@@ -126,7 +126,7 @@ module.exports = function (grunt) {
             './Scripts/LC/moveFocusTo.js:LC/moveFocusTo',
             './Scripts/LC/changesNotification.js:LC/changesNotification',
             './Scripts/LC/dateISO8601.js:LC/dateISO8601',
-            './Scripts/LC/availabilityCalendar.js:LC/availabilityCalendar',
+            './Scripts/LC/availabilityCalendar/index.js:LC/availabilityCalendar',
             './Scripts/LC/SimpleSlider.js:LC/SimpleSlider'
           ]
         }
