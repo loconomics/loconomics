@@ -23,13 +23,9 @@
         // Defaults
         var userId = WebSecurity.IsAuthenticated ? WebSecurity.CurrentUserId : 0;
         var type = Request["type"] ?? "weekly";
-        var defStart = LcHelpers.GetFirstWeekDay(DateTime.Today);
-        var defEnd = LcHelpers.GetLastWeekDay(DateTime.Today);
 
         // Input data
         userId = Request["user"].AsInt(userId);
-        var startDate = Request["start"].AsDateTime(defStart);
-        var endDate = Request["end"].AsDateTime(defEnd);
 
         // Get data
         if (type == "workHours") {
@@ -62,10 +58,12 @@
             result["slots"] = slots;
             
         } else if (type == "monthly") {
-            
-            // Dates are based on the year/month from the given start date
-            startDate = new DateTime(startDate.Year, startDate.Month, 1);
-            endDate = startDate.AddMonths(1).AddDays(-1);
+            // Input data
+            var refDate = (Request["start"] ?? Request["date"]).AsDateTime(DateTime.Today);
+            // This gets the firts week-date for the first month-date for the refDate:
+            var startDate = LcHelpers.GetFirstWeekDay(refDate.AddDays(0 - refDate.Day + 1));
+            // Last week-date for the last month-date for the refDate
+            var endDate = LcHelpers.GetLastWeekDay(refDate.AddMonths(1).AddDays(-1));
             
             var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
 
@@ -102,7 +100,13 @@
 
             result["slots"] = slots;
             
-        } else {
+        } else { // "weekly"
+            // Input data
+            var defStart = LcHelpers.GetFirstWeekDay(DateTime.Today);
+            var defEnd = LcHelpers.GetLastWeekDay(DateTime.Today);
+            var startDate = Request["start"].AsDateTime(defStart);
+            var endDate = Request["end"].AsDateTime(defEnd);
+            
             var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
 
             // Create result
