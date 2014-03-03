@@ -5,7 +5,7 @@ var availabilityCalendar = require('LC/availabilityCalendar');
 
 exports.on = function () {
 
-  var monthlyList = availabilityCalendar.Monthly.enableAll();
+  var monthlyList = availabilityCalendar.Monthly.enableAll({ editable: true });
 
   $.each(monthlyList, function (i, v) {
     var monthly = this;

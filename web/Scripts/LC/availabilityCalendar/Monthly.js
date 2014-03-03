@@ -131,6 +131,11 @@ function updateDatesCells(datesRange, slotsContainer, offMonthDateClass, current
   slotsContainer.children('tr:eq(5)').xtoggle(lastY != 4, { effect: 'height', duration: 0 });
 }
 
+/**
+  It executes the given callback (@eachCellCallback) for 
+  each cell (this inside the callback) iterated between the @datesRange
+  inside the @slotsContainer (a tbody or table with tr-td date cells)
+**/
 function iterateDatesCells(datesRange, slotsContainer, eachCellCallback) {
   var x, y, dateCell;
   // Iterate dates
@@ -148,6 +153,37 @@ function iterateDatesCells(datesRange, slotsContainer, eachCellCallback) {
 }
 
 /**
+  Toggle a selected date-cell availability,
+  for the 'editable' mode
+**/
+function toggleDateAvailability(monthly, cell) {
+  // If there is no data, just return (data not loaded)
+  if (!monthly.data || !monthly.data.slots) return;
+  
+  // Getting the position of the cell in the matrix for date-slots:
+  var tr = cell.closest('tr'),
+    x = tr.find('td').index(cell),
+    y = tr.closest('tbody').find('tr').index(tr),
+    daysOffset = y * 7 + x;
+
+  // Getting the date for the cell based on the showed first date
+  var date = monthly.datesRange.start;
+  date = utils.date.addDays(date, daysOffset);
+  var strDate = dateISO.dateLocal(date, true);
+
+  // Get and update from the underlaying data, 
+  // the status for the date, toggling it:
+  var status = monthly.data.slots[strDate];
+  // If there is no status, just return (data not loaded)
+  if (!status) return;
+  status = status == 'unavailable' ? 'available' : 'unavailable';
+  monthly.data.slots[strDate] = status;
+
+  // Update visualization:
+  monthly.bindData();
+}
+
+/**
 Montly calendar, inherits from LcWidget
 **/
 var Monthly = LcWidget.extend(
@@ -162,13 +198,15 @@ classes: extend({}, utils.weeklyClasses, {
   monthLabel: 'AvailabilityCalendar-monthLabel',
   slotDateLabel: 'AvailabilityCalendar-slotDateLabel',
   offMonthDate: 'AvailabilityCalendar-offMonthDate',
-  currentDate: 'AvailabilityCalendar-currentDate'
+  currentDate: 'AvailabilityCalendar-currentDate',
+  editable: 'is-editable'
 }),
 texts: extend({}, utils.weeklyTexts, {
   months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 }),
 url: '/calendar/get-availability/',
 showSixWeeks: true,
+editable: false,
 
 // Our 'view' will be a subset of the data,
 // delimited by the next property, a dates range:
@@ -236,6 +274,14 @@ function Monthly(element, options) {
   this.$el.on('click', '.' + this.classes.todayAction, function today() {
     that.bindData(utils.date.currentMonthWeeks(null, this.showSixWeeks));
   });
+
+  // Editable mode
+  if (this.editable) {
+    this.$el.on('click', '.' + this.classes.slots + ' td', function clickToggleAvailability() {
+      toggleDateAvailability(that, $(this));
+    });
+    this.$el.addClass(this.classes.editable);
+  }
 
 });
 

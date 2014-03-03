@@ -305,7 +305,7 @@ loadingOverlay() {
     /* Monthly specific stuff */
     &.AvailabilityCalendar--monthly {
         
-        .AvailabilityCalendar-actions {       
+        .AvailabilityCalendar-actions {
             .AvailabilityCalendar-monthLabel {
                 position: absolute;
                 right: 0;
@@ -352,6 +352,15 @@ loadingOverlay() {
                     .AvailabilityCalendar-slotDateLabel {
                         font-weight: bold;
                     }
+                }
+            }
+        }
+        
+        &.is-editable {
+            .AvailabilityCalendar-slots  {               
+                td:hover {
+                    opacity: .5;
+                    cursor: pointer;
                 }
             }
         }
