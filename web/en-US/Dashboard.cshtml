@@ -70,7 +70,7 @@
         {
             var thisPageIndex = LcData.OnboardingSteps.ContainsKey(page) ? LcData.OnboardingSteps[page].Index : 999;
             var currentIndex = LcData.OnboardingSteps[onboardingStep].Index;
-            if (thisPageIndex > currentIndex) {
+            if (currentIndex > 0 && thisPageIndex > currentIndex) {
                 Response.Redirect(LcUrl.LangPath + "dashboard/" + onboardingStep + "/");
             }
         }
