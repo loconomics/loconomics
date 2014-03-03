@@ -59,11 +59,16 @@
             
         } else if (type == "monthly") {
             // Input data
-            var refDate = (Request["start"] ?? Request["date"]).AsDateTime(DateTime.Today);
-            // This gets the firts week-date for the first month-date for the refDate:
-            var startDate = LcHelpers.GetFirstWeekDay(refDate.AddDays(0 - refDate.Day + 1));
-            // Last week-date for the last month-date for the refDate
-            var endDate = LcHelpers.GetLastWeekDay(refDate.AddMonths(1).AddDays(-1));
+            var startDate = Request["start"].AsDateTime(DateTime.MinValue);
+            var endDate = Request["end"].AsDateTime(DateTime.MinValue);
+            
+            if (startDate == DateTime.MinValue) {
+                var refDate = (Request["date"]).AsDateTime(DateTime.Today);
+                // This gets the firts week-date for the first month-date for the refDate:
+                startDate = LcHelpers.GetFirstWeekDay(refDate.AddDays(0 - refDate.Day + 1));
+                // Last week-date for the last month-date for the refDate
+                endDate = LcHelpers.GetLastWeekDay(refDate.AddMonths(1).AddDays(-1));
+            }
             
             var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
 

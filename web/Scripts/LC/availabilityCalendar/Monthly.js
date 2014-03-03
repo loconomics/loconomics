@@ -16,11 +16,15 @@ var utils = require('./utils');
   Note: this code is very similar to utils.weeklyCheckAndPrefetch
 **/
 function monthlyCheckAndPrefetch(monthly, currentDatesRange) {
-  var nextDatesRange = utils.date.nextMonthWeeks(currentDatesRange.start);
+  // We get the next month dates-range, but
+  // using as base-date a date inside current displayed month, that most times is
+  // not the month of the start date in current date, then just forward 7 days that
+  // to ensure we pick the correct month:
+  var nextDatesRange = utils.date.nextMonthWeeks(utils.date.addDays(currentDatesRange.start, 7), 1, monthly.showSixWeeks);
 
   if (!utils.monthlyIsDataInCache(monthly, nextDatesRange)) {
     // Prefetching next week in advance
-    var prefetchQuery = datesToQuery(nextDatesRange);
+    var prefetchQuery = utils.datesToQuery(nextDatesRange);
     monthly.fetchData(prefetchQuery, null, true);
   }
 }
@@ -32,7 +36,11 @@ the complexity comes from the prefetch feature, maybe can be that logic
 isolated and shared?
 **/
 function moveBindMonth(monthly, months) {
-  var datesRange = utils.date.nextMonthWeeks(monthly.datesRange.start, months);
+  // We get the next 'months' (negative for previous) dates-range, but
+  // using as base-date a date inside current displayed month, that most times is
+  // not the month of the start date in current date, then just forward 7 days that
+  // to ensure we pick the correct month:
+  var datesRange = utils.date.nextMonthWeeks(utils.date.addDays(monthly.datesRange.start, 7), months, monthly.showSixWeeks);
 
   // Check cache before try to fetch
   var inCache = utils.monthlyIsDataInCache(monthly, datesRange);
@@ -65,7 +73,7 @@ function moveBindMonth(monthly, months) {
 
     // Fetch (download) the data and show on ready:
     monthly
-    .fetchData(datesToQuery(datesRange))
+    .fetchData(utils.datesToQuery(datesRange))
     .done(function () {
       monthly.bindData(datesRange);
       // Prefetch
@@ -77,23 +85,66 @@ function moveBindMonth(monthly, months) {
 /**
 Mark calendar as current-month and disable prev button,
 or remove the mark and enable it if is not.
+
+Updates the month label too and today button
 **/
 function checkCurrentMonth($el, startDate, monthly) {
-  var yep = dateUtils.isInCurrentMonth(date);
+  // Ensure the date to be from current month and not one of the latest dates
+  // of the previous one (where the range start) adding 7 days for the check:
+  var monthDate = utils.date.addDays(startDate, 7);
+  var yep = utils.date.isInCurrentMonth(monthDate);
   $el.toggleClass(monthly.classes.currentWeek, yep);
   $el.find('.' + monthly.classes.prevAction).prop('disabled', yep);
+
+  // Month - Year
+  var mlbl = monthly.texts.months[monthDate.getMonth()] + ' ' + monthDate.getFullYear();
+  $el.find('.' + monthly.classes.monthLabel).text(mlbl);
+  $el.find('.' + monthly.classes.todayAction).prop('disabled', yep);
 }
 
 /**
   Update the calendar dates cells for 'day of the month' values
-  and number of weeks/rows
+  and number of weeks/rows.
+  @datesRange { start, end }
+  @slotsContainer jQuery-DOM for dates-cells tbody
 **/
-function updateDatesCells(monthly) {
-  // TODO
+function updateDatesCells(datesRange, slotsContainer, offMonthDateClass, currentDateClass, slotDateLabel) {
+  var lastY,
+    currentMonth = utils.date.addDays(datesRange.start, 7).getMonth(),
+    today = dateISO.dateLocal(new Date());
+
+  iterateDatesCells(datesRange, slotsContainer, function (date, x, y) {
+    lastY = y;
+    this.find('.' + slotDateLabel).text(date.getDate());
+
+    // Mark days not in this month
+    this.toggleClass(offMonthDateClass, date.getMonth() != currentMonth);
+
+    // Mark today
+    this.toggleClass(currentDateClass, dateISO.dateLocal(date) == today);
+  });
+
+  // Some months are 5 weeks wide and others 6; our layout has permanent 6 rows/weeks
+  // and we don't look up the 6th week if is not part of the month then that 6th row
+  // must be hidden if there are only 5.
+  // If the last row was the 5 (index 4, zero-based), the 6th is hidden:
+  slotsContainer.children('tr:eq(5)').xtoggle(lastY != 4, { effect: 'height', duration: 0 });
 }
 
-function getCellByDate(monthly, date) {
-  // TODO
+function iterateDatesCells(datesRange, slotsContainer, eachCellCallback) {
+  var x, y, dateCell;
+  // Iterate dates
+  utils.date.eachDateInRange(datesRange.start, datesRange.end, function (date, i) {
+    // dates are sorted as 7 per row (each week-day),
+    // but remember that day-cell position is offset 1 because
+    // each row is 8 cells (first is header and rest 7 are the data-cells for dates)
+    // just looking only 'td's we can use the position without offset
+    x = (i % 7);
+    y = Math.floor(i / 7);
+    dateCell = slotsContainer.children('tr:eq(' + y + ')').children('td:eq(' + x + ')');
+
+    eachCellCallback.apply(dateCell, [date, x, y, i]);
+  });
 }
 
 /**
@@ -106,15 +157,25 @@ classes: extend({}, utils.weeklyClasses, {
   weeklyCalendar: undefined,
   currentWeek: undefined,
   currentMonth: 'is-currentMonth',
-  monthlyCalendar: 'AvailabilityCalendar--monthly'
+  monthlyCalendar: 'AvailabilityCalendar--monthly',
+  todayAction: 'Actions-today',
+  monthLabel: 'AvailabilityCalendar-monthLabel',
+  slotDateLabel: 'AvailabilityCalendar-slotDateLabel',
+  offMonthDate: 'AvailabilityCalendar-offMonthDate',
+  currentDate: 'AvailabilityCalendar-currentDate'
 }),
-texts: utils.weeklyTexts,
+texts: extend({}, utils.weeklyTexts, {
+  months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+}),
 url: '/calendar/get-availability/',
+showSixWeeks: true,
 
 // Our 'view' will be a subset of the data,
 // delimited by the next property, a dates range:
 datesRange: { start: null, end: null },
 bindData: function bindDataMonthly(datesRange) {
+  if (!this.data || !this.data.slots) return;
+
   this.datesRange = datesRange = datesRange || this.datesRange;
   var 
       slotsContainer = this.$el.find('.' + this.classes.slots),
@@ -122,7 +183,7 @@ bindData: function bindDataMonthly(datesRange) {
 
   checkCurrentMonth(this.$el, datesRange.start, this);
 
-  updateDatesCells(this);
+  updateDatesCells(this.datesRange, slotsContainer, this.classes.offMonthDate, this.classes.currentDate, this.classes.slotDateLabel);
 
   // Remove any previous status class from all slots
   for (var s = 0; s < utils.statusTypes.length; s++) {
@@ -131,14 +192,13 @@ bindData: function bindDataMonthly(datesRange) {
 
   var that = this;
 
-  // TODO Re-do for monthly
-  utils.date.eachDateInRange(datesRange.start, datesRange.end, function (date, i) {
+  // Set availability of each date slot/cell:
+  iterateDatesCells(datesRange, slotsContainer, function (date, x, y, i) {
     var datekey = dateISO.dateLocal(date, true);
     var dateStatus = that.data.slots[datekey];
 
-    var slot = getCellByDate(that, date);
-
-    slot.addClass(that.classes.slotStatusPrefix + dateStatus);
+    if (dateStatus)
+      this.addClass(that.classes.slotStatusPrefix + dateStatus);
   });
 }
 },
@@ -156,14 +216,14 @@ function Monthly(element, options) {
   };
 
   // Start fetching current month
-  var firstDates = utils.date.currentMonthWeeks();
+  var firstDates = utils.date.currentMonthWeeks(null, this.showSixWeeks);
   this.fetchData(utils.datesToQuery(firstDates)).done(function () {
     that.bindData(firstDates);
     // Prefetching next month in advance
     monthlyCheckAndPrefetch(that, firstDates);
   });
 
-  utils.checkCurrentMonth(this.$el, firstDates.start, this);
+  checkCurrentMonth(this.$el, firstDates.start, this);
 
   // Set handlers for prev-next actions:
   this.$el.on('click', '.' + this.classes.prevAction, function prev() {
@@ -171,6 +231,10 @@ function Monthly(element, options) {
   });
   this.$el.on('click', '.' + this.classes.nextAction, function next() {
     moveBindMonth(that, 1);
+  });
+  // Handler for today action
+  this.$el.on('click', '.' + this.classes.todayAction, function today() {
+    that.bindData(utils.date.currentMonthWeeks(null, this.showSixWeeks));
   });
 
 });

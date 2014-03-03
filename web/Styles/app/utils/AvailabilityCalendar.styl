@@ -4,6 +4,7 @@
 @import "nib"
 @import "ColorsPalette"
 @import "mediaQueries"
+@import "Actions"
 
 $colorUnavailable = White;
 $colorAvailable = #DDEAB8;
@@ -50,9 +51,15 @@ disabled($color = White, $opacity = .5) {
         }
     }
     
-    &.is-currentWeek {
+    &.is-currentWeek,
+    &.is-currentMonth {
         /* Button previous gets disabled */
         .Actions-prev {
+            position: relative;
+            disabled();
+        }
+        
+        .Actions-today {
             position: relative;
             disabled();
         }
@@ -96,15 +103,23 @@ disabled($color = White, $opacity = .5) {
         position: relative;
         margin: 1em 74px;
         letter-spacing: -1em;
+        
+        * {
+            letter-spacing: 0;
+            vertical-align: top;
+        }
+        
+        $actionFrontColor = #555;
+        $actionBackColor = #F7F7F7;
+        $actionBorderColor = #D1D1D1;
 
         .Actions-move {
-            letter-spacing: normal;
 
             padding: 1.2em 1.6em;
             border-radius: 5px;
-            border: 1px solid #D1D1D1;
-            background: #F7F7F7;
-            color: #555;
+            border: 1px solid $actionBorderColor;
+            background: $actionBackColor;
+            color: $actionFrontColor;
             line-height: normal;
 
             /* Icons */
@@ -144,15 +159,33 @@ disabled($color = White, $opacity = .5) {
                 }
             }
         }
+        
+        .Actions-today {
+
+            padding: 1.2em 1.6em;
+            border-radius: 5px;
+            border: 1px solid $actionBorderColor;
+            color: $actionFrontColor;
+            background: $actionBackColor;
+            line-height: 12px;
+            height: 12px;
+            box-sizing: content-box;
+            text-transform: uppercase;
+
+            margin-left: 1em;
+                
+            &:hover {
+                background: White;
+            }
+        }
     }
   
-    /* Weekly and Workhours share layout */
+    /* Weekly, Workhours and Monthly share a common layout
+        based on week-days columns
+    */
     &.AvailabilityCalendar--weekly,
-    &.AvailabilityCalendar--workHours {
-    
-        .AvailabilityCalendar-actions {
-            
-        }
+    &.AvailabilityCalendar--workHours,
+    &.AvailabilityCalendar--monthly {
   
         table {
             width: 100%;
@@ -187,7 +220,11 @@ disabled($color = White, $opacity = .5) {
                 text-align: center;
                 text-transform: uppercase;
             }
-        
+    }
+    
+    /* Weekly and WorkHours has both Hours cells in 15 minutes slots */
+    &.AvailabilityCalendar--weekly,
+    &.AvailabilityCalendar--workHours {
             .AvailabilityCalendar-slots {
                 
                 th,
@@ -233,7 +270,6 @@ disabled($color = White, $opacity = .5) {
             }
             
         }
-        
     }
     
     /* Workhours specific stuff */
@@ -243,6 +279,57 @@ disabled($color = White, $opacity = .5) {
         
         .AvailabilityCalendar-slots td {
             cursor: pointer;
+        }
+    }
+    
+    /* Monthly specific stuff */
+    &.AvailabilityCalendar--monthly {
+        
+        .AvailabilityCalendar-actions {       
+            .AvailabilityCalendar-monthLabel {
+                position: absolute;
+                right: 0;
+                top: 0;
+                
+                /* Dimensions from buttons in Actions container to be aligned */
+                padding: 1.2em 1.6em;
+                line-height: 12px;
+                box-sizing: content-box;
+            }
+        }
+        
+        /* First column is hidden */
+        .AvailabilityCalendar-days th:first-child {
+            display: none;
+        }
+        
+        .AvailabilityCalendar-slots {
+            /* First column is hidden */
+            th {
+                display: none;
+            }
+       
+            td {
+                border: 1px solid $colorBounds;
+                height: 3em;
+                padding: .5em;
+                
+                text-align: left;
+                
+                .AvailabilityCalendar-slotDateLabel {
+                    font-size: 1em;
+                }
+                
+                &.AvailabilityCalendar-offMonthDate {
+                    color: $colorLtGray;
+                }
+                
+                &.AvailabilityCalendar-currentDate {
+                    .date-label {
+                        font-weight: bold;
+                    }
+                }
+            }
         }
     }
     

@@ -501,8 +501,6 @@ function sz(el, p) {
 
 },{}],"jquery.blockUI":[function(require,module,exports){
 module.exports=require('wGt3pN');
-},{}],"jquery":[function(require,module,exports){
-module.exports=require('fHei1a');
 },{}],"fHei1a":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /*! jQuery v1.7.2 jquery.com | jquery.org/license */
@@ -513,6 +511,8 @@ a){var b=F.exec(a);b&&(b[1]=(b[1]||"").toLowerCase(),b[3]=b[3]&&new RegExp("(?:^
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
+},{}],"jquery":[function(require,module,exports){
+module.exports=require('fHei1a');
 },{}],"jquery-ui":[function(require,module,exports){
 module.exports=require('fScm4G');
 },{}],"fScm4G":[function(require,module,exports){
