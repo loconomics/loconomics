@@ -127,22 +127,28 @@ exports.previousMonth = previousMonth;
   dates from the previous months),
   and similar for the end date being the 
   last week date of the last month week.
+
+  @includeSixWeeks: sometimes is useful get ever a
+  six weeks dates range staring by the first week of
+  the baseDate month. By default is false.
 **/
-function currentMonthWeeks(baseDate) {
-  var r = currentMonth(baseDate);
+function currentMonthWeeks(baseDate, includeSixWeeks) {
+  var r = currentMonth(baseDate),
+    s = getFirstWeekDate(r.start),
+    e = includeSixWeeks ? addDays(s, 6*7 - 1) : getLastWeekDate(r.end);
   return {
-    start: getFirstWeekDate(r.start),
-    end: getLastWeekDate(r.end)
+    start: s,
+    end: e
   };
 }
 exports.currentMonthWeeks = currentMonthWeeks;
 
-function nextMonthWeeks(fromDate, amountMonths) {
-  return currentMonthWeeks(nextMonth(fromDate, amountMonths));
+function nextMonthWeeks(fromDate, amountMonths, includeSixWeeks) {
+  return currentMonthWeeks(nextMonth(fromDate, amountMonths).start, includeSixWeeks);
 }
 exports.nextMonthWeeks = nextMonthWeeks;
 
-function previousMonthWeeks(fromDate, amountMonths) {
-  return currentMonthWeeks(previousMonth(fromDate, amountMonths));
+function previousMonthWeeks(fromDate, amountMonths, includeSixWeeks) {
+  return currentMonthWeeks(previousMonth(fromDate, amountMonths).start, includeSixWeeks);
 }
 exports.previousMonthWeeks = previousMonthWeeks;

@@ -91,6 +91,7 @@ $(function () {
 
   /* Availabilty */
   require('./dashboard/weeklySchedule').on();
+  require('./dashboard/monthlySchedule').on();
   require('./dashboard/calendarSync').on();
   require('./dashboard/appointmentsCrudl').on('.DashboardAvailability');
 });
