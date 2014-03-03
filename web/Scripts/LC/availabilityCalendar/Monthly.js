@@ -21,6 +21,19 @@ function monthlyCheckAndPrefetch(monthly, currentDatesRange) {
   // not the month of the start date in current date, then just forward 7 days that
   // to ensure we pick the correct month:
   var nextDatesRange = utils.date.nextMonthWeeks(utils.date.addDays(currentDatesRange.start, 7), 1, monthly.showSixWeeks);
+  // As we load full weeks, most times the first week of a month is already loaded because 
+  // the week is shared with the previous month, then just check if the start of the new
+  // range is already in cache and shrink the range to be requested, avoiding conflict on
+  // loading the udpated data (if that week was being edited) and faster request load since
+  // the server needs to do less computation:
+  var d = nextDatesRange.start,
+    strend = dateISO.dateLocal(nextDatesRange.end),
+    strd = dateISO.dateLocal(d, true);
+  while (monthly.data.slots[strd] &&
+    strd <= strend) {
+    nextDatesRange.start = d = utils.date.addDays(d, 1);
+    strd = dateISO.dateLocal(d, true);
+  }
 
   if (!utils.monthlyIsDataInCache(monthly, nextDatesRange)) {
     // Prefetching next week in advance
