@@ -139,7 +139,7 @@
                                     { "LicenseCertificationID", licenseID }
                         }));
                     } catch {
-                        LcHelpers.ReturnJsonResult(0, "LJDI: You have entered this license previously and cannot be duplicated.");
+                        LcHelpers.ReturnJsonResult(0, "It looks like we already have that license for you. If that's not right, contact us.");
                         // It stops
                     }
                     // Out of try-catch: inside will break with an exception (response.end not allowed inside try block)
