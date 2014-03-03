@@ -39,7 +39,8 @@ var weeklyClasses = exports.weeklyClasses = {
   slotStatusPrefix: 'is-',
   legend: 'AvailabilityCalendar-legend',
   legendAvailable: 'AvailabilityCalendar-legend-available',
-  legendUnavailable: 'AvailabilityCalendar-legend-unavailable'
+  legendUnavailable: 'AvailabilityCalendar-legend-unavailable',
+  status: 'AvailabilityCalendar-status'
 };
 
 var weeklyTexts = exports.weeklyTexts = {

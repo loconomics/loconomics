@@ -25,6 +25,24 @@ disabled($color = White, $opacity = .5) {
     }
 }
 
+loadingSpinner() {
+    background: url('../img/theme/loading.gif') no-repeat 0 0;
+    width: 48px;
+    height: 48px;
+}
+
+loadingOverlay() {
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+            
+        loadingSpinner();
+    }
+}
+
 .AvailabilityCalendar {
     position: relative;
     
@@ -33,16 +51,8 @@ disabled($color = White, $opacity = .5) {
     }
     
     &.is-loading {
-        /* Loading spinner */
-        &:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 999;
-            background: url('../img/theme/loading.gif') no-repeat 0 0;
-            width: 48px;
-            height: 48px;
+        .AvailabilityCalendar-status {
+            loadingSpinner();
         }
         
         /* Disabling actions to avoid new requests */
@@ -101,17 +111,24 @@ disabled($color = White, $opacity = .5) {
     
     .AvailabilityCalendar-actions {
         position: relative;
-        margin: 1em 74px;
+        margin: 1em 0;
         letter-spacing: -1em;
+        min-height: 50px;
         
         * {
             letter-spacing: 0;
-            vertical-align: top;
+            vertical-align: middle;
         }
         
         $actionFrontColor = #555;
         $actionBackColor = #F7F7F7;
         $actionBorderColor = #D1D1D1;
+
+        .AvailabilityCalendar-status {
+            margin-left: 1em;
+            display: inline-block;
+            position: absolute;
+        }
 
         .Actions-move {
 
@@ -186,8 +203,7 @@ disabled($color = White, $opacity = .5) {
     &.AvailabilityCalendar--weekly,
     &.AvailabilityCalendar--workHours,
     &.AvailabilityCalendar--monthly {
-  
-        table {
+         table {
             width: 100%;
             min-width: 600px;
             
@@ -220,53 +236,57 @@ disabled($color = White, $opacity = .5) {
                 text-align: center;
                 text-transform: uppercase;
             }
+        }
     }
     
     /* Weekly and WorkHours has both Hours cells in 15 minutes slots */
     &.AvailabilityCalendar--weekly,
     &.AvailabilityCalendar--workHours {
-            .AvailabilityCalendar-slots {
+        
+        .AvailabilityCalendar-actions {
+            margin-left: 74px;
+        }
+        
+        .AvailabilityCalendar-slots {
                 
-                th,
-                td {
-                    border-right: 1px solid $colorSmoothBounds;
-                }
+            th,
+            td {
+                border-right: 1px solid $colorSmoothBounds;
+            }
                 
-                td {
-                    height: 4px;
+            td {
+                height: 4px;
+            }
+            
+            .AvailabilityCalendar-hour {
+                
+                th {
+                    text-align: right;    
+                    padding: 0 .5em;
+                    min-width: 45px;
                 }
             
-                .AvailabilityCalendar-hour {
-                
-                    th {
-                        text-align: right;    
-                        padding: 0 .5em;
-                        min-width: 45px;
-                    }
-            
-                    /* Border on hour cells but not the header: */
-                    td {
-                        border-top: 1px solid $colorSmoothBounds;
-                    }
+                /* Border on hour cells but not the header: */
+                td {
+                    border-top: 1px solid $colorSmoothBounds;
+                }
                     
-                    &.AvailabilityCalendar-hour--noon td {
-                        border-top-color: $colorBounds;
-                    }
-            
-                }
-                
-                td:last-child {
-                    border-right: 1px solid $colorBounds;
-                }
-                
-                tr:first-child td {
-                    border-top: 1px solid $colorBounds;
-                }
-                
-                tr:last-child td {
-                    border-bottom: 1px solid $colorBounds;
+                &.AvailabilityCalendar-hour--noon td {
+                    border-top-color: $colorBounds;
                 }
             
+            }
+                
+            td:last-child {
+                border-right: 1px solid $colorBounds;
+            }
+                
+            tr:first-child td {
+                border-top: 1px solid $colorBounds;
+            }
+                
+            tr:last-child td {
+                border-bottom: 1px solid $colorBounds;
             }
             
         }
@@ -292,8 +312,7 @@ disabled($color = White, $opacity = .5) {
                 top: 0;
                 
                 /* Dimensions from buttons in Actions container to be aligned */
-                padding: 1.2em 1.6em;
-                line-height: 12px;
+                line-height: 42px;
                 box-sizing: content-box;
             }
         }
