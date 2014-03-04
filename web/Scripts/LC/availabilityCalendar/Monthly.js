@@ -247,6 +247,8 @@ bindData: function bindDataMonthly(datesRange) {
   iterateDatesCells(datesRange, slotsContainer, function (date, x, y, i) {
     var datekey = dateISO.dateLocal(date, true);
     var dateStatus = that.data.slots[datekey];
+    // Support for simple and detailed status description:
+    dateStatus = dateStatus.status ? dateStatus.status : dateStatus;
 
     if (dateStatus)
       this.addClass(that.classes.slotStatusPrefix + dateStatus);
@@ -265,6 +267,12 @@ function Monthly(element, options) {
     user: this.user,
     type: 'monthly'
   };
+
+  // If is not set by constructor options, get 
+  // 'editable' from data, or left default:
+  if (!(options && typeof (options.editable) != 'undefined') &&
+    typeof (this.$el.data('editable')) != 'undefined')
+    this.editable = !!this.$el.data('editable');
 
   // Start fetching current month
   var firstDates = utils.date.currentMonthWeeks(null, this.showSixWeeks);

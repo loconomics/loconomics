@@ -73,37 +73,11 @@
             var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
 
             // Create result
-            var slots = new Dictionary<string, string>();
-            // We prepare the slots with every date in the range, no matter
-            // if some dates ends up without data (empty value list) we need to be
-            // explicit about the returned dates.
-            var fordate = startDate;
-            while (fordate <= endDate) {
-                slots.Add(fordate.ToString(dateFormat), "");
-                // Next date
-                fordate = fordate.AddDays(1);
+            if (Request["editable"].AsBool()) {
+                result["slots"] = getEditableMonthlySlots(startDate, endDate, dateFormat, data);
+            } else {
+                result["slots"] = getReadOnlyMonthlySlots(startDate, endDate, dateFormat, data);
             }
-        
-            // We set 'unavailable' (any database status except free -includes: unavailable, busy, tentative, offline)
-            // or 'available' (free on database)
-            // ALMOST one slot free sets the date availability as 'available' (because most times there will be
-            // unavailable slots, and that cannot set all the date as unavailable)
-            var curDate = startDate;
-            var curStatus = "unavailable";
-            foreach(var ev in data) {
-                if (curDate != ev.DateSet) {
-                    var strdate = curDate.ToString(dateFormat);
-                    slots[strdate] = curStatus;
-                    curDate = ev.DateSet;
-                    curStatus = "unavailable";
-                }
-                if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
-                    curStatus = "available";
-                }
-            }
-            slots[curDate.ToString(dateFormat)] = curStatus;
-
-            result["slots"] = slots;
             
         } else { // "weekly"
             // Input data
@@ -156,4 +130,86 @@
 
     // Output data
     LcHelpers.ReturnJsonResult(resultCode, result);
+}
+@functions {
+    Dictionary<string, string> getReadOnlyMonthlySlots(DateTime startDate, DateTime endDate, string dateFormat, dynamic data) {
+        var slots = new Dictionary<string, string>();
+        // We prepare the slots with every date in the range, no matter
+        // if some dates ends up without data (empty value list) we need to be
+        // explicit about the returned dates.
+        var fordate = startDate;
+        while (fordate <= endDate) {
+            slots.Add(fordate.ToString(dateFormat), "");
+            // Next date
+            fordate = fordate.AddDays(1);
+        }
+        
+        // We set 'unavailable' (any database status except free -includes: unavailable, busy, tentative, offline)
+        // or 'available' (free on database)
+        // ALMOST one slot free sets the date availability as 'available' (because most times there will be
+        // unavailable slots, and that cannot set all the date as unavailable)
+        var curDate = startDate;
+        var curStatus = "unavailable";
+        bool jump = false;
+        foreach(var ev in data) {
+            if (jump || curDate != ev.DateSet) {
+                jump = false;
+                var strdate = curDate.ToString(dateFormat);
+                slots[strdate] = curStatus;
+                curDate = ev.DateSet;
+                curStatus = "unavailable";
+            }
+            if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
+                curStatus = "available";
+                jump = true;
+            }
+        }
+        var laststrdate = curDate.ToString(dateFormat);
+        slots[laststrdate] = curStatus;
+        
+        return slots;
+    }
+    
+    Dictionary<string, Dictionary<string, string>> getEditableMonthlySlots(DateTime startDate, DateTime endDate, string dateFormat, dynamic data) {
+        var slots = new Dictionary<string, Dictionary<string, string>>();
+        // We prepare the slots with every date in the range, no matter
+        // if some dates ends up without data (empty value list) we need to be
+        // explicit about the returned dates.
+        var fordate = startDate;
+        while (fordate <= endDate) {
+            slots.Add(fordate.ToString(dateFormat), new Dictionary<string, string>());
+            // Next date
+            fordate = fordate.AddDays(1);
+        }
+        
+        // We set 'unavailable' (any database status except free -includes: unavailable, busy, tentative, offline)
+        // or 'available' (free on database)
+        // ALMOST one slot free sets the date availability as 'available' (because most times there will be
+        // unavailable slots, and that cannot set all the date as unavailable)
+        var curDate = startDate;
+        var curStatus = "unavailable";
+        string curStatusSource = null;
+        bool jump = false;
+        foreach(var ev in data) {
+            if (jump || curDate != ev.DateSet) {
+                jump = false;
+                var strdate = curDate.ToString(dateFormat);
+                slots[strdate]["status"] = curStatus;
+                slots[strdate]["source"] = curStatusSource ?? "computed";
+                curDate = ev.DateSet;
+                curStatus = "unavailable";
+                curStatusSource = null;
+            }
+            if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
+                curStatus = "available";
+                curStatusSource = "computed";
+                jump = true;
+            }
+        }
+        var laststrdate = curDate.ToString(dateFormat);
+        slots[laststrdate]["status"] = curStatus;
+        slots[laststrdate]["source"] = curStatusSource;
+        
+        return slots;
+    }
 }

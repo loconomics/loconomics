@@ -1,5 +1,6 @@
 ﻿@{
-    var user = PageData["User"] ?? Request["user"];
+    var user = PageData["User"] ?? Request["user"] ?? Request["userid"];
+    var editable = (bool)PageData["Editable"];
 }
 @functions {
     /// <summary>
@@ -18,7 +19,7 @@
         yield return DayOfWeek.Saturday;
     }
 }
-<div class="AvailabilityCalendar AvailabilityCalendar--monthly" data-calendar-user="@(user)" data-source-url="@(LcUrl.LangPath)calendar/get-availability/">
+<div class="AvailabilityCalendar AvailabilityCalendar--monthly" data-calendar-user="@(user)" data-source-url="@(LcUrl.LangPath)calendar/get-availability/" @(editable ? "data-editable=true" : "")>
 
     <div class="Actions AvailabilityCalendar-actions">
         <button type="button" class="Actions-move Actions-prev">Previous month</button>

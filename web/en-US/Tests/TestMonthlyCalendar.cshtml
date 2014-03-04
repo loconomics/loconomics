@@ -5,13 +5,39 @@
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard.css");
     LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
     
-    /* Manual event creation test:
-    var ent = new CalendarDll.Data.loconomicsEntities();
-    var ev = LcCalendar.CreateFullDateEventFromMonthlyCalendar(141, new DateTime(2014, 3, 28), CalendarDll.AvailabilityTypes.UNAVAILABLE);
-    // Add it for database
-    ent.CalendarEvents.Add(ev);
-    ent.SaveChanges();
-    */
+    if (IsPost) {
+        
+        ModelState.AddFormError("Save not implemented");
+        
+        /* Manual event creation test:
+        var ent = new CalendarDll.Data.loconomicsEntities();
+        var ev = LcCalendar.CreateFullDateEventFromMonthlyCalendar(141, new DateTime(2014, 3, 28), CalendarDll.AvailabilityTypes.UNAVAILABLE);
+        // Add it for database
+        ent.CalendarEvents.Add(ev);
+        ent.SaveChanges();
+        */
+    }
+        
+    var editable = Request["editable"].AsBool();
+    var user = Request["user"] ?? Request["userid"];
 }
 
-@RenderPage(LcUrl.RenderLangPath + "Calendar/$Monthly.cshtml")
+<h2>Test Monthly calendar page</h2>
+<form action="?user=@(user)&editable=@(editable)" method="post">
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Test options:</legend>
+        @if (editable)
+        {
+            <a href="?user=@(user)&editable=false" class="action">Read-only</a>
+            <input type="submit" class="action main-action" value="Save" name="save" />
+        }
+        else
+        {
+            <a href="?user=@(user)&editable=true" class="action">Editable</a>
+        }
+    </fieldset>
+</form>
+
+<h3>Calendar:</h3>
+@RenderPage(LcUrl.RenderLangPath + "Calendar/$Monthly.cshtml", new { Editable = editable, User = user })
