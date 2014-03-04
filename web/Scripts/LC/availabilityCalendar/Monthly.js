@@ -4,8 +4,9 @@
 var $ = require('jquery'),
   dateISO = require('LC/dateISO8601'),
   LcWidget = require('../CX/LcWidget'),
-  extend = require('../CX/extend');
-var utils = require('./utils');
+  extend = require('../CX/extend'),
+  utils = require('./utils'),
+  objectUtils = require('./objectUtils');
 
 /**
   Private utils
@@ -253,6 +254,19 @@ bindData: function bindDataMonthly(datesRange) {
     if (dateStatus)
       this.addClass(that.classes.slotStatusPrefix + dateStatus);
   });
+},
+getUpdatedData: function getUpdatedData() {
+  var d = {};
+  if (this.editable) {
+    // Copy data, we don't want change the original:
+    extend(d, this.data);
+
+    // Filter slots to get only that updated by de user:
+    d.slots = objectUtils.filterProperties(d.slots, function (k, v) {
+      return v.source == 'user';
+    });
+  }
+  return d;
 }
 },
 // Constructor:

@@ -1,9 +1,11 @@
 ﻿/* Forms submitted via AJAX */
-var $ = jQuery || require('jquery'),
+var $ = require('jquery'),
     callbacks = require('./ajaxCallbacks'),
     changesNotification = require('./changesNotification'),
     blockPresets = require('./blockPresets'),
     validationHelper = require('./validationHelper');
+
+jQuery = $;
 
 // Global settings, will be updated on init but is accessed
 // through closure from all functions.
