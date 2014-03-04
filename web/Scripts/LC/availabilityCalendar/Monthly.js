@@ -188,9 +188,9 @@ function toggleDateAvailability(monthly, cell) {
   // the status for the date, toggling it:
   var status = monthly.data.slots[strDate];
   // If there is no status, just return (data not loaded)
-  if (!status) return;
-  status = status == 'unavailable' ? 'available' : 'unavailable';
-  monthly.data.slots[strDate] = status;
+  if (!status && !status.status) return;
+  status.status = status.status == 'unavailable' ? 'available' : 'unavailable';
+  status.source = 'user';
 
   // Update visualization:
   monthly.bindData();
@@ -274,15 +274,6 @@ function Monthly(element, options) {
     typeof (this.$el.data('editable')) != 'undefined')
     this.editable = !!this.$el.data('editable');
 
-  // Start fetching current month
-  var firstDates = utils.date.currentMonthWeeks(null, this.showSixWeeks);
-  this.fetchData(utils.datesToQuery(firstDates)).done(function () {
-    that.bindData(firstDates);
-    // Prefetching next month in advance
-    monthlyCheckAndPrefetch(that, firstDates);
-  });
-
-  checkCurrentMonth(this.$el, firstDates.start, this);
 
   // Set handlers for prev-next actions:
   this.$el.on('click', '.' + this.classes.prevAction, function prev() {
@@ -298,11 +289,23 @@ function Monthly(element, options) {
 
   // Editable mode
   if (this.editable) {
+    this.query.editable = true;
     this.$el.on('click', '.' + this.classes.slots + ' td', function clickToggleAvailability() {
       toggleDateAvailability(that, $(this));
     });
     this.$el.addClass(this.classes.editable);
   }
+
+
+  // Start fetching current month
+  var firstDates = utils.date.currentMonthWeeks(null, this.showSixWeeks);
+  this.fetchData(utils.datesToQuery(firstDates)).done(function () {
+    that.bindData(firstDates);
+    // Prefetching next month in advance
+    monthlyCheckAndPrefetch(that, firstDates);
+  });
+
+  checkCurrentMonth(this.$el, firstDates.start, this);
 
 });
 
