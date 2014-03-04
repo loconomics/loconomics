@@ -4,6 +4,14 @@
     
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard.css");
     LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
+    
+    /* Manual event creation test:
+    var ent = new CalendarDll.Data.loconomicsEntities();
+    var ev = LcCalendar.CreateFullDateEventFromMonthlyCalendar(141, new DateTime(2014, 3, 28), CalendarDll.AvailabilityTypes.UNAVAILABLE);
+    // Add it for database
+    ent.CalendarEvents.Add(ev);
+    ent.SaveChanges();
+    */
 }
 
 @RenderPage(LcUrl.RenderLangPath + "Calendar/$Monthly.cshtml")
