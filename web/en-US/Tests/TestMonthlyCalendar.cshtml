@@ -3,7 +3,7 @@
     Layout = "_TestLayout.cshtml";
     
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard.css");
-    LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
+    //LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
     
     var editable = Request["editable"].AsBool();
     var user = Request["user"] ?? Request["userid"];
@@ -17,8 +17,10 @@
             dynamic monthlyData = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["monthly"] ?? "");
 
             LcCalendar.SaveMonthlyCalendarJsonData(user.AsInt(), monthlyData);
+            
+            LcHelpers.ReturnJsonResult(0, "Saved");
         } else {
-            ModelState.AddFormError("There was not data to save, maybe an error?");
+            LcHelpers.ReturnJsonResult(0, "There was not data to save, maybe an error?");
         }
         
         /* Manual event creation test:
@@ -28,10 +30,29 @@
         ent.CalendarEvents.Add(ev);
         ent.SaveChanges();
         */
-        
-        LcHelpers.ReturnJsonResult(0, "Save not implemented");
     }
+    var dataMode = Request["dataMode"] ?? "monthly-schedule";
 }
+<script type="text/javascript">
+    $(function () {
+        var availabilityCalendar = require('LC/availabilityCalendar');
+        var monthlyList = availabilityCalendar.Monthly.enableAll({ query: { type: '@(dataMode)' } });
+
+        $.each(monthlyList, function (i, v) {
+            var monthly = this;
+
+            // Setuping the WorkHours calendar data save when the form is submitted
+            var form = monthly.$el.closest('form.ajax,fieldset.ajax');
+            var field = form.find('[name=monthly]');
+            if (field.length === 0)
+                field = $('<input type="hidden" name="monthly" />').appendTo(form);
+
+            $('body').on('submit', 'form', function () {
+                field.val(JSON.stringify(monthly.getUpdatedData()));
+            });
+        });
+    });
+</script>
 <div class="DashboardAvailability">
 <h2>Test Monthly calendar page</h2>
 <form action="?user=@(user)&editable=@(editable)" method="post" class="ajax ajax-box">
@@ -42,6 +63,7 @@
         @if (editable)
         {
             <a href="?user=@(user)&editable=false" class="action">Read-only</a>
+            <a href="?user=@(user)&editable=false&dataMode=monthly" class="action">Availability read-only</a>
             <input type="submit" class="action main-action" value="Save" name="save" />
         }
         else

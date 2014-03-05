@@ -556,7 +556,7 @@ public static class LcCalendar
     public static CalendarEvents GetMonthlyScheduleEvent(int userID, DateTime date, loconomicsEntities ent)
     {
         // Events for the date:
-        var evs = ent.CalendarEvents.Where(e => e.UserId == userID && e.EventType == EventTypeMonthlySchedule && e.StartTime.Date == date.Date);
+        var evs = ent.CalendarEvents.Where(e => e.UserId == userID && e.EventType == EventTypeMonthlySchedule && e.StartTime == date.Date);
 
         CalendarEvents ev = null;
         if (evs != null)
@@ -612,7 +612,7 @@ public static class LcCalendar
         {
             foreach (var slot in data.slots)
             {
-                var date = DateTime.Parse(slot.Key);
+                var date = DateTime.Parse(slot.Name);
                 var avail = slot.Value;
                 // We save only slots/appointments modified by the user
                 if (avail.source == "user") {
