@@ -1,6 +1,6 @@
 ﻿@{
     var user = PageData["User"] ?? Request["user"] ?? Request["userid"];
-    var editable = (bool)PageData["Editable"];
+    bool editable = PageData["Editable"] ?? false;
 }
 @functions {
     /// <summary>

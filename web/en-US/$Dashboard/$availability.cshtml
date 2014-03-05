@@ -22,6 +22,11 @@
             @RenderPage("Availability/_$WeeklySchedule.cshtml", new { PageState = ModelState })
         </div>
 
+        <div id="DashboardWeeklySchedule" class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Set your monthly schedule</h2>
+            @RenderPage("Availability/_$MonthlySchedule.cshtml", new { PageState = ModelState })
+        </div>
+
         <div id="DashboardAppointments" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Block off other times you're busy</h2>
             @RenderPage("Availability/_$Appointments.cshtml", new { PageState = ModelState })
