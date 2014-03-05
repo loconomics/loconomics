@@ -6,7 +6,7 @@
     //LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
     
     var editable = Request["editable"].AsBool();
-    var user = Request["user"] ?? Request["userid"];
+    var user = Request["user"] ?? Request["userid"] ?? WebSecurity.CurrentUserId.ToString();
     
     if (IsPost) {
 
@@ -59,17 +59,24 @@
     @Html.ValidationSummary()
     <fieldset>
         <legend>Test options:</legend>
-        <a href="?user=@(user)&editable=@(editable)" class="action">Refresh</a>
-        @if (editable)
+        <a href="?user=@(user)&editable=@(editable)&dataMode=@(dataMode)" class="action">Refresh</a>
+        @if (editable || dataMode == "monthly")
         {
             <a href="?user=@(user)&editable=false" class="action">Read-only</a>
+        }
+        @if (editable || dataMode == "monthly-schedule")
+        {
             <a href="?user=@(user)&editable=false&dataMode=monthly" class="action">Availability read-only</a>
+        }
+        @if (editable)
+        {
             <input type="submit" class="action main-action" value="Save" name="save" />
         }
         else
         {
             <a href="?user=@(user)&editable=true" class="action">Editable</a>
         }
+        <label>Now in: @(editable ? "editable" : dataMode == "monthly-schedule" ? "read-only" : "availability read-only")</label>
     </fieldset>
 
     <h3>Calendar:</h3>
