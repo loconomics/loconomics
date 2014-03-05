@@ -4,8 +4,9 @@
 var $ = require('jquery'),
   dateISO = require('LC/dateISO8601'),
   LcWidget = require('../CX/LcWidget'),
-  extend = require('../CX/extend');
-var utils = require('./utils');
+  extend = require('../CX/extend'),
+  utils = require('./utils'),
+  objectUtils = require('./objectUtils');
 
 /**
   Private utils
@@ -21,6 +22,20 @@ function monthlyCheckAndPrefetch(monthly, currentDatesRange) {
   // not the month of the start date in current date, then just forward 7 days that
   // to ensure we pick the correct month:
   var nextDatesRange = utils.date.nextMonthWeeks(utils.date.addDays(currentDatesRange.start, 7), 1, monthly.showSixWeeks);
+  // As we load full weeks, most times the first week of a month is already loaded because 
+  // the week is shared with the previous month, then just check if the start of the new
+  // range is already in cache and shrink the range to be requested, avoiding conflict on
+  // loading the udpated data (if that week was being edited) and faster request load since
+  // the server needs to do less computation:
+  var d = nextDatesRange.start,
+    strend = dateISO.dateLocal(nextDatesRange.end),
+    strd = dateISO.dateLocal(d, true);
+  if (monthly.data && monthly.data.slots)
+  while (monthly.data.slots[strd] &&
+    strd <= strend) {
+    nextDatesRange.start = d = utils.date.addDays(d, 1);
+    strd = dateISO.dateLocal(d, true);
+  }
 
   if (!utils.monthlyIsDataInCache(monthly, nextDatesRange)) {
     // Prefetching next week in advance
@@ -108,7 +123,7 @@ function checkCurrentMonth($el, startDate, monthly) {
   @datesRange { start, end }
   @slotsContainer jQuery-DOM for dates-cells tbody
 **/
-function updateDatesCells(datesRange, slotsContainer, offMonthDateClass, currentDateClass, slotDateLabel) {
+function updateDatesCells(datesRange, slotsContainer, offMonthDateClass, currentDateClass, slotDateLabel, showSixWeeks) {
   var lastY,
     currentMonth = utils.date.addDays(datesRange.start, 7).getMonth(),
     today = dateISO.dateLocal(new Date());
@@ -124,11 +139,13 @@ function updateDatesCells(datesRange, slotsContainer, offMonthDateClass, current
     this.toggleClass(currentDateClass, dateISO.dateLocal(date) == today);
   });
 
-  // Some months are 5 weeks wide and others 6; our layout has permanent 6 rows/weeks
-  // and we don't look up the 6th week if is not part of the month then that 6th row
-  // must be hidden if there are only 5.
-  // If the last row was the 5 (index 4, zero-based), the 6th is hidden:
-  slotsContainer.children('tr:eq(5)').xtoggle(lastY != 4, { effect: 'height', duration: 0 });
+  if (!showSixWeeks) {
+    // Some months are 5 weeks wide and others 6; our layout has permanent 6 rows/weeks
+    // and we don't look up the 6th week if is not part of the month then that 6th row
+    // must be hidden if there are only 5.
+    // If the last row was the 5 (index 4, zero-based), the 6th is hidden:
+    slotsContainer.children('tr:eq(5)').xtoggle(lastY != 4, { effect: 'height', duration: 0 });
+  }
 }
 
 /**
@@ -173,11 +190,11 @@ function toggleDateAvailability(monthly, cell) {
 
   // Get and update from the underlaying data, 
   // the status for the date, toggling it:
-  var status = monthly.data.slots[strDate];
-  // If there is no status, just return (data not loaded)
-  if (!status) return;
-  status = status == 'unavailable' ? 'available' : 'unavailable';
-  monthly.data.slots[strDate] = status;
+  var slot = monthly.data.slots[strDate];
+  // If there is no slot, just return (data not loaded)
+  if (!slot) return;
+  slot.status = slot.status == 'unavailable' ? 'available' : 'unavailable';
+  slot.source = 'user';
 
   // Update visualization:
   monthly.bindData();
@@ -221,7 +238,7 @@ bindData: function bindDataMonthly(datesRange) {
 
   checkCurrentMonth(this.$el, datesRange.start, this);
 
-  updateDatesCells(this.datesRange, slotsContainer, this.classes.offMonthDate, this.classes.currentDate, this.classes.slotDateLabel);
+  updateDatesCells(this.datesRange, slotsContainer, this.classes.offMonthDate, this.classes.currentDate, this.classes.slotDateLabel, this.showSixWeeks);
 
   // Remove any previous status class from all slots
   for (var s = 0; s < utils.statusTypes.length; s++) {
@@ -233,11 +250,28 @@ bindData: function bindDataMonthly(datesRange) {
   // Set availability of each date slot/cell:
   iterateDatesCells(datesRange, slotsContainer, function (date, x, y, i) {
     var datekey = dateISO.dateLocal(date, true);
-    var dateStatus = that.data.slots[datekey];
+    var slot = that.data.slots[datekey];
+    // Support for simple and detailed status description:
+    var dateStatus = $.isPlainObject(slot) ? slot.status : slot;
+    // Default value from data:
+    dateStatus = dateStatus || that.data.defaultStatus || 'unknow';
 
     if (dateStatus)
       this.addClass(that.classes.slotStatusPrefix + dateStatus);
   });
+},
+getUpdatedData: function getUpdatedData() {
+  var d = {};
+  if (this.editable) {
+    // Copy data, we don't want change the original:
+    extend(d, this.data);
+
+    // Filter slots to get only that updated by de user:
+    d.slots = objectUtils.filterProperties(d.slots, function (k, v) {
+      return v.source == 'user';
+    });
+  }
+  return d;
 }
 },
 // Constructor:
@@ -247,21 +281,20 @@ function Monthly(element, options) {
   // To use this in closures:
   var that = this;
 
-  this.user = this.$el.data('calendar-user');
-  this.query = {
+  // Initializing some data, being care of any value
+  // that comes from merging options into 'this'
+  this.user = this.user || this.$el.data('calendar-user');
+  this.query = extend({
     user: this.user,
-    type: 'monthly'
-  };
+    type: 'monthly-schedule'
+  }, this.query);
 
-  // Start fetching current month
-  var firstDates = utils.date.currentMonthWeeks(null, this.showSixWeeks);
-  this.fetchData(utils.datesToQuery(firstDates)).done(function () {
-    that.bindData(firstDates);
-    // Prefetching next month in advance
-    monthlyCheckAndPrefetch(that, firstDates);
-  });
+  // If is not set by constructor options, get 
+  // 'editable' from data, or left default:
+  if (!(options && typeof (options.editable) != 'undefined') &&
+    typeof (this.$el.data('editable')) != 'undefined')
+    this.editable = !!this.$el.data('editable');
 
-  checkCurrentMonth(this.$el, firstDates.start, this);
 
   // Set handlers for prev-next actions:
   this.$el.on('click', '.' + this.classes.prevAction, function prev() {
@@ -277,11 +310,23 @@ function Monthly(element, options) {
 
   // Editable mode
   if (this.editable) {
+    this.query.editable = true;
     this.$el.on('click', '.' + this.classes.slots + ' td', function clickToggleAvailability() {
       toggleDateAvailability(that, $(this));
     });
     this.$el.addClass(this.classes.editable);
   }
+
+
+  // Start fetching current month
+  var firstDates = utils.date.currentMonthWeeks(null, this.showSixWeeks);
+  this.fetchData(utils.datesToQuery(firstDates)).done(function () {
+    that.bindData(firstDates);
+    // Prefetching next month in advance
+    monthlyCheckAndPrefetch(that, firstDates);
+  });
+
+  checkCurrentMonth(this.$el, firstDates.start, this);
 
 });
 

@@ -90,8 +90,12 @@ $(function () {
   });
 
   /* Availabilty */
-  require('./dashboard/weeklySchedule').on();
-  require('./dashboard/monthlySchedule').on();
-  require('./dashboard/calendarSync').on();
+  function initAvailability() {
+    require('./dashboard/weeklySchedule').on();
+    require('./dashboard/monthlySchedule').on();
+    require('./dashboard/calendarSync').on();
+  }
+  initAvailability();
+  $('.DashboardAvailability').on('ajaxFormReturnedHtml', initAvailability);
   require('./dashboard/appointmentsCrudl').on('.DashboardAvailability');
 });
