@@ -6,7 +6,7 @@ var availabilityCalendar = require('LC/availabilityCalendar');
 exports.on = function () {
 
   var workHoursList = availabilityCalendar.WorkHours.enableAll();
-  
+
   $.each(workHoursList, function (i, v) {
     var workhours = this;
 
