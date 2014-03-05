@@ -30,6 +30,7 @@ function monthlyCheckAndPrefetch(monthly, currentDatesRange) {
   var d = nextDatesRange.start,
     strend = dateISO.dateLocal(nextDatesRange.end),
     strd = dateISO.dateLocal(d, true);
+  if (monthly.data && monthly.data.slots)
   while (monthly.data.slots[strd] &&
     strd <= strend) {
     nextDatesRange.start = d = utils.date.addDays(d, 1);
@@ -122,7 +123,7 @@ function checkCurrentMonth($el, startDate, monthly) {
   @datesRange { start, end }
   @slotsContainer jQuery-DOM for dates-cells tbody
 **/
-function updateDatesCells(datesRange, slotsContainer, offMonthDateClass, currentDateClass, slotDateLabel) {
+function updateDatesCells(datesRange, slotsContainer, offMonthDateClass, currentDateClass, slotDateLabel, showSixWeeks) {
   var lastY,
     currentMonth = utils.date.addDays(datesRange.start, 7).getMonth(),
     today = dateISO.dateLocal(new Date());
@@ -138,11 +139,13 @@ function updateDatesCells(datesRange, slotsContainer, offMonthDateClass, current
     this.toggleClass(currentDateClass, dateISO.dateLocal(date) == today);
   });
 
-  // Some months are 5 weeks wide and others 6; our layout has permanent 6 rows/weeks
-  // and we don't look up the 6th week if is not part of the month then that 6th row
-  // must be hidden if there are only 5.
-  // If the last row was the 5 (index 4, zero-based), the 6th is hidden:
-  slotsContainer.children('tr:eq(5)').xtoggle(lastY != 4, { effect: 'height', duration: 0 });
+  if (!showSixWeeks) {
+    // Some months are 5 weeks wide and others 6; our layout has permanent 6 rows/weeks
+    // and we don't look up the 6th week if is not part of the month then that 6th row
+    // must be hidden if there are only 5.
+    // If the last row was the 5 (index 4, zero-based), the 6th is hidden:
+    slotsContainer.children('tr:eq(5)').xtoggle(lastY != 4, { effect: 'height', duration: 0 });
+  }
 }
 
 /**
@@ -187,11 +190,11 @@ function toggleDateAvailability(monthly, cell) {
 
   // Get and update from the underlaying data, 
   // the status for the date, toggling it:
-  var status = monthly.data.slots[strDate];
-  // If there is no status, just return (data not loaded)
-  if (!status && !status.status) return;
-  status.status = status.status == 'unavailable' ? 'available' : 'unavailable';
-  status.source = 'user';
+  var slot = monthly.data.slots[strDate];
+  // If there is no slot, just return (data not loaded)
+  if (!slot) return;
+  slot.status = slot.status == 'unavailable' ? 'available' : 'unavailable';
+  slot.source = 'user';
 
   // Update visualization:
   monthly.bindData();
@@ -235,7 +238,7 @@ bindData: function bindDataMonthly(datesRange) {
 
   checkCurrentMonth(this.$el, datesRange.start, this);
 
-  updateDatesCells(this.datesRange, slotsContainer, this.classes.offMonthDate, this.classes.currentDate, this.classes.slotDateLabel);
+  updateDatesCells(this.datesRange, slotsContainer, this.classes.offMonthDate, this.classes.currentDate, this.classes.slotDateLabel, this.showSixWeeks);
 
   // Remove any previous status class from all slots
   for (var s = 0; s < utils.statusTypes.length; s++) {
@@ -247,9 +250,11 @@ bindData: function bindDataMonthly(datesRange) {
   // Set availability of each date slot/cell:
   iterateDatesCells(datesRange, slotsContainer, function (date, x, y, i) {
     var datekey = dateISO.dateLocal(date, true);
-    var dateStatus = that.data.slots[datekey];
+    var slot = that.data.slots[datekey];
     // Support for simple and detailed status description:
-    dateStatus = dateStatus.status ? dateStatus.status : dateStatus;
+    var dateStatus = $.isPlainObject(slot) ? slot.status : slot;
+    // Default value from data:
+    dateStatus = dateStatus || that.data.defaultStatus || 'unknow';
 
     if (dateStatus)
       this.addClass(that.classes.slotStatusPrefix + dateStatus);
@@ -276,11 +281,13 @@ function Monthly(element, options) {
   // To use this in closures:
   var that = this;
 
-  this.user = this.$el.data('calendar-user');
-  this.query = {
+  // Initializing some data, being care of any value
+  // that comes from merging options into 'this'
+  this.user = this.user || this.$el.data('calendar-user');
+  this.query = extend({
     user: this.user,
-    type: 'monthly'
-  };
+    type: 'monthly-schedule'
+  }, this.query);
 
   // If is not set by constructor options, get 
   // 'editable' from data, or left default:

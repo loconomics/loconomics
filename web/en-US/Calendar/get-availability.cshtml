@@ -3,7 +3,7 @@
 
     INPUT:
         user
-        start
+        start / date
         end
         type
 *@
@@ -58,26 +58,26 @@
             result["slots"] = slots;
             
         } else if (type == "monthly") {
-            // Input data
-            var startDate = Request["start"].AsDateTime(DateTime.MinValue);
-            var endDate = Request["end"].AsDateTime(DateTime.MinValue);
+            var dates = getMonthlyDatesRequested();
             
-            if (startDate == DateTime.MinValue) {
-                var refDate = (Request["date"]).AsDateTime(DateTime.Today);
-                // This gets the firts week-date for the first month-date for the refDate:
-                startDate = LcHelpers.GetFirstWeekDay(refDate.AddDays(0 - refDate.Day + 1));
-                // Last week-date for the last month-date for the refDate
-                endDate = LcHelpers.GetLastWeekDay(refDate.AddMonths(1).AddDays(-1));
-            }
-            
-            var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
+            var data = LcCalendar.GetUserAvailability(userId, dates.Start, dates.End);
 
             // Create result
+            result["defaultStatus"] = "unavailable";
             if (Request["editable"].AsBool()) {
-                result["slots"] = getEditableMonthlySlots(startDate, endDate, dateFormat, data);
+                result["slots"] = getEditableMonthlySlots(dates.Start, dates.End, dateFormat, data);
             } else {
-                result["slots"] = getReadOnlyMonthlySlots(startDate, endDate, dateFormat, data);
+                result["slots"] = getReadOnlyMonthlySlots(dates.Start, dates.End, dateFormat, data);
             }
+            
+        } else if (type == "monthly-schedule") {
+            var dates = getMonthlyDatesRequested();
+            
+            var data = LcCalendar.GetMonthlyScheduleEvents(userId, dates);
+
+            // Create result
+            result["defaultStatus"] = "available";
+            result["slots"] = getMonthlyScheduleSlots(dates, dateFormat, data);
             
         } else { // "weekly"
             // Input data
@@ -132,6 +132,22 @@
     LcHelpers.ReturnJsonResult(resultCode, result);
 }
 @functions {
+
+    DatesRange getMonthlyDatesRequested() {
+        var startDate = Request["start"].AsDateTime(DateTime.MinValue);
+        var endDate = Request["end"].AsDateTime(DateTime.MinValue);
+            
+        if (startDate == DateTime.MinValue) {
+            var refDate = (Request["date"]).AsDateTime(DateTime.Today);
+            // This gets the firts week-date for the first month-date for the refDate:
+            startDate = LcHelpers.GetFirstWeekDay(refDate.AddDays(0 - refDate.Day + 1));
+            // Last week-date for the last month-date for the refDate
+            endDate = LcHelpers.GetLastWeekDay(refDate.AddMonths(1).AddDays(-1));
+        }
+        
+        return new DatesRange(startDate, endDate);
+    }
+    
     Dictionary<string, string> getReadOnlyMonthlySlots(DateTime startDate, DateTime endDate, string dateFormat, dynamic data) {
         var slots = new Dictionary<string, string>();
         // We prepare the slots with every date in the range, no matter
@@ -209,6 +225,36 @@
         var laststrdate = curDate.ToString(dateFormat);
         slots[laststrdate]["status"] = curStatus;
         slots[laststrdate]["source"] = curStatusSource;
+        
+        return slots;
+    }
+    
+    Dictionary<string, Dictionary<string, string>> getMonthlyScheduleSlots(DatesRange dates, string dateFormat, dynamic data) {
+        var slots = new Dictionary<string, Dictionary<string, string>>();
+        // We prepare the slots with every date in the range, no matter
+        // if some dates ends up without data (empty value list) we need to be
+        // explicit about the returned dates.
+        var fordate = dates.Start;
+        while (fordate <= dates.End) {
+            slots.Add(fordate.ToString(dateFormat), new Dictionary<string, string>());
+            // Next date
+            fordate = fordate.AddDays(1);
+        }
+        
+        foreach(var ev in data) {
+            var strdate = ev.StartTime.ToString(dateFormat);
+            // We denote the source of the given data slot is a single record on database ("db")
+            // On a user change, it will change to "user" to denote that must be saved.
+            slots[strdate]["source"] = "db";
+            if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
+                slots[strdate]["status"] = "available";
+            } else {
+                // On any other status, we set 'unavailable'.
+                // Sure we must only have monthly-schedule events with 'unavailable' status for this
+                // and 'free' for 'available' slots.
+                slots[strdate]["status"] = "unavailable";
+            }
+        }
         
         return slots;
     }

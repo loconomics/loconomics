@@ -5,10 +5,21 @@
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard.css");
     LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
     
+    var editable = Request["editable"].AsBool();
+    var user = Request["user"] ?? Request["userid"];
+    
     if (IsPost) {
-        
-        ModelState.AddFormError("Save not implemented");
-        ModelState.AddFormError(Request["monthly"]);
+
+        if (!Request["monthly"].IsEmpty()) {
+            // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
+            // breaking the code.
+            //workhours = Json.Decode(Request["workhours"]);
+            dynamic monthlyData = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["monthly"] ?? "");
+
+            LcCalendar.SaveMonthlyCalendarJsonData(user.AsInt(), monthlyData);
+        } else {
+            ModelState.AddFormError("There was not data to save, maybe an error?");
+        }
         
         /* Manual event creation test:
         var ent = new CalendarDll.Data.loconomicsEntities();
@@ -20,9 +31,6 @@
         
         LcHelpers.ReturnJsonResult(0, "Save not implemented");
     }
-        
-    var editable = Request["editable"].AsBool();
-    var user = Request["user"] ?? Request["userid"];
 }
 <div class="DashboardAvailability">
 <h2>Test Monthly calendar page</h2>
