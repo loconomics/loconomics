@@ -213,6 +213,9 @@ function WorkHours(element, options) {
 
   setupEditWorkHours.call(this);
 
+  // Show error message
+  this.events.on('hasErrorChanged', utils.handlerCalendarError);
+
 });
 
 /** Static utility: found all components with the Workhours calendar class

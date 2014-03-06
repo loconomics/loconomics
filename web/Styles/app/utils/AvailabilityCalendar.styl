@@ -82,6 +82,17 @@ loadingOverlay() {
         }
     }
     
+    .AvailabilityCalendar-errorMessage {
+        color: $colorRed;
+        display: none;
+    }
+    
+    &.has-dataError {
+        .AvailabilityCalendar-errorMessage {
+            display: inline-block;
+        }
+    }
+    
     .AvailabilityCalendar-legend {
     
         margin: 1.5em 8em;

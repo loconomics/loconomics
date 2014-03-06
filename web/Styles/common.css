@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-03-04
+/*! Loconomics.com 2014-03-06
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -3225,7 +3225,7 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-03-04
+/*! Loconomics.com 2014-03-06
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -3522,17 +3522,30 @@ label.visuallyhidden-with-placeholder{
 }
 
 /* line 84 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+.AvailabilityCalendar .AvailabilityCalendar-errorMessage {
+  color: #e44600;
+  display: none;
+}
+
+/* line 89 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+.AvailabilityCalendar.has-dataError .AvailabilityCalendar-errorMessage {
+  display: inline-block;
+}
+
+/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend {
   margin: 1.5em 8em;
 }
 
-/* line 88 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend ul li {
   display: inline-block;
   margin-right: 5em;
 }
 
-/* line 93 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 104 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend .AvailabilityCalendar-legend-example {
   border: 1px solid #c3c3c3;
   display: inline-block;
@@ -3542,17 +3555,17 @@ label.visuallyhidden-with-placeholder{
   margin-right: 1em;
 }
 
-/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 113 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend .AvailabilityCalendar-legend-available .AvailabilityCalendar-legend-example {
   background: #ddeab8;
 }
 
-/* line 106 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend .AvailabilityCalendar-legend-unavailable .AvailabilityCalendar-legend-example {
   background: White;
 }
 
-/* line 111 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 122 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions {
   position: relative;
   margin: 1em 0;
@@ -3560,20 +3573,20 @@ label.visuallyhidden-with-placeholder{
   min-height: 50px;
 }
 
-/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 128 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions * {
   letter-spacing: 0;
   vertical-align: middle;
 }
 
-/* line 126 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 137 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .AvailabilityCalendar-status {
   margin-left: 1em;
   display: inline-block;
   position: absolute;
 }
 
-/* line 132 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move {
   padding: 1.2em 1.6em;
   -webkit-border-radius: 5px;
@@ -3593,7 +3606,7 @@ label.visuallyhidden-with-placeholder{
   box-sizing: content-box;
 }
 
-/* line 148 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 159 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move:before {
   content: '';
   position: absolute;
@@ -3614,29 +3627,29 @@ label.visuallyhidden-with-placeholder{
   }
 }
 
-/* line 160 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 171 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move:hover {
   background: White;
 }
 
-/* line 164 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 175 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move.Actions-prev {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
 
-/* line 169 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 180 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move.Actions-next {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
 }
 
-/* line 173 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 184 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move.Actions-next:before {
   background-position: -14px 0;
 }
 
-/* line 179 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 190 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-today {
   padding: 1.2em 1.6em;
   -webkit-border-radius: 5px;
@@ -3653,14 +3666,14 @@ label.visuallyhidden-with-placeholder{
   margin-left: 1em;
 }
 
-/* line 193 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 204 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-today:hover {
   background: White;
 }
 
-/* line 202 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 213 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 203 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 214 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table {
@@ -3669,14 +3682,14 @@ label.visuallyhidden-with-placeholder{
 /* Default cells color: unavailable */
 }
 
-/* line 207 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 218 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table th,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table th,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table th {
   font-weight: normal;
 }
 
-/* line 211 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 222 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table th,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table th,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table th,
@@ -3687,7 +3700,7 @@ label.visuallyhidden-with-placeholder{
   width: 14%;
 }
 
-/* line 215 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 226 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table th:first-child,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table th:first-child,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table th:first-child,
@@ -3698,7 +3711,7 @@ label.visuallyhidden-with-placeholder{
   white-space: nowrap;
 }
 
-/* line 222 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table td,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table td,
@@ -3708,14 +3721,14 @@ label.visuallyhidden-with-placeholder{
   background-color: White;
 }
 
-/* line 258 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 269 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table td.is-available,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table td.is-available,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table td.is-available {
   background-color: #ddeab8;
 }
 
-/* line 261 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 272 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table .AvailabilityCalendar-days,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table .AvailabilityCalendar-days,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table .AvailabilityCalendar-days {
@@ -3723,17 +3736,17 @@ label.visuallyhidden-with-placeholder{
   text-transform: uppercase;
 }
 
-/* line 268 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 279 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 269 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 280 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-actions,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-actions {
   margin-left: 74px;
 }
 
-/* line 272 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 283 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 273 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 284 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots th,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots th,
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots td,
@@ -3741,15 +3754,15 @@ label.visuallyhidden-with-placeholder{
   border-right: 1px solid #eee;
 }
 
-/* line 276 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 287 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots td {
   height: 4px;
 }
 
-/* line 279 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 290 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 280 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 291 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots .AvailabilityCalendar-hour th,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots .AvailabilityCalendar-hour th {
   text-align: right;
@@ -3757,51 +3770,51 @@ label.visuallyhidden-with-placeholder{
   min-width: 45px;
 }
 
-/* line 286 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 297 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots .AvailabilityCalendar-hour td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots .AvailabilityCalendar-hour td {
   border-top: 1px solid #eee;
 }
 
-/* line 289 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 300 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots .AvailabilityCalendar-hour.AvailabilityCalendar-hour--noon td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots .AvailabilityCalendar-hour.AvailabilityCalendar-hour--noon td {
   border-top-color: #c3c3c3;
 }
 
-/* line 293 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 304 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots td:last-child,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots td:last-child {
   border-right: 1px solid #c3c3c3;
 }
 
-/* line 296 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 307 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots tr:first-child td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots tr:first-child td {
   border-top: 1px solid #c3c3c3;
 }
 
-/* line 299 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 310 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots tr:last-child td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots tr:last-child td {
   border-bottom: 1px solid #c3c3c3;
 }
 
-/* line 305 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 316 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--workHours {
   padding-top: 2em;
 }
 
-/* line 307 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 318 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots td {
   cursor: pointer;
 }
 
-/* line 312 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 323 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 313 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 324 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 314 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 325 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-actions .AvailabilityCalendar-monthLabel {
   position: absolute;
   right: 0;
@@ -3815,19 +3828,19 @@ label.visuallyhidden-with-placeholder{
   font-size: 1.1em;
 }
 
-/* line 326 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 337 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-days th:first-child {
   display: none;
 }
 
-/* line 329 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 340 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 331 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 342 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots th {
   display: none;
 }
 
-/* line 334 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 345 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td {
   border: 1px solid #c3c3c3;
   height: 3em;
@@ -3835,31 +3848,31 @@ label.visuallyhidden-with-placeholder{
   text-align: left;
 }
 
-/* line 339 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 350 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td .AvailabilityCalendar-slotDateLabel {
   font-size: 1em;
 }
 
-/* line 342 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 353 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td.AvailabilityCalendar-offMonthDate {
   color: #ccc;
 }
 
-/* line 345 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 356 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td.AvailabilityCalendar-currentDate {
   border: 1px solid Black;
 }
 
-/* line 347 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 358 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td.AvailabilityCalendar-currentDate .AvailabilityCalendar-slotDateLabel {
   font-weight: bold;
 }
 
-/* line 353 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 364 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 354 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 365 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 355 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 366 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly.is-editable .AvailabilityCalendar-slots td:hover {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
@@ -3867,7 +3880,7 @@ label.visuallyhidden-with-placeholder{
   cursor: pointer;
 }
 
-/* line 362 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 373 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .SelectionLayer {
   position: absolute;
   background: #006a8d;

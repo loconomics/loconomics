@@ -328,6 +328,9 @@ function Monthly(element, options) {
 
   checkCurrentMonth(this.$el, firstDates.start, this);
 
+  // Show error message
+  this.events.on('hasErrorChanged', utils.handlerCalendarError);
+
 });
 
 /** Static utility: found all components with the Weekly calendar class

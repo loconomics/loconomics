@@ -4,7 +4,8 @@
 **/
 var DataSource = require('./DataSource');
 var Component = require('./Component');
-var extend = require('./extend').extend;
+var extend = require('./extend');
+var mevents = require('events');
 
 /**
 Reusing the original fetchData method but adding classes to our
@@ -19,9 +20,9 @@ var componentFetchData = function bindableComponentFetchData(queryData, mode, is
 
   var req = DataSource.prototype.fetchData.call(this, queryData, mode)
   .done(function () {
-    that.$el.removeClass(cl || '_')
-    // Remove error class too (to fill the case of a previous error)
-    .removeClass(that.classes.hasDataError || '_');
+    that.$el.removeClass(cl || '_');
+    // Unmark any posible previous error since we had a succes load:
+    that.hasError(false);
   });
 
   return req;
@@ -32,11 +33,12 @@ fetchData function to add notification classes to our component model
 **/
 componentFetchData.onerror = function bindableComponentFechDataOnerror(x, s, e) {
   DataSource.prototype.fetchData.onerror.call(this, x, s, e);
-  // Add error class:
+  // Remove fetching classes:
   this.$el
-  .addClass(this.classes.hasDataError)
   .removeClass(this.classes.fetching || '_')
   .removeClass(this.classes.prefetching || '_');
+  // Mark error:
+  this.hasError({ name: 'fetchDataError', request: x, status: s, exception: e });
 };
 
 /**
@@ -82,11 +84,35 @@ var BindableComponent = Component.extend(
         else
           $t.text(bindedValue);
       });
+    },
+    /**
+      It gets the latest error happened in the component (or null/falsy if there is no),
+      or sets the error (passing it in the optional value) returning the previous registered error.
+      Its recommended an object as error instead of a simple value or string (that can get confused
+      with falsy if is empty string or 0, and allow attach more structured information) with an
+      informational property 'name'.
+      To set off the error, pass null value or false.
+    **/
+    hasError: function hasError(errorToSet) {
+      if (typeof (errorToSet) == 'undefined') {
+        return this._error || null;
+      }
+      var prev = this._error || null;
+      this._error = errorToSet;
+      this.events.emit('hasErrorChanged', errorToSet, prev);
+      return prev;
     }
   },
   // Constructor
   function BindableComponent(element, options) {
     Component.call(this, element, options);
+    
+    // It has an event emitter:
+    this.events = new mevents.EventEmitter();
+    // Events object has a property to access this object,
+    // usefull to reference as 'this.component' from inside
+    // event handlers:
+    this.events.component = this;
 
     this.data = this.$el.data('source') || this.data || {};
     if (typeof (this.data) == 'string')
@@ -94,6 +120,16 @@ var BindableComponent = Component.extend(
 
     // On html source url configuration:
     this.url = this.$el.data('source-url') || this.url;
+
+    // Classes on fetchDataError
+    var that = this;
+    this.events.on('hasErrorChanged', function (err, prevErr) {
+      if (err && err.name == 'fetchDataError') {
+        that.$el.addClass(that.classes.hasDataError);
+      } else if (prevErr && prevErr.name == 'fetchDataError') {
+        that.$el.removeClass(that.classes.hasDataError || '_');
+      }
+    });
 
     // TODO: 'change' event handlers on forms with data-bind to update its value at this.data
     // TODO: auto 'bindData' on fetchData ends? configurable, bindDataMode{ inmediate, notify }

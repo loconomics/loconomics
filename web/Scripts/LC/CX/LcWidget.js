@@ -18,7 +18,7 @@ var LcWidget = BindableComponent.extend(
         DataSource.prototype.updateData.call(this, data.Result, mode);
       } else {
         // Error message in the JSON
-        return { name: 'data-format', message: data.ErrorMessage };
+        return { name: 'data-format', message: data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : "unknow" };
       }
     }
   },

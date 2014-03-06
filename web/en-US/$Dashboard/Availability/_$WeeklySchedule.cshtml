@@ -40,7 +40,7 @@
             if (Request["between-time"].IsEmpty()) {
                 ModelState.AddError("between-time", LcRessources.RequiredField("Minimum time between bookings"));
             }
-            
+
             if (allTime) {
                 LcCalendar.SetAllTimeAvailability(userId);
             } else {

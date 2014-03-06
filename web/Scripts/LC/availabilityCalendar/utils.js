@@ -40,7 +40,8 @@ var weeklyClasses = exports.weeklyClasses = {
   legend: 'AvailabilityCalendar-legend',
   legendAvailable: 'AvailabilityCalendar-legend-available',
   legendUnavailable: 'AvailabilityCalendar-legend-unavailable',
-  status: 'AvailabilityCalendar-status'
+  status: 'AvailabilityCalendar-status',
+  errorMessage: 'AvailabilityCalendar-errorMessage'
 };
 
 var weeklyTexts = exports.weeklyTexts = {
@@ -53,6 +54,22 @@ var weeklyTexts = exports.weeklyTexts = {
 };
 
 /*----------- VIEW UTILS ----------------*/
+
+function handlerCalendarError(err) {
+  var msg = '';
+  if (err && err.message)
+    msg = err.message;
+  else if (err && err.exception && err.exception.message)
+    msg = err.exception.message;
+
+  var that = this.component;
+  var msgContainer = that.$el.find('.' + that.classes.errorMessage);
+
+  if (msg) msg = (msgContainer.data('message-prefix') || '') + msg;
+
+  msgContainer.text(msg);
+}
+exports.handlerCalendarError = handlerCalendarError;
 
 function moveBindRangeInDays(weekly, days) {
   var 
@@ -102,6 +119,7 @@ function moveBindRangeInDays(weekly, days) {
 exports.moveBindRangeInDays = moveBindRangeInDays;
 
 function weeklyIsDataInCache(weekly, datesRange) {
+  if (!weekly.data || !weekly.data.slots) return false;
   // Check cache: if there is almost one date in the range
   // without data, we set inCache as false and fetch the data:
   var inCache = true;
