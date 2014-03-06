@@ -21,6 +21,8 @@ url: '/calendar/get-availability/',
 // delimited by the next property, a dates range:
 datesRange: { start: null, end: null },
 bindData: function bindDataWeekly(datesRange) {
+  if (!this.data || !this.data.slots) return;
+
   this.datesRange = datesRange = datesRange || this.datesRange;
   var 
       slotsContainer = this.$el.find('.' + this.classes.slots),
@@ -91,6 +93,9 @@ function Weekly(element, options) {
   this.$el.on('click', '.' + this.classes.nextAction, function next() {
     utils.moveBindRangeInDays(that, 7);
   });
+
+  // Show error message
+  this.events.on('hasErrorChanged', utils.handlerCalendarError);
 
 });
 
