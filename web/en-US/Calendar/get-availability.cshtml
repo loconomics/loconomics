@@ -287,7 +287,7 @@
             date = e.StartTime.Date;
             while (date < e.EndTime) {
                 // Only for existant dates slots
-                var strdate = e.StartTime.ToString(dateFormat);
+                var strdate = date.ToString(dateFormat);
                 if (result["slots"][strdate] != null) {
                     // Check or create if the index of related events exist for the slot
                     if (!result["slots"][strdate].ContainsKey("eventsIds")) {
