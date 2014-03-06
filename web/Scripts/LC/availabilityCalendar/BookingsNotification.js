@@ -54,7 +54,7 @@ module.exports = function BookingsNotification(element) {
       for (var p in events) {
         if (!events.hasOwnProperty(p)) continue;
         var ev = events[p];
-        var item = $('<a target="_blank" />').attr('href', ev.url).text(ev.summary);
+        var item = $('<a target="_blank" />').attr('href', ev.url).text(ev.summary || 'booking');
         eventsHtml.push(item.outerHtml());
 
         hasNotifications = true;
