@@ -6,7 +6,8 @@ var $ = require('jquery'),
   LcWidget = require('../CX/LcWidget'),
   extend = require('../CX/extend'),
   utils = require('./utils'),
-  objectUtils = require('./objectUtils');
+  objectUtils = require('./objectUtils'),
+  BookingsNotification = require('./BookingsNotification');
 
 /**
   Private utils
@@ -195,6 +196,7 @@ function toggleDateAvailability(monthly, cell) {
   if (!slot) return;
   slot.status = slot.status == 'unavailable' ? 'available' : 'unavailable';
   slot.source = 'user';
+  monthly.bookingsNotification.register(slot.status == 'unavailable', monthly.data, strDate);
 
   // Update visualization:
   monthly.bindData();
@@ -216,7 +218,8 @@ classes: extend({}, utils.weeklyClasses, {
   slotDateLabel: 'AvailabilityCalendar-slotDateLabel',
   offMonthDate: 'AvailabilityCalendar-offMonthDate',
   currentDate: 'AvailabilityCalendar-currentDate',
-  editable: 'is-editable'
+  editable: 'is-editable',
+  bookingsNotification: 'AvailabilityCalendar-bookingsNotification'
 }),
 texts: extend({}, utils.weeklyTexts, {
   months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -259,6 +262,9 @@ bindData: function bindDataMonthly(datesRange) {
     if (dateStatus)
       this.addClass(that.classes.slotStatusPrefix + dateStatus);
   });
+
+  // Notifications:
+  this.bookingsNotification.render();
 },
 getUpdatedData: function getUpdatedData() {
   var d = {};
@@ -317,6 +323,10 @@ function Monthly(element, options) {
     this.$el.addClass(this.classes.editable);
   }
 
+  // Creating the bookingsNotification element, both editable and read-only modes.
+  // Read-only mode need hidden the element and thats done on constructor and editable
+  // will render it on bindData
+  this.bookingsNotification = new BookingsNotification(this.$el.find('.' + this.classes.bookingsNotification));
 
   // Start fetching current month
   var firstDates = utils.date.currentMonthWeeks(null, this.showSixWeeks);
@@ -330,7 +340,6 @@ function Monthly(element, options) {
 
   // Show error message
   this.events.on('hasErrorChanged', utils.handlerCalendarError);
-
 });
 
 /** Static utility: found all components with the Weekly calendar class

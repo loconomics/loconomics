@@ -216,6 +216,9 @@ exports.parse = function parse(datestr) {
       parsedDate.setUTCHours(h, mm, s);
     else
       parsedDate.setHours(h, mm, s);
+  } else {
+    // A date without time part must be considered as 00:00:00 instead of current time
+    parsedDate.setHours(0, 0, 0);
   }
 
   return parsedDate;
