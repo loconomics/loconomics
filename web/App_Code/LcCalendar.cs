@@ -652,6 +652,48 @@ public static class LcCalendar
     }
     #endregion
 
+    #region Booking events
+    public static dynamic GetBookingEvents(int userID, DatesRange dates)
+    {
+        /*using (var ent = new loconomicsEntities())
+        {
+            return ent.CalendarEvents
+                //.Include("CalendarAvailabilityType")
+                //.Include("CalendarEventType")
+                //.Include("CalendarReccurrence")
+                //.Include("CalendarReccurrence.CalendarReccurrenceFrequency")
+                .Where(c => c.UserId == userID && c.EventType == 1 &&
+                c.StartTime >= dates.Start && c.StartTime <= dates.End)
+                .ToList();
+        }*/
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(@"
+                SELECT
+                    E.Id,
+                    E.Summary,
+                    E.StartTime,
+                    E.EndTime,
+                    B.BookingID
+                FROM
+                    CalendarEvents As E
+                     INNER JOIN
+                    Booking As B
+                      ON E.Id = B.ConfirmedDateID
+                WHERE
+                    E.UserId = @0
+                     AND
+                    E.StartTime <= @2
+                     AND
+                    E.EndTime >= @1
+                     AND
+                    -- Only confirmed bookings still not performed/complete and not cancelled
+                    B.BookingStatusID = 1
+            ", userID, dates.Start, dates.End);
+        }
+    }
+    #endregion
+
     #region Appointments (custom user events)
     public static List<CalendarEvents> GetUserAppointments(int userID)
     {

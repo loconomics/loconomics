@@ -79,6 +79,12 @@
             result["defaultStatus"] = "available";
             result["slots"] = getMonthlyScheduleSlots(dates, dateFormat, data);
             
+            // TODO: Recurrent events (since recurrent bookings are not used still and its more complex
+            // do that computation -and time consuming- currently either GetBookingEvents nor fillBookingEvents
+            // are being aware of the possibility to have recurrent rules with occurrences happening on our
+            // dates-range)
+            fillBookingEvents(LcCalendar.GetBookingEvents(userId, dates), result, dateFormat, timeFormat);
+            
         } else { // "weekly"
             // Input data
             var defStart = LcHelpers.GetFirstWeekDay(DateTime.Today);
@@ -229,14 +235,14 @@
         return slots;
     }
     
-    Dictionary<string, Dictionary<string, string>> getMonthlyScheduleSlots(DatesRange dates, string dateFormat, dynamic data) {
-        var slots = new Dictionary<string, Dictionary<string, string>>();
+    Dictionary<string, Dictionary<string, dynamic>> getMonthlyScheduleSlots(DatesRange dates, string dateFormat, dynamic data) {
+        var slots = new Dictionary<string, Dictionary<string, dynamic>>();
         // We prepare the slots with every date in the range, no matter
         // if some dates ends up without data (empty value list) we need to be
         // explicit about the returned dates.
         var fordate = dates.Start;
         while (fordate <= dates.End) {
-            slots.Add(fordate.ToString(dateFormat), new Dictionary<string, string>());
+            slots.Add(fordate.ToString(dateFormat), new Dictionary<string, dynamic>());
             // Next date
             fordate = fordate.AddDays(1);
         }
@@ -257,5 +263,44 @@
         }
         
         return slots;
+    }
+    
+    void fillBookingEvents(dynamic bookingEvents, Dictionary<string, dynamic> result, string dateFormat, string timeFormat) {
+        var rEvents = new Dictionary<string, dynamic>();
+        var date = DateTime.MinValue;
+        
+        foreach(var e in bookingEvents) {
+            // Format the required events information in the result,
+            // indexed by its ID
+            rEvents[e.Id.ToString()] = new {
+                summary = e.Summary,
+                start = e.StartTime.ToString(dateFormat) + "T" + e.StartTime.TimeOfDay.ToString(timeFormat),
+                end = e.EndTime.ToString(dateFormat) + "T" + e.EndTime.TimeOfDay.ToString(timeFormat),
+                id = e.Id,
+                url = LcUrl.LangPath + "dashboard/messages/booking/" + e.BookingID.ToString() + "/"
+            };
+            
+            // Check what dates the booking performs and index it per date-slot:
+            // Iterate all days, using the date without time and excluding the EndTime:
+            // this avoid include midnight EndTimes while still adding it for other cases
+            // (since our iteration 'date' has no time portion and EndTime has it)
+            date = e.StartTime.Date;
+            while (date < e.EndTime) {
+                // Only for existant dates slots
+                var strdate = e.StartTime.ToString(dateFormat);
+                if (result["slots"][strdate] != null) {
+                    // Check or create if the index of related events exist for the slot
+                    if (!result["slots"][strdate].ContainsKey("eventsIds")) {
+                        result["slots"][strdate]["eventsIds"] = new List<string>();
+                    }
+                    // Add the event id to the list:
+                    result["slots"][strdate]["eventsIds"].Add(e.Id.ToString());
+                }
+                
+                // Next date
+                date = date.AddDays(1);
+            }
+        }
+        result["events"] = rEvents;
     }
 }
