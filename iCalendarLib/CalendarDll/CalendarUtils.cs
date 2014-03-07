@@ -75,6 +75,9 @@ namespace CalendarDll
 
             const int TIME_SLICE_SIZE = 15; // in Minutes
 
+            // IagoSRL: presaving the last date time slice (23:45:00 for a time_slice of 15) for later computations
+            TimeSpan lastDayTimeSlice = new TimeSpan(24, 0, 0).Subtract(new TimeSpan(0, TIME_SLICE_SIZE, 0));
+
 
             //----------------------------------------------------------------------
             // For purposes of showing all the Time Slices of a day
@@ -270,7 +273,7 @@ namespace CalendarDll
                 //----------------------------------------------------------------------
 
                 stamp =
-                    (stamp == new TimeSpan(24, 0, 0).Subtract(new TimeSpan(0, TIME_SLICE_SIZE, 0))) ?
+                    (stamp == lastDayTimeSlice) ?
                         stamp = new TimeSpan() :                         // Starting anew from 00:00:00 
                         stamp.Add(new TimeSpan(0, TIME_SLICE_SIZE, 0));  // Continue with next Time Slice
 
@@ -1001,9 +1004,23 @@ namespace CalendarDll
                 var listEventsFromDB =
                     db.CalendarEvents.Where(
                         c => c.UserId == user.Id &&
-                        ((c.EndTime < nextDayFromEndEvaluationDay && 
-                        c.StartTime >=startEvaluationDate) || 
-                            c.CalendarReccurrence.Any())).ToList();
+                        (
+                            // IagoSRL: Date Ranges query updated from being
+                            // 'only events that are completely included' (next commented code from CASS):
+                            //(c.EndTime < nextDayFromEndEvaluationDay && 
+                            //c.StartTime >=startEvaluationDate) || 
+                        
+                            // to be 'all events complete or partially inside the range: complete included or with a previous
+                            // start or with a posterior end'.
+                            // This fix a bug found on #463 described on comment https://github.com/dani0198/Loconomics/issues/463#issuecomment-36936782 and nexts.
+                            (
+                                c.StartTime < nextDayFromEndEvaluationDay && 
+                                c.EndTime >= startEvaluationDate
+                            ) || 
+                            // OR, if they are Recurrence, any Date Range
+                            c.CalendarReccurrence.Any()
+                        )
+                    ).ToList();
 
                 var iCalEvents = new List<iEvent>();
 
