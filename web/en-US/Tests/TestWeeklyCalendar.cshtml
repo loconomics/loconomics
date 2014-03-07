@@ -2,10 +2,100 @@
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
     
-    var type = Request["type"];
-    
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard.css");
-    LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
-}
+    //LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
+    
+    // NOTE: Partial code from $Dashboard/Availability/_$WeeklySchedule.cshtml, adpated for testing
 
-@RenderPage(LcUrl.RenderLangPath + "Calendar/$Weekly.cshtml", new { Type = type })
+    var type = Request["type"];    
+    var user = Request["user"] ?? Request["userid"] ?? WebSecurity.CurrentUserId.ToString();
+    var allTime = Request["alltime"].AsBool();
+    
+    if (IsPost) {
+
+        if (!Request["workhours"].IsEmpty()) {
+            
+            dynamic workhours = null;
+            
+            if (!allTime) {
+                // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
+                // breaking the code.
+                //workhours = Json.Decode(Request["workhours"]);
+                workhours = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["workhours"] ?? "");
+
+                if (workhours != null && workhours.status != "available") {
+                    LcHelpers.ReturnJsonResult(-1, "Work hours availability information: status not allowed");
+                }
+            }
+            
+            if (allTime) {
+                LcCalendar.SetAllTimeAvailability(user.AsInt());
+            } else {
+                LcCalendar.SaveWorkHoursJsonData(user.AsInt(), workhours);
+            }
+            
+            LcHelpers.ReturnJsonResult(0, "Saved");
+        } else {
+            LcHelpers.ReturnJsonResult(0, "There was not data to save, maybe an error?");
+        }
+    }
+}
+<script type="text/javascript">
+    $(function () {
+
+        // From Scripts/app/dashboard/weeklySchedule.js, some testing tweaks :-)
+        // 'presubmit' custom event don't fired here, thats was changed by standard 'submit'
+
+        var availabilityCalendar = require('LC/availabilityCalendar');
+
+        var workHoursList = availabilityCalendar.WorkHours.enableAll();
+
+        $.each(workHoursList, function (i, v) {
+            var workhours = this;
+
+            // Setuping the WorkHours calendar data save when the form is submitted
+            var form = workhours.$el.closest('form.ajax, fieldset.ajax');
+            var field = form.find('[name=workhours]');
+            if (field.length === 0)
+                field = $('<input type="hidden" name="workhours" />').appendTo(form);
+            form.on('submit', function () {
+                field.val(JSON.stringify(workhours.data));
+            });
+
+            // Disabling calendar on field alltime
+            form.find('[name=alltime]').on('change', function () {
+                var $t = $(this),
+        cl = workhours.classes.disabled;
+                if (cl)
+                    workhours.$el.toggleClass(cl, $t.prop('checked'));
+            });
+
+        });
+    });
+</script>
+<div class="DashboardAvailability">
+<h2>Test Monthly calendar page</h2>
+    <form action="?user=@(user)&type=@(type)" method="post" class="ajax ajax-box">
+        @Html.ValidationSummary()
+        <div>
+            <label>Data from user: <strong>@user</strong></label>
+            <label>Now in: @(type == "workHours" ? "Work Hours" : "Availability (read-only)")</label>
+        </div>
+        <fieldset>
+            <legend>Test options:</legend>
+            <a href="?user=@(user)&type=@(type)" class="action">Refresh</a>
+            @if (type == "workHours")
+            {
+                <a href="?user=@(user)&type=weekly" class="action">Availability (read-only)</a>
+                <input type="submit" class="action main-action" value="Save" name="save" />
+            }
+            else
+            {
+                <a href="?user=@(user)&type=workHours" class="action">Work Hours (edition)</a>
+            }
+        </fieldset>
+
+        <h3>Calendar:</h3>
+        @RenderPage(LcUrl.RenderLangPath + "Calendar/$Weekly.cshtml", new { User = user, Type = type })
+    </form>
+</div>
