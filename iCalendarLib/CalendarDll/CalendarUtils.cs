@@ -133,7 +133,6 @@ namespace CalendarDll
 
 
             List<DataContainer>        ldates     = new List<DataContainer>();
-            List<ProviderAvailability> ocurrences = new List<ProviderAvailability>();
             DateTime refDate = startDateTime;
             TimeSpan stamp   = new TimeSpan(0, 0, 0);
 
@@ -278,6 +277,9 @@ namespace CalendarDll
 
             }
 
+            /* IagoSRL: one-step, don't waste iteration cycles!
+
+            List<ProviderAvailability> ocurrences = new List<ProviderAvailability>();
 
             //----------------------------------------------------------------------
             // Gets the TimeSlices with Availability 
@@ -294,7 +296,10 @@ namespace CalendarDll
 
             return ocurrences.
                         Select(av => av.result).ToList();
-
+            */
+            return ldates.Select(
+                    dts => new ProviderAvailability(dts).result
+            ).ToList();
         }
 
 
