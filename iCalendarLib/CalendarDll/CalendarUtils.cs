@@ -244,7 +244,6 @@ namespace CalendarDll
                         newTimeSliceStart.AddMilliseconds(-1);
 
                     //----------------------------------------------------------------------
-
                     tempDataContainer.Ocurrences =
                         iCal.GetOccurrences(
                             refDate,
@@ -448,7 +447,8 @@ namespace CalendarDll
             {
                 Summary = eventFromDB.Summary ?? null,
                 Start = new iCalDateTime((DateTime)eventFromDB.StartTime, defaultTZID),
-                Duration = (eventFromDB.EndTime - eventFromDB.StartTime),
+                //Duration = (eventFromDB.EndTime - eventFromDB.StartTime),
+                End = new iCalDateTime((DateTime)eventFromDB.EndTime, defaultTZID),
                 Location = eventFromDB.Location ?? null,
                 AvailabilityID = eventFromDB.CalendarAvailabilityTypeID,
                 EventType = eventFromDB.EventType,
@@ -979,7 +979,7 @@ namespace CalendarDll
         /// <param name="endEvaluationDate"></param>
         /// <returns></returns>
         /// <remarks>2012/12 by CA2S FA</remarks>
-        private IEnumerable<iEvent> GetEventsByUserDateRange(
+        public IEnumerable<iEvent> GetEventsByUserDateRange(
             CalendarUser user, 
             DateTime startEvaluationDate, 
             DateTime endEvaluationDate,

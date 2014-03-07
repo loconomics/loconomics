@@ -74,7 +74,7 @@
     });
 </script>
 <div class="DashboardAvailability">
-<h2>Test Monthly calendar page</h2>
+<h2>Test Weekly calendar page</h2>
     <form action="?user=@(user)&type=@(type)" method="post" class="ajax ajax-box">
         @Html.ValidationSummary()
         <div>
@@ -99,3 +99,15 @@
         @RenderPage(LcUrl.RenderLangPath + "Calendar/$Weekly.cshtml", new { User = user, Type = type })
     </form>
 </div>
+<div>
+@*<h2>TEMP test data output</h2>
+@{
+    var u = new CalendarDll.CalendarUtils();
+    var evs = u.GetEventsByUserDateRange(new CalendarDll.CalendarUser(user.AsInt()), DateTime.Today, DateTime.Today.AddDays(1), null)
+        .Where(e => e.EventType == 2)
+        .Select(e => new { EventType = e.EventType, Summary = e.Summary, Day = e.Start.DayOfWeek.ToString(), Start = e.Start.ToString("HH:mm:ss"), End = e.End.ToString("HH:mm:ss") });
+        
+    var blokcs = LcCalendar.GetUserAvailability(user.AsInt(), DateTime.Today.AddDays(7), DateTime.Today.AddDays(8));
+}
+@ObjectInfo.Print(blokcs)
+</div>*@
