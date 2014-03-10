@@ -626,7 +626,7 @@ VALUES
    ,'il'
    ,'True'
    ,'dashboard/about-you/#DashboardVerifications'
-   ,'True'
+   ,'False'
    ,'False'
    ,'11'
    ,'True'

@@ -48,12 +48,45 @@
             // and response end just after this:
             LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "Account/AccountLockedOut/");
         }
+        
+        // #454: User is auto-logged on registering, allowing it to do the Onboarding,
+        // But next times, it is required to confirm email before logged.
+        // Since we set IsConfirmed as true on database to let 'auto-logging on register', 
+        // we must check for the existance of a confirmation token:
+        var userId = WebSecurity.GetUserId(username);
+        string token = userId == -1 ? null :
+            Database
+            .Open("sqlloco")
+            // coalesce used to avoid the value 'DbNull' to be returned, just 'empty' when there is no token,
+            // is already confirmed
+            .QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userId);
 
+        if (userId > -1 && !String.IsNullOrWhiteSpace(token)) {
+            // Resend confirmation mail
+            var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");
+            
+            var isProvider = Database
+                .Open("sqlloco")
+                .QueryValue("SELECT IsProvider FROM users WHERE UserID=@0", userId);
+
+            if (isProvider) {
+                LcMessaging.SendWelcomeProvider(userId, username, confirmationUrl);
+            } else {
+                LcMessaging.SendWelcomeCustomer(userId, username, confirmationUrl, token);
+            }
+            
+            ModelState.AddFormError("Your account need to be confirmed. An email to confirm your account was sent.");
+        }
         // Attempt to login to the Security object using provided creds
-        if (LcAuth.Login(username, password, rememberMe)) {
+        else if (LcAuth.Login(username, password, rememberMe)) {
            
+            // Check Onboarding status (#455):
+            string onboardingStep = Database.Open("sqlloco").QueryValue("SELECT coalesce(OnboardingStep, '') FROM users WHERE UserID=@0", WebSecurity.GetUserId(username));
+            if (!String.IsNullOrEmpty(onboardingStep)) {
+                redirect = LcUrl.LangPath + "dashboard/" + onboardingStep + "/";
+            }
             // The redirect cannot be done to an url inside the /Account/ segment:
-            if (redirect.Contains("/Account/")) {
+            else if (redirect.Contains("/Account/")) {
                 redirect = LcUrl.LangPath;
             }
             
@@ -70,15 +103,8 @@
             // We return a json with result OK and redirect link (Code=1),
             // and response end just after this:
             LcHelpers.ReturnJsonResult(1, redirect);
-        } else if (WebSecurity.GetUserId(username) > -1 && !WebSecurity.IsConfirmed(username)) {
-            // Resend confirmation mail, like in register
-            var token = Database.Open("sqlloco").QueryValue("SELECT ConfirmationToken FROM webpages_Membership WHERE UserID=@0", WebSecurity.GetUserId(username));
-            var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");      
-            
-            LcMessaging.SendWelcomeCustomer(WebSecurity.GetUserId(username), username, confirmationUrl, token);
-            
-            ModelState.AddFormError("Your account need to be confirmed. An email to confirm your account was sent.");
-        } else {
+        }
+        else {
             ModelState.AddFormError("Incorrect Username or password.");
         }
     }
@@ -106,6 +132,7 @@
                         else
                             log.attr('action', act + "?HASH=" + window.location.hash.substring(1));
                     }
+                    $('#loginBox [autofocus]').focus();
                 });
             </script>
 

@@ -219,7 +219,7 @@ public static class LcCalendar
         var startDateTime = new DateTime(
             2006,
             1,
-            1,
+            1 + (int)workHoursDay.DayOfWeek,
             workHoursDay.StartTime.Hours,
             workHoursDay.StartTime.Minutes,
             workHoursDay.StartTime.Seconds
@@ -228,7 +228,7 @@ public static class LcCalendar
             2006,
             1,
             /* Must be the next day if end time is '00:00:00'; else the same day */
-            (workHoursDay.EndTime == TimeSpan.Zero ? 2 : 1),
+            (workHoursDay.EndTime == TimeSpan.Zero ? 2 : 1) + (int)workHoursDay.DayOfWeek,
             workHoursDay.EndTime.Hours,
             workHoursDay.EndTime.Minutes,
             workHoursDay.EndTime.Seconds

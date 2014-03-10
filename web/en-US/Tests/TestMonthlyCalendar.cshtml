@@ -5,6 +5,8 @@
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard.css");
     //LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
     
+    // NOTE: Partial code from $Dashboard/Availability/_$MonthlySchedule.cshtml, adpated for testing
+    
     var editable = Request["editable"].AsBool();
     var user = Request["user"] ?? Request["userid"] ?? WebSecurity.CurrentUserId.ToString();
     
@@ -35,6 +37,9 @@
 }
 <script type="text/javascript">
     $(function () {
+        // From Scripts/app/dashboard/monthlySchedule.js, some testing tweaks :-)
+        // 'presubmit' custom event don't fired here, thats was changed by standard 'submit'
+
         var availabilityCalendar = require('LC/availabilityCalendar');
         var monthlyList = availabilityCalendar.Monthly.enableAll({ query: { type: '@(dataMode)' } });
 
@@ -57,6 +62,10 @@
 <h2>Test Monthly calendar page</h2>
 <form action="?user=@(user)&editable=@(editable)" method="post" class="ajax ajax-box">
     @Html.ValidationSummary()
+    <div>
+        <label>Data from user: <strong>@user</strong></label>
+        <label>Now in: @(editable ? "editable" : dataMode == "monthly-schedule" ? "read-only" : "availability read-only")</label>
+    </div>
     <fieldset>
         <legend>Test options:</legend>
         <a href="?user=@(user)&editable=@(editable)&dataMode=@(dataMode)" class="action">Refresh</a>
@@ -76,7 +85,6 @@
         {
             <a href="?user=@(user)&editable=true" class="action">Editable</a>
         }
-        <label>Now in: @(editable ? "editable" : dataMode == "monthly-schedule" ? "read-only" : "availability read-only")</label>
     </fieldset>
 
     <h3>Calendar:</h3>

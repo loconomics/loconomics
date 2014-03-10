@@ -90,7 +90,7 @@
             var defStart = LcHelpers.GetFirstWeekDay(DateTime.Today);
             var defEnd = LcHelpers.GetLastWeekDay(DateTime.Today);
             var startDate = Request["start"].AsDateTime(defStart);
-            var endDate = Request["end"].AsDateTime(defEnd);
+            var endDate = Request["end"].AsDateTime(defEnd).AddDays(1).AddSeconds(-1);
             
             var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
 

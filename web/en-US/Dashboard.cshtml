@@ -70,7 +70,13 @@
         {
             var thisPageIndex = LcData.OnboardingSteps.ContainsKey(page) ? LcData.OnboardingSteps[page].Index : 999;
             var currentIndex = LcData.OnboardingSteps[onboardingStep].Index;
+            // If is not the welcome step (0) and is a greater step from current, go the the current one:
             if (currentIndex > 0 && thisPageIndex > currentIndex) {
+                Response.Redirect(LcUrl.LangPath + "dashboard/" + onboardingStep + "/");
+            }
+            // If is welcome step (0) and is a greater than the 1 first, go to the current (welcome)
+            // (we explicitely let the page:1 to let it begin the process)
+            else if (currentIndex == 0 && thisPageIndex > 1) {
                 Response.Redirect(LcUrl.LangPath + "dashboard/" + onboardingStep + "/");
             }
         }

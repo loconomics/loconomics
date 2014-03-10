@@ -13,7 +13,7 @@
     
     var hasEmailVerification = PageData["HasEmailVerification"] ?? LcData.UserInfo.HasEmailVerification(u.UserID);
 }
-@if (verifications != null && verifications.Count > 0)
+@if (verifications != null && verifications.Count > 0 || hasEmailVerification)
 {
     <div class="@(newWay ? "" : "DashboardVerifications-list-icons")">
         <ul>
@@ -27,8 +27,10 @@
                         <p><span class="DashboardVerifications-list-item-status DashboardVerifications-list-item-status--confirmed">Confirmed</span></p>
                     </li>
                 }
-                foreach (var v in verifications)
+                if (verifications != null && verifications.Count > 0)
                 {
+                    foreach (var v in verifications)
+                    {
                     <li class="DashboardVerifications-list-item ItemBox crudl-item" data-crudl-item-id="@v.VerificationID">
                         <h1 class="ItemBox-name">@v.VerificationType</h1>
                     
@@ -41,6 +43,7 @@
                         </div>
                         *@
                     </li>
+                    }
                 }
             }
             else
@@ -51,14 +54,17 @@
                         Email: <span class="DashboardVerifications-list-item-status DashboardVerifications-list-item-status--confirmed">Confirmed</span>
                     </li>
                 }
-                foreach (var v in verifications)
+                if (verifications != null && verifications.Count > 0)
                 {
+                    foreach (var v in verifications)
+                    {
                     <li class="DashboardVerifications-list-item @v.Icon">
                         @v.VerificationType:
                         <span class="DashboardVerifications-list-item-status @(v.VerificationStatusID == 1 ? "DashboardVerifications-list-item-status--confirmed" : "")">
                             @v.VerificationStatusName
                         </span> on @v.LastVerifiedDate
                     </li>
+                    }
                 }
             }
         </ul>
