@@ -52,8 +52,13 @@
         // Attempt to login to the Security object using provided creds
         if (LcAuth.Login(username, password, rememberMe)) {
            
+            // Check Onboarding status (#455):
+            string onboardingStep = Database.Open("sqlloco").QueryValue("SELECT coalesce(OnboardingStep, '') FROM users WHERE UserID=@0", WebSecurity.GetUserId(username));
+            if (!String.IsNullOrEmpty(onboardingStep)) {
+                redirect = LcUrl.LangPath + "dashboard/" + onboardingStep + "/";
+            }
             // The redirect cannot be done to an url inside the /Account/ segment:
-            if (redirect.Contains("/Account/")) {
+            else if (redirect.Contains("/Account/")) {
                 redirect = LcUrl.LangPath;
             }
             
