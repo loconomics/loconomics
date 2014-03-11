@@ -7,6 +7,7 @@
     
     var u = LcData.UserInfo.GetUserRow();
     var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    var PageState = PageData["PageState"] ?? ModelState;
 
     dynamic userLicenses = null;
     var sqlGetUserLicenses = @"
@@ -45,8 +46,17 @@
             L.Active = 1
     ";
 
+    var uncompleteAlert = false;
+
     using (var db = Database.Open("sqlloco")) {
         userLicenses = db.Query(sqlGetUserLicenses, u.UserID, positionID);
+        // Check if user has required professional licenses not filled by
+        // checking the alert.
+        uncompleteAlert = db.QuerySingle("SELECT * FROM useralert WHERE userid = @0 AND positionid = @1 AND alertid = 19 AND active = 1", u.UserID, positionID) != null;
+    }
+    
+    if (uncompleteAlert) {
+        PageState.AddFormError("LJDI: Please input the required licenses.");
     }
 }
 @if (userLicenses != null && userLicenses.Count > 0)

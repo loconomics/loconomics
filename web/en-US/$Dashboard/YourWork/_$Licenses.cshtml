@@ -81,7 +81,7 @@ else
             </div>
 
             <div class="crudl-list" data-source-url="@(LcUrl.LangUrl)$dashboard/YourWork/$LicensesList/?PositionID=@(positionID)">
-                @RenderPage("$LicensesList.cshtml", new { PositionID = positionID })
+                @RenderPage("$LicensesList.cshtml", new { PositionID = positionID, PageState = PageState })
             </div>
         </div>
     </fieldset>
