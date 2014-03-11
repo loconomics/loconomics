@@ -41,6 +41,20 @@ $(function () {
   var paymentAccount = require('./dashboard/paymentAccount');
   paymentAccount.on('.DashboardPayments');
 
+  /* about-you */
+  $('html').on('ajaxFormReturnedHtml', '.DashboardAboutYou form.ajax', initAboutYou);
+  initAboutYou();
+
+  /* Your work init */
+  $('html').on('ajaxFormReturnedHtml', '.DashboardYourWork form.ajax', initYourWorkDom);
+  initYourWorkDom();
+
+  /* Availabilty */
+  initAvailability();
+  $('.DashboardAvailability').on('ajaxFormReturnedHtml', initAvailability);
+});
+
+function initAboutYou() {
   /* Profile photo */
   var changeProfilePhoto = require('./dashboard/changeProfilePhoto');
   changeProfilePhoto.on('.DashboardAboutYou');
@@ -51,21 +65,14 @@ $(function () {
 
   /* About you / verifications */
   require('./dashboard/verificationsActions').on('.DashboardVerifications');
+}
 
-  /* Your work init */
-  $('html').on('ajaxFormReturnedHtml', '.DashboardYourWork form.ajax', initYourWorkDom);
-  initYourWorkDom();
-
-  /* Availabilty */
-  function initAvailability() {
-    require('./dashboard/monthlySchedule').on();
-    require('./dashboard/weeklySchedule').on();
-    require('./dashboard/calendarSync').on();
-  }
-  initAvailability();
-  $('.DashboardAvailability').on('ajaxFormReturnedHtml', initAvailability);
+function initAvailability() {
+  require('./dashboard/monthlySchedule').on();
+  require('./dashboard/weeklySchedule').on();
+  require('./dashboard/calendarSync').on();
   require('./dashboard/appointmentsCrudl').on('.DashboardAvailability');
-});
+}
 
 /**
   Initialize Dom elements and events handlers for Your-work logic.
