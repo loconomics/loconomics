@@ -7,6 +7,7 @@
     
     var u = LcData.UserInfo.GetUserRow();
     var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    var PageState = PageData["PageState"] ?? ModelState;
 
     dynamic locations = null;
 
@@ -28,7 +29,7 @@
     var thereIsData = (locations != null && locations.Count > 0);
     
     if (!thereIsData && IsPost) {
-        ModelState.AddFormError("Please enter at least one location that you travel from or at which you perform services");
+        PageState.AddFormError("LJDI: Please enter at least one location that you travel from or at which you perform services");
     }
 }
 @helper printLocation(dynamic location){

@@ -41,6 +41,20 @@ $(function () {
   var paymentAccount = require('./dashboard/paymentAccount');
   paymentAccount.on('.DashboardPayments');
 
+  /* about-you */
+  $('html').on('ajaxFormReturnedHtml', '.DashboardAboutYou form.ajax', initAboutYou);
+  initAboutYou();
+
+  /* Your work init */
+  $('html').on('ajaxFormReturnedHtml', '.DashboardYourWork form.ajax', initYourWorkDom);
+  initYourWorkDom();
+
+  /* Availabilty */
+  initAvailability();
+  $('.DashboardAvailability').on('ajaxFormReturnedHtml', initAvailability);
+});
+
+function initAboutYou() {
   /* Profile photo */
   var changeProfilePhoto = require('./dashboard/changeProfilePhoto');
   changeProfilePhoto.on('.DashboardAboutYou');
@@ -51,12 +65,27 @@ $(function () {
 
   /* About you / verifications */
   require('./dashboard/verificationsActions').on('.DashboardVerifications');
+}
+
+function initAvailability() {
+  require('./dashboard/monthlySchedule').on();
+  require('./dashboard/weeklySchedule').on();
+  require('./dashboard/calendarSync').on();
+  require('./dashboard/appointmentsCrudl').on('.DashboardAvailability');
+}
+
+/**
+  Initialize Dom elements and events handlers for Your-work logic.
+
+  NOTE: .DashboardYourWork is an ajax-box parent of the form.ajax, every section
+  is inside the form and replaced on html returned from server.
+**/
+function initYourWorkDom() {
+  /* Your work / pricing */
+  require('./dashboard/pricingCrudl').on();
 
   /* Your work / services */
   require('./dashboard/serviceAttributesValidation').setup($('.DashboardYourWork form'));
-
-  /* Your work / pricing */
-  require('./dashboard/pricingCrudl').on('.DashboardYourWork');
 
   /* Your work / locations */
   require('./dashboard/locationsCrudl').on('.DashboardYourWork');
@@ -88,14 +117,4 @@ $(function () {
   $('body').on('ajaxFormReturnedHtml', '.DashboardAddPosition', function () {
     addPosition.init();
   });
-
-  /* Availabilty */
-  function initAvailability() {
-    require('./dashboard/monthlySchedule').on();
-    require('./dashboard/weeklySchedule').on();
-    require('./dashboard/calendarSync').on();
-  }
-  initAvailability();
-  $('.DashboardAvailability').on('ajaxFormReturnedHtml', initAvailability);
-  require('./dashboard/appointmentsCrudl').on('.DashboardAvailability');
-});
+}

@@ -44,7 +44,7 @@
         </div>
 
         <div class="crudl-list" data-source-url="@(LcUrl.LangUrl)$dashboard/YourWork/$LocationsList/?PositionID=@(positionID)">
-            @RenderPage("$LocationsList.cshtml", new { PositionID = positionID })
+            @RenderPage("$LocationsList.cshtml", new { PositionID = positionID, PageState = PageState })
         </div>
     </div>
 </fieldset>
