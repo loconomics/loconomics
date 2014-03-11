@@ -15,6 +15,14 @@
     var idprefix = "position" + positionID.ToString() + "-pricingwizard-packages";
     
     var datacontext = "pricing-" + positionID.ToString();
+    
+    // Required CRUDL: on post, we check if there are almost one pricing (previously created via CRUDL item form)
+    if (IsPost) {
+        var items = LcData.GetPricingPackagesByProviderPosition(WebSecurity.CurrentUserId, positionID, -1, -1);
+        if (items == null || items.Packages == null || items.Packages.Count == 0) {
+            PageState.AddFormError("LJDI: You must specify your pricing.");
+        }
+    }
 }
 
 @if (pricingTypes != null && pricingTypes.Count > 0)

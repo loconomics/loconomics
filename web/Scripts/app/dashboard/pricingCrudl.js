@@ -11,10 +11,9 @@ var updateTooltips = require('LC/tooltips').updateTooltips;
 //LC.initCrudl = crudl.on;
 var initCrudl = LC.initCrudl;
 
-exports.on = function (containerSelector) {
-  var $c = $(containerSelector),
-    pricingSelector = '.DashboardPricing',
-    $pricing = $c.find(pricingSelector).closest('.DashboardSection-page-section'),
+exports.on = function (pricingSelector) {
+  pricingSelector = pricingSelector || '.DashboardPricing';
+  var $pricing = $(pricingSelector).closest('.DashboardSection-page-section'),
     $others = $pricing.siblings().add($pricing.find('.DashboardSection-page-section-introduction'));
 
   var crudl = initCrudl(pricingSelector);
