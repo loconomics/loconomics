@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-03-06
+/*! Loconomics.com 2014-03-12
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -3225,7 +3225,7 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-03-06
+/*! Loconomics.com 2014-03-12
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -3945,12 +3945,23 @@ label.visuallyhidden-with-placeholder{
   position: absolute;
   right: 0px;
   left: 0px;
-  padding-left: 225px;
-  padding-bottom: 12px;
+  background: White;
+/* Saving the margin the container 'header' has to fill all
+        the top area
+    */
+  margin-top: -17px;
   border-bottom: 1px solid #00989a;
 }
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+/* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+.WelcomeHeader .wrap {
+  padding: 17px 0 12px 225px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
 .WelcomeHeader h1 {
   font-family: Hand Of Sean;
   font-size: 2.2em;
@@ -3960,7 +3971,7 @@ label.visuallyhidden-with-placeholder{
   line-height: 78px;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
 .WelcomeHeader span {
   font-size: 1.5em;
   color: #00989a;

@@ -6,12 +6,21 @@
 @import "ColorsPalette"
 
 .WelcomeHeader {
+    
     position: absolute;
     right: 0px;
     left: 0px;
-    padding-left: 225px;
-    padding-bottom: 12px;
+    background: White;
+    /* Saving the margin the container 'header' has to fill all
+        the top area
+    */
+    margin-top: -17px;
     border-bottom: 1px solid $colorTeal;
+    
+    .wrap {
+        padding: 17px 0 12px 225px;
+        box-sizing: border-box;
+    }
     
     h1 {
         font-family: Hand Of Sean;
