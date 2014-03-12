@@ -462,11 +462,8 @@ public static class LcPayment
                 Phone = user.MobilePhone,
                 Address = new AddressRequest
                 {
-                    // Setting the ExtendedAddres and/or country raises
-                    // an Authorization exception, commented and appended
-                    // the second line to StreetAddress:
-                    StreetAddress = address.AddressLine1 + " " + address.AddressLine2,
-                    //ExtendedAddress = address.AddressLine2,
+                    StreetAddress = address.AddressLine1,
+                    ExtendedAddress = address.AddressLine2,
                     PostalCode = address.PostalCode,
                     Locality = address.City,
                     Region = address.StateProvinceCode,

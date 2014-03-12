@@ -38,7 +38,7 @@
         // No alternate phone at Braintree
         AlternatePhone = user.AlternatePhone;
         AddressLine1 = btAccount.IndividualDetails.Address.StreetAddress;
-        AddressLine2 = btAccount.IndividualDetails.Address.ExtendedAddress;
+        AddressLine2 = btAccount.IndividualDetails.Address.ExtendedAddress ?? user.AddressLine2;
         City = btAccount.IndividualDetails.Address.Locality;
         PostalCode = btAccount.IndividualDetails.Address.PostalCode;
         StateCode = btAccount.IndividualDetails.Address.Region;
