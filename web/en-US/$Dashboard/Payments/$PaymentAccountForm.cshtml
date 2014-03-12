@@ -14,6 +14,8 @@
     string FirstName, LastName, MobilePhone, AlternatePhone, AddressLine1, AddressLine2, City, PostalCode, Aba, AccountNumber, Ssn, StateCode;
     DateTime? BirthDate = null;
 
+    MerchantAccount btAccount = LcPayment.GetProviderPaymentAccount(user.UserID);
+
     if (IsPost) {
         FirstName = Request["firstname"];
         LastName = Request["lastname"];
@@ -29,6 +31,26 @@
         Aba = Request["aba"];
         AccountNumber = Request["accountnumber"];
         Ssn = Request["ssn"];
+    } else if (btAccount != null) {
+        FirstName = btAccount.IndividualDetails.FirstName;
+        LastName = btAccount.IndividualDetails.LastName;
+        MobilePhone = btAccount.IndividualDetails.Phone;
+        // No alternate phone at Braintree
+        AlternatePhone = user.AlternatePhone;
+        AddressLine1 = btAccount.IndividualDetails.Address.StreetAddress;
+        AddressLine2 = btAccount.IndividualDetails.Address.ExtendedAddress;
+        City = btAccount.IndividualDetails.Address.Locality;
+        PostalCode = btAccount.IndividualDetails.Address.PostalCode;
+        StateCode = btAccount.IndividualDetails.Address.Region;
+
+        BirthDate = btAccount.IndividualDetails.DateOfBirth.IsDateTime() ? 
+            (DateTime?)btAccount.IndividualDetails.DateOfBirth.AsDateTime() : 
+            null;
+        Aba = btAccount.FundingDetails.RoutingNumber == null ? "" : LcHelpers.GetLastStringChars(btAccount.FundingDetails.RoutingNumber, 4).PadLeft(10, '*');
+        AccountNumber = btAccount.FundingDetails.AccountNumberLast4 == null ? "" : btAccount.FundingDetails.AccountNumberLast4.PadLeft(10, '*');
+        // TODO Braintree must fix the bug with last 4 Ssn digits not available, we cannot to know
+        // if there is or not a value, we just use asterisk ever now:
+        Ssn = "".PadLeft(10, '*');
     } else {
         FirstName = user.FirstName;
         LastName = LcHelpers.JoinNotEmptyStrings(" ", user.LastName, user.SecondLastName);
@@ -93,7 +115,7 @@
                 FirstName,
                 null,
                 LastName,
-                null,
+                "",
                 MobilePhone,
                 AlternatePhone,
                 AddressLine1,
@@ -121,6 +143,7 @@
                 );
             }
             else {
+                
                 var result = LcPayment.CreateProviderPaymentAccount(new LcData.UserInfo {
                     UserID = user.UserID,
                     FirstName = FirstName,
@@ -134,10 +157,11 @@
                     City = City,
                     StateProvinceCode = StateCode
                 }, new LcPayment.BankInfo {
-                    Ssn = Ssn,
                     RoutingNumber = Aba,
                     AccountNumber = AccountNumber
-                }, BirthDate.Value
+                },
+                BirthDate.Value,
+                Ssn
                 );
                
                 if (result == null) {
@@ -158,8 +182,15 @@
             }
         }
     }
-        
-    
+}
+@if (btAccount != null)
+{
+    <div class="warning">
+        LJDI:
+        Some sensitive data is showed masked by asterisks (for example '****123'); you don't need to type it again if you don't need change it.
+        <br />
+        If you need to update that information, just replace it with the new value; or remove the asterisk and numbers to remove that information at all.
+    </div>
 }
 <fieldset class="DashboardSection-page-section is-required">
     <legend class="DashboardSection-page-section-header">Add your contact information</legend>

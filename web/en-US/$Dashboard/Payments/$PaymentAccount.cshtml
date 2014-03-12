@@ -18,13 +18,7 @@
 }
 
 <div class="DashboardPaymentAccount">
-@if (account == null)
-{
-    returns["NeedsForm"] = true;
-    returns["HasRequiredSections"] = true;
-    @RenderPage("$PaymentAccountForm.cshtml", new { PageState = PageState })
-}
-else
+@if (account != null)
 {
     <div class="DashboardSection-page-section">
         <h2 class="DashboardSection-page-section-header">Account Status</h2>
@@ -32,7 +26,7 @@ else
         {
             case "active": //Braintree.MerchantAccountStatus.ACTIVE:
                 <p>You're all set up with Braintree payments</p>
-                <p>If you need to update your personal or bank account information, please contact Braintree at 877.434.2894.</p>
+                @*<p>If you need to update your personal or bank account information, please contact Braintree at 877.434.2894.</p>*@
                 break;
             case "pending": //Braintree.MerchantAccountStatus.PENDING.ToString():
                 <p>Braintree is working on creating your account.</p>
@@ -55,8 +49,12 @@ else
                 }
                 break;
         }
-    </div>
-    
-    @RenderPage("$PaymentFeesInfo.cshtml")
+    </div>    
 }
+@{
+    returns["NeedsForm"] = true;
+    returns["HasRequiredSections"] = true;
+    @RenderPage("$PaymentAccountForm.cshtml", new { PageState = PageState })
+}
+
 </div>
