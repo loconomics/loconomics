@@ -480,7 +480,9 @@ public static class LcPayment
 
         if (btAccount == null || String.IsNullOrWhiteSpace(Ssn) || !Ssn.Contains("*"))
         {
-            request.Individual.Ssn = String.IsNullOrWhiteSpace(Ssn) ? null : Ssn;
+            // Braintree require pass an empty string to remove the value of SSN in case of
+            // user remove it from the form field:
+            request.Individual.Ssn = String.IsNullOrWhiteSpace(Ssn) ? "" : Ssn;
         }
 
         // Set payment/funding information only on creation or explicitely
