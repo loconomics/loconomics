@@ -38,6 +38,11 @@
         // No alternate phone at Braintree
         AlternatePhone = user.AlternatePhone;
         AddressLine1 = btAccount.IndividualDetails.Address.StreetAddress;
+        // Braintree is not storing the ExtendedAddress right now (confirmed by their support
+        // on 2014-03-12, logged at issues #454), we attempt it because we are still sending
+        // the field to Braintree (we hope some day they include it in storage) since raises no error
+        // (it was throwing error until 2014-03-05, but after communicate with them they solved that).
+        // BECAUSE OF THAT, we fallback in our db stored AddressLine2.
         AddressLine2 = btAccount.IndividualDetails.Address.ExtendedAddress ?? user.AddressLine2;
         City = btAccount.IndividualDetails.Address.Locality;
         PostalCode = btAccount.IndividualDetails.Address.PostalCode;
@@ -46,11 +51,9 @@
         BirthDate = btAccount.IndividualDetails.DateOfBirth.IsDateTime() ? 
             (DateTime?)btAccount.IndividualDetails.DateOfBirth.AsDateTime() : 
             null;
-        Aba = btAccount.FundingDetails.RoutingNumber == null ? "" : LcHelpers.GetLastStringChars(btAccount.FundingDetails.RoutingNumber, 4).PadLeft(10, '*');
-        AccountNumber = btAccount.FundingDetails.AccountNumberLast4 == null ? "" : btAccount.FundingDetails.AccountNumberLast4.PadLeft(10, '*');
-        // TODO Braintree must fix the bug with last 4 Ssn digits not available, we cannot to know
-        // if there is or not a value, we just use asterisk ever now:
-        Ssn = "".PadLeft(10, '*');
+        Aba = String.IsNullOrEmpty(btAccount.FundingDetails.RoutingNumber) ? "" : LcHelpers.GetLastStringChars(btAccount.FundingDetails.RoutingNumber, 4).PadLeft(10, '*');
+        AccountNumber = String.IsNullOrEmpty(btAccount.FundingDetails.AccountNumberLast4) ? "" : btAccount.FundingDetails.AccountNumberLast4.PadLeft(10, '*');
+        Ssn = String.IsNullOrEmpty(btAccount.IndividualDetails.SsnLastFour) ? "" : btAccount.IndividualDetails.SsnLastFour.PadLeft(10, '*');
     } else {
         FirstName = user.FirstName;
         LastName = LcHelpers.JoinNotEmptyStrings(" ", user.LastName, user.SecondLastName);

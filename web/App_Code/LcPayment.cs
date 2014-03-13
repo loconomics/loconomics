@@ -463,6 +463,9 @@ public static class LcPayment
                 Address = new AddressRequest
                 {
                     StreetAddress = address.AddressLine1,
+                    // NOTE: We set the ExtendedAddress, but was communicated by Braintree on 2014-03-12
+                    // that field is not being stored (support messages copies at #454).
+                    // On the interface, we rely on our db for the copied version of that address part as fallback.
                     ExtendedAddress = address.AddressLine2,
                     PostalCode = address.PostalCode,
                     Locality = address.City,
