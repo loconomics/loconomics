@@ -75,7 +75,7 @@
                 LcMessaging.SendWelcomeCustomer(userId, username, confirmationUrl, token);
             }
             
-            ModelState.AddFormError("Your account need to be confirmed. An email to confirm your account was sent.");
+            ModelState.AddFormError("Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.");
         }
         // Attempt to login to the Security object using provided creds
         else if (LcAuth.Login(username, password, rememberMe)) {
