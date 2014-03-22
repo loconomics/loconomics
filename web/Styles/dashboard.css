@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-03-12
+/*! Loconomics.com 2014-03-22
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1093,7 +1093,7 @@ form ul li {
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 
-/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1238,18 +1238,26 @@ form ul li {
   vertical-align: middle;
 }
 
+/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+
 /* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+.DashboardPayments .DashboardPaymentAccount .DashboardPaymentAccount-bank label {
+  font-weight: bold;
+  display: block;
+}
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 .DashboardPayments .DashboardPaymentFees {
   display: table-row;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 .DashboardPayments .DashboardPaymentFees img {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 .DashboardPayments .DashboardPaymentFees p {
   padding: 0 1.5em;
   display: table-cell;

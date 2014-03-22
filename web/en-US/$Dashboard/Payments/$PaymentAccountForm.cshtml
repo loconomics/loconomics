@@ -186,7 +186,7 @@
         }
     }
 }
-<fieldset class="DashboardSection-page-section is-required">
+<fieldset class="DashboardSection-page-section is-required DashboardPaymentAccount-contact">
     <legend class="DashboardSection-page-section-header">@(btAccount == null ? "Add" : "Edit") your contact information</legend>
     <ul>
         <li><input placeholder="First name" type="text" name="firstname" value="@FirstName" @Validation.GetHtml("firstname")/>
@@ -216,7 +216,7 @@
     </ul>
 </fieldset>
 
-<fieldset class="DashboardSection-page-section is-required">
+<fieldset class="DashboardSection-page-section is-required DashboardPaymentAccount-bank">
     <legend class="DashboardSection-page-section-header">@(btAccount == null ? "Add" : "Edit") your bank account information</legend>
     <p class="DashboardSection-page-section-introduction">
         If you choose not to enter your bank information,
@@ -224,8 +224,20 @@
         You will then have to set up your Venmo account to release payments. We do not recommend this option as it requires an extra step.
     </p>
     <ul>
-        <li><input placeholder="ABA routing number" type="text" name="aba" value="@Aba" @Validation.GetHtml("aba") /></li>
-        <li><input placeholder="Account number" type="text" name="accountnumber" value="@AccountNumber" @Validation.GetHtml("accountnumber") /></li>
+        <li>
+            @if (btAccount != null)
+            {
+                <label for="payments-aba">ABA routing number</label>
+            }
+            <input id="payments-aba" placeholder="ABA routing number" type="text" name="aba" value="@Aba" @Validation.GetHtml("aba") />
+        </li>
+        <li>
+            @if (btAccount != null)
+            {
+                <label for="payments-accountnumber">Account number</label>
+            }
+            <input id="payments-accountnumber" placeholder="Account number" type="text" name="accountnumber" value="@AccountNumber" @Validation.GetHtml("accountnumber") />
+        </li>
     </ul>
 </fieldset>
 
