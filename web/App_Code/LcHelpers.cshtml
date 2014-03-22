@@ -11,8 +11,14 @@
 
 @functions{
     /*=========================
-     * Request/File Sizes (bytes)
+     * Request/File Sizes
      */
+    
+    /// <summary>
+    /// Retrieve from asp.net configuration the maximum allowed request size in KB,
+    /// or 0 otherwise (impossible to get size limit)
+    /// </summary>
+    /// <returns></returns>
     public static int GetMaxRequestSize() {
         int maxRequestLength = 0;
         System.Web.Configuration.HttpRuntimeSection section =
