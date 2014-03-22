@@ -7,7 +7,7 @@
     var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     // Updated assets version, to avoid problems with cache of css & js assets
-    LcAssets.AssetsVersion = "20140311";
+    LcAssets.AssetsVersion = "20140322";
     
     // Sniff IE browsers or based on its same engine (Trident).
     var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident") : false;
@@ -100,16 +100,21 @@
         }
         @RenderBody()
         <header id="site-header">
-		    <div class="wrap">
-			    <a id="logo" class="replace" href="@Href(LcUrl.LangPath)">Loconomics, at your service.</a>
-                @if (showWelcomeHeader) {
-                    
-                    <div class="WelcomeHeader">
+
+            @if (showWelcomeHeader)
+            {
+                <div class="WelcomeHeader">
+                    <div class="wrap">
                         <h1>Welcome to Loconomics.</h1>
                         <span>We're glad you're here.</span>
                     </div>
-                    
-                } else {
+                </div>
+            }
+
+		    <div class="wrap">
+			    <a id="logo" class="replace" href="@Href(LcUrl.LangPath)">Loconomics, at your service.</a>
+                @if (!showWelcomeHeader) {
+
                     if (!WebSecurity.IsAuthenticated)
                     {
                         <ul class="anonymous-tools">

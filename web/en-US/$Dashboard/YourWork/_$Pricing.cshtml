@@ -20,7 +20,7 @@
     if (IsPost) {
         var items = LcData.GetPricingPackagesByProviderPosition(WebSecurity.CurrentUserId, positionID, -1, -1);
         if (items == null || items.Packages == null || items.Packages.Count == 0) {
-            PageState.AddFormError("LJDI: You must specify your pricing.");
+            PageState.AddFormError("You must specify your pricing.");
         }
     }
 }

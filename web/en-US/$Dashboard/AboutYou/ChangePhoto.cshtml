@@ -74,7 +74,12 @@
         string fileName = (string)Request["qqfile"];
         
         try{
-            SaveAvatar(Request.InputStream, virtualPath);
+            if (Request.InputStream.Length > 0) {
+                SaveAvatar(Request.InputStream, virtualPath);
+            } else {
+                // Emulate standard error, next its replaced by better message
+                ModelState.AddFormError("Maximum request length exceeded");
+            }
         } catch(Exception ex) {
             ModelState.AddFormError(ex.Message);
         }
@@ -95,7 +100,12 @@
             System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
             
             try{
-                SaveAvatar(fileuploaded.InputStream, virtualPath);
+                if (Request.InputStream.Length > 0) {
+                    SaveAvatar(fileuploaded.InputStream, virtualPath);
+                } else {
+                    // Emulate standard error, next its replaced by better message
+                    ModelState.AddFormError("Maximum request length exceeded");
+                }
             } catch(Exception ex) {
                 ModelState.AddFormError(ex.Message);
             }
@@ -130,11 +140,28 @@
             }
         } else {
             if (ajaxEnabled) {
+                var errMsg = String.Join("; ", ModelState.Values.First().Errors);
+                
+                // We don't want the ugly default asp.net message for file-size-exceeded
+                // As of #454 (https://github.com/dani0198/Loconomics/issues/454#issuecomment-37782181)
+                if (errMsg.Contains("Maximum request length exceeded")) {
+                    
+                    var max = LcHelpers.GetMaxRequestSize();
+                    var printMax = "";
+                    if (max > 0) {
+                        printMax = LcHelpers.PrettyFileSize(max * 1024);
+                        
+                        errMsg = "The file is too large, maximum file size is " + printMax;
+                    } else {
+                        errMsg = "The file is too large";
+                    }
+                }
+
                 // NOTE: IE problems with contentype=json, use JsonHelper directly:
                 //LcHelpers.ReturnJson(
                 Json.Write(
                     new Dictionary<string, object>(){
-                        { "error", LcRessources.GetText("an-error", String.Join("; ", ModelState.Values.First().Errors)) }
+                        { "error", LcRessources.GetText("an-error", errMsg) }
                     },
                     Response.Output);
                 Response.End();
@@ -175,6 +202,9 @@
         <script type="text/javascript">
             @if (ajaxEnabled)
             {
+                int sizeLimit = LcHelpers.GetMaxRequestSize() * 1024;
+                // DEBUG: forcing no limit to debug server response on 'maximum request size exceded' error
+                //sizeLimit = 0;
             <text>
             $(document).ready(function () {
                 var uploader = new qq.FileUploader({
@@ -184,7 +214,15 @@
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
                         window.parent.reloadUserPhoto();
-                    }
+                    },
+                    messages: {
+                        typeError: "{file} has invalid extension. Only {extensions} are allowed.",
+                        sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
+                        minSizeError: "{file} is too small, minimum file size is {minSizeLimit}.",
+                        emptyError: "{file} is empty, please select files again without it.",
+                        onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
+                    },
+                    sizeLimit: @(sizeLimit > 0 ? sizeLimit.ToString() : "undefined")
                 });
             });
             </text>

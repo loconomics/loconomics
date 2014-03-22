@@ -1323,10 +1323,10 @@ public static partial class LcData
                 IF EXISTS (SELECT * FROM ProviderPaymentAccount WHERE ProviderUserID = @0)
                     UPDATE ProviderPaymentAccount SET
                         MerchantAccountID = @1
-                        , Status = @2
-                        , Message = @3
-                        , bt_signature = @4
-                        , bt_payload = @5
+                        , Status = coalesce(@2, Status)
+                        , Message = coalesce(@3, Message)
+                        , bt_signature = coalesce(@4, bt_signature)
+                        , bt_payload = coalesce(@5, bt_payload)
                         , UpdatedDate = getdate()
                         , ModifiedBy = 'braintree'
                     WHERE ProviderUserID = @0

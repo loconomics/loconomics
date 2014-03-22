@@ -369,7 +369,7 @@ public class LcMessaging
 
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
 
-            SendMail(provider.Email, LcData.Booking.GetBookingRequestTitleFor(2, customer, LcData.UserInfo.UserType.Provider), 
+            SendMail(provider.Email, "[Action Required] " + LcData.Booking.GetBookingRequestTitleFor(2, customer, LcData.UserInfo.UserType.Provider), 
                 ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
@@ -708,7 +708,7 @@ public class LcMessaging
     #region Type:Welcome
     public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
-        SendMail(providerEmail, "Welcome to Loconomics-Please Verify Your Account",
+        SendMail(providerEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
             ApplyTemplate(LcUrl.LangPath + "ProviderSignUp/EmailWelcomeProvider/",
             new Dictionary<string,object> {
                 { "UserID", providerID },
@@ -718,7 +718,7 @@ public class LcMessaging
     }
     public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
     {
-        SendMail(userEmail, "Welcome to Loconomics-Please Verify Your Account",
+        SendMail(userEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeCustomer/",
             new Dictionary<string, object> {
                 { "UserID", userID },
@@ -729,7 +729,7 @@ public class LcMessaging
     }
     public static void SendResetPassword(int userID, string userEmail, string resetURL, string resetToken)
     {
-        SendMail(userEmail, "Loconomics Password Recovery",
+        SendMail(userEmail, "[Action Required] Loconomics Password Recovery",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailResetPassword/",
             new Dictionary<string, object> {
                 { "UserID", userID },

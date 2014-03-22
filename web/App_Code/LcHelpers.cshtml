@@ -11,6 +11,53 @@
 
 @functions{
     /*=========================
+     * Request/File Sizes
+     */
+    
+    /// <summary>
+    /// Retrieve from asp.net configuration the maximum allowed request size in KB,
+    /// or 0 otherwise (impossible to get size limit)
+    /// </summary>
+    /// <returns></returns>
+    public static int GetMaxRequestSize() {
+        int maxRequestLength = 0;
+        System.Web.Configuration.HttpRuntimeSection section =
+        System.Configuration.ConfigurationManager.GetSection("system.web/httpRuntime") as System.Web.Configuration.HttpRuntimeSection;
+        if (section != null)
+            maxRequestLength = section.MaxRequestLength;
+
+        return maxRequestLength;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="size">Size in bytes</param>
+    /// <returns></returns>
+    public static string PrettyFileSize(long size) {
+        long result = size;
+        string unit = "bytes";
+
+        if (size >= 1073741824)
+        {
+            result = size / 1073741824;
+            unit = "GB";
+        }
+        else if (size >= 1048576)
+        {
+            result = size / 1048576;
+            unit = "MB";
+        }
+        else
+        {
+            result = size / 1024;
+            unit = "KB";                        
+        }
+
+        return result.ToString("0.00") + " " + unit;
+    }
+
+    /*=========================
      * Debugging
      */
     public static LcLogger _debugLogger;
