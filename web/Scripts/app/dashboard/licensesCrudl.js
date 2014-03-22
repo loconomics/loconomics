@@ -12,7 +12,9 @@ exports.on = function (containerSelector) {
   var $c = $(containerSelector),
     licensesSelector = '.DashboardLicenses',
     $licenses = $c.find(licensesSelector).closest('.DashboardSection-page-section'),
-    $others = $licenses.siblings().add($licenses.find('.DashboardSection-page-section-introduction'));
+    $others = $licenses.siblings()
+      .add($licenses.find('.DashboardSection-page-section-introduction'))
+      .add($licenses.closest('.DashboardYourWork').siblings());
 
   var crudl = initCrudl(licensesSelector);
 

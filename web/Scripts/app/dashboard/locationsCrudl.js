@@ -14,7 +14,9 @@ exports.on = function (containerSelector) {
   var $c = $(containerSelector),
     locationsSelector = '.DashboardLocations',
     $locations = $c.find(locationsSelector).closest('.DashboardSection-page-section'),
-    $others = $locations.siblings().add($locations.find('.DashboardSection-page-section-introduction'));
+    $others = $locations.siblings()
+      .add($locations.find('.DashboardSection-page-section-introduction'))
+      .add($locations.closest('.DashboardYourWork').siblings());
 
   var crudl = initCrudl(locationsSelector);
 

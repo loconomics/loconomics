@@ -14,7 +14,9 @@ var initCrudl = LC.initCrudl;
 exports.on = function (pricingSelector) {
   pricingSelector = pricingSelector || '.DashboardPricing';
   var $pricing = $(pricingSelector).closest('.DashboardSection-page-section'),
-    $others = $pricing.siblings().add($pricing.find('.DashboardSection-page-section-introduction'));
+    $others = $pricing.siblings()
+      .add($pricing.find('.DashboardSection-page-section-introduction'))
+      .add($pricing.closest('.DashboardYourWork').siblings());
 
   var crudl = initCrudl(pricingSelector);
 
