@@ -51,7 +51,7 @@
         BirthDate = btAccount.IndividualDetails.DateOfBirth.IsDateTime() ? 
             (DateTime?)btAccount.IndividualDetails.DateOfBirth.AsDateTime() : 
             null;
-        Aba = String.IsNullOrEmpty(btAccount.FundingDetails.RoutingNumber) ? "" : LcHelpers.GetLastStringChars(btAccount.FundingDetails.RoutingNumber, 4).PadLeft(10, '*');
+        Aba = btAccount.FundingDetails.RoutingNumber;
         AccountNumber = String.IsNullOrEmpty(btAccount.FundingDetails.AccountNumberLast4) ? "" : btAccount.FundingDetails.AccountNumberLast4.PadLeft(10, '*');
         Ssn = String.IsNullOrEmpty(btAccount.IndividualDetails.SsnLastFour) ? "" : btAccount.IndividualDetails.SsnLastFour.PadLeft(10, '*');
     } else {
@@ -97,7 +97,7 @@
             PageState.AddError("birhtdate", LcRessources.RequiredField("Date of Birth"));
         }
         
-        if (!Request["agree"].AsBool()) {
+        if (btAccount == null && !Request["agree"].AsBool()) {
             PageState.AddError("agree", "You must agree the terms of service");
         }
         
@@ -186,17 +186,8 @@
         }
     }
 }
-@if (btAccount != null)
-{
-    <div class="warning">
-        LJDI:
-        Some sensitive data is showed masked by asterisks (for example '****123'); you don't need to type it again if you don't need change it.
-        <br />
-        If you need to update that information, just replace it with the new value; or remove the asterisk and numbers to remove that information at all.
-    </div>
-}
 <fieldset class="DashboardSection-page-section is-required">
-    <legend class="DashboardSection-page-section-header">Add your contact information</legend>
+    <legend class="DashboardSection-page-section-header">@(btAccount == null ? "Add" : "Edit") your contact information</legend>
     <ul>
         <li><input placeholder="First name" type="text" name="firstname" value="@FirstName" @Validation.GetHtml("firstname")/>
         </li>
@@ -226,7 +217,7 @@
 </fieldset>
 
 <fieldset class="DashboardSection-page-section is-required">
-    <legend class="DashboardSection-page-section-header">Add your bank account information</legend>
+    <legend class="DashboardSection-page-section-header">@(btAccount == null ? "Add" : "Edit") your bank account information</legend>
     <p class="DashboardSection-page-section-introduction">
         If you choose not to enter your bank information,
         a <a href="https://venmo.com" target="_blank">Venmo</a> account will be created and linked to your email.
@@ -240,6 +231,8 @@
 
 @RenderPage("$PaymentFeesInfo.cshtml")
 
+@if (btAccount == null)
+{
 <fieldset class="DashboardSection-page-section is-required DashboardPaymentAccount-tos">
     <legend class="DashboardSection-page-section-header">Agree to the terms of service</legend>
     <p class="DashboardSection-page-section-introduction">
@@ -253,3 +246,4 @@
     </p>
     <label><input type="checkbox" name="agree" value="true" @Validation.GetHtml("agree") /> I agree to the above terms of service</label>
 </fieldset>
+}
