@@ -89,13 +89,20 @@
         } else {
             try{
                 uploadedFileURI = LcUrl.AppPath + filePathInApp + fileName;
-                SavePhoto(Request.InputStream, virtualPath, fileName);
+                if (Request.InputStream.Length > 0) {
+                    SavePhoto(Request.InputStream, virtualPath, fileName);
+                } else {
+                    // Emulate standard error, next its replaced by better message
+                    ModelState.AddFormError("Maximum request length exceeded");
+                }
             } catch(Exception ex) {
                 ModelState.AddFormError(ex.Message);
             }
         
-            // File saved, register it on the database:
-            photoID = RegisterUserPhoto(fileName, userId, positionId);
+            if (ModelState.IsValid) {
+                // File saved, register it on the database:
+                photoID = RegisterUserPhoto(fileName, userId, positionId);
+            }
   
             processed = true;
         }
@@ -106,19 +113,26 @@
         if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName)) {
             ModelState.AddFormError("Please, select an image");
         }
-            
+
         if (ModelState.IsValid) {
             string fileName = GetValidFileName(fileuploaded.FileName);
             
             try{
                 uploadedFileURI = LcUrl.AppPath + filePathInApp + fileName;
-                SavePhoto(fileuploaded.InputStream, virtualPath, fileName);
+                if (Request.InputStream.Length > 0) {
+                    SavePhoto(fileuploaded.InputStream, virtualPath, fileName);
+                } else {
+                    // Emulate standard error, next its replaced by better message
+                    ModelState.AddFormError("Maximum request length exceeded");
+                }
             } catch(Exception ex) {
                 ModelState.AddFormError(ex.Message);
             }
-                
-            // File saved, register it on the database:
-            photoID = RegisterUserPhoto(fileName, userId, positionId);
+
+            if (ModelState.IsValid) {
+                // File saved, register it on the database:
+                photoID = RegisterUserPhoto(fileName, userId, positionId);
+            }
         }
             
         processed = true;
@@ -233,6 +247,8 @@
             @if (ajaxEnabled)
             {
                 int sizeLimit = LcHelpers.GetMaxRequestSize() * 1024;
+                // DEBUG: forcing no limit to debug server response on 'maximum request size exceded' error
+                //sizeLimit = 0;
             <text>
             jQuery(document).ready(function () {
                 var uploader = new qq.FileUploader({
