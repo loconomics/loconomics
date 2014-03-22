@@ -83,10 +83,10 @@
                     City = City,
                     StateProvinceCode = StateCode
                 }, new LcPayment.BankInfo {
-                    Ssn = Ssn,
+                    //Ssn = Ssn,
                     RoutingNumber = Aba,
                     AccountNumber = AccountNumber
-                }, BirthDate.Value
+                }, BirthDate.Value, Ssn
                 );                    
                 
                 if (result.IsSuccess()) {

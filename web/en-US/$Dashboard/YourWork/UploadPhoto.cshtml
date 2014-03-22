@@ -151,11 +151,28 @@
             }
         } else {
             if (ajaxEnabled) {
+                var errMsg = String.Join("; ", ModelState.Values.First().Errors);
+                
+                // We don't want the ugly default asp.net message for file-size-exceeded
+                // As of #454 (https://github.com/dani0198/Loconomics/issues/454#issuecomment-37782181)
+                if (errMsg.Contains("Maximum request length exceeded")) {
+                    
+                    var max = LcHelpers.GetMaxRequestSize();
+                    var printMax = "";
+                    if (max > 0) {
+                        printMax = LcHelpers.PrettyFileSize(max * 1024);
+                        
+                        errMsg = "The file is too large, maximum file size is " + printMax;
+                    } else {
+                        errMsg = "The file is too large";
+                    }
+                }
+                    
                 // NOTE: IE problems with contentype=json, use JsonHelper directly:
                 //LcHelpers.ReturnJson(
                 Json.Write(
                     new Dictionary<string, object>(){
-                        { "error", LcRessources.GetText("an-error", String.Join("; ", ModelState.Values.First().Errors)) }
+                        { "error", LcRessources.GetText("an-error", errMsg) }
                     },
                     Response.Output);
                 Response.End();
@@ -163,6 +180,7 @@
         }
     }
 }
+
 <html>
     <head>
         @*
@@ -224,6 +242,13 @@
                     onComplete: function (id, fileName, responseJSON) {
                         if (responseJSON.success)
                         reloadPhoto(responseJSON.fileURI, responseJSON.photoID);
+                    },
+                    messages: {
+                        typeError: "{file} has invalid extension. Only {extensions} are allowed.",
+                        sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
+                        minSizeError: "{file} is too small, minimum file size is {minSizeLimit}.",
+                        emptyError: "{file} is empty, please select files again without it.",
+                        onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
                     }
                 });
             });
