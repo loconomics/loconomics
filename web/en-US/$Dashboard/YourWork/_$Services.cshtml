@@ -372,7 +372,7 @@
 
     <fieldset class="DashboardServices-positionIntro">
         <legend>Position introduction</legend>
-        <textarea rows="4" name="position-intro" @Validation.GetHtml("position-intro") placeholder="What makes your @pos.PositionSingular services special? Avoid listing things you’ve selected above.">@(Request["position-intro"] ?? pos.PositionIntro)</textarea>
+        <textarea rows="4" name="position-intro" @Validation.GetHtml("position-intro") placeholder="What makes your @pos.PositionSingular services special? What sets you apart from other @pos.PositionPlural? Avoid listing things you’ve selected above.">@(Request["position-intro"] ?? pos.PositionIntro)</textarea>
     </fieldset>
 
     <fieldset class="DashboardServices-requestAttributes">
