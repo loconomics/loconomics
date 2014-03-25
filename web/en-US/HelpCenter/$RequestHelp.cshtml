@@ -11,7 +11,7 @@
         }
         
         if (ModelState.IsValid) {
-            LcMessaging.SendMail("support@loconomics.com", "User Request Help",
+            LcMessaging.SendMail("support@loconomics.com", "[Action Required] User Request Help",
                 Request["question"], u.Email);
             LcHelpers.ReturnJsonResult(0, "Your message was sent and will be answered as soon as possible.");
         }

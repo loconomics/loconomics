@@ -176,7 +176,7 @@
                     );
                     // Send email to loconomics
                     LcMessaging.SendMail("verifications@loconomics.com",
-                        "License verification request",
+                        "[Action Required] License verification request",
                         LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailLicenseVerificationRequest",
                             new Dictionary<string, object> { 
                                 { "ProviderUserID", u.UserID },

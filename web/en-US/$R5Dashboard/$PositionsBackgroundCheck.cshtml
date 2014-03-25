@@ -43,7 +43,7 @@
             
             // Send email to loconomics
             LcMessaging.SendMail("verifications@loconomics.com",
-                "Background check request",
+                "[Action Required] Background check request",
                 LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailBackgroundCheckRequest/",
                     new Dictionary<string, object> { 
                         { "ProviderUserID", u.UserID },

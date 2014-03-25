@@ -178,7 +178,7 @@
                 // Check request-more-attributes and send email to loconomics if there is something
                 if (!Request.Form["request-more-attributes"].IsEmpty()) {
                         LcMessaging.SendMail("providerhelp@loconomics.com",
-                        "Loconomics.com: Provider request more service attributes",
+                        "[Action Required] Provider request more service attributes",
                         LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailRequestMoreServiceAttributes/",
                             new Dictionary<string, object> { 
                                 { "ProviderUserID", pos.UserID },
