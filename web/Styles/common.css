@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-03-22
+/*! Loconomics.com 2014-03-28
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -3078,18 +3078,24 @@ form.lightform textarea {
 
 /** Form icons / data classification **/
 form input.personal-data,
+form .has-personal-data input,
 form input.secure-data,
-form input.search-data {
+form .has-secure-data input,
+form input.search-data,
+form .has-search-data input {
     background-position: 99% center;
     background-repeat: no-repeat;
 }
-input.personal-data {
+input.personal-data,
+.has-personal-data input {
     background-image: url('../img/theme/icon-form-personal.png');
 }
-input.secure-data {
+input.secure-data,
+.has-secure-data input {
     background-image: url('../img/theme/icon-form-secure.png');
 }
-input.search-data {
+input.search-data,
+.has-search-data input {
     background-image: url('../img/theme/icon-form-search.png');
 }
 
@@ -3225,12 +3231,12 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-03-22
+/*! Loconomics.com 2014-03-28
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.

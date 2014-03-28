@@ -34,6 +34,7 @@
     if (!providerWithoutPosition) {    
         Validation.RequireField("profile-type", "Please, select one from Provider or Customer");
         Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
+        Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
         Validation.RequireField("email", LcRessources.RequiredField("Email"));
         Validation.RequireField("zipcode", LcRessources.RequiredField("Zip code"));
         Validation.RequireField("password", LcRessources.RequiredField("Password"));
@@ -71,9 +72,6 @@
             }
             redirect += PROVIDER_REDIRECT;
         } else {
-            if (Request["lastname"].IsEmpty()) {
-                ModelState.AddError("lastname", LcRessources.RequiredField("Last name"));
-            }
             redirect += CUSTOMER_REDIRECT;
         }
 
@@ -174,13 +172,13 @@
                     <ul>
                         @if (!providerWithoutPosition)
                         {
-                        <li class="provider customer"><label for="@(idprefix)-firstname">First name</label><input id="@(idprefix)-firstname" class="personal-data" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
-                        <li class="customer"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" class="personal-data" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
-                        <li class="provider customer"><label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" class="personal-data" type="text" placeholder="Zip code" name="zipcode" @Validation.GetHtml("zipcode") value="@Request["zipcode"]" /></li>
-                        <li class="provider customer"><label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" class="personal-data" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
-                        <li class="provider customer"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" class="secure-data" type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
+                        <li class="provider customer has-personal-data"><label for="@(idprefix)-firstname">First name</label><input id="@(idprefix)-firstname" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
+                        <li class="provider customer has-personal-data"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
+                        <li class="provider customer has-personal-data"><label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" @Validation.GetHtml("zipcode") @Html.Raw(ModelState.IsValidField("zipcode") ? "" : "class='input-validation-error'") type="text" placeholder="Zip code" name="zipcode" value="@Request["zipcode"]" /></li>
+                        <li class="provider customer has-personal-data"><label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
+                        <li class="provider customer has-secure-data"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
                         }
-                        <li class="provider job-title"><label for="@(idprefix)-jobtitle">Job title</label><input id="@(idprefix)-jobtitle" class="search-data" type="text" placeholder="Job title (you can add more later)" name="jobtitle"  @Validation.GetHtml("jobtitle") value="@Request["jobtitle"]" /></li>
+                        <li class="provider job-title has-search-data"><label for="@(idprefix)-jobtitle">Job title</label><input id="@(idprefix)-jobtitle" type="text" placeholder="Job title (you can add more later)" name="jobtitle" @Validation.GetHtml("jobtitle") @Html.Raw(ModelState.IsValidField("jobtitle") ? "" : "class='input-validation-error'") value="@Request["jobtitle"]" /></li>
                         <li class="position-description provider"><textarea rows="5" name="jobdescription" readonly>@Request["jobdescription"]</textarea><input type="hidden" name="positionid" value="@Request["positionid"]" /></li>
                     </ul>
                     <div class="actions">
