@@ -20,9 +20,27 @@
         }
         
         .DashboardPaymentAccount-bank {
+            
+            &.is-venmoAccount {
+                display: none;
+            }
+            
             label {
                 font-weight: bold;
                 display: block;
+            }
+        }
+        
+        .DashboardPaymentAccount-changeMethod {
+            &.is-venmoAccount {
+                .DashboardSection-page-section-introduction--bankAccount {
+                    display: none;
+                }
+            }
+            &.is-bankAccount {
+                .DashboardSection-page-section-introduction--venmoAccount {
+                    display: none;
+                }
             }
         }
     }

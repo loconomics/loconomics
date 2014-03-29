@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-03-28
+/*! Loconomics.com 2014-03-29
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -3231,12 +3231,12 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-03-28
+/*! Loconomics.com 2014-03-29
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.
