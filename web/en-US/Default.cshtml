@@ -2,6 +2,7 @@
 @{
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     bool performSearch = false;
+    PageData["ShowWelcomePopup"] = false;
     
     PageData["Customer"] = LcData.UserInfo.GetUserRow();
     
