@@ -280,11 +280,19 @@ public static class LcCalendar
     /// It expectes the Json structure parsed created by calendar/get-availability?type=workHours
     /// and updated by the javascript availabilityCalendar.WorkHours component, its
     /// analized and saved into database reusing the other specific methods for save work hour events.
+    /// 
+    /// It does not save if there is no data (then, it doesn't allow to remove all workHours).
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="workhours"></param>
-    public static void SaveWorkHoursJsonData(int userId, dynamic workhours)
+    /// <returns>It returns true if there was data and was saved, false otherwise</returns>
+    public static bool SaveWorkHoursJsonData(int userId, dynamic workhours)
     {
+        if (workhours == null || workhours.slots == null)
+            return false;
+
+        var thereIsData = false;
+
         var slotsGap = TimeSpan.FromMinutes(15);
         var slotsRanges = new List<LcCalendar.WorkHoursDay>();
 
@@ -333,9 +341,11 @@ public static class LcCalendar
                     }
                 }
                 // Last range in the list (if there was something)
-                // Note: we have slots by its start-time, by the
+                // Note: we have slots by its start-time, but the
                 // range to save must include the end-time for the last slot
                 if (firstSlot != TimeSpan.MinValue) {
+                    thereIsData = true;
+
                     // Calculations can have precision errors, be aware to don't pass a time
                     // after 24:00:00
                     var finalEndTime = lastSlot.Add(slotsGap);
@@ -350,9 +360,14 @@ public static class LcCalendar
                 }
             }
         }
-            
-        // Saving in database
-        SetAllProviderWorkHours(userId, slotsRanges);
+
+        if (thereIsData)
+        {
+            // Saving in database
+            SetAllProviderWorkHours(userId, slotsRanges);
+        }
+
+        return thereIsData;
     }
 
     /// <summary>

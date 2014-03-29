@@ -25,7 +25,7 @@
             workhours = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["workhours"] ?? "");
 
             if (workhours != null && workhours.status != "available") {
-                ModelState.AddFormError("Work hours availability information: status not allowed");
+                PageState.AddFormError("Work hours availability information: status not allowed");
             }
         }
 
@@ -35,30 +35,34 @@
             betweenTime = Request["between-time"].AsDecimal();
             
             if (Request["advance-time"].IsEmpty()) {
-                ModelState.AddError("advance-time", LcRessources.RequiredField("Time in advance of bookings"));
+                PageState.AddError("advance-time", LcRessources.RequiredField("Time in advance of bookings"));
             }
             if (Request["between-time"].IsEmpty()) {
-                ModelState.AddError("between-time", LcRessources.RequiredField("Minimum time between bookings"));
+                PageState.AddError("between-time", LcRessources.RequiredField("Minimum time between bookings"));
             }
 
             if (allTime) {
                 LcCalendar.SetAllTimeAvailability(userId);
             } else {
-                LcCalendar.SaveWorkHoursJsonData(userId, workhours);
+                if (!LcCalendar.SaveWorkHoursJsonData(userId, workhours)) {
+                    PageState.AddFormError("LJDI: Your weekly schedule is required.");
+                }
             }
 
-            // Testing the alert
-            using (var db = Database.Open("sqlloco")) {
-                db.Execute("SetCalendarProviderAttributes @0, @1, @2, null, null", userId, 
-                    advanceTime,
-                    betweenTime
-                );
+            if (PageState.IsValid) {
+                // Testing the alert
+                using (var db = Database.Open("sqlloco")) {
+                    db.Execute("SetCalendarProviderAttributes @0, @1, @2, null, null", userId, 
+                        advanceTime,
+                        betweenTime
+                    );
                 
-                db.Execute("EXEC TestAlertAvailability @0", userId);
-            }
+                    db.Execute("EXEC TestAlertAvailability @0", userId);
+                }
             
-            if (doReturn) {
-                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                if (doReturn) {
+                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                }
             }
         }
     }
