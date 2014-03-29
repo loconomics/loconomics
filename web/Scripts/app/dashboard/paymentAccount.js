@@ -8,8 +8,14 @@ require('jquery.formatter');
 exports.on = function onPaymentAccount(containerSelector) {
   var $c = $(containerSelector);
 
-  // Initialize the formatters on page-ready..
-  var finit = function () { initFormatters($c); };
+  var finit = function () {
+
+    // Initialize the formatters on page-ready..
+    initFormatters($c);
+
+    changePaymentMethod($c);
+
+  };
   $(finit);
   // and any ajax-post of the form that returns new html:
   $c.on('ajaxFormReturnedHtml', 'form.ajax', finit);
@@ -27,4 +33,29 @@ function initFormatters($container) {
     'pattern': '{{999}}-{{99}}-{{9999}}',
     'persistent': false
   });
+}
+
+function changePaymentMethod($container) {
+
+  var $bank = $container.find('.DashboardPaymentAccount-bank'),
+    $els = $container.find('.DashboardPaymentAccount-changeMethod')
+    .add($bank);
+
+  $container.find('.Actions--changePaymentMethod').on('click', function () {
+    $els.toggleClass('is-venmoAccount is-bankAccount');
+
+    if ($bank.hasClass('is-venmoAccount')) {
+      // Remove and save numbers
+      $bank.find('input').val(function (i, v) {
+        $(this).data('prev-val', v);
+        return '';
+      });
+    } else {
+      // Restore numbers
+      $bank.find('input').val(function (i, v) {
+        return $(this).data('prev-val');
+      });
+    }
+  });
+
 }

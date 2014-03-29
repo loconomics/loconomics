@@ -13,6 +13,7 @@
     // Data
     string FirstName, LastName, MobilePhone, AlternatePhone, AddressLine1, AddressLine2, City, PostalCode, Aba, AccountNumber, Ssn, StateCode;
     DateTime? BirthDate = null;
+    bool? isVenmo = null;
 
     MerchantAccount btAccount = LcPayment.GetProviderPaymentAccount(user.UserID);
 
@@ -31,6 +32,11 @@
         Aba = Request["aba"];
         AccountNumber = Request["accountnumber"];
         Ssn = Request["ssn"];
+        
+        // Is Venmo account if there is no bank informatino
+        if (btAccount != null) {
+            isVenmo = String.IsNullOrEmpty(AccountNumber) && String.IsNullOrEmpty(Aba);
+        }
     } else if (btAccount != null) {
         FirstName = btAccount.IndividualDetails.FirstName;
         LastName = btAccount.IndividualDetails.LastName;
@@ -54,6 +60,9 @@
         Aba = btAccount.FundingDetails.RoutingNumber;
         AccountNumber = String.IsNullOrEmpty(btAccount.FundingDetails.AccountNumberLast4) ? "" : btAccount.FundingDetails.AccountNumberLast4.PadLeft(10, '*');
         Ssn = String.IsNullOrEmpty(btAccount.IndividualDetails.SsnLastFour) ? "" : btAccount.IndividualDetails.SsnLastFour.PadLeft(10, '*');
+        
+        // Is Venmo account if there is no bank informatino
+        isVenmo = String.IsNullOrEmpty(AccountNumber) && String.IsNullOrEmpty(Aba);
     } else {
         FirstName = user.FirstName;
         LastName = LcHelpers.JoinNotEmptyStrings(" ", user.LastName, user.SecondLastName);
@@ -216,13 +225,41 @@
     </ul>
 </fieldset>
 
-<fieldset class="DashboardSection-page-section is-required DashboardPaymentAccount-bank">
+@if (isVenmo.HasValue)
+{
+    <fieldset class="DashboardSection-page-section is-required DashboardPaymentAccount-changeMethod @(isVenmo.Value ? "is-venmoAccount" : "is-bankAccount")">
+        <legend class="DashboardSection-page-section-header">Change your payment method</legend>
+        <p class="DashboardSection-page-section-introduction DashboardSection-page-section-introduction--venmoAccount">
+            You're all set up with Braintree payments.
+            Payments will be sent to your Venmo account within 48 hours of you completing each booking.
+            Please remember to cash out frequently in Venmo to ensure the money gets deposited into your bank account.
+            <br />
+            <strong>If you'd like to add your bank account information instead, press next button.</strong>
+            <br />
+            <a class="action Actions--changePaymentMethod" href="#changePaymentMethod">Change payment method to Bank Account</a>
+        </p>
+
+        <p class="DashboardSection-page-section-introduction DashboardSection-page-section-introduction--bankAccount">
+            You're all set up with Braintree payments.
+            Payments will be sent directly to your bank account within 48 hours of you completing each booking.
+            <br />
+            <strong>If you'd like to remove your bank account information instead, press next button.</strong>
+            <br />
+            <a class="action Actions--changePaymentMethod" href="#changePaymentMethod">Change payment method to Venmo Account</a>
+        </p>
+    </fieldset>
+}
+    
+<fieldset class="DashboardSection-page-section is-required DashboardPaymentAccount-bank @(isVenmo.HasValue && isVenmo.Value ? "is-venmoAccount" : "is-bankAccount")">
     <legend class="DashboardSection-page-section-header">@(btAccount == null ? "Add" : "Edit") your bank account information</legend>
-    <p class="DashboardSection-page-section-introduction">
-        If you choose not to enter your bank information,
-        a <a href="https://venmo.com" target="_blank">Venmo</a> account will be created and linked to your email.
-        You will then have to set up your Venmo account to release payments. We do not recommend this option as it requires an extra step.
-    </p>
+    @if (btAccount == null)
+    {
+        <p class="DashboardSection-page-section-introduction">
+            If you choose not to enter your bank information,
+            a <a href="https://venmo.com" target="_blank">Venmo</a> account will be created and linked to your email.
+            You will then have to set up your Venmo account to release payments. We do not recommend this option as it requires an extra step.
+        </p>
+    }
     <ul>
         <li>
             @if (btAccount != null)

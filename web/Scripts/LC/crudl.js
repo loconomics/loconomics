@@ -213,6 +213,24 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
                 anotherOnComplete.apply(this, Array.prototype.slice.call(arguments, 0));
             };
           }
+
+          // NOTE: First, we notify the changes-saved and event, this last allows
+          // client scripts to do tasks just before the editor begins to close
+          // (avoiding problems like with the 'moveFocusTo' not being precise if the
+          // animation duration is the same on client script and hide-editor).
+          // Then, editor gets hidden
+          // TODO: This can get enhanced to allow larger durations on client-scripts
+          // without affect moveFocusTo passing in the trigger an object that holds
+          // a Promise/Deferred to be set by client-script as 'hide-editor &
+          // viewer-show must start when this promise gets fullfilled', allowing to
+          // have a sequence (first client-scripts, then hide-editor).
+
+          // Mark form as saved to remove the 'has-changes' mark
+          changesNotification.registerSave(dtr.find('form').get(0));
+
+          // Custom event
+          crudl.trigger(instance.settings.events['edit-ends']);
+
           // We need a custom complete callback, but to not replace the user callback, we
           // clone first the settings and then apply our callback that internally will call
           // the user callback properly (if any)
@@ -220,12 +238,6 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           withcallback.complete = oncomplete(withcallback.complete);
           // Hiding editor:
           dtr.xhide(withcallback);
-
-          // Mark form as saved to remove the 'has-changes' mark
-          changesNotification.registerSave(dtr.find('form').get(0));
-
-          // Custom event
-          crudl.trigger(instance.settings.events['edit-ends']);
 
           return false;
         }

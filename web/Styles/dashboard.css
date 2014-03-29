@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-03-22
+/*! Loconomics.com 2014-03-29
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1093,7 +1093,7 @@ form ul li {
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 
-/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 62 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1240,24 +1240,45 @@ form ul li {
 
 /* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 
-/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+.DashboardPayments .DashboardPaymentAccount .DashboardPaymentAccount-bank.is-venmoAccount {
+  display: none;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 .DashboardPayments .DashboardPaymentAccount .DashboardPaymentAccount-bank label {
   font-weight: bold;
   display: block;
 }
 
-/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+/* line 33 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+.DashboardPayments .DashboardPaymentAccount .DashboardPaymentAccount-changeMethod.is-venmoAccount .DashboardSection-page-section-introduction--bankAccount {
+  display: none;
+}
+
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+.DashboardPayments .DashboardPaymentAccount .DashboardPaymentAccount-changeMethod.is-bankAccount .DashboardSection-page-section-introduction--venmoAccount {
+  display: none;
+}
+
+/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 .DashboardPayments .DashboardPaymentFees {
   display: table-row;
 }
 
-/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 .DashboardPayments .DashboardPaymentFees img {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\payments.styl */
 .DashboardPayments .DashboardPaymentFees p {
   padding: 0 1.5em;
   display: table-cell;
