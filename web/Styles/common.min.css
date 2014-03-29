@@ -451,6 +451,9 @@ div.scripts { display: none; }
 }
 
 
+.home #site-footer {
+    margin-top: 0;
+}
 .home #main {
     float: none;
     text-align: center;
@@ -2177,10 +2180,10 @@ html.boxshadow #loginBox .field-validation-error{
 
 
 .home .search-categories {
-    margin: 40px 0 16px;
+    margin: 40px 0 0;
 }
 .search-categories > ul {
-    height: 260px;
+    height: 240px;
     text-align: center;
     margin: 0;
     overflow: visible;

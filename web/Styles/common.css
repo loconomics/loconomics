@@ -698,6 +698,9 @@ div.scripts { display: none; }
 
 /*= Home page, main search
  */
+.home #site-footer {
+    margin-top: 0;
+}
 .home #main {
     float: none;
     text-align: center;
@@ -2478,10 +2481,10 @@ html.boxshadow #loginBox .field-validation-error{
    for specific 'search results page' styles see search.css
  */
 .home .search-categories {
-    margin: 40px 0 16px;
+    margin: 40px 0 0;
 }
 .search-categories > ul {
-    height: 260px;
+    height: 240px;
     text-align: center;
     margin: 0;
     overflow: visible;
@@ -3236,7 +3239,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.
