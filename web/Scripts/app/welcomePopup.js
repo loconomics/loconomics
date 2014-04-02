@@ -6,9 +6,52 @@ var $ = require('jquery');
 require('bootstrap');
 //TODO more dependencies?
 
+var initialized = false;
+
+exports.init = function initWelcomePopup() {
+
+  exports.autoShow();
+
+  $(document).on('click', 'a.sign-up, a.register', function () {
+
+    // When clicking a register button when already in the popup
+    // (like in the login popup hovering the welcomepopup)
+    // just close any popup and left
+    if ($('#welcomepopup').is(':visible')) {
+      $.unblockUI();
+      return false;
+    }
+
+    exports.show();
+    return false;
+  });
+
+};
+
+exports.autoShow = function autoShowWelcomePopup() {
+  if ($('#welcomepopup:visible').length) {
+    exports.show();
+    return;
+  }
+
+  var c = $('#welcome-popup-overlay');
+  if (c.length === 0) return;
+
+  if (c.hasClass('auto-show')) {
+    c.show();
+    exports.show();
+  }
+};
+
 exports.show = function welcomePopup() {
   var c = $('#welcomepopup');
   if (c.length === 0) return;
+
+  $('#welcome-popup-overlay').fadeIn(300);
+
+  if (initialized) return;
+  initialized = true;
+
   var skipStep1 = c.hasClass('select-position');
 
   // Init
@@ -49,7 +92,7 @@ exports.show = function welcomePopup() {
       // (we can't use on-change, need to be keypress; its namespaced
       // to let off and on every time to avoid multiple handler registrations)
       .off('keypress.description-tooltip')
-      .on('keypress..description-tooltip', function () {
+      .on('keypress.description-tooltip', function () {
         el.popover('hide');
       });
 

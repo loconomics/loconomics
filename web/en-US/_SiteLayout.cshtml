@@ -33,6 +33,7 @@
     // detected automatically as true if anonymous user or provider without positions:
     var showWelcomePopup = PageData["ShowWelcomePopup"] ?? 
         (u == null ? true : u.IsProvider && LcData.UserInfo.GetUserPos().Count == 0);
+    var includeWelcomePopup = showWelcomePopup || u == null;
 }
 @helper howItWorksLi(){
                         <li>
@@ -83,10 +84,10 @@
         }
     </head>
     <body class="@PageData["BodyClass"]">
-        @if (showWelcomePopup)
+        @if (includeWelcomePopup)
         {
             // Annonymous access, Welcome popup
-            <div id="welcome-popup-overlay" class="smooth-box-block-overlay" style="position:absolute;top:0;left:0;right:0;min-height:100%;z-index:999;">
+            <div id="welcome-popup-overlay" class="smooth-box-block-overlay @(showWelcomePopup ? "auto-show" : "")">
                 <div id="welcome-popup-container" class="smooth-box-block-element">
                     @RenderPage(LcUrl.RenderLangPath + "Account/$WelcomePopup.cshtml")
                 </div>

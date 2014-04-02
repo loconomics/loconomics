@@ -1,9 +1,7 @@
 ﻿@{
     // Set the layout page and page title
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
-    Page.Title = "Sign Up";
-    PageData["ShowWelcomePopup"] = false;
+    PageData["ShowWelcomePopup"] = true;
+    PageData["BodyClass"] = "RegisterPage";
 }
-<div id="container" class="clearfix">
-    @RenderPage("$Register.cshtml")
-</div>
+@* $WelcomePopup gets included in the SiteLayout because of the setting ShowWelcomePopup=true *@

@@ -1,10 +1,15 @@
 ﻿@{
+    // Avoid loading the page twice
+    if (Validation.GetHtml("profile-type") != null) {
+        return;
+    }
+    
     //string PROVIDER_REDIRECT = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-providers";
     string PROVIDER_REDIRECT = LcUrl.LangPath + "dashboard/"; // "HelpCenter/ProviderWelcome/";
     string CUSTOMER_REDIRECT = LcUrl.LangPath + "dashboard/"; //"HelpCenter/HowItWorks/#howitworks-customers";
     var redirect = "";
     bool withLogo = PageData["WithLogo"] ?? true;
-    string title = PageData["Title"] ?? "Welcome to Loconomics";
+    string title = PageData["WelcomePopupTitle"] ?? "Welcome to Loconomics";
     
     /* The special case of provider logged but without a position still (it went from facebook redirect)
         doesn't need more of the fields, only JobTitle,
