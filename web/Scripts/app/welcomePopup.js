@@ -6,9 +6,47 @@ var $ = require('jquery');
 require('bootstrap');
 //TODO more dependencies?
 
+var initialized = false;
+
+exports.init = function initWelcomePopup() {
+
+  exports.autoShow();
+
+  $(document).on('click', 'a.sign-up, a.register, a.need-login, button.need-login', function () {
+    // Remove any opened popup (it overlays the welcomepopup)
+    $.unblockUI();
+
+    return !exports.show();
+  });
+
+};
+
+exports.autoShow = function autoShowWelcomePopup() {
+  var $wp = $('#welcomepopup');
+  var $wo = $('#welcome-popup-overlay');
+
+  // When the popup is integrated in the page instead of
+  // the layout, exec show and close orphan overlay.
+  if ($wp.length &&
+    $wp.is(':visible') &&
+    $wp.closest('#welcome-popup-overlay').length === 0) {
+    $wo.hide();
+    exports.show();
+    return;
+  } else if ($wo.hasClass('auto-show')) {
+    exports.show();
+  }
+};
+
 exports.show = function welcomePopup() {
   var c = $('#welcomepopup');
-  if (c.length === 0) return;
+  if (c.length === 0) return false;
+
+  c.closest('#welcome-popup-overlay').fadeIn(300);
+
+  if (initialized) return true;
+  initialized = true;
+
   var skipStep1 = c.hasClass('select-position');
 
   // Init
@@ -49,7 +87,7 @@ exports.show = function welcomePopup() {
       // (we can't use on-change, need to be keypress; its namespaced
       // to let off and on every time to avoid multiple handler registrations)
       .off('keypress.description-tooltip')
-      .on('keypress..description-tooltip', function () {
+      .on('keypress.description-tooltip', function () {
         el.popover('hide');
       });
 
@@ -116,4 +154,7 @@ exports.show = function welcomePopup() {
 
   // If profile type is prefilled by request:
   c.find('.profile-choice [name=profile-type]:checked').change();
+
+  // All fine
+  return true;
 };

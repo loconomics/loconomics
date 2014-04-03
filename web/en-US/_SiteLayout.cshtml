@@ -7,7 +7,7 @@
     var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     // Updated assets version, to avoid problems with cache of css & js assets
-    LcAssets.AssetsVersion = "20140328";
+    LcAssets.AssetsVersion = "20140403";
     
     // Sniff IE browsers or based on its same engine (Trident).
     var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident") : false;
@@ -33,6 +33,7 @@
     // detected automatically as true if anonymous user or provider without positions:
     var showWelcomePopup = PageData["ShowWelcomePopup"] ?? 
         (u == null ? true : u.IsProvider && LcData.UserInfo.GetUserPos().Count == 0);
+    var includeWelcomePopup = showWelcomePopup || u == null;
 }
 @helper howItWorksLi(){
                         <li>
@@ -83,10 +84,10 @@
         }
     </head>
     <body class="@PageData["BodyClass"]">
-        @if (showWelcomePopup)
+        @if (includeWelcomePopup)
         {
             // Annonymous access, Welcome popup
-            <div id="welcome-popup-overlay" class="smooth-box-block-overlay" style="position:absolute;top:0;left:0;right:0;min-height:100%;z-index:999;">
+            <div id="welcome-popup-overlay" class="smooth-box-block-overlay @(showWelcomePopup ? "auto-show" : "")">
                 <div id="welcome-popup-container" class="smooth-box-block-element">
                     @RenderPage(LcUrl.RenderLangPath + "Account/$WelcomePopup.cshtml")
                 </div>
@@ -172,7 +173,7 @@
 				        </li>
                         @if (!WebSecurity.IsAuthenticated || !u.IsProvider)
                         {
-			                <li class="actions"><a class="main-action" href="@(LcUrl.LangPath)ProviderSignUp/">Become a provider</a></li>
+			                <li class="actions"><a class="main-action" href="@(LcUrl.LangPath)Account/ProviderWelcome/">Become a provider</a></li>
                         }
 			        </ul>
                 }

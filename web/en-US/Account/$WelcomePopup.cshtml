@@ -1,10 +1,15 @@
 ﻿@{
+    // Avoid loading the page twice
+    if (Validation.GetHtml("profile-type") != null) {
+        return;
+    }
+    
     //string PROVIDER_REDIRECT = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-providers";
-    string PROVIDER_REDIRECT = LcUrl.LangPath + "dashboard/"; // "HelpCenter/ProviderWelcome/";
+    string PROVIDER_REDIRECT = LcUrl.LangPath + "dashboard/"; // "Account/ProviderWelcome/";
     string CUSTOMER_REDIRECT = LcUrl.LangPath + "dashboard/"; //"HelpCenter/HowItWorks/#howitworks-customers";
     var redirect = "";
     bool withLogo = PageData["WithLogo"] ?? true;
-    string title = PageData["Title"] ?? "Welcome to Loconomics";
+    string title = PageData["WelcomePopupTitle"] ?? "Welcome to Loconomics";
     
     /* The special case of provider logged but without a position still (it went from facebook redirect)
         doesn't need more of the fields, only JobTitle,
@@ -37,7 +42,7 @@
         Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
         Validation.RequireField("email", LcRessources.RequiredField("Email"));
         Validation.RequireField("zipcode", LcRessources.RequiredField("Zip code"));
-        Validation.RequireField("password", LcRessources.RequiredField("Password"));
+        Validation.RequireField("create-password", LcRessources.RequiredField("Password"));
         Validation.Add("email",
             Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
     }
@@ -93,13 +98,13 @@
                             Request["email"],
                             Request["firstname"],
                             Request["lastname"],
-                            Request["password"],
+                            Request["create-password"],
                             asProvider
                         );
                         LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
                         LcAuth.SendRegisterUserEmail(user);
                         // Auto-login:
-                        LcAuth.Login(user.Email, Request["password"]);
+                        LcAuth.Login(user.Email, Request["create-password"]);
                         if (asProvider) {
                             try{
                                 // Add position
@@ -176,7 +181,7 @@
                         <li class="provider customer has-personal-data"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
                         <li class="provider customer has-personal-data"><label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" @Validation.GetHtml("zipcode") @Html.Raw(ModelState.IsValidField("zipcode") ? "" : "class='input-validation-error'") type="text" placeholder="Zip code" name="zipcode" value="@Request["zipcode"]" /></li>
                         <li class="provider customer has-personal-data"><label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
-                        <li class="provider customer has-secure-data"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
+                        <li class="provider customer has-secure-data"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" type="password" placeholder="Create password" name="create-password" @Validation.GetHtml("create-password")/></li>
                         }
                         <li class="provider job-title has-search-data"><label for="@(idprefix)-jobtitle">Job title</label><input id="@(idprefix)-jobtitle" type="text" placeholder="Job title (you can add more later)" name="jobtitle" @Validation.GetHtml("jobtitle") @Html.Raw(ModelState.IsValidField("jobtitle") ? "" : "class='input-validation-error'") value="@Request["jobtitle"]" /></li>
                         <li class="position-description provider"><textarea rows="5" name="jobdescription" readonly>@Request["jobdescription"]</textarea><input type="hidden" name="positionid" value="@Request["positionid"]" /></li>

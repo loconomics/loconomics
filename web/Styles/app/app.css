@@ -696,6 +696,9 @@ div.scripts { display: none; }
 
 /*= Home page, main search
  */
+.home #site-footer {
+    margin-top: 0;
+}
 .home #main {
     float: none;
     text-align: center;
@@ -1548,7 +1551,6 @@ form div.validation-summary-valid{
 /***********************
  * Account Popups:
  * LoginBox
- * RegisterBox
  */
 .account-popup{
     text-align: left;
@@ -1615,15 +1617,11 @@ form div.validation-summary-valid{
 }
 
 .blockMsg #loginBox,
-.blockMsg #registerBox,
 .blockMsg #forgotPasswordBox{
     width: 100%;
 }
 #loginBox{
     width: 410px;
-}
-#registerBox{
-    width: 450px;
 }
 #forgotPasswordBox{
     width: 400px;
@@ -2476,10 +2474,10 @@ html.boxshadow #loginBox .field-validation-error{
    for specific 'search results page' styles see search.css
  */
 .home .search-categories {
-    margin: 40px 0 16px;
+    margin: 40px 0 0;
 }
 .search-categories > ul {
-    height: 260px;
+    height: 240px;
     text-align: center;
     margin: 0;
     overflow: visible;
@@ -2905,168 +2903,6 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     list-style: disc inside;
 }
 
-/*= TakeATour, WelcomePopup */
-#takeATour h1 {
-    background: url("../img/theme/logo-loconomics-header.png") center top no-repeat;
-    text-align: center;
-    font-size: 1.6em;
-    color: #00989A;
-    padding: 110px 0 5px;
-    margin-top: 0;
-    font-family: Hand Of Sean, Arial, sans-serif;
-}
-.es #takeATour h1 {
-    background-image: url('../img/theme/logo-loconomics-header-ES.png');
-}
-#takeATour p {
-    color: #999999;
-    text-align: justify;
-}
-#takeATour .actions {
-    text-align: center !important;
-    margin-top: 40px;
-}
-#takeATour .actions .main-action,
-#welcomepopup .actions .main-action {
-    min-width: 50%;
-    font-weight: bold;
-}
-/*= welcomepopup */
-#welcomepopup .profile-data,
-#welcomepopup .terms,
-#welcomepopup .position-description {
-    display: none;
-}
-#welcomepopup.select-position .profile-data {
-    display: block;
-}
-#welcome-popup-container {
-    padding: 0;
-    width: 400px;
-    margin: 120px auto 60px;
-    border: 1px solid #5a5b5b;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -o-border-radius: 10px;
-    -webkit-border-radius: 10px;
-}
-#welcomepopup header,
-#welcomepopup footer,
-#welcomepopup .register {
-    padding: 20px 25px;
-    text-align: center;
-}
-#welcomepopup h1,
-#welcomepopup h2 {
-    font-family: Hand Of Sean, Arial, sans-serif;
-    margin: 0;
-}
-#welcomepopup h1.has-icon {
-    padding: 0 0 0 110px;
-    background: url("../img/theme/logo-loconomics-header-mini.png") no-repeat left center;
-}
-#welcomepopup h1 {
-    padding: 0;
-    line-height: 39px;
-    font-size: 1.3em;
-    color: #00989A;
-    text-align: center;
-}
-#welcomepopup h2 {
-    font-size: 1.05em;
-}
-#welcomepopup h3 { /*.popover-title {*/
-    color: Black;
-    font-weight: bold;
-}
-#welcomepopup.select-position .profile-data h2 {
-    color: Black;
-    text-align: left;
-    margin-bottom: .5em;
-}
-#welcomepopup.select-position .presentation {
-    display: none;
-}
-#welcomepopup .presentation {
-    text-align: justify;
-    font-size: 1em;
-    margin: .5em 1em;
-    color: Black;
-    line-height: normal;
-}
-#welcomepopup strong {
-    text-transform: uppercase;
-    color: #e95d0f;
-}
-#welcomepopup .register {
-    border: 1px solid #cccccc;
-    border-width: 1px 0;
-    background-color: #f5f5f5;
-    margin: 0;
-    position: relative;
-}
-#welcomepopup .register form {
-    margin: 0 1em;
-}
-#welcomepopup .actions {
-    text-align: center !important;
-    margin-top: 1em;
-}
-#welcomepopup .profile-choice h2 {
-    margin-bottom: 1em;
-}
-#welcomepopup .choice-or {
-    font-family: Hand Of Sean, Arial, sans-serif;
-    color: Black;
-}
-#welcomepopup .terms {
-    font-size: .9em;
-    line-height: normal;
-    margin: 0 1em 1em;
-    text-align: justify;
-}
-#welcomepopup .profile-data {
-    margin: 1em 0;
-}
-#welcomepopup .profile-data li {
-    padding: 3px 0;
-}
-#welcomepopup .profile-data input,
-#welcomepopup .profile-data textarea {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -o-box-sizing: border-box;
-    width: 100%;
-}
-#welcomepopup .profile-data label {
-    display: none;
-}
-#welcomepopup a.login {
-    background-color: #f5f5f5;
-    color: #333333 !important;
-    border: 1px solid #ababab !important;
-    margin: 0 1em;
-}
-#welcomepopup a.login:hover {
-    box-shadow: 0 0 5px 2px #ababab;
-}
-#terms-tooltip {
-    text-align: justify;
-}
-#terms-tooltip li {
-    list-style: disc inside;
-}
-#welcomepopupLoading {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 999;
-    background-color: rgba(220, 220, 220, .7);
-}
-
 /*= .lightform */
 form.lightform input,
 form.lightform textarea {
@@ -3129,10 +2965,6 @@ ul.attributes-list li {
     #takeATour h1 {
         background-image: url("../img/theme/logo-loconomics-header@2x.png");
         background-size: 201px 78px;
-    }
-    #welcomepopup h1.has-icon {
-        background-image: url("../img/theme/logo-loconomics-header-mini@2x.png");
-        background-size: 100px 39px;
     }
     .user-rating-summary-widget span.rating-image {
         background-image: url('../img/theme/star-rating-gray-orange@2x.png') !important;

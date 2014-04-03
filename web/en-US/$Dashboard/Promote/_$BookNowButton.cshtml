@@ -57,16 +57,19 @@
                 <li><label><input type="radio" name="positionid" value="@(pos.PositionID)" @LcHelpers.IsChecked(selectedPosition, pos.PositionID) />My @pos.PositionSingular booking page
                     @if (pos.StatusID > 1)
                     {
-                        <span>(<strong>This position is not yet active</strong>--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
+                        <span>(<strong>This position is not yet active</strong>--please visit the <a href="@(LcUrl.LangPath)dashboard/#DashboardTodosSummary">to-dos</a> section to complete it)</span>
                     }
                 </label></li>
             }
+
+            @* Disabled (but not fully removed) general option, no explicit position just a profile URL, after being discussed at #490
             <li><label><input type="radio" name="positionid" value="" @LcHelpers.IsChecked(selectedPosition, "") />My general profile
                 @if (!u.IsActiveProvider)
                 {
                     <span>(<strong>This profile is not yet active</strong>--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
                 }
             </label></li>
+            *@
         </ul>
     </fieldset>
     <fieldset class="DashboardBookNowButton-buttonCode" data-base-url="@(LcUrl.AppUrl)book/@(bookCode)/" data-base-src="@(LcUrl.AppUrl)img/extern/book-me-button-">

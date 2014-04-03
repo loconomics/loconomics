@@ -1,5 +1,6 @@
 ﻿@{
-    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
     
     var formzip = Request["zip"];
     var zip = 0;
@@ -8,8 +9,7 @@
     zip = LcData.GetPostalCodeID(formzip, stateid);
     
 }
-  <div id="container" class="clearfix sign-up-wizard editable">
-    <div id="main" class="tabbed folders wizard">
+
 <form action="" method="post" class="ajax ajax-box">
     <label>Zip code
         <input name="zip" value="@formzip" />
@@ -21,4 +21,3 @@
     <label>language: @LcData.GetCurrentLanguageID()</label>
     <input type="submit" value="Enviar!" />
 </form>
-</div></div>

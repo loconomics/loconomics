@@ -2,17 +2,13 @@
     Enable the use of popups to show links to some Account pages (default links behavior is to open in a new tab)
 **/
 var $ = require('jquery');
+require('jquery.blockUI');
 
 exports.enable = function (baseUrl) {
     $(document)
     .on('click', 'a.login', function () {
         var url = baseUrl + 'Account/$Login/?ReturnUrl=' + encodeURIComponent(window.location);
         popup(url, { width: 410, height: 320 });
-        return false;
-    })
-    .on('click', 'a.register', function () {
-        var url = this.getAttribute('href').replace('/Account/Register', '/Account/$Register');
-        popup(url, { width: 450, height: 500 });
         return false;
     })
     .on('click', 'a.forgot-password', function () {

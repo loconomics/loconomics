@@ -709,7 +709,7 @@ public class LcMessaging
     public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
         SendMail(providerEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
-            ApplyTemplate(LcUrl.LangPath + "ProviderSignUp/EmailWelcomeProvider/",
+            ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeProvider/",
             new Dictionary<string,object> {
                 { "UserID", providerID },
                 { "EmailTo", providerEmail },

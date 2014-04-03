@@ -191,7 +191,6 @@ LC.dateToInterchangleString = dateToInterchangeableString;
 
 // Pages in popup
 var welcomePopup = require('./welcomePopup');
-//var takeATourPopup = require('takeATourPopup');
 var faqsPopups = require('./faqsPopups');
 var accountPopups = require('./accountPopups');
 var legalPopups = require('./legalPopups');
@@ -247,8 +246,8 @@ $(function () {
 
   ajaxForms.init();
 
-  //takeATourPopup.show();
-  welcomePopup.show();
+  welcomePopup.init();
+
   // Enable the use of popups for some links that by default open a new tab:
   faqsPopups.enable(LcUrl.LangPath);
   accountPopups.enable(LcUrl.LangPath);
