@@ -12,13 +12,11 @@ exports.init = function initWelcomePopup() {
 
   exports.autoShow();
 
-  $(document).on('click', 'a.sign-up, a.register', function () {
-
+  $(document).on('click', 'a.sign-up, a.register, a.need-login, button.need-login', function () {
     // Remove any opened popup (it overlays the welcomepopup)
     $.unblockUI();
 
-    exports.show();
-    return false;
+    return !exports.show();
   });
 
 };
@@ -42,11 +40,11 @@ exports.autoShow = function autoShowWelcomePopup() {
 
 exports.show = function welcomePopup() {
   var c = $('#welcomepopup');
-  if (c.length === 0) return;
+  if (c.length === 0) return false;
 
   c.closest('#welcome-popup-overlay').fadeIn(300);
 
-  if (initialized) return;
+  if (initialized) return true;
   initialized = true;
 
   var skipStep1 = c.hasClass('select-position');
@@ -156,4 +154,7 @@ exports.show = function welcomePopup() {
 
   // If profile type is prefilled by request:
   c.find('.profile-choice [name=profile-type]:checked').change();
+
+  // All fine
+  return true;
 };
