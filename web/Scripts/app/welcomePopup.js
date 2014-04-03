@@ -14,13 +14,8 @@ exports.init = function initWelcomePopup() {
 
   $(document).on('click', 'a.sign-up, a.register', function () {
 
-    // When clicking a register button when already in the popup
-    // (like in the login popup hovering the welcomepopup)
-    // just close any popup and left
-    if ($('#welcomepopup').is(':visible')) {
-      $.unblockUI();
-      return false;
-    }
+    // Remove any opened popup (it overlays the welcomepopup)
+    $.unblockUI();
 
     exports.show();
     return false;
@@ -29,16 +24,18 @@ exports.init = function initWelcomePopup() {
 };
 
 exports.autoShow = function autoShowWelcomePopup() {
-  if ($('#welcomepopup:visible').length) {
+  var $wp = $('#welcomepopup');
+  var $wo = $('#welcome-popup-overlay');
+
+  // When the popup is integrated in the page instead of
+  // the layout, exec show and close orphan overlay.
+  if ($wp.length &&
+    $wp.is(':visible') &&
+    $wp.closest('#welcome-popup-overlay').length === 0) {
+    $wo.hide();
     exports.show();
     return;
-  }
-
-  var c = $('#welcome-popup-overlay');
-  if (c.length === 0) return;
-
-  if (c.hasClass('auto-show')) {
-    c.show();
+  } else if ($wo.hasClass('auto-show')) {
     exports.show();
   }
 };
@@ -47,7 +44,7 @@ exports.show = function welcomePopup() {
   var c = $('#welcomepopup');
   if (c.length === 0) return;
 
-  $('#welcome-popup-overlay').fadeIn(300);
+  c.closest('#welcome-popup-overlay').fadeIn(300);
 
   if (initialized) return;
   initialized = true;
