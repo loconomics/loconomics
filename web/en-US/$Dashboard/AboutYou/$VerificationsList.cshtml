@@ -45,9 +45,16 @@
                     </li>
                     }
                 }
+
+                if (u.IsProvider)
+                {
+                    @RenderPage("$BackgroundCheckListItems.cshtml", new { ItemClass = "DashboardVerifications-list-item" })
+                }
             }
             else
             {
+                // DEPRECATED old desing; its not used already, remove this and all CSS,JS related
+                
                 if (hasEmailVerification)
                 {
                     <li class="DashboardVerifications-list-item verification">

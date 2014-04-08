@@ -6,7 +6,6 @@
     Page.Title = "Loconomics.com - Background Check Request";
     
     var providerID = Request["ProviderUserID"].AsInt();
-    var positionID = Request["PositionID"].AsInt();
     var checkID = Request["BackgroundCheckID"].AsInt();
     var provider = LcData.UserInfo.GetUserRow(providerID);
     

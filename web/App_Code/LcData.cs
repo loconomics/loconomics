@@ -1189,6 +1189,83 @@ public static partial class LcData
     ";
     #endregion
 
+    #region Background Checks
+    public static void RequestBackgroundCheck(int userId, int backgroundCheckId)
+    {
+        using (var db = Database.Open("sqlloco")) {
+            // Save request in database as 'pending'
+            db.Execute(@"
+                INSERT INTO UserBackgroundCheck (
+                    UserID,
+                    BackgroundCheckID,
+                    StatusID,
+                    LastVerifiedDate,
+                    CreatedDate,
+                    ModifiedDate,
+                    ModifiedBy
+                ) VALUES (
+                    @0, @1,
+                    1, --status: pending
+                    getdate(),
+                    getdate(), getdate(), 'sys'
+                )
+
+                -- Check Alert
+                EXEC TestAlertBackgroundCheck @0
+            ", userId, backgroundCheckId);
+            
+            // Send email to loconomics
+            LcMessaging.SendMail("verifications@loconomics.com",
+                "[Action Required] Background check request",
+                LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailBackgroundCheckRequest/",
+                    new Dictionary<string, object> { 
+                        { "ProviderUserID", userId },
+                        { "BackgroundCheckID", backgroundCheckId }
+            }));
+        }
+    }
+
+    public static dynamic GetUserBackgroundChecks(int userId, int countryId, int stateProvinceId, bool requested, int positionId = 0)
+    {
+        using (var db = Database.Open("sqlloco")) {
+            return db.Query(@"
+                SELECT  B.BackgroundCheckID
+                        ,B.BackgroundCheckName
+                        ,B.BackgroundCheckDescription
+                        ,B.BackgroundCheckPrice
+                        ,UB.StatusID
+                        ,UB.Summary
+                        ,UB.LastVerifiedDate
+                        ,S.StatusName
+                FROM    BackgroundCheck As B
+                            INNER JOIN
+                        PositionBackgroundCheck As P
+                            ON B.BackgroundCheckID = P.BackgroundCheckID
+                            AND (@1 = 0 OR P.PositionID = @1)
+                            AND B.CountryID = P.CountryID
+                            LEFT JOIN
+                        UserBackgroundCheck As UB
+                            ON B.BackgroundCheckID = UB.BackgroundCheckID
+                            AND UB.UserID = @0
+                            LEFT JOIN
+                        Status As S
+                            ON UB.StatusID = S.StatusID
+                WHERE
+                    B.Active = 1 AND P.Active = 1
+                        AND B.LanguageID = @2 AND B.CountryID = @3
+                        AND P.StateProvinceID = @4
+                        AND (@5 = 1 AND S.StatusID is not null OR @5 = 0 AND S.StatusID is null)
+            ",
+            userId,
+            positionId,
+            LcData.GetCurrentLanguageID(),
+            countryId,
+            stateProvinceId,
+            requested ? 1 : 0);
+        }
+    }
+    #endregion
+
     #region Education
     public const string sqlSelectFromUserEducation = @"
             SELECT  E.UserEducationId, E.UserID, E.InstitutionID

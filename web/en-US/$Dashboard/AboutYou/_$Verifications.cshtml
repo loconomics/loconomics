@@ -1,7 +1,7 @@
 ﻿@{
     LcHelpers.SecurePage();
     
-    var u = LcData.UserInfo.GetUserRow();
+    var u = LcData.UserInfo.GetUserRowWithContactData();
     var PageState = PageData["PageState"] ?? ModelState;
     var doReturn = PageState == ModelState;
     
@@ -11,6 +11,9 @@
     if (!LcHelpers.InLive && Request["confirmemail"].AsBool()){
         hasEmailVerification = false;
     }
+    
+    var checks = LcData.GetUserBackgroundChecks(u.UserID, u.CountryID, u.StateProvinceID, false);
+    var thereAreBackgroundChecksAvailable = checks != null && checks.Count > 0;
 }
 @* CRUDL: Right now, Crudl is disabled because there is no need for it and no editor pages (there is not edition capability for verifications) *@
 <fieldset class="DashboardVerifications"> @* crudl *@
@@ -31,6 +34,15 @@
                 <a href="#confirm-email">Confirm e-mail address</a>
                 <p>
                     Please click on "Verify my account" in the e-mail we sent you to verify your address. Click here to resend. 
+                </p>
+            </div>
+        }
+        @if (thereAreBackgroundChecksAvailable)
+        {
+            <div class="ActionBox">
+                <a href="#add-background-check">Add a background check</a>
+                <p>
+                    Background checks can be essential for some clients to feel at ease hiring your services. Don't worry if there's a blemish, we'll help you with this.
                 </p>
             </div>
         }

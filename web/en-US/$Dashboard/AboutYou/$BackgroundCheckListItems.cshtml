@@ -1,0 +1,30 @@
+﻿@*
+    List the user background checks requests and its status.
+
+    Not like the *List pages, this shows the items in a list to be integrated in the $VerificationsList.
+*@
+@{
+    var u = LcData.UserInfo.GetUserRowWithContactData();
+    var itemClass = PageData["ItemClass"] ?? "";
+    
+    var checks = LcData.GetUserBackgroundChecks(u.UserID, u.CountryID, u.StateProvinceID, false); 
+}
+@foreach (var check in checks)
+{
+    <li class="@itemClass ItemBox">
+        <h1 class="ItemBox-name">@check.BackgroundCheckName</h1>
+        <div class="ItemBox-important description">
+            @LcHelpers.PrintTextAsHtml(check.BackgroundCheckDescription)
+        </div>
+        @if (check.StatusID != null)
+        {
+            <p><span class="@(itemClass)-status @(check.StatusID == 2 ? itemClass + "-status--confirmed" : "")">@check.StatusName</span></p>
+            
+            if (check.LastVerifiedDate != null)
+            {
+                <p>since @check.LastVerifiedDate.ToShortDateString() </p>
+            }
+            <p>@check.Summary</p>
+        }
+    </li>
+}
