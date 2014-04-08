@@ -132,6 +132,8 @@
     var idprefix = "welcomepopup";
 }
 <div id="welcomepopup" class="@(providerWithoutPosition ? "select-position" : "")">
+    <a class="close-popup" href="#close-popup">X</a>
+
     <header>
         <h1 class="@(withLogo ? "has-icon" : "")">@(title)</h1>
         <div class="presentation">

@@ -42,10 +42,21 @@ exports.show = function welcomePopup() {
   var c = $('#welcomepopup');
   if (c.length === 0) return false;
 
-  c.closest('#welcome-popup-overlay').fadeIn(300);
+  var overlay = c.closest('#welcome-popup-overlay');
+  overlay.fadeIn(300);
 
   if (initialized) return true;
   initialized = true;
+
+  // close button logic and only when as popup (it has overlay)
+  var closeButton = c.find('.close-popup, [href="#close-popup"]');
+  if (overlay.length === 0)
+    closeButton.hide();
+  else
+    closeButton.show().on('click', function () {
+      overlay.fadeOut('normal');
+      return false;
+    });
 
   var skipStep1 = c.hasClass('select-position');
 
