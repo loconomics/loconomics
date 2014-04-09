@@ -13,7 +13,7 @@
     var type = Request["type"];
     switch (type) {
         case "background-check":
-            @RenderPage("$BackgroundCheckEdit.cshtml")
+            @RenderPage("$BackgroundCheckEdit.cshtml", new { IsSubform = true })
             break;
     }
 }

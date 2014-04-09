@@ -258,6 +258,10 @@ function doJSONAction(data, text, jx, ctx) {
             // and maybe doing something more in the triggered event with the data object.
             showSuccessMessage(ctx, data.Result.Message, data);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
+        } else if (data.Code == 8) {
+            // Show validation messages
+            var validationHelper = require('./validationHelper');
+            validationHelper.setErrors(ctx.form, data.Result.Errors);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx, ctx]);

@@ -245,6 +245,10 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
         dtr
         .on('click', '.crudl-cancel', finishEdit)
         .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit)
+        // An evented method: trigger this event to execute a viewer reload:
+        .on('reloadList', '*', function () {
+          vwr.find('.crudl-list').reload({ autofocus: false });
+        })
         .on('ajaxSuccessPost', 'form, fieldset', function (e, data) {
           if (data.Code === 0 || data.Code == 5 || data.Code == 6) {
             // Show viewer and reload list:

@@ -38,7 +38,7 @@
             }
             @if (thereAreBackgroundChecksAvailable)
             {
-                <div class="ActionBox">
+                <div class="ActionBox BackgroundCheckActionBox">
                     <a href="#add-background-check" class="crudl-create" data-crudl-extra-query="type=background-check">Add a background check</a>
                     <p>
                         Background checks can be essential for some clients to feel at ease hiring your services. Don't worry if there's a blemish, we'll help you with this.
@@ -47,7 +47,7 @@
             }
         </div>
         <div class="crudl-list" data-source-url="@(LcUrl.LangUrl)$dashboard/AboutYou/$VerificationsList/">
-            @RenderPage("$VerificationsList.cshtml", new { NewDesign = true, HasEmailVerification = hasEmailVerification })
+            @RenderPage("$VerificationsList.cshtml", new { HasEmailVerification = hasEmailVerification })
         </div>
     </div>
 </fieldset>

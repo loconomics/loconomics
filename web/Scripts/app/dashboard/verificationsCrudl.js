@@ -24,5 +24,8 @@ exports.on = function (containerSelector) {
   })
   .on(crudl.settings.events['edit-ends'], function () {
     $others.xshow({ effect: 'height', duration: 'slow' });
+  })
+  .on(crudl.settings.events['editor-ready'], function (e, $editor) {
+    require('./backgroundCheckRequest').setupForm($editor.find('.DashboardBackgroundCheck'));
   });
 };

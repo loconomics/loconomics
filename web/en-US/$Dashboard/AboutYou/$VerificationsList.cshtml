@@ -9,7 +9,7 @@
     
     var verifications = LcData.UserInfo.GetUserVerifications(u.UserID);
     
-    var newWay = PageData["NewDesign"] ?? false;
+    var newWay = PageData["NewDesign"] ?? true;
     
     var hasEmailVerification = PageData["HasEmailVerification"] ?? LcData.UserInfo.HasEmailVerification(u.UserID);
 }

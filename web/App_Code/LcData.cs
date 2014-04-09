@@ -1269,20 +1269,26 @@ public static partial class LcData
                     ,B.BackgroundCheckDescription
                     ,B.BackgroundCheckPrice
             FROM    BackgroundCheck As B
-                        INNER JOIN
+                      INNER JOIN
                     PositionBackgroundCheck As P
                         ON B.BackgroundCheckID = P.BackgroundCheckID
                         AND B.CountryID = P.CountryID
-                        INNER JOIN
+                      INNER JOIN
 					UserProfilePositions As UP
 						ON UP.PositionID = P.PositionID
 						AND UP.CountryID = P.CountryID
 						AND UP.LanguageID = B.LanguageID
+                      LEFT JOIN
+                    UserBackgroundCheck As UB
+                        ON B.BackgroundCheckID = UB.BackgroundCheckID
+                        AND UP.UserID = UB.UserID
             WHERE
                 B.Active = 1
                 AND P.Active = 1
                 AND UP.Active = 1
                 AND UP.StatusID > 0
+                -- Its a non requested Check
+                AND UB.StatusID is null
                 AND UP.UserID = @0
                 AND B.LanguageID = @1
                 AND B.CountryID = @2
