@@ -13,7 +13,9 @@ exports.on = function (containerSelector) {
   var $c = $(containerSelector),
     crudlSelector = '.DashboardAppointments',
     $crudlContainer = $c.find(crudlSelector).closest('.DashboardSection-page-section'),
-    $others = $crudlContainer.siblings().add($crudlContainer.find('.DashboardSection-page-section-introduction'));
+    $others = $crudlContainer.siblings()
+        .add($crudlContainer.find('.DashboardSection-page-section-introduction'))
+        .add($crudlContainer.closest('.DashboardAvailability').siblings());
 
   var crudl = initCrudl(crudlSelector);
 

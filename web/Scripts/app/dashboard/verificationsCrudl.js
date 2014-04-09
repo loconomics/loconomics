@@ -1,8 +1,6 @@
-﻿/** Education page setup for CRUDL use
+﻿/** Verifications page setup for CRUDL use
 **/
 var $ = require('jquery');
-//require('LC/jquery.xtsh');
-require('jquery-ui');
 
 // TODO: Replace by real require and not global LC:
 //var ajaxForms = require('../LC/ajaxForms');
@@ -12,14 +10,13 @@ var initCrudl = LC.initCrudl;
 
 exports.on = function (containerSelector) {
   var $c = $(containerSelector),
-    sectionSelector = '.DashboardEducation',
+    sectionSelector = '.DashboardVerifications',
     $section = $c.find(sectionSelector).closest('.DashboardSection-page-section'),
     $others = $section.siblings()
-        .add($section.find('.DashboardSection-page-section-introduction'))
-        .add($section.closest('.DashboardAboutYou').siblings());
+      .add($section.find('.DashboardSection-page-section-introduction'))
+      .add($section.closest('.DashboardAboutYou').siblings());
 
   var crudl = initCrudl(sectionSelector);
-  //crudl.settings.effects['show-viewer'] = { effect: 'height', duration: 'slow' };
 
   crudl.elements
   .on(crudl.settings.events['edit-starts'], function () {
@@ -27,14 +24,5 @@ exports.on = function (containerSelector) {
   })
   .on(crudl.settings.events['edit-ends'], function () {
     $others.xshow({ effect: 'height', duration: 'slow' });
-  })
-  .on(crudl.settings.events['editor-ready'], function (e, $editor) {
-    // Setup autocomplete
-    $editor.find('[name=institution]').autocomplete({
-      source: LcUrl.JsonPath + 'GetInstitutions/Autocomplete/',
-      autoFocus: false,
-      delay: 200,
-      minLength: 5
-    });
   });
 };

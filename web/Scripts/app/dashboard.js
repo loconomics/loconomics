@@ -65,6 +65,7 @@ function initAboutYou() {
 
   /* About you / verifications */
   require('./dashboard/verificationsActions').on('.DashboardVerifications');
+  require('./dashboard/verificationsCrudl').on('.DashboardAboutYou');
 }
 
 function initAvailability() {
