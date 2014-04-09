@@ -1189,6 +1189,122 @@ public static partial class LcData
     ";
     #endregion
 
+    #region Background Checks
+    public static void RequestBackgroundCheck(int userId, int backgroundCheckId)
+    {
+        using (var db = Database.Open("sqlloco")) {
+            // Save request in database as 'pending'
+            db.Execute(@"
+                INSERT INTO UserBackgroundCheck (
+                    UserID,
+                    BackgroundCheckID,
+                    StatusID,
+                    LastVerifiedDate,
+                    CreatedDate,
+                    ModifiedDate,
+                    ModifiedBy
+                ) VALUES (
+                    @0, @1,
+                    1, --status: pending
+                    getdate(),
+                    getdate(), getdate(), 'sys'
+                )
+
+                -- Check Alert
+                EXEC TestAlertBackgroundCheck @0
+            ", userId, backgroundCheckId);
+            
+            // Send email to loconomics
+            LcMessaging.SendMail("verifications@loconomics.com",
+                "[Action Required] Background check request",
+                LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailBackgroundCheckRequest/",
+                    new Dictionary<string, object> { 
+                        { "ProviderUserID", userId },
+                        { "BackgroundCheckID", backgroundCheckId }
+            }));
+        }
+    }
+
+    public static dynamic GetUserBackgroundChecks(int userId, int countryId, int stateProvinceId, bool requested)
+    {
+        var queryRequested = @"
+            SELECT  B.BackgroundCheckID
+                    ,B.BackgroundCheckName
+                    ,B.BackgroundCheckDescription
+                    ,B.BackgroundCheckPrice
+                    ,UB.StatusID
+                    ,UB.Summary
+                    ,UB.LastVerifiedDate
+                    ,S.StatusName
+            FROM    BackgroundCheck As B
+                      INNER JOIN
+                    PositionBackgroundCheck As P
+                        ON B.BackgroundCheckID = P.BackgroundCheckID
+                        AND B.CountryID = P.CountryID
+                      INNER JOIN
+                    UserBackgroundCheck As UB
+                        ON B.BackgroundCheckID = UB.BackgroundCheckID
+                      INNER JOIN
+                    UserProfilePositions As UP
+						ON UP.UserID = UB.UserID
+						AND UP.PositionID = P.PositionID
+						AND UP.CountryID = P.CountryID
+						AND UP.LanguageID = B.LanguageID
+				      INNER JOIN
+                    [Status] As S
+                        ON UB.StatusID = S.StatusID
+            WHERE
+                B.Active = 1
+                AND P.Active = 1
+                AND UP.Active = 1
+                AND UP.StatusID > 0
+                AND UP.UserID = @0
+                AND B.LanguageID = @1
+                AND B.CountryID = @2
+                AND P.StateProvinceID = @3
+        ";
+        var queryAvailable = @"
+            SELECT  B.BackgroundCheckID
+                    ,B.BackgroundCheckName
+                    ,B.BackgroundCheckDescription
+                    ,B.BackgroundCheckPrice
+            FROM    BackgroundCheck As B
+                      INNER JOIN
+                    PositionBackgroundCheck As P
+                        ON B.BackgroundCheckID = P.BackgroundCheckID
+                        AND B.CountryID = P.CountryID
+                      INNER JOIN
+					UserProfilePositions As UP
+						ON UP.PositionID = P.PositionID
+						AND UP.CountryID = P.CountryID
+						AND UP.LanguageID = B.LanguageID
+                      LEFT JOIN
+                    UserBackgroundCheck As UB
+                        ON B.BackgroundCheckID = UB.BackgroundCheckID
+                        AND UP.UserID = UB.UserID
+            WHERE
+                B.Active = 1
+                AND P.Active = 1
+                AND UP.Active = 1
+                AND UP.StatusID > 0
+                -- Its a non requested Check
+                AND UB.StatusID is null
+                AND UP.UserID = @0
+                AND B.LanguageID = @1
+                AND B.CountryID = @2
+                AND P.StateProvinceID = @3
+        ";
+
+        using (var db = Database.Open("sqlloco")) {
+            return db.Query(requested ? queryRequested : queryAvailable,
+            userId,
+            LcData.GetCurrentLanguageID(),
+            countryId,
+            stateProvinceId);
+        }
+    }
+    #endregion
+
     #region Education
     public const string sqlSelectFromUserEducation = @"
             SELECT  E.UserEducationId, E.UserID, E.InstitutionID

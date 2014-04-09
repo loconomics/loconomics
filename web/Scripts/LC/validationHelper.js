@@ -56,9 +56,27 @@ function setValidationSummaryAsValid(container) {
     LC.setupValidation();
 }
 
-function setValidationSummaryAsError(container) {
+function setValidationSummaryAsError(container, errors) {
   var v = findValidationSummary(container);
   v.addClass('validation-summary-errors').removeClass('validation-summary-valid');
+}
+
+function setErrors(container, errors) {
+    //var validator = $(container).validate();
+    //validator.showErrors(errors);
+    var $s = findValidationSummary(container).find('ul');
+    var withErrors = false;
+    for(var field in errors) {
+        if (errors.hasOwnProperty && !errors.hasOwnProperty(field))
+            continue;
+        $('<li/>').text(errors[field]).appendTo($s);
+        //$(container).find('[name="' + field + '"]')
+        //.addClass('field-validation-error')
+        //.removeClass('field-validation-valid valid');
+        withErrors = true;
+    }
+    if (withErrors)
+        setValidationSummaryAsError(container);
 }
 
 function goToSummaryErrors(form) {
@@ -71,7 +89,7 @@ function goToSummaryErrors(form) {
 
 function findValidationSummary(container) {
   container = container || document;
-  return $('[data-valmsg-summary=true]');
+  return $('[data-valmsg-summary=true]', container);
 }
 
 module.exports = {
@@ -79,5 +97,6 @@ module.exports = {
     setValidationSummaryAsValid: setValidationSummaryAsValid,
     setValidationSummaryAsError: setValidationSummaryAsError,
     goToSummaryErrors: goToSummaryErrors,
-    findValidationSummary: findValidationSummary
+    findValidationSummary: findValidationSummary,
+    setErrors: setErrors
 };

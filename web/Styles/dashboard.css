@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-04-02
+/*! Loconomics.com 2014-04-09
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1287,7 +1287,7 @@ form ul li {
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
 
-/* line 152 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 186 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1879,6 +1879,46 @@ form ul li {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+/* line 152 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+
+/* line 153 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardBackgroundCheck .DashboardBackgroundCheck-item {
+  position: relative;
+}
+
+/* line 156 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardBackgroundCheck .DashboardBackgroundCheck-item h5 {
+  font-size: 1em;
+  margin-bottom: 0.5em;
+}
+
+/* line 161 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardBackgroundCheck .DashboardBackgroundCheck-item .buy-action {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 1em;
+}
+
+/* line 169 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardBackgroundCheck .popup.buy-step-2 ol {
+  margin: 0 0 0 35px;
+}
+
+/* line 173 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardBackgroundCheck .popup.buy-step-2 ol li {
+  list-style: decimal outside;
+  color: #b5e1e2;
+  font-size: 1.6em;
+  margin: 10px 0 0;
+}
+
+/* line 180 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardBackgroundCheck .popup.buy-step-2 ol li .step-details {
+  font-size: 0.6em;
+  color: #666;
 }
 
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */

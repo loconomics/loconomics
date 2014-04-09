@@ -9,7 +9,7 @@
     
     var verifications = LcData.UserInfo.GetUserVerifications(u.UserID);
     
-    var newWay = PageData["NewDesign"] ?? false;
+    var newWay = PageData["NewDesign"] ?? true;
     
     var hasEmailVerification = PageData["HasEmailVerification"] ?? LcData.UserInfo.HasEmailVerification(u.UserID);
 }
@@ -34,7 +34,7 @@
                     <li class="DashboardVerifications-list-item ItemBox crudl-item" data-crudl-item-id="@v.VerificationID">
                         <h1 class="ItemBox-name">@v.VerificationType</h1>
                     
-                        <p><span class="DashboardVerifications-list-item-status @(v.VerificationStatusID == 1 ? "DashboardVerifications-list-item-status--confirmed" : "")">@v.VerificationStatusName</span> on @v.LastVerifiedDate</p>
+                        <p><span class="DashboardVerifications-list-item-status @(v.VerificationStatusID == 1 ? "DashboardVerifications-list-item-status--confirmed" : "")">@v.VerificationStatusName</span> since @v.LastVerifiedDate</p>
                       
                         @* There is no way to edit verifications right now
                         <div class="actions ItemBox-actions">
@@ -45,9 +45,16 @@
                     </li>
                     }
                 }
+
+                if (u.IsProvider)
+                {
+                    @RenderPage("$BackgroundCheckListItems.cshtml", new { ItemClass = "DashboardVerifications-list-item" })
+                }
             }
             else
             {
+                // DEPRECATED old desing; its not used already, remove this and all CSS,JS related
+                
                 if (hasEmailVerification)
                 {
                     <li class="DashboardVerifications-list-item verification">
