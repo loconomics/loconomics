@@ -1225,43 +1225,76 @@ public static partial class LcData
         }
     }
 
-    public static dynamic GetUserBackgroundChecks(int userId, int countryId, int stateProvinceId, bool requested, int positionId = 0)
+    public static dynamic GetUserBackgroundChecks(int userId, int countryId, int stateProvinceId, bool requested)
     {
+        var queryRequested = @"
+            SELECT  B.BackgroundCheckID
+                    ,B.BackgroundCheckName
+                    ,B.BackgroundCheckDescription
+                    ,B.BackgroundCheckPrice
+                    ,UB.StatusID
+                    ,UB.Summary
+                    ,UB.LastVerifiedDate
+                    ,S.StatusName
+            FROM    BackgroundCheck As B
+                      INNER JOIN
+                    PositionBackgroundCheck As P
+                        ON B.BackgroundCheckID = P.BackgroundCheckID
+                        AND B.CountryID = P.CountryID
+                      INNER JOIN
+                    UserBackgroundCheck As UB
+                        ON B.BackgroundCheckID = UB.BackgroundCheckID
+                      INNER JOIN
+                    UserProfilePositions As UP
+						ON UP.UserID = UB.UserID
+						AND UP.PositionID = P.PositionID
+						AND UP.CountryID = P.CountryID
+						AND UP.LanguageID = B.LanguageID
+				      INNER JOIN
+                    [Status] As S
+                        ON UB.StatusID = S.StatusID
+            WHERE
+                B.Active = 1
+                AND P.Active = 1
+                AND UP.Active = 1
+                AND UP.StatusID > 0
+                AND UP.UserID = @0
+                AND B.LanguageID = @1
+                AND B.CountryID = @2
+                AND P.StateProvinceID = @3
+        ";
+        var queryAvailable = @"
+            SELECT  B.BackgroundCheckID
+                    ,B.BackgroundCheckName
+                    ,B.BackgroundCheckDescription
+                    ,B.BackgroundCheckPrice
+            FROM    BackgroundCheck As B
+                        INNER JOIN
+                    PositionBackgroundCheck As P
+                        ON B.BackgroundCheckID = P.BackgroundCheckID
+                        AND B.CountryID = P.CountryID
+                        INNER JOIN
+					UserProfilePositions As UP
+						ON UP.PositionID = P.PositionID
+						AND UP.CountryID = P.CountryID
+						AND UP.LanguageID = B.LanguageID
+            WHERE
+                B.Active = 1
+                AND P.Active = 1
+                AND UP.Active = 1
+                AND UP.StatusID > 0
+                AND UP.UserID = @0
+                AND B.LanguageID = @1
+                AND B.CountryID = @2
+                AND P.StateProvinceID = @3
+        ";
+
         using (var db = Database.Open("sqlloco")) {
-            return db.Query(@"
-                SELECT  B.BackgroundCheckID
-                        ,B.BackgroundCheckName
-                        ,B.BackgroundCheckDescription
-                        ,B.BackgroundCheckPrice
-                        ,UB.StatusID
-                        ,UB.Summary
-                        ,UB.LastVerifiedDate
-                        ,S.StatusName
-                FROM    BackgroundCheck As B
-                            INNER JOIN
-                        PositionBackgroundCheck As P
-                            ON B.BackgroundCheckID = P.BackgroundCheckID
-                            AND (@1 = 0 OR P.PositionID = @1)
-                            AND B.CountryID = P.CountryID
-                            LEFT JOIN
-                        UserBackgroundCheck As UB
-                            ON B.BackgroundCheckID = UB.BackgroundCheckID
-                            AND UB.UserID = @0
-                            LEFT JOIN
-                        Status As S
-                            ON UB.StatusID = S.StatusID
-                WHERE
-                    B.Active = 1 AND P.Active = 1
-                        AND B.LanguageID = @2 AND B.CountryID = @3
-                        AND P.StateProvinceID = @4
-                        AND (@5 = 1 AND S.StatusID is not null OR @5 = 0 AND S.StatusID is null)
-            ",
+            return db.Query(requested ? queryRequested : queryAvailable,
             userId,
-            positionId,
             LcData.GetCurrentLanguageID(),
             countryId,
-            stateProvinceId,
-            requested ? 1 : 0);
+            stateProvinceId);
         }
     }
     #endregion

@@ -34,7 +34,7 @@
                     <li class="DashboardVerifications-list-item ItemBox crudl-item" data-crudl-item-id="@v.VerificationID">
                         <h1 class="ItemBox-name">@v.VerificationType</h1>
                     
-                        <p><span class="DashboardVerifications-list-item-status @(v.VerificationStatusID == 1 ? "DashboardVerifications-list-item-status--confirmed" : "")">@v.VerificationStatusName</span> on @v.LastVerifiedDate</p>
+                        <p><span class="DashboardVerifications-list-item-status @(v.VerificationStatusID == 1 ? "DashboardVerifications-list-item-status--confirmed" : "")">@v.VerificationStatusName</span> since @v.LastVerifiedDate</p>
                       
                         @* There is no way to edit verifications right now
                         <div class="actions ItemBox-actions">
