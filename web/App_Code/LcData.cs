@@ -1228,7 +1228,8 @@ public static partial class LcData
     public static dynamic GetUserBackgroundChecks(int userId, int countryId, int stateProvinceId, bool requested)
     {
         var queryRequested = @"
-            SELECT  B.BackgroundCheckID
+            SELECT  DISTINCT
+                    B.BackgroundCheckID
                     ,B.BackgroundCheckName
                     ,B.BackgroundCheckDescription
                     ,B.BackgroundCheckPrice
@@ -1238,33 +1239,21 @@ public static partial class LcData
                     ,S.StatusName
             FROM    BackgroundCheck As B
                       INNER JOIN
-                    PositionBackgroundCheck As P
-                        ON B.BackgroundCheckID = P.BackgroundCheckID
-                        AND B.CountryID = P.CountryID
-                      INNER JOIN
                     UserBackgroundCheck As UB
                         ON B.BackgroundCheckID = UB.BackgroundCheckID
-                      INNER JOIN
-                    UserProfilePositions As UP
-						ON UP.UserID = UB.UserID
-						AND UP.PositionID = P.PositionID
-						AND UP.CountryID = P.CountryID
-						AND UP.LanguageID = B.LanguageID
 				      INNER JOIN
                     [Status] As S
                         ON UB.StatusID = S.StatusID
             WHERE
                 B.Active = 1
-                AND P.Active = 1
-                AND UP.Active = 1
-                AND UP.StatusID > 0
-                AND UP.UserID = @0
+                AND UB.UserID = @0
                 AND B.LanguageID = @1
                 AND B.CountryID = @2
-                AND P.StateProvinceID = @3
+                --AND P.StateProvinceID = @3
         ";
         var queryAvailable = @"
-            SELECT  B.BackgroundCheckID
+            SELECT  DISTINCT
+                    B.BackgroundCheckID
                     ,B.BackgroundCheckName
                     ,B.BackgroundCheckDescription
                     ,B.BackgroundCheckPrice
