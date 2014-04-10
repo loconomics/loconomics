@@ -69,12 +69,11 @@
     @foreach (var check in checks)
     {
         <li class="DashboardBackgroundCheck-item">
+            <div class="actions"><a href="#buy-check" data-background-check-id="@check.BackgroundCheckID" class="button main-action buy-action">Purchase for @check.BackgroundCheckPrice.ToString("c")</a></div>
             <h5>@check.BackgroundCheckName</h5>
-            <div class="description">
+            <div>
                 @LcHelpers.PrintTextAsHtml(check.BackgroundCheckDescription)
             </div>
-
-            <div class="actions"><a href="#buy-check" data-background-check-id="@check.BackgroundCheckID" class="button main-action buy-action">Purchase for @check.BackgroundCheckPrice.ToString("c")</a></div>
         </li>
     }
     </ul>
