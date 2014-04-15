@@ -1,0 +1,73 @@
+﻿@{
+    var user = PageData["User"] ?? Request["user"];
+    var type = PageData["Type"] ?? "weekly";
+    
+}
+@functions {
+    /// <summary>
+    /// Return all days in a week, in the culture sort
+    /// TODO: Must check culture and returns the appropiate order, right
+    /// now is hard-coded for US.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<DayOfWeek> getWeekDays(){
+        yield return DayOfWeek.Sunday;
+        yield return DayOfWeek.Monday;
+        yield return DayOfWeek.Tuesday;
+        yield return DayOfWeek.Wednesday;
+        yield return DayOfWeek.Thursday;
+        yield return DayOfWeek.Friday;
+        yield return DayOfWeek.Saturday;
+    }
+    
+    IEnumerable<DateTime> getDayHours(){
+        for(var h = 0; h < 24; h++) {
+            yield return DateTime.Today.AddHours(h);
+        }
+    }
+}
+<div class="AvailabilityCalendar AvailabilityCalendar--@(type)" data-calendar-user="@(user)" data-source-url="@(LcUrl.LangPath)calendar/get-availability/">
+    @if (type == "weekly")
+    {
+    <div class="AvailabilityCalendar-actions">
+        <button type="button" class="Actions-move Actions-prev">Previous week</button>
+        <button type="button" class="Actions-move Actions-next">Next week</button>
+        <div class="AvailabilityCalendar-status"></div>
+        <div class="AvailabilityCalendar-errorMessage" data-message-prefix="An error happened: "></div>
+    </div>
+    }
+    <table>
+        <thead class="AvailabilityCalendar-days">
+            <tr>
+                <th></th>
+                @foreach (var wk in getWeekDays())
+                {
+                    <th>@(wk.ToString().Substring(0, 3))</th>
+                }
+            </tr>
+        </thead>
+        <tbody class="AvailabilityCalendar-slots">
+            @foreach (var dh in getDayHours())
+            {    
+                for (var q = 0; q < 4; q++)
+                {
+                    <tr class="@( q == 0 ? "AvailabilityCalendar-hour" : "" ) @( (q == 0 && dh.Hour == 12) ? "AvailabilityCalendar-hour--noon" : "" )">
+                        @if (q == 0)
+                        {
+                            <th rowspan="4">@( (dh.Hour == 0 || dh.Hour == 12) ? dh.ToString("h tt") : dh.ToString("h ") )</th>
+                        }
+                        @foreach (var wk in getWeekDays()) {
+                            <td></td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div class="AvailabilityCalendar-legend">
+        <ul>
+            <li class="AvailabilityCalendar-legend-available"><div class="AvailabilityCalendar-legend-example"></div>Available</li>
+            <li class="AvailabilityCalendar-legend-unavailable"><div class="AvailabilityCalendar-legend-example"></div>Unavailable</li>
+        </ul>
+    </div>
+</div>

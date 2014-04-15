@@ -1,0 +1,127 @@
+/** Your work
+**/
+@import "../utils/BasicForm"
+@import "../utils/Crudl--basicStyle"
+@import "../utils/ItemBox"
+@import "../utils/ActionBox"
+@import "../utils/ColorsPalette"
+
+.DashboardAvailability {
+    
+    .DashboardWeeklySchedule {
+    
+        .DashboardWeeklySchedule-require {
+            li {
+                margin-bottom: 1em;
+            }
+        }
+
+    }
+    
+    .DashboardAppointments {
+        
+        .DashboardAppointments-editor {
+        
+            ul > li {
+                label {
+                    display: inline-block;
+                    width: 120px;
+                    text-align: right;
+                    margin-right: 5px;
+                }
+            
+                .time-options {
+                    label,
+                    .repeat-options .repeat-ends ul {
+                        li {
+                            padding-left: 0;
+                            font-weight: normal;
+                        
+                            label {
+                                width: auto;
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+                    
+                    .time-switchers {
+                        margin: 4px 5px 4px 130px;
+                        
+                        label {
+                            width: auto;
+                        }
+                    }
+                    
+                    .repeat-every {
+   
+                       .repeat-frequency-unit {
+                            text-transform: lowercase;
+                        }
+                    
+                    }
+                    
+                    .repeat-options {
+                        label {
+                            font-weight: bold;
+                        }
+                        
+                        ul > li {
+                            margin: 6px 0;
+                        }
+                        
+                        .repeat-ends > * {
+                            display: inline-block;
+                            vertical-align: top;
+                        }
+                        
+                        .frequency-extra {
+                            .week-days,
+                            .monthly-options {
+                                display: inline;
+                            }
+                        
+                            .week-days .has-tooltip {
+                                text-decoration: none;
+                            }
+                        
+                            .week-days label,
+                            .monthly-options label {
+                                width: auto;
+                            }
+                        }
+                    }
+                }
+                
+                input[type=text],
+                select,
+                textarea {
+                    width: 400px;
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+                }
+                
+                &.when { 
+                    input[type=text] {
+                        width: 80px;
+                    }
+                    
+                    .repeat-every input[type=text] {
+                        width: 40px;
+                    }
+                    
+                    .date[type="text"],
+                    .time[type="text"] {
+                        width: 6.3em;
+                    }
+                    
+                    select.time {
+                        width: 5.7em;
+                    }
+                }
+            }
+        
+        }
+        
+    }
+}

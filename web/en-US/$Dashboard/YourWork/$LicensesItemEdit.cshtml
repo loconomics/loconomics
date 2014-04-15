@@ -1,0 +1,269 @@
+﻿@*
+    Allow edit or create an userlicense record.
+ *@
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var isSubform = PageData["IsSubform"] ?? Request["subform"].AsBool();
+
+    var u = LcData.UserInfo.GetUserRowWithContactData();
+    var licenseID = Request["LicenseID"].AsInt();
+    var positionID = Request["PositionID"].AsInt();
+    var idprefix = "editLicense" + licenseID.ToString();
+
+    // Validation rules
+    Validation.RequireField("first-name", LcRessources.RequiredField("First name"));
+    Validation.RequireField("last-name", LcRessources.RequiredField("Last name"));
+    Validation.RequireField("license-number", LcRessources.RequiredField("License number"));
+    Validation.RequireField("county", LcRessources.RequiredField("County"));
+    Validation.RequireField("city", LcRessources.RequiredField("City"));
+    Validation.Add("license-link", Validator.StringLength(2073, 0, "License URL link must be fewer than 2073 characters."));
+    Validation.Add("license-number", Validator.StringLength(100, 0, "License/Certification number must be fewer than 100 characters."));
+    Validation.Add("first-name", Validator.StringLength(100, 0, "First name must be fewer than 100 characters."));
+    Validation.Add("last-name", Validator.StringLength(100, 0, "Last name must be fewer than 100 characters."));
+    Validation.Add("second-last-name", Validator.StringLength(100, 0, "Second last name must be fewer than 100 characters."));
+    Validation.Add("middle-initial", Validator.StringLength(1, 0, "Middle initial must be a single character."));
+    Validation.Add("business-name", Validator.StringLength(200, 0, "Business name must be fewer than 200 characters."));
+    Validation.Add("city", Validator.StringLength(2073, 0, "City must be fewer than 100 characters."));
+
+    // Save posted data
+    if (IsPost && Validation.IsValid()) {
+        if (Request["middle-initial"].Length > 1) {
+            ModelState.AddError("middle-initial", "Middle Initial must be only one letter");
+        }
+        if (ModelState.IsValid) {
+            var sqlCheckLicense = @"
+                SELECT  count(*)
+                FROM    userlicenseverification
+                WHERE   ProviderUserID = @0
+                         AND
+                        PositionID = @1
+                         AND
+                        LicenseCertificationID = @2 
+            ";
+            var sqlCheckOptionGroup = @"
+                DECLARE @OptionGroup varchar(50)
+
+                SELECT  @OptionGroup = OptionGroup
+                FROM    LicenseCertification As L
+                WHERE   L.LicenseCertificationID = @2
+
+                SELECT  count(*)
+                FROM    licensecertification As L
+                         INNER JOIN
+                        userlicenseverification As R
+                          ON L.LicenseCertificationID = R.LicenseCertificationID
+                WHERE
+                        ProviderUserID = @0
+                         AND
+                        PositionID = @1
+                         AND
+                        L.Active = 1
+                         AND
+                        L.OptionGroup is not null
+                         AND
+                        L.OptionGroup = @OptionGroup
+            ";
+            var sqlInsRequest = @"
+                INSERT INTO userlicenseverification (
+                    ProviderUserID,
+                    PositionID,
+                    -- License info
+                    LicenseCertificationID,
+                    LicenseCertificationURL,
+                    LicenseCertificationNumber,
+                    -- Provider personal
+                    FirstName,
+                    LastName,
+                    SecondLastName,
+                    MiddleInitial,
+                    BusinessName,
+                    -- Provider location
+                    City,
+                    CountyID,
+                    StateProvinceID,
+                    CountryID,
+                    -- Record
+                    CreatedDate,
+                    ModifiedDate,
+                    ModifiedBy,
+                    StatusID
+                ) VALUES (
+                    @0, @1,
+                    @2, @3, @4,
+                    @5, @6, @7, @8, @9,
+                    @10, @11, @12, @13,
+                    getdate(), getdate(), 'sys', 1 --Pending status
+                )
+
+                -- Check Alert
+                EXEC TestAlertProfessionalLicense @0, @1
+            ";
+            
+            using (var db = Database.Open("sqlloco")) {
+            
+                if (db.QueryValue(sqlCheckLicense, u.UserID, positionID, Request["license-type"]) > 0) {
+                    ModelState.AddError("license-type", "You already have this license registered!");
+                }
+                if (ModelState.IsValid && db.QueryValue(sqlCheckOptionGroup, u.UserID, positionID, Request["license-type"]) > 0) {
+                    ModelState.AddError("license-type", "You have a license that is incompatible with this one.");
+                }
+            
+                if (ModelState.IsValid) {
+                    try{
+                        // Save request
+                        db.Execute(sqlInsRequest,
+                            u.UserID,
+                            positionID,
+                            licenseID,
+                            Request["license-link"],
+                            Request["license-number"],
+                            Request["first-name"],
+                            Request["last-name"],
+                            Request["second-last-name"],
+                            Request["middle-initial"],
+                            Request["business-name"],
+                            Request["city"],
+                            Request["county"],
+                            u.StateProvinceID,
+                            u.PreferredCountryID //LcData.GetCurrentCountryID()
+                        );
+                        // Send email to loconomics
+                        LcMessaging.SendMail("verifications@loconomics.com",
+                            "[Action Required] License verification request",
+                            LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailLicenseVerificationRequest",
+                                new Dictionary<string, object> { 
+                                    { "ProviderUserID", u.UserID },
+                                    { "PositionID", positionID },
+                                    { "LicenseCertificationID", licenseID }
+                        }));
+                    } catch {
+                        LcHelpers.ReturnJsonResult(0, "It looks like we already have that license for you. If that's not right, contact us.");
+                        // It stops
+                    }
+                    // Out of try-catch: inside will break with an exception (response.end not allowed inside try block)
+                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                }
+            }
+        }
+    }
+    
+    dynamic licenseInfo = null;
+    var sqlGetLicenseInfo = @"
+        SELECT
+            L.*,
+            SP.StateProvinceName,
+            SP.StateProvinceCode
+        FROM
+            licensecertification As L
+             INNER JOIN
+            positionlicense As P
+              ON L.LicenseCertificationID = P.LicenseCertificationID
+                AND L.StateProvinceID = P.StateProvinceID
+                AND L.CountryID = P.CountryID
+             INNER JOIN
+            StateProvince As SP
+              ON SP.StateProvinceID = L.StateProvinceID
+        WHERE
+            P.PositionID = @0
+             AND
+            L.Active = 1
+             AND
+            P.Active = 1
+             AND
+            L.LicenseCertificationID = @1
+    ";
+    using (var db = Database.Open("sqlloco")) {
+        licenseInfo = db.QuerySingle(sqlGetLicenseInfo, positionID, licenseID);
+    }
+    if (licenseInfo == null) {
+        LcHelpers.ReturnJsonResult(0, "Invalid license type");
+    }
+
+    var formAction = LcUrl.LangPath + "$dashboard/YourWork/$LicensesItemEdit/?LicenseID=" + licenseID + "&PositionID=" + positionID;
+}
+
+@if (isSubform) {
+    @Html.Raw("<")<text>fieldset data-ajax-fieldset-action="@(formAction)&subform=true" class="crudl-form ajax ajax-box"></text>
+} else {
+    @Html.Raw("<")<text>form action="@formAction" method="post" class="crudl-form ajax ajax-box" id="@idprefix"></text>
+}
+
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+
+    <div class="DashboardLicense-licenseDetails">
+        <ul>
+            <li>Please input your <strong>@licenseInfo.LicenseCertificationType</strong> license details below, and we’ll verify it right away.</li>
+            <li><strong>License description:</strong> @licenseInfo.LicenseCertificationTypeDescription</li>
+            <li><strong>State:</strong> @licenseInfo.StateProvinceName (@licenseInfo.StateProvinceCode)</li>
+            <li><strong>Certifying board:</strong> <a href="@(licenseInfo.VerificationWebsiteURL)" target="_blank">@licenseInfo.LicenseCertificationAuthority</a></li>
+        </ul>
+    </div>
+
+    <fieldset class="DashboardLicense-request">
+        <ul>
+            <li>
+                <label for="@idprefix-county">County:</label>
+                <select id="@idprefix-county" name="county" @Validation.GetHtml("county")>
+                    <option value=""></option>
+                    @LcHelpers.CountyOptions(Request["county"])
+                </select>
+            </li>
+            <li>
+                <label for="@idprefix-license-number">License/certificate number:</label>
+                <input type="text" id="@idprefix-license-number" value="@Request["license-number"]" name="license-number" @Validation.GetHtml("license-number")/>
+            </li>
+            <li>
+                <label for="@idprefix-business-name">Business name (optional):</label>
+                <input type="text" id="@idprefix-business-name" value="@Request["business-name"]" name="business-name" @Validation.GetHtml("business-name")/>
+            </li>
+            <li>
+                <label for="@idprefix-first-name">First name:</label>
+                <input type="text" id="@idprefix-first-name" value="@Request["first-name"]" name="first-name" @Validation.GetHtml("first-name")/>
+            </li>
+            <li>
+                <label for="@idprefix-last-name">Last name:</label>
+                <input type="text" id="@idprefix-last-name" value="@Request["last-name"]" name="last-name" @Validation.GetHtml("last-name")/>
+            </li>
+            @if (LcData.GetCurrentCountryID() == 1)
+            {
+            <li>
+                <label for="@idprefix-middle-initial">Middle initial:</label>
+                <input type="text" id="@idprefix-middle-initial" value="@Request["middle-initial"]" name="middle-initial" @Validation.GetHtml("middle-initial")/>
+            </li>
+            }
+            @if (LcData.GetCurrentCountryID() == 2)
+            {
+            <li>
+                <label for="@idprefix-second-last-name">Second last name:</label>
+                <input type="text" id="@idprefix-second-last-name" value="@Request["second-last-name"]" name="second-last-name" @Validation.GetHtml("second-last-name")/>
+            </li>
+            }
+            <li>
+                <label for="@idprefix-city">City:</label>
+                <input type="text" id="@idprefix-city" value="@Request["city"]" name="city" @Validation.GetHtml("city")/>
+            </li>
+            <li>
+                <label for="@idprefix-license-link">Link to license:</label>
+                <input type="text" id="@idprefix-license-link" value="@Request["license-link"]" name="license-link" @Validation.GetHtml("license-link")/>
+            </li>
+            @if (!String.IsNullOrEmpty(licenseInfo.HowToGetLicensedURL))
+            {
+                <li>
+                    Need to apply or renew this license/certification? Please <a target="_blank" href="@(licenseInfo.HowToGetLicensedURL)">visit this link</a>.
+                </li>
+            }
+        </ul>
+    </fieldset>
+
+    <div class="actions">
+        <button type="button" class="button cancel-action crudl-cancel">Cancel</button>
+        <button class="button main-action crudl-save @(isSubform ? "ajax-fieldset-submit" : "")">Save</button>
+    </div>
+
+@if(isSubform) {
+    @Html.Raw("</fieldset>")
+} else {
+    @Html.Raw("</form>")
+}

@@ -8,10 +8,7 @@
     }
     string thisUserType = "";
     int reviewPositionID = 0;
-    int bookingID = Request["BookingID"].AsInt();
-    if (bookingID == 0) {
-        bookingID = (int)PageData["BookingID"];
-    }
+    int bookingID = PageData["BookingID"] ?? Request["BookingID"].AsInt();
     
     dynamic booking = PageData["booking"] ?? LcData.Booking.GetBookingBasicInfo(bookingID);
     dynamic customer = null, provider = null, position = null, review = null;

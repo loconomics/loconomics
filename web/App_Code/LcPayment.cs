@@ -345,7 +345,7 @@ public static class LcPayment
         var bank = LcData.UserInfo.GetUserBankInfo(providerID);
         if (provider != null && address != null)
         {
-            return CreateProviderPaymentAccount(provider, address, bank, gateway);
+            return CreateProviderPaymentAccount(provider, address, bank.ABANumber, gateway);
         }
         return null;
     }
@@ -379,11 +379,27 @@ public static class LcPayment
 
         dynamic bank = new {
             RoutingNumber = ABANumber,
-            Ssn = tin,
             AccountNumber = accountNumber
         };
 
-        return CreateProviderPaymentAccount(user, address, bank, DateTime.Today.AddYears(-30));
+        return CreateProviderPaymentAccount(user, address, bank, DateTime.Today.AddYears(-30), tin);
+    }
+
+    public static MerchantAccount GetProviderPaymentAccount(int userId, BraintreeGateway gateway = null)
+    {
+        gateway = NewBraintreeGateway(gateway);
+
+        var accountID = LcPayment.GetProviderPaymentAccountId(userId);
+        MerchantAccount btAccount = null;
+
+        // Find any existant one:
+        try
+        {
+            btAccount = gateway.MerchantAccount.Find(accountID);
+        }
+        catch (Braintree.Exceptions.NotFoundException ex) { }
+
+        return btAccount;
     }
 
     /// <summary>
@@ -398,12 +414,47 @@ public static class LcPayment
     /// <returns>It returns the result of the Braintree transaction (check for IsSuccess to know the result),
     /// or null when there Braintree doesn't authorize the operation (AuthorizationException catched),
     /// it means the details are not complete or malformed.</returns>
-    public static Result<MerchantAccount> CreateProviderPaymentAccount(dynamic user, LcData.Address address, dynamic bank, DateTime BirthDate, BraintreeGateway gateway = null) {
+    public static dynamic CreateProviderPaymentAccount(dynamic user, LcData.Address address, dynamic bank, DateTime BirthDate, string Ssn, BraintreeGateway gateway = null) {
         gateway = NewBraintreeGateway(gateway);
-        
+
+        // We need to detect what FundingDestination notify depending on the provided
+        // information
+        // Analizing source bank information: asterisks means 'not to set -- preseve previous value', other value is send being
+        // null or empty to clear/remove previous value
+        // Next variables will have null for 'not to set' or any other to be udpated.
+        string routingNumber = null;
+        string accountNumber = null;
+        FundingDestination fundingDest = FundingDestination.EMAIL;
+        if (bank != null)
+        {
+            // Null and asterisks values are not set
+            if (bank.RoutingNumber != null && !bank.RoutingNumber.Contains("*"))
+                routingNumber = bank.RoutingNumber;
+
+            if (bank.AccountNumber != null && !bank.AccountNumber.Contains("*"))
+                accountNumber = bank.AccountNumber;
+            
+            // We check against the bank object because has the original values.
+            // Here, we allow an asterisks value as valid, because is a previous one
+            // that will be preserved, or any new value to be set just different
+            // from empty or null
+            if (!String.IsNullOrEmpty(bank.AccountNumber) && !String.IsNullOrEmpty(bank.RoutingNumber))
+            {
+                fundingDest = FundingDestination.BANK;
+            }
+            else if (!String.IsNullOrWhiteSpace(user.MobilePhone))
+            {
+                fundingDest = FundingDestination.MOBILE_PHONE;
+            }
+        }
+
+        var updateBankInfo = bank != null;
+       
+        var btAccount = GetProviderPaymentAccount((int)user.UserID);
+
         MerchantAccountRequest request = new MerchantAccountRequest
         {
-            ApplicantDetails = new ApplicantDetailsRequest
+            Individual = new IndividualRequest
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -412,29 +463,60 @@ public static class LcPayment
                 Address = new AddressRequest
                 {
                     StreetAddress = address.AddressLine1,
+                    // NOTE: We set the ExtendedAddress, but was communicated by Braintree on 2014-03-12
+                    // that field is not being stored (support messages copies at #454).
+                    // On the interface, we rely on our db for the copied version of that address part as fallback.
+                    ExtendedAddress = address.AddressLine2,
                     PostalCode = address.PostalCode,
                     Locality = address.City,
                     Region = address.StateProvinceCode,
                 },
-                DateOfBirth = BirthDate.ToString("yyyy-MM-dd"),
-                Ssn = bank.Ssn,
-                RoutingNumber = bank.RoutingNumber,
-                AccountNumber = bank.AccountNumber
-          },
-          TosAccepted = true,
-          MasterMerchantAccountId = BraintreeMerchantAccountId,
-          Id = LcPayment.GetProviderPaymentAccountId(user.UserID)
+                DateOfBirth = BirthDate.ToString("yyyy-MM-dd")
+            },
+            TosAccepted = true,
+            MasterMerchantAccountId = BraintreeMerchantAccountId,
+            Id = LcPayment.GetProviderPaymentAccountId((int)user.UserID)
         };
 
+        if (btAccount == null || String.IsNullOrWhiteSpace(Ssn) || !Ssn.Contains("*"))
+        {
+            // Braintree require pass an empty string to remove the value of SSN in case of
+            // user remove it from the form field:
+            request.Individual.Ssn = String.IsNullOrWhiteSpace(Ssn) ? "" : Ssn;
+        }
+
+        // Set payment/funding information only on creation or explicitely
+        // asked for update of its data
+        if (btAccount == null || updateBankInfo)
+        {
+            request.Funding = new FundingRequest{
+                Destination = fundingDest,
+                Email = user.Email,
+                MobilePhone = user.MobilePhone
+            };
+
+            // On null, we don't set the values, empty to remove or value to set
+
+            if (routingNumber != null)
+                request.Funding.RoutingNumber = routingNumber;
+
+            if (accountNumber != null)
+                request.Funding.AccountNumber = accountNumber;
+        }
+
         try{
-            var ret = gateway.MerchantAccount.Create(request);
+            Result<MerchantAccount> ret = null;
+            if (btAccount == null)
+                ret = gateway.MerchantAccount.Create(request);
+            else
+                ret = gateway.MerchantAccount.Update(request.Id, request);
 
             // All Ok, register on database
             if (ret.IsSuccess())
                 LcData.SetProviderPaymentAccount(
                     user.UserID,
                     request.Id,
-                    "pending",
+                    btAccount == null ? "pending" : null,
                     null,
                     null,
                     null
@@ -490,7 +572,6 @@ public static class LcPayment
     public class BankInfo
     {
         public BankInfo() { }
-        public string Ssn;
         public string RoutingNumber;
         public string AccountNumber;
     }

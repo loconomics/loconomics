@@ -7,17 +7,33 @@
     var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     // Updated assets version, to avoid problems with cache of css & js assets
-    LcAssets.AssetsVersion = "20131127";
+    LcAssets.AssetsVersion = "20140410";
     
     // Sniff IE browsers or based on its same engine (Trident).
     var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident") : false;
     
+    // Main assets that allow minification
+    var styleCss = "Styles/common";
+    var loadScripts = new List<string>();
+    // Enabled only on dev
+    if (LcHelpers.InDev) {
+        loadScripts.Add("libs.js");
+        loadScripts.Add("app.js");
+        styleCss += ".css";
+    } else {
+        loadScripts.Add("common.min.js");
+        styleCss += ".min.css";
+    }
+    
     var onBehalfOf = LcHelpers.OnBehalfOf();
     
+    bool showWelcomeHeader = PageData["ShowWelcomeHeader"] ?? false;
+
     // Show welcome popup depending on the parameter passed from the page or
     // detected automatically as true if anonymous user or provider without positions:
     var showWelcomePopup = PageData["ShowWelcomePopup"] ?? 
         (u == null ? true : u.IsProvider && LcData.UserInfo.GetUserPos().Count == 0);
+    var includeWelcomePopup = showWelcomePopup || u == null;
 }
 @helper howItWorksLi(){
                         <li>
@@ -32,75 +48,46 @@
                             </dl>
                         </li>
 }
+@* html attributes: data-base-url and data-culture are used by LcUrl.js. Data-culture is used by i18n.js too. *@
 <!doctype html>
     <!--[if lt IE 8]>    <html class="no-js ie ie7 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
     <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
     <!--[if gt IE 8]> <html class="no-js ie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
-    <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode" data-culture="@culture"> <!--<![endif]-->
-     <head>
-          <meta charset="utf-8"/>
-          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-          <title>Loconomics - @Page.Title</title>
-          <meta name="description" content="Find service providers to do the job right. At your service!"/>
-          <meta name="author" content="Loconomics Inc."/>
-          @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: <meta name="viewport" content="width=device-width,initial-scale=1"/>*@
-          <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
-          <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
-           @* Our styles *@
-           @LcAssets.PrintStyleTag(LcUrl.AppPath + "Styles/style.css")
-           @LcAssets.GetStylesTags()
-           <script type="text/javascript">var LC = window['LC'] || {};</script>
-           <script src="@Href(LcUrl.AppPath + "Scripts/libs/modernizr.custom.2.6.2.js")" type="text/javascript"></script>
-           <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
-           <script type="text/javascript">
-                @* Our LcUrl class *@
-                @Html.Raw(LcUrl.ToJsVar())
-                @* OUR namespace (abbreviated Loconomics) *@
-                var LC = window['LC'] || {};
-                @* OUR Loader *@
-                LC.load = function(opts) {
-                    opts = $.extend(true, {
-                        scripts: [],
-                        complete: null,
-                        completeVerification: null,
-                        loadDelay: 0,
-                        trialsInterval: 500
-                    }, opts);
-                    if (!opts.scripts.length) return;
-                    function performComplete() {
-                        if (typeof(opts.completeVerification) !== 'function' || opts.completeVerification())
-                            opts.complete();
-                        else {
-                            setTimeout(performComplete, opts.trialsInterval);
-                            if (console && console.warn)
-                                console.warn('LC.load.completeVerification failed for ' + opts.scripts[0] + ' retrying it in ' + opts.trialsInterval + 'ms');
-                        }
-                    }
-                    function load() {
-                        Modernizr.load({
-                            load: opts.scripts,
-                            complete: opts.complete ? performComplete : null
-                        });
-                    }
-                    if (opts.loadDelay)
-                        setTimeout(load, opts.loadDelay);
-                    else
-                        load();
-                }
-            </script>
-            @if(isIE){
-            <!--[if lt IE 9]>
-            <style type="text/css">
-                body,html,iframe{overflow: hidden; overflow:hidden !important;}
-            </style>
-            <![endif]-->
-            }
+    <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode" data-culture="@culture" data-base-url="@LcUrl.AppPath" data-fb-appid="@Facebook.AppId"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>Loconomics - @Page.Title</title>
+        <meta name="description" content="Find service providers to do the job right. At your service!"/>
+        <meta name="author" content="Loconomics Inc."/>
+        @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: 
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        *@
+        <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
+
+        @* Our styles *@
+        @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
+        @LcAssets.GetStylesTags()
+
+        @foreach (var js in loadScripts)
+        {
+            @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/" + js)
+        }
+        @* GetScriptsTags at the end of the document to delay load *@
+
+        @if(isIE){
+        <!--[if lt IE 9]>
+        <style type="text/css">
+            body,html,iframe{overflow: hidden; overflow:hidden !important;}
+        </style>
+        <![endif]-->
+        }
     </head>
     <body class="@PageData["BodyClass"]">
-        @if (showWelcomePopup)
+        @if (includeWelcomePopup)
         {
             // Annonymous access, Welcome popup
-            <div id="welcome-popup-overlay" class="smooth-box-block-overlay" style="position:absolute;top:0;left:0;right:0;min-height:100%;z-index:999;">
+            <div id="welcome-popup-overlay" class="smooth-box-block-overlay @(showWelcomePopup ? "auto-show" : "")">
                 <div id="welcome-popup-container" class="smooth-box-block-element">
                     @RenderPage(LcUrl.RenderLangPath + "Account/$WelcomePopup.cshtml")
                 </div>
@@ -114,70 +101,82 @@
         }
         @RenderBody()
         <header id="site-header">
+
+            @if (showWelcomeHeader)
+            {
+                <div class="WelcomeHeader">
+                    <div class="wrap">
+                        <h1>Welcome to Loconomics.</h1>
+                        <span>We're glad you're here.</span>
+                    </div>
+                </div>
+            }
+
 		    <div class="wrap">
 			    <a id="logo" class="replace" href="@Href(LcUrl.LangPath)">Loconomics, at your service.</a>
-                @if (!WebSecurity.IsAuthenticated) {
-                <ul class="anonymous-tools">
-                        @howItWorksLi()
-                        <li><a class="register" href="@(LcUrl.LangPath)Account/Register/">Sign Up</a></li>
-                        <li><a class="login" href="@(LcUrl.LangPath)Account/Login/">Login</a></li>
-                </ul>
-                }
-			    <ul class="user-tools">
-                    @if (WebSecurity.IsAuthenticated) {
-                        <li>
-					        <dl class="user-nav">
-                                @{
-                                    var usermenuGreeting = "Welcome, {0}!";
-                                    if (N.W(u.FirstName) == null) {
-                                        usermenuGreeting = "Welcome!";
-                                    } else {
-                                        usermenuGreeting = String.Format(usermenuGreeting, u.FirstName);
+                @if (!showWelcomeHeader) {
+
+                    if (!WebSecurity.IsAuthenticated)
+                    {
+                        <ul class="anonymous-tools">
+                                @howItWorksLi()
+                                <li><a class="register" href="@(LcUrl.LangPath)Account/Register/">Sign Up</a></li>
+                                <li><a class="login" href="@(LcUrl.LangPath)Account/Login/">Login</a></li>
+                        </ul>
+                    }
+			        <ul class="user-tools">
+                        @if (WebSecurity.IsAuthenticated)
+                        {
+                            <li>
+					            <dl class="user-nav">
+                                    @{
+                            var usermenuGreeting = "Welcome, {0}!";
+                            if (N.W(u.FirstName) == null)
+                            {
+                                usermenuGreeting = "Welcome!";
+                            }
+                            else
+                            {
+                                usermenuGreeting = String.Format(usermenuGreeting, u.FirstName);
+                            }
+						            <dt>@(usermenuGreeting) &#x25BC;</dt>
                                     }
-						        <dt>@(usermenuGreeting) &#x25BC;</dt>
-                                }
+						            <dd>
+                                        <ul>
+                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/")">My Dashboard</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/messages/")">Messages</a></li>
+                                            @if (u.IsProvider)
+                                            {
+                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/availability/")">Availability</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/your-work/")">Your Work</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/promote/")">Promote</a></li>
+                                            }
+                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/about-you/")">About you</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/privacy/")">Privacy</a></li>
+                                            <li><a href="@Href(LcData.UserInfo.GetMyPublicURL())">Public Profile</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "Account/Logout/")">Logout</a></li>
+                                        </ul>
+						            </dd>
+					            </dl>
+				            </li>
+                            @howItWorksLi()
+                        }
+				        <li>
+					        <dl class="lang-country">
+						        <dt class="current-lang-country @LcUrl.LangId">English (US) &#x25BC;</dt>
 						        <dd>
                                     <ul>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/")">My Dashboard</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Alerts/")">Alerts</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Mailbox/")">Inbox</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Bookings/")">Bookings</a></li>
-                                        @if (u.IsProvider)
-                                        {
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Calendar/")">Calendar</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Positions/")">My Work</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Tools/")">Tools</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/MyClients/")">My Clients</a></li>
-                                        }
-                                        @if (u.IsCustomer)
-                                        {
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/MyProviders/")">My Providers</a></li>
-                                        }
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Preferences/")">Privacy Settings</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Account/")">My Profile</a></li>
-                                        <li><a href="@Href(LcData.UserInfo.GetMyPublicURL())">Public Profile</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Account/Logout/")">Logout</a></li>
+							            <li class="current"><a href="@Href(LcUrl.AppPath)en-US/">English (US)</a></li>
                                     </ul>
 						        </dd>
 					        </dl>
 				        </li>
-                        @howItWorksLi()
-                    }
-				    <li>
-					    <dl class="lang-country">
-						    <dt class="current-lang-country @LcUrl.LangId">English (US) &#x25BC;</dt>
-						    <dd>
-                                <ul>
-							        <li class="current"><a href="@Href(LcUrl.AppPath)en-US/">English (US)</a></li>
-                                </ul>
-						    </dd>
-					    </dl>
-				    </li>
-                    @if (!WebSecurity.IsAuthenticated || !u.IsProvider)
-                    {
-			            <li class="actions"><a class="main-action" href="@(LcUrl.LangPath)ProviderSignUp/">Become a provider</a></li>
-                    }
-			    </ul>
+                        @if (!WebSecurity.IsAuthenticated || !u.IsProvider)
+                        {
+			                <li class="actions"><a class="main-action" href="@(LcUrl.LangPath)Account/ProviderWelcome/">Become a provider</a></li>
+                        }
+			        </ul>
+                }
                 @if (onBehalfOf != null)
                 {
                     <div style="float:right;clear:both;color:red;margin-top:5px;padding:0 5px;border:5px solid red;border-width:0 0 0 5px;">@onBehalfOf</div>
@@ -191,101 +190,6 @@
             <div class="site-links"><a href="@(LcUrl.LangPath)About/">About</a>|<a href="@(LcUrl.LangPath)About/TermsOfUse/">Terms of Use</a>|<a href="@(LcUrl.LangPath)About/PrivacyPolicy/">Privacy Policy</a>|<a href="@Href(LcUrl.LangPath + "HelpCenter/")">FAQs</a>|<a href="http://blog.loconomics.com/">Blog</a></div>
         </footer>
         <div class="scripts">           
-            <script type="text/javascript">
-                yepnope({
-                    test: typeof JSON === 'object',
-                    nope: LcUrl.AppPath + "Scripts/libs/json2.js"
-                });
-            </script>
-            @if (isHomePage)
-            {
-                @* Loading blockUI jquery-plugin and our script in a delayed way only on Home Page, to be faster loading *@
-                <script type="text/javascript">
-                    LC.load({
-                        scripts: [
-                            LcUrl.AppPath + 'Scripts/jquery/jquery-ui-1.8.21.custom.min.js'
-                            @if (LcData.GetCurrentLanguageID() == 2)
-                            {
-                            <text>,LcUrl.AppPath + 'Scripts/jquery/jquery.ui.datepicker-es.js'</text>
-                            }
-                        ],
-                        trialsInterval: 200,
-                        completeVerification: function () {
-                            return !!$.datepicker;
-                        },
-                        complete: function () {
-                            $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
-                            $('.date-pick', document).datepicker({
-                                showAnim: 'blind'
-                            });
-                            // Location js-dropdown
-                            var s = $('#search-location');
-                            s.prop('readonly', true);
-                            s.autocomplete({
-                                source: LC.searchLocations
-                                , autoFocus: true
-                                , minLength: 0
-                                , select: function () {
-                                    return false;
-                                }
-                            });
-                            s.on('focus click', function () { s.autocomplete('search', '') });
-
-                            /* Positions autocomplete */
-                            var positionsAutocomplete = $('#search-service').autocomplete({
-                                source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
-                                autoFocus: false,
-                                minLength: 0,
-                                select: function (event, ui) {
-                                    // We want show the label (position name) in the textbox, not the id-value
-                                    //$(this).val(ui.item.label);
-                                    $(this).val(ui.item.positionSingular);
-                                    return false;
-                                },
-                                focus: function (event, ui) {
-                                    if (!ui || !ui.item || !ui.item.positionSingular);
-                                    // We want the label in textbox, not the value
-                                    //$(this).val(ui.item.label);
-                                    $(this).val(ui.item.positionSingular);
-                                    return false;
-                                }
-                            });
-                            // Load all positions in background to replace the autocomplete source (avoiding multiple, slow look-ups)
-                            /*$.getJSON(LcUrl.JsonPath + 'GetPositions/Autocomplete/',
-                                function (data) {
-                                    positionsAutocomplete.autocomplete('option', 'source', data);
-                                }
-                            );*/
-                            // More to load:
-                            LC.load({
-                                scripts: [
-                                    LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js",
-                                    LcUrl.AppPath + "@LcAssets.AddVersion("Scripts/script.js", ".js")"
-                                ]
-                            });
-                        }
-                    });
-                </script>
-            } else {
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
-                if (LcData.GetCurrentLanguageID() == 2)
-                {
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.ui.datepicker-es.js")" type="text/javascript"></script>
-                }
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.ba-hashchange.min.js")" type="text/javascript"></script>
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.formatter.min.js")" type="text/javascript"></script>
-                @* IagoSRL: Disable to investigate if really are being used this scripts from old code:
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery.selectboxes.pack.js")" type="text/javascript"></script>
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery.backgroundPosition.js")" type="text/javascript"></script>*@
-                @*
-                IagoSRL: The author recommends replace the autocomplete plugin by the autocomplete widget included in jQuery.UI
-                Original author migration guide: http://www.learningjquery.com/2010/06/autocomplete-migration-guide
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.autocomplete.js")" type="text/javascript"></script>
-                *@
-		        <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js")" type="text/javascript"></script>
-                @* Our scripts *@
-                @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/script.js")
-            }
             @* Javascript linked from asp.net *@
             @LcAssets.GetScriptsTags()
             @if (PageData["InlineScript"] != null)

@@ -3,6 +3,7 @@
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Page Error :-(";
     Response.StatusCode = 500;
+    PageData["ShowWelcomePopup"] = false;
 }
 <div id="container">
     <h1>We're sorry, we've encountered an error. If this persists, please <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">send us a note</a> so we assist you.</h1>

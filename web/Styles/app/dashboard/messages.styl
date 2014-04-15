@@ -1,0 +1,68 @@
+/** Your work
+**/
+@import "../utils/ColorsPalette"
+@import "../utils/ItemsList"
+
+/** Styles for Messages
+**/
+.DashboardMessages {
+
+    /*
+    * Messaging conversation
+    */
+    .DashboardMessages-thread {
+    
+        .DashboardMessages-thread-block {
+            border: 1px solid #6c6c6c;
+            border-radius: 4px;
+            background: white;
+            padding: 15px;
+        }
+        
+        .DashboardMessages-thread-messages {
+            /* Partially refactored */
+            clearfix();
+            
+            > li {
+                overflow: hidden;
+                margin: 20px 0;
+            }
+            > li > .mini-user-info {
+                width: 60px;
+                font-size: .8em;
+            }
+            > li > .mini-user-info > div {
+                line-height: 1em;
+            }
+            > li.customer > .mini-user-info {
+                float: left;
+            }
+            > li.provider > .mini-user-info {
+                float: right;
+            }
+            > li > .DashboardMessages-thread-block {
+                font-size: 0.9em;
+                margin: 0 12px;
+                width: 518px;
+            }
+            > li.customer > .DashboardMessages-thread-block {
+                float: left;
+            }
+            > li.provider > .DashboardMessages-thread-block {
+                float: right;
+            }
+            > li.new-message form > textarea {
+                height: 80px;
+            }
+            > li.new-message form > fieldset.actions {
+                margin-bottom: 0 !important;
+            }
+            
+            > li.is-current .DashboardMessages-thread-block {
+                background-color: $colorLtTeal;
+            }
+        }
+        
+    }
+
+}

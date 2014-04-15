@@ -62,9 +62,14 @@ public static class LcAuth
                 userid, firstname, lastname, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
 
             // If is provider, update profile with that info (being both customer and provider)
+            // It assigns the first OnboardingStep 'welcome' for the new Onboarding Dashboard #454
             if (isProvider)
             {
-                db.Execute("UPDATE Users SET IsProvider = 1 WHERE UserID = @0", userid);
+                db.Execute(@"UPDATE Users SET 
+                    IsProvider = 1,
+                    OnboardingStep = 'welcome'
+                    WHERE UserID = @0
+                ", userid);
             }
 
             // Partial email confirmation to allow user login but still show up email-confirmation-alert. Details:

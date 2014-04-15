@@ -11,15 +11,16 @@
     PageData["ShowWelcomePopup"] = false;
     
     // #275: Detecting if the user is logged (maybe autologged) and its account is already confirmed,
-    // doing a redirect to dashboard/account/verifications instead of show an error message here
+    // doing a redirect to dashboard instead of show an error message here
     // (there will be the 'success email verification message')
     var checkUser = LcData.UserInfo.GetUserRow();
     if (checkUser != null) {
         using(var db = Database.Open("sqlloco")) {
             if (db.QueryValue("SELECT UserID FROM webpages_Membership WHERE UserID = @0 AND ConfirmationToken is null",
                 checkUser.UserID) == checkUser.UserID) {
-                // Account already confirmed, redirect
-                Response.Redirect(LcUrl.LangPath + "Dashboard/Account/#account-verifications");
+                // Account already confirmed, redirect (to the Verifications section, 
+                // just let user to see the email verification marked)
+                Response.Redirect(LcUrl.LangPath + "dashboard/about-you/#DashboardVerifications");
             }
         }
     }
@@ -59,7 +60,7 @@
                     SELECT TOP 1 email FROM UserProfile WHERE UserID = @0
                 ", confirmatedUserID);
                 FormsAuthentication.SetAuthCookie(confirmatedUserEmail, false);
-                Response.Redirect(LcUrl.LangPath + "Dashboard/Account/#account-verifications");
+                Response.Redirect(LcUrl.LangPath + "dashboard/about-you/");
 
 
                 // Standard logic (previous 2012-09-27, issue #134):
@@ -92,7 +93,7 @@
     <p>@message</p>
     if (showLogin)
     {
-        @RenderPage("$Login.cshtml", new { ShowHeader = false, ShowTools = false, Redirect = LcUrl.LangPath + "Dashboard/" })
+        @RenderPage("$Login.cshtml", new { ShowHeader = false, ShowTools = false, Redirect = LcUrl.LangPath + "dashboard/" })
     }
 } else {
     <form method="post" action="">

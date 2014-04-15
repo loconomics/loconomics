@@ -1,0 +1,80 @@
+/**
+  Action's classes, for buttons/links
+**/
+@import "nib"
+@import "ColorsPalette"
+
+/* General Mixim for actions */
+Action($backColor = $colorGreen) {
+    border-radius: 4px;
+    border: none;
+    
+    color: White;
+    background-color: $backColor;
+    display: inline-block;
+    
+    font-size: 1em;
+    padding: 0.4em 1em;
+    line-height: 1.3em;
+    
+    text-decoration: none;
+    text-transform: lowercase;
+    
+    transition: background-color 1s, box-shadow .5s, width 2s;
+
+    &:hover {
+        box-shadow: 0 0 5px 2px $backColor;
+        background-color: $backColor;
+    }
+}
+
+Action--mainPosition() {
+    float: right;
+    /* Discount the padding as margin to get the button in baseline with
+        any text on the same line */
+    margin-top: -0.4em;
+}
+
+Action--important() {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+Action--rightArrow($color, $imgSufix = '') {
+    padding: 0.2em .6em;
+    line-height: 27px;
+    
+    $imgSrc = '../img/theme/right-arrow' + $imgSufix + '.png'
+    $imgSrc2x = '../img/theme/right-arrow' + $imgSufix + '@2x.png'
+    
+    &:after {
+        content: " ";
+        background: url($imgSrc) no-repeat center;
+        hr-image($imgSrc2x, 29px, 27px);
+        width: 29px;
+        height: 27px;
+        line-height: 27px;
+        margin-left: .4em;
+        color: $color;
+        border-radius: 100%;
+        vertical-align: middle;
+        display: inline-block;
+    }
+}
+
+.begin-action,
+.next-action,
+.finish-action {
+    Action($colorOrange);
+    Action--rightArrow($colorOrange);
+    Action--important();
+}
+
+/*
+    Actions container
+ */
+.Actions {
+    clearfix();
+    display: block;
+    clear: both;
+}

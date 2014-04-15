@@ -12,6 +12,6 @@
 <p></p>
 <div class="view-panel">
     @foreach(var pricingType in pricingTypes) {
-        @RenderPage(LcUrl.RenderLangPath + "PricingWizard/$PricingTypePackagesList.cshtml", new { Editable = false, PricingTypeID = pricingType.PricingTypeID, ProviderUserID = pos.UserID, PositionID = pos.PositionID })
+        @RenderPage(LcUrl.RenderLangPath + "PricingWizard/$PricingList.cshtml", new { Editable = false, PricingTypeID = pricingType.PricingTypeID, ProviderUserID = pos.UserID, PositionID = pos.PositionID })
     }
 </div>

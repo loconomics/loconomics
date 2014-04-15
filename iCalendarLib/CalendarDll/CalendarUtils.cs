@@ -49,6 +49,8 @@ namespace CalendarDll
 
         /// <summary>
         /// Get Free Events
+        /// 
+        /// It includes both dates, full date times (not limited by the time in startDate and endDate)
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -72,6 +74,9 @@ namespace CalendarDll
 
 
             const int TIME_SLICE_SIZE = 15; // in Minutes
+
+            // IagoSRL: presaving the last date time slice (23:45:00 for a time_slice of 15) for later computations
+            TimeSpan lastDayTimeSlice = new TimeSpan(24, 0, 0).Subtract(new TimeSpan(0, TIME_SLICE_SIZE, 0));
 
 
             //----------------------------------------------------------------------
@@ -131,7 +136,6 @@ namespace CalendarDll
 
 
             List<DataContainer>        ldates     = new List<DataContainer>();
-            List<ProviderAvailability> ocurrences = new List<ProviderAvailability>();
             DateTime refDate = startDateTime;
             TimeSpan stamp   = new TimeSpan(0, 0, 0);
 
@@ -166,8 +170,10 @@ namespace CalendarDll
             // for the Date Range
             //----------------------------------------------------------------------
 
-
-            while (refDate < endDateTime)
+            // Iago: Since we get calculated the last day time slice in endDateTime
+            // previously, we need to check lower than or equal to don't lost that last
+            // time slice, as previously happens by checking only 'less than'
+            while (refDate <= endDateTime)
             {
                 DateTime newTimeSliceStart = 
                     refDate.AddMinutes(
@@ -238,7 +244,6 @@ namespace CalendarDll
                         newTimeSliceStart.AddMilliseconds(-1);
 
                     //----------------------------------------------------------------------
-
                     tempDataContainer.Ocurrences =
                         iCal.GetOccurrences(
                             refDate,
@@ -267,13 +272,16 @@ namespace CalendarDll
                 //----------------------------------------------------------------------
 
                 stamp =
-                    (stamp == new TimeSpan(24, 0, 0).Subtract(new TimeSpan(0, TIME_SLICE_SIZE, 0))) ?
+                    (stamp == lastDayTimeSlice) ?
                         stamp = new TimeSpan() :                         // Starting anew from 00:00:00 
                         stamp.Add(new TimeSpan(0, TIME_SLICE_SIZE, 0));  // Continue with next Time Slice
 
 
             }
 
+            /* IagoSRL: one-step, don't waste iteration cycles!
+
+            List<ProviderAvailability> ocurrences = new List<ProviderAvailability>();
 
             //----------------------------------------------------------------------
             // Gets the TimeSlices with Availability 
@@ -290,7 +298,10 @@ namespace CalendarDll
 
             return ocurrences.
                         Select(av => av.result).ToList();
-
+            */
+            return ldates.Select(
+                    dts => new ProviderAvailability(dts).result
+            ).ToList();
         }
 
 
@@ -436,7 +447,8 @@ namespace CalendarDll
             {
                 Summary = eventFromDB.Summary ?? null,
                 Start = new iCalDateTime((DateTime)eventFromDB.StartTime, defaultTZID),
-                Duration = (eventFromDB.EndTime - eventFromDB.StartTime),
+                //Duration = (eventFromDB.EndTime - eventFromDB.StartTime),
+                End = new iCalDateTime((DateTime)eventFromDB.EndTime, defaultTZID),
                 Location = eventFromDB.Location ?? null,
                 AvailabilityID = eventFromDB.CalendarAvailabilityTypeID,
                 EventType = eventFromDB.EventType,
@@ -967,7 +979,7 @@ namespace CalendarDll
         /// <param name="endEvaluationDate"></param>
         /// <returns></returns>
         /// <remarks>2012/12 by CA2S FA</remarks>
-        private IEnumerable<iEvent> GetEventsByUserDateRange(
+        public IEnumerable<iEvent> GetEventsByUserDateRange(
             CalendarUser user, 
             DateTime startEvaluationDate, 
             DateTime endEvaluationDate,
@@ -992,9 +1004,23 @@ namespace CalendarDll
                 var listEventsFromDB =
                     db.CalendarEvents.Where(
                         c => c.UserId == user.Id &&
-                        ((c.EndTime < nextDayFromEndEvaluationDay && 
-                        c.StartTime >=startEvaluationDate) || 
-                            c.CalendarReccurrence.Any())).ToList();
+                        (
+                            // IagoSRL: Date Ranges query updated from being
+                            // 'only events that are completely included' (next commented code from CASS):
+                            //(c.EndTime < nextDayFromEndEvaluationDay && 
+                            //c.StartTime >=startEvaluationDate) || 
+                        
+                            // to be 'all events complete or partially inside the range: complete included or with a previous
+                            // start or with a posterior end'.
+                            // This fix a bug found on #463 described on comment https://github.com/dani0198/Loconomics/issues/463#issuecomment-36936782 and nexts.
+                            (
+                                c.StartTime < nextDayFromEndEvaluationDay && 
+                                c.EndTime >= startEvaluationDate
+                            ) || 
+                            // OR, if they are Recurrence, any Date Range
+                            c.CalendarReccurrence.Any()
+                        )
+                    ).ToList();
 
                 var iCalEvents = new List<iEvent>();
 

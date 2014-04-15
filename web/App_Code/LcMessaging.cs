@@ -149,6 +149,200 @@ public class LcMessaging
     }
     #endregion
 
+    #region Database queries (showing list, details, etc)
+    private static readonly Dictionary<string, string> sqlListMessageThread = new Dictionary<string,string> {
+    { "select", "SELECT " },    
+    { "select-fields", @"
+                T.ThreadID,
+                T.CustomerUserID,
+                T.ProviderUserID,
+                T.PositionID,
+                T.MessageThreadStatusID,
+                T.UpdatedDate As LastMessageDate,
+                T.Subject,
+
+                T.LastMessageID,
+                M.BodyText As LastMessageBodyText,
+                M.MessageTypeID As LastMessageTypeID,
+                M.AuxID As LastMessageAuxID,
+                M.AuxT As LastMessageAuxT,
+                M.SentByUserID As LastMessageSendByUserID,
+
+                UC.FirstName As CustomerFirstName,
+                UC.LastName As CustomerLastName,
+
+                UP.FirstName As ProviderFirstName,
+                UP.LastName As ProviderLastName,
+
+                Pos.PositionSingular
+    "},
+    { "from", @"
+        FROM    MessagingThreads As T
+                 INNER JOIN
+                Messages As M
+                  ON M.ThreadID = T.ThreadID
+                      AND
+                     M.MessageID = T.LastMessageID
+                 INNER JOIN
+                Users As UC
+                  ON UC.UserID = T.CustomerUserID
+                 INNER JOIN
+                Users As UP
+                  ON UP.UserID = T.ProviderUserID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = T.PositionID
+					AND Pos.CountryID = @2 AND Pos.LanguageID = @1
+    "},
+    { "where", @"
+        WHERE   (T.CustomerUserID = @0 OR T.ProviderUserID = @0)
+    "},
+    { "order-by", @"
+        ORDER BY T.UpdatedDate DESC
+    "},
+    };
+    public static dynamic GetMessageThreadList(int userID)
+    {
+        var sql = String.Join(" ", sqlListMessageThread.Values);
+        using (var db = Database.Open("sqlloco")) {
+            return db.Query(sql, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+    }
+    public static Dictionary<string, dynamic> GetLastNewReadSentMessages(int userID, int maxPerType = 3)
+    {
+        var commonSql = 
+            "SELECT TOP " + maxPerType + " " +
+            sqlListMessageThread["select-fields"] + 
+            sqlListMessageThread["from"] + 
+            sqlListMessageThread["where"];
+        var order = sqlListMessageThread["order-by"];
+        var sqlNew = commonSql + " AND T.MessageThreadStatusID = 1 AND M.SentByUserID <> @0 " + order;
+        var sqlRead = commonSql + " AND T.MessageThreadStatusID = 2 AND M.SentByUserID <> @0 " + order;
+        var sqlSent = commonSql + " AND M.SentByUserID = @0 " + order;
+        var sqlList = new Dictionary<string, string> {
+            { "new", sqlNew },
+            { "read", sqlRead },
+            { "sent", sqlSent }
+        };
+
+        var ret = new Dictionary<string, dynamic>();
+        using (var db = Database.Open("sqlloco")) {
+            foreach (var sql in sqlList)
+            {
+                dynamic d = db.Query(sql.Value, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                if (d != null && d.Count > 0)
+                    ret[sql.Key] = d;
+            }
+        }
+        return ret;
+    }
+    #endregion
+
+    #region Message Summary (building small reusable summaries, as of messages listings)
+    public class MessageSummary
+    {
+        private dynamic r;
+        private int displayToUserID;
+
+        public MessageSummary(dynamic messageRecord, int displayToUserID)
+        {
+            this.r = messageRecord;
+            this.displayToUserID = displayToUserID;
+        }
+
+        public static List<int> BookingRelatedMessageTypes = new List<int> {
+            4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 19, 17, 18
+        };
+
+        public string GetMessageTypeDependantSubject() {
+            var ret = "";
+            if (BookingRelatedMessageTypes.Contains((int)r.LastMessageTypeID)) {
+                ret = "for ";
+            } else {
+                ret = "about ";
+            }
+            ret += r.PositionSingular + " services";
+            return ret;
+        }
+
+        public string GetThreadParticipantFirstName() {
+            if (r.ProviderUserID == displayToUserID) {
+                return r.CustomerFirstName;
+            } else {
+                return r.ProviderFirstName;
+            }
+        }
+
+        public string GetMessageUrl(string baseUrl = null) {
+            if (baseUrl == null)
+            {
+                baseUrl = LcUrl.LangPath + "dashboard/";
+            }
+            var url = baseUrl;
+            switch ((string)r.LastMessageAuxT) {
+                default:
+                    url += "Messages/Inquiry/" + r.ThreadID + "/" + r.LastMessageID + "/";
+                    break;
+                case "Booking":
+                    url += "Messages/Booking/" + r.LastMessageAuxID + "/";
+                    break;
+                case "BookingRequest":
+                    url += "Messages/BookingRequest/" + r.LastMessageAuxID + "/";
+                    break;
+            }
+            return url;
+        }
+
+        public string GetMessageTypeLabel() {
+            var ret = "";
+            switch((int)r.LastMessageTypeID) {
+                default:            
+                case 1:
+                case 2:
+                case 3:
+                    ret = "Message";
+                    break;
+                case 4:
+                case 5:
+                    ret = "Booking request";
+                    break;
+                case 6:
+                case 7:
+                    ret = "Booking confirmation";
+                    break;
+                case 8:
+                    ret = "Marketing";
+                    break;
+                case 9:
+                    ret = "Booking dispute";
+                    break;
+                case 10:
+                    ret = "Booking resolution";
+                    break;
+                case 12:
+                    ret = "Pricing adjustment";
+                    break;
+                case 13:
+                    ret = "Booking declined";
+                    break;
+                case 14:
+                    ret = "Booking cancelled";
+                    break;
+                case 15:
+                case 16:
+                case 19:
+                    ret = "Booking update";
+                    break;
+                case 17:
+                case 18:
+                    ret = "Booking review";
+                    break;
+            }
+            return ret;
+        }
+    }
+    #endregion
+
     #region Type:Booking and Booking Request
     /// <summary>
     /// A Booking Request is ever sent by a customer
@@ -175,7 +369,7 @@ public class LcMessaging
 
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
 
-            SendMail(provider.Email, LcData.Booking.GetBookingRequestTitleFor(2, customer, LcData.UserInfo.UserType.Provider), 
+            SendMail(provider.Email, "[Action Required] " + LcData.Booking.GetBookingRequestTitleFor(2, customer, LcData.UserInfo.UserType.Provider), 
                 ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
@@ -514,8 +708,8 @@ public class LcMessaging
     #region Type:Welcome
     public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
-        SendMail(providerEmail, "Welcome to Loconomics-Please Verify Your Account",
-            ApplyTemplate(LcUrl.LangPath + "ProviderSignUp/EmailWelcomeProvider/",
+        SendMail(providerEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
+            ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeProvider/",
             new Dictionary<string,object> {
                 { "UserID", providerID },
                 { "EmailTo", providerEmail },
@@ -524,7 +718,7 @@ public class LcMessaging
     }
     public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
     {
-        SendMail(userEmail, "Welcome to Loconomics-Please Verify Your Account",
+        SendMail(userEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeCustomer/",
             new Dictionary<string, object> {
                 { "UserID", userID },
@@ -535,7 +729,7 @@ public class LcMessaging
     }
     public static void SendResetPassword(int userID, string userEmail, string resetURL, string resetToken)
     {
-        SendMail(userEmail, "Loconomics Password Recovery",
+        SendMail(userEmail, "[Action Required] Loconomics Password Recovery",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailResetPassword/",
             new Dictionary<string, object> {
                 { "UserID", userID },

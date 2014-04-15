@@ -1,4 +1,9 @@
-﻿@{
+﻿@* Pricing Item View: visualize in read-only the pricing package details,
+    with editable mode to show edit/delete buttons and fees-free prices for providers,
+    and non editable for customers; it works too as email template providing
+    the parameter ForEmail=true
+*@
+@{
     // The read-only view is available for email templating
     var forEmail = PageData["ForEmail"] ?? false;
     
@@ -10,6 +15,7 @@
     Dictionary<string, LcPricingModel.FeeRate> feesSet = null;
     string containerTag = "div";
     string containerClasses = "provider-package w-ProviderPackage ";
+    string containerExtraAttributes = "";
     int pricingEstimateID = 0;
     int pricingEstimateRevision = 0;
     bool showPrices = true;
@@ -33,6 +39,7 @@
         feesSet = PageData["FeesSet"];
         containerTag = PageData["ContainerTag"] ?? containerTag;
         containerClasses += PageData["ContainerClasses"];
+        containerExtraAttributes = PageData["ContainerExtraAttributes"];
         pricingEstimateID = PageData["PricingEstimateID"] ?? 0;
         pricingEstimateRevision = PageData["PricingEstimateRevision"] ?? 0;
         showPrices = PageData["ShowPrices"] ?? true;
@@ -84,10 +91,10 @@
 }
 @if (!String.IsNullOrEmpty(containerTag))
 {
-    @Html.Raw(String.Format("<{0} class='{1}'>", containerTag, containerClasses));
+    @Html.Raw(String.Format("<{0} class='{1}' {2}>", containerTag, containerClasses, containerExtraAttributes));
 }
-    <h4 class="w-ProviderPackage-name" @if(forEmail) { @LcEmailTemplateHelper.StyleH4("margin-top:0;"); }>@pak.Name</h4>
-    <div class="provider-package-service-summary w-ProviderPackage-serviceSummary">
+    <h4 class="w-ProviderPackage-name ItemBox-name" @if(forEmail) { @LcEmailTemplateHelper.StyleH4("margin-top:0;"); }>@pak.Name</h4>
+    <div class="provider-package-service-summary ItemBox-important w-ProviderPackage-serviceSummary">
         @{
             var inpersonphone = "in-person";
             if (config.InPersonPhoneLabel != null)
@@ -171,16 +178,16 @@
     </div>
     @if (editable)
     {
-    <div class="actions">
-        <a href="#delete" class="delete-action crudl-delete">Delete</a>
-        <a href="#edit" class="edit-action crudl-update">Edit</a>
+    <div class="actions ItemBox-actions">
+        <a href="#delete" class="crudl-delete">Delete</a>
+        <a href="#edit" class="crudl-update">Edit</a>
     </div>
     }
     @if (config.FirstTimeClientsOnlyListText != null && pak.FirstTimeClientsOnly)
     {
-        <h5 class="w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>@config.FirstTimeClientsOnlyListText</h5>
+        <h5 class="w-ProviderPackage-sectionTitle ItemBox-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>@config.FirstTimeClientsOnlyListText</h5>
     }
-    <h5 class="w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>Description:</h5>
+    <h5 class="w-ProviderPackage-sectionTitle ItemBox-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>Description:</h5>
     <div class="provider-package-description w-ProviderPackage-description">
         @LcHelpers.PrintTextAsHtml(pak.Description)
     </div>
@@ -197,7 +204,7 @@
             // fees apply with 1 decimal for the case of hourly-rates:
             priceRateWithFees = new LcPricingModel.Price(pak.PriceRate ?? 0M, rateFee, 1);
         }
-        <h5 class="price-rate w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
+        <h5 class="price-rate w-ProviderPackage-sectionTitle ItemBox-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
             @if (config.PriceRateUnitListLabel != null)
             {
                 <span class="price-rate-unit">@config.PriceRateUnitListLabel @pak.PriceRateUnit</span>
@@ -206,7 +213,7 @@
     }
     @if (showPrices && config.NoPriceRateListMessage != null && N.D(pak.PriceRate) == null)
     {
-        <h5 class="w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>@config.NoPriceRateListMessage</h5>
+        <h5 class="w-ProviderPackage-sectionTitle ItemBox-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>@config.NoPriceRateListMessage</h5>
     }
     @if (config.IncludeServiceAttributes)
     {
@@ -215,8 +222,8 @@
             || (config.WithoutServiceAttributesProviderMessage != null && editable)
             )
         {
-            <h5 class="w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>Services included:</h5>
-            <ul class="provider-package-services attributes-list service-attributes-list w-ProviderPackage-serviceAttributes" @if(forEmail) { @LcEmailTemplateHelper.StyleUlOl(true, "overflow:hidden;"); }>
+            <h5 class="w-ProviderPackage-sectionTitle ItemBox-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>Services included:</h5>
+            <ul class="ItemBox-subitemsList provider-package-services attributes-list service-attributes-list w-ProviderPackage-serviceAttributes" @if(forEmail) { @LcEmailTemplateHelper.StyleUlOl(true, "overflow:hidden;"); }>
                 @foreach (var ser in atts)
                 {
                     <li title="@ser.Name" data-description="@ser.Description" data-service-attribute-id="@ser.ID" @if(forEmail) { @LcEmailTemplateHelper.PrintStyle("float:left;width:200px !important;padding-left:8px;list-style-type:square;"); }>@ser.Name</li>

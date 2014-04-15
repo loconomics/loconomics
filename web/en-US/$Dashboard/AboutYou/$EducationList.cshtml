@@ -1,0 +1,57 @@
+﻿@*
+    List user education
+ *@
+@using WebMatrix.Data;
+@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var idprefix = "listEducation";
+
+    // Load usereducation records
+    dynamic education = null;
+    using (var db = Database.Open("sqlloco")) {
+        education = db.Query(LcData.sqlSelectFromUserEducation +
+        @"
+            WHERE   UserID = @0
+                     AND
+                    Active = 1
+            ORDER BY ToYearAttended DESC, FromYearAttended DESC
+        ", u.UserID);
+    }
+}
+@if (education == null || education.Count == 0)
+{
+    <div></div>
+}
+else
+{
+    <div id="@idprefix">
+        <ul>
+            @foreach (var e in education)
+            {
+                <li class="DashboardEducation-list-item ItemBox crudl-item" data-crudl-item-id="@e.UserEducationId">
+                    <h1 class="ItemBox-name">@e.InstitutionName</h1>
+                    @{
+                        var check = 0;
+                        check += String.IsNullOrEmpty(e.DegreeCertificate) ? 0 : 1;
+                        check += String.IsNullOrEmpty(e.FieldOfStudy) ? 0 : 1;
+                    }
+                    @if (check > 0)
+                    {
+                       <p>@e.DegreeCertificate@(check == 2 ? ", " : "") @e.FieldOfStudy</p>
+                    }
+                    @if (e.FromYearAttended is decimal || e.ToYearAttended is decimal)
+                    { 
+                        <p class="years-attended">@e.FromYearAttended - @e.ToYearAttended</p>
+                    }
+                    
+                    <div class="actions ItemBox-actions">
+                        <a href="#delete" class="crudl-delete">Delete</a>
+                        <a href="#edit" class="crudl-update">Edit</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+}
