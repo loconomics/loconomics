@@ -68,7 +68,13 @@ function initAboutYou() {
   require('./dashboard/verificationsCrudl').on('.DashboardAboutYou');
 }
 
-function initAvailability() {
+function initAvailability(e) {
+  // We need to avoid this logic when an event bubble
+  // from the any fieldset.ajax, because its a subform event
+  // and must not reset the main form (#504)
+  if (e && e.target && /fieldset/i.test(e.target.nodeName))
+    return;
+
   require('./dashboard/monthlySchedule').on();
   require('./dashboard/weeklySchedule').on();
   require('./dashboard/calendarSync').on();
