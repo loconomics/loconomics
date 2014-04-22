@@ -52,6 +52,7 @@
                                 } else if (result == "json") {
                                 <text>
                                 popup(url, 'small', null, "Verifing");
+                                $(document).trigger('connectedToFacebook');
                                 </text>
                                 }
                                 /*FB.api('/me', function (response) {
@@ -77,7 +78,7 @@
 
     <a class="facebook-connect" href="#" data-redirect="@Uri.EscapeDataString(redirectUrl ?? "")" data-profile="customer">
         @GetFacebookInitializationScripts(redirectUrl)
-        <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/@icon"/>
+        <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/@icon" width="193px" height="24px"/>
     </a>
 
     @*

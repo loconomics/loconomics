@@ -3,7 +3,8 @@
     LcHelpers.SecurePage();
     
     var u = LcData.UserInfo.GetUserRow();
-    var bID = Request["BookingID"].AsInt();
+    int bID = PageData["BookingID"] ?? Request["BookingID"].AsInt();
+    string redirectUrl = PageData["RedirectUrl"];
     
     var sqlCheckBooking = @"
         SELECT  TOP 1 B.BookingID
@@ -30,31 +31,53 @@
                 // the manual payment to provider by the price less refunded:
                 LcMessaging.SendProviderPaymentRequestToLoconomics(bID);
 
+                if (redirectUrl == null) {
+                    redirectUrl = LcUrl.LangPath + (
+                        Request.IsAjaxRequest() ?
+                        "Booking/$BookingDetailsWidget/?BookingID={0}" :
+                        "dashboard/messages/booking/{0}/");
+                }
+                redirectUrl = String.Format(redirectUrl, bID);
+                
                 if (Request.IsAjaxRequest()){
-                    LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + String.Format(
-                        "Booking/$BookingDetailsWidget/?BookingID={0}", bID ));
+                    LcHelpers.ReturnJsonResult(3, redirectUrl);
                 } else {
-                    Response.Redirect(LcUrl.LangPath + String.Format(
-                        "Dashboard/Bookings/#!Booking-{0}", bID));
+                    Response.Redirect(redirectUrl);
                 }
             } else {
+                
+                var fullmsg = "Error cancelling the booking: " + result.ErrorMessage;
+                
+                if (PageData["UseRenderReturns"]) {
+                    LcHelpers.RenderPageReturns = fullmsg;
+                    return;
+                }
+                
                 if (Request.IsAjaxRequest()){
                     // Return JSON result:
                     // We need negative numbers to indicate an error (is our convention for json 'Code')
-                    LcHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
+                    LcHelpers.ReturnJsonError(0 - result.Error, fullmsg);
                 } else {
-                    throw new HttpException(500, "Error cancelling the booking: " + result.ErrorMessage);
+                    throw new HttpException(500, fullmsg);
                 }
             }
         } else {
+            
+            var fullmsg = "Impossible to cancel that Booking. Is already cancelled?";
+                
+            if (PageData["UseRenderReturns"]) {
+                LcHelpers.RenderPageReturns = fullmsg;
+                return;
+            }
+            
             if (Request.IsAjaxRequest()){
                 /* What? 
                  * - BookingID and UserID (as CustomerUserID) don't match?
                  * - Booking is already cancelled?
                  */
-                LcHelpers.ReturnJsonError(-1, "Impossible to cancel that Booking. Is already cancelled?");
+                LcHelpers.ReturnJsonError(-1, fullmsg);
             } else {
-                throw new HttpException(500, "Impossible to cancel that Booking. Is already cancelled?");
+                throw new HttpException(500, fullmsg);
             }
         }
     }

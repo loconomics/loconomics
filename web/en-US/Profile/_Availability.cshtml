@@ -8,4 +8,5 @@
     Available times for a provider are highlighted in green below.  A provider will confirm your appointment time within 18 hours after you've completed your booking.
 </p>
 
-@RenderPage("$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", p.UserID } } )
+@*RenderPage("$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", p.UserID } } )*@
+@RenderPage(LcUrl.RenderLangPath + "Calendar/$Weekly.cshtml", new { User = p.UserID })

@@ -11,9 +11,9 @@
     var showSign = PageData["showSign"] ?? false;
     var viewOnSiteUrl = PageData["viewOnSiteUrl"];
     if (threadID != null) {
-        viewOnSiteUrl = LcUrl.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID;
+        viewOnSiteUrl = LcUrl.LangUrl + "dashboard/messages/inquiry/" + threadID + "/";
         if (messageID != null) {
-            viewOnSiteUrl += "_Message-" + messageID;
+            viewOnSiteUrl += "/" + messageID + "/";
         }
     }
     var isNotAUser = (bool)(PageData["isNotAUser"] ?? false);
@@ -130,7 +130,7 @@
                 <td colspan="2">
                     This message was sent to <a href="mailto:@(emailTo)">@emailTo</a><br />
                     @if (!isNotAUser) {
-                    <text>Visit <a href="@(LcUrl.LangUrl)Dashboard/Preferences/">alert preferences</a> to manage your email and mobile alerts. </text><br />
+                    <text>Visit <a href="@(LcUrl.LangUrl)dashboard/privacy/">alert preferences</a> to manage your email and mobile alerts. </text><br />
                     }
                     Please add <a href="mailto:automated@loconomics.com">automated@loconomics.com</a> to your address book to ensure delivery of our emails. <br />
                     &#0169; @(DateTime.Today.Year) Loconomics, Inc. | All Rights Reserved. <br />

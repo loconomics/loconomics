@@ -1,0 +1,64 @@
+﻿@*
+    It shows the top bar for the steps during Onboarding phase
+*@
+@{
+    var step = (string)PageData["Step"];
+    var baseUrl = (string)PageData["BaseUrl"];
+    
+    PageData["CurrentStepIndex"] = LcData.OnboardingSteps.ContainsKey(step) ? LcData.OnboardingSteps[step].Index : 1;
+}
+
+@functions {
+    class StepInfo {
+        public string Page;
+        public string Label;
+        public int Index;
+    }
+}
+
+@helper menu(string a, string b) {
+    @(LcHelpers.CssCurrent(a, b, "is-current"))
+}
+
+@helper printStep(int index, string label, string pageUrl) {
+    var currentIndex = (int)PageData["CurrentStepIndex"];
+    var baseUrl = (string)PageData["BaseUrl"];
+    var useLink = index <= currentIndex;
+
+    if (useLink) {
+        @Html.Raw("<a href='" + baseUrl + pageUrl + "'>")
+    }
+    <span class="DashboardSection-onboardingSteps-index">@index</span><span class="DashboardSection-onboardingSteps-title">@label</span>
+    if (useLink) {
+        @Html.Raw("</a>")
+    }
+}
+
+<div class="DashboardSection-onboardingSteps">
+    @* There is only onboarding for providers right now
+    @if (u.IsProvider)
+    *@
+
+    @if (step == "welcome")
+    {
+        @* Especial bar for welcome step *@
+        <div class="DashboardSection-onboardingSteps-welcome">
+            Just a few steps left to get your profile active in the marketplace
+            <a class="action main-action begin-action" href="@(baseUrl)your-work/">Begin</a>
+        </div>
+    }
+    else
+    {
+        <ul>
+            @foreach (var itemStep in LcData.OnboardingSteps)
+            {
+                if (itemStep.Value.InMenu)
+                {
+                    <li class="@(menu(itemStep.Value.Page, step))">
+                        @printStep(itemStep.Value.Index, itemStep.Value.Label, itemStep.Value.Page)
+                    </li>
+                }
+            }
+        </ul>
+    }
+</div>

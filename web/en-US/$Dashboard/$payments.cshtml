@@ -1,0 +1,53 @@
+﻿@{
+    // Account/Payments
+    LcHelpers.ProviderPage();
+    
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+
+    var returns = new Dictionary<string, object> {
+        { "NeedsForm", false },
+        { "HasRequiredSections", false }
+    };
+}
+<h1 class="DashboardSection-page-header">Payment processing setup</h1>
+<p class="DashboardSection-page-introduction">
+    Getting paid is the easy part.
+    We accept payments on  your behalf, and Braintree (a leading credit card merchant provider)
+    processes them with a deposit directly to your bank account.
+    Braintree's transaction fee (@(LcPayment.MarketplaceProviderFee) transaction fee) is subtracted from your payment.
+    Easy, right?
+    Complete the information below and, as always, let us know if you have questions.
+</p>
+
+<div class="DashboardPayments">
+    <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$dashboard/$payments/">
+
+        @* PaymentAccount and Form is internally divided in "DashboardSection-page-section" *@
+        @RenderPage("Payments/$PaymentAccount.cshtml", new { PageState = ModelState, Returns = returns })
+
+        @if((bool)returns["NeedsForm"] || isInOnboarding) {
+            @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        
+            <div class="actions">
+                <button class="@(isInOnboarding ? "finish-action" : "main-action")" type="submit">@(isInOnboarding ? "Finish" : "Save")</button>
+            </div>
+        }
+    </form>
+</div>
+
+@if ((bool)returns["HasRequiredSections"]) {
+    <div class="InlineNotification InlineNotification--hasRequiredSections">
+        Required sections
+    </div>
+}
+
+@{
+    // On Post check validation status, returning a Json response or html
+    if (LcHelpers.CheckDashboardSuccessPost("payments", true)) {
+        // NOTE: For now, we have here only the provider payment-account here, then
+        // instead of the default change-button-text result we force reload to show the
+        // updated informational page:
+        //LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+        LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "dashboard/Payments/");
+    }
+}

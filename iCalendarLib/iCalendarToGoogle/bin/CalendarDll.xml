@@ -1,0 +1,369 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CalendarDll</name>
+    </assembly>
+    <members>
+        <member name="M:CalendarDll.EventsUtilities.CreateEvent(CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Create Event
+            </summary>
+            <param name="newCalendarEvent"></param>
+            <remarks>2013/02/06 CA2S Roque Mocan</remarks>
+        </member>
+        <member name="M:CalendarDll.EventsUtilities.EditEvent(CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Edit Event
+            </summary>
+            <param name="calendarEventWithChanges"></param>
+            <returns>2013/02/11 CA2S Roque Mocan</returns>
+        </member>
+        <member name="M:CalendarDll.EventsUtilities.DeleteEvent(System.String)">
+            <summary>
+            Delete Event by UID
+            </summary>
+            <param name="UID"></param>
+            <returns></returns>
+            <remarks>2013/02/09 Roque Mocan</remarks>
+        </member>
+        <member name="M:CalendarDll.EventsUtilities.GetEventByUID(System.String)">
+            <summary>
+            Get Event by UID
+            </summary>
+            <param name="UIDToReturn"></param>
+            <returns></returns>
+            <remarks>2013/02/11 CA2S Roque Mocan</remarks>
+        </member>
+        <member name="T:CalendarDll.CalendarUtils">
+            <summary>
+            Calendar Utils
+            </summary>
+            <remarks>2012/12/11 by CA2S (Static version), 2012/12/21 by RM (Dynamic version)</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetICalendarLibraryInstance">
+            <summary>
+            Gets an Instance of the iCalendar Library
+            </summary>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetFreeEvents(CalendarDll.CalendarUser,System.DateTime,System.DateTime,System.DateTime)">
+            <summary>
+            Get Free Events
+            
+            It includes both dates, full date times (not limited by the time in startDate and endDate)
+            </summary>
+            <param name="startDate"></param>
+            <param name="endDate"></param>
+            <param name="currentDateForAdvanceTime">Currend Date-Time for Calculating Advance Time.
+            We consider the time BEFORE this parameter + Advance Time as unavailable.
+            For two reasons: It is in the past, or we have to wait for the Advance Time to pass</param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetICalendarEventsFromDBByUser(CalendarDll.CalendarUser)">
+            <summary>
+            Get the Calendar, filled with the Events for the User
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetICalendarEventsFromDBByUserDateRange(CalendarDll.CalendarUser,System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="user"></param>
+            <param name="startDate"></param>
+            <param name="endDate"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetCalendarByUserForExport(CalendarDll.CalendarUser)">
+            <summary>
+            Get Calendar Events, for Export, by User
+            
+            It only takes into account the Events 
+            with UIDs starting with Asterisk (*)
+            </summary>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.CreateEvent(CalendarDll.Data.CalendarEvents,System.String)">
+            <summary>
+            Create Event 
+            
+            In iCal format, from the Loconomics DB
+            </summary>
+            <param name="eventFromDB"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.CreateBetweenEvent(CalendarDll.iEvent,CalendarDll.CalendarUser)">
+            <summary>
+            Create Between Events
+            
+            It takes the Original iCal Event
+            and creates another iCal Event 
+            following the original, 
+            and with the duration of the Between Event of the User
+            </summary>
+            <param name="originalICalEvent"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventStatus(System.Int32)">
+            <summary>
+            Get Event Status
+            </summary>
+            <param name="statusID"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.getTransparency(System.Int32)">
+            <summary>
+            Get Transparency
+            </summary>
+            <param name="eventStatus"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.getAvailabilityId(DDay.iCal.IFreeBusyEntry)">
+            <summary>
+            Get the Database AvailabilityID based on the 
+            FreeBusyEntry status, that has one-to-one equivalencies
+            </summary>
+            <param name="fbentry"></param>
+            <returns></returns>
+            <remarks>IagoSRL 2013/05/08</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.getAvailabilityId(System.Int32)">
+            <summary>
+            Get Availability Id
+            </summary>
+            <param name="eventStatus"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.getAvailabilityId(System.String,System.String)">
+            <summary>
+            Availabilty when Importing
+            
+            It calculates the Availability
+            depending on the Status (which could be Confirmed, Tentative, Cancelled)
+            and the Transparency (which could be Opaque or Transparent)
+            </summary>
+            <param name="Status"></param>
+            <param name="Transparency"></param>
+            <returns></returns>
+            <remarks>2013/01/02 CA2S RM</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventsByUser(CalendarDll.CalendarUser,System.String)">
+            <summary>
+            Get Events by User
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventsByUserForExport(CalendarDll.CalendarUser,System.String)">
+            <summary>
+            Based on GetEventsByUser, it filter events by type to only that required in
+            the export task.
+            </summary>
+            <param name="user"></param>
+            <param name="defaultTZID"></param>
+            <returns></returns>
+            <remarks>IagoSRL</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventsByUserDateRange(CalendarDll.CalendarUser,System.DateTime,System.DateTime,System.String)">
+            <summary>
+            Get Events By User
+            (overloads another version without Dates parameters)
+            
+            And also by Range of Dates
+            Note: Because recurrence events are more complicated,
+            they are recovered regardless of dates
+            </summary>
+            <param name="user"></param>
+            <param name="startEvaluationDate"></param>
+            <param name="endEvaluationDate"></param>
+            <returns></returns>
+            <remarks>2012/12 by CA2S FA</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillExceptionsDates(DDay.iCal.Event,CalendarDll.Data.CalendarEvents,System.String)">
+            <summary>
+            Fill Exceptions Dates
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillRecurrencesDates(DDay.iCal.Event,CalendarDll.Data.CalendarEvents,System.String)">
+            <summary>
+            Fill Recurrence Dates
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillContacts(DDay.iCal.Event,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Fill Contacts
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillContactsToDB(DDay.iCal.Event,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventForDB"></param>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillAttendees(DDay.iCal.Event,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Fill Attendees
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillAttendeesToDB(DDay.iCal.IUniqueComponent,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventForDB"></param>
+            <remarks>Changed by IagoSRL on 2013/05/08 to be generic, accepting any IUniqueComponent.
+            This allow using the method not only for Events, like originally, else for vfreebusy objects
+            and others.</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillComments(DDay.iCal.Event,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Fill Comments
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillCommentsToDB(DDay.iCal.IUniqueComponent,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            
+            </summary>
+            <param name="iCalObject"></param>
+            <param name="objectForDB"></param>
+            <remarks>Changed by IagoSRL on 2013/05/08 to be generic, accepting any IUniqueComponent
+            This allow using the method not only for Events, like originally, else for vfreebusy objects
+            and others.</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillRecurrences(DDay.iCal.Event,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Fill Recurrences
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.SetFrequenciesToDB(DDay.iCal.IRecurrencePattern,CalendarDll.Data.CalendarReccurrence)">
+            <summary>
+            Set Frecuencies - for Recurrences
+            </summary>
+            <param name="rec"></param>
+            <param name="recPattern"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.PrepareExportDataForUser(CalendarDll.CalendarUser)">
+            <summary>
+            Prepare Data for Export
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="F:CalendarDll.CalendarUtils.FutureMonthsLimitForImportingFreeBusy">
+            <summary>
+            This property allows limit (when greater than zero) the FreeBusy items
+            to be imported by setting the limit in number of months of future items
+            allowed.
+            This allows avoid the overload of import excessive future items.
+            In other words: don't import freebusy events from x months and greater in the future.
+            </summary>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.ImportCalendar(DDay.iCal.IICalendarCollection,CalendarDll.CalendarUser)">
+            <summary>
+            Import Calendar
+            </summary>
+            <param name="calendar"></param>
+            <param name="user"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.UpdateEventDatesToSystemTimeZone(DDay.iCal.IEvent)">
+            <summary>
+            Modify the passed @anEvent updating its date-time fields from its
+            original time zone to the current system time zone (we are using California
+            TimeZone in our server and database data).
+            It updates every elements collection inside it (ExceptionDates, RecurrenceDates)
+            
+            IagoSRL @Loconomics
+            </summary>
+            <param name="anEvent"></param>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.UpdateFreeBusyDatesToSystemTimeZone(DDay.iCal.IFreeBusy)">
+            <summary>
+            Modify the passed @freebusy updating its date-time fields from its
+            original time zone to the current system time zone (we are using California
+            TimeZone in our server and database data).
+            It updates every elements collection inside it (freebusyentries)
+            
+            IagoSRL @Loconomics
+            </summary>
+            <param name="freebusy"></param>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.UpdateDateToSystemTimeZone(DDay.iCal.IDateTime)">
+            <summary>
+            Returns an updated datetime object converting the given one
+            to the system time zone (we are using California TimeZone in our
+            server and database data).
+            
+            IagoSRL @Loconomics
+            </summary>
+            <param name="datetime"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CalendarDll.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:CalendarDll.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:CalendarDll.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:CalendarDll.Resources.BetweenTime">
+            <summary>
+              Looks up a localized string similar to Buffer time.
+            </summary>
+        </member>
+        <member name="T:SRL.TimeRange">
+            It represents a pair of Start and End times and elapsed time between both.
+            Author: IagoSRL@gmail.com
+            From Lib: SRL
+        </member>
+        <member name="T:Srl.Timeline">
+            <summary>
+            Allows registering times on performing tasks to help in the measuring of performance.
+            Author: IagoSRL@gmail.com
+            From Lib: SRL
+            </summary>
+        </member>
+    </members>
+</doc>

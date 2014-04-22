@@ -1,35 +1,38 @@
 ﻿@using WebMatrix.WebData;
+@using System.Text.RegularExpressions;
 @{
     LcHelpers.SecurePage();
     
     Page.Title = "Make your life better!";
-    LcAssets.AddStyle(LcUrl.AppPath + "Styles/Dashboard.css");
-    
-    var u = LcData.UserInfo.GetUserRow();
     
     /*
      * Selecting page to render dynamically
      */
+    var u = LcData.UserInfo.GetUserRow();
+    var isInOnboarding = false;
     var page = UrlData[0].ToLower();
     var fileToRender = "";
     
     if (String.IsNullOrEmpty(page)) {
-        Response.Redirect(LcUrl.LangPath + "Dashboard/Mailbox/");
+        page = "default";
     }
 
     var pages = new List<string> {
-        "account", "calendar", "mailbox", "myclients", "myproviders", "positions", "preferences",
-        "ressources", "tools", "bookings", "admin", "alerts"
+        "default", "welcome", "availability", "promote", "your-work", "about-you",
+        "payments", "privacy", "messages", "todos"
     };
     if (pages.Contains(page)) {
-        fileToRender = LcUrl.RenderLangPath + "$Dashboard/$" + page + ".cshtml";
-        // Set menu option selected
-        PageData["menu-item"] = page;
+
+        isInOnboarding = checkOnboardingPage(u, page);
+        
+        fileToRender = LcUrl.RenderLangPath + "$dashboard/$" + page + ".cshtml";
+        //// Set menu option selected
+        //PageData["menu-item"] = page;
     } else {
-        string folder = "$Dashboard/";
+        string folder = "$dashboard/";
         string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
         if (File.Exists(Server.MapPath(LcUrl.RenderLangPath + folder + file))) {
-            if (file.StartsWith("$") || file == "ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
+            if (Regex.IsMatch(file, @"\/\$") || file.StartsWith("$") || file == "AboutYou/ChangePhoto.cshtml" || file == "YourWork/UploadPhoto.cshtml") {
                 @RenderPage(LcUrl.RenderLangPath + folder + file);
                 return;
             } else {
@@ -39,74 +42,67 @@
             throw new HttpException(404, "Page not found");
         }
     }
+    
     // Only apply page layout after analizy url params (to avoid partial pages to use full layout)
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
-    LcAssets.AddScript(LcUrl.AppPath + "Scripts/Dashboard.js");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard", !LcHelpers.InDev);
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard", !LcHelpers.InDev);
+   
+    // Some layout configurations
+    var baseUrl = LcUrl.LangPath + "dashboard/";
+    
+    // SelectedPage: use page as value, changing default by dashboard.
+    var selectedPage = page == "default" ? "dashboard" : page;
+    
+    PageData["ShowWelcomeHeader"] = isInOnboarding;
 }
-@helper menu(string item){
-    @(LcHelpers.CssCurrent(item, PageData["menu-item"]))
-}
-        <!-- Dashboard -->
-        <div class="provider dashboard editable changes-notification-enabled">
-            <div id="container" class="clearfix">
-                
-                <div id="highlights">
-                    <h1>Dashboard</h1>
-                    <div id="dashboard-avatar">
-                        <img class="avatar image-1dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/")" alt="User Photo" />
-                        <img class="avatar image-2dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/" + WebSecurity.CurrentUserId + "/2x/")" alt="User Photo" />
-                        <a id="changephoto" href="#">Edit profile photo</a>
-                    </div>
-                </div><!-- highlights -->
-                
-                <div id="dashboard-help">
-                    <a class="skip" href="#main">Skip the help.</a>
-                    @if (u.IsProvider)
-                    {
-                    <p>It’s all here: everything you need to manage your 
-                        <a href="@(LcUrl.LangPath)Dashboard/Positions/">profile</a>, 
-                        <a href="@(LcUrl.LangPath)Dashboard/Bookings/">bookings</a>, 
-                        and <a href="@(LcUrl.LangPath)Dashboard/Account/">account settings</a>.
-                    </p>
-                    }
-                    else if (u.IsCustomer)
-                    {
-                     <p>It’s all here: everything you need to manage your 
-                     	<a href="@(LcUrl.LangPath)Dashboard/Bookings/">bookings</a> 
-                        and <a href="@(LcUrl.LangPath)Dashboard/Account/">account settings</a>.
-                    </p>
-                    }
-                    @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$DashboardHelpWidget.cshtml")
-                </div><!-- dashboard-help -->
+@functions {
+    bool checkOnboardingPage(dynamic u, string page){
+        var onboardingStep = (string)u.OnboardingStep;
 
-                <div id="nav">
-                    <ul id="profile-menu" class="autofill-submenu">
-                        @{
-                            var userAlertsCount = LcData.GetActiveRequiredUserAlertsCount(u.UserID);
-                        }
-                        <li class="@menu("alerts")"><a href="@(LcUrl.LangPath)Dashboard/Alerts/">Alerts @if (userAlertsCount > 0) { <span id="required-alerts-global-count" class="warning-note">@userAlertsCount</span> }</a></li>
-                        <li class="@menu("mailbox")"><a href="@(LcUrl.LangPath)Dashboard/Mailbox/">Inbox</a></li>
-                        <li class="@menu("bookings")"><a href="@(LcUrl.LangPath)Dashboard/Bookings/">Bookings</a></li>
-                        @if (u.IsProvider){
-                        <li class="@menu("calendar")"><a href="@(LcUrl.LangPath)Dashboard/Calendar/">Calendar</a></li>
-                        <li class="@menu("positions")"><a href="@(LcUrl.LangPath)Dashboard/Positions/">My Work</a></li>
-                        <li class="@menu("tools")"><a href="@(LcUrl.LangPath)Dashboard/Tools/">Tools</a></li>
-                        <li class="@menu("myclients")"><a href="@(LcUrl.LangPath)Dashboard/MyClients/">My Clients</a></li>
-                        }
-                        @if (u.IsCustomer){
-                        <li class="@menu("myproviders")"><a href="@(LcUrl.LangPath)Dashboard/MyProviders/">My Providers</a></li>
-                        }
-                        <li class="@menu("preferences")"><a href="@(LcUrl.LangPath)Dashboard/Preferences/">Privacy Settings</a></li>
-                        <li class="@menu("account")"><a href="@(LcUrl.LangPath)Dashboard/Account/">My Profile</a></li>
-                        @if (u.IsAdmin){
-                        <li class="@menu("admin") admin"><a href="@(LcUrl.LangPath)Dashboard/Admin/">Admin</a></li>
-                        }
-                    </ul>
-                </div><!-- nav -->
-            
-                <div id="main" class="tabbed folders">
-                    @RenderPage(fileToRender)        
-                </div><!-- #main -->
-            
-            </div><!-- container -->
-        </div><!-- Dashboard -->
+        var isInOnboarding = LcData.OnboardingSteps.ContainsKey(onboardingStep ?? "");
+        
+        // If in onboarding, we redirect to the current step (last reached by the user)
+        // if this page requested is not in the onboarding steps or is further in the
+        // list:
+        if (isInOnboarding &&
+            page != onboardingStep)
+        {
+            var thisPageIndex = LcData.OnboardingSteps.ContainsKey(page) ? LcData.OnboardingSteps[page].Index : 999;
+            var currentIndex = LcData.OnboardingSteps[onboardingStep].Index;
+            // If is not the welcome step (0) and is a greater step from current, go the the current one:
+            if (currentIndex > 0 && thisPageIndex > currentIndex) {
+                Response.Redirect(LcUrl.LangPath + "dashboard/" + onboardingStep + "/");
+            }
+            // If is welcome step (0) and is a greater than the 1 first, go to the current (welcome)
+            // (we explicitely let the page:1 to let it begin the process)
+            else if (currentIndex == 0 && thisPageIndex > 1) {
+                Response.Redirect(LcUrl.LangPath + "dashboard/" + onboardingStep + "/");
+            }
+        }
+        
+        return isInOnboarding;
+    }
+}
+
+<div id="container" class="DashboardSection changes-notification-enabled js-changesNotificationEnabled clearfix">
+    
+    @RenderPage("$dashboard/_$Sidebar.cshtml", new {
+        BaseUrl = baseUrl,
+        ActiveProfile = !isInOnboarding,
+        SelectedPage = selectedPage
+    })
+
+    @if (isInOnboarding)
+    {
+        @RenderPage("$dashboard/_$OnboardingSteps.cshtml", new {
+            BaseUrl = baseUrl,
+            Step = selectedPage
+        })
+    }
+
+    <div id="main" class="DashboardSection-page">
+        @RenderPage(fileToRender, new { IsInOnboarding = isInOnboarding })        
+    </div><!-- #main -->
+
+</div>

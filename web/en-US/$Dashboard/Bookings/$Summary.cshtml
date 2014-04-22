@@ -1,0 +1,97 @@
+﻿@* It shows a summary of bookings, last ones, link to the calendar page (Availabilty).
+*@
+@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    
+    var bookings = PageData["Data"] ?? LcData.Booking.GetUpcomingBookings((int)u.UserID, 5);
+    
+    // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
+}
+@helper printItem(dynamic r) {
+    <li>@(r.StartTime.ToLongTimeString())-@(r.EndTime.ToLongTimeString()) <a href="@getBookingUrl(r)">@(r.PositionSingular) booking</a> with @getPairName(r)</li>
+}
+@functions {
+    string getPairName(dynamic r) {
+        var t = getPairType(r);
+        return r[t + "FirstName"] + " " + r[t + "LastName"];
+    }
+    string getPairType(dynamic r) {
+        // The other user involved is 'Provider' or 'Customer'? (spelling as of SQL name fields prefix
+        return r.CustomerUserID == WebSecurity.CurrentUserId ?
+            "Provider" :
+            "Customer";
+    }
+    string getBookingUrl(dynamic r) {
+        return LcUrl.LangPath + "dashboard/messages/booking/" + r.BookingID + "/";
+    }
+}
+<div id="DashboardBookingsSummary" class="DashboardSection-page-section DashboardBookings">
+    <h2 class="DashboardSection-page-section-header">Upcoming appointments</h2>
+    <div class="DashboardBookings-summary DashboarSummary-group">
+        @if (@u.IsProvider) {
+            <a class="DashboardSummary-group-iconlink" href="@(LcUrl.LangPath)dashboard/availability/">Go to availability</a>
+        }
+        <div class="DashboardBookings-summary-list DashboardSummary-group-content">
+            @if (bookings.Count == 0)
+            {
+                <div class="DashboardSummary-group-emptyMessage">
+                    You don't have any upcoming appointments. 
+                    @if (u.IsProvider)
+                    {
+                        <a href="@(LcUrl.LangPath)dashboard/promote/">Why not promote yourself?</a>
+                    }
+                    else
+                    {
+                        <a href="@(LcUrl.LangPath)">Why not search for one now?</a>
+                    }
+                </div>
+            }
+
+            @if (bookings.ContainsKey("today"))
+            {
+            <h3 class="DashboardSummary-group-listHeader">Today</h3>
+            <ul class="DashboardSummary-group-list">
+                @foreach (var r in bookings["today"])
+                {
+                    @printItem(r)
+                }
+            </ul>
+            }
+            @if (bookings.ContainsKey("tomorrow"))
+            {
+            <h3 class="DashboardSummary-group-listHeader">Tomorrow</h3>
+            <ul class="DashboardSummary-group-list">
+                @foreach (var r in bookings["tomorrow"])
+                {
+                    @printItem(r)
+                }
+            </ul>
+            }
+            @if (bookings.ContainsKey("upcoming"))
+            {
+                var prevDate = DateTime.MinValue.Date;
+                bool changed = true;
+                foreach (var r in bookings["upcoming"])
+                {
+                    changed = prevDate != r.StartTime.Date;
+                    if (changed)
+                    {
+                        var date = r.StartTime.ToString("dddd, MMMM d") + "th";
+                    
+                        @Html.Raw("<h3 class='DashboardSummary-group-listHeader'>" + date + "</h3>")
+                        @Html.Raw("<ul class='DashboardSummary-group-list'>")
+                    }
+                    
+                    @printItem(r)
+
+                    if (changed)
+                    {
+                        @Html.Raw("</ul>")
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,119 @@
+﻿@using Braintree;
+@using WebMatrix.Data;
+@{
+    LcHelpers.SecurePage();
+    
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+
+    var user = LcData.UserInfo.GetUserRowWithContactData();
+    
+    // Data
+    string FirstName, LastName, MobilePhone, AlternatePhone, AddressLine1, AddressLine2, City, PostalCode, StateCode;
+
+    if (IsPost) {
+        FirstName = Request["firstname"];
+        LastName = Request["lastname"];
+        MobilePhone = Request["mobilephone"];
+        AlternatePhone = Request["alternatephone"];
+        AddressLine1 = Request["addressline1"];
+        AddressLine2 = Request["addressline2"];
+        City = Request["city"];
+        PostalCode = Request["postalcode"];
+        StateCode = Request["state"];
+    } else {
+        FirstName = user.FirstName;
+        LastName = LcHelpers.JoinNotEmptyStrings(" ", user.LastName, user.SecondLastName);
+        MobilePhone = user.MobilePhone;
+        AlternatePhone = user.AlternatePhone;
+        AddressLine1 = user.AddressLine1;
+        AddressLine2 = user.AddressLine2;
+        City = user.City;
+        PostalCode = user.PostalCode;
+        StateCode = user.StateProvinceCode;
+    }
+    
+    // Initializing Validation rules
+    if (Validation.GetHtml("firstname") == null) {
+        Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
+    }
+    if (Validation.GetHtml("lastname") == null) {
+        Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
+    }
+    if (Validation.GetHtml("addressline1") == null) {
+        Validation.RequireField("addressline1", LcRessources.RequiredField("Address line 1"));
+    }
+    if (Validation.GetHtml("state") == null) {
+        Validation.RequireField("state", LcRessources.RequiredField("State"));
+    }
+    if (Validation.GetHtml("postalcode") == null) {
+        Validation.RequireField("postalcode", LcRessources.RequiredField("Zip Code"));
+    }
+    if (Validation.GetHtml("city") == null) {
+        Validation.RequireField("city", LcRessources.RequiredField("City"));
+    }
+    
+    if (IsPost && Validation.IsValid()) {
+        
+        // Gathering state and postal IDs and verifying they match
+        var stateId = LcData.GetStateFromZipCode(PostalCode);
+        var postalCodeId = LcData.GetPostalCodeID(PostalCode, stateId);
+        if (LcData.GetStateProvinceCode(stateId) != StateCode) {
+            PageState.AddError("postalcode", "Zip Code is not valid for that state.");
+        }
+
+        if (PageState.IsValid) {
+            // Save peronal data to our database that replaces the need for a separate
+            // form under 'about you'
+            // (Nothing about payment, bank account.. thats only on Braintree)
+                
+            LcData.UserInfo.UpdatePersonalAndContactData(
+                user.UserID,
+                FirstName,
+                null,
+                LastName,
+                null,
+                MobilePhone,
+                AlternatePhone,
+                AddressLine1,
+                AddressLine2,
+                City,
+                stateId,
+                postalCodeId,
+                LcData.GetCurrentCountryID(),
+                LcData.GetCurrentLanguageID(),
+                null
+            );
+                
+            if (doReturn) {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
+        }
+    }
+}
+<fieldset class="DashboardContactInfo">
+    <ul>
+        <li><input placeholder="First name" type="text" name="firstname" value="@FirstName" @Validation.GetHtml("firstname")/>
+        </li>
+        <li><input placeholder="Last name" type="text" name="lastname" value="@LastName" @Validation.GetHtml("lastname")/>
+        </li>
+        <li><input placeholder="Mobile phone number" type="text" name="mobilephone" value="@MobilePhone" @Validation.GetHtml("mobilephone")/>
+        </li>
+        <li><input placeholder="Alternate phone number" type="text" name="alternatephone" value="@AlternatePhone" @Validation.GetHtml("alternatephone")/>
+        </li>
+        <li><input placeholder="Address line 1" type="text" name="addressline1" value="@AddressLine1" @Validation.GetHtml("addressline1")/>
+        </li>
+        <li><input placeholder="Address line 2" type="text" name="addressline2" value="@AddressLine2" @Validation.GetHtml("addressline2")/>
+        </li>
+        <li><input placeholder="City" type="text" name="city" value="@City" @Validation.GetHtml("city")/>
+        </li>
+        <li>
+            <select name="state" @Validation.GetHtml("state")>
+                <option value="">State</option>
+                @LcHelpers.StateProvinceCodeOptions(StateCode)
+            </select>
+        </li>
+        <li><input placeholder="Zip code" type="text" name="postalcode" value="@PostalCode" @Validation.GetHtml("postalcode") data-val-postalcode="Postal Code is not valid"/>
+        </li>
+    </ul>
+</fieldset>

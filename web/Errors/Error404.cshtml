@@ -2,6 +2,7 @@
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Page Not Found";
     Response.StatusCode = 404;
+    PageData["ShowWelcomePopup"] = false;
     
     try{
         using (var logger = new LcLogger("PageNotFound"))

@@ -59,6 +59,7 @@ Below you can find out if you're within this provider's service radius and/or at
         var positionedByUser = false;
         // Some confs
         var radiusUnit = '@(LcData.GetCurrentCountryID() == 1 ? "miles" : "km")';
+
         var generalZoomLevel = 11;
         var addresses = [null
         @foreach (var add in addresses)
@@ -75,12 +76,12 @@ Below you can find out if you're within this provider's service radius and/or at
         // First address position is null, delete
         //addresses.remove(0);
         Array.remove(addresses, 0);
-
         // If there is no address, nothing!
         if (addresses.length == 0) return;
 
         // Map element
-        var m = $('#user-addresses-map-position-@pos.PositionID').get(0);
+        var $m = $('#user-addresses-map-position-@pos.PositionID');
+        var m = $m.get(0);
         
         // Creating position coordinates, from one of the addresses
         var lat = addresses[0].lat,
@@ -110,12 +111,19 @@ Below you can find out if you're within this provider's service radius and/or at
                 center: new google.maps.LatLng(addresses[i].lat, addresses[i].lng),
                 map: map,
                 clickable: false,
-                radius: (radiusUnit == 'miles' ? convertMilesKm(addresses[i].radius, radiusUnit) : addresses[i].radius) * 1000, // in meters
+                radius: (radiusUnit == 'miles' ? LC.i18n.convertMilesKm(addresses[i].radius, radiusUnit) : addresses[i].radius) * 1000, // in meters
                 fillColor: addresses[i].workplace ? '#5F2393' : '#00989A',
                 fillOpacity: .3,
                 strokeWeight: 0
             });
         }
+
+        // To avoid the bug on partial maps being showed (that happens when the element is hidden during map loading,
+        // happens here because of tab focus changes), we trigger a map refresh on
+        // any tab-focus event
+        $m.parents('.tab-body').on('tabFocused', function() {
+            LC.mapReady.refreshMap(map);
+        });
     });
 </script>
 }

@@ -2,6 +2,7 @@
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Forbidden";
     Response.StatusCode = 403;
+    PageData["ShowWelcomePopup"] = false;
     
     // Gets what user type was required by the requested page, and current logged user is Not of that type.
     var requires = LcData.UserInfo.ParseUserType(Request["requires"], LcData.UserInfo.UserType.None);

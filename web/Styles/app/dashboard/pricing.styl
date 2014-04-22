@@ -1,0 +1,158 @@
+/** Your work / pricing
+**/
+/*@import "../utils/BasicForm"
+@import "../utils/Crudl--basicStyle"
+@import "../utils/ItemBox"
+@import "../utils/ActionBox"
+@import "../utils/ColorsPalette"
+*/
+
+/* TODO: Refactoring NOT complete, needs apply new naming convention, use dashboard variables,
+    and reuse styles like BasicForm
+*/
+
+/* DEPENDENCY: bundled in common.cs, w-ProviderPackage.css has old styles for .provider-package that needs
+    lot of refactoring */
+
+.DashboardYourWork .DashboardPricing {
+
+    .crudl-editor {
+        display: none;
+        min-height: 160px;
+        
+        .crudl-form {
+            position: relative;
+        }
+        
+        h5 {
+            color: rgb(108, 108, 108);
+            font-size: 1.1em;
+            margin: 8px 0px 4px;
+            display: block !important;
+        }
+    
+        label {
+            padding: 0;
+        }
+        .label-text {
+            display: none;
+        }
+        .provider-package-services {
+            max-height: 160px;
+            overflow: auto;
+        }
+        .provider-package-services li {
+            float: left;
+            margin: 0;
+        }
+        .provider-package-services li > label {
+            width: 200px !important;
+            text-overflow: ellipsis;
+            display: inline-block;
+        }
+        .provider-package-services.services-not-checked {
+            /*display: none;*/
+        }
+        .show-more-attributes {
+            margin: 10px 0 0 13px;
+            color: #747474;
+        }
+        .package-data label {
+            display: block;
+            margin: 2px 0;
+        }
+        .package-data .package-name input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .package-data .package-sessions,
+        .package-data .package-price {
+            width: auto;
+            display: inline-block;
+        }
+        .package-data .package-sessions input {
+            width: 3em;
+        }
+        .package-price input {
+            width: 6em;
+        }
+        .package-data .package-duration input {
+            width: 4em;
+        }
+        .package-data .package-description textarea {
+            height: 8em;
+        }
+
+        .learn-more span {
+            text-decoration: underline;
+            color: #00989a;
+        }
+        .fs-price-rate .learn-more {
+            display: inline;
+        }
+        .fs-price-rate label {
+            padding: 0;
+        }
+        .fs-price-rate .price-rate input {
+            width: 4em;
+        }
+        .fs-price-rate .price-rate-unit input {
+            width: 5em;
+        }
+        .fs-price-rate .no-price-rate {
+            margin-top: .5em;
+        }
+        .inperson-phone label {
+            display: inline;
+        }
+    }
+
+    /* Housekeeper pricing specifics */
+    .provider-average-time {
+	    position: relative;
+	    height: 65px;
+    }
+    .provider-average-time > label {
+        display: block !important;
+        margin: 0 !important;
+    }
+    .provider-average-time .average-label {
+	    position:absolute;
+	    left:36%;
+	    right:36%;
+	    width: auto;
+	    text-align:center
+    }
+    .provider-average-time .below-average-label {
+        position: absolute;
+        left: 0;
+        right: 64%;
+    }
+    .provider-average-time .above-average-label {
+	    position: absolute;
+	    right: 0;
+	    left: 64%;
+	    text-align: right;
+    }
+    .housekeeper-pricing {
+        margin: 1em 0;
+    }
+    .housekeeper-pricing > div {
+        width: 30%;
+        margin-right: 3%;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .housekeeper-pricing > .preview {
+        margin-right: 0;
+    }
+    .housekeeperservices .fs-price-rate {
+        position: absolute;
+        top: 0;
+        right: 0;
+        max-width: 34%;
+    }
+    .housekeeperservices .package-data > .package-name {
+        width: 70% !important;
+    }
+}

@@ -1,0 +1,370 @@
+﻿@*  $CalendarEditEventForm.cshtml
+    Allow edit or create an event.
+ *@
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var eventID = Request["EventID"].AsInt();
+    var idprefix = "editEvent" + eventID.ToString();
+    
+    if (Request["Action"] == "delete") {
+
+        // Delete eventID
+        LcCalendar.DelUserAppointment(u.UserID, eventID);
+        LcHelpers.ReturnJsonResult(0, "Event was succesful deleted!");
+        // ENDS page execution
+    }
+    
+    // Validation rules
+    Validation.RequireField("summary", LcRessources.RequiredField("Title"));
+    Validation.RequireField("startdate", LcRessources.RequiredField("Start Date"));
+    Validation.RequireField("enddate", LcRessources.RequiredField("End Date"));
+    Validation.Add("startdate", Validator.DateTime("Start date is not valid"));
+    Validation.Add("starttime", Validator.DateTime("Start time is not valid"));
+    Validation.Add("enddate", Validator.DateTime("End date is not valid"));
+    Validation.Add("endtime", Validator.DateTime("End date is not valid"));
+    Validation.Add("repeat-every", Validator.Integer("'Repeat every' must be a number"));
+    Validation.Add("repeat-ocurrences", Validator.Integer("Number of occurrences must be a number"));
+    Validation.Add("repeat-end-date", Validator.DateTime("Repitition End Date is not valid"));
+    
+    // Some form values catched in vars because they need special treatment:
+    int? repeatFrequency = Request["repeat-frequency"].AsInt();
+    List<int> selectedWeekDays = new List<int>();
+    if (Request.Form.AllKeys.Contains<string>("week-day")) {
+        foreach(var w in Request.Form.GetValues("week-day")){
+            // Try-catch because a bad-request can send non-valid values or repeated
+            // ones, making the list-addition fail. For normal use, that problem
+            // never will happen, because of that a better control 
+            // without try-catch is over-complicate the code
+            try{
+                selectedWeekDays.Add(w.AsInt());
+            }catch{}
+        }
+    }
+    var monthlyOption = Request["monthly-option"] ?? "month-day";
+    
+    // Save posted data
+    if (IsPost && Validation.IsValid()) {
+        
+        var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+        
+        var repeatEvery = Request["repeat-every"].AsInt(1);
+        // Special frequencies with an ID of 2-hundred have forced
+        // an interval/repeatEvery value of 2
+        if ((int)repeatFrequency / 100 == 2) {
+            repeatEvery = 2;
+            // And the code of frequency MUST be changed to its 'real' equivalent:
+            repeatFrequency -= 200;
+        }
+        // Weekly frequency presets: 5 hundred values
+        if ((int)repeatFrequency / 100 == 5) {
+            // Interval to 1
+            repeatEvery = 1;
+            // Set week-days
+            selectedWeekDays.Clear();
+            if (repeatFrequency == 501 || repeatFrequency == 502) {
+                selectedWeekDays.Add((int)DayOfWeek.Monday);
+                selectedWeekDays.Add((int)DayOfWeek.Wednesday);
+                selectedWeekDays.Add((int)DayOfWeek.Friday);
+            }
+            if (repeatFrequency == 501 || repeatFrequency == 503) {
+                selectedWeekDays.Add((int)DayOfWeek.Tuesday);
+                selectedWeekDays.Add((int)DayOfWeek.Thursday);
+            }
+            // Finally, set frequency to 'weekly':
+            repeatFrequency = 5;
+        }
+        
+        var startDT = (Request["startdate"] + " " + Request["starttime"]).AsDateTime();
+        var endDT = (Request["enddate"] + " " + Request["endtime"]).AsDateTime();
+        
+        if (endDT < startDT){
+            var dt = endDT;
+            endDT = startDT;
+            startDT = dt;
+        }
+        
+        if (ModelState.IsValid) {
+            LcCalendar.SetUserAppointment(u.UserID,
+                eventID,
+                Request["type"].AsInt(),
+                Request["availability"].AsInt(),
+                Request["summary"],
+                startDT,
+                endDT,
+                Request["allday"].AsBool(),
+                Request["repeat"].AsBool(),
+                repeatFrequency.Value,
+                repeatEvery,
+                Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
+                Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
+                Request["location"],
+                Request["description"],
+                selectedWeekDays,
+                monthlyOption
+            );            
+                        
+            // Show the profile activation popup with 'next-step' buttons and progress information when need,
+            // if not the short message is showed:
+            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                u.UserID,
+                LcRessources.DataSaved,
+                "Edit/add appointments"))
+            {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
+        }
+    }
+    
+    dynamic eventTypes = null, availabilityTypes = null;
+    using (var db = Database.Open("sqlloco")) {
+        eventTypes = db.Query(@"SELECT EventTypeID, DisplayName FROM CalendarEventType WHERE DisplayName is not null");
+        availabilityTypes = db.Query(@"
+            SELECT  CalendarAvailabilityTypeID As ID, SelectableAs As DisplayName
+            FROM    CalendarAvailabilityType
+            WHERE   LanguageID = @0 AND CountryID = @1
+                    AND SelectableAs is not null
+        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+    }
+    var repeatFrequencies = LcCalendar.GetRecurrenceFrequencyTypes();
+    dynamic calEvent = LcCalendar.GetUserAppointment((int)u.UserID, eventID);
+    CalendarDll.Data.CalendarReccurrence calRecurrence = null;
+    var calEventIsRecurrent = false;
+    var recEnds = "never";
+    if (calEvent != null && calEvent.CalendarReccurrence != null && calEvent.CalendarReccurrence.Count > 0) {
+        foreach(var r in calEvent.CalendarReccurrence) {
+            calRecurrence = r;
+            break;
+        }
+        if (calRecurrence != null) {
+            calEventIsRecurrent = true;
+            if (calRecurrence.Until != null) {
+                recEnds = "date";
+            } else if (calRecurrence.Count != null && calRecurrence.Count > 0) {
+                recEnds = "ocurrences";
+            }
+            repeatFrequency = calRecurrence.Frequency;
+        }
+        // Week days: Fill with db values, but not in post. For Weekly and Monthly special options
+        if (!IsPost && calRecurrence != null && calRecurrence.CalendarReccurrenceFrequency != null && calRecurrence.CalendarReccurrenceFrequency.Count > 0){
+            foreach(var rf in calRecurrence.CalendarReccurrenceFrequency) {
+                if (rf.DayOfWeek.HasValue && 
+                    !selectedWeekDays.Contains(rf.DayOfWeek.Value)) {
+                    selectedWeekDays.Add(rf.DayOfWeek.Value);
+                }
+                // If monthly, we check that there are almost one frequency record
+                // that has a ByDay:true, FrequencyDay, and DayOfWeek
+                // to detect that was set the 'week-day' option.
+                if (repeatFrequency == 6 &&
+                    rf.ByDay.HasValue && rf.ByDay.Value &&
+                    rf.DayOfWeek.HasValue &&
+                    rf.FrequencyDay.HasValue) {
+                    monthlyOption = "week-day";
+                }
+            }
+            // Only if there is week-days
+            if (selectedWeekDays.Count > 0) {
+                // Detect Weekly frequency Presets:
+                if (repeatFrequency == 5) {
+                    if (selectedWeekDays.Count == 3 &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Wednesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Friday)){
+                        repeatFrequency = 502;
+                    }
+                    if (selectedWeekDays.Count == 2 &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Thursday)) {
+                        repeatFrequency = 503;
+                    }
+                    if (selectedWeekDays.Count == 5 &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Wednesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Friday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Thursday)){
+                        repeatFrequency = 501;
+                    }
+                }
+            }
+        }
+    }
+}
+@helper printOptionsHours(string selectedHour){
+    var firstHour = new TimeSpan(0, 0, 0);
+    var lastHour = new TimeSpan(24, 0, 0);
+    var interval = new TimeSpan(0, 15, 0);
+    for (var hour = firstHour; hour <= lastHour; hour += interval)
+    {
+        <option @LcHelpers.IsSelected(selectedHour, hour.ToString("c")) value="@hour.ToString("c")">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
+    }
+}
+<form action="@(LcUrl.LangPath)$R5Dashboard/$CalendarEditEventForm/?EventID=@(eventID)" method="post" class="crudl-form ajax ajax-box availability-events-edit" id="@idprefix">
+    @LcHelpers.GetValidationScripts()
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+
+    <ul>
+        <li class="type">
+            <label for="@(idprefix)Type">Type</label>
+            <select name="type" id="@(idprefix)Type" @Validation.GetHtml("type")>
+                @foreach (var type in eventTypes) {
+                    <option value="@type.EventTypeID" @LcHelpers.IsSelected(type.EventTypeID, Request["type"] ?? (calEvent == null ? "" : calEvent.EventType))>@type.DisplayName</option>
+                }
+            </select>
+        </li>
+        <li class="availability">
+            <label for="@(idprefix)Availability">Availability</label>
+            <select name="availability" id="@(idprefix)Availability" @Validation.GetHtml("availability")>
+                @foreach (var type in availabilityTypes) {
+                    <option value="@type.ID" @LcHelpers.IsSelected(type.ID, Request["availability"] ?? (calEvent == null ? "" : calEvent.CalendarAvailabilityTypeID))>@type.DisplayName</option>
+                }
+            </select>
+        </li>
+        <li class="what">
+            <label for="@(idprefix)Summary">What</label>
+            <input id="@(idprefix)Summary" type="text" placeholder="Untitled event" name="summary" value="@(Request["summary"] ?? (calEvent == null ? "" : calEvent.Summary))" @Validation.GetHtml("summary") />
+        </li>
+        <li class="when">
+            <label for="@(idprefix)StartDate">When</label>
+            <input class="date date-pick date-pick-icon" id="@(idprefix)StartDate" placeholder="01/01/2000" name="startdate" type="text" value="@(Request["startdate"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortDateString()))" @Validation.GetHtml("startdate") />
+            @*<input class="time" name="starttime" type="text" placeholder="12:00 PM" value="@(Request["starttime"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortTimeString()))" @Validation.GetHtml("starttime") />*@
+            <select class="time" name="starttime">@printOptionsHours(Request["starttime"] ?? (calEvent == null ? "" : calEvent.StartTime.TimeOfDay.ToString("c")))</select>
+            <span class="when-to">to</span>
+            @*<input class="time" name="endtime" type="text" placeholder="12:00 PM" value="@(Request["endtime"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortTimeString()))" @Validation.GetHtml("endtime") />*@
+            <select class="time" name="endtime">@printOptionsHours(Request["endtime"] ?? (calEvent == null ? "" : calEvent.EndTime.TimeOfDay.ToString("c")))</select>
+            <input class="date date-pick date-pick-icon" name="enddate" placeholder="01/01/2000" type="text" value="@(Request["enddate"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortDateString()))" @Validation.GetHtml("enddate") />
+            <div class="time-options">
+                <div class="time-switchers">
+                    <label><input type="checkbox" name="allday" value="True" @LcHelpers.IsChecked(true, Request["allday"] ?? (calEvent == null ? "" : calEvent.IsAllDay)) /> All day</label>
+                    <label><input type="checkbox" name="repeat" value="True" @LcHelpers.IsChecked(true, Request["repeat"] ?? (calEvent == null ? false : calEventIsRecurrent).ToString()) /> Repeat...</label>
+                </div>
+                <div class="repeat-options">
+                    <ul>
+                        <li>
+                            <label for="@(idprefix)RepeatFrequency">Repeats:</label>
+                            <select name="repeat-frequency" id="@(idprefix)RepeatFrequency" @Validation.GetHtml("repeat-frequency")>
+                                @foreach (var freq in repeatFrequencies) {
+                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, repeatFrequency)>@LcRessources.GetText(freq.Name)</option>
+                                }
+                            </select>
+                        </li>
+                        <li class="repeat-every">
+                            <label for="@(idprefix)RepeatEvery">Repeat every:</label>
+                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? (calRecurrence == null ? "1" : calRecurrence.Interval.ToString()))" @Validation.GetHtml("repeat-every") />
+                            <span class="repeat-frequency-unit">days</span>
+                        </li>
+                        <li class="frequency-extra frequency-extra-5 weekly-extra">
+                            <label>Repeat on:</label>
+                            <div class="week-days">
+                                @foreach(var weekday in LcRessources.ListWeekDays()){
+                                    <label title="@weekday.Name" class="has-tooltip"><input type="checkbox" name="week-day" value="@weekday.ID" @LcHelpers.IsChecked(true, selectedWeekDays.Contains(weekday.ID)) />@weekday.Abbr</label>
+                                }
+                            </div>
+                        </li>
+                        <li class="frequency-extra frequency-extra-6 monthly-extra">
+                            <label>Repeat by:</label>
+                            <div class="monthly-options">
+                                <label><input type="radio" name="monthly-option" value="month-day" @LcHelpers.IsChecked("month-day", monthlyOption) /> day of the month</label>
+                                <label><input type="radio" name="monthly-option" value="week-day" @LcHelpers.IsChecked("week-day", monthlyOption) /> day of the week</label>
+                            </div>
+                        </li>
+                        <li class="repeat-ends">
+                            <label>Ends:</label>
+                            <ul>
+                                <li><label><input type="radio" @LcHelpers.IsChecked("never", recEnds) value="never" name="repeat-ends" @Validation.GetHtml("repeat-ends") /> Never</label></li>
+                                <li class="repeat-ocurrences"><label><input type="radio" @LcHelpers.IsChecked("ocurrences", recEnds) value="ocurrences" name="repeat-ends" @Validation.GetHtml("repeat-ends") /> After</label>
+                                    <label><input type="text" name="repeat-ocurrences" value="@(Request["repeat-ocurrences"] ?? (calRecurrence == null ? "" : calRecurrence.Count.ToString()))" @Validation.GetHtml("repeat-ocurrences") /> ocurrences</label>
+                                </li>
+                                <li class="repeat-end-date"><label><input type="radio" value="date" @LcHelpers.IsChecked("date", recEnds) name="repeat-ends" @Validation.GetHtml("repeat-ends") /> On</label>
+                                    <input class="date date-pick" type="text" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? (calRecurrence == null ? "" : (calRecurrence.Until.HasValue ? calRecurrence.Until.Value.ToShortDateString() : "")))" @Validation.GetHtml("repeat-end-date") />
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li>
+            <label for="@(idprefix)Where">Where</label>
+            <input type="text" id="@(idprefix)Where" value="@(Request["location"] ?? (calEvent == null ? "" : calEvent.Location))" name="location" @Validation.GetHtml("location") />
+        </li>
+        <li>
+            <label for="@(idprefix)Description">Description</label>
+            <textarea name="description" id="@(idprefix)Description" @Validation.GetHtml("description")>@(Request["description"] ?? (calEvent == null ? "" : calEvent.Description))</textarea>
+        </li>
+    </ul>
+
+    <div class="actions">
+        <button type="button" class="button cancel-action crudl-cancel">Cancel</button>
+        <button class="button main-action crudl-save">Save</button>
+    </div>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            var f = $('#@(idprefix)');
+            var repeat = f.find('[name=repeat]').change(function(){
+                var a = f.find('.repeat-options');
+                if (this.checked)
+                    a.slideDown('fast');
+                else
+                    a.slideUp('fast');
+            });
+            var allday = f.find('[name=allday]').change(function(){
+                var a= f.find('[name=starttime],[name=endtime]')
+                .prop('disabled', this.checked);
+                if (this.checked)
+                    a.hide('fast');
+                else
+                    a.show('fast');
+            });
+            var repeatFrequency = f.find('[name=repeat-frequency]').change(function(){
+                var freq = $(this).children(':selected');
+                var unit = freq.data('unit');
+                f.find('.repeat-frequency-unit')
+                .text(unit);
+                // If there is no unit, there is not interval/repeat-every field:
+                var interval = f.find('.repeat-every');
+                if (unit)
+                    interval.show('fast');
+                else
+                    interval.hide('fast');
+                // Show frequency-extra, if there is someone
+                f.find('.frequency-extra-' + freq.val()).slideDown('fast');
+                // Hide all other frequency-extra
+                f.find('.frequency-extra:not(.frequency-extra-' + freq.val() + ')').slideUp('fast');
+            });
+            // auto-select some options when its value change
+            f.find('[name=repeat-ocurrences]').change(function(){
+                f.find('[name=repeat-ends][value=ocurrences]').prop('checked', true);
+            });
+            f.find('[name=repeat-end-date]').change(function () {
+                f.find('[name=repeat-ends][value=date]').prop('checked', true);
+            });
+            // start-date trigger
+            f.find('[name=startdate]').on('change', function(){
+                // auto fill enddate with startdate when this last is updated
+                f.find('[name=enddate]').val(this.value);
+                // if no week-days or only one, auto-select the day that matchs start-date
+                var weekDays = f.find('.weekly-extra .week-days input');
+                if (weekDays.are(':checked', {until:1})) {
+                    var date = $(this).datepicker("getDate");
+                    if (date) {
+                        weekDays.prop('checked', false);
+                        weekDays.filter('[value=' + date.getDay() + ']').prop('checked', true);
+                    }
+                }
+            });
+
+            // Init:
+            repeat.change();
+            allday.change();
+            repeatFrequency.change();
+            // add date pickers
+            applyDatePicker();
+            // add placeholder support (polyfill)
+            f.find(':input').placeholder();
+        });
+    </script>
+</form>

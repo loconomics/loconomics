@@ -1,0 +1,147 @@
+﻿@using Braintree;
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+
+    var userId = WebSecurity.CurrentUserId;
+    
+    // Data
+    var advanceTime = 24M;
+    var betweenTime = 0M;
+    var allTime = false;
+    
+    if (IsPost && Validation.IsValid()) {
+        
+        allTime = Request["alltime"].AsBool();
+        dynamic workhours = null;
+        
+        if (!allTime) {
+            // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
+            // breaking the code.
+            //workhours = Json.Decode(Request["workhours"]);
+            workhours = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["workhours"] ?? "");
+
+            if (workhours != null && workhours.status != "available") {
+                PageState.AddFormError("Work hours availability information: status not allowed");
+            }
+        }
+
+        if (PageState.IsValid) {
+            
+            advanceTime = Request["advance-time"].AsDecimal();
+            betweenTime = Request["between-time"].AsDecimal();
+            
+            if (Request["advance-time"].IsEmpty()) {
+                PageState.AddError("advance-time", LcRessources.RequiredField("Time in advance of bookings"));
+            }
+            if (Request["between-time"].IsEmpty()) {
+                PageState.AddError("between-time", LcRessources.RequiredField("Minimum time between bookings"));
+            }
+
+            if (allTime) {
+                LcCalendar.SetAllTimeAvailability(userId);
+            } else {
+                if (!LcCalendar.SaveWorkHoursJsonData(userId, workhours)) {
+                    PageState.AddFormError("LJDI: Your weekly schedule is required.");
+                }
+            }
+
+            if (PageState.IsValid) {
+                // Testing the alert
+                using (var db = Database.Open("sqlloco")) {
+                    db.Execute("SetCalendarProviderAttributes @0, @1, @2, null, null", userId, 
+                        advanceTime,
+                        betweenTime
+                    );
+                
+                    db.Execute("EXEC TestAlertAvailability @0", userId);
+                }
+            
+                if (doReturn) {
+                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                }
+            }
+        }
+    }
+    
+    var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
+    dynamic atts = null;
+    using (var db = Database.Open("sqlloco")) {
+        atts = db.QuerySingle(varSQLGetUserCalendarProviderAttributes, userId);  
+    }
+    if (atts != null) {
+        advanceTime = atts.AdvanceTime;
+        betweenTime = atts.BetweenTime;
+    }
+}
+
+@helper printOption(string selected, string val, string label) {
+    <option @LcHelpers.IsSelected(selected, val) value="@val">@label</option>
+}
+@helper printHoursTimeInAdvance(string selected){
+    <select id="advance-time" name="advance-time">
+        <option value=""></option>
+        @printOption(selected, "1",     "1 hour")
+        @printOption(selected, "1.5",   "1.5 hours")
+        @printOption(selected, "2",     "2 hours")
+        @printOption(selected, "2.5",   "2.5 hours")
+        @printOption(selected, "3",     "3 hours")
+        @printOption(selected, "4",     "4 hours")
+        @printOption(selected, "5",     "5 hours")
+        @printOption(selected, "6",     "6 hours")
+        @printOption(selected, "7",     "7 hours")
+        @printOption(selected, "8",     "8 hours")
+        @printOption(selected, "12",    "12 hours")
+        @printOption(selected, "18",    "18 hours")
+        @printOption(selected, "24",    "1 day")
+        @printOption(selected, "48",    "2 days")
+        @printOption(selected, "72",    "3 days")
+        @printOption(selected, "96",    "4 days")
+        @printOption(selected, "120",   "5 days")
+        @printOption(selected, "144",   "6 days")
+        @printOption(selected, "168",   "1 week")
+        @printOption(selected, "336",   "2 weeks")
+    </select>
+}
+@helper printHoursBetweenBookingTime(string selected){
+    <select id="between-time" name="between-time">
+        <option value=""></option>
+        @printOption(selected, "0", "0 minutes")
+        @printOption(selected, "0.08",  "5 minutes")
+        @printOption(selected, "0.16",  "10 minutes")
+        @printOption(selected, "0.25",  "15 minutes")
+        @printOption(selected, "0.5",   "30 minutes")
+        @printOption(selected, "0.75",  "45 minutes")
+        @printOption(selected, "1",     "1 hour")
+        @printOption(selected, "2",     "2 hours")
+        @printOption(selected, "3",     "3 hours")
+        @printOption(selected, "4",     "4 hours")
+        @printOption(selected, "5",     "5 hours")
+        @printOption(selected, "6",     "6 hours")
+    </select>
+}
+
+<fieldset class="DashboardWeeklySchedule">
+
+    <label class="DashboardWeeklySchedule-allTime"><input type="checkbox" name="alltime" value="True" @LcHelpers.IsChecked(true, Request["alltime"]) /> All days/times</label>
+
+    @RenderPage(LcUrl.RenderLangPath + "Calendar/$Weekly.cshtml", new { User = userId, Type = "workHours" })
+
+    <fieldset class="DashboardWeeklySchedule-require">
+        <legend>I require:</legend>
+        <ul>
+            <li>
+                <label for="advance-time" title="How far in advance can clients book your services? We recommend 1 or 2 days, but it's up to you." class="has-tooltip">Time in advance of bookings:</label>
+                @printHoursTimeInAdvance(advanceTime.ToString("###0.##")) 
+            </li>
+            <li>
+                <label for="between-time" title="Do you need time to prepare for your next client after a booking?" class="has-tooltip">Minimum time between bookings:</label>
+                @printHoursBetweenBookingTime(betweenTime.ToString("###0.##"))
+            </li>
+        </ul>
+    </fieldset>
+
+</fieldset>

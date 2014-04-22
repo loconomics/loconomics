@@ -75,7 +75,7 @@
 }
             <div class="position-summary">
                 <div class="actions book">
-                    <a class="book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
+                    <a class="book-action main-action need-login" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
                 </div>
                 @{
                     var priceExtraClass = 
@@ -99,7 +99,7 @@
                         }
                     </span>
                 }
-                <a class="calculate-price" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
+                <a class="calculate-price need-login" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
                 
                 <div class="provider-features-lists">
                     

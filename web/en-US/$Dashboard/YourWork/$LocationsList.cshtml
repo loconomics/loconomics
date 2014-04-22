@@ -1,0 +1,68 @@
+﻿@*
+    List user locations
+ *@
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    var PageState = PageData["PageState"] ?? ModelState;
+
+    dynamic locations = null;
+
+    // Since user can delete addresses from being available on its list but still
+    // we need preserve that addresses information for cases in that is liked to 
+    // a booking, that addresses get 'smooth deleted', changing its flags for kind
+    // of location to false, then we only show addresses with almost one flag.
+    var sqlcondOnlyActiveServiceAddress = " AND (TravelFromLocation = 1 OR ServicesPerformedAtLocation = 1)";
+
+    using (var db = Database.Open("sqlloco")) {
+        locations = db.Query(LcData.sqlGetServiceAddresses + sqlcondOnlyActiveServiceAddress,
+            u.UserID,
+            positionID,
+            LcData.GetCurrentLanguageID(),
+            LcData.GetCurrentCountryID()
+        );
+    }
+    
+    var thereIsData = (locations != null && locations.Count > 0);
+    
+    if (!thereIsData && IsPost) {
+        PageState.AddFormError("Please enter a service radius and/or a service location.");
+    }
+}
+@helper printLocation(dynamic location){
+    <li class="DashboardLocation-list-item ItemBox crudl-item Location" data-crudl-item-id="@location.AddressID">
+        <h1 class="ItemBox-name Location-name">@location.AddressName</h1>
+        <span class="Location-line">
+            <span class="Location-line1">@location.AddressLine1</span>
+            <span class="Location-line2">@location.AddressLine2</span>
+        </span>
+        <span class="Location-city">@location.City</span>
+        <span class="Location-state">@location.StateProvinceCode</span>
+        <span class="Location-zipcode">@location.PostalCode</span>
+        @if (((bool?)location.ServicesPerformedAtLocation) ?? false) {
+            <span class="Location-serviceLocation">I perform services here</span>
+        }
+        @if (((bool?)location.TravelFromLocation) ?? false) {
+        <div class="Location-serviceRadius">
+            <span class="Location-travel-radius-label">I will travel up to <span class="Location-travel-radius">@location.ServiceRadiusFromLocation</span> mile(s) from here</span>
+            <span class="Location-travel-transport-label">I travel by: <span class="Location-travel-transport">@location.TransportTypeName</span></span>
+        </div>
+        }
+        <div class="actions ItemBox-actions">
+            <a href="#delete" class="crudl-delete">Delete</a>
+            <a href="#edit" class="crudl-update">Edit</a>
+        </div>
+    </li>
+}
+@if (thereIsData)
+{
+    <ul>
+        @foreach (var location in locations)
+        {
+            @printLocation(location)
+        }
+    </ul>
+}

@@ -1,17 +1,5 @@
 ﻿@{
-    Layout = "../_SiteLayout.cshtml";
-    Page.Title = "Welcome to Loconomics";
-    PageData["ShowWelcomePopup"] = false;
-}
-<div id="container" class="clearfix provider-sign-up changes-notification-enabled">
-    <div id="main">
-        <h1 class="withsub"><em>Welcome</em> to a new kind of Marketplace</h1>
-        <p class="subh1">We’re glad you’re here!  You’re about to create a profile that will act as your portal to new and exisiting clients.  We’ve put some extra special thought into helping you market and differentiate yourself in the marketplace and hope you like it.  We’re always open to suggestions as we want you to make this your home.  E-mail us at <a href="mailto:providerhelp@loconomics.com">providerhelp@loconomics.com</a> with anything.</p>
-        @RenderPage("$ProviderSignUpForm.cshtml")
-    </div>
-</div>
-@{
-    // load ressources (at end, just when we know we need it and it was not an ajax response:
-    LcAssets.AddStyle(LcUrl.AppPath + "Styles/ProviderSignUp.css");
-    LcAssets.AddScript(LcUrl.AppPath + "Scripts/ProviderSignUp.js");    
+    // Just a redirect, for a while
+    // TODO: Remove this page when the link is longer unused.
+    Response.Redirect(LcUrl.LangPath + "Account/ProviderWelcome");
 }

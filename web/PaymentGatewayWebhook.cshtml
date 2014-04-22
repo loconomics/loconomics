@@ -11,6 +11,28 @@
         var signature = Request["bt_signature"];
         var payload = Request["bt_payload"];
         var notification = gw.WebhookNotification.Parse(signature, payload);
+        
+        // Detecting the channel (from the ID) and the domain on wich this page is executing
+        // to stop processing on the case they don't match.
+        // Since we have 4 channels and only 2 at Braintree -sandbox and production-, Braintree production
+        // is linked for several of our channels: testing, staging and live; then any of them will
+        // receive notifications but not all notifications are for them, this filtering just avoid treat
+        // 'other channel' notifications.
+        if (notification.MerchantAccount.Id.Contains("_dev_") && !Request.Url.Authority.Contains("dev."))
+        {
+            Response.End();
+        }
+        else if (notification.MerchantAccount.Id.Contains("_testing_") && !Request.Url.Authority.Contains("testing."))
+        {
+            Response.End();
+        }
+        else if (notification.MerchantAccount.Id.Contains("_staging_") && !Request.Url.Authority.Contains("staging."))
+        {
+            Response.End();
+        }
+        // ELSE any other case (localdev, live) is left 'as is' not requiring filtering, just localdev will never 
+        // receive a webhook and live is the default one.
+        // There is no chance to fall here if is not a *live* notification and this is not the main domain.
 
         // Doing the action that fits better:
         //
