@@ -51,7 +51,7 @@
                             <p>Are you really sure you want to delete this position?</p>
                             <form action="@(LcUrl.LangPath)$dashboard/position/$delete" method="post" class="ajax ajax-box confirm actions">
                                 <input type="hidden" name="PositionID" value="@posID" />
-                                <button type="button" class="close-action">No</button>
+                                <button type="button" class="close-action cancel-action">No</button>
                                 <button type="submit" class="main-action">Yes</button>
                             </form>
                         </div>

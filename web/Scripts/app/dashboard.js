@@ -2,6 +2,7 @@
     User private dashboard section
 **/
 var $ = require('jquery');
+var LcUrl = require('../LC/LcUrl');
 
 // Code on page ready
 $(function () {
@@ -27,8 +28,15 @@ $(function () {
     return false;
   })
   .on('click', '.delete-position a', function () {
+    var positionId = $(this).closest('[data-position-id]').data('position-id');
     var pos = new ProviderPosition(positionId);
-    pos.remove();
+
+    pos
+    .on(pos.removedEvent, function (msg) {
+      // Current position page doesn't exist anymore, out!
+      window.location = LcUrl.LangPath + 'dashboard/your-work/';
+    })
+    .remove();
 
     return false;
   });

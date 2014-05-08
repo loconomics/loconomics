@@ -27,9 +27,11 @@ ProviderPosition.prototype = {
   stateChangedEvent: 'state-changed',
   stateChangedDeclinedEvent: 'state-changed-declined',
   removeFormSelector: '.delete-message-confirm',
-  removeFormContainer: '.DashboardYourWork',
+  removeFormContainer: '.DashboardSection-page',
   removeMessageClass: 'warning',
-  removePopupClass: 'position-state-change'
+  removePopupClass: 'position-state-change',
+  removedEvent: 'removed',
+  removeFailedEvent: 'remove-failed'
 };
 
 /** changeState to the one given, it will raise a stateChangedEvent on success
@@ -70,26 +72,35 @@ ProviderPosition.prototype.changeState = function changePositionState(state) {
 ProviderPosition.prototype.remove = function deletePosition() {
 
     var c = $(this.removeFormContainer),
-        f = $(this.removeFormSelector),
-        popupForm = f.clone();
+        f = c.find(this.removeFormSelector).first(),
+        popupForm = f.clone(),
+        that = this;
 
-    popupForm.one('ajaxSuccessPost', '.ajax-box', function (data) {
+    popupForm.one('ajaxSuccessPost', '.ajax-box', function (event, data) {
+
+        function notify() {
+            switch (data.Code) {
+                case 101:
+                    that.events.fire(that.removedEvent, [data.Result]);
+                    break;
+                case 103:
+                    that.events.fire(that.removeFailedEvent, [data.Result]);
+                    break;
+            }
+        }
+
         if (data && data.Code) {
 
             if (data.Result && data.Result.Message) {
                 var msg = $('<div/>').addClass(that.removeMessageClass).append(data.Result.Message);
-                smoothBoxBlock.open(msg, $d, that.removePopupClass, { closable: true, center: false, autofocus: false });
-            }
+                var box = smoothBoxBlock.open(msg, c, that.removePopupClass, { closable: true, center: false, autofocus: false });
 
-            switch (data.Code) {
-                case 101:
-                    that.events.fire('removed', [data.Result]);
-                    // Current position page doesn't exist now!
-                    window.location.reload();
-                    break;
-                case 103:
-                    that.events.fire('remove-failed', [data.Result]);
-                    break;
+                box.on('xhide', function () {
+                    notify();
+                });
+            }
+            else {
+                notify();
             }
         }
 
