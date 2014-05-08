@@ -70,7 +70,10 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     box.data('modal-box-options', options);
     if (!boxc.data('_close-action-added'))
       boxc
-        .on('click', '.close-action', function (e) { e.preventDefault(); smoothBoxBlock(null, blocked, null, box.data('modal-box-options')); })
+        .on('click', '.close-action', function (e) {
+            e.preventDefault();
+            smoothBoxBlock(null, blocked, null, box.data('modal-box-options'));
+        })
         .data('_close-action-added', true);
     boxc.append(contentBox);
     boxc.width(options.width);
