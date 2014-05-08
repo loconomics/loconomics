@@ -25,6 +25,12 @@ $(function () {
     .changeState(n);
 
     return false;
+  })
+  .on('click', '.delete-position a', function () {
+    var pos = new ProviderPosition(positionId);
+    pos.remove();
+
+    return false;
   });
 
   /* Promote */

@@ -40,6 +40,27 @@
 
 <div class="DashboardYourWork ajax-box">
 
+    @if (!isInOnboarding)
+    {
+        <div class="DashboardPosition-quickToolsBar">
+            <div class="DashboardPosition-quickToolsBar-group">
+                <div class="delete-position">
+                    <a href="#delete-position" class="DashboardPosition-quickToolsBar-link">Delete position</a>
+                    <div class="lc-ressources position-ressources">
+                        <div class="delete-message-confirm">
+                            <p>Are you really sure you want to delete this position?</p>
+                            <form action="@(LcUrl.LangPath)$dashboard/position/$delete" method="post" class="ajax ajax-box confirm actions">
+                                <input type="hidden" name="PositionID" value="@posID" />
+                                <button type="button" class="close-action">No</button>
+                                <button type="submit" class="main-action">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
     @if(newPos) {
         <div id="DashboardAddPosition" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Add a new position</h2>
@@ -97,9 +118,12 @@
 </div>
 
 @if(!newPos) {
-    <div class="InlineNotification InlineNotification--hasRequiredSections">
-        Required sections
-    </div>
+    if (isInOnboarding)
+    {  
+        <div class="InlineNotification InlineNotification--hasRequiredSections">
+            Required sections
+        </div>
+    }
 
     LcHelpers.CheckDashboardSuccessPost("your-work");
 }

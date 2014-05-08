@@ -25,7 +25,11 @@ ProviderPosition.prototype = {
   declinedMessageClass: 'info',
   declinedPopupClass: 'position-state-change',
   stateChangedEvent: 'state-changed',
-  stateChangedDeclinedEvent: 'state-changed-declined'
+  stateChangedDeclinedEvent: 'state-changed-declined',
+  removeFormSelector: '.delete-message-confirm',
+  removeFormContainer: '.DashboardYourWork',
+  removeMessageClass: 'warning',
+  removePopupClass: 'position-state-change'
 };
 
 /** changeState to the one given, it will raise a stateChangedEvent on success
@@ -58,6 +62,41 @@ ProviderPosition.prototype.changeState = function changePositionState(state) {
     }
   });
   return this;
+};
+
+/**
+    Delete position
+**/
+ProviderPosition.prototype.remove = function deletePosition() {
+
+    var c = $(this.removeFormContainer),
+        f = $(this.removeFormSelector),
+        popupForm = f.clone();
+
+    popupForm.one('ajaxSuccessPost', '.ajax-box', function (data) {
+        if (data && data.Code) {
+
+            if (data.Result && data.Result.Message) {
+                var msg = $('<div/>').addClass(that.removeMessageClass).append(data.Result.Message);
+                smoothBoxBlock.open(msg, $d, that.removePopupClass, { closable: true, center: false, autofocus: false });
+            }
+
+            switch (data.Code) {
+                case 101:
+                    that.events.fire('removed', [data.Result]);
+                    // Current position page doesn't exist now!
+                    window.location.reload();
+                    break;
+                case 103:
+                    that.events.fire('remove-failed', [data.Result]);
+                    break;
+            }
+        }
+
+    });
+
+    // Open confirmation form
+    var b = smoothBoxBlock.open(popupForm, c, null, { closable: true });
 };
 
 module.exports = ProviderPosition;
