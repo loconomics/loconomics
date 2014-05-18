@@ -109,7 +109,8 @@ exports.show = function welcomePopup() {
                 title: 'Does this sound like you?',
                 content: ui.item.description,
                 trigger: 'focus',
-                placement: 'left'
+                // Different placement for mobile design (up to 640px wide) to avoid being hidden
+                placement: $('html').width() < 640 ? 'top' : 'left'
             })
             .popover('show')
             // Hide on possible position name change to avoid confusions
