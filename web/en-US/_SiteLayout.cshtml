@@ -33,7 +33,7 @@
     // detected automatically as true if anonymous user or provider without positions:
     var showWelcomePopup = PageData["ShowWelcomePopup"] ?? 
         (u == null ? true : u.IsProvider && LcData.UserInfo.GetUserPos().Count == 0);
-    var includeWelcomePopup = showWelcomePopup || u == null;
+    var includeWelcomePopup = (showWelcomePopup && u == null) || u == null;
 }
 @helper howItWorksLi(){
                         <li>

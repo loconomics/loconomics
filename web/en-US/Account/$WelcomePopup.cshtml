@@ -6,7 +6,7 @@
     
     //string PROVIDER_REDIRECT = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-providers";
     string PROVIDER_REDIRECT = LcUrl.LangPath + "dashboard/"; // "Account/ProviderWelcome/";
-    string CUSTOMER_REDIRECT = LcUrl.LangPath + "dashboard/"; //"HelpCenter/HowItWorks/#howitworks-customers";
+    string CUSTOMER_REDIRECT = LcUrl.LangPath; //"HelpCenter/HowItWorks/#howitworks-customers";
     var redirect = "";
     bool withLogo = PageData["WithLogo"] ?? true;
     string title = PageData["WelcomePopupTitle"] ?? "Welcome to Loconomics";
@@ -130,9 +130,14 @@
     }
     
     var idprefix = "welcomepopup";
+    // WelcomePopup is required again #514
+    var closable = false;
 }
 <div id="welcomepopup" class="@(providerWithoutPosition ? "select-position" : "")">
-    <a class="close-popup" href="#close-popup">X</a>
+    @if (closable)
+    {
+        <a class="close-popup" href="#close-popup">X</a>
+    }
 
     <header>
         <h1 class="@(withLogo ? "has-icon" : "")">@(title)</h1>
