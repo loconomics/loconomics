@@ -39,7 +39,10 @@
     if (!providerWithoutPosition) {    
         Validation.RequireField("profile-type", "Please, select one from Provider or Customer");
         Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
-        Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
+        
+        // Last name disabled for a while, as of #514
+        //Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
+        
         Validation.RequireField("email", LcRessources.RequiredField("Email"));
         Validation.RequireField("zipcode", LcRessources.RequiredField("Zip code"));
         Validation.RequireField("create-password", LcRessources.RequiredField("Password"));
@@ -185,7 +188,8 @@
                         @if (!providerWithoutPosition)
                         {
                         <li class="provider customer has-personal-data"><label for="@(idprefix)-firstname">First name</label><input id="@(idprefix)-firstname" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
-                        <li class="provider customer has-personal-data"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
+                        @* class="provider customer  *@
+                        <li class="has-personal-data"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
                         <li class="provider customer has-personal-data">
                         <label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" @Validation.GetHtml("zipcode") @Html.Raw(ModelState.IsValidField("zipcode") ? "" : "class='input-validation-error'") type="text" placeholder="Zip code" name="zipcode" value="@Request["zipcode"]" />
                         <span class="field-validation-error" data-valmsg-for="zipcode" data-valmsg-replace="true"></span>
