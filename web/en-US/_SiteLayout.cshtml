@@ -7,7 +7,7 @@
     var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     // Updated assets version, to avoid problems with cache of css & js assets
-    LcAssets.AssetsVersion = "201405181";
+    LcAssets.AssetsVersion = "201405182";
     
     // Sniff IE browsers or based on its same engine (Trident).
     var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident") : false;
@@ -60,9 +60,8 @@
         <title>Loconomics - @Page.Title</title>
         <meta name="description" content="Find service providers to do the job right. At your service!"/>
         <meta name="author" content="Loconomics Inc."/>
-        @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: 
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        *@
+        
         <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
 
         @* Our styles *@

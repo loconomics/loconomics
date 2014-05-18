@@ -11,7 +11,10 @@
 
 #welcome-popup-overlay {
     display:none;
-    position: fixed;
+    /* Absolute manages scrollbar when need, where fixed not,
+        but it needs a position:relative at body to avoid not
+        overlay the footer */
+    position: absolute;
     top:0;
     left:0;
     right:0;
