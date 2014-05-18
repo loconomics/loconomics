@@ -109,10 +109,16 @@ $welcomePopupMedia = "only screen and (max-width: 640px)"
                 background url("../img/theme/logo-loconomics-header-mini.png") no-repeat left center transparent /* white */
     
             @media $welcomePopupMedia
-                font-size 1em
+                font-size: 1em;
                 /*
                 text-indent -9999px
                 */
+            @media only screen and (max-width: 350px)
+                font-size: 0.84em;
+            @media only screen and (max-width: 270px)
+                font-size 1em
+                line-height 1.2em
+                height: 39px;
                 
         .presentation
             text-align: justify;
