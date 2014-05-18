@@ -2912,29 +2912,6 @@ form.lightform textarea {
     box-shadow: none;
 }
 
-/** Form icons / data classification **/
-form input.personal-data,
-form .has-personal-data input,
-form input.secure-data,
-form .has-secure-data input,
-form input.search-data,
-form .has-search-data input {
-    background-position: 99% center;
-    background-repeat: no-repeat;
-}
-input.personal-data,
-.has-personal-data input {
-    background-image: url('../img/theme/icon-form-personal.png');
-}
-input.secure-data,
-.has-secure-data input {
-    background-image: url('../img/theme/icon-form-secure.png');
-}
-input.search-data,
-.has-search-data input {
-    background-image: url('../img/theme/icon-form-search.png');
-}
-
 /* attributes */
 ul.attributes-list li {
     /*list-style: disc inside url("../img/theme/bullet.png") !important;*/
@@ -2963,10 +2940,6 @@ ul.attributes-list li {
     #site-header #logo.replace {
         background-image: url("../img/theme/logo-loconomics-header@2x.png") !important;
         background-size: contain;
-    }
-    #takeATour h1 {
-        background-image: url("../img/theme/logo-loconomics-header@2x.png");
-        background-size: 201px 78px;
     }
     .user-rating-summary-widget span.rating-image {
         background-image: url('../img/theme/star-rating-gray-orange@2x.png') !important;
@@ -4255,6 +4228,110 @@ label.visuallyhidden-with-placeholder{
     -webkit-background-size: 100px 39px;
     -moz-background-size: 100px 39px;
     background-size: 100px 39px;
+  }
+}
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+form input.personal-data,
+form .has-personal-data input,
+form input.secure-data,
+form .has-secure-data input,
+form input.search-data,
+form .has-search-data input {
+  background-position: 99% center;
+  background-repeat: no-repeat;
+}
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+input.personal-data,
+.has-personal-data input {
+  background-image: url("../img/theme/icon-form-personal.png");
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+  input.personal-data,
+  .has-personal-data input {
+    background-image: url("../img/theme/icon-form-personal@2x.png");
+    -webkit-background-size: 14px 14px;
+    -moz-background-size: 14px 14px;
+    background-size: 14px 14px;
+  }
+}
+
+/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+input.secure-data,
+.has-secure-data input {
+  background-image: url("../img/theme/icon-form-secure.png");
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+  input.secure-data,
+  .has-secure-data input {
+    background-image: url("../img/theme/icon-form-secure@2x.png");
+    -webkit-background-size: 14px 14px;
+    -moz-background-size: 14px 14px;
+    background-size: 14px 14px;
+  }
+}
+
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+input.search-data,
+.has-search-data input {
+  background-image: url("../img/theme/icon-form-search.png");
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+  input.search-data,
+  .has-search-data input {
+    background-image: url("../img/theme/icon-form-search@2x.png");
+    -webkit-background-size: 14px 14px;
+    -moz-background-size: 14px 14px;
+    background-size: 14px 14px;
   }
 }
 
