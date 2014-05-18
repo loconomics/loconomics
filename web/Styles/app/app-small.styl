@@ -1,0 +1,59 @@
+/**
+  Styles to adapt the site for small screens; its not a complete phone/tablet site,
+  just minimum adaptation.
+**/
+@import "nib"
+@import "utils/mediaQueries"
+
+$contentSize = 735px;
+
+/* Some default size */
+.DashboardSection-sidebarToggle
+    display: none
+
+@media $mediaXs
+
+    .home
+        #container, #site-footer, #site-header .wrap
+            width: $contentSize;
+
+    #welcome-popup-container
+        width auto
+        margin 0
+
+    /*   
+    .search, .Dashboard
+        #container, #site-footer, #site-header .wrap
+            width: $contentSize;
+    */      
+    /*
+    .Dashboard
+        .DashboardSection-sidebar
+            display: none
+            
+        .DashboardSection-sidebarToggle
+            display: block
+            &:active
+                & + DashboardSection-sidebar
+                    display: inherit
+                    position: absolute
+                    top: 124px
+                    left: 0
+                    right: 0
+                    width: auto
+                    background: white
+    */
+
+    /* Not enabled, just test *//*
+    .profile
+        #profileHeader aside
+            position: static
+            border-left: medium none
+        #profileHeader .profile-desc
+            max-height: none
+            position: static
+            padding: 0;
+            &:hover
+                background: none;
+                box-shadow: 0px;
+    */

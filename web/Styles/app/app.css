@@ -519,7 +519,7 @@ div.scripts { display: none; }
     position: absolute;
     top: 0;
     width: 201px;
-    z-index: 1000;
+    z-index: 900;
 }
 .es #site-header #logo.replace { background-image: url('../img/theme/logo-loconomics-header-ES.png'); }
 #site-header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }

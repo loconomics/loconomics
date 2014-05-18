@@ -246,7 +246,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-firstSlide ul {
     background-image: url("../img/theme/provider-welcome/how-it-works@2x.png");
     -webkit-background-size: 660px 160px;
@@ -283,7 +283,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-secondSlide ul li.ProviderWelcome-secondSlide-clients {
     background-image: url("../img/theme/provider-welcome/landing-page-url@2x.png");
     -webkit-background-size: 48px 48px;
@@ -298,7 +298,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-secondSlide ul li.ProviderWelcome-secondSlide-payment {
     background-image: url("../img/theme/provider-welcome/landing-page-payments@2x.png");
     -webkit-background-size: 48px 48px;
@@ -313,7 +313,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-secondSlide ul li.ProviderWelcome-secondSlide-calendar {
     background-image: url("../img/theme/provider-welcome/landing-page-calendar@2x.png");
     -webkit-background-size: 48px 48px;
@@ -328,7 +328,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-secondSlide ul li.ProviderWelcome-secondSlide-community {
     background-image: url("../img/theme/provider-welcome/landing-page-community@2x.png");
     -webkit-background-size: 48px 48px;
@@ -347,7 +347,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-thirdSlide ul {
     background-image: url("../img/theme/provider-welcome/landing-page-profile-elizabeth@2x.png");
     -webkit-background-size: 218px 235px;
@@ -364,7 +364,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-thirdSlide ul li {
     background-image: url("../img/theme/teal-checkmark@2x.png");
     -webkit-background-size: 24px 24px;
@@ -383,7 +383,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-fourthSlide ul {
     background-image: url("../img/theme/provider-welcome/landing-page-triple-bottom-line@2x.png");
     -webkit-background-size: 200px 200px;
@@ -400,7 +400,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-fourthSlide ul li {
     background-image: url("../img/theme/teal-checkmark@2x.png");
     -webkit-background-size: 24px 24px;
@@ -473,7 +473,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-start .start-action:after {
     background-image: url("../img/theme/right-arrow-teal@2x.png");
     -webkit-background-size: 29px 27px;
@@ -511,7 +511,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-slides li.ProviderWelcome-presentation-actions-goPrevious a {
     background-image: url("../img/theme/provider-welcome/landing-page-left-arrow@2x.png");
     -webkit-background-size: 48px 48px;
@@ -529,7 +529,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-slides li.ProviderWelcome-presentation-actions-goNext a {
     background-image: url("../img/theme/provider-welcome/landing-page-right-arrow@2x.png");
     -webkit-background-size: 48px 48px;
@@ -609,7 +609,7 @@
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup .register .main-action:after {
     background-image: url("../img/theme/right-arrow@2x.png");
     -webkit-background-size: 29px 27px;
