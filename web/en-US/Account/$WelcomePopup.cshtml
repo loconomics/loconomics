@@ -145,10 +145,7 @@
     <header>
         <h1 class="@(withLogo ? "has-icon" : "")">@(title)</h1>
         <div class="presentation">
-            Whether you're providing or purchasing local services, we've designed a marketplace with you in mind.
-            We're a <a href="#bcorp" class="has-tooltip" title="Benefit Corporations are a new class of corporation that are required to create a material positive impact on society and the environment.">California Benefit Corporation</a>
-            dedicated to the self-employed movement.
-            We invite you to create a <strong>free</strong> profile!
+            We’re readying for our launch this summer as a <a href="#bcorp" class="has-tooltip" title="There are no fat cats in suits here. Just a bunch of hard-working people strengthening local economies...probably even one of your neighbors!">worker-owned cooperative</a> and marketplace. <br></br>You'll be able to find here therapists to pamper your mind or body, tutors for your upcoming trip to Spain, and caterers for your next big birthday.  <br></br>Introduce yourself, take a look around, and we’ll keep you in the loop as we progress!
         </div>
     </header>
 
@@ -164,7 +161,7 @@
             {
             <div class="profile-choice">
                 <h2>Join our San Francisco community as a:</h2>
-                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Provider</label>
+                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Freelancer</label>
                 <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Customer</label>
             </div>
             }
