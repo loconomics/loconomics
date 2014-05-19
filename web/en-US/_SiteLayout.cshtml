@@ -82,7 +82,7 @@
         <![endif]-->
         }
     </head>
-    <body class="@PageData["BodyClass"] @(showWelcomePopup ? "strict-welcome-popup" : "")">
+    <body class="@PageData["BodyClass"] @(includeWelcomePopup && showWelcomePopup ? "strict-welcome-popup" : "")">
         @if (includeWelcomePopup)
         {
             // Annonymous access, Welcome popup

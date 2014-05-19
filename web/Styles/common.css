@@ -4568,17 +4568,6 @@ input.search-data,
 .DashboardSection-sidebarToggle {
   display: none;
 }
-@media only screen and (max-width: 958px) {
-
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-small.styl */
-
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-small.styl */
-  .home #container,
-  .home #site-footer,
-  .home #site-header .wrap {
-    width: 735px;
-  }
-}
 
 /*= w-ProviderPackage */
 .w-ProviderPackage {

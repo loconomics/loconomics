@@ -8,48 +8,49 @@
 $contentSize = 735px;
 
 /* Some default size */
-.DashboardSection-sidebarToggle
+.DashboardSection-sidebarToggle {
     display: none
+}
 
-@media $mediaXs
+/*@media $mediaXs*/
+/*
+.home
+    #container, #site-footer, #site-header .wrap
+        width: $contentSize;
+*/
+/*   
+.search, .Dashboard
+    #container, #site-footer, #site-header .wrap
+        width: $contentSize;
+*/      
+/*
+.Dashboard
+    .DashboardSection-sidebar
+        display: none
+        
+    .DashboardSection-sidebarToggle
+        display: block
+        &:active
+            & + DashboardSection-sidebar
+                display: inherit
+                position: absolute
+                top: 124px
+                left: 0
+                right: 0
+                width: auto
+                background: white
+*/
 
-    .home
-        #container, #site-footer, #site-header .wrap
-            width: $contentSize;
-
-    /*   
-    .search, .Dashboard
-        #container, #site-footer, #site-header .wrap
-            width: $contentSize;
-    */      
-    /*
-    .Dashboard
-        .DashboardSection-sidebar
-            display: none
-            
-        .DashboardSection-sidebarToggle
-            display: block
-            &:active
-                & + DashboardSection-sidebar
-                    display: inherit
-                    position: absolute
-                    top: 124px
-                    left: 0
-                    right: 0
-                    width: auto
-                    background: white
-    */
-
-    /* Not enabled, just test *//*
-    .profile
-        #profileHeader aside
-            position: static
-            border-left: medium none
-        #profileHeader .profile-desc
-            max-height: none
-            position: static
-            padding: 0;
-            &:hover
-                background: none;
-                box-shadow: 0px;
-    */
+/* Not enabled, just test *//*
+.profile
+    #profileHeader aside
+        position: static
+        border-left: medium none
+    #profileHeader .profile-desc
+        max-height: none
+        position: static
+        padding: 0;
+        &:hover
+            background: none;
+            box-shadow: 0px;
+*/
