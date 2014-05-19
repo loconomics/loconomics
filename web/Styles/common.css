@@ -707,6 +707,7 @@ div.scripts { display: none; }
     float: none;
     text-align: center;
     width: 690px;
+    padding: 0 135px;
     margin: auto;
     font-size: 1.2em;
 }
@@ -3043,7 +3044,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.
