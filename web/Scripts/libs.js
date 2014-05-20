@@ -700,8 +700,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 },{"jquery":"fHei1a"}],"bootstrap":[function(require,module,exports){
 module.exports=require('1hRLMN');
-},{}],"modernizr":[function(require,module,exports){
-module.exports=require('FbOfbE');
 },{}],"FbOfbE":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 
@@ -714,5 +712,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
-},{"jquery":"fHei1a"}]},{},[])
+},{"jquery":"fHei1a"}],"modernizr":[function(require,module,exports){
+module.exports=require('FbOfbE');
+},{}]},{},[])
 ;

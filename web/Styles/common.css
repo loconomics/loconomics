@@ -4060,8 +4060,9 @@ label.visuallyhidden-with-placeholder{
 /* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   body.strict-welcome-popup #container,
   body.strict-welcome-popup #site-header,
-  body.strict-welcome-popup #site-footer {
-    display: none;
+  body.strict-welcome-popup #site-footer,
+  body.strict-welcome-popup #zenbox_tab {
+    display: none !important;
   }
 }
 
