@@ -25,7 +25,13 @@ ProviderPosition.prototype = {
   declinedMessageClass: 'info',
   declinedPopupClass: 'position-state-change',
   stateChangedEvent: 'state-changed',
-  stateChangedDeclinedEvent: 'state-changed-declined'
+  stateChangedDeclinedEvent: 'state-changed-declined',
+  removeFormSelector: '.delete-message-confirm',
+  removeFormContainer: '.DashboardSection-page',
+  removeMessageClass: 'warning',
+  removePopupClass: 'position-state-change',
+  removedEvent: 'removed',
+  removeFailedEvent: 'remove-failed'
 };
 
 /** changeState to the one given, it will raise a stateChangedEvent on success
@@ -58,6 +64,50 @@ ProviderPosition.prototype.changeState = function changePositionState(state) {
     }
   });
   return this;
+};
+
+/**
+    Delete position
+**/
+ProviderPosition.prototype.remove = function deletePosition() {
+
+    var c = $(this.removeFormContainer),
+        f = c.find(this.removeFormSelector).first(),
+        popupForm = f.clone(),
+        that = this;
+
+    popupForm.one('ajaxSuccessPost', '.ajax-box', function (event, data) {
+
+        function notify() {
+            switch (data.Code) {
+                case 101:
+                    that.events.fire(that.removedEvent, [data.Result]);
+                    break;
+                case 103:
+                    that.events.fire(that.removeFailedEvent, [data.Result]);
+                    break;
+            }
+        }
+
+        if (data && data.Code) {
+
+            if (data.Result && data.Result.Message) {
+                var msg = $('<div/>').addClass(that.removeMessageClass).append(data.Result.Message);
+                var box = smoothBoxBlock.open(msg, c, that.removePopupClass, { closable: true, center: false, autofocus: false });
+
+                box.on('xhide', function () {
+                    notify();
+                });
+            }
+            else {
+                notify();
+            }
+        }
+
+    });
+
+    // Open confirmation form
+    var b = smoothBoxBlock.open(popupForm, c, null, { closable: true });
 };
 
 module.exports = ProviderPosition;
