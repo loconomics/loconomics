@@ -403,6 +403,8 @@ form.report-unauthorized-use textarea {
 }
 .profile .user-rating-summary-widget > ul > li > label {
     margin-left: 20px;
+    /* Fixed size, solves an ungly bug in Chrome when zooming #511 */
+    font-size: 14px;
 }
 .profile .overview .service-attribute-category div{
     display: inline-block;

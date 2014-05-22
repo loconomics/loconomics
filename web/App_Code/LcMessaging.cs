@@ -941,7 +941,12 @@ public class LcMessaging
             using (var logger = new LcLogger("SendMail"))
             {
                 logger.Log("WebMail.Send, to:{0}, subject:{1}, from:{2}, body::", to, subject, from);
-                logger.LogData(body);
+                if (!String.IsNullOrEmpty(body)) {
+                    logger.LogData(body);
+                }
+                else {
+                    logger.Log("**There is no message body**");
+                }
                 logger.LogEx("SendMail (previous logged email)", ex);
                 logger.Save();
             }

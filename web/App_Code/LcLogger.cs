@@ -31,7 +31,14 @@ public class LcLogger : IDisposable
     /// <param name="format"></param>
     /// <param name="pars"></param>
     public void Log(string format, params object[] pars){
-        var str = String.Format(format.Replace("\n", "  "), pars);
+        string str = "";
+        try {
+            str = String.Format(format.Replace("\n", "  "), pars);
+        }
+        catch {
+            // Catch invalid format messages
+            str = String.IsNullOrEmpty(format) ? "**no log message**" : format.Replace("\n", "  ");
+        }
         if (String.IsNullOrWhiteSpace(str)) return;
         // Universal date-time, following ISO8601 format with Z identifier at the end
         logger.AppendFormat("{0:s}Z ", DateTime.Now.ToUniversalTime());
@@ -59,7 +66,14 @@ public class LcLogger : IDisposable
     /// <param name="pars"></param>
     public void LogData(string format, params object[] pars)
     {
-        var str = String.Format(format, pars);
+        string str = "";
+        try {
+            str = String.Format(format, pars);
+        }
+        catch {
+            // Catch invalid format messages
+            str = String.IsNullOrEmpty(format) ? "**no log message**" : format;
+        }
         if (String.IsNullOrWhiteSpace(str)) return;
         logger.AppendFormat("[LOGDATA[\n{0}\n]LOGDATA]\n", str);
     }

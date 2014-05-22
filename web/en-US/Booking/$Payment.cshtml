@@ -512,7 +512,7 @@
 <p class="info">
     <strong>Visa, Mastercard, or American Express will do nicely, thank you</strong>
 </p>
-<form action="@(LcUrl.LangPath)Booking/$Payment/@Request.Url.Query" method="post" class="payment" id="booking-payment">
+<form action="@(LcUrl.LangPath)Booking/$Payment/@Request.Url.Query" method="post" class="payment clearfix" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @LcHelpers.GetValidationScripts()

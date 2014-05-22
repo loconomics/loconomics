@@ -6,18 +6,17 @@
 
     if (positionID > 0) {
         using (var db = Database.Open("sqlloco")) {
-            // It just update StatusID to 3 'private profile, manual activation'
-            db.Execute("UPDATE UserProfilePositions SET StatusID = 3 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
-        }
-        if (Request.IsAjaxRequest()) {
-            LcHelpers.ReturnJsonResult(101, null);
+            // Set StatusID to 0 'deleted by user'
+            db.Execute("UPDATE UserProfilePositions SET StatusID = 0 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
         }
     } else {
         if (Request.IsAjaxRequest()) {
             LcHelpers.ReturnJsonResult(103, new { Message = "We're sorry, we're unable to deactivate your profile.  Please contact us for help." });
         }
     }
-    if (!Request.IsAjaxRequest()) {
-        Response.Redirect(LcHelpers.GetRedirectURLFromReferrer("/dashboard"));
+    if (Request.IsAjaxRequest()) {
+        LcHelpers.ReturnJsonResult(101, new { Message = "Position deleted" });
+    } else {
+        Response.Redirect(LcUrl.LangPath + "R5Dashboard/");
     }
 }
