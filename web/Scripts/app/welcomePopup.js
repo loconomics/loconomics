@@ -99,7 +99,12 @@ exports.show = function welcomePopup() {
     });
 
     // Popovers for tooltip replacement
-    c.find('[data-toggle="popover"]').popover();
+    c.find('[data-toggle="popover"]')
+    .popover()
+    .filter('a[href="#"]').on('click', function (e) {
+        // Avoid navigate to the link
+        e.preventDefault();
+    });
 
     var skipStep1 = c.hasClass('select-position');
 
