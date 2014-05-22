@@ -98,6 +98,9 @@ exports.show = function welcomePopup() {
         e.preventDefault();
     });
 
+    // Popovers for tooltip replacement
+    c.find('[data-toggle="popover"]').popover();
+
     var skipStep1 = c.hasClass('select-position');
 
     // Init
