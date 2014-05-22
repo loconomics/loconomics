@@ -162,8 +162,10 @@
             {
             <div class="profile-choice">
                 <h2>Join our San Francisco community as a:</h2>
-                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Freelancer (future co-op member)</label><br>
+                <div class="profile-choice-list">
+                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Freelancer (future co-op member)</label>
                 <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Potential customer</label>
+                </div>
             </div>
             }
             <div class="profile-data">
