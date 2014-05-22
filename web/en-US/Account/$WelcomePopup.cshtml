@@ -6,7 +6,7 @@
     
     //string PROVIDER_REDIRECT = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-providers";
     string PROVIDER_REDIRECT = LcUrl.LangPath + "dashboard/"; // "Account/ProviderWelcome/";
-    string CUSTOMER_REDIRECT = LcUrl.LangPath + "dashboard/"; //"HelpCenter/HowItWorks/#howitworks-customers";
+    string CUSTOMER_REDIRECT = LcUrl.LangPath; //"HelpCenter/HowItWorks/#howitworks-customers";
     var redirect = "";
     bool withLogo = PageData["WithLogo"] ?? true;
     string title = PageData["WelcomePopupTitle"] ?? "Welcome to Loconomics";
@@ -39,7 +39,10 @@
     if (!providerWithoutPosition) {    
         Validation.RequireField("profile-type", "Please, select one from Provider or Customer");
         Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
-        Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
+        
+        // Last name disabled for a while, as of #514
+        //Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
+        
         Validation.RequireField("email", LcRessources.RequiredField("Email"));
         Validation.RequireField("zipcode", LcRessources.RequiredField("Zip code"));
         Validation.RequireField("create-password", LcRessources.RequiredField("Password"));
@@ -130,21 +133,32 @@
     }
     
     var idprefix = "welcomepopup";
+    // WelcomePopup is required again #514
+    var closable = false;
 }
 <div id="welcomepopup" class="@(providerWithoutPosition ? "select-position" : "")">
-    <a class="close-popup" href="#close-popup">X</a>
+    @if (closable)
+    {
+        <a class="close-popup" href="#close-popup">X</a>
+    }
 
     <header>
         <h1 class="@(withLogo ? "has-icon" : "")">@(title)</h1>
         <div class="presentation">
-            Whether you're providing or purchasing local services, we've designed a marketplace with you in mind.
-            We're a <a href="#bcorp" class="has-tooltip" title="Benefit Corporations are a new class of corporation that are required to create a material positive impact on society and the environment.">California Benefit Corporation</a>
-            dedicated to the self-employed movement.
-            We invite you to create a <strong>free</strong> profile!
+            We’re readying for our launch this summer as a 
+            <a href="#" data-toggle="popover" data-placement="bottom" data-trigger="hover"
+                data-content="There are no fat cats in suits here. Just a bunch of hard-working people strengthening local economies...probably even one of your neighbors!">freelancer-owned cooperative</a>
+            and marketplace.<br></br>
+            You'll soon be able to find and book therapists to pamper your mind or body, tutors for your upcoming trip to Spain,
+            caterers for your next big birthday, and so much more.<br></br>
+            For freelancers, we provide you the tools you need to launch and grow your own service-based business while having a seat
+            at the table with a vote and share in the profits.<br></br>
+            Introduce yourself, take a look around, and we’ll keep you in the loop as we progress!
         </div>
     </header>
 
     <div class="register">
+        <a class="back-action" href="#back">&lt;&lt;back</a>
         <div id="welcomepopupLoading"><img alt="Loading" src="@(LcUrl.AppPath)img/theme/loading.gif" /></div>
         <form action="@(LcUrl.LangPath)Account/$WelcomePopup/@(Request.Url.Query)" method="post" class="ajax ajax-box lightform">
             @if (IsPost)
@@ -156,8 +170,10 @@
             {
             <div class="profile-choice">
                 <h2>Join our San Francisco community as a:</h2>
-                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Provider</label>
-                <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Customer</label>
+                <div class="profile-choice-list">
+                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Freelancer (future co-op member)</label>
+                <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Potential customer</label>
+                </div>
             </div>
             }
             <div class="profile-data">
@@ -180,8 +196,12 @@
                         @if (!providerWithoutPosition)
                         {
                         <li class="provider customer has-personal-data"><label for="@(idprefix)-firstname">First name</label><input id="@(idprefix)-firstname" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
-                        <li class="provider customer has-personal-data"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
-                        <li class="provider customer has-personal-data"><label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" @Validation.GetHtml("zipcode") @Html.Raw(ModelState.IsValidField("zipcode") ? "" : "class='input-validation-error'") type="text" placeholder="Zip code" name="zipcode" value="@Request["zipcode"]" /></li>
+                        @* class="provider customer  *@
+                        <li class="has-personal-data"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
+                        <li class="provider customer has-personal-data">
+                        <label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" @Validation.GetHtml("zipcode") @Html.Raw(ModelState.IsValidField("zipcode") ? "" : "class='input-validation-error'") type="text" placeholder="Zip code" name="zipcode" value="@Request["zipcode"]" />
+                        <span class="field-validation-error" data-valmsg-for="zipcode" data-valmsg-replace="true"></span>
+                        </li>
                         <li class="provider customer has-personal-data"><label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
                         <li class="provider customer has-secure-data"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" type="password" placeholder="Create password" name="create-password" @Validation.GetHtml("create-password")/></li>
                         }
@@ -196,7 +216,7 @@
                         {
                             btnText = "Save and continue";
                         }
-                        <button type="submit" class="main-action action">@(btnText)</button>   
+                        <button type="submit" class="next-action action">@(btnText)</button>   
                     </div>
                 </div>
 
@@ -221,7 +241,7 @@
             </div></div>
         </div>
         <div class="login">
-            Already have an account? <a target="_blank" href="@(LcUrl.LangPath)Account/Login/" class="login action">Login</a>
+            Already have an account? <a target="_blank" href="@(LcUrl.LangPath)Account/Login/" class="login action">Log in</a>
         </div>
     }
     </footer>

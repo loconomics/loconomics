@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-05-08
+/*! Loconomics.com 2014-05-22
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -214,6 +214,8 @@ Yellow 	#F0B600
 */
 
 body {
+    /* For correct height calculations and popups positioning, just 'relative' */
+    position: relative;
     color: #333333;
     font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
     font-size: .9em;
@@ -521,7 +523,7 @@ div.scripts { display: none; }
     position: absolute;
     top: 0;
     width: 201px;
-    z-index: 1000;
+    z-index: 900;
 }
 .es #site-header #logo.replace { background-image: url('../img/theme/logo-loconomics-header-ES.png'); }
 #site-header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
@@ -705,6 +707,7 @@ div.scripts { display: none; }
     float: none;
     text-align: center;
     width: 690px;
+    padding: 0 135px;
     margin: auto;
     font-size: 1.2em;
 }
@@ -2912,29 +2915,6 @@ form.lightform textarea {
     box-shadow: none;
 }
 
-/** Form icons / data classification **/
-form input.personal-data,
-form .has-personal-data input,
-form input.secure-data,
-form .has-secure-data input,
-form input.search-data,
-form .has-search-data input {
-    background-position: 99% center;
-    background-repeat: no-repeat;
-}
-input.personal-data,
-.has-personal-data input {
-    background-image: url('../img/theme/icon-form-personal.png');
-}
-input.secure-data,
-.has-secure-data input {
-    background-image: url('../img/theme/icon-form-secure.png');
-}
-input.search-data,
-.has-search-data input {
-    background-image: url('../img/theme/icon-form-search.png');
-}
-
 /* attributes */
 ul.attributes-list li {
     /*list-style: disc inside url("../img/theme/bullet.png") !important;*/
@@ -2963,10 +2943,6 @@ ul.attributes-list li {
     #site-header #logo.replace {
         background-image: url("../img/theme/logo-loconomics-header@2x.png") !important;
         background-size: contain;
-    }
-    #takeATour h1 {
-        background-image: url("../img/theme/logo-loconomics-header@2x.png");
-        background-size: 201px 78px;
     }
     .user-rating-summary-widget span.rating-image {
         background-image: url('../img/theme/star-rating-gray-orange@2x.png') !important;
@@ -3063,7 +3039,7 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-05-08
+/*! Loconomics.com 2014-05-22
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -3125,7 +3101,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -4024,74 +4000,6 @@ label.visuallyhidden-with-placeholder{
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcome-popup-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  min-height: 100%;
-  z-index: 999;
-}
-
-/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-.RegisterPage #welcome-popup-overlay {
-  background: none !important;
-  display: block;
-  position: static;
-  min-height: 0;
-}
-
-/* line 36 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#takeATour h1 {
-  background: url("../img/theme/logo-loconomics-header.png") center top no-repeat;
-  text-align: center;
-  font-size: 1.6em;
-  color: #00989a;
-  padding: 110px 0 5px;
-  margin-top: 0;
-  font-family: Hand Of Sean, Arial, sans-serif;
-}
-
-/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-.es #takeATour h1 {
-  background-image: url("../img/theme/logo-loconomics-header-ES.png");
-}
-
-/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#takeATour p {
-  color: #999;
-  text-align: justify;
-}
-
-/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#takeATour .actions {
-  text-align: center !important;
-  margin-top: 40px;
-}
-
-/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#takeATour .actions .main-action,
-#welcomepopup .actions .main-action {
-  min-width: 50%;
-  font-weight: bold;
-}
-
-/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup .profile-data,
-#welcomepopup .terms,
-#welcomepopup .position-description {
-  display: none;
-}
-
-/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup.select-position .profile-data {
-  display: block;
-}
-
-/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcome-popup-container {
   padding: 0;
   width: 400px;
@@ -4099,112 +4007,285 @@ label.visuallyhidden-with-placeholder{
   border: 1px solid #5a5b5b;
   -webkit-border-radius: 10px;
   border-radius: 10px;
-  -moz-border-radius: 10px;
-  -o-border-radius: 10px;
-  -webkit-border-radius: 10px;
+/* Adjusting welcome popup on mobile/tablet, following rules and sizes from #514 */
+}
+@media only screen and (max-width: 640px) {
+
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcome-popup-container {
+    width: 100%;
+    margin: 0;
+    border: none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background: none !important;
+  }
 }
 
-/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup header,
-#welcomepopup footer,
-#welcomepopup .register {
-  padding: 20px 25px;
-  text-align: center;
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcome-popup-overlay {
+  display: none;
+/* fixed needs overflow and height:100% to get scrollbar */
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+@media only screen and (max-width: 640px) {
+
+/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcome-popup-overlay {
+    background: none !important;
+  }
 }
 
-/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup h1,
-#welcomepopup h2 {
-  font-family: Hand Of Sean, Arial, sans-serif;
-  margin: 0;
+/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+
+/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+.RegisterPage #welcome-popup-overlay {
+  background: none !important;
+  display: block;
+  position: static;
+  min-height: 0;
+}
+@media only screen and (max-width: 640px) {
+
+/* line 58 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+
+/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  body.strict-welcome-popup #container,
+  body.strict-welcome-popup #site-header,
+  body.strict-welcome-popup #site-footer,
+  body.strict-welcome-popup #zenbox_tab {
+    display: none !important;
+  }
 }
 
-/* line 85 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup h1.has-icon {
-  padding: 0 0 0 110px;
-  background: url("../img/theme/logo-loconomics-header-mini.png") no-repeat left center;
-}
+/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 
-/* line 89 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup h1 {
-  padding: 0;
-  line-height: 39px;
-  font-size: 1.3em;
-  color: #00989a;
-  text-align: center;
-}
-
-/* line 96 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup h2 {
-  font-size: 1.05em;
-}
-
-/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup h3 {
-/*.popover-title {*/
-  color: Black;
+/* line 68 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup .actions .main-action,
+#welcomepopup .actions .next-action {
+  width: 100%;
   font-weight: bold;
 }
 
-/* line 103 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup.select-position .profile-data h2 {
-  color: Black;
-  text-align: left;
-  margin-bottom: 0.5em;
-}
-
-/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup.select-position .presentation {
-  display: none;
-}
-
-/* line 111 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup .presentation {
-  text-align: justify;
-  font-size: 1em;
-  margin: 0.5em 1em;
-  color: Black;
-  line-height: normal;
-}
-
-/* line 118 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup strong {
-  text-transform: uppercase;
-  color: #e95d0f;
-}
-
-/* line 122 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 72 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .register {
+  padding: 20px 25px;
+  text-align: center;
   border: 1px solid #ccc;
   border-width: 1px 0;
   background-color: #f5f5f5;
   margin: 0;
   position: relative;
 }
+@media only screen and (max-width: 640px) {
 
-/* line 129 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcomepopup .register {
+    padding: 10px 0;
+    background: none;
+    background-color: transparent;
+    border: none;
+  }
+}
+
+/* line 87 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .register form {
   margin: 0 1em;
 }
 
-/* line 132 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup .register .back-action {
+  display: none;
+  position: absolute;
+  top: 5px;
+  left: 39px;
+}
+@media only screen and (max-width: 640px) {
+
+/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcomepopup .register .back-action {
+    top: 0;
+    left: 14px;
+  }
+}
+
+/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+
+/* line 100 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup .register .profile-choice h2 {
+  margin-bottom: 1em;
+}
+
+/* line 103 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup .register .profile-choice .profile-choice-list {
+  text-align: left;
+  display: inline-block;
+}
+
+/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup .register .profile-choice .profile-choice-list label {
+  display: block;
+}
+
+/* line 111 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup header {
+  padding: 20px 25px;
+  text-align: center;
+}
+@media only screen and (max-width: 640px) {
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcomepopup header {
+    padding: 10px;
+  }
+}
+
+/* line 118 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup header h1 {
+  line-height: 39px;
+  font-size: 1.3em;
+  color: #00989a;
+  text-align: center;
+}
+
+/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup header h1.has-icon {
+  padding-left: 110px;
+  background: url("../img/theme/logo-loconomics-header-mini.png") no-repeat left center transparent;
+/* white */
+}
+@media only screen and (max-width: 640px) {
+
+/* line 128 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcomepopup header h1 {
+    font-size: 1em;
+  }
+}
+@media only screen and (max-width: 350px) {
+
+/* line 133 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcomepopup header h1 {
+    font-size: 0.84em;
+  }
+}
+@media only screen and (max-width: 270px) {
+
+/* line 135 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcomepopup header h1 {
+    font-size: 1em;
+    line-height: 1.2em;
+    height: 39px;
+  }
+}
+
+/* line 140 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup header .presentation {
+  text-align: justify;
+  font-size: 1em;
+  padding: 0.5em 1em;
+  color: Black;
+  line-height: normal;
+}
+@media only screen and (max-width: 640px) {
+
+/* line 147 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcomepopup header .presentation {
+    margin-top: 10px;
+  }
+}
+
+/* line 150 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup footer {
+  padding: 20px 25px;
+  text-align: center;
+}
+@media only screen and (max-width: 640px) {
+
+/* line 154 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcomepopup footer {
+    padding: 10px;
+  }
+}
+
+/* line 176 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+@media only screen and (max-width: 640px) {
+
+/* line 177 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #welcomepopup footer div.login {
+    margin: 10px 0;
+  }
+}
+
+/* line 180 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup .profile-data,
+#welcomepopup .terms,
+#welcomepopup .position-description {
+  display: none;
+}
+
+/* line 183 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup.select-position .profile-data {
+  display: block;
+}
+
+/* line 187 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup h1,
+#welcomepopup h2 {
+  font-family: Hand Of Sean, Arial, sans-serif;
+  margin: 0;
+}
+
+/* line 192 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup h2 {
+  font-size: 1.05em;
+}
+
+/* line 195 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup h3 {
+/*.popover-title {*/
+  color: Black;
+  font-weight: bold;
+}
+
+/* line 199 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup.select-position .profile-data h2 {
+  color: Black;
+  text-align: left;
+  margin-bottom: 0.5em;
+}
+
+/* line 204 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup.select-position .presentation {
+  display: none;
+}
+
+/* line 208 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+#welcomepopup strong {
+  text-transform: uppercase;
+  color: #e95d0f;
+}
+
+/* line 213 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .actions {
   text-align: center !important;
   margin-top: 1em;
 }
 
-/* line 136 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
-#welcomepopup .profile-choice h2 {
-  margin-bottom: 1em;
-}
-
-/* line 139 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 218 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .choice-or {
   font-family: Hand Of Sean, Arial, sans-serif;
   color: Black;
 }
 
-/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 222 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .terms {
   font-size: 0.9em;
   line-height: normal;
@@ -4212,17 +4293,17 @@ label.visuallyhidden-with-placeholder{
   text-align: justify;
 }
 
-/* line 149 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 228 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .profile-data {
   margin: 1em 0;
 }
 
-/* line 152 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 231 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .profile-data li {
   padding: 3px 0;
 }
 
-/* line 155 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .profile-data input,
 #welcomepopup .profile-data textarea {
   -webkit-box-sizing: border-box;
@@ -4234,12 +4315,12 @@ label.visuallyhidden-with-placeholder{
   width: 100%;
 }
 
-/* line 162 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 241 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .profile-data label {
   display: none;
 }
 
-/* line 165 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 244 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup a.login {
   background-color: #f5f5f5;
   color: #333 !important;
@@ -4247,23 +4328,23 @@ label.visuallyhidden-with-placeholder{
   margin: 0 1em;
 }
 
-/* line 171 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 250 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup a.login:hover {
   -webkit-box-shadow: 0 0 5px 2px #ababab;
   box-shadow: 0 0 5px 2px #ababab;
 }
 
-/* line 174 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 253 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #terms-tooltip {
   text-align: justify;
 }
 
-/* line 177 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 256 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #terms-tooltip li {
   list-style: disc inside;
 }
 
-/* line 180 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 259 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopupLoading {
   position: absolute;
   top: 0;
@@ -4275,13 +4356,248 @@ label.visuallyhidden-with-placeholder{
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 191 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 270 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup h1.has-icon {
     background-image: url("../img/theme/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
     -moz-background-size: 100px 39px;
     background-size: 100px 39px;
   }
+}
+@media only screen and (max-width: 640px) {
+
+/* line 282 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+
+/* line 283 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #loginBox h1 {
+    font-size: 1.4em;
+  }
+
+/* line 287 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #loginBox fieldset li {
+    font-size: 0.9em;
+  }
+
+/* line 290 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #loginBox fieldset li input,
+  #loginBox fieldset li label {
+    display: block;
+    text-align: center;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: none !important;
+  }
+
+/* line 297 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #loginBox fieldset li label {
+    margin: 1em 0 0.5em;
+  }
+
+/* line 300 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #loginBox fieldset li.remember-me {
+    display: block;
+    float: none;
+    text-align: center;
+  }
+
+/* line 305 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #loginBox fieldset li.remember-me input,
+  #loginBox fieldset li.remember-me label {
+    display: inline !important;
+    width: auto !important;
+  }
+
+/* line 309 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #loginBox fieldset li.actions {
+    text-align: center;
+    float: none;
+  }
+
+/* line 313 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #loginBox fieldset li.actions .main-action {
+    font-weight: bold !important;
+    font-size: 1.2em !important;
+  }
+
+/* line 317 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  #loginBox .account-tools a {
+    display: block;
+    float: none !important;
+    text-align: center;
+    line-height: 1.8em;
+  }
+
+/* line 323 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+  .blockMsg {
+    position: fixed;
+    height: 100% !important;
+    width: auto !important;
+    overflow: auto;
+    padding: 20px 10px !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    background-color: rgba(255,255,255,0.95) !important;
+  }
+}
+
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+form input.personal-data,
+form .has-personal-data input,
+form input.secure-data,
+form .has-secure-data input,
+form input.search-data,
+form .has-search-data input {
+  background-position: 99% center;
+  background-repeat: no-repeat;
+}
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+input.personal-data,
+.has-personal-data input {
+  background-image: url("../img/theme/icon-form-personal.png");
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+  input.personal-data,
+  .has-personal-data input {
+    background-image: url("../img/theme/icon-form-personal@2x.png");
+    -webkit-background-size: 14px 14px;
+    -moz-background-size: 14px 14px;
+    background-size: 14px 14px;
+  }
+}
+
+/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+input.secure-data,
+.has-secure-data input {
+  background-image: url("../img/theme/icon-form-secure.png");
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+  input.secure-data,
+  .has-secure-data input {
+    background-image: url("../img/theme/icon-form-secure@2x.png");
+    -webkit-background-size: 14px 14px;
+    -moz-background-size: 14px 14px;
+    background-size: 14px 14px;
+  }
+}
+
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+input.search-data,
+.has-search-data input {
+  background-image: url("../img/theme/icon-form-search.png");
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+  input.search-data,
+  .has-search-data input {
+    background-image: url("../img/theme/icon-form-search@2x.png");
+    -webkit-background-size: 14px 14px;
+    -moz-background-size: 14px 14px;
+    background-size: 14px 14px;
+  }
+}
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-small.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-small.styl */
+.DashboardSection-sidebarToggle {
+  display: none;
 }
 
 /*= w-ProviderPackage */

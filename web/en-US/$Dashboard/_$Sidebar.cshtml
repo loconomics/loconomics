@@ -36,7 +36,7 @@
 @helper menu(string a, string b) {
     @(LcHelpers.CssCurrent(a, b, "is-current"))
 }
-
+<div class="DashboardSection-sidebarToggle"><a href="#">Dashboard sidebar</a></div>
 <div class="DashboardSection-sidebar @(activeProfile ? "is-enabled" : "is-disabled")">
     @if (activeProfile)
     {

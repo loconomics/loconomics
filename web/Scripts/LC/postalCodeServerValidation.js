@@ -36,6 +36,8 @@ exports.init = function (options) {
                                     if ($(this).text() == msg)
                                         $(this).remove();
                                 });
+                            // Error label (if there is)
+                            $t.closest('form').find('[data-valmsg-for=' + $t.attr('name') + ']').text('');
                         } else {
                             $t.addClass('input-validation-error').removeClass('valid');
                             $t.siblings('.field-validation-valid')
@@ -48,6 +50,14 @@ exports.init = function (options) {
                                 .removeClass('validation-summary-valid')
                                 .children('ul')
                                 .append('<li>' + msg + '</li>');
+                            // Error label (if there is)
+                            $t.closest('form').find('[data-valmsg-for=' + $t.attr('name') + ']').text(msg);
+                            // If label is not visible, just remove the bad code to let user see the placeholder #514
+                            var $label = $t.closest('label');
+                            if (!$label.length && $t.attr('id'))
+                                $label = $t.closest('form').find('label[for=' + $t.attr('id') + ']');
+                            if (!$label.is(':visible'))
+                                $t.val('');
                         }
                 }
             });

@@ -1,0 +1,38 @@
+/**
+  Form icons / data classification.
+**/
+@import "nib"
+
+form input.personal-data,
+form .has-personal-data input,
+form input.secure-data,
+form .has-secure-data input,
+form input.search-data,
+form .has-search-data input {
+    background-position: 99% center;
+    background-repeat: no-repeat;
+}
+
+input.personal-data,
+.has-personal-data input
+    background-image: url('../img/theme/icon-form-personal.png');
+    
+    @media $highResolutionMedia
+        background-image: url('../img/theme/icon-form-personal@2x.png');
+        background-size: 14px 14px;
+
+input.secure-data,
+.has-secure-data input
+    background-image: url('../img/theme/icon-form-secure.png');
+    
+    @media $highResolutionMedia
+        background-image: url('../img/theme/icon-form-secure@2x.png');
+        background-size: 14px 14px;
+
+input.search-data,
+.has-search-data input
+    background-image: url('../img/theme/icon-form-search.png');
+    
+    @media $highResolutionMedia
+        background-image: url('../img/theme/icon-form-search@2x.png');
+        background-size: 14px 14px;

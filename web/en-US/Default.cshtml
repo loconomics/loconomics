@@ -2,7 +2,8 @@
 @{
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     bool performSearch = false;
-    PageData["ShowWelcomePopup"] = false;
+    // WelcomePopup is required again #514
+    PageData["ShowWelcomePopup"] = true;
     
     PageData["Customer"] = LcData.UserInfo.GetUserRow();
     

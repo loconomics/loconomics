@@ -212,6 +212,8 @@ Yellow 	#F0B600
 */
 
 body {
+    /* For correct height calculations and popups positioning, just 'relative' */
+    position: relative;
     color: #333333;
     font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
     font-size: .9em;
@@ -519,7 +521,7 @@ div.scripts { display: none; }
     position: absolute;
     top: 0;
     width: 201px;
-    z-index: 1000;
+    z-index: 900;
 }
 .es #site-header #logo.replace { background-image: url('../img/theme/logo-loconomics-header-ES.png'); }
 #site-header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
@@ -703,6 +705,7 @@ div.scripts { display: none; }
     float: none;
     text-align: center;
     width: 690px;
+    padding: 0 135px;
     margin: auto;
     font-size: 1.2em;
 }
@@ -2910,29 +2913,6 @@ form.lightform textarea {
     box-shadow: none;
 }
 
-/** Form icons / data classification **/
-form input.personal-data,
-form .has-personal-data input,
-form input.secure-data,
-form .has-secure-data input,
-form input.search-data,
-form .has-search-data input {
-    background-position: 99% center;
-    background-repeat: no-repeat;
-}
-input.personal-data,
-.has-personal-data input {
-    background-image: url('../img/theme/icon-form-personal.png');
-}
-input.secure-data,
-.has-secure-data input {
-    background-image: url('../img/theme/icon-form-secure.png');
-}
-input.search-data,
-.has-search-data input {
-    background-image: url('../img/theme/icon-form-search.png');
-}
-
 /* attributes */
 ul.attributes-list li {
     /*list-style: disc inside url("../img/theme/bullet.png") !important;*/
@@ -2961,10 +2941,6 @@ ul.attributes-list li {
     #site-header #logo.replace {
         background-image: url("../img/theme/logo-loconomics-header@2x.png") !important;
         background-size: contain;
-    }
-    #takeATour h1 {
-        background-image: url("../img/theme/logo-loconomics-header@2x.png");
-        background-size: 201px 78px;
     }
     .user-rating-summary-widget span.rating-image {
         background-image: url('../img/theme/star-rating-gray-orange@2x.png') !important;
