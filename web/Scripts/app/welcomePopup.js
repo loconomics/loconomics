@@ -45,12 +45,25 @@ exports.show = function welcomePopup() {
     var overlay = c.closest('#welcome-popup-overlay');
     overlay.fadeIn(300);
 
-    if (initialized) {
+    /**
+    Go to the first step on a already initialized popup
+    **/
+    function startAgain(animate) {
         // Return popup to the first step (choose profile, #486) and exit -init is ready-
         // Show first step
-        c.find('.profile-choice, header .presentation').show();
+        var step1 = c.find('.profile-choice, header .presentation');
+        if (animate)
+            step1.slideDown('fast');
+        else
+            step1.show();
         // Hide second step
-        c.find('.terms, .profile-data').hide();
+        var step2 = c.find('.terms, .profile-data');
+        if (animate)
+            step2.slideUp('fast');
+        else
+            step2.hide();
+        // Hide back-action button
+        c.find('.back-action').hide();
         // Reset hidden fields per profile-type
         c.find('.profile-data li:not(.position-description)').show();
         // Reset choosen profile-type
@@ -61,7 +74,10 @@ exports.show = function welcomePopup() {
         c.find('.profile-data li input:not([type=hidden])')
         .attr('data-val', null)
         .removeClass('input-validation-error');
+    }
 
+    if (initialized) {
+        startAgain();
         return true;
     }
     initialized = true;
@@ -75,6 +91,12 @@ exports.show = function welcomePopup() {
             overlay.fadeOut('normal');
             return false;
         });
+
+    // go back button
+    c.find('.back-action').on('click', function (e) {
+        startAgain(true);
+        e.preventDefault();
+    });
 
     var skipStep1 = c.hasClass('select-position');
 
@@ -156,6 +178,9 @@ exports.show = function welcomePopup() {
 
     // Actions
     c.on('change', '.profile-choice [name=profile-type]', function () {
+        // Show back-action button
+        c.find('.back-action').show();
+
         c.find('.profile-data li:not(.' + this.value + ')').hide();
         c.find('.profile-choice, header .presentation').slideUp('fast');
         c.find('.terms, .profile-data').slideDown('fast');
