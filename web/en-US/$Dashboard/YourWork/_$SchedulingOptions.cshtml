@@ -14,15 +14,15 @@
     Validation.RequireField("instant-booking", "Please, select a scheduling");
     if (IsPost && Validation.IsValid()) {
         instantBooking = Request["instant-booking"].AsBool();
-//        using (var db = Database.Open("sqlloco")) {
-//            db.Execute(@"
-//                UPDATE userprofilepositions
-//                SET InstantBooking = @2
-//                WHERE UserID = @0 AND PositionID = @1
-//                    AND LanguageID = @3
-//                    AND CountryID = @4
-//            ", providerID, positionID, instantBooking, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-//        }
+        using (var db = Database.Open("sqlloco")) {
+            db.Execute(@"
+                UPDATE userprofilepositions
+                SET InstantBooking = @2
+                WHERE UserID = @0 AND PositionID = @1
+                    AND LanguageID = @3
+                    AND CountryID = @4
+            ", providerID, positionID, instantBooking, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
         
         if (doReturn) {
             LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
@@ -30,32 +30,32 @@
     }
 
 
-//    using (var db = Database.Open("sqlloco")) {
+    using (var db = Database.Open("sqlloco")) {
 
-//        instantBooking = db.QueryValue(@"
-//            SELECT  InstantBooking
-//            FROM    userprofilepositions
-//            WHERE   UserID = @0 AND PositionID = @1
-//                    AND LanguageID = @2
-//                    AND CountryID = @3
-//        ", providerID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-//    }
+        instantBooking = db.QueryValue(@"
+            SELECT  InstantBooking
+            FROM    userprofilepositions
+            WHERE   UserID = @0 AND PositionID = @1
+                    AND LanguageID = @2
+                    AND CountryID = @3
+        ", providerID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+    }
     
     var prefix = "scheduling-options-" + positionID.ToString();
 }
 <p class="DashboardSection-page-section-introduction">
-    LJDI: Choose how bookings must be confirmed.
+    Is your calendar always up-to-date or do you like to pre-screen clients and/or appointment times? Here you can set how appointments will be confirmed according to what's best for you and your business. Keep in mind, clients generally prefer instant booking.
 </p>
 <fieldset class="DashboardCancellationPolicy">
     <ul>
         <li>
-            <label><input @LcHelpers.IsChecked(instantBooking, false) type="radio" name="instant-booking" value="false" />
-                LJDI: Your customer will choose up to three times and you must confirm the appointment for one time.
+            <label><input @LcHelpers.IsChecked(instantBooking, true) type="radio" name="instant-booking" value="true" /> 
+                <strong>Instant booking (recommended):</strong> Appointments will be automatically confirmed for your clients. This requires you to ensure your calendar is always up-do-date. We help you with this by allowing you to import and export calendars to stay organized.
             </label>
         </li>
         <li>
-            <label><input @LcHelpers.IsChecked(instantBooking, true) type="radio" name="instant-booking" value="true" /> 
-                LJDI: Instant booking, you customer will just choose one time and no confirmation is need by you.
+            <label><input @LcHelpers.IsChecked(instantBooking, false) type="radio" name="instant-booking" value="false" />
+                <strong>Acceptance required:</strong> Clients will choose up to three appointment times from your calendar, and you confirm the one that works best for you. If you don't respond within 18 hours, the appointment is cancelled automatically and you will lose the booking.
             </label>
         </li>
     </ul>
