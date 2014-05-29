@@ -1,0 +1,62 @@
+﻿@* Scheduling Options for the position
+*@
+@{
+    LcHelpers.SecurePage();
+    
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+
+    int providerID = WebSecurity.CurrentUserId;
+    int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    
+    var instantBooking = false;
+
+    Validation.RequireField("instant-booking", "Please, select a scheduling");
+    if (IsPost && Validation.IsValid()) {
+        instantBooking = Request["instant-booking"].AsBool();
+        using (var db = Database.Open("sqlloco")) {
+            db.Execute(@"
+                UPDATE userprofilepositions
+                SET InstantBooking = @2
+                WHERE UserID = @0 AND PositionID = @1
+                    AND LanguageID = @3
+                    AND CountryID = @4
+            ", providerID, positionID, instantBooking, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+        
+        if (doReturn) {
+            LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+        }
+    }
+
+
+//    using (var db = Database.Open("sqlloco")) {
+
+//        instantBooking = db.QueryValue(@"
+//            SELECT  InstantBooking
+//            FROM    userprofilepositions
+//            WHERE   UserID = @0 AND PositionID = @1
+//                    AND LanguageID = @2
+//                    AND CountryID = @3
+//        ", providerID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+//    }
+    
+    var prefix = "scheduling-options-" + positionID.ToString();
+}
+<p class="DashboardSection-page-section-introduction">
+    LJDI: Choose how bookings must be confirmed.
+</p>
+<fieldset class="DashboardCancellationPolicy">
+    <ul>
+        <li>
+            <label><input @LcHelpers.IsChecked(instantBooking, false) type="radio" name="instant-booking" value="false" />
+                LJDI: Your customer will choose up to three times and you must confirm the appointment for one time.
+            </label>
+        </li>
+        <li>
+            <label><input @LcHelpers.IsChecked(instantBooking, true) type="radio" name="instant-booking" value="true" /> 
+                LJDI: Instant booking, you customer will just choose one time and no confirmation is need by you.
+            </label>
+        </li>
+    </ul>
+</fieldset>

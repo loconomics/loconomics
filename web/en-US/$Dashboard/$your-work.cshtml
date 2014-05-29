@@ -86,6 +86,11 @@
                 @RenderPage("YourWork/_$CancellationPolicy.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
             </div>
 
+            <div id="DashboardSchedulingOptions" class="DashboardSection-page-section is-required">
+                <h2 class="DashboardSection-page-section-header">LJDI: Set your scheduling options</h2>
+                @RenderPage("YourWork/_$SchedulingOptions.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+            </div>
+
             <div id="DashboardLocations" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Set your service location(s)</h2>
                 @RenderPage("YourWork/_$Locations.cshtml", new { PageState = ModelState, Position = p })
