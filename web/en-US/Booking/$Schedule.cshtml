@@ -221,7 +221,8 @@
      */
     dynamic providerLocations = null, customerLocations = null, providerTravelLocation = null;
     var serviceDurationTime = TimeSpan.Zero;
-    var instantBooking = false;
+    // Get InstantBooking option
+    var instantBooking = pos.InstantBooking;
     
     using (var db = Database.Open("sqlloco")) {
         if (!withoutLocation) {
@@ -271,9 +272,6 @@
             }
         }
         serviceDurationTime = getServiceDurationTime(db, bookingRequestID, p.UserID);
-        
-        // TODO Get InstantBooking option
-        instantBooking = Request["instantBooking"].AsBool();
     }
 }
 @functions { 
