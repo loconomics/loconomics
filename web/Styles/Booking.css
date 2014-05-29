@@ -283,6 +283,12 @@
     /* green */
     background-color: #99C027;
 }
+#booking-schedule .instant-selector.is-btn-unpressed:hover {
+    box-shadow: 0 0 5px 2px #E95D0F;
+}
+#booking-schedule .instant-selector.is-btn-pressed:hover {
+    box-shadow: 0 0 5px 2px #99C027;
+}
 
 /* Schedule.location */
 #booking-schedule .validation-summary-errors {

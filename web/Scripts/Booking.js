@@ -160,7 +160,10 @@ LC.setupScheduleCalendar = function () {
 
             if ($s.is('.is-btn-pressed')) {
 
-                toggleInstantSelector($s, true);
+                // DISABLED by: Dont' allow to de-select the option
+                // (Is a required option, and the de-selection
+                // doesn't really de-selects the value right now)
+                //toggleInstantSelector($s, true);
 
                 v = '';
             }
