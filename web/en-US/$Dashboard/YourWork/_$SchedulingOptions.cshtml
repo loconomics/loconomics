@@ -14,15 +14,15 @@
     Validation.RequireField("instant-booking", "Please, select a scheduling");
     if (IsPost && Validation.IsValid()) {
         instantBooking = Request["instant-booking"].AsBool();
-        using (var db = Database.Open("sqlloco")) {
-            db.Execute(@"
-                UPDATE userprofilepositions
-                SET InstantBooking = @2
-                WHERE UserID = @0 AND PositionID = @1
-                    AND LanguageID = @3
-                    AND CountryID = @4
-            ", providerID, positionID, instantBooking, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        }
+//        using (var db = Database.Open("sqlloco")) {
+//            db.Execute(@"
+//                UPDATE userprofilepositions
+//                SET InstantBooking = @2
+//                WHERE UserID = @0 AND PositionID = @1
+//                    AND LanguageID = @3
+//                    AND CountryID = @4
+//            ", providerID, positionID, instantBooking, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+//        }
         
         if (doReturn) {
             LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);

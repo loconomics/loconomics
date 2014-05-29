@@ -222,6 +222,9 @@
 #booking-schedule .select-day-hours .step-block {
     margin-top: 20px;
 }
+#booking-schedule .select-day-hours table {
+    width: 100%;
+}
 #booking-schedule .select-day-hours table td {
     width: 33%;
 }
@@ -266,6 +269,19 @@
     width: 16px;
     line-height: 16px;
     text-align: center;
+}
+
+/* instant booking */
+#booking-schedule .instant-selector {
+    font-size: 1em;
+}
+#booking-schedule .instant-selector.is-btn-unpressed {
+    /* orange */
+    background-color: #E95D0F;
+}
+#booking-schedule .instant-selector.is-btn-pressed {
+    /* green */
+    background-color: #99C027;
 }
 
 /* Schedule.location */

@@ -92,9 +92,11 @@ LC.showDateHours = function (date) {
     var strdate = LC.dateToInterchangleString(date);
     var minutes = $day.data('duration-minutes');
     var userid = $day.data('user-id');
+    var isInstantBooking = $day.is('.is-instantBooking');
     $day.reload({
         url: LcUrl.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
-            encodeURIComponent(strdate) + '/' + minutes + '/' + userid + '/',
+            encodeURIComponent(strdate) + '/' + minutes + '/' + userid + '/' +
+            '?instantBooking=' + isInstantBooking,
         complete: LC.markSelectedDates,
         autofocus: false
     });
@@ -131,6 +133,76 @@ LC.selectWeekDay = function (date) {
     }).addClass('current');
 };
 LC.setupScheduleCalendar = function () {
+
+    function selectTime() {
+        var $s = $(this),
+            $c = $s.closest('#dayHoursSelector'),
+            instantBooking = $c.is('.is-instantBooking');
+
+        var v;
+
+        if (instantBooking) {
+            // Toggle button status
+            function toggleInstantSelector($is, pressed) {
+                if (pressed) {
+                    $is
+                    .removeClass('is-btn-pressed')
+                    .addClass('is-btn-unpressed')
+                    .text($is.data('btn-unpressed'));
+                }
+                else {
+                    $is
+                    .removeClass('is-btn-unpressed')
+                    .addClass('is-btn-pressed')
+                    .text($is.data('btn-pressed'));
+                }
+            }
+
+            if ($s.is('.is-btn-pressed')) {
+
+                toggleInstantSelector($s, true);
+
+                v = '';
+            }
+            else {
+
+                toggleInstantSelector($s, false);
+
+                $s.closest('tr').siblings().find('.instant-selector')
+                .each(function () { toggleInstantSelector($(this), true); });
+
+                v = 'instant';
+            }
+        }
+        else {
+            v = $s.val();
+        }
+
+        if (v) {
+            // Get row date and time
+            var $row = $s.closest('tr');
+            var $table = $row.closest('table');
+            var start = $row.find('.start').text();
+            var end = $row.find('.end').text();
+            var date = new Date($table.data('date'));
+            var dateshowed = $table.find('caption').text();
+
+            // Get choice
+            var choice = $s.closest('form').find('.selected-schedule').find('.' + v + '-choice');
+
+            // Show date and time
+            choice.addClass('has-values');
+            choice.find('span.date-showed').text(dateshowed);
+            choice.find('span.start-time').text(start);
+            choice.find('span.end-time').text(end);
+            choice.find('input.date').val(LC.dateToInterchangleString(date));
+            choice.find('input.start-time').val(start);
+
+            // Others Select with this same option selected must be reset:
+            $s.closest('tr').siblings().find('option[value=' + v + ']:selected').closest('select').val('');
+        }
+    }
+
     var $scheduleStep = $('#booking-schedule')
     .on('click', '#weekDaySelector .week-slider', function () {
 
@@ -146,30 +218,8 @@ LC.setupScheduleCalendar = function () {
 
         return false;
     })
-    .on('change', '#dayHoursSelector select.choice-selector', function () {
-        var $s = $(this), v = $s.val();
-        if (v) {
-            // Get row date and time
-            var $row = $s.closest('tr');
-            var $table = $row.closest('table');
-            var start = $row.find('.start').text();
-            var end = $row.find('.end').text();
-            var date = new Date($table.data('date'));
-            var dateshowed = $table.find('caption').text();
-
-            // Show date and time
-            var choice = $(this).closest('form').find('.selected-schedule').find('.' + v + '-choice');
-            choice.addClass('has-values');
-            choice.find('span.date-showed').text(dateshowed);
-            choice.find('span.start-time').text(start);
-            choice.find('span.end-time').text(end);
-            choice.find('input.date').val(LC.dateToInterchangleString(date));
-            choice.find('input.start-time').val(start);
-
-            // Others Select with this same option selected must be reset:
-            $s.closest('tr').siblings().find('option[value=' + v + ']:selected').closest('select').val('');
-        }
-    })
+    .on('change', '#dayHoursSelector select.choice-selector', selectTime)
+    .on('click', '#dayHoursSelector .instant-selector', selectTime)
     .on('click', '.unselect-action', function () {
         // Remove values from view-selection panel and form
         $(this).siblings('span').text('')
