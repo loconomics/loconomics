@@ -168,7 +168,7 @@
             
             var sqlUpdBookingRequest = @"
                 UPDATE  BookingRequest SET
-                        AddressID = @1
+                        AddressID = @1,
                         InstantBooking = @2
                 WHERE   BookingRequestID = @0
             ";
