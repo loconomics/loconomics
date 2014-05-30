@@ -21,6 +21,9 @@
             throw new Exception(inputdataerrormessage);
         }
     }
+    
+    // Get InstantBooking option
+    var instantBooking = pos.InstantBooking;
 
     // Check if is a valid booking process (session not expired or error at first step)
     var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
@@ -166,6 +169,7 @@
             var sqlUpdBookingRequest = @"
                 UPDATE  BookingRequest SET
                         AddressID = @1
+                        InstantBooking = @2
                 WHERE   BookingRequestID = @0
             ";
             
@@ -205,10 +209,14 @@
                     }
                 }
                 
+                // Let Payment to know about InstantBooking
+                Session["InstantBooking"] = instantBooking;
+                
                 // Updating BookingRequest with location and date-times
                 db.Execute(sqlUpdBookingRequest,
                     bookingRequestID,
-                    locationID == 0 ? null : (int?)locationID);
+                    locationID == 0 ? null : (int?)locationID,
+                    instantBooking);
             }
             
             // Return OK result
@@ -221,8 +229,6 @@
      */
     dynamic providerLocations = null, customerLocations = null, providerTravelLocation = null;
     var serviceDurationTime = TimeSpan.Zero;
-    // Get InstantBooking option
-    var instantBooking = pos.InstantBooking;
     
     using (var db = Database.Open("sqlloco")) {
         if (!withoutLocation) {
