@@ -235,6 +235,7 @@ public static partial class LcData
                         Pr.PricingEstimateRevision,
                         R.BookingRequestStatusID,
                         B.BookingStatusID,
+                        R.InstantBooking,
 
                         UC.FirstName As CustomerFirstName,
                         UC.LastName As CustomerLastName,
@@ -327,6 +328,7 @@ public static partial class LcData
                         B.BookingStatusID,
                         R.PositionID,
                         R.CancellationPolicyID,
+                        R.InstantBooking,
 
                         DATEADD(day, 7, E.EndTime) As PaymentDate,
                         (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference
@@ -427,6 +429,7 @@ public static partial class LcData
                         R.BookingRequestStatusID,
                         R.PositionID,
                         R.CancellationPolicyID,
+                        R.InstantBooking,
 
                         DATEADD(day, 7, E1.EndTime) As PaymentDate,
                         (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference

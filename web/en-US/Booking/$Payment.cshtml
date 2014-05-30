@@ -376,6 +376,9 @@
                                 
                                 if (result.Error == 0) {
                                     
+                                    // Communicate bookingID to Confirmation page through Session
+                                    Session["BookingID"] = result.BookingID;
+                                    
                                     // TODO Send 'instant' specific email #520
                                     LcMessaging.SendBookingRequestConfirmation(bookingRequestID, result.BookingID);
                                 }
