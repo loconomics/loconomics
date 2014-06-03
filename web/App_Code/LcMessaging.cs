@@ -383,7 +383,7 @@ public class LcMessaging
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "SentTo", "Customer" }
-                ,{ "SentBy", "Provider" }
+                ,{ "SentBy", "Customer" }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", customer.Email }
             }));
@@ -441,6 +441,50 @@ public class LcMessaging
             }));
         }
     }
+
+    public static void SendInstantBooking(int CustomerUserID, int ProviderUserID, int PositionID, int BookingRequestID, int BookingID)
+    {
+        dynamic customer = null, provider = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Customer information
+            customer = db.QuerySingle(sqlGetUserData, CustomerUserID);
+            // Get Provider information
+            provider = db.QuerySingle(sqlGetUserData, ProviderUserID);
+        }
+        if (customer != null && provider != null)
+        {
+            // Create message body based on detailed booking data
+            // TODO #520: say 'instant' in the subject?
+            string subject = LcData.Booking.GetBookingSubject(BookingID);
+            string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
+
+            // #520: MessageTypeID:6 "Booking Request Customer Confirmation"
+            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 6, message, BookingID, "Booking");
+
+            SendMail(provider.Email, LcData.Booking.GetBookingTitleFor(1, customer, LcData.UserInfo.UserType.Provider),
+                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
+                new Dictionary<string, object> {
+                { "BookingID", BookingID }
+                ,{ "BookingRequestID", BookingRequestID }
+                ,{ "SentTo", "Provider" }
+                ,{ "SentBy", "Customer" }
+                ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", provider.Email }
+            }));
+            SendMail(customer.Email, LcData.Booking.GetBookingTitleFor(1, provider, LcData.UserInfo.UserType.Customer),
+                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
+                new Dictionary<string, object> {
+                { "BookingID", BookingID }
+                ,{ "BookingRequestID", BookingRequestID }
+                ,{ "SentTo", "Customer" }
+                ,{ "SentBy", "Customer" }
+                ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
+            }));
+        }
+    }
+
     public static void SendBookingRequestDenegation(int BookingRequestID, bool sentByProvider)
     {
         // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
