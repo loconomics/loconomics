@@ -2,6 +2,13 @@
    ====== IagoSRL for Loconomics S.L. ============
  */
  @import url('Pricing.css');
+
+/* A general booking-view style sets .actions float:none
+    to avoid undesired effects on dashboard, needs this
+    to force float:right on wizard pages */ 
+.booking.wizard form fieldset.actions {
+    float: right;
+}
  
 .booking form {
     margin: 20px 0 0;
@@ -222,6 +229,9 @@
 #booking-schedule .select-day-hours .step-block {
     margin-top: 20px;
 }
+#booking-schedule .select-day-hours table {
+    width: 100%;
+}
 #booking-schedule .select-day-hours table td {
     width: 33%;
 }
@@ -266,6 +276,25 @@
     width: 16px;
     line-height: 16px;
     text-align: center;
+}
+
+/* instant booking */
+#booking-schedule .instant-selector {
+    font-size: 1em;
+}
+#booking-schedule .instant-selector.is-btn-unpressed {
+    /* orange */
+    background-color: #E95D0F;
+}
+#booking-schedule .instant-selector.is-btn-pressed {
+    /* green */
+    background-color: #99C027;
+}
+#booking-schedule .instant-selector.is-btn-unpressed:hover {
+    box-shadow: 0 0 5px 2px #E95D0F;
+}
+#booking-schedule .instant-selector.is-btn-pressed:hover {
+    box-shadow: 0 0 5px 2px #99C027;
 }
 
 /* Schedule.location */

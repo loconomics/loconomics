@@ -16,6 +16,7 @@
     dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = null;
 
     bool priceIsEstimated = Session["PriceIsEstimated"] is bool ? (bool)Session["PriceIsEstimated"] : true;
+    bool instantBooking = Session["InstantBooking"] is bool ? (bool)Session["InstantBooking"] : false;
     
     // Check if is a valid booking process (session not expired or error at first step)
     var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
@@ -161,7 +162,8 @@
                      * State will still be '1:created' and not '2:complete' because
                      * payment transaction need be done still, but to ensure avoid
                      * problems with most saving errors, save some data now and let
-                     * to after payment only transaction data and state changes, minifying
+                     * left specific transaction data and state changes to be updated
+                     * after payment is done, minifying
                      * possible errors after payment that can break the booking request:
                      */
                     if (ModelState.IsValid) {
@@ -367,6 +369,31 @@
                                         ,BookingRequestStatusID = 2 -- Completed
                                 WHERE   BookingRequestID = @0
                             ", bookingRequestID, transactionID);
+                            
+                            // If we are in InstantBooking, the booking gets confirmed instantly!!
+                            if (instantBooking) {
+                                var result = LcData.Booking.ConfirmBooking(bookingRequestID, "PREFERRED", db);
+                                
+                                if (result.Error == 0) {
+                                    
+                                    // Communicate bookingID to Confirmation page through Session
+                                    Session["BookingID"] = result.BookingID;
+                                    
+                                    // Send 'instant booking' specific email #520
+                                    LcMessaging.SendInstantBooking(c.UserID, p.UserID, pos.PositionID, bookingRequestID, result.BookingID);
+                                }
+                                else {
+                                    
+                                    // Manage errors
+                                    ModelState.AddFormError(result.ErrorMessage);
+                                }
+                            }
+                            else {
+                                /*
+                                * Create, save and send Message
+                                */
+                                LcMessaging.SendBookingRequest(c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+                            }
                         }
                     }                    
                     
@@ -380,10 +407,6 @@
                 }
             }
             if (ModelState.IsValid) {
-                /*
-                * Create, save and send Message
-                */
-                LcMessaging.SendBookingRequest(c.UserID, p.UserID, pos.PositionID, bookingRequestID);
                 
                 // Return OK result
                 LcHelpers.ReturnJsonResult(101, null);
@@ -512,7 +535,7 @@
 <p class="info">
     <strong>Visa, Mastercard, or American Express will do nicely, thank you</strong>
 </p>
-<form action="@(LcUrl.LangPath)Booking/$Payment/@Request.Url.Query" method="post" class="payment clearfix" id="booking-payment">
+<form action="@(LcUrl.LangPath)Booking/$Payment/@Request.Url.Query" method="post" class="payment clearfix clearfix" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @LcHelpers.GetValidationScripts()

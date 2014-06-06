@@ -18,7 +18,7 @@
                 href="@(LcUrl.LangPath)dashboard/messages/bookingrequest/@(booking.BookingRequestID)/cancel/">Cancel</a>
         } else if (!isRequest && booking.BookingStatusID == 1) {
             <a class="button item-action booking-action button-cancel-booking"
-                href="@(LcUrl.LangPath)dashboard/messages/booking/(booking.BookingID)/cancel/"
+                href="@(LcUrl.LangPath)dashboard/messages/booking/@(booking.BookingID)/cancel/"
                 data-must-confirm="#@(prefix)-confirm-cancellation-policy">Cancel</a>
             <div class="popups">
                 <div id="@(prefix)-confirm-cancellation-policy" class="popup confirm-popup">
