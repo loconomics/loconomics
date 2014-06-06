@@ -2,6 +2,13 @@
    ====== IagoSRL for Loconomics S.L. ============
  */
  @import url('Pricing.css');
+
+/* A general booking-view style sets .actions float:none
+    to avoid undesired effects on dashboard, needs this
+    to force float:right on wizard pages */ 
+.booking.wizard form fieldset.actions {
+    float: right;
+}
  
 .booking form {
     margin: 20px 0 0;
