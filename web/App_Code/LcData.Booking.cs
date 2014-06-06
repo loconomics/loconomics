@@ -1203,20 +1203,11 @@ public static partial class LcData
                 // On no errors:
                 if (result.Error == 0)
                 {
-                    // Charge total amount of booking request to the customer (Submit to settlement the transaction)
-                    // Get booking request TransactionID
-                    string tranID = N.DE(db.QueryValue(sqlGetTransactionIDFromBookingRequest, bookingRequestID));
-                    if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:"))
+                    // Charge customer:
+                    var settleResult = SettleBookingRequestTransaction(bookingRequestID, db);
+                    if (settleResult.Error != 0)
                     {
-                        string paymentError = LcPayment.SettleTransaction(tranID);
-                        if (paymentError != null)
-                        {
-                            return new
-                            {
-                                Error = -3,
-                                ErrorMessage = paymentError
-                            };
-                        }
+                        return settleResult;
                     }
 
                     // Update the CalendarEvent to include contact data,
@@ -1249,6 +1240,57 @@ public static partial class LcData
                 if (owned)
                     db.Dispose();
             }
+        }
+
+        /// <summary>
+        /// Charge customer for the booking request transaction
+        /// </summary>
+        /// <param name="bookingRequestID"></param>
+        /// <param name="db"></param>
+        /// <returns>An object with almost an integer/numeric property 'Error', 0 when there is no
+        /// error; if there is error (!= 0), ErrorMessage contains a string, otherwise other
+        /// properties are added with information: BookingID for the created booking.
+        /// -3: payment error
+        /// </returns>
+        public static dynamic SettleBookingRequestTransaction(int bookingRequestID, Database db = null)
+        {
+            var owned = db == null;
+            if (owned)
+                db = Database.Open("sqlloco");
+
+            try
+            {
+                // Charge total amount of booking request to the customer (Submit to settlement the transaction)
+                // Get booking request TransactionID
+                string tranID = N.DE(db.QueryValue(sqlGetTransactionIDFromBookingRequest, bookingRequestID));
+                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:"))
+                {
+                    string paymentError = LcPayment.SettleTransaction(tranID);
+                    if (paymentError != null)
+                    {
+                        return new
+                        {
+                            Error = -3,
+                            ErrorMessage = paymentError
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Replay exception, we just need the finally to close the connection properly
+                throw ex;
+            }
+            finally
+            {
+                if (owned)
+                    db.Dispose();
+            }
+
+            return new
+            {
+                Error = 0
+            };
         }
         #endregion
 
