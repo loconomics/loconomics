@@ -912,7 +912,7 @@ public static partial class LcData
                                 case 2:
                                 case 3:
                                 case 5:
-                                    msg = "Your payment of {0:c} has been successfully received. Payment will be withheld to {1} until after each appointment is successfully completed.";
+                                    msg = "Your card ending in {2} has been authorized for {0:c}. We’ll charge your card the day {1} performs the scheduled services.";
                                     break;
                                 // Completed and payed
                                 case 4:
