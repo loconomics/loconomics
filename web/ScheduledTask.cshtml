@@ -382,24 +382,41 @@
             foreach (var b in bookings){
                 try {
                     // Release the payment
-                    LcPayment.ReleaseTransactionFromEscrow(b.PaymentTransactionID);
-                    // Mark as payed (StatusID:4 'complete')
-                    db.Execute(@"
-                        UPDATE  Booking
-                        SET     BookingStatusID = 4
-                                ,UpdatedDate = getdate()
-                        WHERE   BookingID = @0", b.BookingID);
+                    var errmsg = LcPayment.ReleaseTransactionFromEscrow(b.PaymentTransactionID);
                     
-                    // Send messages
+                    if (errmsg == null) {
+                        // Mark as payed (StatusID:4 'complete')
+                        db.Execute(@"
+                            UPDATE  Booking
+                            SET     BookingStatusID = 4
+                                    ,UpdatedDate = getdate()
+                            WHERE   BookingID = @0", b.BookingID);
                     
-                    // Notify customer and provider with an updated booking details:
-                    LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                        // Send messages
                     
-                    // Update MessagingLog for the booking
-                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment 120H New Provider]");
+                        // Notify customer and provider with an updated booking details:
+                        LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                    
+                        // Update MessagingLog for the booking
+                        db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment 120H New Provider]");
 
-                    items++;
-                    messages += 2;
+                        items++;
+                        messages += 2;
+                    }
+                    else {
+                        
+                        var errTitle = "Booking Release Payment after 120H for new providers";
+                        var errDesc = String.Format(
+                            "BookingID: {0}, TransactionID: {1} Not payed, error on Braintree 'release transaction from escrow': {2}",
+                            b.BookingID,
+                            b.PaymentTransactionID,
+                            errmsg
+                        );
+                        
+                        LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+                        
+                        logger.Log("Error on: " + errTitle + "; " + errDesc);
+                    }
                 } catch (Exception ex){
                     logger.LogEx("Booking Release Payment after 120H for new providers", ex);
                 }
@@ -453,24 +470,41 @@
             foreach (var b in bookings){
                 try {
                     // Release the payment
-                    LcPayment.ReleaseTransactionFromEscrow(b.PaymentTransactionID);
-                    // Mark as payed (StatusID:4 'complete')
-                    db.Execute(@"
-                        UPDATE  Booking
-                        SET     BookingStatusID = 4
-                                ,UpdatedDate = getdate()
-                        WHERE   BookingID = @0", b.BookingID);
+                    var errmsg = LcPayment.ReleaseTransactionFromEscrow(b.PaymentTransactionID);
                     
-                    // Send messages
+                    if (errmsg == null) {
+                        // Mark as payed (StatusID:4 'complete')
+                        db.Execute(@"
+                            UPDATE  Booking
+                            SET     BookingStatusID = 4
+                                    ,UpdatedDate = getdate()
+                            WHERE   BookingID = @0", b.BookingID);
                     
-                    // Notify customer and provider with an updated booking details:
-                    LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                        // Send messages
                     
-                    // Update MessagingLog for the booking
-                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment 24H]");
+                        // Notify customer and provider with an updated booking details:
+                        LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                    
+                        // Update MessagingLog for the booking
+                        db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment 24H]");
 
-                    items++;
-                    messages += 2;
+                        items++;
+                        messages += 2;
+                    }
+                    else {
+                        
+                        var errTitle = "Booking Release Payment 24H";
+                        var errDesc = String.Format(
+                            "BookingID: {0}, TransactionID: {1} Not payed, error on Braintree 'release transaction from escrow': {2}",
+                            b.BookingID,
+                            b.PaymentTransactionID,
+                            errmsg
+                        );
+                        
+                        LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+                        
+                        logger.Log("Error on: " + errTitle + "; " + errDesc);
+                    }
                 } catch (Exception ex){
                     logger.LogEx("Booking Release Payment 24H", ex);
                 }

@@ -936,7 +936,7 @@ public class LcMessaging
     {
         try
         {
-            SendMail("iagosrl@gmail.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
+            SendMail("support@loconomics.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
                 exceptionPageContent);
         }
         catch { }
