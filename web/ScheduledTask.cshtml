@@ -514,6 +514,72 @@
         totalitems += items;
         totalmessages += messages;
         
+
+        /*
+         * Check:: Charge Customer the day of the service
+         * If:: Confirmated or performed or complete bookings only, not cancelled or in dispute
+         * If:: Current time is 1 hour after Confirmed Service EndTime
+         * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
+         * Action:: settle booking transaction
+         *          set [TotalPricePaidByCustomer] and [TotalServiceFeesPaidByCustomer] values
+         */
+        items = 0;
+        {
+            // Get bookings affected by conditions
+            var sqlGet = @"
+                SELECT  B.BookingID
+                        ,BR.PaymentTransactionID
+                FROM    Booking As B
+                         INNER JOIN
+                        CalendarEvents As E
+                          ON B.ConfirmedDateID = E.Id
+                         INNER JOIN
+                        BookingRequest As BR
+                          ON BR.BookingRequestID = B.BookingRequestID
+                WHERE   BookingStatusID IN (1, 2, 3, 4) -- confirmed, performed or completed
+                         AND
+                        -- at 1 hour, after service ended (more than that is fine)
+                        getdate() >= dateadd(hh, 1, E.EndTime)
+                        /* AND
+                         getdate() < dateadd(hh, 25, E.EndTime)
+                        */
+                         AND
+                        -- Still not charged
+                        B.TotalPricePaidByCustomer is null
+            ";
+            var bookings = db.Query(sqlGet);
+
+            foreach (var b in bookings){
+                try {
+                    
+                    // Charge customer and update DB
+                    var errmsg = LcData.Booking.SettleBookingTransaction(b.PaymentTransactionID, b.BookingID, db);
+                    
+                    if (errmsg == null) {
+                        items++;
+                    }
+                    else {
+                        
+                        var errTitle = "Booking Charge Customer, Receive Payment 1H";
+                        var errDesc = String.Format(
+                            "BookingID: {0}, TransactionID: {1} Payment not received, error on Braintree 'settle transaction': {2}",
+                            b.BookingID,
+                            b.PaymentTransactionID,
+                            errmsg
+                        );
+                        
+                        LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+                        
+                        logger.Log("Error on: " + errTitle + "; " + errDesc);
+                    }
+                } catch (Exception ex){
+                    logger.LogEx("Booking Charge Customer, Receive Payment 1H", ex);
+                }
+            }
+        }
+        logger.Log("Total of Booking Charge Customer, Receive Payment after 1H: {0}", items);
+        totalitems += items;
+        
         
         // Ending work with database
     }

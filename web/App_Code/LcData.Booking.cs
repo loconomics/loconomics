@@ -1203,12 +1203,23 @@ public static partial class LcData
                 // On no errors:
                 if (result.Error == 0)
                 {
+                    // SINCE #508, Customer is not charged on confirming the booking, else the date the service
+                    // must be performed; then the 'charge/settle' is removed from here (next commented
+                    // code) and done in a ScheduledTask
+                    /*
+                    // Get booking request TransactionID
+                    string tranID = N.DE(db.QueryValue(sqlGetTransactionIDFromBookingRequest, bookingRequestID));
                     // Charge customer:
-                    var settleResult = SettleBookingRequestTransaction(bookingRequestID, db);
-                    if (settleResult.Error != 0)
+                    var settleResult = SettleBookingTransaction(tranID, result.BookingID, db);
+                    if (settleResult != null)
                     {
-                        return settleResult;
+                        return new
+                        {
+                            Error = -3,
+                            ErrorMessage = settleResult
+                        };
                     }
+                    */
 
                     // Update the CalendarEvent to include contact data,
                     // but this is not so important as the rest because of that it goes
@@ -1245,14 +1256,12 @@ public static partial class LcData
         /// <summary>
         /// Charge customer for the booking request transaction
         /// </summary>
-        /// <param name="bookingRequestID"></param>
+        /// <param name="paymentTransactionID"></param>
+        /// <param name="bookingID"></param>
         /// <param name="db"></param>
-        /// <returns>An object with almost an integer/numeric property 'Error', 0 when there is no
-        /// error; if there is error (!= 0), ErrorMessage contains a string, otherwise other
-        /// properties are added with information: BookingID for the created booking.
-        /// -3: payment error
+        /// <returns>A string with an error message or null on success.
         /// </returns>
-        public static dynamic SettleBookingRequestTransaction(int bookingRequestID, Database db = null)
+        public static string SettleBookingTransaction(string paymentTransactionID, int bookingID, Database db = null)
         {
             var owned = db == null;
             if (owned)
@@ -1261,20 +1270,33 @@ public static partial class LcData
             try
             {
                 // Charge total amount of booking request to the customer (Submit to settlement the transaction)
-                // Get booking request TransactionID
-                string tranID = N.DE(db.QueryValue(sqlGetTransactionIDFromBookingRequest, bookingRequestID));
-                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:"))
+                if (!String.IsNullOrEmpty(paymentTransactionID) && !paymentTransactionID.StartsWith("TEST:"))
                 {
-                    string paymentError = LcPayment.SettleTransaction(tranID);
+                    string paymentError = LcPayment.SettleTransaction(paymentTransactionID);
                     if (paymentError != null)
                     {
-                        return new
-                        {
-                            Error = -3,
-                            ErrorMessage = paymentError
-                        };
+                        return paymentError;
                     }
                 }
+
+                // Update booking database information, setting amount payed by customer
+                db.Execute(@"
+                        DECLARE @price decimal(7, 2)
+                        DECLARE @fees decimal(7, 2)
+
+                        SELECT
+                                @price = TotalPrice,
+                                @fees = FeePrice
+                        FROM
+                                pricingestimate
+                        WHERE
+                                PricingEstimateID = @1
+
+                        UPDATE  Booking
+                        SET     TotalPricePaidByCustomer = @price,
+                                TotalServiceFeesPaidByCustomer = @fees
+                        WHERE   Id = @0
+                    ", bookingID, paymentTransactionID);
             }
             catch (Exception ex)
             {
@@ -1287,10 +1309,7 @@ public static partial class LcData
                     db.Dispose();
             }
 
-            return new
-            {
-                Error = 0
-            };
+            return null;
         }
         #endregion
 
