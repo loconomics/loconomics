@@ -88,19 +88,18 @@
             <section class="payment">
                 <h3>Payment</h3>
                 <p>
+                    Your card ending in @LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits) has been authorized for @booking.TotalPrice.ToString("c").
                     @if (!booking.InstantBooking) {
                         <text>
-                            Your card ending in @LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits) has been authorized for @booking.TotalPrice.ToString("c").
-                            You will be charged this amount after @provider.FirstName accepts one of your time preferences (within 18 hours).
+                            If your request is accepted (within 18 hours), we’ll charge your card the day @provider.FirstName performs the scheduled services.
                             If he’s unable to accept one of these times, your card will not be charged.
                         </text>
                     }
                     else {
                         <text>
-                            Your card ending in @LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits) has been authorized for @booking.TotalPrice.ToString("c").
+                            We’ll charge your card the day @provider.FirstName performs the scheduled services.
                         </text>
-                    }
-                    We’ll charge your card the day @provider.FirstName performs the scheduled services.
+                    }                    
                 </p>
             </section>
             <section class="last-note">

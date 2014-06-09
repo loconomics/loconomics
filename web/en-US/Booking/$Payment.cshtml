@@ -673,7 +673,16 @@
         </div>
         <h4>Services Requested</h4>
         @LcPricingView.CustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
-        <div class="payment-info booking-warning">Your card will be authorized immediately and charged when your provider accepts the booking, typically within 18 hr.</div>
+        <div class="payment-info booking-warning">
+            @if (!instantBooking)
+            {
+                <text>Your card will be authorized for @(pricingSummary.TotalPrice.ToString("c")). If your request is accepted (within 18 hours), we’ll charge your card the day @(p.FirstName) performs the scheduled services.</text>
+            }
+            else
+            {
+                <text>Your card will be authorized for @(pricingSummary.TotalPrice.ToString("c")). We’ll charge your card the day @(p.FirstName) performs the scheduled services.</text>
+            }
+        </div>
     </fieldset>
     <fieldset class="agreement">
         <ul>
