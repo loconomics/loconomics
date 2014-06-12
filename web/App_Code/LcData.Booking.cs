@@ -254,6 +254,7 @@ public static partial class LcData
                         E.TimeZone,
                         Pos.PositionSingular,
                         Pr.TotalPrice,
+                        Pr.FeePrice,
                         Pr.ServiceDuration,
                     
                         CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
@@ -1272,10 +1273,26 @@ public static partial class LcData
                 // Charge total amount of booking request to the customer (Submit to settlement the transaction)
                 if (!String.IsNullOrEmpty(paymentTransactionID) && !paymentTransactionID.StartsWith("TEST:"))
                 {
-                    string paymentError = LcPayment.SettleTransaction(paymentTransactionID);
-                    if (paymentError != null)
+                    // Since #508, we can an authorized transaction to be settle or a saved card to perform
+                    // the charge without previous authorization;
+                    // On card cases, we saved the card in the transactionID, its just a 'CARD:' prefix
+                    // followed by the card token
+                    if (paymentTransactionID.StartsWith("CARD:"))
                     {
-                        return paymentError;
+                        var cardToken = paymentTransactionID.Substring("CARD:".Length);
+                        
+                        string saleError = LcPayment.SaleBookingTransaction(bookingID, cardToken);
+                        if (saleError != null)
+                            return saleError;
+                    }
+                    else
+                    {
+                        // Authorized transaction to be settle
+                        string paymentError = LcPayment.SettleTransaction(paymentTransactionID);
+                        if (paymentError != null)
+                        {
+                            return paymentError;
+                        }
                     }
                 }
 

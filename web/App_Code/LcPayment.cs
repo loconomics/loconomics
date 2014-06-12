@@ -75,6 +75,71 @@ public static class LcPayment
     }
     #endregion
 
+    #region Actions: Perform transaction
+    /// <summary>
+    /// Performs a Transaction.Sale for bookingID amount with the
+    /// given creditCardToken; this transaction is submitted for settlement
+    /// right now and data is not stored in vault, since this method is
+    /// for cases when a transaction could not being authorized when requesting
+    /// the booking, saving the credit card to be charged later (the date of the service).
+    /// </summary>
+    /// <param name="bookingID"></param>
+    /// <param name="creditCardToken"></param>
+    /// <returns></returns>
+    public static string SaleBookingTransaction(int bookingID, string creditCardToken)
+    {
+        Result<Transaction> r = null;
+
+        try
+        {
+            var booking = LcData.Booking.GetBooking(bookingID);
+
+            if (booking == null)
+                throw new Exception("The booking doesn't exists " + bookingID.ToString());
+
+            var gateway = NewBraintreeGateway();
+
+            TransactionRequest request = new TransactionRequest
+            {
+                Amount = booking.TotalPrice,
+                CustomerId = GetCustomerId(booking.CustomerUserID),
+                PaymentMethodToken = creditCardToken,
+                // Now, with Marketplace #408, the receiver of the money for each transaction is
+                // the provider through account at Braintree, and not the Loconomics account:
+                //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+                MerchantAccountId = GetProviderPaymentAccountId(booking.ProviderUserID),
+                // Marketplace #408: since provider receive the money directly, Braintree must discount
+                // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
+                ServiceFeeAmount = booking.FeePrice,
+                Options = new TransactionOptionsRequest
+                {
+                    // Marketplace #408: don't pay provider still, wait for the final confirmation 'release scrow'
+                    HoldInEscrow = true,
+                    // Submit now!
+                    SubmitForSettlement = true,
+                    StoreInVaultOnSuccess = false
+                }
+            };
+
+            r = gateway.Transaction.Sale(request);
+
+            // Everything goes fine
+            if (r.IsSuccess())
+            {
+                // If the card is a TEMPorarly card (just to perform this transaction)
+                // it must be removed now since was successful used
+                if (creditCardToken.StartsWith("TEMPCARD_"))
+                    gateway.CreditCard.Delete(creditCardToken);
+            }
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+        return (r == null || r.IsSuccess() ? null : r.Message);
+    }
+    #endregion
+
     #region Actions: Refund
     /// <summary>
     /// Full refund a transaction ensuring that will be no charge to the customer
