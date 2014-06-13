@@ -1229,7 +1229,7 @@ public static partial class LcData
                     if ((DateTime.Now - dateInfo.StartTime) < TimeSpan.FromDays(7)) 
                     {
                         // Get card from transaction
-                        string transactionID = db.QueryValue("SELECT transactionId FROM BookingRequest WHERE BookingRequestID = @0", bookingRequestID);
+                        string transactionID = db.QueryValue("SELECT coalesce(PaymentTransactionId, '') FROM BookingRequest WHERE BookingRequestID = @0", bookingRequestID);
 
                         if (!String.IsNullOrWhiteSpace(transactionID) &&
                             transactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))

@@ -227,23 +227,27 @@
                                         // one with the required prefix plus the environment
                                         // and BookingRequestID, its unique
                                         creditCardToken = LcPayment.TempSavedCardPrefix + LcHelpers.Channel + "_" + bookingRequestID.ToString();
+                                        
+                                        createCard = true;
                                     }
 
-                                    // Save credit card, temporary or permanent for later transaction,
-                                    // updating internally the value for creditCardToken
-                                    var saveCardError = LcPayment.SaveCardInVault(
-                                        customer.Id,
-                                        ref creditCardToken,
-                                        Request["name-on-card"],
-                                        Request["card-number"],
-                                        Request["card-exp-month"],
-                                        Request["card-exp-year"],
-                                        Request["cvv"],
-                                        address
-                                    );
+                                    if (createCard) {
+                                        // Save credit card, temporary or permanent for later transaction,
+                                        // updating internally the value for creditCardToken
+                                        var saveCardError = LcPayment.SaveCardInVault(
+                                            customer.Id,
+                                            ref creditCardToken,
+                                            Request["name-on-card"],
+                                            Request["card-number"],
+                                            Request["card-exp-month"],
+                                            Request["card-exp-year"],
+                                            Request["cvv"],
+                                            address
+                                        );
                                     
-                                    if (!String.IsNullOrWhiteSpace(saveCardError)) {
-                                        ModelState.AddFormError(saveCardError);
+                                        if (!String.IsNullOrWhiteSpace(saveCardError)) {
+                                            ModelState.AddFormError(saveCardError);
+                                        }
                                     }
                                 }
 
