@@ -1356,6 +1356,11 @@ public static partial class LcData
                 db.Execute(@"
                         DECLARE @price decimal(7, 2)
                         DECLARE @fees decimal(7, 2)
+                        DECLARE @BookingRequestID int
+    
+                        SELECT  @BookingRequestID
+                        FROM    Booking
+                        WHERE   BookingID = @0
 
                         SELECT
                                 @price = TotalPrice,
@@ -1363,13 +1368,13 @@ public static partial class LcData
                         FROM
                                 pricingestimate
                         WHERE
-                                PricingEstimateID = @1
+                                PricingEstimateID = (SELECT PricingEstimateID FROM BookingRequest WHERE BookingRequestID = @BookingRequestID)
 
                         UPDATE  Booking
                         SET     TotalPricePaidByCustomer = @price,
                                 TotalServiceFeesPaidByCustomer = @fees
-                        WHERE   Id = @0
-                    ", bookingID, paymentTransactionID);
+                        WHERE   BookingId = @0
+                    ", bookingID);
             }
             catch (Exception ex)
             {

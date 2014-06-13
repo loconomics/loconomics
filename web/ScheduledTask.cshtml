@@ -518,7 +518,7 @@
         /*
          * Check:: Charge Customer the day of the service
          * If:: Confirmated or performed or complete bookings only, not cancelled or in dispute
-         * If:: Current time is 1 hour after Confirmed Service EndTime
+         * If:: Current time is the Start of the Confirmed Service Time
          * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
          * Action:: settle booking transaction
          *          set [TotalPricePaidByCustomer] and [TotalServiceFeesPaidByCustomer] values
@@ -564,7 +564,7 @@
                     }
                     else {
                         
-                        var errTitle = "Booking Charge Customer, Receive Payment 1H";
+                        var errTitle = "Booking Charge Customer, Receive Payment";
                         var errDesc = String.Format(
                             "BookingID: {0}, TransactionID: {1} Payment not received, error on Braintree 'settle transaction': {2}",
                             b.BookingID,
@@ -577,11 +577,11 @@
                         logger.Log("Error on: " + errTitle + "; " + errDesc);
                     }
                 } catch (Exception ex){
-                    logger.LogEx("Booking Charge Customer, Receive Payment 1H", ex);
+                    logger.LogEx("Booking Charge Customer, Receive Payment", ex);
                 }
             }
         }
-        logger.Log("Total of Booking Charge Customer, Receive Payment after 1H: {0}", items);
+        logger.Log("Total of Booking Charge Customer, Receive Payment: {0}", items);
         totalitems += items;
         
         
