@@ -1226,7 +1226,7 @@ public static partial class LcData
                     // NOW here we authorize a transaction for lower than 7 days for service date from now, or
                     // nothing on other cases since we cannot ensure the authorization would persist more than
                     // that time, and transaction gets postponed for the service date on 'settle transaction'.
-                    if ((DateTime.Now - dateInfo.StartTime) < TimeSpan.FromDays(7)) 
+                    if ((dateInfo.StartTime - DateTime.Now) < TimeSpan.FromDays(7)) 
                     {
                         // Get card from transaction
                         string transactionID = db.QueryValue("SELECT coalesce(PaymentTransactionId, '') FROM BookingRequest WHERE BookingRequestID = @0", bookingRequestID);
