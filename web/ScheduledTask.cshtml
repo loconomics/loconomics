@@ -538,11 +538,15 @@
                           ON BR.BookingRequestID = B.BookingRequestID
                 WHERE   BookingStatusID IN (1, 2, 3, 4) -- confirmed, performed or completed
                          AND
-                        -- at 1 hour, after service ended (more than that is fine)
-                        getdate() >= dateadd(hh, 1, E.EndTime)
+                        -- at the startTime hour, or later
+                        getdate() >= E.StartTime
+                        
+                        /*-- at 1 hour, after service ended (more than that is fine)
+                        getdate() >= dateadd(hh, 1, E.EndTime)*/
                         /* AND
                          getdate() < dateadd(hh, 25, E.EndTime)
                         */
+
                          AND
                         -- Still not charged
                         B.TotalPricePaidByCustomer is null
