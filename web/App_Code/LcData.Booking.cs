@@ -1358,13 +1358,13 @@ public static partial class LcData
                         DECLARE @fees decimal(7, 2)
                         DECLARE @BookingRequestID int
     
-                        SELECT  @BookingRequestID
+                        SELECT  @BookingRequestID = BookingRequestID
                         FROM    Booking
                         WHERE   BookingID = @0
 
                         SELECT
-                                @price = TotalPrice,
-                                @fees = FeePrice
+                                @price = coalesce(TotalPrice, 0),
+                                @fees = coalesce(FeePrice, 0)
                         FROM
                                 pricingestimate
                         WHERE

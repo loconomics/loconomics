@@ -518,7 +518,7 @@
         /*
          * Check:: Charge Customer the day of the service
          * If:: Confirmated or performed or complete bookings only, not cancelled or in dispute
-         * If:: Current time is the Start of the Confirmed Service Time
+         * If:: Current time is the Start of the Confirmed Service Time, or later
          * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
          * Action:: settle booking transaction
          *          set [TotalPricePaidByCustomer] and [TotalServiceFeesPaidByCustomer] values
