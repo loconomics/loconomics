@@ -1025,7 +1025,7 @@ public static partial class LcData
                 ", bookingRequestID, transactionID);
             }
         }
-        #region
+        #endregion
 
         #region Create Booking
         #region SQLs
@@ -1222,9 +1222,46 @@ public static partial class LcData
                 // On no errors:
                 if (result.Error == 0)
                 {
-                    // SINCE #508, Customer is not charged on confirming the booking, else the date the service
-                    // must be performed; then the 'charge/settle' is removed from here (next commented
-                    // code) and done in a ScheduledTask
+                    // SINCE #508, Customer is not charged on confirming the booking, else the date of the service;
+                    // NOW here we authorize a transaction for lower than 7 days for service date from now, or
+                    // nothing on other cases since we cannot ensure the authorization would persist more than
+                    // that time, and transaction gets postponed for the service date on 'settle transaction'.
+                    if ((DateTime.Now - dateInfo.StartTime) < TimeSpan.FromDays(7)) 
+                    {
+                        // Get card from transaction
+                        string transactionID = db.QueryValue("SELECT transactionId FROM BookingRequest WHERE BookingRequestID = @0", bookingRequestID);
+
+                        if (!String.IsNullOrWhiteSpace(transactionID) &&
+                            transactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                        {
+                            var cardToken = transactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
+
+                            if (!String.IsNullOrWhiteSpace(cardToken))
+                            {
+                                // Transaction authorization, so NOT charge/settle now
+                                var authorizationError = LcPayment.SaleBookingTransaction(result.BookingID, cardToken, false);
+
+                                if (!String.IsNullOrEmpty(authorizationError))
+                                {
+                                    return new
+                                    {
+                                        Error = -3,
+                                        ErrorMessage = authorizationError
+                                    };
+                                }
+                            }
+                            else
+                            {
+                                return new
+                                {
+                                    Error = -3,
+                                    ErrorMessage = "Transaction or card identifier gets lost, payment will cannot be performed."
+                                };
+                            }
+                        }
+                    }
+
+                    // Next commented code is from previous #508: 'charge/settle' is done in a ScheduledTask now
                     /*
                     // Get booking request TransactionID
                     string tranID = N.DE(db.QueryValue(sqlGetTransactionIDFromBookingRequest, bookingRequestID));
