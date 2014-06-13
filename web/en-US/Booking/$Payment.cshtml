@@ -70,7 +70,7 @@
         /*
          * Dependency validations
          */
-        bool savePayment = Request["save-payment"].AsBool();
+        bool savePayment = Request["save-payment"].AsBool() || Request["update-credit-card"].AsBool();
         var creditCardToken = Request["credit-card"];
         var createCard = String.IsNullOrWhiteSpace(creditCardToken) || Request["update-credit-card"].AsBool();
         if (createCard) {
@@ -216,141 +216,42 @@
                                  */
                         
                                 // Find or create Customer on Braintree
-                                string customerIdOnBraintree = LcPayment.GetCustomerId(c.UserID);
-                                try{
-                                    var gc = gateway.Customer.Find(customerIdOnBraintree);
-                                } catch (Braintree.Exceptions.NotFoundException ex) {
-                                    // Customer doens't exist, create it:
-                                    var gcr = new CustomerRequest{
-                                        Id = customerIdOnBraintree
-                                    };
-
-                                    var r = gateway.Customer.Create(gcr);
-                                    if (!r.IsSuccess()) {
-                                        ModelState.AddFormError(r.Message);
-                                        foreach (var error in r.Errors.All()) {
-                                            ModelState.AddFormError(error.Message);
-                                        }
-                                    }
-                                }
-                            
-                        
-                                TransactionCreditCardRequest transactionCreditCard = null;
-                                AddressRequest transactionAddress = null;
-                                if (ModelState.IsValid && createCard) {
-                                    
-                                    if (savePayment) {
-                                        // Create credit card saving in vault
-                                        var creditCardRequest = new CreditCardRequest
-                                        {
-                                            CustomerId = customerIdOnBraintree,
-                                            CardholderName = Request["name-on-card"],
-                                            Number = Request["card-number"],
-                                            ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
-                                            CVV = Request["cvv"],
-                                            BillingAddress = new CreditCardAddressRequest
-                                            {
-                                                StreetAddress = address.AddressLine1,
-                                                ExtendedAddress = address.AddressLine2,
-                                                Locality = address.City,
-                                                Region = address.StateProvinceCode,
-                                                PostalCode = address.PostalCode,
-                                                CountryCodeAlpha2 = address.CountryCodeAlpha2
-                                            }
-                                        };
+                                var customer = LcPayment.GetOrCreateBraintreeCustomer((int)c.UserID);
                                 
-                                        Result<CreditCard> resultCreditCard = null;
-
-                                        // Find or create/update the payment method (credit card) for the customer
-                                        try{
-                                            // Find the card
-                                            gateway.CreditCard.Find(creditCardToken);
-                                    
-                                            // Update it:
-                                            resultCreditCard = gateway.CreditCard.Update(creditCardToken, creditCardRequest);
-
-                                        } catch (Braintree.Exceptions.NotFoundException ex) {
-                                            // Credit card for customer doesn't exist, create it:
-                                            resultCreditCard = gateway.CreditCard.Create(creditCardRequest);
-                                        }
-                                
-                                        if (resultCreditCard.IsSuccess()) {
-                                            // New Token, for the payment transaction
-                                            creditCardToken = resultCreditCard.Target.Token;
-                                        }
-                                        else {
-                                            ModelState.AddFormError(resultCreditCard.Message);
-                                            foreach (var error in resultCreditCard.Errors.All()) {
-                                                ModelState.AddFormError(error.Message);
-                                            }
-                                        }
-                                    } else {
-                                        // Card details for the transaction without being saved on Vault
-                                        transactionCreditCard = new TransactionCreditCardRequest {
-                                            CardholderName = Request["name-on-card"],
-                                            Number = Request["card-number"],
-                                            ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
-                                            CVV = Request["cvv"]
-                                        };
-                                        transactionAddress = new AddressRequest
-                                        {
-                                            StreetAddress = address.AddressLine1,
-                                            ExtendedAddress = address.AddressLine2,
-                                            Locality = address.City,
-                                            Region = address.StateProvinceCode,
-                                            PostalCode = address.PostalCode,
-                                            CountryCodeAlpha2 = address.CountryCodeAlpha2
-                                        };
-                                    }
-                                }
-                        
-                        
                                 if (ModelState.IsValid) {
-                                    TransactionRequest request = new TransactionRequest
-                                    {
-                                        Amount = TotalPrice,
-                                        CustomerId = customerIdOnBraintree,
-                                        PaymentMethodToken = creditCardToken,
-                                        // Now, with Marketplace #408, the receiver of the money for each transaction is
-                                        // the provider through account at Braintree, and not the Loconomics account:
-                                        //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
-                                        MerchantAccountId = LcPayment.GetProviderPaymentAccountId(p.UserID),
-                                        // Marketplace #408: since provider receive the money directly, Braintree must discount
-                                        // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
-                                        ServiceFeeAmount = LoconomicsFees,
-                                        Options = new TransactionOptionsRequest
-                                        {
-                                            // Marketplace #408: don't pay provider still, wait for the final confirmation 'release scrow'
-                                            HoldInEscrow = true,
-                                            SubmitForSettlement = false,
-                                            StoreInVaultOnSuccess = savePayment,
-                                            AddBillingAddressToPaymentMethod = savePayment
-                                        },
-                                        CreditCard = transactionCreditCard,
-                                        BillingAddress = transactionAddress
-                                    };
-                                    if (LcPayment.BraintreeFraudProtectionToolsEnabled) {
-                                        request.DeviceData = Request.Form["device_data"];
+                            
+                                    // If is not a selected saved card and it does not want to save it
+                                    // we create a temporary card per booking.
+                                    if (!savePayment && String.IsNullOrWhiteSpace(creditCardToken)) {
+                                        // We need a temporary card token, we generate
+                                        // one with the required prefix plus the environment
+                                        // and BookingRequestID, its unique
+                                        creditCardToken = LcPayment.TempSavedCardPrefix + LcHelpers.Channel + "_" + bookingRequestID.ToString();
                                     }
-                                
-                                    var result = gateway.Transaction.Sale(request);
-                    
-                                    // Checking results:
-                                    if (result.IsSuccess()
-                                        && result.Target != null
-                                        && !String.IsNullOrEmpty(result.Target.Id)) {
-                                        transactionID = result.Target.Id;
-                                    } else {
-                                        if (result.IsSuccess()) {
-                                            ModelState.AddFormError("Impossible to know transaction details, please contact support");
-                                        } else {
-                                            ModelState.AddFormError(result.Message);
-                                            foreach (var error in result.Errors.All()) {
-                                                ModelState.AddFormError(error.Message);
-                                            }
-                                        }
+
+                                    // Save credit card, temporary or permanent for later transaction,
+                                    // updating internally the value for creditCardToken
+                                    var saveCardError = LcPayment.SaveCardInVault(
+                                        customer.Id,
+                                        ref creditCardToken,
+                                        Request["name-on-card"],
+                                        Request["card-number"],
+                                        Request["card-exp-month"],
+                                        Request["card-exp-year"],
+                                        Request["cvv"],
+                                        address
+                                    );
+                                    
+                                    if (!String.IsNullOrWhiteSpace(saveCardError)) {
+                                        ModelState.AddFormError(saveCardError);
                                     }
                                 }
+
+                                // DISABLED WITH #508, since transaction is not done here doubt: Can be saved for later use on the postponed transaction?
+                                //if (LcPayment.BraintreeFraudProtectionToolsEnabled) {
+                                //    // Instead of transaction, we will need save it in the booking-request?
+                                //    transaction.DeviceData = Request.Form["device_data"];
+                                //}
                             
                             } catch (Braintree.Exceptions.BraintreeException ex) {
                                 //ModelState.AddFormError(ex.Message + "(<a target='_blank' href='" + ex.HelpLink + "'>More info</a>)");
@@ -360,17 +261,15 @@
 
                         if (ModelState.IsValid) {
                             /*
-                             * Save Braintree Transaction ID in the Booking Request and card digits
-                             * and updating State to 'Booking Request Completed' (2:completed)
+                             * Updating State to 'Booking Request Completed' (2:completed)
                              */
                             db.Execute(@"
                                 UPDATE  BookingRequest
-                                SET     PaymentTransactionID = @1
-                                        ,BookingRequestStatusID = 2 -- Completed
+                                SET     BookingRequestStatusID = 2 -- Completed
                                 WHERE   BookingRequestID = @0
-                            ", bookingRequestID, transactionID);
+                            ", bookingRequestID);
                             
-                            // If we are in InstantBooking, the booking gets confirmed instantly!!
+                            // If we are in InstantBooking, the booking gets confirmed instantly!
                             if (instantBooking) {
                                 var result = LcData.Booking.ConfirmBooking(bookingRequestID, "PREFERRED", db);
                                 

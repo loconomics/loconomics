@@ -1009,6 +1009,24 @@ public static partial class LcData
         }
         #endregion
 
+        #region Booking Request updates
+        public static void SetBookingRequestTransaction(int bookingRequestID, string transactionID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                /*
+                    * Save Braintree Transaction ID in the Booking Request and card digits
+                    * and updating State to 'Booking Request Completed' (2:completed)
+                    */
+                db.Execute(@"
+                    UPDATE  BookingRequest
+                    SET     PaymentTransactionID = @1
+                    WHERE   BookingRequestID = @0
+                ", bookingRequestID, transactionID);
+            }
+        }
+        #region
+
         #region Create Booking
         #region SQLs
         public const string sqlGetBookingRequestDates = @"
@@ -1273,21 +1291,22 @@ public static partial class LcData
                 // Charge total amount of booking request to the customer (Submit to settlement the transaction)
                 if (!String.IsNullOrEmpty(paymentTransactionID) && !paymentTransactionID.StartsWith("TEST:"))
                 {
-                    // Since #508, we can an authorized transaction to be settle or a saved card to perform
+                    // Since #508, we can have an authorized transaction to be settle or a saved card to perform
                     // the charge without previous authorization;
                     // On card cases, we saved the card in the transactionID, its just a 'CARD:' prefix
                     // followed by the card token
-                    if (paymentTransactionID.StartsWith("CARD:"))
+                    if (paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
                     {
-                        var cardToken = paymentTransactionID.Substring("CARD:".Length);
+                        var cardToken = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
                         
-                        string saleError = LcPayment.SaleBookingTransaction(bookingID, cardToken);
+                        // Do transaction, charging/settling now
+                        string saleError = LcPayment.SaleBookingTransaction(bookingID, cardToken, true);
                         if (saleError != null)
                             return saleError;
                     }
                     else
                     {
-                        // Authorized transaction to be settle
+                        // We have an authorized transaction to be settle, AKA charge card
                         string paymentError = LcPayment.SettleTransaction(paymentTransactionID);
                         if (paymentError != null)
                         {
