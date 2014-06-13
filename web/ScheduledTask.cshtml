@@ -586,7 +586,7 @@
         /*
          * Check:: Charge Customer the day of the service
          * If:: Confirmated or performed or complete bookings only, not cancelled or in dispute
-         * If:: Current time is the Start of the Confirmed Service Time, or later
+         * If:: Current time is the 1 hour after the End Service, or later
          * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
          * Action:: settle booking transaction
          *          set [TotalPricePaidByCustomer] and [TotalServiceFeesPaidByCustomer] values
@@ -606,13 +606,11 @@
                           ON BR.BookingRequestID = B.BookingRequestID
                 WHERE   BookingStatusID IN (1, 2, 3, 4) -- confirmed, performed or completed
                          AND
-                        -- at the startTime hour, or later
-                        getdate() >= E.StartTime
                         
-                        /*-- at 1 hour, after service ended (more than that is fine)
-                        getdate() >= dateadd(hh, 1, E.EndTime)*/
+                        -- at 1 hour, after service ended (more than that is fine)
+                        getdate() >= dateadd(hh, 1, E.EndTime)
                         /* AND
-                         getdate() < dateadd(hh, 25, E.EndTime)
+                         getdate() < dateadd(hh, 2, E.EndTime)
                         */
 
                          AND
