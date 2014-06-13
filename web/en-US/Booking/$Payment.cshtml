@@ -218,38 +218,40 @@
                                 // Find or create Customer on Braintree
                                 var customer = LcPayment.GetOrCreateBraintreeCustomer((int)c.UserID);
                                 
-                                if (ModelState.IsValid) {
-                            
-                                    // If is not a selected saved card and it does not want to save it
-                                    // we create a temporary card per booking.
-                                    if (!savePayment && String.IsNullOrWhiteSpace(creditCardToken)) {
-                                        // We need a temporary card token, we generate
-                                        // one with the required prefix plus the environment
-                                        // and BookingRequestID, its unique
-                                        creditCardToken = LcPayment.TempSavedCardPrefix + LcHelpers.Channel + "_" + bookingRequestID.ToString();
-                                        
-                                        createCard = true;
-                                    }
+                                // If is not a selected saved card and it does not want to save it
+                                // we create a temporary card per booking.
+                                if (!savePayment && String.IsNullOrWhiteSpace(creditCardToken)) {
+                                    // We need a temporary card token, we generate
+                                    // one with the required prefix plus the environment
+                                    // and BookingRequestID, its unique
+                                    creditCardToken = LcPayment.TempSavedCardPrefix + LcHelpers.Channel + "_" + bookingRequestID.ToString();
 
-                                    if (createCard) {
-                                        // Save credit card, temporary or permanent for later transaction,
-                                        // updating internally the value for creditCardToken
-                                        var saveCardError = LcPayment.SaveCardInVault(
-                                            customer.Id,
-                                            ref creditCardToken,
-                                            Request["name-on-card"],
-                                            Request["card-number"],
-                                            Request["card-exp-month"],
-                                            Request["card-exp-year"],
-                                            Request["cvv"],
-                                            address
-                                        );
+                                    createCard = true;
+                                }
+
+                                if (createCard) {
+                                    // Save credit card, temporary or permanent for later transaction,
+                                    // updating internally the value for creditCardToken
+                                    var saveCardError = LcPayment.SaveCardInVault(
+                                        customer.Id,
+                                        ref creditCardToken,
+                                        Request["name-on-card"],
+                                        Request["card-number"],
+                                        Request["card-exp-month"],
+                                        Request["card-exp-year"],
+                                        Request["cvv"],
+                                        address
+                                    );
                                     
-                                        if (!String.IsNullOrWhiteSpace(saveCardError)) {
-                                            ModelState.AddFormError(saveCardError);
-                                        }
+                                    if (!String.IsNullOrWhiteSpace(saveCardError)) {
+                                        ModelState.AddFormError(saveCardError);
                                     }
                                 }
+                                
+                                // The transactionID is now a credit card reference
+                                // We need to set-up this after a possible SaveCardInVault since the
+                                // token can be created there under some cases
+                                transactionID = LcPayment.TransactionIdIsCardPrefix + creditCardToken;
 
                                 // DISABLED WITH #508, since transaction is not done here doubt: Can be saved for later use on the postponed transaction?
                                 //if (LcPayment.BraintreeFraudProtectionToolsEnabled) {
@@ -270,8 +272,9 @@
                             db.Execute(@"
                                 UPDATE  BookingRequest
                                 SET     BookingRequestStatusID = 2 -- Completed
+                                        ,PaymentTransactionID = @1
                                 WHERE   BookingRequestID = @0
-                            ", bookingRequestID);
+                            ", bookingRequestID, transactionID);
                             
                             // If we are in InstantBooking, the booking gets confirmed instantly!
                             if (instantBooking) {
