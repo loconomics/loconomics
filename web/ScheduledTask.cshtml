@@ -514,6 +514,74 @@
         totalitems += items;
         totalmessages += messages;
         
+        /*
+         * Check:: Authorize postponed transactions 48hours previous to service start-time
+         * If:: Confirmated or performed or complete bookings only, not cancelled or in dispute
+         * If:: Current time is 48 hours before Confirmed Service StartTime
+         * If:: BookingRequest PaymentTransactionID is a Card token rather than an actual TransactionID
+         * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
+         * Action:: authorize booking transaction
+         */
+        items = 0;
+        {
+            // Get bookings affected by conditions
+            var sqlGet = @"
+                SELECT  B.BookingID
+                        ,BR.PaymentTransactionID
+                FROM    Booking As B
+                         INNER JOIN
+                        CalendarEvents As E
+                          ON B.ConfirmedDateID = E.Id
+                         INNER JOIN
+                        BookingRequest As BR
+                          ON BR.BookingRequestID = B.BookingRequestID
+                WHERE   BookingStatusID IN (1, 2, 3, 4) -- confirmed, performed or completed
+                         AND                       
+                        -- at 48 hours before service starts (more than that is fine)
+                        getdate() >= dateadd(hh, -48, E.StartTime)
+                        /* AND
+                         getdate() < dateadd(hh, -49, E.StartTime)
+                        */
+
+                         AND
+                        -- Still not charged
+                        B.TotalPricePaidByCustomer is null
+            ";
+            var bookings = db.Query(sqlGet);
+
+            foreach (var b in bookings){
+                try {
+                    
+                    // Create transaction authorizing charge (but actually not charging still)
+                    // for saved customer credit card and update DB.
+                    // NOTE: 'AuthorizeBookingTransaction' just skips past transactions, only works when PaymentTransactionID
+                    // is in fact a saved card token.
+                    var errmsg = LcData.Booking.AuthorizeBookingTransaction(b.PaymentTransactionID, b.BookingID, db);
+                    
+                    if (errmsg == null) {
+                        items++;
+                    }
+                    else {
+                        
+                        var errTitle = "Booking Authorize Postponed Transactions, 48h before Service Starts";
+                        var errDesc = String.Format(
+                            "BookingID: {0}, TransactionID: {1} Payment not allowed, error on Braintree 'sale transaction, authorizing only': {2}",
+                            b.BookingID,
+                            b.PaymentTransactionID,
+                            errmsg
+                        );
+                        
+                        LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+                        
+                        logger.Log("Error on: " + errTitle + "; " + errDesc);
+                    }
+                } catch (Exception ex){
+                    logger.LogEx("Booking Authorize Postponed Transactions, 48h before Service Starts", ex);
+                }
+            }
+        }
+        logger.Log("Total of Booking Authorize Postponed Transactions, 48h before Service Starts: {0}", items);
+        totalitems += items;
 
         /*
          * Check:: Charge Customer the day of the service
@@ -583,7 +651,6 @@
         }
         logger.Log("Total of Booking Charge Customer, Receive Payment: {0}", items);
         totalitems += items;
-        
         
         // Ending work with database
     }

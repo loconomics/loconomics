@@ -1231,33 +1231,15 @@ public static partial class LcData
                         // Get card from transaction
                         string transactionID = db.QueryValue("SELECT coalesce(PaymentTransactionId, '') FROM BookingRequest WHERE BookingRequestID = @0", bookingRequestID);
 
-                        if (!String.IsNullOrWhiteSpace(transactionID) &&
-                            transactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                        var authorizationError = AuthorizeBookingTransaction(transactionID, result.BookingID, db);
+
+                        if (!String.IsNullOrEmpty(authorizationError))
                         {
-                            var cardToken = transactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
-
-                            if (!String.IsNullOrWhiteSpace(cardToken))
+                            return new
                             {
-                                // Transaction authorization, so NOT charge/settle now
-                                var authorizationError = LcPayment.SaleBookingTransaction(result.BookingID, cardToken, false);
-
-                                if (!String.IsNullOrEmpty(authorizationError))
-                                {
-                                    return new
-                                    {
-                                        Error = -3,
-                                        ErrorMessage = authorizationError
-                                    };
-                                }
-                            }
-                            else
-                            {
-                                return new
-                                {
-                                    Error = -3,
-                                    ErrorMessage = "Transaction or card identifier gets lost, payment will cannot be performed."
-                                };
-                            }
+                                Error = -3,
+                                ErrorMessage = authorizationError
+                            };
                         }
                     }
 
@@ -1307,6 +1289,60 @@ public static partial class LcData
                 if (owned)
                     db.Dispose();
             }
+        }
+
+        /// <summary>
+        /// If the given transactionID is a Card Token, it performs a transaction to authorize, without charge/settle,
+        /// the amount on the card.
+        /// This process ensures the money is available for the later moment the charge happens (withing the authorization
+        /// period, the worse case 7 days) using 'SettleBookingTransaction', or manage preventively any error that arises.
+        /// The transactionID generated (if any) is updated on database properly.
+        /// </summary>
+        /// <param name="paymentTransactionID"></param>
+        /// <param name="bookingID"></param>
+        /// <param name="db"></param>
+        /// <returns>An error message or null on success</returns>
+        public static string AuthorizeBookingTransaction(string paymentTransactionID, int bookingID, Database db = null)
+        {
+            var owned = db == null;
+            if (owned)
+                db = Database.Open("sqlloco");
+
+            try
+            {
+                if (paymentTransactionID != null &&
+                    paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                {
+                    var cardToken = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
+
+                    if (!String.IsNullOrWhiteSpace(cardToken))
+                    {
+                        // Transaction authorization, so NOT charge/settle now
+                        var authorizationError = LcPayment.SaleBookingTransaction(bookingID, cardToken, false);
+
+                        if (!String.IsNullOrEmpty(authorizationError))
+                        {
+                            return authorizationError;
+                        }
+                    }
+                    else
+                    {
+                        return "Transaction or card identifier gets lost, payment will cannot be performed.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Replay exception, we just need the finally to close the connection properly
+                throw ex;
+            }
+            finally
+            {
+                if (owned)
+                    db.Dispose();
+            }
+
+            return null;
         }
 
         /// <summary>
