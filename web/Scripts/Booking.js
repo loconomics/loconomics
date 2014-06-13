@@ -575,16 +575,29 @@ LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
     var $edit = $c.find('.edit-card');
     var $update = $c.find('[name=update-credit-card]');
     function updateUpdateFlagWith($card) {
+
+        var cardVal = $card.find('[name=credit-card]').val();
+
         var flag =
             $card.find('.update-credit-card').hasClass('cancel-update')
             ||
-            $card.find('[name=credit-card]').val() == '';
+            cardVal == '';
+
         if (flag) {
             $update.val('true');
-            $edit.slideDown(anim_duration);
+            $edit
+            .slideDown(anim_duration);
         } else {
             $update.val('false');
-            $edit.slideUp(anim_duration);
+            $edit
+            .slideUp(anim_duration)
+            .addClass('updating-card');
+        }
+
+        if (cardVal == '') {
+            $edit.removeClass('updating-card');
+        } else {
+            $edit.addClass('updating-card');
         }
     }
 

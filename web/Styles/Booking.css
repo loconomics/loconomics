@@ -622,7 +622,11 @@
     display: inline;
 }
 #booking-payment .saved-cards .update-credit-card.cancel-update .update-label {
-    display: none
+    display: none;
+}
+
+#booking-payment .edit-card.updating-card .save-to-my-payments  {
+    display: none;
 }
 
 
