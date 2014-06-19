@@ -407,7 +407,7 @@
                         
                         var errTitle = "Booking Release Payment after 120H for new providers";
                         var errDesc = String.Format(
-                            "BookingID: {0}, TransactionID: {1} Not payed, error on Braintree 'release transaction from escrow': {2}",
+                            "BookingID: {0}, TransactionID: {1}. Not payed on [Release Payment 120H New Provider], error on Braintree 'release transaction from escrow': {2}",
                             b.BookingID,
                             b.PaymentTransactionID,
                             errmsg
@@ -495,7 +495,7 @@
                         
                         var errTitle = "Booking Release Payment 24H";
                         var errDesc = String.Format(
-                            "BookingID: {0}, TransactionID: {1} Not payed, error on Braintree 'release transaction from escrow': {2}",
+                            "BookingID: {0}, TransactionID: {1}. Not payed on [Release Payment 24H], error on Braintree 'release transaction from escrow': {2}",
                             b.BookingID,
                             b.PaymentTransactionID,
                             errmsg
