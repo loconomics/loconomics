@@ -585,7 +585,7 @@ public static partial class LcData
             if (poss == null) {
                 using (var db = Database.Open("sqlloco")) {
                     var sqlpositions = @"
-                        SELECT a.UserID, a.PositionID, a.Active, a.StatusID,
+                        SELECT a.UserID, a.PositionID, a.Active, a.StatusID, InstantBooking,
                             PositionSingular, PositionPlural, a.UpdatedDate, a.PositionIntro
                         FROM dbo.userprofilepositions a join
                             positions c on a.PositionID = c.PositionID and a.CountryID = c.CountryID and a.LanguageID = c.LanguageID
@@ -619,7 +619,7 @@ public static partial class LcData
             if (u == null){
                 using (var db = Database.Open("sqlloco")){
                     var sqlpositions = @"
-                        SELECT  a.UserID, a.PositionID, a.Active, a.StatusID, 
+                        SELECT  a.UserID, a.PositionID, a.Active, a.StatusID, InstantBooking,
                                 PositionSingular, PositionPlural, a.UpdatedDate, a.PositionIntro
                         FROM    dbo.userprofilepositions a join positions c on a.PositionID = c.PositionID 
                         WHERE   a.UserID = @0 and a.PositionID = @1 and c.LanguageID = @2 and c.CountryID = @3

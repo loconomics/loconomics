@@ -235,6 +235,7 @@ public static partial class LcData
                         Pr.PricingEstimateRevision,
                         R.BookingRequestStatusID,
                         B.BookingStatusID,
+                        R.InstantBooking,
 
                         UC.FirstName As CustomerFirstName,
                         UC.LastName As CustomerLastName,
@@ -253,6 +254,7 @@ public static partial class LcData
                         E.TimeZone,
                         Pos.PositionSingular,
                         Pr.TotalPrice,
+                        Pr.FeePrice,
                         Pr.ServiceDuration,
                     
                         CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
@@ -327,6 +329,7 @@ public static partial class LcData
                         B.BookingStatusID,
                         R.PositionID,
                         R.CancellationPolicyID,
+                        R.InstantBooking,
 
                         DATEADD(day, 7, E.EndTime) As PaymentDate,
                         (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference
@@ -427,6 +430,7 @@ public static partial class LcData
                         R.BookingRequestStatusID,
                         R.PositionID,
                         R.CancellationPolicyID,
+                        R.InstantBooking,
 
                         DATEADD(day, 7, E1.EndTime) As PaymentDate,
                         (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference
@@ -909,7 +913,7 @@ public static partial class LcData
                                 case 2:
                                 case 3:
                                 case 5:
-                                    msg = "Your payment of {0:c} has been successfully received. Payment will be withheld to {1} until after each appointment is successfully completed.";
+                                    msg = "Your card ending in {2} has been authorized for {0:c}. We’ll charge your card the day {1} performs the scheduled services.";
                                     break;
                                 // Completed and payed
                                 case 4:
@@ -1002,6 +1006,424 @@ public static partial class LcData
                 booking.PostalCode,
                 !String.IsNullOrEmpty(booking.LocationSpecialInstructions) ? string.Format(" ({0})", booking.LocationSpecialInstructions) : ""
             );
+        }
+        #endregion
+
+        #region Booking Request updates
+        public static void SetBookingRequestTransaction(int bookingRequestID, string transactionID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                /*
+                    * Save Braintree Transaction ID in the Booking Request and card digits
+                    * and updating State to 'Booking Request Completed' (2:completed)
+                    */
+                db.Execute(@"
+                    UPDATE  BookingRequest
+                    SET     PaymentTransactionID = @1
+                    WHERE   BookingRequestID = @0
+                ", bookingRequestID, transactionID);
+            }
+        }
+        #endregion
+
+        #region Create Booking
+        #region SQLs
+        public const string sqlGetBookingRequestDates = @"
+            SELECT  TOP 1
+                    R.PreferredDateID,
+                    R.AlternativeDate1ID,
+                    R.AlternativeDate2ID
+            FROM    BookingRequest As R
+            WHERE   R.BookingRequestID = @0
+                    -- Only bookings 'created', but not incomplete, confirmed, cancelled or any other one
+                     AND
+                    R.BookingRequestStatusID = 2
+        ";
+        public const string sqlConfirmBooking = @"
+            -- Parameters
+            DECLARE @BookingRequestID int, @ConfirmedDateID int
+            SET @BookingRequestID = @0
+            SET @ConfirmedDateID = @1
+
+            DECLARE @BookingID int
+            SET @BookingID = -1
+
+            BEGIN TRY
+                BEGIN TRAN
+
+                /*
+                 * Creating the Confirmed Booking Record
+                 */
+                INSERT INTO Booking (
+                    BookingRequestID, ConfirmedDateID,
+                    BookingStatusID,
+                    TotalPricePaidByCustomer, TotalServiceFeesPaidByCustomer, 
+                    TotalPaidToProvider, TotalServiceFeesPaidByProvider, 
+                    PricingAdjustmentApplied,
+                    CreatedDate, UpdatedDate, ModifiedBy
+                ) VALUES (
+                    @BookingRequestID, @ConfirmedDateID,
+                    1, --confirmed
+                    -- Initial price data to null
+                    -- (booking request prices are estimated, here only paid prices go)
+                    null, null, null, null,
+                    0, -- not applied price adjustement (now, almost)
+                    getdate(), getdate(), 'sys'
+                )
+                SET @BookingID = @@Identity
+
+                -- Removing non needed CalendarEvents:
+                DELETE FROM CalendarEvents
+                WHERE ID IN (
+                    SELECT TOP 1 PreferredDateID FROM BookingRequest
+                    WHERE BookingRequestID = @BookingRequestID AND PreferredDateID <> @ConfirmedDateID
+                    UNION
+                    SELECT TOP 1 AlternativeDate1ID FROM BookingRequest
+                    WHERE BookingRequestID = @BookingRequestID AND AlternativeDate1ID <> @ConfirmedDateID
+                    UNION
+                    SELECT TOP 1 AlternativeDate2ID FROM BookingRequest
+                    WHERE BookingRequestID = @BookingRequestID AND AlternativeDate2ID <> @ConfirmedDateID
+                )
+
+                /*
+                 * Update Availability of the CalendarEvent record for the ConfirmedDateID,
+                 * from 'tentative' to 'busy'
+                 */
+                UPDATE  CalendarEvents
+                SET     CalendarAvailabilityTypeID = 2
+                WHERE   Id = @ConfirmedDateID
+
+                /*
+                 * Updating Booking Request status, and removing references to the 
+                 * user selected dates (there is already a confirmed date in booking).
+                 */
+                UPDATE  BookingRequest
+                SET     BookingRequestStatusID = 7, -- accepted
+                        PreferredDateID = null,
+                        AlternativeDate1ID = null,
+                        AlternativeDate2ID = null
+                WHERE   BookingRequestID = @BookingRequestID
+
+                COMMIT TRAN
+
+                -- We return sucessful operation with Error=0
+                -- and attach the BookingID created instead of an ErrorMessage
+                SELECT 0 As Error, @BookingID As BookingID
+            END TRY
+            BEGIN CATCH
+                IF @@TRANCOUNT > 0
+                    ROLLBACK TRAN
+                -- We return error number and message
+                SELECT ERROR_NUMBER() As Error, ERROR_MESSAGE() As ErrorMessage
+            END CATCH
+        ";
+        #endregion
+
+        /// <summary>
+        /// Create a booking by confirming an existant Booking Request,
+        /// this last gets updated to reflect the new status.
+        /// Payment is managed, but messaging is not (caller code can sent it if result.Error == 0)
+        /// </summary>
+        /// <param name="bookingRequestID"></param>
+        /// <param name="dateType">A string value from: PREFERRED, ALTERNATIVE1, ALTERNATIVE2;
+        /// that date/event from the booking request will be confirmed.</param>
+        /// <param name="db"></param>
+        /// <returns>An object with almost an integer/numeric property 'Error', 0 when there is no
+        /// error; if there is error (!= 0), ErrorMessage contains a string, otherwise other
+        /// properties are added with information: BookingID for the created booking.
+        /// Error > 0: Database error during confirmation.
+        /// Error < 0: verifications errors:
+        /// -1: there is no date to confirm, maybe booking is already confirmed or there is not exists.
+        /// -2: provider not available that date
+        /// -3: payment error
+        /// </returns>
+        public static dynamic ConfirmBooking(int bookingRequestID, string dateType, Database db = null)
+        {
+            var owned = db == null;
+            if (owned)
+                db = Database.Open("sqlloco");
+
+            try
+            {
+                // Getting the date
+                var dateID = 0;
+                var dates = db.QuerySingle(sqlGetBookingRequestDates, bookingRequestID);
+                if (dates != null)
+                {
+                    switch (dateType.ToUpper())
+                    {
+                        case "PREFERRED":
+                            if (dates.PreferredDateID != null)
+                            {
+                                dateID = dates.PreferredDateID;
+                            }
+                            break;
+                        case "ALTERNATIVE1":
+                            if (dates.AlternativeDate1ID != null)
+                            {
+                                dateID = dates.AlternativeDate1ID;
+                            }
+                            break;
+                        case "ALTERNATIVE2":
+                            if (dates.AlternativeDate2ID != null)
+                            {
+                                dateID = dates.AlternativeDate2ID;
+                            }
+                            break;
+                    }
+                }
+                if (dateID == 0)
+                {
+                    return new
+                    {
+                        Error = -1,
+                        ErrorMessage = "We're having issues finding your booking request. Please contact us at support@loconomics.com."
+                    };
+                }
+
+                // Change the event to be 'transparent'(4) for a while to don't
+                // affect the availability check.
+                // And get the required information from the event to do the
+                // availability check
+                var dateInfo = db.QuerySingle(@"
+                    UPDATE  CalendarEvents SET
+                            CalendarAvailabilityTypeID = 4
+                    WHERE   ID = @0
+
+                    SELECT  ID, StartTime, EndTime, UserId
+                    FROM    CalendarEvents
+                    WHERE   ID = @0
+                ", dateID);
+                var isNotAvailable = !LcCalendar.CheckUserAvailability(dateInfo.UserID, dateInfo.StartTime, dateInfo.EndTime);
+
+                if (isNotAvailable)
+                {
+                    // Is not available, restore event to its previous state (availability 'tentative':3)
+                    db.Execute(@"
+                        UPDATE  CalendarEvents SET
+                                CalendarAvailabilityTypeID = 3
+                        WHERE   ID = @0
+                    ", dateID);
+
+                    return new
+                    {
+                        Error = -2,
+                        // Text: message can end being showed to both customer and provider (but can be customized
+                        // on each page executing this), and must care that the time was available when selected
+                        // but is not now because a (very) recent change (race condition).
+                        ErrorMessage = "The choosen time is not available, it conflicts with a recent appointment!"
+                    };
+                }
+
+                // Creating booking and updating BookingRequest
+                var result = db.QuerySingle(sqlConfirmBooking, bookingRequestID, dateID);
+
+                // On no errors:
+                if (result.Error == 0)
+                {
+                    // SINCE #508, Customer is not charged on confirming the booking, else the date of the service;
+                    // NOW here we authorize a transaction for lower than 7 days for service date from now, or
+                    // nothing on other cases since we cannot ensure the authorization would persist more than
+                    // that time, and transaction gets postponed for the service date on 'settle transaction'.
+                    if ((dateInfo.StartTime - DateTime.Now) < TimeSpan.FromDays(7)) 
+                    {
+                        // Get card from transaction
+                        string transactionID = db.QueryValue("SELECT coalesce(PaymentTransactionId, '') FROM BookingRequest WHERE BookingRequestID = @0", bookingRequestID);
+
+                        var authorizationError = AuthorizeBookingTransaction(transactionID, result.BookingID, db);
+
+                        if (!String.IsNullOrEmpty(authorizationError))
+                        {
+                            return new
+                            {
+                                Error = -3,
+                                ErrorMessage = authorizationError
+                            };
+                        }
+                    }
+
+                    // Next commented code is from previous #508: 'charge/settle' is done in a ScheduledTask now
+                    /*
+                    // Get booking request TransactionID
+                    string tranID = N.DE(db.QueryValue(sqlGetTransactionIDFromBookingRequest, bookingRequestID));
+                    // Charge customer:
+                    var settleResult = SettleBookingTransaction(tranID, result.BookingID, db);
+                    if (settleResult != null)
+                    {
+                        return new
+                        {
+                            Error = -3,
+                            ErrorMessage = settleResult
+                        };
+                    }
+                    */
+
+                    // Update the CalendarEvent to include contact data,
+                    // but this is not so important as the rest because of that it goes
+                    // inside a try-catch, it doesn't matter if fails, is just a commodity
+                    // (customer and provider can access contact data from the booking).
+                    try
+                    {
+                        var description = LcData.Booking.GetBookingEventDescription(result.BookingID);
+                        var location = LcData.Booking.GetBookingLocationAsOneLineText(result.BookingID);
+                        db.Execute(@"
+                                UPDATE  CalendarEvents
+                                SET     Description = @1,
+                                        Location = @2
+                                WHERE   Id = @0
+                            ", dateID, description, location);
+                    }
+                    catch { }
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Replay exception, we just need the finally to close the connection properly
+                throw ex;
+            }
+            finally
+            {
+                if (owned)
+                    db.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// If the given transactionID is a Card Token, it performs a transaction to authorize, without charge/settle,
+        /// the amount on the card.
+        /// This process ensures the money is available for the later moment the charge happens (withing the authorization
+        /// period, the worse case 7 days) using 'SettleBookingTransaction', or manage preventively any error that arises.
+        /// The transactionID generated (if any) is updated on database properly.
+        /// </summary>
+        /// <param name="paymentTransactionID"></param>
+        /// <param name="bookingID"></param>
+        /// <param name="db"></param>
+        /// <returns>An error message or null on success</returns>
+        public static string AuthorizeBookingTransaction(string paymentTransactionID, int bookingID, Database db = null)
+        {
+            var owned = db == null;
+            if (owned)
+                db = Database.Open("sqlloco");
+
+            try
+            {
+                if (paymentTransactionID != null &&
+                    paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                {
+                    var cardToken = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
+
+                    if (!String.IsNullOrWhiteSpace(cardToken))
+                    {
+                        // Transaction authorization, so NOT charge/settle now
+                        var authorizationError = LcPayment.SaleBookingTransaction(bookingID, cardToken, false);
+
+                        if (!String.IsNullOrEmpty(authorizationError))
+                        {
+                            return authorizationError;
+                        }
+                    }
+                    else
+                    {
+                        return "Transaction or card identifier gets lost, payment will cannot be performed.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Replay exception, we just need the finally to close the connection properly
+                throw ex;
+            }
+            finally
+            {
+                if (owned)
+                    db.Dispose();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Charge customer for the booking request transaction
+        /// </summary>
+        /// <param name="paymentTransactionID"></param>
+        /// <param name="bookingID"></param>
+        /// <param name="db"></param>
+        /// <returns>A string with an error message or null on success.
+        /// </returns>
+        public static string SettleBookingTransaction(string paymentTransactionID, int bookingID, Database db = null)
+        {
+            var owned = db == null;
+            if (owned)
+                db = Database.Open("sqlloco");
+
+            try
+            {
+                // Charge total amount of booking request to the customer (Submit to settlement the transaction)
+                if (!String.IsNullOrEmpty(paymentTransactionID) && !paymentTransactionID.StartsWith("TEST:"))
+                {
+                    // Since #508, we can have an authorized transaction to be settle or a saved card to perform
+                    // the charge without previous authorization;
+                    // On card cases, we saved the card in the transactionID, its just a 'CARD:' prefix
+                    // followed by the card token
+                    if (paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                    {
+                        var cardToken = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
+                        
+                        // Do transaction, charging/settling now
+                        string saleError = LcPayment.SaleBookingTransaction(bookingID, cardToken, true);
+                        if (saleError != null)
+                            return saleError;
+                    }
+                    else
+                    {
+                        // We have an authorized transaction to be settle, AKA charge card
+                        string paymentError = LcPayment.SettleTransaction(paymentTransactionID);
+                        if (paymentError != null)
+                        {
+                            return paymentError;
+                        }
+                    }
+                }
+
+                // Update booking database information, setting amount payed by customer
+                db.Execute(@"
+                        DECLARE @price decimal(7, 2)
+                        DECLARE @fees decimal(7, 2)
+                        DECLARE @BookingRequestID int
+    
+                        SELECT  @BookingRequestID = BookingRequestID
+                        FROM    Booking
+                        WHERE   BookingID = @0
+
+                        SELECT
+                                @price = coalesce(TotalPrice, 0),
+                                @fees = coalesce(FeePrice, 0)
+                        FROM
+                                pricingestimate
+                        WHERE
+                                PricingEstimateID = (SELECT PricingEstimateID FROM BookingRequest WHERE BookingRequestID = @BookingRequestID)
+
+                        UPDATE  Booking
+                        SET     TotalPricePaidByCustomer = @price,
+                                TotalServiceFeesPaidByCustomer = @fees
+                        WHERE   BookingId = @0
+                    ", bookingID);
+            }
+            catch (Exception ex)
+            {
+                // Replay exception, we just need the finally to close the connection properly
+                throw ex;
+            }
+            finally
+            {
+                if (owned)
+                    db.Dispose();
+            }
+
+            return null;
         }
         #endregion
 

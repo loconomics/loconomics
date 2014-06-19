@@ -21,6 +21,9 @@
             throw new Exception(inputdataerrormessage);
         }
     }
+    
+    // Get InstantBooking option
+    var instantBooking = pos.InstantBooking;
 
     // Check if is a valid booking process (session not expired or error at first step)
     var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
@@ -165,7 +168,8 @@
             
             var sqlUpdBookingRequest = @"
                 UPDATE  BookingRequest SET
-                        AddressID = @1
+                        AddressID = @1,
+                        InstantBooking = @2
                 WHERE   BookingRequestID = @0
             ";
             
@@ -205,10 +209,14 @@
                     }
                 }
                 
+                // Let Payment to know about InstantBooking
+                Session["InstantBooking"] = instantBooking;
+                
                 // Updating BookingRequest with location and date-times
                 db.Execute(sqlUpdBookingRequest,
                     bookingRequestID,
-                    locationID == 0 ? null : (int?)locationID);
+                    locationID == 0 ? null : (int?)locationID,
+                    instantBooking);
             }
             
             // Return OK result
@@ -221,6 +229,7 @@
      */
     dynamic providerLocations = null, customerLocations = null, providerTravelLocation = null;
     var serviceDurationTime = TimeSpan.Zero;
+    
     using (var db = Database.Open("sqlloco")) {
         if (!withoutLocation) {
             // Provider locations
@@ -316,7 +325,7 @@
 <p class="info">
     Search the days below for up to three appointment times that will work with your schedule.
 </p>
-<form action="@(LcUrl.LangPath)Booking/$Schedule/" method="post" class="schedule" id="booking-schedule">
+<form action="@(LcUrl.LangPath)Booking/$Schedule/" method="post" class="schedule clearfix" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @LcHelpers.GetValidationScripts()
@@ -331,57 +340,77 @@
 
     </fieldset>
     <fieldset class="select-day-hours">
-        @RenderPage("$ScheduleCalendarElements.cshtml", new { 
-            Element = "DayHoursSelector", 
-            Date = showDate, 
-            DurationMinutes = serviceDurationTime.TotalMinutes,
-            UserID = p.UserID
-        })
+        <div class="step-block">
+            @RenderPage("$ScheduleCalendarElements.cshtml", new { 
+                Element = "DayHoursSelector", 
+                Date = showDate, 
+                DurationMinutes = serviceDurationTime.TotalMinutes,
+                UserID = p.UserID,
+                IsInstantBooking = instantBooking
+            })
+        </div>
     </fieldset>
     @{
         var dateFormat = "dddd, MMM d";
         var timeFormat = "t";
     }
     <fieldset class="selected-schedule">
-        <h2>Your selected times for @pos.PositionSingular services are:</h2>
+        @if (instantBooking)
+        {
+            <h2>You're confirming the following time for @pos.PositionSingular services:</h2>
+            
+            <div class="choice instant-choice">
+                <p>
+                    <span class="date-showed">@(dt1Start.HasValue ? dt1Start.Value.ToString(dateFormat) : "")</span>
+                    <span class="time start-time">@(dt1Start.HasValue ? dt1Start.Value.ToString(timeFormat) : "")</span>
+                    <span class="time end-time">@(dt1End.HasValue ? dt1End.Value.ToString(timeFormat) : "")</span>
+                </p>
+                <input type="hidden" class="date" value="@Request["first-date"]" name="first-date" />
+                <input type="hidden" class="start-time" value="@Request["first-start-time"]" name="first-start-time" />
+            </div>
+        }
+        else
+        {
+            <h2>Your selected times for @pos.PositionSingular services are:</h2>
 
-        <div class="choice first-choice @(dt1Start.HasValue ? "has-values" : "")" data-choice="first">
-            <h3>First Choice</h3>
-            <p>
-                <span class="date-showed">@(dt1Start.HasValue ? dt1Start.Value.ToString(dateFormat) : "")</span>
-                <span class="time start-time">@(dt1Start.HasValue ? dt1Start.Value.ToString(timeFormat) : "")</span>
-                <span class="time end-time">@(dt1End.HasValue ? dt1End.Value.ToString(timeFormat) : "")</span>
-            </p>
-            <input type="hidden" class="date" value="@Request["first-date"]" name="first-date" />
-            <input type="hidden" class="start-time" value="@Request["first-start-time"]" name="first-start-time" />
-        </div>
-        <div class="choice second-choice @(dt2Start.HasValue ? "has-values" : "")" data-choice="second">
-            <h3>Second Choice</h3>
-            <p>
-                <span class="date-showed">@(dt2Start.HasValue ? dt2Start.Value.ToString(dateFormat) : "")</span>
-                <span class="time start-time">@(dt2Start.HasValue ? dt2Start.Value.ToString(timeFormat) : "")</span>
-                <span class="time end-time">@(dt2End.HasValue ? dt2End.Value.ToString(timeFormat) : "")</span>
-                <a class="unselect-action" href="#unselect">X</a>
-            </p>
-            <input type="hidden" class="date" value="@Request["second-date"]" name="second-date" />
-            <input type="hidden" class="start-time" value="@Request["second-start-time"]" name="second-start-time" />
-        </div>
-        <div class="choice third-choice @(dt3Start.HasValue ? "has-values" : "")" data-choice="third">
-            <h3>Third Choice</h3>
-            <p>
-                <span class="date-showed">@(dt3Start.HasValue ? dt3Start.Value.ToString(dateFormat) : "")</span>
-                <span class="time start-time">@(dt3Start.HasValue ? dt3Start.Value.ToString(timeFormat) : "")</span>
-                <span class="time end-time">@(dt3End.HasValue ? dt3End.Value.ToString(timeFormat) : "")</span>
-                <a class="unselect-action" href="#unselect">X</a>
-            </p>
-            <input type="hidden" class="date" value="@Request["third-date"]" name="third-date" />
-            <input type="hidden" class="start-time" value="@Request["third-start-time"]" name="third-start-time" />
-        </div>
+            <div class="choice first-choice @(dt1Start.HasValue ? "has-values" : "")" data-choice="first">
+                <h3>First Choice</h3>
+                <p>
+                    <span class="date-showed">@(dt1Start.HasValue ? dt1Start.Value.ToString(dateFormat) : "")</span>
+                    <span class="time start-time">@(dt1Start.HasValue ? dt1Start.Value.ToString(timeFormat) : "")</span>
+                    <span class="time end-time">@(dt1End.HasValue ? dt1End.Value.ToString(timeFormat) : "")</span>
+                </p>
+                <input type="hidden" class="date" value="@Request["first-date"]" name="first-date" />
+                <input type="hidden" class="start-time" value="@Request["first-start-time"]" name="first-start-time" />
+            </div>
+            <div class="choice second-choice @(dt2Start.HasValue ? "has-values" : "")" data-choice="second">
+                <h3>Second Choice</h3>
+                <p>
+                    <span class="date-showed">@(dt2Start.HasValue ? dt2Start.Value.ToString(dateFormat) : "")</span>
+                    <span class="time start-time">@(dt2Start.HasValue ? dt2Start.Value.ToString(timeFormat) : "")</span>
+                    <span class="time end-time">@(dt2End.HasValue ? dt2End.Value.ToString(timeFormat) : "")</span>
+                    <a class="unselect-action" href="#unselect">X</a>
+                </p>
+                <input type="hidden" class="date" value="@Request["second-date"]" name="second-date" />
+                <input type="hidden" class="start-time" value="@Request["second-start-time"]" name="second-start-time" />
+            </div>
+            <div class="choice third-choice @(dt3Start.HasValue ? "has-values" : "")" data-choice="third">
+                <h3>Third Choice</h3>
+                <p>
+                    <span class="date-showed">@(dt3Start.HasValue ? dt3Start.Value.ToString(dateFormat) : "")</span>
+                    <span class="time start-time">@(dt3Start.HasValue ? dt3Start.Value.ToString(timeFormat) : "")</span>
+                    <span class="time end-time">@(dt3End.HasValue ? dt3End.Value.ToString(timeFormat) : "")</span>
+                    <a class="unselect-action" href="#unselect">X</a>
+                </p>
+                <input type="hidden" class="date" value="@Request["third-date"]" name="third-date" />
+                <input type="hidden" class="start-time" value="@Request["third-start-time"]" name="third-start-time" />
+            </div>
 
-        <div class="time-selection-note booking-warning">
-            <strong>Why am I choosing three times?</strong>
-            <p>This allows us to figure out a good appointment time on both ends. Your provider has 18 hours to confirm your appointment.</p>
-        </div>
+            <div class="time-selection-note booking-warning">
+                <strong>Why am I choosing three times?</strong>
+                <p>This allows us to figure out a good appointment time on both ends. Your provider has 18 hours to confirm your appointment.</p>
+            </div>
+        }
     </fieldset>
 
     @if (!withoutLocation)
