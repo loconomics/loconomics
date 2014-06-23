@@ -10,6 +10,8 @@
         PageData["IsInOnboarding"] = isInOnboarding = true;
     }
     
+    var onboardingValidationSummaryMessage = "You're not quite done with this step, but we've saved what you've completed! Log back in when you're ready to finish your profile.";
+    
     // User Position record
     dynamic p = null;
     var newPos = false;
@@ -115,7 +117,7 @@
             </div>
 
             <div>
-                @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+                @Html.ValidationSummary(isInOnboarding ? onboardingValidationSummaryMessage : LcRessources.ValidationSummaryTitle)
             </div>
 
             <div class="actions">
