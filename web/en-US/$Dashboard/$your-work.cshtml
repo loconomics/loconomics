@@ -68,12 +68,12 @@
         </div>
     } else {
 
-        <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$your-work/@(posID)/">
+        <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$your-work/@(posID)/" @(true ? "data-post-validation='true'" : "")>
             <input type="hidden" name="positionID" value="@(posID)" />
 
             <div id="DashboardServices" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Describe your services</h2>
-                @RenderPage("YourWork/_$Services.cshtml", new { PageState = ModelState, Position = p })
+                @RenderPage("YourWork/$Services.cshtml", new { PageState = ModelState, Position = p })
             </div>
 
             <div id="DashboardPricing" class="DashboardSection-page-section is-required">

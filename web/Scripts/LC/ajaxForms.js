@@ -3,7 +3,8 @@ var $ = require('jquery'),
     callbacks = require('./ajaxCallbacks'),
     changesNotification = require('./changesNotification'),
     blockPresets = require('./blockPresets'),
-    validationHelper = require('./validationHelper');
+    validationHelper = require('./validationHelper'),
+    getXPath = require('./getXPath');
 
 jQuery = $;
 
@@ -137,10 +138,16 @@ function ajaxFormsSubmitHandler(event) {
     ctx.box = (event.data ? event.data.box : null) || ctx.form.closest(".ajax-box");
     var action = (event.data ? event.data.action : null) || ctx.form.attr('action') || '';
 
-    // Check validation
-    if (validateForm(ctx) === false) {
-      // Validation failed, submit cannot continue, out!
-      return false;
+    var postValidation = ctx.form.data('post-validation');
+    var requests = ctx.form.data('xhr-requests') || [];
+    ctx.form.data('xhr-requests', requests);
+
+    if (!postValidation) {
+        // Check validation
+        if (validateForm(ctx) === false) {
+            // Validation failed, submit cannot continue, out!
+            return false;
+        }
     }
 
     // Data saved:
@@ -157,9 +164,15 @@ function ajaxFormsSubmitHandler(event) {
 
     var data = ctx.form.find(':input').serialize();
 
+    // Abort previous requests
+    $.each(requests, function (req) {
+        if (req && req.abort)
+            req.abort();
+    });
+
     // Do the Ajax post
-    $.ajax({
-        url: (action),
+    var request = $.ajax({
+        url: action,
         type: 'POST',
         data: data,
         context: ctx,
@@ -168,8 +181,66 @@ function ajaxFormsSubmitHandler(event) {
         complete: ajaxFormsCompleteHandler
     });
 
+    // Register request
+    requests.push(request);
+    // Set auto-desregistration
+    var reqIndex = requests.length - 1;
+    request.always(function () {
+        // Delete, not splice, since we need to preserve the order
+        delete requests[reqIndex];
+    });
+
+    // Do post validation:
+    if (postValidation) {
+        request.done(function () {
+            validateForm(ctx);
+        });
+    }
+
     // Stop normal POST:
     return false;
+}
+
+/**
+    It performs a post submit on the given form on background,
+    without notifications of any kind, just for the instant saving feature.
+**/
+function doInstantSaving(form, changedElements) {
+    form = $(form);
+    var action = form.attr('action') || form.data('ajax-fieldset-action') || '';
+    var ctx = { form: form, box: form };
+
+    // Notification event to allow scripts to hook additional tasks before send data
+    form.trigger('presubmit', [ctx]);
+
+    var data = ctx.form.find(':input').serialize();
+
+    // Do the Ajax post
+    var request = $.ajax({
+        url: action,
+        type: 'POST',
+        data: data,
+        context: ctx,
+        success: function () {
+            // Tracked changed elements are saved
+            if (changedElements)
+                changesNotification.registerSave(form.closest('form').get(0), changedElements);
+        }
+    });
+
+    var requests = form.data('xhr-requests') || [];
+    form.data('xhr-requests', requests);
+
+    // Register request
+    requests.push(request);
+    // Set auto-desregistration
+    var reqIndex = requests.length - 1;
+    request.always(function () {
+        // Delete, not splice, since we need to preserve the order
+        delete requests[reqIndex];
+    });
+
+    return request;
 }
 
 // Public initialization
@@ -213,5 +284,6 @@ if (typeof module !== 'undefined' && module.exports)
         init: initAjaxForms,
         onSuccess: ajaxFormsSuccessHandler,
         onError: ajaxErrorPopupHandler,
-        onComplete: ajaxFormsCompleteHandler
+        onComplete: ajaxFormsCompleteHandler,
+        doInstantSaving: doInstantSaving
     };

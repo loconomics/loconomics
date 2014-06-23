@@ -4,7 +4,14 @@
     var u = LcData.UserInfo.GetUserRow();
     var PageState = PageData["PageState"] ?? ModelState;
     var doReturn = PageState == ModelState;
-    var pos = PageData["Position"];
+    var pos = PageData["Position"] ?? LcData.UserInfo.GetUserPos((int)u.UserID, Request["PositionID"].AsInt());
+    
+    if (pos == null) {
+        return;
+    }
+    
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    isInOnboarding = true;
 
     var idprefix = "position-" + pos.PositionID + "-services";
     
@@ -18,7 +25,9 @@
         Validation.Add("position-intro", Validator.StringLength(2000, 0, "Position introduction must be fewer than 2000 characters"));
     }
     
-    if (IsPost && Validation.IsValid()) {
+    // In onboarding, save all time since we need 'instant saving' #524
+    // (validation errors are still returned when is not valid but in onboarding)
+    if (IsPost && (Validation.IsValid() || isInOnboarding)) {
         var sqlSetPosIntro = @"
             UPDATE  UserProfilePositions
             SET     PositionIntro = @2
@@ -189,7 +198,7 @@
             } catch {}
         }
             
-        if (doReturn) {
+        if (doReturn && ModelState.IsValid) {
             LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
         }
     }
@@ -280,7 +289,7 @@
         </ul>
     </fieldset>
 }
-<fieldset class="DashboardServices">
+<fieldset class="DashboardServices ajax ajax-box" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/YourWork/$Services/?PositionID=@(pos.PositionID)">
     <p class="DashboardSection-page-section-introduction">
         Fill us in on the services you provide. By conveying your job, experience, and passion with genuine feeling, you’ll attract the type of customers you want.
         Make sure to be clear about what tasks future clients can expect you to perform.

@@ -3,6 +3,7 @@
 **/
 var $ = require('jquery');
 var LcUrl = require('../LC/LcUrl');
+var ajaxForms = require('LC/ajaxForms');
 
 // Code on page ready
 $(function () {
@@ -107,6 +108,11 @@ function initYourWorkDom() {
 
   /* Your work / services */
   require('./dashboard/serviceAttributesValidation').setup($('.DashboardYourWork form'));
+  // Instant saving and correct changes tracking
+  var $services = $('.DashboardServices');
+  $services.on('change', ':input', function () {
+    ajaxForms.doInstantSaving($services, [this]);
+  });
 
   /* Your work / locations */
   require('./dashboard/locationsCrudl').on('.DashboardYourWork');
