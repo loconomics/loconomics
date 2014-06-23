@@ -76,9 +76,11 @@ function setInstantSavingSection(sectionSelector) {
 
     var $section = $(sectionSelector);
 
-    $section.on('change', ':input', function () {
-        ajaxForms.doInstantSaving($section, [this]);
-    });
+    if ($section.data('instant-saving')) {
+        $section.on('change', ':input', function () {
+            ajaxForms.doInstantSaving($section, [this]);
+        });
+    }
 }
 
 function initAboutYou() {

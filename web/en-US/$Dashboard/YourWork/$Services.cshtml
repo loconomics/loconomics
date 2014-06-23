@@ -12,7 +12,7 @@
     }
     
     var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
-
+    
     var idprefix = "position-" + pos.PositionID + "-services";
     
     var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
@@ -289,7 +289,7 @@
         </ul>
     </fieldset>
 }
-<fieldset class="DashboardServices ajax ajax-box" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/YourWork/$Services/?PositionID=@(pos.PositionID)">
+<fieldset class="DashboardServices ajax ajax-box" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/YourWork/$Services/?PositionID=@(pos.PositionID)" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
     <p class="DashboardSection-page-section-introduction">
         Fill us in on the services you provide. By conveying your job, experience, and passion with genuine feeling, you’ll attract the type of customers you want.
         Make sure to be clear about what tasks future clients can expect you to perform.

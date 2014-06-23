@@ -8,7 +8,9 @@
 
     int providerID = WebSecurity.CurrentUserId;
     int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
-    
+
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+
     var instantBooking = false;
 
     Validation.RequireField("instant-booking", "Please, select a scheduling");
@@ -46,7 +48,7 @@
 <p class="DashboardSection-page-section-introduction">
     Is your calendar always up-to-date or do you like to pre-screen clients and/or appointment times? Here you can set how appointments will be confirmed according to what's best for you and your business. Keep in mind, clients generally prefer instant booking.
 </p>
-<fieldset class="DashboardSchedulingOptions ajax ajax-box" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/YourWork/$SchedulingOptions/?PositionID=@(positionID)">
+<fieldset class="DashboardSchedulingOptions ajax ajax-box" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/YourWork/$SchedulingOptions/?PositionID=@(positionID)" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
     <ul>
         <li>
             <label><input @LcHelpers.IsChecked(instantBooking, true) type="radio" name="instant-booking" value="true" /> 
