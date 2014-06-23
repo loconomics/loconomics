@@ -137,6 +137,7 @@ function initYourWorkDom() {
 
     /* Your work / photos */
     require('./dashboard/managePhotosUI').on('.DashboardYourWork');
+    setInstantSavingSection('.DashboardPhotos');
 
     /* Your work / reviews */
     $('.DashboardYourWork').on('ajaxSuccessPost', 'form', function (event, data) {

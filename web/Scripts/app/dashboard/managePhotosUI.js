@@ -95,7 +95,7 @@ function initElements(form) {
       // Get photo order, a comma separated value of items IDs
       var order = $(this).sortable("toArray").toString();
       // Set order in the form element, to be sent later with the form
-      $(this).closest(sectionSelector).find('[name=gallery-order]').val(order);
+      $(this).closest(sectionSelector).find('[name=gallery-order]').val(order).change();
     }
   });
 
