@@ -9,6 +9,8 @@
     var subform = Request["subform"].AsBool();
     var doReturn = PageState == ModelState && !subform;
     int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
 
     string photosFolder = "img/userphotos/u" + userID.ToString() + "/";
     Validation.Add("photo-caption", Validator.StringLength(50, 0, "Photo caption must be fewer than 50 characters."));
@@ -136,7 +138,7 @@
     Upload photos of 1600 x 1200 resolution or higher, with file sizes no larger than 2 MB.
 </p>
 
-    <fieldset class="DashboardPhotos ajax ajax-box" data-ajax-fieldset-action="@(formAction)" data-reload-mode="replace-content">
+    <fieldset class="DashboardPhotos ajax ajax-box" data-ajax-fieldset-action="@(formAction)" data-reload-mode="replace-content" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
         @* Quick&Dirty solution for the fieldset.ajax.submit using a hidden button, for the 'delete' photo task: *@
         <input type="submit" class="ajax-fieldset-submit" value="" style="display:none" />
 

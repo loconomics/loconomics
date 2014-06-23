@@ -7,7 +7,7 @@ var
   $ = require('jquery'),
   LcUrl = require('./LcUrl'),
   smoothBoxBlock = require('./smoothBoxBlock'),
-  ajaxCallbacks = require('./ajaxCallbacks');
+  ajaxCallbacks = require('LC/ajaxCallbacks');
 
 /** Constructor
 **/

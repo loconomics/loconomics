@@ -6,6 +6,11 @@
     var posID = (Request.Form["positionID"] ?? UrlData[1]).AsInt(-1);
     
     var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    if (!LcHelpers.InLive && Request["TESTING_SETONBOARDING"].AsBool()) {
+        PageData["IsInOnboarding"] = isInOnboarding = true;
+    }
+    
+    var onboardingValidationSummaryMessage = "You're not quite done with this step, but we've saved what you've completed! Log back in when you're ready to finish your profile.";
     
     // User Position record
     dynamic p = null;
@@ -68,51 +73,51 @@
         </div>
     } else {
 
-        <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$your-work/@(posID)/">
+        <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$your-work/@(posID)/@(Request.Url.Query)" @Html.Raw(isInOnboarding ? "data-post-validation='never'" : "")>
             <input type="hidden" name="positionID" value="@(posID)" />
 
             <div id="DashboardServices" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Describe your services</h2>
-                @RenderPage("YourWork/_$Services.cshtml", new { PageState = ModelState, Position = p })
+                @RenderPage("YourWork/$Services.cshtml", new { PageState = ModelState, Position = p, IsInOnboarding = isInOnboarding })
             </div>
 
             <div id="DashboardPricing" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Price your services</h2>
-                @RenderPage("YourWork/_$Pricing.cshtml", new { PageState = ModelState, Position = p })
+                @RenderPage("YourWork/_$Pricing.cshtml", new { PageState = ModelState, Position = p, IsInOnboarding = isInOnboarding })
             </div>
 
             <div id="DashboardCancellationPolicy" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Set your cancellation policy</h2>
-                @RenderPage("YourWork/_$CancellationPolicy.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+                @RenderPage("YourWork/$CancellationPolicy.cshtml", new { PageState = ModelState, PositionID = p.PositionID, IsInOnboarding = isInOnboarding })
             </div>
 
             <div id="DashboardSchedulingOptions" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Set your scheduling confirmation preferences</h2>
-                @RenderPage("YourWork/_$SchedulingOptions.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+                @RenderPage("YourWork/$SchedulingOptions.cshtml", new { PageState = ModelState, PositionID = p.PositionID, IsInOnboarding = isInOnboarding })
             </div>
 
             <div id="DashboardLocations" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Set your service location(s)</h2>
-                @RenderPage("YourWork/_$Locations.cshtml", new { PageState = ModelState, Position = p })
+                @RenderPage("YourWork/_$Locations.cshtml", new { PageState = ModelState, Position = p, IsInOnboarding = isInOnboarding })
             </div>
 
             <div id="DashboardLicenses" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Verify your professional certification(s)</h2>
-                @RenderPage("YourWork/_$Licenses.cshtml", new { PageState = ModelState, Position = p })
+                @RenderPage("YourWork/_$Licenses.cshtml", new { PageState = ModelState, Position = p, IsInOnboarding = isInOnboarding })
             </div>
 
             <div id="DashboardPhotos" class="DashboardSection-page-section">
                 <h2 class="DashboardSection-page-section-header">Upload up to 10 images of your work</h2>
-                @RenderPage("YourWork/$Photos.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+                @RenderPage("YourWork/$Photos.cshtml", new { PageState = ModelState, PositionID = p.PositionID, IsInOnboarding = isInOnboarding })
             </div>
 
             <div id="DashboardReviews" class="DashboardSection-page-section">
                 <h2 class="DashboardSection-page-section-header">Ask for reviews from past clients</h2>
-                @RenderPage("YourWork/_$Reviews.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+                @RenderPage("YourWork/_$Reviews.cshtml", new { PageState = ModelState, PositionID = p.PositionID, IsInOnboarding = isInOnboarding })
             </div>
 
             <div>
-                @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+                @Html.ValidationSummary(isInOnboarding ? onboardingValidationSummaryMessage : LcRessources.ValidationSummaryTitle)
             </div>
 
             <div class="actions">
