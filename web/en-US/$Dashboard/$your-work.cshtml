@@ -83,12 +83,12 @@
 
             <div id="DashboardCancellationPolicy" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Set your cancellation policy</h2>
-                @RenderPage("YourWork/_$CancellationPolicy.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+                @RenderPage("YourWork/$CancellationPolicy.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
             </div>
 
             <div id="DashboardSchedulingOptions" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Set your scheduling confirmation preferences</h2>
-                @RenderPage("YourWork/_$SchedulingOptions.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+                @RenderPage("YourWork/$SchedulingOptions.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
             </div>
 
             <div id="DashboardLocations" class="DashboardSection-page-section is-required">

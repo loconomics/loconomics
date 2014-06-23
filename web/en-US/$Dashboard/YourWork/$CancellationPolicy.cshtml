@@ -37,7 +37,7 @@
     We know that no-shows and last-minute cancellations are pain.
     Set your cancellation policy below---we'll enforce it for you.
 </p>
-<fieldset class="DashboardCancellationPolicy">
+<fieldset class="DashboardCancellationPolicy ajax ajax-box" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/YourWork/$CancellationPolicy/?PositionID=@(positionID)">
     <ul>
         @foreach (var policy in policies)
         {
