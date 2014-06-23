@@ -191,7 +191,7 @@ function ajaxFormsSubmitHandler(event) {
     });
 
     // Do post validation:
-    if (postValidation) {
+    if (postValidation && postValidation !== 'never') {
         request.done(function () {
             validateForm(ctx);
         });

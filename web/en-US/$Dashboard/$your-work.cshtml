@@ -73,7 +73,7 @@
         </div>
     } else {
 
-        <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$your-work/@(posID)/" @Html.Raw(isInOnboarding ? "data-post-validation='true'" : "")>
+        <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$your-work/@(posID)/@(Request.Url.Query)" @Html.Raw(isInOnboarding ? "data-post-validation='never'" : "")>
             <input type="hidden" name="positionID" value="@(posID)" />
 
             <div id="DashboardServices" class="DashboardSection-page-section is-required">
