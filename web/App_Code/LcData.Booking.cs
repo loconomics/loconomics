@@ -1506,12 +1506,12 @@ public static partial class LcData
 
             if (tranID != null && !tranID.StartsWith("TEST:"))
             {
-                if (tranID.StartsWith(LcPayment.TempSavedCardPrefix))
+                if (tranID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
                 {
                     // For saved cards, there is no transaction, we need to do
                     // one to refund money, or just delete the card if was a full-refund,
                     // all cases managed at LcPayment:
-                    var creditCard = tranID.Substring(LcPayment.TempSavedCardPrefix.Length);
+                    var creditCard = tranID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
                     result = LcPayment.DoTransactionToRefundFromCard(creditCard, refund, customerID, providerID);
                 }
                 else
