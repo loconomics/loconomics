@@ -7,8 +7,11 @@
     var doReturn = PageState == ModelState;
 
     var userId = WebSecurity.CurrentUserId;
+    
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    var isInstantSaving = Request["instantSaving"].AsBool(false);
 
-    if (IsPost && Validation.IsValid()) {
+    if (IsPost && (Validation.IsValid() || isInOnboarding)) {
         
         if (!Request["monthly"].IsEmpty()) {
             // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
@@ -26,11 +29,17 @@
             ModelState.AddFormError("There was not monthly schedule appointments to save, maybe an error?");
         }
     }
+    
+    if (isInstantSaving) {
+        // Avoid unneed processing, instant saving does not require output, just placeholder
+        @("<div/>")
+        return;
+    }
 }
 <p class="DashboardSection-page-section-introduction">
     Taking some days off? Select them here to ensure you're not booked.
 </p>
-<fieldset class="DashboardWeeklySchedule">
+<fieldset class="DashboardMonthlySchedule" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/Availability/$MonthlySchedule/?instantSaving=True" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
 
     @RenderPage(LcUrl.RenderLangPath + "Calendar/$Monthly.cshtml", new { User = userId, Editable = true })
 

@@ -111,6 +111,7 @@ function initAvailability(e) {
 
   // Instant saving
   setInstantSavingSection('.DashboardWeeklySchedule');
+  setInstantSavingSection('.DashboardMonthlySchedule');
 }
 
 /**
