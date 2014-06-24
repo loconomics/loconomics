@@ -332,6 +332,16 @@
         try{
             var gc = gateway.Customer.Find(LcPayment.GetCustomerId((int)c.UserID));
             savedCards = gc.CreditCards;
+            
+            // Filter credit cards to avoid the temporary ones
+            var filteredCards = new List<Braintree.CreditCard>();
+            foreach(var card in savedCards) {
+                if (card.Token != null && !card.Token.StartsWith(LcPayment.TempSavedCardPrefix)) {
+                    filteredCards.Add(card);
+                }
+            }
+            savedCards = filteredCards.ToArray<CreditCard>();
+
         } catch (Braintree.Exceptions.NotFoundException ex) {
         }
     }
@@ -453,7 +463,8 @@
         {
             <div class="saved-cards">
                 @*(Request["update-credit-card"].AsBool(false))*@
-                <input type="hidden" name="update-credit-card" value="@(Request["update-credit-card"] ?? "false")" />
+                <input type="hidden" name="update-credit-card" value="@(Request["update-credit-card"] ?? "False")" />
+                Update? @Request["update-credit-card"].AsBool()
                 <table>
                     <tr>
                         <th>Your saved payment options</th>
