@@ -2,7 +2,7 @@
     // Account/Payments
     LcHelpers.ProviderPage();
     
-    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? Request["onboarding"].AsBool(false));
 
     var returns = new Dictionary<string, object> {
         { "NeedsForm", false },
@@ -21,6 +21,7 @@
 
 <div class="DashboardPayments">
     <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$dashboard/$payments/">
+        <input type="hidden" name="onboarding" value="@(isInOnboarding)" />
 
         @* PaymentAccount and Form is internally divided in "DashboardSection-page-section" *@
         @RenderPage("Payments/$PaymentAccount.cshtml", new { PageState = ModelState, Returns = returns })

@@ -2,7 +2,7 @@
     // Tools/Calendar
     LcHelpers.ProviderPage();
     
-    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? Request["onboarding"].AsBool(false));
 
     // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }
@@ -16,6 +16,7 @@
 
 <div class="DashboardAvailability">
     <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$dashboard/$availability/">
+        <input type="hidden" name="onboarding" value="@(isInOnboarding)" />
 
         <div id="DashboardWeeklySchedule" class="DashboardSection-page-section is-required">
             <h2 class="DashboardSection-page-section-header">Set your weekly schedule</h2>

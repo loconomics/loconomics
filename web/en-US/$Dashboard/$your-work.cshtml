@@ -5,7 +5,7 @@
     // UrlData position on Get and Post.
     var posID = (Request.Form["positionID"] ?? UrlData[1]).AsInt(-1);
     
-    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? Request["onboarding"].AsBool(false));
     if (!LcHelpers.InLive && Request["TESTING_SETONBOARDING"].AsBool()) {
         PageData["IsInOnboarding"] = isInOnboarding = true;
     }
@@ -75,6 +75,7 @@
 
         <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$your-work/@(posID)/@(Request.Url.Query)" @Html.Raw(isInOnboarding ? "data-post-validation='never'" : "")>
             <input type="hidden" name="positionID" value="@(posID)" />
+            <input type="hidden" name="onboarding" value="@(isInOnboarding)" />
 
             <div id="DashboardServices" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Describe your services</h2>
