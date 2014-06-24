@@ -5,6 +5,9 @@
     var PageState = PageData["PageState"] ?? ModelState;
     var doReturn = PageState == ModelState;
     
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    var isInstantSaving = Request["instantSaving"].AsBool(false);
+    
     var WebsiteUrl = Request["website-url"] ?? u.ProviderWebsiteURL;
     
     if (IsPost && Validation.IsValid()) {
@@ -50,8 +53,14 @@
             }
         }
     }
+    
+    if (isInstantSaving) {
+        // Avoid unneed processing, instant saving does not require output, just placeholder
+        @("<div/>")
+        return;
+    }
 }
-<div class="DashboardPersonalWebsite">
+<div class="DashboardPersonalWebsite" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/AboutYou/$PersonalWebsite/?instantSaving=True" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
     <p class="DashboardSection-page-section-introduction">
         If you have your own website, let us know the URL. After you accept a booking,
         we'll send the link to clients to let them do some more research before their appointment.

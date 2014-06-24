@@ -95,6 +95,10 @@ function initAboutYou() {
     /* About you / verifications */
     require('./dashboard/verificationsActions').on('.DashboardVerifications');
     require('./dashboard/verificationsCrudl').on('.DashboardAboutYou');
+
+    // Instant saving
+    setInstantSavingSection('.DashboardPublicBio');
+    setInstantSavingSection('.DashboardPersonalWebsite');
 }
 
 function initAvailability(e) {
