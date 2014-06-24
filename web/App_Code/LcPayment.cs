@@ -153,6 +153,70 @@ public static class LcPayment
     }
 
     /// <summary>
+    /// Do a transaction ('sale') to be submitted and payed now for the remaining amounts
+    /// of a refund operation.
+    /// It allows records for total refunds, that situation is well managed internally.
+    /// The removal of a temporary card is performed on any case (with or without transaction because of total refund)
+    /// </summary>
+    /// <param name="creditCardToken"></param>
+    /// <param name="refund"></param>
+    /// <param name="customerID"></param>
+    /// <param name="providerID"></param>
+    /// <returns></returns>
+    public static string DoTransactionToRefundFromCard(string creditCardToken, dynamic refund, int customerID, int providerID)
+    {
+        string result = null;
+
+        try
+        {
+            var gateway = NewBraintreeGateway();
+
+            if (!refund.IsTotalRefund && refund.TotalRemaining != 0)
+            {
+                TransactionRequest request = new TransactionRequest
+                {
+                    Amount = refund.TotalRemaining,
+                    CustomerId = GetCustomerId(customerID),
+                    PaymentMethodToken = creditCardToken,
+                    // Now, with Marketplace #408, the receiver of the money for each transaction is
+                    // the provider through account at Braintree, and not the Loconomics account:
+                    //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+                    MerchantAccountId = GetProviderPaymentAccountId(providerID),
+                    // Marketplace #408: since provider receive the money directly, Braintree must discount
+                    // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
+                    ServiceFeeAmount = refund.FeeRemaining,
+                    Options = new TransactionOptionsRequest
+                    {
+                        // Marketplace #408: we normally hold it, but we are refunding so don't hold, pay at the moment
+                        HoldInEscrow = false,
+                        // Submit now
+                        SubmitForSettlement = true
+                    }
+                };
+
+                var r = gateway.Transaction.Sale(request);
+
+                result = r.IsSuccess() ? null : r.Message;
+            }
+
+            // Everything goes fine
+            if (result == null)
+            {
+                // If the card is a TEMPorarly card (just to perform this transaction)
+                // it must be removed now since was successful used
+                if (creditCardToken.StartsWith(TempSavedCardPrefix))
+                    gateway.CreditCard.Delete(creditCardToken);
+            }
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Prefix for the ID/Token of temporarly saved credit cards on Braintree Vault,
     /// for transactions that doesn't want to save it permanently.
     /// </summary>
