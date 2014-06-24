@@ -167,7 +167,7 @@ public static class LcPayment
     {
         BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
 
-        var isTemp = !String.IsNullOrEmpty(creditCardToken) && creditCardToken.StartsWith(TempSavedCardPrefix);
+        var isTemp = creditCardToken != null && creditCardToken.StartsWith(TempSavedCardPrefix);
 
         var creditCardRequest = new CreditCardRequest
         {
@@ -213,6 +213,7 @@ public static class LcPayment
         if (resultCreditCard.IsSuccess()) {
             // New Token
             creditCardToken = resultCreditCard.Target.Token;
+            ASP.LcHelpers.DebugLogger.Log("Created card {0}", creditCardToken);
         }
         else {
             return resultCreditCard.Message;

@@ -220,7 +220,7 @@
                                 
                                 // If is not a selected saved card and it does not want to save it
                                 // we create a temporary card per booking.
-                                if (!savePayment && String.IsNullOrWhiteSpace(creditCardToken)) {
+                                if (!Request["save-payment"].AsBool() && String.IsNullOrWhiteSpace(creditCardToken)) {
                                     // We need a temporary card token, we generate
                                     // one with the required prefix plus the environment
                                     // and BookingRequestID, its unique
@@ -229,7 +229,7 @@
                                     createCard = true;
                                 }
 
-                                if (createCard) {
+                                if (ModelState.IsValid && createCard) {
                                     // Save credit card, temporary or permanent for later transaction,
                                     // updating internally the value for creditCardToken
                                     var saveCardError = LcPayment.SaveCardInVault(
