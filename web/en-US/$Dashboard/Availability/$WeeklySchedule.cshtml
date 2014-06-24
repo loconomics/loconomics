@@ -8,12 +8,15 @@
 
     var userId = WebSecurity.CurrentUserId;
     
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    var isInstantSaving = Request["instantSaving"].AsBool(false);
+    
     // Data
     var advanceTime = 24M;
     var betweenTime = 0M;
     var allTime = false;
     
-    if (IsPost && Validation.IsValid()) {
+    if (IsPost && (Validation.IsValid() || isInOnboarding)) {
         
         allTime = Request["alltime"].AsBool();
         dynamic workhours = null;
@@ -65,6 +68,12 @@
                 }
             }
         }
+    }
+    
+    if (isInstantSaving) {
+        // Avoid unneed processing, instant saving does not require output, just placeholder
+        @("<div/>")
+        return;
     }
     
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
@@ -124,7 +133,7 @@
     </select>
 }
 
-<fieldset class="DashboardWeeklySchedule">
+<fieldset class="DashboardWeeklySchedule" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/Availability/$WeeklySchedule/?instantSaving=True" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
 
     <label class="DashboardWeeklySchedule-allTime"><input type="checkbox" name="alltime" value="True" @LcHelpers.IsChecked(true, Request["alltime"]) /> All days/times</label>
 

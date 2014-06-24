@@ -105,9 +105,12 @@ function initAvailability(e) {
     return;
 
   require('./dashboard/monthlySchedule').on();
-  require('./dashboard/weeklySchedule').on();
+  var weekly = require('./dashboard/weeklySchedule').on();
   require('./dashboard/calendarSync').on();
   require('./dashboard/appointmentsCrudl').on('.DashboardAvailability');
+
+  // Instant saving
+  setInstantSavingSection('.DashboardWeeklySchedule');
 }
 
 /**

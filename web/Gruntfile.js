@@ -134,7 +134,8 @@ module.exports = function (grunt) {
                         './Scripts/LC/availabilityCalendar/index.js:LC/availabilityCalendar',
                         './Scripts/LC/SimpleSlider.js:LC/SimpleSlider',
                         './Scripts/LC/ajaxForms.js:LC/ajaxForms',
-                        './Scripts/LC/ajaxCallbacks.js:LC/ajaxCallbacks'
+                        './Scripts/LC/ajaxCallbacks.js:LC/ajaxCallbacks',
+                        './Scripts/LC/batchEventHandler:LC/batchEventHandler'
                     ]
                 }
             },
@@ -159,7 +160,8 @@ module.exports = function (grunt) {
                         'LC/dateISO8601',
                         'LC/availabilityCalendar',
                         'LC/ajaxForms',
-                        'LC/ajaxCallbacks'
+                        'LC/ajaxCallbacks',
+                        'LC/batchEventHandler'
                     ]
                 }
             }
