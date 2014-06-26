@@ -342,148 +342,152 @@
 
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
-    <fieldset class="package-data">
-        <label class="package-name">
-            <span class="label-text">@config.NamePlaceHolder</span>
-            <input type="text" name="package-name" @Html.Raw(config.FixedName != null ? "readonly" : "") placeholder="@config.NamePlaceHolder" value="@(config.FixedName ?? Request["package-name"] ?? data.Name ?? config.SuggestedName)" />
-        </label>
-        @if (config.NumberOfSessionsLabel != null)
-        {
-            <label class="package-sessions">@(config.NumberOfSessionsLabel)
-                <input type="text" name="sessions-number" value="@(Request["sessions-number"] ?? data.NumberOfSessions.ToString())" />
-            </label>
-        }
-		@if (config.PriceLabel != null)
-		{
-			<label class="package-price">@config.PriceLabel @LcRessources.MoneySymbolPrefix
-				<input type="text" name="price" value="@(Request["price"] ?? data.Price.ToString())" /> @LcRessources.MoneySymbolSufix
-				@if (config.PriceNote != null) {
-					<span class="price-note">@config.PriceNote</span>
-				}
-			</label>
-        }
-		@if (config.DurationLabel != null)
-        {
-            <label class="package-duration">@config.DurationLabel
-                <input type="text" name="hours" value="@(Request["hours"] ?? (data.Duration.Hours + data.Duration.Days * 24).ToString())" /> hours
-				<input type="text" name="minutes" value="@(Request["minutes"] ?? data.Duration.Minutes.ToString())" /> minutes
-            </label>
-        }
-        @if (config.InPersonPhoneLabel != null){
-            <div class="inperson-phone">
-                @config.InPersonPhoneLabel
-                <label><input type="radio" name="inpersonphone" value="inperson" @LcHelpers.IsChecked("inperson", Request["inpersonphone"] ?? (data.IsPhone ? "phone" : "inperson")) /> in-person</label>
-                <label><input type="radio" name="inpersonphone" value="phone" @LcHelpers.IsChecked("phone", Request["inpersonphone"] ?? (data.IsPhone ? "phone" : "inperson")) /> phone</label>
-            </div>
-        }
-        @if (config.FirstTimeClientsOnlyLabel != null)
-        {
-            <label class="only-first-time-clients">
-                <input type="checkbox" name="first-time-clients-only" value="True" @LcHelpers.IsChecked(true, Request["first-time-clients-only"] ?? data.FirstTimeClientsOnly.ToString()) />
-                @config.FirstTimeClientsOnlyLabel
-            </label>
-        }
-		@if (config.Mod != null) {
-			@Html.Raw(config.Mod.GetProviderHtml(data));
-		}
-        <label class="package-description">
-            <span class="label-text">@(config.DescriptionPlaceHolder)</span>
-            <textarea name="package-description" placeholder="@config.DescriptionPlaceHolder">@(Request["package-description"] ?? data.Description)</textarea>
-        </label>
-    </fieldset>
-    @if (config.IncludeServiceAttributes)
-    {
-        // Splitting attributes in two blocks, checking if there are something
-        var preCheckedAttributes = new List<dynamic>();
-        var notCheckedAttributes = new List<dynamic>();
+    <div class="DashboardPricing-editor-fields">
 
-        if (attributes != null)
-        {
-            foreach (var att in attributes)
+        <fieldset class="package-data">
+            <label class="package-name">
+                <span class="label-text">@config.NamePlaceHolder</span>
+                <input type="text" name="package-name" @Html.Raw(config.FixedName != null ? "readonly" : "") placeholder="@config.NamePlaceHolder" value="@(config.FixedName ?? Request["package-name"] ?? data.Name ?? config.SuggestedName)" />
+            </label>
+            @if (config.NumberOfSessionsLabel != null)
             {
-                if (att.EligibleForPackages)
+                <label class="package-sessions">@(config.NumberOfSessionsLabel)
+                    <input type="text" name="sessions-number" value="@(Request["sessions-number"] ?? data.NumberOfSessions.ToString())" />
+                </label>
+            }
+		    @if (config.PriceLabel != null)
+		    {
+			    <label class="package-price">@config.PriceLabel @LcRessources.MoneySymbolPrefix
+				    <input type="text" name="price" value="@(Request["price"] ?? data.Price.ToString())" /> @LcRessources.MoneySymbolSufix
+				    @if (config.PriceNote != null) {
+					    <span class="price-note">@config.PriceNote</span>
+				    }
+			    </label>
+            }
+		    @if (config.DurationLabel != null)
+            {
+                <label class="package-duration">@config.DurationLabel
+                    <input type="text" name="hours" value="@(Request["hours"] ?? (data.Duration.Hours + data.Duration.Days * 24).ToString())" /> hours
+				    <input type="text" name="minutes" value="@(Request["minutes"] ?? data.Duration.Minutes.ToString())" /> minutes
+                </label>
+            }
+            @if (config.InPersonPhoneLabel != null){
+                <div class="inperson-phone">
+                    @config.InPersonPhoneLabel
+                    <label><input type="radio" name="inpersonphone" value="inperson" @LcHelpers.IsChecked("inperson", Request["inpersonphone"] ?? (data.IsPhone ? "phone" : "inperson")) /> in-person</label>
+                    <label><input type="radio" name="inpersonphone" value="phone" @LcHelpers.IsChecked("phone", Request["inpersonphone"] ?? (data.IsPhone ? "phone" : "inperson")) /> phone</label>
+                </div>
+            }
+            @if (config.FirstTimeClientsOnlyLabel != null)
+            {
+                <label class="only-first-time-clients">
+                    <input type="checkbox" name="first-time-clients-only" value="True" @LcHelpers.IsChecked(true, Request["first-time-clients-only"] ?? data.FirstTimeClientsOnly.ToString()) />
+                    @config.FirstTimeClientsOnlyLabel
+                </label>
+            }
+		    @if (config.Mod != null) {
+			    @Html.Raw(config.Mod.GetProviderHtml(data));
+		    }
+            <label class="package-description">
+                <span class="label-text">@(config.DescriptionPlaceHolder)</span>
+                <textarea name="package-description" placeholder="@config.DescriptionPlaceHolder">@(Request["package-description"] ?? data.Description)</textarea>
+            </label>
+        </fieldset>
+        @if (config.IncludeServiceAttributes)
+        {
+            // Splitting attributes in two blocks, checking if there are something
+            var preCheckedAttributes = new List<dynamic>();
+            var notCheckedAttributes = new List<dynamic>();
+
+            if (attributes != null)
+            {
+                foreach (var att in attributes)
                 {
-                    if (att.UserChecked)
+                    if (att.EligibleForPackages)
                     {
-                        preCheckedAttributes.Add(att);
-                    }
-                    else
-                    {
-                        notCheckedAttributes.Add(att);
+                        if (att.UserChecked)
+                        {
+                            preCheckedAttributes.Add(att);
+                        }
+                        else
+                        {
+                            notCheckedAttributes.Add(att);
+                        }
                     }
                 }
             }
-        }
-        if (preCheckedAttributes.Count > 0 || notCheckedAttributes.Count > 0)
-        {
-            <fieldset class="package-details">
-                <h5>Included services (you can add these if you think it will add clarity for the client):</h5>
-                <ul class="provider-package-services">
-                @foreach (var att in (preCheckedAttributes.Count > 0 ? preCheckedAttributes : notCheckedAttributes))
-                {
-                    <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
-                        <label><input name="package-service-attribute" type="checkbox" @LcHelpers.IsChecked(true, data.ServiceAttributes.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
-                    </li>
-                }
-                </ul>
-                @if (preCheckedAttributes.Count > 0 && notCheckedAttributes.Count > 0)
-                {
-                    <ul class="provider-package-services services-not-checked">
-
-                    @foreach (var att in notCheckedAttributes)
+            if (preCheckedAttributes.Count > 0 || notCheckedAttributes.Count > 0)
+            {
+                <fieldset class="package-details">
+                    <h5>Included services (you can add these if you think it will add clarity for the client):</h5>
+                    <ul class="provider-package-services">
+                    @foreach (var att in (preCheckedAttributes.Count > 0 ? preCheckedAttributes : notCheckedAttributes))
                     {
                         <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
                             <label><input name="package-service-attribute" type="checkbox" @LcHelpers.IsChecked(true, data.ServiceAttributes.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
                         </li>
                     }
                     </ul>
-                    <a href="#show-more-attributes" class="show-more-attributes" data-hide-text="Show fewer service options" data-show-text="Show more service options">Show fewer service options</a>
+                    @if (preCheckedAttributes.Count > 0 && notCheckedAttributes.Count > 0)
+                    {
+                        <ul class="provider-package-services services-not-checked">
+
+                        @foreach (var att in notCheckedAttributes)
+                        {
+                            <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
+                                <label><input name="package-service-attribute" type="checkbox" @LcHelpers.IsChecked(true, data.ServiceAttributes.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
+                            </li>
+                        }
+                        </ul>
+                        <a href="#show-more-attributes" class="show-more-attributes" data-hide-text="Show fewer service options" data-show-text="Show more service options">Show fewer service options</a>
+                    }
+                </fieldset>
+            }
+        }
+        @if(config.PriceRateQuantityLabel != null)
+        {
+            <fieldset class="fs-price-rate">
+                <label class="price-rate">@config.PriceRateQuantityLabel @LcRessources.MoneySymbolPrefix <input type="text" name="price-rate" value="@(Request["price-rate"] ?? (dynamic)data.PriceRate)" /> @LcRessources.MoneySymbolSufix</label>
+                @if(config.PriceRateUnitLabel != null)
+                {
+                    <label class="price-rate-unit">@config.PriceRateUnitLabel <input type="text" name="price-rate-unit" value="@(Request["price-rate-unit"] ?? data.PriceRateUnit)" /></label>
+                }
+                @if (config.PriceRateLearnMoreLabel != null && config.PriceRateLearnMoreText != null)
+                {
+                    <div class="price-rate-learn-more learn-more">
+                        <span data-tooltip-url="#price-rate-learn-more-@config.SlugName">(@config.PriceRateLearnMoreLabel)</span>
+                        <div class="popups"><div id="price-rate-learn-more-@config.SlugName">
+                            @config.PriceRateLearnMoreText
+                        </div></div>
+                    </div>
+                }
+                @if(config.NoPriceRateLabel != null) {
+                    <div class="no-price-rate">
+                        <label>@config.NoPriceRateLabel <input type="checkbox" name="no-price-rate" value="True" @LcHelpers.IsChecked(true, new object[]{Request["no-price-rate"], !(data == null || data.ID == 0 || data.PriceRate != null)}) /></label>
+                        @if (config.NoPriceRateLearnMoreLabel != null && config.NoPriceRateLearnMoreText != null)
+                        {
+                            <div class="no-price-rate-learn-more learn-more">
+                                <span data-tooltip-url="#no-price-rate-learn-more-@config.SlugName">(@config.NoPriceRateLearnMoreLabel)</span>
+                                <div class="popups"><div id="no-price-rate-learn-more-@config.SlugName">
+                                    @config.NoPriceRateLearnMoreText
+                                </div></div>
+                            </div>
+                        }
+                    </div>
                 }
             </fieldset>
         }
-    }
-    @if(config.PriceRateQuantityLabel != null)
-    {
-        <fieldset class="fs-price-rate">
-            <label class="price-rate">@config.PriceRateQuantityLabel @LcRessources.MoneySymbolPrefix <input type="text" name="price-rate" value="@(Request["price-rate"] ?? (dynamic)data.PriceRate)" /> @LcRessources.MoneySymbolSufix</label>
-            @if(config.PriceRateUnitLabel != null)
-            {
-                <label class="price-rate-unit">@config.PriceRateUnitLabel <input type="text" name="price-rate-unit" value="@(Request["price-rate-unit"] ?? data.PriceRateUnit)" /></label>
-            }
-            @if (config.PriceRateLearnMoreLabel != null && config.PriceRateLearnMoreText != null)
-            {
-                <div class="price-rate-learn-more learn-more">
-                    <span data-tooltip-url="#price-rate-learn-more-@config.SlugName">(@config.PriceRateLearnMoreLabel)</span>
-                    <div class="popups"><div id="price-rate-learn-more-@config.SlugName">
-                        @config.PriceRateLearnMoreText
-                    </div></div>
-                </div>
-            }
-            @if(config.NoPriceRateLabel != null) {
-                <div class="no-price-rate">
-                    <label>@config.NoPriceRateLabel <input type="checkbox" name="no-price-rate" value="True" @LcHelpers.IsChecked(true, new object[]{Request["no-price-rate"], !(data == null || data.ID == 0 || data.PriceRate != null)}) /></label>
-                    @if (config.NoPriceRateLearnMoreLabel != null && config.NoPriceRateLearnMoreText != null)
-                    {
-                        <div class="no-price-rate-learn-more learn-more">
-                            <span data-tooltip-url="#no-price-rate-learn-more-@config.SlugName">(@config.NoPriceRateLearnMoreLabel)</span>
-                            <div class="popups"><div id="no-price-rate-learn-more-@config.SlugName">
-                                @config.NoPriceRateLearnMoreText
-                            </div></div>
-                        </div>
-                    }
-                </div>
-            }
-        </fieldset>
-    }
-    @if(config.LearnMoreLabel != null && config.LearnMoreText != null)
-    {
-        <div class="learn-more">
-            <span data-tooltip-url="#learn-more-@config.SlugName">@config.LearnMoreLabel</span>
-            <div class="popups"><div id="learn-more-@config.SlugName">
-                @config.LearnMoreText
-            </div></div>
-        </div>
-    }
+        @if(config.LearnMoreLabel != null && config.LearnMoreText != null)
+        {
+            <div class="learn-more">
+                <span data-tooltip-url="#learn-more-@config.SlugName">@config.LearnMoreLabel</span>
+                <div class="popups"><div id="learn-more-@config.SlugName">
+                    @config.LearnMoreText
+                </div></div>
+            </div>
+        }
+    
+    </div>
 
     <div class="actions">
         <button type="button" class="button cancel-action crudl-cancel">Cancel</button>
