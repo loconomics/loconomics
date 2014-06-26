@@ -48,7 +48,7 @@
                 LcCalendar.SetAllTimeAvailability(userId);
             } else {
                 if (!LcCalendar.SaveWorkHoursJsonData(userId, workhours)) {
-                    PageState.AddFormError("LJDI: Your weekly schedule is required.");
+                    PageState.AddFormError("Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \"all days/times\".");
                 }
             }
 
