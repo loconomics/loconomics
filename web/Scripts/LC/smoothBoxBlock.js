@@ -50,7 +50,7 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         // to avoid some problems with layout on some edge cases almost
         // that may be not a problem during blocking but when unblocked.
         var prev = blocked.data('sbb-previous-css-position');
-        blocked.css('position', prev || 'static');
+        blocked.css('position', prev || '');
         blocked.data('sbb-previous-css-position', null);
 
         return;
