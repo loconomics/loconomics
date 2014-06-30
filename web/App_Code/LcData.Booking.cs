@@ -350,8 +350,15 @@ public static partial class LcData
 
                         E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
 
-                        P.ServiceDuration, P.SubtotalPrice, P.FeePrice, P.TotalPrice, P.PFeePrice,
-                        P.FeeRefunded, P.SubtotalRefunded, P.TotalRefunded, P.DateRefunded,
+                        coalesce(P.ServiceDuration, 0) As ServiceDuration,
+                        coalesce(P.SubtotalPrice, 0) As SubtotalPrice,
+                        coalesce(P.FeePrice, 0) As FeePrice,
+                        coalesce(P.TotalPrice, 0) As TotalPrice,
+                        coalesce(P.PFeePrice, 0) As PFeePrice,
+                        coalesce(P.SubtotalRefunded, 0) As SubtotalRefunded,
+                        coalesce(P.FeeRefunded, 0) As FeeRefunded,
+                        coalesce(P.TotalRefunded, 0) As TotalRefunded,
+                        P.DateRefunded As DateRefunded,
 
                         CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
                             WHERE URP.BookingID = B.BookingID
@@ -459,7 +466,11 @@ public static partial class LcData
                         coalesce(P.SubtotalPrice, 0) As SubtotalPrice,
                         coalesce(P.FeePrice, 0) As FeePrice,
                         coalesce(P.TotalPrice, 0) As TotalPrice,
-                        coalesce(P.PFeePrice, 0) As PFeePrice
+                        coalesce(P.PFeePrice, 0) As PFeePrice,
+                        coalesce(P.SubtotalRefunded, 0) As SubtotalRefunded,
+                        coalesce(P.FeeRefunded, 0) As FeeRefunded,
+                        coalesce(P.TotalRefunded, 0) As TotalRefunded,
+                        P.DateRefunded As DateRefunded
                 FROM    BookingRequest As R
                          INNER JOIN
                         PricingEstimate As P
@@ -893,15 +904,15 @@ public static partial class LcData
                 
                 case UserInfo.UserType.Customer:
 
-                    const string msgCustomerCanceled = "<em><strong>Your credit card has not been charged</strong></em> and the authorization should expire shortly.";
+                    const string msgCustomer = "<em><strong>Your credit card has not been charged</strong></em> and the authorization should expire shortly.";
 
                     switch ((int)booking.BookingRequestStatusID)
                     {
                         // Request complete, waiting for provider response
                         case 2:
-                            msg = @"Your card ending in {2} has been authorized for {0:c}. 
-                            You will be charged this amount only after {1} accepts one of your time preferences. 
-                            If he is unable to accept one of these times, your card will not be charged.
+                            msg = @"Your card ending in {2} will be authorized for {0:c}. 
+                            If your request is accepted (within 18 hours), we’ll charge your card the day {1}
+                            performs the scheduled services.
                             We'll withhold payment to {1} until after the service is completed.";
                             break;
                         // Request accepted, is a confirmed booking
@@ -921,13 +932,17 @@ public static partial class LcData
                                     break;
                                 // Cancelled by customer
                                 case 6:
-                                    msg = msgCustomerCanceled;
+                                    msg = GetBookingPaymentCustomerCancelledTemplate(booking);
                                     break;
                             }
                             break;
-                        // Any other case: incomplete request, expired, denied or cancelled:
+                        // Request cancelled
+                        case 4:
+                            msg = GetBookingPaymentCustomerCancelledTemplate(booking);
+                            break;
+                        // Any other case: incomplete request, expired, denied:
                         default:
-                            msg = msgCustomerCanceled;
+                            msg = msgCustomer;
                             break;
                     }
                     return String.Format(
@@ -944,6 +959,60 @@ public static partial class LcData
                 booking.PaymentDate ?? "<date not available>"
             );
         }
+
+        /// <summary>
+        /// Utility for use in GetBookingPaymentInformation when a booking/request is cancelled
+        /// by customer: message template for the customer
+        /// </summary>
+        /// <param name="booking"></param>
+        /// <param name="userType"></param>
+        /// <param name="itsUserData"></param>
+        /// <returns></returns>
+        public static string GetBookingPaymentCustomerCancelledTemplate(dynamic booking)
+        {
+            var t = "Your credit card has ben charged {0:c} ";
+
+            var fullAmount = booking.TotalPrice == booking.TotalRefunded;
+            var halfPercent = booking.SubtotalRefunded > 0 && booking.SubtotalPrice / 2 == booking.SubtotalRefunded;
+            var onlyFees = booking.FeeRefunded > 0 && booking.SubtotalRefunded == 0;
+            var inTime = true;
+
+            // Checking ConfirmedDateStart against the DateRefunded and the 'HoursRequired before booking'
+            // from the cancellation policy to know if cancellation was done in time or not.
+            // IMPORTANT: Dates from a BookingRequest are not checked since there is no support for
+            // customer cancellations previous booking confirmation.
+            if (N.D(booking.DateRefunded) != null &&
+                N.D(booking.ConfirmedDateStart) != null)
+            {
+                // Compare booking date with date refunded
+                using (var db = Database.Open("sqlloco"))
+                {
+                    var hours = db.QueryValue(@"
+                        SELECT  C.HoursRequired
+                        FROM    CancellationPolicy As C
+                        WHERE   C.CAncellationPolicyID = @0
+                    ", booking.CancellationPolicyID);
+
+                    inTime = booking.DateRefunded < booking.ConfirmedDateStart.AddHours(0 - hours);
+                }
+            }
+            
+            t += fullAmount ? "(full amount) " : "";
+            t += halfPercent ? "(50% plus booking fees) " : "";
+            t += onlyFees ? "(booking fees) " : "";
+
+            t += "per the cancellation policy below";
+
+            if (!inTime)
+            {
+                t += " as you did not cancel within the allotted time to receive any refund";
+            }
+
+            t += ".";
+
+            return t;
+        }
+
         /// <summary>
         /// Get a string in text-only format to be used as the CalendarEvent Description field with the
         /// details of the booking request (hidden still the contact data)
