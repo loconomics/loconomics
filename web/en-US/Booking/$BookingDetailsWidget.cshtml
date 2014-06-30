@@ -165,13 +165,29 @@ else
         }
 
         <h4 class="c-SectionTitle">@(myUserType == LcData.UserInfo.UserType.Provider ? "Payment" : "Pricing") Summary</h4>
-        @if (myUserType == LcData.UserInfo.UserType.Provider)
+        @if (booking.BookingRequestStatusID == 4 ||
+            booking.BookingStatusID > 0 && booking.BookingStatusID == 6)
         {
-            @LcPricingView.ProviderPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+            // Is a cancelled booking/request
+            if (myUserType == LcData.UserInfo.UserType.Provider)
+            {
+                @LcPricingView.ProviderCancellationPricingSummary(booking)
+            }
+            else if (myUserType == LcData.UserInfo.UserType.Customer)
+            {
+                @LcPricingView.CustomerCancellationPricingSummary(booking)
+            }
         }
-        else if (myUserType == LcData.UserInfo.UserType.Customer)
+        else
         {
-            @LcPricingView.CustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+            if (myUserType == LcData.UserInfo.UserType.Provider)
+            {
+                @LcPricingView.ProviderPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+            }
+            else if (myUserType == LcData.UserInfo.UserType.Customer)
+            {
+                @LcPricingView.CustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+            }
         }
 
         <h4 class="c-SectionTitle">Services Requested</h4>

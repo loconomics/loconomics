@@ -43,13 +43,29 @@
         @if (showPricing)
         {
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Pricing summary:</h5>
-            if (myUserType == "provider")
+            if (booking.BookingRequestStatusID == 4 ||
+                booking.BookingStatusID > 0 && booking.BookingStatusID == 6)
             {
-                @LcPricingView.EmailProviderPricingSummaryDetailed(pricingSummary, rpricingSummaryDetails)
+                // Is a cancelled booking/request
+                if (myUserType == "provider")
+                {
+                    @LcPricingView.EmailProviderCancellationPricingSummary(booking)
+                }
+                else if (myUserType == "customer")
+                {
+                    @LcPricingView.EmailCustomerCancellationPricingSummary(booking)
+                }
             }
-            else if (myUserType == "customer")
+            else
             {
-                @LcPricingView.EmailCustomerPricingSummaryDetailed(pricingSummary, rpricingSummaryDetails)
+                if (myUserType == "provider")
+                {
+                    @LcPricingView.EmailProviderPricingSummaryDetailed(pricingSummary, rpricingSummaryDetails)
+                }
+                else if (myUserType == "customer")
+                {
+                    @LcPricingView.EmailCustomerPricingSummaryDetailed(pricingSummary, rpricingSummaryDetails)
+                }
             }
         }
         
