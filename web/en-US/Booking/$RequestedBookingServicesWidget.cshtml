@@ -52,7 +52,7 @@
         {
             <h5>Pricing Summary</h5>
             if (booking.BookingRequestStatusID == 4 ||
-                booking.BookingStatusID > 0 && booking.BookingStatusID == 6)
+                booking.BookingID > 0 && booking.BookingStatusID == 6)
             {
                 // Is a cancelled booking/request
                 if (forUserType == LcData.UserInfo.UserType.Provider)

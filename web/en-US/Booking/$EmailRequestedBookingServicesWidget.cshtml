@@ -44,7 +44,7 @@
         {
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Pricing summary:</h5>
             if (booking.BookingRequestStatusID == 4 ||
-                booking.BookingStatusID > 0 && booking.BookingStatusID == 6)
+                booking.BookingID > 0 && booking.BookingStatusID == 6)
             {
                 // Is a cancelled booking/request
                 if (myUserType == "provider")

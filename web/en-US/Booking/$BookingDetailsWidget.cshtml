@@ -166,7 +166,7 @@ else
 
         <h4 class="c-SectionTitle">@(myUserType == LcData.UserInfo.UserType.Provider ? "Payment" : "Pricing") Summary</h4>
         @if (booking.BookingRequestStatusID == 4 ||
-            booking.BookingStatusID > 0 && booking.BookingStatusID == 6)
+            booking.BookingID > 0 && booking.BookingStatusID == 6)
         {
             // Is a cancelled booking/request
             if (myUserType == LcData.UserInfo.UserType.Provider)
