@@ -1573,38 +1573,51 @@ public static partial class LcData
         {
             string result = null;
 
-            if (tranID != null && !tranID.StartsWith("TEST:"))
+            try
             {
-                if (tranID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                if (tranID != null && !tranID.StartsWith("TEST:"))
                 {
-                    // For saved cards, there is no transaction, we need to do
-                    // one to refund money, or just delete the card if was a full-refund,
-                    // all cases managed at LcPayment:
-                    var creditCard = tranID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
-                    result = LcPayment.DoTransactionToRefundFromCard(creditCard, refund, customerID, providerID);
-                }
-                else
-                {
-                    // Different calls for total and partial refunds
-                    if (refund.IsTotalRefund)
+                    if (tranID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
                     {
-                        result = LcPayment.RefundTransaction(tranID);
+                        // For saved cards, there is no transaction, we need to do
+                        // one to refund money, or just delete the card if was a full-refund,
+                        // all cases managed at LcPayment:
+                        var creditCard = tranID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
+                        result = LcPayment.DoTransactionToRefundFromCard(creditCard, refund, customerID, providerID);
                     }
                     else
                     {
-                        // Partial refund could be given with zero amount to refund (because cancellation
-                        // policy sets no refund), execute payment partial refund only with no zero values
-                        if (refund.TotalRefunded != 0)
-                            result = LcPayment.RefundTransaction(tranID, refund.TotalRefunded);
-
-                        // Marketplace #408: just after refund to the customer its amount, pay the rest amount
-                        // to the provider (and fees to us)
-                        if (result == null)
-                            result = LcPayment.ReleaseTransactionFromEscrow(tranID);
+                        // Different calls for total and partial refunds
+                        if (refund.IsTotalRefund)
+                        {
+                            result = LcPayment.RefundTransaction(tranID);
+                        }
+                        else
+                        {
+                            // Partial refund could be given with zero amount to refund (because cancellation
+                            // policy sets no refund), execute payment partial refund only with no zero values
+                            if (refund.TotalRefunded != 0)
+                            {
+                                // Refund does the payment release
+                                result = LcPayment.RefundTransaction(tranID, refund.TotalRefunded);
+                            }
+                            else
+                            {
+                                // Marketplace #408: just after refund to the customer its amount, pay the rest amount
+                                // to the provider (and fees to us)
+                                if (result == null)
+                                    result = LcPayment.ReleaseTransactionFromEscrow(tranID);
+                            }
+                        }
                     }
-                }
 
+                }
             }
+            catch (Exception ex)
+            {
+                result = ex.Message;
+            }
+
             return result;
         }
 

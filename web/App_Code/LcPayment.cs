@@ -373,8 +373,7 @@ public static class LcPayment
             catch (Braintree.Exceptions.NotFoundException ex) { }
 
             if (transaction == null)
-                // It doesn't exists, 'refunded' ;)
-                return null;
+                return "Payment transaction doesn't exists, impossible to perform the refund.";
 
             if (transaction.Amount > 0)
             {
@@ -384,6 +383,11 @@ public static class LcPayment
                 {
                     // Partial refund transaction.
                     r = gateway.Transaction.Refund(transactionID, amount);
+
+                    // Marketplace #408: just after refund to the customer its amount, pay the rest amount
+                    // to the provider (and fees to us)
+                    if (r.IsSuccess())
+                        r = gateway.Transaction.ReleaseFromEscrow(transactionID);
                 }
                 else if (transaction.Status == TransactionStatus.AUTHORIZED ||
                     transaction.Status == TransactionStatus.AUTHORIZING ||
@@ -396,7 +400,11 @@ public static class LcPayment
                     var request = new TransactionCloneRequest
                     {
                         // Total original amount less refunded amount
-                        Amount = transaction.Amount.Value - amount
+                        Amount = transaction.Amount.Value - amount,
+                        Options = new TransactionOptionsCloneRequest
+                        {
+                            SubmitForSettlement = true
+                        }
                     };
                     Result<Transaction> newResult = gateway.Transaction.
                       CloneTransaction(transactionID, request);
@@ -420,6 +428,12 @@ public static class LcPayment
                             // Try to void new transaction
                             gateway.Transaction.Void(newTransactionID);
                         }
+                        else
+                        {
+                            // Marketplace #408: just after refund to the customer its amount, pay the rest amount
+                            // to the provider (and fees to us)
+                            r = gateway.Transaction.ReleaseFromEscrow(newTransactionID);
+                        }
                     }
                     else
                     {
@@ -428,8 +442,7 @@ public static class LcPayment
                 }
                 else
                 {
-                    // No transaction, no accepted, no charge, nothing to refund
-                    return null;
+                    return "Impossible to refund payment: unknow transaction status.";
                 }
             }
         }
