@@ -552,7 +552,9 @@ public class LcMessaging
     /// <param name="bySystemProviderOrCustomer"></param>
     /// <param name="onlyTo">'p' for provider and 'c' for customer. Will send the email only to that, or 'b' both by default</param>
     /// <param name="reminderType">Specify ONLY If the message is a Reminder. Set the kind of reminder (service, review-firstreminder, review)</param>
-    public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer, char onlyTo = 'b', string reminderType = null)
+    /// <param name="messageTypeID">the parameter bySystemProviderOrCustomer choose automatically a messageTypeID from the 'update' types, but when
+    /// another type is need that can be just specified here and will take precedence.</param>
+    public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer, char onlyTo = 'b', string reminderType = null, int? messageTypeID = null)
     {
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
@@ -577,6 +579,8 @@ public class LcMessaging
             // ThreadStatus=2, responded;
             // MessageType: 'p' provider 15, 'c' customer 16, 's' system 19
             int messageType = bySystemProviderOrCustomer == 'p' ? 15 : bySystemProviderOrCustomer == 'c' ? 16 : 19;
+            if (messageTypeID.HasValue)
+                messageType = messageTypeID.Value;
             int messageID = CreateMessage(thread.ThreadID, 2, messageType, message, BookingID, "Booking", subject);
 
             // default value and explicit value for Status:1
