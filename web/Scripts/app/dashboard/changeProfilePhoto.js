@@ -15,7 +15,7 @@ require('jquery.blockUI');
 exports.on = function (containerSelector) {
   var $c = $(containerSelector);
   $c.on('click', '[href="#change-profile-photo"]', function () {
-    popup(LcUrl.LangPath + 'dashboard/AboutYou/ChangePhoto/', { width: 240, height: 240 });
+    popup(LcUrl.LangPath + 'dashboard/AboutYou/ChangePhoto/', { width: 700, height: 600 }, null, null, { autoFocus: false });
     return false;
   });
 
