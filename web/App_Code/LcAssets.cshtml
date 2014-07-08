@@ -11,14 +11,14 @@
         set { assetsVersion = value; }
     }
     static public string AddVersion(string file, string extension) {
-        if (!String.IsNullOrEmpty(AssetsVersion)) {
-            if (file.EndsWith(extension)) {
-                return file.Replace(extension, "." + AssetsVersion + extension);
-            } else {
-                return file + "." + AssetsVersion + extension;
-            }
+        
+        var v = String.IsNullOrEmpty(AssetsVersion) ? "" : "." + AssetsVersion;
+
+        if (file.EndsWith(extension)) {
+            return file.Replace(extension, v + extension);
+        } else {
+            return file + v + extension;
         }
-        return file;
     }
 }
 
