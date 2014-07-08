@@ -46,12 +46,12 @@ public static class LcImaging
                 if (nPercentH < nPercentW)
                 {
                     nPercent = nPercentH;
-                    destX = System.Convert.ToInt16((Width - (sourceWidth * nPercent)) / 2);
+                    destX = (int)Math.Floor((Width - (sourceWidth * nPercent)) / 2);
                 }
                 else
                 {
                     nPercent = nPercentW;
-                    destY = System.Convert.ToInt16((Height - (sourceHeight * nPercent)) / 2);
+                    destY = (int)Math.Floor((Height - (sourceHeight * nPercent)) / 2);
                 }
                 break;
             case SizeMode.Cover:
@@ -64,11 +64,11 @@ public static class LcImaging
                             destY = 0;
                             break;
                         case AnchorPosition.End:
-                            destY = (int)
+                            destY = (int)Math.Floor
                                 (Height - (sourceHeight * nPercent));
                                 break;
                         default:
-                            destY = (int)
+                            destY = (int)Math.Floor
                                 ((Height - (sourceHeight * nPercent))/2);
                             break;
                     }
@@ -82,11 +82,11 @@ public static class LcImaging
                             destX = 0;
                             break;
                         case AnchorPosition.End:
-                            destX = (int)
+                            destX = (int)Math.Floor
                               (Width - (sourceWidth * nPercent));
                             break;
                         default:
-                            destX = (int)
+                            destX = (int)Math.Floor
                               ((Width - (sourceWidth * nPercent))/2);
                             break;
                     }
@@ -94,8 +94,8 @@ public static class LcImaging
                 break;
         }
 
-        int destWidth  = (int)(sourceWidth * nPercent);
-        int destHeight = (int)(sourceHeight * nPercent);
+        int destWidth  = (int)Math.Floor(sourceWidth * nPercent);
+        int destHeight = (int)Math.Floor(sourceHeight * nPercent);
 
         Bitmap bmPhoto = new Bitmap(Width, Height, 
                           PixelFormat.Format24bppRgb);
@@ -109,11 +109,41 @@ public static class LcImaging
                 InterpolationMode.HighQualityBicubic;
 
         grPhoto.DrawImage(imgPhoto, 
-            new Rectangle(destX,destY,destWidth,destHeight),
-            new Rectangle(sourceX,sourceY,sourceWidth,sourceHeight),
+            new Rectangle(destX, destY, destWidth, destHeight),
+            new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
             GraphicsUnit.Pixel);
 
         grPhoto.Dispose();
+        return bmPhoto;
+    }
+
+    public static Image Crop(
+        Image imgPhoto,
+        int startX,
+        int startY,
+        int Width,
+        int Height)
+    {
+        if (Width <= 0)
+        {
+            Width = imgPhoto.Width;
+        }
+        if (Height <= 0)
+        {
+            Height = imgPhoto.Height;
+        }
+
+        Bitmap bmPhoto = new Bitmap(Width, Height);
+        bmPhoto.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution);
+
+        using (Graphics grPhoto = Graphics.FromImage(bmPhoto))
+        {
+            grPhoto.SmoothingMode = SmoothingMode.AntiAlias;
+            grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            grPhoto.DrawImage(imgPhoto, new Rectangle(0, 0, Width, Height), startX, startY, Width, Height, GraphicsUnit.Pixel);
+        }
         return bmPhoto;
     }
     #endregion

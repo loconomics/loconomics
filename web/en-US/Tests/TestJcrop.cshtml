@@ -4,9 +4,129 @@
     
     LcAssets.AddStyle(LcUrl.AppPath + "/Scripts/jcrop/css/jquery.Jcrop", true);
     LcAssets.AddScript(LcUrl.AppPath + "/Scripts/jcrop/js/jquery.Jcrop", true);
+  
+    int userId = WebSecurity.IsAuthenticated ? WebSecurity.CurrentUserId : 0;
     
-    if (IsPost) {
+    string fileName = GetValidFileName(Request["fileName"]);
+    string basePath = "img/userphotos/u" + userId.ToString() + "/";
+    string virtualPath = LcUrl.RenderAppPath + basePath;
+    string photoUrl = LcUrl.AppPath + basePath + fileName;
+    
+    int step = String.IsNullOrEmpty(Request["fileName"]) ? 1 : 2;
 
+    if (IsPost) {
+        
+        if (step == 1) {
+
+            var photo = Request.Files["photo"];
+        
+            if (photo == null || String.IsNullOrEmpty(photo.FileName)) {
+                ModelState.AddFormError("Please, select an image");
+            }
+        
+            if (ModelState.IsValid) {
+            
+                fileName = GetValidFileName(photo.FileName);
+            
+                SavePhoto(photo.InputStream, virtualPath, fileName);
+
+                photoUrl = LcUrl.AppPath + basePath + fileName;
+
+                step = 2;
+            }
+        }
+        else if (step == 2) {
+            
+            CropPhoto(virtualPath, fileName, Request["x1"].AsInt(), Request["y1"].AsInt(), Request["w"].AsInt(), Request["h"].AsInt());
+
+            photoUrl = LcUrl.AppPath + basePath + fileName;
+        }
+    }
+
+    // With time stamp to avoid cache problems    
+    photoUrl += "?ts=" + DateTime.Now.ToString();
+}
+@functions {
+    string GetValidFileName(string fileName) {
+        // Names starting with $ are considered special for us, no allow user to upload a file with that character as prefix:
+        return String.IsNullOrEmpty(fileName) ? "photo" : System.IO.Path.ChangeExtension(fileName, ".jpg").TrimStart('$');
+    }
+    void CropPhoto(string virtualPath, string fileName, int startX, int startY, int width, int height) {
+        // Check folder or create
+        var folder = Server.MapPath(virtualPath);
+        if (!Directory.Exists(folder)) {
+            Directory.CreateDirectory(folder);
+        }
+        
+        // Use file as image
+        using (var srcImg = System.Drawing.Image.FromFile(folder + fileName)) {
+            
+            // Crop
+            var img = LcImaging.Crop(srcImg, startX, startY, width, height);
+            img = LcImaging.Resize(img, 200, 200, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center);
+            srcImg.Dispose();
+
+            // Save:
+            img.Save(folder + fileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+        }
+    }
+    void SavePhoto(Stream photo, string virtualPath, string fileName){
+        // Check folder or create
+        var folder = Server.MapPath(virtualPath);
+        if (!Directory.Exists(folder)) {
+            Directory.CreateDirectory(folder);
+        }
+                
+        //// Raw Save file on disk
+        //byte[] content = new byte[photo.Length];
+        //photo.Read(content, 0, (int)photo.Length);
+        //File.WriteAllBytes(folder + fileName, content);
+        //photo.Dispose();
+        
+        // Use file as image
+        using (var srcImg = System.Drawing.Image.FromStream(photo)) {
+            
+            // Resize
+            var img = LcImaging.Resize(srcImg, 200, 200, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center);
+            
+            // Save:
+            img.Save(folder + fileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+            
+        }
+    }
+    void SavePhoto(Stream photo, string virtualPath){
+        var avatarNamePrefix = "$avatar";
+        
+        // Check folder or create
+        var folder = Server.MapPath(virtualPath);
+        if (!Directory.Exists(folder)) {
+            Directory.CreateDirectory(folder);
+        }
+        
+        // Remove previous photos, original and sized/adapted, all start with avatarNamePrefix
+        // File.Delete doesn't allow wildcards, find and delete each one
+        foreach (var f in Directory.GetFiles(folder, avatarNamePrefix + "*", SearchOption.TopDirectoryOnly))
+            File.Delete(f);
+
+        // Save original photo as avatarNamePrefix in jpg format
+        using (var img = System.Drawing.Image.FromStream(photo)) {
+            img.Save(folder + avatarNamePrefix + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            /*byte[] content = new byte[photo.Length];
+            Request.InputStream.Read(content, 0, (int)photo.Length);
+            File.WriteAllBytes(folder + avatarNamePrefix, content);*/
+            photo.Dispose();
+        
+            // Save image with profile size (-176x184) and grayscale (-gray)
+            using (var modImg = LcImaging.Grayscale(LcImaging.Resize(img, 176, 184, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))) {
+                modImg.Save(folder + avatarNamePrefix + "-176x184-gray.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            // Same as previous but for hi-res 2x devices: (real pixel sizes is double, 352x368, but preserve the original size name to recognize it better adding the @2x suffix
+            using (var modImg = LcImaging.Grayscale(LcImaging.Resize(img, 352, 368, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))) {
+                modImg.Save(folder + avatarNamePrefix + "-176x184-gray@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            
+            // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
+        }
     }
 }
 <div>
@@ -55,19 +175,37 @@
             display: block;
         }
     </style>
-    <form method="post">
-        <img src="/source/en-US/Profile/Photo/141/" id="target" alt="[Jcrop Example]" />
-        <div id="coords" class="inline-labels">
-            <label>X1 <input type="text" size="4" id="x1" name="x1" /></label>
-            <label>Y1 <input type="text" size="4" id="y1" name="y1" /></label>
-            <label>X2 <input type="text" size="4" id="x2" name="x2" /></label>
-            <label>Y2 <input type="text" size="4" id="y2" name="y2" /></label>
-            <label>W <input type="text" size="4" id="w" name="w" /></label>
-            <label>H <input type="text" size="4" id="h" name="h" /></label>
-        </div>
+    <form method="post" enctype="multipart/form-data">
+        @Html.ValidationSummary()
 
-        <div class="actions">
-            <input type="submit" class="main-action" value="Upload and crop!" />
-        </div>
+        @if (step == 1)
+        {
+            <h3>Step 1</h3>
+            <label>Choose an image from your computer: <input type="file" name="photo" /></label>
+            
+            <div class="actions">
+                <input type="submit" class="main-action" value="Upload!" />
+            </div>
+        }
+        
+        @if (step == 2)
+        {
+            <h3>Step 2</h3>
+            <label>Crop image</label>
+            <img src="@photoUrl" id="target" alt="[Jcrop Example]" />
+            <input type="text" readonly value="@fileName" name="fileName" />
+            <div id="coords" class="inline-labels">
+                <label>X1 <input type="text" size="4" id="x1" name="x1" /></label>
+                <label>Y1 <input type="text" size="4" id="y1" name="y1" /></label>
+                <label>X2 <input type="text" size="4" id="x2" name="x2" /></label>
+                <label>Y2 <input type="text" size="4" id="y2" name="y2" /></label>
+                <label>W <input type="text" size="4" id="w" name="w" /></label>
+                <label>H <input type="text" size="4" id="h" name="h" /></label>
+            </div>
+            <div>@Request["x1"] @Request["y1"] @Request["w"] @Request["h"] @Server.MapPath(virtualPath) @fileName</div>
+            <div class="actions">
+                <input type="submit" class="main-action" value="crop!" />
+            </div>
+        }
     </form>
 </div>
