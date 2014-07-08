@@ -46,12 +46,12 @@ public static class LcImaging
                 if (nPercentH < nPercentW)
                 {
                     nPercent = nPercentH;
-                    destX = (int)Math.Floor((Width - (sourceWidth * nPercent)) / 2);
+                    destX = (int)((Width - (sourceWidth * nPercent)) / 2);
                 }
                 else
                 {
                     nPercent = nPercentW;
-                    destY = (int)Math.Floor((Height - (sourceHeight * nPercent)) / 2);
+                    destY = (int)((Height - (sourceHeight * nPercent)) / 2);
                 }
                 break;
             case SizeMode.Cover:
@@ -64,11 +64,11 @@ public static class LcImaging
                             destY = 0;
                             break;
                         case AnchorPosition.End:
-                            destY = (int)Math.Floor
+                            destY = (int)
                                 (Height - (sourceHeight * nPercent));
                                 break;
                         default:
-                            destY = (int)Math.Floor
+                            destY = (int)
                                 ((Height - (sourceHeight * nPercent))/2);
                             break;
                     }
@@ -82,11 +82,11 @@ public static class LcImaging
                             destX = 0;
                             break;
                         case AnchorPosition.End:
-                            destX = (int)Math.Floor
+                            destX = (int)
                               (Width - (sourceWidth * nPercent));
                             break;
                         default:
-                            destX = (int)Math.Floor
+                            destX = (int)
                               ((Width - (sourceWidth * nPercent))/2);
                             break;
                     }
@@ -94,8 +94,8 @@ public static class LcImaging
                 break;
         }
 
-        int destWidth  = (int)Math.Floor(sourceWidth * nPercent);
-        int destHeight = (int)Math.Floor(sourceHeight * nPercent);
+        int destWidth  = (int)(sourceWidth * nPercent);
+        int destHeight = (int)(sourceHeight * nPercent);
 
         Bitmap bmPhoto = new Bitmap(Width, Height, 
                           PixelFormat.Format24bppRgb);

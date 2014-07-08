@@ -12,6 +12,9 @@
     string virtualPath = LcUrl.RenderAppPath + basePath;
     string photoUrl = LcUrl.AppPath + basePath + fileName;
     
+    var fixedSizeWidth = 112;
+    var fixedSizeHeight = 118;
+    
     int step = String.IsNullOrEmpty(Request["fileName"]) ? 1 : 2;
 
     if (IsPost) {
@@ -37,7 +40,12 @@
         }
         else if (step == 2) {
             
-            CropPhoto(virtualPath, fileName, Request["x1"].AsInt(), Request["y1"].AsInt(), Request["w"].AsInt(), Request["h"].AsInt());
+            CropPhoto(virtualPath, fileName, 
+                (int)Math.Round(Request["x1"].AsDecimal()), 
+                (int)Math.Round(Request["y1"].AsDecimal()),
+                (int)Math.Round(Request["w"].AsDecimal()),
+                (int)Math.Round(Request["h"].AsDecimal())
+            );
 
             photoUrl = LcUrl.AppPath + basePath + fileName;
         }
@@ -63,7 +71,7 @@
             
             // Crop
             var img = LcImaging.Crop(srcImg, startX, startY, width, height);
-            img = LcImaging.Resize(img, 200, 200, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center);
+            img = LcImaging.Resize(img, 112, 118, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center);
             srcImg.Dispose();
 
             // Save:
@@ -86,8 +94,8 @@
         // Use file as image
         using (var srcImg = System.Drawing.Image.FromStream(photo)) {
             
-            // Resize
-            var img = LcImaging.Resize(srcImg, 200, 200, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center);
+            // Resize to maximum allowed size (but not upscale)
+            var img = LcImaging.Resize(srcImg, 500, 500, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center);
             
             // Save:
             img.Save(folder + fileName, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -137,10 +145,13 @@
 
             var jcrop_api;
 
-            $('#target').Jcrop({
+            var $t = $('#target');
+
+            $t.Jcrop({
                 onChange: showCoords,
                 onSelect: showCoords,
-                onRelease: clearCoords
+                onRelease: clearCoords,
+                aspectRatio: $t.data('target-width') / $t.data('target-height')
             }, function () {
                 jcrop_api = this;
             });
@@ -192,7 +203,7 @@
         {
             <h3>Step 2</h3>
             <label>Crop image</label>
-            <img src="@photoUrl" id="target" alt="[Jcrop Example]" />
+            <img src="@photoUrl" id="target" alt="[Jcrop Example]" data-target-width="@fixedSizeWidth" data-target-height="@fixedSizeHeight" />
             <input type="text" readonly value="@fileName" name="fileName" />
             <div id="coords" class="inline-labels">
                 <label>X1 <input type="text" size="4" id="x1" name="x1" /></label>
