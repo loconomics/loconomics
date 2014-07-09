@@ -905,7 +905,7 @@ form.has-changes .actions .main-action:hover,
 /* .item-action button, is the main-button equivalent for an item inside a list of items. */
 .actions .item-action {
     text-transform: lowercase;
-    background: #E44600 !important;
+    background: #E95D0F !important;
     font-size: 1em;
     line-height: 180%;
 }

@@ -350,8 +350,15 @@ public static partial class LcData
 
                         E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
 
-                        P.ServiceDuration, P.SubtotalPrice, P.FeePrice, P.TotalPrice, P.PFeePrice,
-                        P.FeeRefunded, P.SubtotalRefunded, P.TotalRefunded, P.DateRefunded,
+                        coalesce(P.ServiceDuration, 0) As ServiceDuration,
+                        coalesce(P.SubtotalPrice, 0) As SubtotalPrice,
+                        coalesce(P.FeePrice, 0) As FeePrice,
+                        coalesce(P.TotalPrice, 0) As TotalPrice,
+                        coalesce(P.PFeePrice, 0) As PFeePrice,
+                        coalesce(P.SubtotalRefunded, 0) As SubtotalRefunded,
+                        coalesce(P.FeeRefunded, 0) As FeeRefunded,
+                        coalesce(P.TotalRefunded, 0) As TotalRefunded,
+                        P.DateRefunded As DateRefunded,
 
                         CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
                             WHERE URP.BookingID = B.BookingID
@@ -459,7 +466,11 @@ public static partial class LcData
                         coalesce(P.SubtotalPrice, 0) As SubtotalPrice,
                         coalesce(P.FeePrice, 0) As FeePrice,
                         coalesce(P.TotalPrice, 0) As TotalPrice,
-                        coalesce(P.PFeePrice, 0) As PFeePrice
+                        coalesce(P.PFeePrice, 0) As PFeePrice,
+                        coalesce(P.SubtotalRefunded, 0) As SubtotalRefunded,
+                        coalesce(P.FeeRefunded, 0) As FeeRefunded,
+                        coalesce(P.TotalRefunded, 0) As TotalRefunded,
+                        P.DateRefunded As DateRefunded
                 FROM    BookingRequest As R
                          INNER JOIN
                         PricingEstimate As P
@@ -893,15 +904,15 @@ public static partial class LcData
                 
                 case UserInfo.UserType.Customer:
 
-                    const string msgCustomerCanceled = "<em><strong>Your credit card has not been charged</strong></em> and the authorization should expire shortly.";
+                    const string msgCustomer = "<em><strong>Your credit card has not been charged</strong></em> and the authorization should expire shortly.";
 
                     switch ((int)booking.BookingRequestStatusID)
                     {
                         // Request complete, waiting for provider response
                         case 2:
-                            msg = @"Your card ending in {2} has been authorized for {0:c}. 
-                            You will be charged this amount only after {1} accepts one of your time preferences. 
-                            If he is unable to accept one of these times, your card will not be charged.
+                            msg = @"Your card ending in {2} will be authorized for {0:c}. 
+                            If your request is accepted (within 18 hours), we’ll charge your card the day {1}
+                            performs the scheduled services.
                             We'll withhold payment to {1} until after the service is completed.";
                             break;
                         // Request accepted, is a confirmed booking
@@ -921,13 +932,17 @@ public static partial class LcData
                                     break;
                                 // Cancelled by customer
                                 case 6:
-                                    msg = msgCustomerCanceled;
+                                    msg = GetBookingPaymentCustomerCancelledTemplate(booking);
                                     break;
                             }
                             break;
-                        // Any other case: incomplete request, expired, denied or cancelled:
+                        // Request cancelled
+                        case 4:
+                            msg = GetBookingPaymentCustomerCancelledTemplate(booking);
+                            break;
+                        // Any other case: incomplete request, expired, denied:
                         default:
-                            msg = msgCustomerCanceled;
+                            msg = msgCustomer;
                             break;
                     }
                     return String.Format(
@@ -944,6 +959,60 @@ public static partial class LcData
                 booking.PaymentDate ?? "<date not available>"
             );
         }
+
+        /// <summary>
+        /// Utility for use in GetBookingPaymentInformation when a booking/request is cancelled
+        /// by customer: message template for the customer
+        /// </summary>
+        /// <param name="booking"></param>
+        /// <param name="userType"></param>
+        /// <param name="itsUserData"></param>
+        /// <returns></returns>
+        public static string GetBookingPaymentCustomerCancelledTemplate(dynamic booking)
+        {
+            var t = "Your credit card has ben charged {0:c} ";
+
+            var fullAmount = booking.TotalPrice == booking.TotalRefunded;
+            var halfPercent = booking.SubtotalRefunded > 0 && booking.SubtotalPrice / 2 == booking.SubtotalRefunded;
+            var onlyFees = booking.FeeRefunded > 0 && booking.SubtotalRefunded == 0;
+            var inTime = true;
+
+            // Checking ConfirmedDateStart against the DateRefunded and the 'HoursRequired before booking'
+            // from the cancellation policy to know if cancellation was done in time or not.
+            // IMPORTANT: Dates from a BookingRequest are not checked since there is no support for
+            // customer cancellations previous booking confirmation.
+            if (N.D(booking.DateRefunded) != null &&
+                N.D(booking.ConfirmedDateStart) != null)
+            {
+                // Compare booking date with date refunded
+                using (var db = Database.Open("sqlloco"))
+                {
+                    var hours = db.QueryValue(@"
+                        SELECT  C.HoursRequired
+                        FROM    CancellationPolicy As C
+                        WHERE   C.CAncellationPolicyID = @0
+                    ", booking.CancellationPolicyID);
+
+                    inTime = booking.DateRefunded < booking.ConfirmedDateStart.AddHours(0 - hours);
+                }
+            }
+            
+            t += fullAmount ? "(full amount) " : "";
+            t += halfPercent ? "(50% plus booking fees) " : "";
+            t += onlyFees ? "(booking fees) " : "";
+
+            t += "per the cancellation policy below";
+
+            if (!inTime)
+            {
+                t += " as you did not cancel within the allotted time to receive any refund";
+            }
+
+            t += ".";
+
+            return t;
+        }
+
         /// <summary>
         /// Get a string in text-only format to be used as the CalendarEvent Description field with the
         /// details of the booking request (hidden still the contact data)
@@ -1428,13 +1497,6 @@ public static partial class LcData
         #endregion
 
         #region Actions on bookings, modifications
-        #region SQLs
-        public const string sqlGetTransactionIDFromBookingRequest = @"
-            SELECT  PaymentTransactionID
-            FROM    BookingRequest
-            WHERE   BookingRequestID = @0
-        ";
-        #endregion
         /// <summary>
         /// Invalide a Booking Request setting it as 'cancelled', 'declined',
         /// or 'expired', preserving the main data but removing some unneded
@@ -1463,6 +1525,14 @@ public static partial class LcData
                     BookingRequestStatusID));
             }
 
+            var sqlGetTransactionAndUsers = @"
+                SELECT  PaymentTransactionID,
+                        CustomerUserID,
+                        ProviderUserID
+                FROM    BookingRequest
+                WHERE   BookingRequestID = @0
+            ";
+
             var sqlInvalidateBookingRequest = @"EXEC InvalidateBookingRequest @0, @1";
 
             using (var db = Database.Open("sqlloco"))
@@ -1470,34 +1540,13 @@ public static partial class LcData
                 // Check cancellation policy and get quantities to refund
                 var refund = GetCancellationAmountsForBookingRequest(BookingRequestID, BookingRequestStatusID, db);
 
-                // Get booking request TransactionID
-                string tranID = N.DE(db.QueryValue(sqlGetTransactionIDFromBookingRequest, BookingRequestID));
+                // Get booking info
+                var booking = db.QuerySingle(sqlGetTransactionAndUsers, BookingRequestID);
 
-                // if there is a valid transactionID -or is not a virtual testing id-, do the refund
-                if (tranID != null && !tranID.StartsWith("TEST:"))
-                {
-                    string result = null;
-                    // Different calls for total and partial refunds
-                    if (refund.IsTotalRefund)
-                    {
-                        result = LcPayment.RefundTransaction(tranID);
-                    }
-                    else
-                    {
-                        // Partial refund could be given with zero amount to refund (because cancellation
-                        // policy sets no refund), execute payment partial refund only with no zero values
-                        if (refund.TotalRefunded != 0)
-                            result = LcPayment.RefundTransaction(tranID, refund.TotalRefunded);
+                string result = ManageRefundTransaction(booking.PaymentTransactionID, refund, booking.CustomerUserID, booking.ProviderUserID);
 
-                        // Marketplace #408: just after refund to the customer its amount, pay the rest amount
-                        // to the provider (and fees to us)
-                        if (result == null)
-                            result = LcPayment.ReleaseTransactionFromEscrow(tranID);
-                    }
-
-                    if (result != null)
-                        return (dynamic)new { Error = 9999, ErrorMessage = result };
-                }
+                if (result != null)
+                    return (dynamic)new { Error = 9999, ErrorMessage = result };
 
                 // All goes fine with payment proccessing, continue
 
@@ -1510,6 +1559,68 @@ public static partial class LcData
                     BookingRequestStatusID);
             }
         }
+
+        /// <summary>
+        /// Given a database saved transactionID (can be a card identifier or nothing)
+        /// and a 'cancellation refund' record with amounts of money to refund and remaining,
+        /// it performs for either a booking or booking-request, the refund of
+        /// money for a cancellation.
+        /// </summary>
+        /// <param name="tranID"></param>
+        /// <param name="refund"></param>
+        /// <returns></returns>
+        public static string ManageRefundTransaction(string tranID, dynamic refund, int customerID, int providerID)
+        {
+            string result = null;
+
+            try
+            {
+                if (tranID != null && !tranID.StartsWith("TEST:"))
+                {
+                    if (tranID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                    {
+                        // For saved cards, there is no transaction, we need to do
+                        // one to refund money, or just delete the card if was a full-refund,
+                        // all cases managed at LcPayment:
+                        var creditCard = tranID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
+                        result = LcPayment.DoTransactionToRefundFromCard(creditCard, refund, customerID, providerID);
+                    }
+                    else
+                    {
+                        // Different calls for total and partial refunds
+                        if (refund.IsTotalRefund)
+                        {
+                            result = LcPayment.RefundTransaction(tranID);
+                        }
+                        else
+                        {
+                            // Partial refund could be given with zero amount to refund (because cancellation
+                            // policy sets no refund), execute payment partial refund only with no zero values
+                            if (refund.TotalRefunded != 0)
+                            {
+                                // Refund does the payment release
+                                result = LcPayment.RefundTransaction(tranID, refund.TotalRefunded);
+                            }
+                            else
+                            {
+                                // Marketplace #408: just after refund to the customer its amount, pay the rest amount
+                                // to the provider (and fees to us)
+                                if (result == null)
+                                    result = LcPayment.ReleaseTransactionFromEscrow(tranID);
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result = ex.Message;
+            }
+
+            return result;
+        }
+
         public class InvalidateBookingResult
         {
             public int Error = 0;
@@ -1530,8 +1641,10 @@ public static partial class LcData
                     BookingStatusID));
             }
 
-            var sqlGetTransactionID = @"
-                SELECT  PaymentTransactionID
+            var sqlGetTransactionAndUsers = @"
+                SELECT  BookingRequest.PaymentTransactionID,
+                        BookingRequest.CustomerUserID,
+                        BookingRequest.ProviderUserID
                 FROM    BookingRequest
                          INNER JOIN
                         Booking
@@ -1610,29 +1723,13 @@ public static partial class LcData
                 // Check cancellation policy and get quantities to refund
                 var refund = GetCancellationAmountsForBooking(BookingID, BookingStatusID, db);
 
-                // Get booking request TransactionID
-                string tranID = db.QueryValue(sqlGetTransactionID, BookingID);
+                // Get booking info
+                var booking = db.QuerySingle(sqlGetTransactionAndUsers, BookingID);
 
-                // if there is a valid transactionID -or is not a virtual testing id-, do the refund
-                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:"))
-                {
-                    string result = null;
-                    // Different calls for total and partial refunds
-                    if (refund.IsTotalRefund)
-                    {
-                        result = LcPayment.RefundTransaction(tranID);
-                    }
-                    else
-                    {
-                        // Partial refund could be given with zero amount to refund (because cancellation
-                        // policy sets no refund), execute payment partial refund only with no zero values
-                        if (refund.TotalRefunded != 0)
-                            result = LcPayment.RefundTransaction(tranID, refund.TotalRefunded);
-                    }
+                string result = ManageRefundTransaction(booking.PaymentTransactionID, refund, booking.CustomerUserID, booking.ProviderUserID);
 
-                    if (result != null)
-                        return new InvalidateBookingResult{ Error = 9999, ErrorMessage = result };
-                }
+                if (result != null)
+                    return new InvalidateBookingResult{ Error = 9999, ErrorMessage = result };
 
                 // All goes fine with payment proccessing, continue
 
@@ -1768,7 +1865,10 @@ public static partial class LcData
                     SubtotalRefunded = pricingAndPolicy.SubtotalPrice,
                     FeeRefunded = pricingAndPolicy.FeePrice,
                     TotalRefunded = pricingAndPolicy.TotalPrice,
-                    DateRefunded = DateTime.Now
+                    DateRefunded = DateTime.Now,
+                    SubtotalRemaining = 0M,
+                    FeeRemaining = 0M,
+                    TotalRemaining = 0M
                 };
             }
             else
@@ -1786,7 +1886,10 @@ public static partial class LcData
                         SubtotalRefunded = subr,
                         FeeRefunded = feer,
                         TotalRefunded = subr + feer,
-                        DateRefunded = DateTime.Now
+                        DateRefunded = DateTime.Now,
+                        SubtotalRemaining = (decimal)pricingAndPolicy.SubtotalPrice - subr,
+                        FeeRemaining = (decimal)pricingAndPolicy.FeePrice - feer,
+                        TotalRemaining = (decimal)pricingAndPolicy.TotalPrice - subr - feer
                     };
                 }
                 else
@@ -1801,7 +1904,10 @@ public static partial class LcData
                         // Fees never are refunded after limit date
                         FeeRefunded = 0,
                         TotalRefunded = subr,
-                        DateRefunded = DateTime.Now
+                        DateRefunded = DateTime.Now,
+                        SubtotalRemaining = (decimal)pricingAndPolicy.SubtotalPrice - subr,
+                        FeeRemaining = (decimal)pricingAndPolicy.FeePrice,
+                        TotalRemaining = (decimal)pricingAndPolicy.TotalPrice - subr
                     };
                 }
             }

@@ -45,8 +45,8 @@
 
             <p @LcEmailTemplateHelper.StyleResetP()>Hi @(info.CustomerUser.FirstName),<br/><br/>
             This is to confirm that you have successfully cancelled you booking with @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser).
-            Your card will be refunded as follows:
-            </p>           
+            Your card will be charged as follows:
+            </p>
 
             <h4 @LcEmailTemplateHelper.StyleH4("color: #E44600;")>Refund summary</h4>
             @LcPricingView.EmailCustomerCancellationPricingSummary(info.Booking)

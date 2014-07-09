@@ -153,6 +153,70 @@ public static class LcPayment
     }
 
     /// <summary>
+    /// Do a transaction ('sale') to be submitted and payed now for the remaining amounts
+    /// of a refund operation.
+    /// It allows records for total refunds, that situation is well managed internally.
+    /// The removal of a temporary card is performed on any case (with or without transaction because of total refund)
+    /// </summary>
+    /// <param name="creditCardToken"></param>
+    /// <param name="refund"></param>
+    /// <param name="customerID"></param>
+    /// <param name="providerID"></param>
+    /// <returns></returns>
+    public static string DoTransactionToRefundFromCard(string creditCardToken, dynamic refund, int customerID, int providerID)
+    {
+        string result = null;
+
+        try
+        {
+            var gateway = NewBraintreeGateway();
+
+            if (!refund.IsTotalRefund && refund.TotalRemaining != 0)
+            {
+                TransactionRequest request = new TransactionRequest
+                {
+                    Amount = refund.TotalRemaining,
+                    CustomerId = GetCustomerId(customerID),
+                    PaymentMethodToken = creditCardToken,
+                    // Now, with Marketplace #408, the receiver of the money for each transaction is
+                    // the provider through account at Braintree, and not the Loconomics account:
+                    //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+                    MerchantAccountId = GetProviderPaymentAccountId(providerID),
+                    // Marketplace #408: since provider receive the money directly, Braintree must discount
+                    // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
+                    ServiceFeeAmount = refund.FeeRemaining,
+                    Options = new TransactionOptionsRequest
+                    {
+                        // Marketplace #408: we normally hold it, but we are refunding so don't hold, pay at the moment
+                        HoldInEscrow = false,
+                        // Submit now
+                        SubmitForSettlement = true
+                    }
+                };
+
+                var r = gateway.Transaction.Sale(request);
+
+                result = r.IsSuccess() ? null : r.Message;
+            }
+
+            // Everything goes fine
+            if (result == null)
+            {
+                // If the card is a TEMPorarly card (just to perform this transaction)
+                // it must be removed now since was successful used
+                if (creditCardToken.StartsWith(TempSavedCardPrefix))
+                    gateway.CreditCard.Delete(creditCardToken);
+            }
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Prefix for the ID/Token of temporarly saved credit cards on Braintree Vault,
     /// for transactions that doesn't want to save it permanently.
     /// </summary>
@@ -167,7 +231,7 @@ public static class LcPayment
     {
         BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
 
-        var isTemp = !String.IsNullOrEmpty(creditCardToken) && creditCardToken.StartsWith(TempSavedCardPrefix);
+        var isTemp = creditCardToken != null && creditCardToken.StartsWith(TempSavedCardPrefix);
 
         var creditCardRequest = new CreditCardRequest
         {
@@ -213,6 +277,7 @@ public static class LcPayment
         if (resultCreditCard.IsSuccess()) {
             // New Token
             creditCardToken = resultCreditCard.Target.Token;
+            ASP.LcHelpers.DebugLogger.Log("Created card {0}", creditCardToken);
         }
         else {
             return resultCreditCard.Message;
@@ -308,8 +373,7 @@ public static class LcPayment
             catch (Braintree.Exceptions.NotFoundException ex) { }
 
             if (transaction == null)
-                // It doesn't exists, 'refunded' ;)
-                return null;
+                return "Payment transaction doesn't exists, impossible to perform the refund.";
 
             if (transaction.Amount > 0)
             {
@@ -319,6 +383,11 @@ public static class LcPayment
                 {
                     // Partial refund transaction.
                     r = gateway.Transaction.Refund(transactionID, amount);
+
+                    // Marketplace #408: just after refund to the customer its amount, pay the rest amount
+                    // to the provider (and fees to us)
+                    if (r.IsSuccess())
+                        r = gateway.Transaction.ReleaseFromEscrow(transactionID);
                 }
                 else if (transaction.Status == TransactionStatus.AUTHORIZED ||
                     transaction.Status == TransactionStatus.AUTHORIZING ||
@@ -331,7 +400,11 @@ public static class LcPayment
                     var request = new TransactionCloneRequest
                     {
                         // Total original amount less refunded amount
-                        Amount = transaction.Amount.Value - amount
+                        Amount = transaction.Amount.Value - amount,
+                        Options = new TransactionOptionsCloneRequest
+                        {
+                            SubmitForSettlement = true
+                        }
                     };
                     Result<Transaction> newResult = gateway.Transaction.
                       CloneTransaction(transactionID, request);
@@ -355,6 +428,12 @@ public static class LcPayment
                             // Try to void new transaction
                             gateway.Transaction.Void(newTransactionID);
                         }
+                        else
+                        {
+                            // Marketplace #408: just after refund to the customer its amount, pay the rest amount
+                            // to the provider (and fees to us)
+                            r = gateway.Transaction.ReleaseFromEscrow(newTransactionID);
+                        }
                     }
                     else
                     {
@@ -363,8 +442,7 @@ public static class LcPayment
                 }
                 else
                 {
-                    // No transaction, no accepted, no charge, nothing to refund
-                    return null;
+                    return "Impossible to refund payment: unknow transaction status.";
                 }
             }
         }

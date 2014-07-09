@@ -220,7 +220,7 @@
                                 
                                 // If is not a selected saved card and it does not want to save it
                                 // we create a temporary card per booking.
-                                if (!savePayment && String.IsNullOrWhiteSpace(creditCardToken)) {
+                                if (!Request["save-payment"].AsBool() && String.IsNullOrWhiteSpace(creditCardToken)) {
                                     // We need a temporary card token, we generate
                                     // one with the required prefix plus the environment
                                     // and BookingRequestID, its unique
@@ -229,7 +229,7 @@
                                     createCard = true;
                                 }
 
-                                if (createCard) {
+                                if (ModelState.IsValid && createCard) {
                                     // Save credit card, temporary or permanent for later transaction,
                                     // updating internally the value for creditCardToken
                                     var saveCardError = LcPayment.SaveCardInVault(
@@ -332,6 +332,16 @@
         try{
             var gc = gateway.Customer.Find(LcPayment.GetCustomerId((int)c.UserID));
             savedCards = gc.CreditCards;
+            
+            // Filter credit cards to avoid the temporary ones
+            var filteredCards = new List<Braintree.CreditCard>();
+            foreach(var card in savedCards) {
+                if (card.Token != null && !card.Token.StartsWith(LcPayment.TempSavedCardPrefix)) {
+                    filteredCards.Add(card);
+                }
+            }
+            savedCards = filteredCards.ToArray<CreditCard>();
+
         } catch (Braintree.Exceptions.NotFoundException ex) {
         }
     }
@@ -453,7 +463,8 @@
         {
             <div class="saved-cards">
                 @*(Request["update-credit-card"].AsBool(false))*@
-                <input type="hidden" name="update-credit-card" value="@(Request["update-credit-card"] ?? "false")" />
+                <input type="hidden" name="update-credit-card" value="@(Request["update-credit-card"] ?? "False")" />
+                Update? @Request["update-credit-card"].AsBool()
                 <table>
                     <tr>
                         <th>Your saved payment options</th>

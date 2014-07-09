@@ -9,6 +9,9 @@ var $ = require('jquery'),
   clearCurrentSelection = require('./clearCurrentSelection'),
   makeUnselectable = require('./makeUnselectable');
 require('../jquery.bounds');
+var events = {
+    dataChanged: 'dataChanged'
+};
 
 /**
 Work hours private utils
@@ -34,8 +37,10 @@ function setupEditWorkHours() {
     if (islot == -1)
       wkslots.push(strslot);
     else
-    //delete wkslots[islot];
+      //delete wkslots[islot];
       wkslots.splice(islot, 1);
+
+    that.events.emit(events.dataChanged, cell, slot);
   }
 
   function toggleCellRange(firstCell, lastCell) {

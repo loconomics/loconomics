@@ -322,7 +322,7 @@
                     //LcMessaging.SendProviderPaymentRequestToLoconomics(b.BookingID);
                     
                     // Notify customer and provider with an updated booking details:
-                    LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                    LcMessaging.SendBookingUpdate(b.BookingID, 's', 'b', null, 20);
                     
                     // Update MessagingLog for the booking
                     db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[48H Service Performed]");
@@ -395,7 +395,7 @@
                         // Send messages
                     
                         // Notify customer and provider with an updated booking details:
-                        LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                        LcMessaging.SendBookingUpdate(b.BookingID, 's', 'b', null, 21);
                     
                         // Update MessagingLog for the booking
                         db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment 120H New Provider]");
@@ -483,7 +483,7 @@
                         // Send messages
                     
                         // Notify customer and provider with an updated booking details:
-                        LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                        LcMessaging.SendBookingUpdate(b.BookingID, 's', 'b', null, 21);
                     
                         // Update MessagingLog for the booking
                         db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment 24H]");
