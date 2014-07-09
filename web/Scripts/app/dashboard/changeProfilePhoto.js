@@ -13,41 +13,49 @@ require('jquery.blockUI');
 // var ajaxForms = require('../LC/ajaxForms');
 
 exports.on = function (containerSelector) {
-  var $c = $(containerSelector);
-  $c.on('click', '[href="#change-profile-photo"]', function () {
-    popup(LcUrl.LangPath + 'dashboard/AboutYou/ChangePhoto/', { width: 700, height: 600 }, null, null, { autoFocus: false });
-    return false;
-  });
+    var $c = $(containerSelector),
+        userPhotoPopup;
 
-  // NOTE: We are exposing global functions from here because the server page/iframe expects this
-  // to work.
-  // TODO: refactor to avoid this way.
-  window.reloadUserPhoto = function reloadUserPhoto() {
-    $c.find('.DashboardPublicBio-photo .avatar').each(function () {
-      var src = this.getAttribute('src');
-      // avoid cache this time
-      src = src + "?v=" + (new Date()).getTime();
-      this.setAttribute('src', src);
+    $c.on('click', '[href="#change-profile-photo"]', function () {
+        userPhotoPopup = popup(LcUrl.LangPath + 'dashboard/AboutYou/ChangePhoto/', { width: 700, height: 600 }, null, null, { autoFocus: false });
+        return false;
     });
-  };
 
-  window.deleteUserPhoto = function deleteUserPhoto() {
-    $.blockUI(LC.blockPresets.loading);
-    $.ajax({
-      url: LcUrl.LangUrl + "dashboard/AboutYou/ChangePhoto/?delete=true",
-      method: "GET",
-      cache: false,
-      dataType: "json",
-      success: function (data) {
-        if (data.Code === 0)
-          $.blockUI(LC.blockPresets.info(data.Result));
-        else
-          $.blockUI(LC.blockPresets.error(data.Result.ErrorMessage));
-        $('.blockUI .close-popup').click(function () { $.unblockUI(); });
-        reloadUserPhoto();
-      },
-      error: ajaxErrorPopupHandler
-    });
-  };
+    // NOTE: We are exposing global functions from here because the server page/iframe expects this
+    // to work.
+    // TODO: refactor to avoid this way.
+    window.reloadUserPhoto = function reloadUserPhoto() {
+        $c.find('.DashboardPublicBio-photo .avatar').each(function () {
+            var src = this.getAttribute('src');
+            // avoid cache this time
+            src = src + "?v=" + (new Date()).getTime();
+            this.setAttribute('src', src);
+        });
+    };
+
+    window.closePopupUserPhoto = function closePopupUserPhoto() {
+        if (userPhotoPopup) {
+            userPhotoPopup.find('.close-popup').trigger('click');
+        }
+    };
+
+    window.deleteUserPhoto = function deleteUserPhoto() {
+        $.blockUI(LC.blockPresets.loading);
+        $.ajax({
+            url: LcUrl.LangUrl + "dashboard/AboutYou/ChangePhoto/?delete=true",
+            method: "GET",
+            cache: false,
+            dataType: "json",
+            success: function (data) {
+                if (data.Code === 0)
+                    $.blockUI(LC.blockPresets.info(data.Result));
+                else
+                    $.blockUI(LC.blockPresets.error(data.Result.ErrorMessage));
+                $('.blockUI .close-popup').click(function () { $.unblockUI(); });
+                reloadUserPhoto();
+            },
+            error: ajaxErrorPopupHandler
+        });
+    };
 
 };

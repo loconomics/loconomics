@@ -261,6 +261,10 @@
                 max-height: 120px !important;
                 overflow: auto;
             }
+            
+            #crop-photo .jcrop-holder {
+                margin: auto;
+            }
         </style>
 
         <script type="text/javascript">
@@ -312,6 +316,7 @@
                             // Avatar cropped, resized and saved!
                             window.parent.reloadUserPhoto();
                             $('#crop-photo').slideUp('fast');
+                            window.parent.closePopupUserPhoto();
                         },
                         error: function (xhr, er) {
                             alert('Sorry, there was an error setting-up your photo. ' + (er || ''));
@@ -376,9 +381,9 @@
                         <input type="hidden" id="w" name="w" />
                         <input type="hidden" id="h" name="h" />
                     </div>
-                    <div class="actions">
+                    <div>
                         <input type="hidden" name="save-avatar" value="True" />
-                        <input type="submit" class="main-action" value="Ready!" />
+                        <input type="submit" class="qq-upload-button" value="Ready!" />
                     </div>
                 </form>
             </div>
