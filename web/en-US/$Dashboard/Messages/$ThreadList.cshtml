@@ -21,102 +21,102 @@
 
     public dynamic getMessageStatusConfig(dynamic item, string senderUserType) {
         
-        string buttonAction = "view", buttonLabel = "View";
+        string buttonClass = "view", buttonLabel = "View";
         
         if (senderUserType == "customer") {
             switch ((int)item.MessageThreadStatusID){
                 case 1:
-                    buttonAction = "respond";
+                    buttonClass = "respond";
                     buttonLabel = "Respond";
                     break;
                 case 2:
-                    buttonAction = "responded";
+                    buttonClass = "responded info-action";
                     buttonLabel = "Responded";
                     break;
             }
         } else if (senderUserType == "provider") {
             switch ((int)item.MessageThreadStatusID){
                 case 1:
-                    buttonAction = "waiting-respond";
+                    buttonClass = "waiting-respond";
                     buttonLabel = "Waiting";
                     break;
                 case 2:
-                    buttonAction = "responded";
+                    buttonClass = "responded info-action";
                     buttonLabel = "Responded";
                     break;
             }
         }
     
         return new {
-            buttonAction = buttonAction,
+            buttonClass = buttonClass,
             buttonLabel = buttonLabel
         };
     }
 
     public dynamic getBookingStatusConfig(dynamic item, string senderUserType) {
     
-        string buttonAction = "view", buttonLabel = "View";
+        string buttonClass = "view", buttonLabel = "View";
     
         switch ((int)item.LastMessageTypeID){
             case 4:
             case 5:
                 if (senderUserType == "customer") {
-                    buttonAction = "respond";
+                    buttonClass = "respond";
                     buttonLabel = "Respond";
                 } else {
-                    buttonAction = "waiting-respond";
+                    buttonClass = "waiting-respond info-action";
                     buttonLabel = "Waiting";
                 }
                 break;
             case 6:
             case 7:
-                buttonAction = "confirmed";
+                buttonClass = "confirmed success-action";
                 buttonLabel = "Confirmed";
                 break;
             case 9:
-                buttonAction = "dispute";
+                buttonClass = "dispute failure-action";
                 buttonLabel = "Dispute";
                 break;
             case 10:
-                buttonAction = "resolution";
+                buttonClass = "resolution";
                 buttonLabel = "Resolution";
                 break;
             case 12:
-                buttonAction = "adjustment";
+                buttonClass = "adjustment";
                 buttonLabel = "Adjustment";
                 break;
             case 13:
-                buttonAction = "declined";
+                buttonClass = "declined failure-action";
                 buttonLabel = "Declined";
                 break;
             case 14:
-                buttonAction = "cancelled";
+                buttonClass = "cancelled failure-action";
                 buttonLabel = "Cancelled";
                 break;
             case 15:
             case 16:
             case 19:
-                buttonAction = "view";
+                buttonClass = "view";
                 buttonLabel = "View";
                 break;
             case 17:
             case 18:
-                buttonAction = "review";
+                buttonClass = "review";
                 buttonLabel = "Review";
                 break;
                 
             case 20:
-                buttonAction = "service-performed";
+                buttonClass = "service-performed success-action";
                 buttonLabel = "Done";
                 break;
             case 21:
-                buttonAction = "closed";
+                buttonClass = "closed success-action";
                 buttonLabel = "Closed";
                 break;
         }
     
         return new {
-            buttonAction = buttonAction,
+            buttonClass = buttonClass,
             buttonLabel = buttonLabel
         };
     }
@@ -184,7 +184,7 @@
             
             var summary = new LcMessaging.MessageSummary(item, WebSecurity.CurrentUserId);
         }
-        <a class="item-action @statusConfig.buttonAction" href="@(summary.GetMessageUrl())">@statusConfig.buttonLabel</a>
+        <a class="item-action @statusConfig.buttonClass" href="@(summary.GetMessageUrl())">@statusConfig.buttonLabel</a>
         <div class="date item-extra-info">@item.LastMessageDate</div>
     </div>
   </li>

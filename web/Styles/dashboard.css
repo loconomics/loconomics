@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-06-26
+/*! Loconomics.com 2014-07-09
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -4460,32 +4460,51 @@ form ul li {
   margin: 6px 0 0;
 }
 
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
-.ItemsList .actions .item-action.responded {
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .actions .item-action.info-action {
   background: #f0b600 !important;
 }
 
-/* line 41 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
-.ItemsList .actions .item-action.responded:hover {
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .actions .item-action.info-action:hover {
   -webkit-box-shadow: 0 0 5px 2px #f0b600;
   box-shadow: 0 0 5px 2px #f0b600;
-  -moz-box-shadow: 0 0 5px 2px #f0b600;
-  -o-box-shadow: 0 0 5px 2px #f0b600;
-  -webkit-box-shadow: 0 0 5px 2px #f0b600;
 }
 
-/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .actions .item-action.success-action {
+  background: #99c027 !important;
+}
+
+/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .actions .item-action.success-action:hover {
+  -webkit-box-shadow: 0 0 5px 2px #99c027;
+  box-shadow: 0 0 5px 2px #99c027;
+}
+
+/* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .actions .item-action.failure-action {
+  background: #e44600 !important;
+}
+
+/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .actions .item-action.failure-action:hover {
+  -webkit-box-shadow: 0 0 5px 2px #e44600;
+  box-shadow: 0 0 5px 2px #e44600;
+}
+
+/* line 62 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
 .ItemsList .items-groups-list > li > h3 {
   font-size: 1.1em;
   color: #6c6c6c;
 }
 
-/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
 .ItemsList .items-groups-list > li > h3 > .items-count {
   color: #e44600;
 }
 
-/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
 .ItemsList .item-summary > li {
   overflow: hidden;
   -o-text-overflow: ellipsis;
@@ -4493,13 +4512,13 @@ form ul li {
   white-space: nowrap;
 }
 
-/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+/* line 76 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
 .ItemsList .item-summary > li.long-details {
   white-space: normal;
   height: 40px;
 }
 
-/* line 68 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+/* line 80 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
 .ItemsList .item-summary > li > h5 {
   color: #e44600;
   display: inline;
@@ -4598,7 +4617,7 @@ form ul li {
   background-color: #b5e1e2;
 }
 
-/* line 75 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\todos.styl */
+/* line 87 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\todos.styl */
 
 /* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 

@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-06-26
+/*! Loconomics.com 2014-07-09
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -907,7 +907,7 @@ form.has-changes .actions .main-action:hover,
 /* .item-action button, is the main-button equivalent for an item inside a list of items. */
 .actions .item-action {
     text-transform: lowercase;
-    background: #E44600 !important;
+    background: #E95D0F !important;
     font-size: 1em;
     line-height: 180%;
 }
@@ -3039,12 +3039,12 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-06-26
+/*! Loconomics.com 2014-07-09
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.
