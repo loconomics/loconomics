@@ -102,7 +102,7 @@
     bool processed = false;
     string basePath = "img/userphotos/u" + userId.ToString() + "/";
     string virtualPath = LcUrl.RenderAppPath + basePath;
-    string editableAvatarUrl = LcUrl.AppPath + basePath + avatarName + ".jpg";
+    string editableAvatarUrl = LcUrl.AppPath + basePath + avatarName + ".jpg?v=" + DateTime.Now.ToString().Replace(" ", "");
     
     var cropSaveAvatar = Request["save-avatar"].AsBool();
     
@@ -114,6 +114,9 @@
             (int)Math.Round(Request["w"].AsDecimal()),
             (int)Math.Round(Request["h"].AsDecimal())
         );
+        
+        // File saved, change the user preference at the database:
+        UpdateDb(userId, true);
         
         Json.Write(
             new Dictionary<string, object>(){
@@ -230,14 +233,32 @@
         }
     }
 }
+@{
+    // Main assets that allow minification
+    var styleCss = "Styles/common";
+    var loadScripts = new List<string>();
+    // Enabled only on dev
+    if (LcHelpers.InDev) {
+        loadScripts.Add("libs.js");
+        loadScripts.Add("app.js");
+        styleCss += ".css";
+    } else {
+        loadScripts.Add("common.min.js");
+        styleCss += ".min.css";
+    }
+}
 <html>
     <head>
         @*<script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
             Jquery its already in common.min.js, and we reuse that because is already cached by the client browser.
         *@
-        <script src="@Href(LcUrl.AppPath + "Scripts/common.min.js")" type="text/javascript"></script>
+        @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
+        @foreach (var js in loadScripts)
+        {
+            @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/" + js)
+        }
+
         <script src="@Href(LcUrl.AppPath + "Scripts/fileuploader/fileuploader.js")" type="text/javascript"></script>
-        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Scripts/fileuploader/fileuploader.css")" />
 
         <script src="@Href(LcUrl.AppPath + "Scripts/jcrop/js/jquery.Jcrop.min.js")" type="text/javascript"></script>
         <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Scripts/jcrop/css/jquery.Jcrop.min.css")" />
@@ -246,24 +267,13 @@
             @Html.Raw(LcUrl.ToJsVar())
         </script>
         <style type="text/css">
+            html:after,
+            html:before {
+                display: none;
+            }
             body {
                 font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
-            }
-            .qq-upload-button {
-                width: 100%;
-                border: none;
-                display: block;
-                font-size: 1em;
-                cursor: pointer;
-            }
-            .qq-upload-list {
-                margin: 15px 0 !important;
-                max-height: 120px !important;
-                overflow: auto;
-            }
-            
-            #crop-photo .jcrop-holder {
-                margin: auto;
+                padding: 1em;
             }
         </style>
 
@@ -292,7 +302,7 @@
                         onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
                     },
                     sizeLimit: @(sizeLimit > 0 ? sizeLimit.ToString() : "undefined"),
-                    template: '<div class="qq-uploader">' + 
+                    template: '<div class="qq-uploader actions">' + 
                             '<div class="qq-upload-drop-area"><span>Drop a file here to upload</span></div>' +
                             '<div class="qq-upload-button">Choose a photo</div>' +
                             '<ul class="qq-upload-list"></ul>' + 
@@ -325,17 +335,37 @@
                 });
 
                 // Setup img cropping
-                var $t = $('#cropimg');
-                $t.Jcrop({
+                var $img = $('#cropimg');
+                $img.Jcrop({
                     onChange: showCoords,
                     onSelect: showCoords,
                     onRelease: clearCoords,
-                    aspectRatio: $t.data('target-width') / $t.data('target-height')
+                    aspectRatio: $img.data('target-width') / $img.data('target-height')
                 }, function () {
                     jcrop_api = this;
                     // Initial selection to show user that can choose an area
-                    jcrop_api.setSelect([0, 0, $t.data('target-width'), $t.data('target-height')]);
+                    if ($img.height() > 0)
+                        jcrop_api.setSelect([0, 0, $img.width(), $img.height()]);
+                    else
+                        $img.on('load', function () {
+                            jcrop_api.setSelect([0, 0, $img.width(), $img.height()]);
+                        });
                 });
+
+                // Enable crop editor
+                var $cp = $('#crop-photo');
+                // If an image is loaded, show up the cropping tool
+                function showEditorIfImage() {
+                    if ($img.height() > 30) {
+                        $cp.slideDown('fast');
+                        return true;
+                    }
+                    else return false;
+                }
+                if (!showEditorIfImage()) {
+                    // Show on image load, if any
+                    $img.on('load', showEditorIfImage);
+                }
             });
 
             // Simple event handler, called from onChange and onSelect
@@ -367,11 +397,12 @@
         </script>
     </head>
     <body>
-        <div class="change-photo">
-            <div id="change-photo-file-uploader">
+        <div class="change-photo FileUploader">
+            <div id="change-photo-file-uploader" class="FileUploader-uploader">
             </div>
-            <div id="crop-photo" style="display:none">
-                <img src="@editableAvatarUrl" id="cropimg" data-target-width="@fixedSizeWidth" data-target-height="@fixedSizeHeight" />
+            <div id="crop-photo" class="FileUploader-editor" style="display:none">
+                <p>Please use the tool below to crop your photo</p>
+                <img src="@editableAvatarUrl" id="cropimg" data-target-width="@fixedSizeWidth" data-target-height="@fixedSizeHeight" alt="Edit photo" />
                 <form action="@(LcUrl.LangPath)$dashboard/AboutYou/ChangePhoto/" method="post">
                     <div id="coords">
                         <input type="hidden" id="x1" name="x1" />
@@ -381,14 +412,14 @@
                         <input type="hidden" id="w" name="w" />
                         <input type="hidden" id="h" name="h" />
                     </div>
-                    <div>
+                    <div class="actions">
                         <input type="hidden" name="save-avatar" value="True" />
-                        <input type="submit" class="qq-upload-button" value="Ready!" />
+                        <input type="submit" class="save-photo-action" value="Save photo changes" />
                     </div>
                 </form>
             </div>
-            <div id="delete-photo">
-                <button type="button" class="qq-upload-button">Remove photo</button>
+            <div id="delete-photo" class="actions FileUploader-removal">
+                <button type="button" class="remove-photo-action">Remove photo</button>
                 <script type="text/javascript">
                     jQuery('#delete-photo > button').click(function () {
                         window.parent.deleteUserPhoto();
