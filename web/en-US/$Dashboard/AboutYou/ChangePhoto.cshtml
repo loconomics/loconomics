@@ -25,6 +25,20 @@
         }
     }
     
+    void DeletePhoto(int userId, string virtualPath) {
+        
+        UpdateDb(userId, false);
+        
+        var folder = Server.MapPath(virtualPath);
+
+        foreach (var f in Directory.GetFiles(folder, avatarName + "*", SearchOption.TopDirectoryOnly)) {
+            try {
+                File.Delete(f);
+            }
+            catch {}
+        }
+    }
+    
     /// <summary>
     /// Save the uploaded photo as an image on the user folder
     /// with a greater size than usual but limited,
@@ -129,10 +143,9 @@
     else {
         // Delete file support:
         if (Request["delete"].AsBool()) {
-            // We don't need the upload staff here, simply update database removing all file, both
-            // managed by next common function:
-            UpdateDb(userId, false);
-        
+            // Remove photo files (all 'avatar-*' files) an update db
+            DeletePhoto(userId, virtualPath);
+
             LcHelpers.ReturnJsonResult(0, "Photo was removed");
         }
     
