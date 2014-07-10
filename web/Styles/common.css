@@ -206,7 +206,7 @@ td { vertical-align: top; }
 Teal	#00989A
 Lt Teal #b5e1e2
 Green	#99C027
-Red 	#E44600
+Red 	#fc0404 --#E44600
 Purple 	#461864
 Blue 	#006A8D
 Orange 	#E95D0F
@@ -320,7 +320,7 @@ form textarea:focus{
     outline: none;
 }
 form input[type="text"].error, form input[type="password"].error {
-    background: #E44600;
+    background: #fc0404;/*$colorRed*/
     color: #fff;
 }
 form select:focus,
@@ -446,7 +446,7 @@ ul.collection { margin: 0; padding: 0; }
 ul.collection.empty { border: 1px dashed #ccc; }
 ul.collection li { list-style-type: none; margin: 0 .5em .5em 0; padding: .1em 1em; display: inline-block; background: #efefef; }
 ul.collection li:before { content: "• "; }
-ul.collection li:hover { color: #efefef; background: #E44600; cursor: pointer; }
+ul.collection li:hover { color: #efefef; background: #fc0404;/*$colorRed*/ cursor: pointer; }
 ul.collection li:hover:before { content: "✖ "; }
 
 div.progress-bar { float: right; vertical-align: middle; margin-left: 1em; } 
@@ -912,17 +912,17 @@ form.has-changes .actions .main-action:hover,
     line-height: 180%;
 }
 .actions .item-action:hover{
-    box-shadow: 0 0 5px 2px #E44600;
+    box-shadow: 0 0 5px 2px #E95D0F;/*$colorOrange*/
 }
 /* .cancel-action for cancel buttons */
 .actions .cancel-action {
-    background: none repeat scroll 0 0 #E44600 !important;
+    background: none repeat scroll 0 0 #fc0404 !important;/*$colorRed*/
     font-size: 1.1em;
     line-height: 150%;
     text-transform: lowercase;
 }
 .actions .cancel-action:hover{
-    box-shadow: 0 0 5px 2px #E44600;
+    box-shadow: 0 0 5px 2px #fc0404;/*$colorRed*/
 }
 .add-action {
     background: none repeat scroll 0 0 #00989A;
@@ -2223,10 +2223,10 @@ html.boxshadow #loginBox .field-validation-error{
     margin-top: .5em;
 }
 .w-BookingDetails .w-BookingDetails-actions .item-action {
-    background-color: #E44600 !important;
+    background-color: #E95D0F !important;/*$colorOrange*/
 }
 .w-BookingDetails .w-BookingDetails-actions .item-action:hover {
-    box-shadow: 0 0 5px 2px #E44600;
+    box-shadow: 0 0 5px 2px #E95D0F;/*$colorOrange*/
 }
 
 /*= w-UserInfo in w-BookingDetails */
@@ -2347,9 +2347,9 @@ html.boxshadow #loginBox .field-validation-error{
 
 /** Booking review **/
 .booking-review .booking-summary {
-    border: 1px solid #E44600;
+    border: 1px solid #E95D0F;/*$colorOrange*/
     background: none repeat scroll 0 0 white;
-    border: 2px solid #E44600;
+    border: 2px solid #E95D0F;/*$colorOrange*/
     padding: 10px;
 }
 .booking-review h4 {
@@ -2359,7 +2359,7 @@ html.boxshadow #loginBox .field-validation-error{
     font-size: 1.1em;
 }
 .booking-review legend {
-    color: #E44600 !important;
+    color: #E95D0F !important;/*$colorOrange*/
 }
 .booking-review .message-section {
     border: 1px solid #6C6C6C;
@@ -3044,7 +3044,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.
@@ -3101,7 +3101,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
 /* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 
@@ -3202,7 +3202,7 @@ label.visuallyhidden-with-placeholder{
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
   .begin-action:after,
   .next-action:after,
   .finish-action:after {
@@ -3436,7 +3436,7 @@ label.visuallyhidden-with-placeholder{
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
   .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move:before {
     background-image: url("../img/theme/Actions-move@2x.png");
     -webkit-background-size: 26px 12px;
@@ -3714,7 +3714,7 @@ label.visuallyhidden-with-placeholder{
   pointer-events: none;
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -3798,7 +3798,7 @@ label.visuallyhidden-with-placeholder{
   margin-left: 1em;
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 
 /* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover {
@@ -4005,7 +4005,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcome-popup-container {
@@ -4713,7 +4713,7 @@ input.search-data,
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
   .begin-action:after,
   .next-action:after,
   .finish-action:after {
@@ -4743,7 +4743,7 @@ input.search-data,
   clear: both;
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
 /* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 

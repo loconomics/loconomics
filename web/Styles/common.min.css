@@ -74,7 +74,7 @@ form textarea:focus{
     outline: none;
 }
 form input[type=text].error, form input[type=password].error {
-    background: #E44600;
+    background: #fc0404;
     color: #fff;
 }
 form select:focus,
@@ -198,7 +198,7 @@ ul.collection { margin: 0; padding: 0; }
 ul.collection.empty { border: 1px dashed #ccc; }
 ul.collection li { list-style-type: none; margin: 0 .5em .5em 0; padding: .1em 1em; display: inline-block; background: #efefef; }
 ul.collection li:before { content: "• "; }
-ul.collection li:hover { color: #efefef; background: #E44600; cursor: pointer; }
+ul.collection li:hover { color: #efefef; background: #fc0404; cursor: pointer; }
 ul.collection li:hover:before { content: "✖ "; }
 
 div.progress-bar { float: right; vertical-align: middle; margin-left: 1em; } 
@@ -659,17 +659,17 @@ form.has-changes .actions .main-action:hover,
     line-height: 180%;
 }
 .actions .item-action:hover{
-    box-shadow: 0 0 5px 2px #E44600;
+    box-shadow: 0 0 5px 2px #E95D0F;
 }
 
 .actions .cancel-action {
-    background: none repeat scroll 0 0 #E44600 !important;
+    background: none repeat scroll 0 0 #fc0404 !important;
     font-size: 1.1em;
     line-height: 150%;
     text-transform: lowercase;
 }
 .actions .cancel-action:hover{
-    box-shadow: 0 0 5px 2px #E44600;
+    box-shadow: 0 0 5px 2px #fc0404;
 }
 .add-action {
     background: none repeat scroll 0 0 #00989A;
@@ -1924,10 +1924,10 @@ html.boxshadow #loginBox .field-validation-error{
     margin-top: .5em;
 }
 .w-BookingDetails .w-BookingDetails-actions .item-action {
-    background-color: #E44600 !important;
+    background-color: #E95D0F !important;
 }
 .w-BookingDetails .w-BookingDetails-actions .item-action:hover {
-    box-shadow: 0 0 5px 2px #E44600;
+    box-shadow: 0 0 5px 2px #E95D0F;
 }
 
 
@@ -2048,9 +2048,9 @@ html.boxshadow #loginBox .field-validation-error{
 
 
 .booking-review .booking-summary {
-    border: 1px solid #E44600;
+    border: 1px solid #E95D0F;
     background: none repeat scroll 0 0 white;
-    border: 2px solid #E44600;
+    border: 2px solid #E95D0F;
     padding: 10px;
 }
 .booking-review h4 {
@@ -2060,7 +2060,7 @@ html.boxshadow #loginBox .field-validation-error{
     font-size: 1.1em;
 }
 .booking-review legend {
-    color: #E44600 !important;
+    color: #E95D0F !important;
 }
 .booking-review .message-section {
     border: 1px solid #6C6C6C;
