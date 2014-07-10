@@ -43,7 +43,7 @@ exports.on = function (containerSelector) {
     window.deleteUserPhoto = function deleteUserPhoto() {
 
         $.unblockUI();
-        smoothBoxBlock.open($('<div/>').html(LC.blockPresets.loading.message), $('body'), '');
+        smoothBoxBlock.open($('<div/>').html(LC.blockPresets.loading.message), $('body'), '', { center: 'horizontal' });
 
         $.ajax({
             url: LcUrl.LangUrl + "dashboard/AboutYou/ChangePhoto/?delete=true",
