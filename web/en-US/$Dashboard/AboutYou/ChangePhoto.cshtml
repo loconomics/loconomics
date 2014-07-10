@@ -334,6 +334,25 @@
                     });
                 });
 
+                $img = setupCropPhoto();
+
+                // Enable crop editor
+                var $cp = $('#crop-photo');
+                // If an image is loaded, show up the cropping tool
+                function showEditorIfImage() {
+                    if ($img.height() > 30) {
+                        $cp.show();
+                        return true;
+                    }
+                    else return false;
+                }
+                if (!showEditorIfImage()) {
+                    // Show on image load, if any
+                    $img.on('load', showEditorIfImage);
+                }
+            });
+
+            function setupCropPhoto() {
                 // Setup img cropping
                 var $img = $('#cropimg');
                 $img.Jcrop({
@@ -344,29 +363,11 @@
                 }, function () {
                     jcrop_api = this;
                     // Initial selection to show user that can choose an area
-                    if ($img.height() > 0)
-                        jcrop_api.setSelect([0, 0, $img.width(), $img.height()]);
-                    else
-                        $img.on('load', function () {
-                            jcrop_api.setSelect([0, 0, $img.width(), $img.height()]);
-                        });
+                    jcrop_api.setSelect([0, 0, $img.width(), $img.height()]);
                 });
 
-                // Enable crop editor
-                var $cp = $('#crop-photo');
-                // If an image is loaded, show up the cropping tool
-                function showEditorIfImage() {
-                    if ($img.height() > 30) {
-                        $cp.slideDown('fast');
-                        return true;
-                    }
-                    else return false;
-                }
-                if (!showEditorIfImage()) {
-                    // Show on image load, if any
-                    $img.on('load', showEditorIfImage);
-                }
-            });
+                return $img;
+            }
 
             // Simple event handler, called from onChange and onSelect
             // event handlers, as per the Jcrop invocation above
@@ -391,8 +392,8 @@
                     return $(this).attr('src') + "?v=" + (new Date()).getTime();
                 });
 
-                $p.slideDown('fast');
-                $('#delete-photo').hide();
+                $p.show();
+                setupCropPhoto();
             }
         </script>
     </head>
