@@ -1071,7 +1071,7 @@ form ul li {
 
 /* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\privacy.styl */
 .DashboardPrivacy .DashboardPrivacySettings .DashboardPrivacySettings-personalData .note {
-  color: #e44600;
+  color: #fc0404;
   margin-left: 10px;
 }
 
@@ -1079,7 +1079,7 @@ form ul li {
 .DashboardPrivacy .DashboardPrivacySettings .DashboardPrivacySettings-personalData .note a,
 .DashboardPrivacy .DashboardPrivacySettings .DashboardPrivacySettings-personalData .note a:link,
 .DashboardPrivacy .DashboardPrivacySettings .DashboardPrivacySettings-personalData .note a:visited {
-  color: #e44600;
+  color: #fc0404;
 }
 
 /* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\privacy.styl */
@@ -1088,7 +1088,7 @@ form ul li {
 .DashboardPrivacy .DashboardPrivacySettings .DashboardPrivacySettings-myAccount a,
 .DashboardPrivacy .DashboardPrivacySettings .DashboardPrivacySettings-myAccount a:link,
 .DashboardPrivacy .DashboardPrivacySettings .DashboardPrivacySettings-myAccount a:visited {
-  color: #e44600;
+  color: #fc0404;
   margin-left: 10px;
 }
 
@@ -2434,8 +2434,8 @@ form ul li {
 
 /* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardServices .DashboardServices-attributes fieldset.is-required.is-error legend {
-  -webkit-box-shadow: 0 0 5px 1px #e44600;
-  box-shadow: 0 0 5px 1px #e44600;
+  -webkit-box-shadow: 0 0 5px 1px #fc0404;
+  box-shadow: 0 0 5px 1px #fc0404;
   padding: 0 10px;
 }
 
@@ -4534,13 +4534,13 @@ form ul li {
 
 /* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
 .ItemsList .actions .item-action.failure-action {
-  background: #e44600 !important;
+  background: #fc0404 !important;
 }
 
 /* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
 .ItemsList .actions .item-action.failure-action:hover {
-  -webkit-box-shadow: 0 0 5px 2px #e44600;
-  box-shadow: 0 0 5px 2px #e44600;
+  -webkit-box-shadow: 0 0 5px 2px #fc0404;
+  box-shadow: 0 0 5px 2px #fc0404;
 }
 
 /* line 62 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */

@@ -3341,7 +3341,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 84 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-errorMessage {
-  color: #e44600;
+  color: #fc0404;
   display: none;
 }
 
@@ -4939,7 +4939,7 @@ input.search-data,
   border-radius: 4px;
   border: none;
   color: White;
-  background-color: #e44600;
+  background-color: #fc0404;
   display: inline-block;
   font-size: 1em;
   padding: 0.4em 1em;
@@ -4961,9 +4961,9 @@ input.search-data,
 
 /* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .FileUploader .FileUploader-removal .remove-photo-action:hover {
-  -webkit-box-shadow: 0 0 5px 2px #e44600;
-  box-shadow: 0 0 5px 2px #e44600;
-  background-color: #e44600;
+  -webkit-box-shadow: 0 0 5px 2px #fc0404;
+  box-shadow: 0 0 5px 2px #fc0404;
+  background-color: #fc0404;
 }
 
 /*= w-ProviderPackage */
