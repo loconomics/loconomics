@@ -347,22 +347,33 @@
                     });
                 });
 
-                $img = setupCropPhoto();
+                setupCropPhoto();
 
                 // Enable crop editor
                 var $cp = $('#crop-photo');
                 // If an image is loaded, show up the cropping tool
                 function showEditorIfImage() {
+                    var $img = $('#cropimg');
+
                     if ($img.height() > 30) {
                         $cp.show();
                         return true;
                     }
-                    else return false;
+                    else {
+                        $cp.hide();
+                        $img
+                        .one('load', showEditorIfImage)
+                        .one('error', showEditorIfImage);
+                        return false;
+                    }
                 }
-                if (!showEditorIfImage()) {
-                    // Show on image load, if any
-                    $img.on('load', showEditorIfImage);
-                }
+                showEditorIfImage();
+
+                // Setup remove photo
+                $('#delete-photo > button').click(function () {
+                    window.parent.deleteUserPhoto();
+                    $cp.hide();
+                })
             });
 
             function setupCropPhoto() {
@@ -434,16 +445,6 @@
             </div>
             <div id="delete-photo" class="actions FileUploader-removal">
                 <button type="button" class="remove-photo-action">Remove photo</button>
-                <script type="text/javascript">
-                    jQuery('#delete-photo > button').click(function () {
-                        window.parent.deleteUserPhoto();
-                    })
-                    .hover(function () {
-                        jQuery(this).addClass('qq-upload-button-hover');
-                    }, function () {
-                        jQuery(this).removeClass('qq-upload-button-hover');
-                    });
-                </script>
             </div>
         </div>
     </body>

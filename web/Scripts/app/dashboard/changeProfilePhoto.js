@@ -3,6 +3,7 @@
 **/
 var $ = require('jquery');
 require('jquery.blockUI');
+var smoothBoxBlock = require('LC/smoothBoxBlock');
 // TODO: reimplement this and the server-side file to avoid iframes and exposing global functions,
 // direct API use without iframe-normal post support (current browser matrix allow us this?)
 // TODO: implement as real modular, next are the knowed modules in use but not loading that are expected
@@ -40,18 +41,20 @@ exports.on = function (containerSelector) {
     };
 
     window.deleteUserPhoto = function deleteUserPhoto() {
-        $.blockUI(LC.blockPresets.loading);
+
+        $.unblockUI();
+        smoothBoxBlock.open($('<div/>').html(LC.blockPresets.loading.message), $('body'), '');
+
         $.ajax({
             url: LcUrl.LangUrl + "dashboard/AboutYou/ChangePhoto/?delete=true",
             method: "GET",
             cache: false,
             dataType: "json",
             success: function (data) {
-                if (data.Code === 0)
-                    $.blockUI(LC.blockPresets.info(data.Result));
-                else
-                    $.blockUI(LC.blockPresets.error(data.Result.ErrorMessage));
-                $('.blockUI .close-popup').click(function () { $.unblockUI(); });
+                var content = (data.Code === 0 ? data.Result : data.Result.ErrorMessage);
+
+                smoothBoxBlock.open($('<div/>').text(content), $('body'), '', { closable: true, center: 'horizontal' });
+
                 reloadUserPhoto();
             },
             error: ajaxErrorPopupHandler
