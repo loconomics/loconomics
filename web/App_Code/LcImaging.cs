@@ -105,8 +105,10 @@ public static class LcImaging
         Graphics grPhoto = Graphics.FromImage(bmPhoto);
         if (sizeMode == SizeMode.Contain)
             grPhoto.Clear(Color.Black);
-        grPhoto.InterpolationMode = 
-                InterpolationMode.HighQualityBicubic;
+
+        grPhoto.SmoothingMode = SmoothingMode.HighQuality;
+        grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
         grPhoto.DrawImage(imgPhoto, 
             new Rectangle(destX, destY, destWidth, destHeight),
@@ -138,7 +140,7 @@ public static class LcImaging
 
         using (Graphics grPhoto = Graphics.FromImage(bmPhoto))
         {
-            grPhoto.SmoothingMode = SmoothingMode.AntiAlias;
+            grPhoto.SmoothingMode = SmoothingMode.HighQuality;
             grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
             grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
 

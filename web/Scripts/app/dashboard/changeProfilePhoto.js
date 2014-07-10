@@ -17,7 +17,7 @@ exports.on = function (containerSelector) {
         userPhotoPopup;
 
     $c.on('click', '[href="#change-profile-photo"]', function () {
-        userPhotoPopup = popup(LcUrl.LangPath + 'dashboard/AboutYou/ChangePhoto/', { width: 700, height: 600 }, null, null, { autoFocus: false });
+        userPhotoPopup = popup(LcUrl.LangPath + 'dashboard/AboutYou/ChangePhoto/', { width: 700, height: 670 }, null, null, { autoFocus: false });
         return false;
     });
 

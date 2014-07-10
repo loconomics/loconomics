@@ -60,7 +60,6 @@ FullButton() {
         .qq-upload-list {
             padding:0;
             list-style:disc;
-            margin: 15px 0;
             max-height: 120px;
             overflow: auto;
         
@@ -69,6 +68,14 @@ FullButton() {
                 padding:0;
                 line-height:15px;
                 font-size:12px;
+
+                &:first-child {
+                    margin-top: 10px;
+                }
+                
+                &:last-child {
+                    margin-bottom: 10px;
+                }
             }
         }
         .qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-failed-text {
@@ -78,9 +85,9 @@ FullButton() {
         .qq-upload-file {}
         .qq-upload-spinner {
             display: inline-block;
-            background: url("../img/theme/loading.gif");
-            width: 48px;
-            height: 48px;
+            background: url("../img/theme/loading-mini.gif");
+            width: 15px;
+            height: 15px;
             vertical-align: text-bottom;
         }
         .qq-upload-size, .qq-upload-cancel {
@@ -97,11 +104,17 @@ FullButton() {
     
     .FileUploader-editor {
         .jcrop-holder {
-            margin: auto;
+            margin: 0 auto 1em;
+        }
+        
+        img {
+            height: 400px;
+            box-sizing: border-box;
         }
         
         > p {
             text-align: center;
+            margin: 1em 0 0.5em;
         }
         
         .save-photo-action {

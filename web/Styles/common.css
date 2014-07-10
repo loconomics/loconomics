@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-07-09
+/*! Loconomics.com 2014-07-10
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -3039,7 +3039,7 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-07-09
+/*! Loconomics.com 2014-07-10
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -4614,7 +4614,7 @@ input.search-data,
 
 /* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 122 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 135 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -4824,12 +4824,11 @@ input.search-data,
 .FileUploader .FileUploader-uploader .qq-upload-list {
   padding: 0;
   list-style: disc;
-  margin: 15px 0;
   max-height: 120px;
   overflow: auto;
 }
 
-/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-list li {
   margin: 0;
   padding: 0;
@@ -4837,7 +4836,17 @@ input.search-data,
   font-size: 12px;
 }
 
-/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 72 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-list li:first-child {
+  margin-top: 10px;
+}
+
+/* line 76 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-list li:last-child {
+  margin-bottom: 10px;
+}
+
+/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-file,
 .FileUploader .FileUploader-uploader .qq-upload-spinner,
 .FileUploader .FileUploader-uploader .qq-upload-size,
@@ -4846,46 +4855,55 @@ input.search-data,
   margin-right: 7px;
 }
 
-/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 85 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 79 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 86 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-spinner {
   display: inline-block;
-  background: url("../img/theme/loading.gif");
-  width: 48px;
-  height: 48px;
+  background: url("../img/theme/loading-mini.gif");
+  width: 15px;
+  height: 15px;
   vertical-align: text-bottom;
 }
 
-/* line 86 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 93 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-size,
 .FileUploader .FileUploader-uploader .qq-upload-cancel {
   font-size: 11px;
 }
 
-/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 97 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-failed-text {
   display: none;
 }
 
-/* line 93 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 100 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-fail .qq-upload-failed-text {
   display: inline;
 }
 
-/* line 98 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 106 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-editor .jcrop-holder {
-  margin: auto;
+  margin: 0 auto 1em;
 }
 
-/* line 103 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 110 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-editor img {
+  height: 400px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-editor > p {
   text-align: center;
+  margin: 1em 0 0.5em;
 }
 
-/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 120 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-editor .save-photo-action {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -4918,12 +4936,12 @@ input.search-data,
   background-color: #e95d0f;
 }
 
-/* line 113 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 126 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-removal {
   margin-top: 1em;
 }
 
-/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 130 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-removal .remove-photo-action {
   -webkit-border-radius: 4px;
   border-radius: 4px;
