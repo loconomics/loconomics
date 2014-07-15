@@ -1,0 +1,87 @@
+﻿@using System.Linq;
+@using System.Web;
+@using System.Web.WebPages;
+@using System.Web.WebPages.Html;
+@using System.Collections;
+@using System.Collections.Generic;
+@*
+    Testing page for building a REST API
+*@
+@using WebMatrix.Data;
+@{
+    dynamic result = new Dictionary<string, dynamic>();
+    // Error code by default
+    int resultCode = -1;
+
+    try {
+        
+        switch (Request.HttpMethod) {
+            case "GET":
+                result = doGet();
+                
+                break;
+            case "POST":
+ 
+                result = doPost();
+                break;
+                
+            case "PUT":
+                
+                break;
+                
+            case "DELETE":
+                
+                break;
+        }
+        
+        // Success
+        resultCode = 0;
+
+        
+    } catch(HttpException http) {
+        
+        Response.StatusCode = http.GetHttpCode();
+        
+        result["ErrorMessage"] = http.Message;
+        if (!ModelState.IsValid) {
+            result["Errors"] = ModelState.Errors();
+        }
+        
+    } catch(Exception ex){
+
+        result["ErrorMessage"] = ex.Message;
+    }
+    
+    // Output data
+    LcHelpers.ReturnJsonResult(resultCode, result);
+}
+@functions {
+    dynamic doGet() {
+        if (!Request["givemeerror"].IsEmpty()) {
+            throw new HttpException(400, Request["givemeerror"]);
+        }
+            
+        return new {
+            rows = new string[] { "one", "little", "two", "little", "three", "little", "indians" }
+        };
+    }
+    
+    dynamic doPost() {
+        if (!Request["givemeerror"].IsEmpty()) {
+            throw new HttpException(500, Request["givemeerror"]);
+        }
+        
+        Validation.Add("short", Validator.StringLength(5, 0, "Short must be 5 or less"));
+        Validation.RequireField("req", LcRessources.RequiredField("Req"));
+        Validation.Add("num", Validator.Decimal("Num must be a number"));
+        
+        if (Validation.IsValid()) {
+            
+            return Request.Form.AllKeys.ToDictionary(key => key, key => Request.Form[key]);
+        }
+        else {
+            
+            throw new HttpException(400, "Validation rules");
+        }
+    }
+}

@@ -1,0 +1,79 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
+    var url = Request["url"];
+}
+<script type="text/javascript">
+    jQuery(function ($) {
+
+        function doRequest(type, url, data) {
+
+            $log = $('#log');
+
+            try {
+
+                data = data && data.replace(/^\s+/, '') && JSON.parse(data);
+
+                $.ajax({
+                    url: LcUrl.LangPath + 'REST/' + url,
+                    type: type,
+                    data: data
+                }).then(
+                function (d, statusText, xhr) {
+                    console.log('OK   ', d);
+                    $log.text('OK    ' + xhr.status + ':' + statusText + '\n' + xhr.responseText + '\n');
+                }, function (err) {
+
+                    var msg = err.responseText;
+                    try {
+                        msg = JSON.parse(err.responseText);
+                    } catch (ex) { }
+
+                    console.log('ERROR', msg);
+                    $log.text('ERROR ' + err.status + ':' + err.statusText + '\n' + err.responseText + '\n');
+                }
+                );
+
+            } catch (ex) {
+                console.error('doRequest', ex);
+            }
+        }
+
+        $('form [data-method]').on('click', function () {
+            doRequest($(this).data('method'), $('[name=url]').val(), $('[name=rawdata]').val());
+            return false;
+        });
+
+    });
+</script>
+<style>
+    input, textarea {
+        box-sizing: border-box !important;
+        -moz-box-sizing: border-box !important;
+        -webkit-box-sizing: border-box !important;
+        width: 100% !important;
+    }
+</style>
+<div>
+    <form>
+        <label>REST API URL (relative to REST root) <input type="text" name="url" value="Test" /></label>
+        <div>
+            <!-- Some example data as JSON -->
+            <label>Raw data as JSON
+            <textarea name="rawdata" rows="10">
+            {
+                "name": "Mine"
+            }
+            </textarea>
+            </label>
+        </div>
+        <div class="actions">
+            <button type="button" class="action" data-method="GET">GET</button>
+            <button type="button" class="action" data-method="POST">POST</button>
+            <button type="button" class="action" data-method="PUT">PUT</button>
+            <button type="button" class="action" data-method="DELETE">DELETE</button>
+        </div>
+    </form>
+    <pre id="log"></pre>
+</div>
