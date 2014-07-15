@@ -8,6 +8,9 @@
 
     var userId = WebSecurity.CurrentUserId;
     
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    var isInstantSaving = Request["instantSaving"].AsBool(false);
+    
     // Request specific to only Reset private url
     if (!IsPost & Request["reset-private-url"].AsBool()) {
 
@@ -75,6 +78,12 @@
         }
     }
     
+    if (isInstantSaving) {
+        // Avoid unneed processing, instant saving does not require output, just placeholder
+        @("<div/>")
+        return;
+    }
+    
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     dynamic atts = null;
     using (var db = Database.Open("sqlloco")) {
@@ -113,7 +122,7 @@
     We can both import your availability and export your Loconomics bookings to ensure
     you never miss an appointment.
 </p>
-<fieldset class="DashboardCalendarSync has-confirm">
+<fieldset class="DashboardCalendarSync has-confirm" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/Availability/$CalendarSync/?instantSaving=True" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
     <ul>
         <li>
             <label for="@idprefix-program-url">Please paste the URL from your iCal-supported calendar to import your free/busy information here:</label>

@@ -5,6 +5,9 @@
     var PageState = PageData["PageState"] ?? ModelState;
     var doReturn = PageState == ModelState;
     
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    var isInstantSaving = Request["instantSaving"].AsBool(false);
+    
     var Bio = Request["publicbio"] ?? u.PublicBio;
     var GenderID = Request["gender"] ?? u.GenderID;
     
@@ -47,6 +50,12 @@
         }
     }
     
+    if (isInstantSaving) {
+        // Avoid unneed processing, instant saving does not require output, just placeholder
+        @("<div/>")
+        return;
+    }
+    
     dynamic genders = null;
     using (var db = Database.Open("sqlloco")){
         genders = db.Query(@"
@@ -56,7 +65,7 @@
         ", 1, 1);
     }
 }
-<fieldset class="DashboardPublicBio">
+<fieldset class="DashboardPublicBio" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/AboutYou/$PublicBio/?instantSaving=True" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
     <div class="DashboardPublicBio-photo">
         <img class="avatar image-1dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/")" alt="User Photo" />
         <img class="avatar image-2dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/" + WebSecurity.CurrentUserId + "/2x/")" alt="User Photo" />

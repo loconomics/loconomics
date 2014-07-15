@@ -10,6 +10,7 @@
     var redirect = "";
     bool withLogo = PageData["WithLogo"] ?? true;
     string title = PageData["WelcomePopupTitle"] ?? "Welcome to Loconomics";
+    bool allowBack = PageData["AllowBack"] ?? true;
     
     /* The special case of provider logged but without a position still (it went from facebook redirect)
         doesn't need more of the fields, only JobTitle,
@@ -158,7 +159,10 @@
     </header>
 
     <div class="register">
-        <a class="back-action" href="#back">&lt;&lt;back</a>
+        @if (allowBack)
+        {
+            <a class="back-action" href="#back">&lt;&lt;back</a>
+        }
         <div id="welcomepopupLoading"><img alt="Loading" src="@(LcUrl.AppPath)img/theme/loading.gif" /></div>
         <form action="@(LcUrl.LangPath)Account/$WelcomePopup/@(Request.Url.Query)" method="post" class="ajax ajax-box lightform">
             @if (IsPost)
@@ -206,7 +210,7 @@
                         <li class="provider customer has-secure-data"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" type="password" placeholder="Create password" name="create-password" @Validation.GetHtml("create-password")/></li>
                         }
                         <li class="provider job-title has-search-data"><label for="@(idprefix)-jobtitle">Job title</label><input id="@(idprefix)-jobtitle" type="text" placeholder="Job title (you can add more later)" name="jobtitle" @Validation.GetHtml("jobtitle") @Html.Raw(ModelState.IsValidField("jobtitle") ? "" : "class='input-validation-error'") value="@Request["jobtitle"]" /></li>
-                        <li class="position-description provider"><textarea rows="5" name="jobdescription" readonly>@Request["jobdescription"]</textarea><input type="hidden" name="positionid" value="@Request["positionid"]" /></li>
+                        <li class="position-description provider"><textarea rows="5" name="jobdescription" disabled readonly>@Request["jobdescription"]</textarea><input type="hidden" name="positionid" value="@Request["positionid"]" /></li>
                     </ul>
                     <div class="actions">
                         @{

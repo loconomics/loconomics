@@ -9,6 +9,10 @@ var $ = require('jquery'),
   objectUtils = require('./objectUtils'),
   BookingsNotification = require('./BookingsNotification');
 
+var events = {
+    dataChanged: 'dataChanged'
+};
+
 /**
   Private utils
 **/
@@ -197,6 +201,7 @@ function toggleDateAvailability(monthly, cell) {
   slot.status = slot.status == 'unavailable' ? 'available' : 'unavailable';
   slot.source = 'user';
   monthly.bookingsNotification.register(slot.status == 'unavailable', monthly.data, strDate);
+  monthly.events.emit(events.dataChanged, cell, slot);
 
   // Update visualization:
   monthly.bindData();

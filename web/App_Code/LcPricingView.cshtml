@@ -379,25 +379,67 @@
     </div>
 }
 
+@helper CustomerCancellationPricingSummary(dynamic booking) {
+    <div class="customer-pricing-summary pricing-summary detailed w-PricingSummary w-PricingSummary--detailed">
+        <table>
+            <tr>
+                <td class="pricing-summary-item-concept concept">Services booked @(booking.BookingDate.ToShortDateString())</td>
+                <td class="price">@((booking.TotalPrice ?? 0).ToString("c"))</td>
+            </tr>
+            <tr>
+                <td class="pricing-summary-item-concept concept">Nonrefundable Loconomics service fee</td>
+                <td class="price">@(((booking.FeePrice ?? 0) - (booking.FeeRefunded ?? 0)).ToString("c"))</td>
+            </tr>
+            <tr>
+                <td class="pricing-summary-item-concept concept">less cancellation fee</td>
+                <td class="price">@((0 - (booking.TotalRefunded ?? 0)).ToString("c"))</td>
+            </tr>
+            <tr class="total">
+                <th class="pricing-summary-item-concept concept">Charge to card ending in @LcEncryptor.Decrypt((string)booking.PaymentCustomerCardLastDigits)</th>
+                <th class="price total-price">@((booking.TotalPrice ?? 0 - booking.TotalRefunded ?? 0).ToString("c"))</th>
+            </tr>
+        </table>
+    </div>
+}
+
 @helper EmailCustomerCancellationPricingSummary(dynamic booking) {
     <table border="0" style="border:none;width:100%">
         <tr>
-            <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Original amount charged @(booking.BookingDate.ToShortDateString())</td>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Services booked @(booking.BookingDate.ToShortDateString())</td>
             <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((booking.TotalPrice ?? 0).ToString("c"))</td>
         </tr>
         <tr>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Nonrefundable Loconomics service fee</td>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@(((booking.FeePrice ?? 0) - (booking.FeeRefunded ?? 0)).ToString("c"))</td>
+        </tr>
+        <tr>
             <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">less cancellation fee</td>
-            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">-@(((booking.SubtotalPrice ?? 0) - (booking.SubtotalRefunded ?? 0)).ToString("c"))</td>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((0 - (booking.TotalRefunded ?? 0)).ToString("c"))</td>
         </tr>
         <tr>
-            <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">less nonrefundable Loconomics service fee</td>
-            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">-@(((booking.FeePrice ?? 0) - (booking.FeeRefunded ?? 0)).ToString("c"))</td>
-        </tr>
-        <tr>
-            <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Refund to card ending in @LcEncryptor.Decrypt((string)booking.PaymentCustomerCardLastDigits)</th>
-            <th style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((booking.TotalRefunded ?? 0).ToString("c"))</th>
+            <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Charge to card ending in @LcEncryptor.Decrypt((string)booking.PaymentCustomerCardLastDigits)</th>
+            <th style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((booking.TotalPrice ?? 0 - booking.TotalRefunded ?? 0).ToString("c"))</th>
         </tr>
     </table>
+}
+
+@helper ProviderCancellationPricingSummary(dynamic booking) {
+    <div class="provider-pricing-summary pricing-summary w-PricingSummary w-PricingSummary--detailed">
+        <table>
+            <tr>
+                <td class="pricing-summary-item-concept concept">Cancellation fee</td>
+                <td class="price">@(((booking.SubtotalPrice ?? 0) - (booking.SubtotalRefunded ?? 0)).ToString("c"))</td>
+            </tr>
+            <tr>
+                <td class="pricing-summary-item-concept concept">less Loconomics service fee (payment processing costs)</td>
+                <td class="price">-@((booking.PFeePrice ?? 0).ToString("c"))</td>
+            </tr>
+            <tr class="total">
+                <th class="pricing-summary-item-concept concept">Payment to account ending in @LcEncryptor.Decrypt((string)booking.PaymentProviderAccountLastDigits)</th>
+                <th class="price total-price">@(((booking.SubtotalPrice ?? 0) - (booking.PFeePrice ?? 0) - (booking.SubtotalRefunded ?? 0)).ToString("c"))</th>
+            </tr>
+        </table>
+    </div>
 }
 
 @helper EmailProviderCancellationPricingSummary(dynamic booking) {

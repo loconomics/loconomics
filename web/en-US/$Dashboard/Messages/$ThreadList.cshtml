@@ -7,6 +7,121 @@
     // All messages threads (as customer and as provider)
     dynamic messageThreads = LcMessaging.GetMessageThreadList(userID);
 }
+@functions{
+
+    public dynamic getItemStatusConfig(dynamic item, string senderUserType) {
+        
+        if (item.LastMessageAuxT == "Booking" || item.LastMessageAuxT == "BookingRequest") {
+            return getBookingStatusConfig(item, senderUserType);
+        }
+        else {
+            return getMessageStatusConfig(item, senderUserType);
+        }
+    }
+
+    public dynamic getMessageStatusConfig(dynamic item, string senderUserType) {
+        
+        string buttonClass = "view", buttonLabel = "View";
+        
+        if (senderUserType == "customer") {
+            switch ((int)item.MessageThreadStatusID){
+                case 1:
+                    buttonClass = "respond";
+                    buttonLabel = "Respond";
+                    break;
+                case 2:
+                    buttonClass = "responded info-action";
+                    buttonLabel = "Responded";
+                    break;
+            }
+        } else if (senderUserType == "provider") {
+            switch ((int)item.MessageThreadStatusID){
+                case 1:
+                    buttonClass = "waiting-respond";
+                    buttonLabel = "Waiting";
+                    break;
+                case 2:
+                    buttonClass = "responded info-action";
+                    buttonLabel = "Responded";
+                    break;
+            }
+        }
+    
+        return new {
+            buttonClass = buttonClass,
+            buttonLabel = buttonLabel
+        };
+    }
+
+    public dynamic getBookingStatusConfig(dynamic item, string senderUserType) {
+    
+        string buttonClass = "view", buttonLabel = "View";
+    
+        switch ((int)item.LastMessageTypeID){
+            case 4:
+            case 5:
+                if (senderUserType == "customer") {
+                    buttonClass = "respond";
+                    buttonLabel = "Respond";
+                } else {
+                    buttonClass = "waiting-respond info-action";
+                    buttonLabel = "Waiting";
+                }
+                break;
+            case 6:
+            case 7:
+                buttonClass = "confirmed success-action";
+                buttonLabel = "Confirmed";
+                break;
+            case 9:
+                buttonClass = "dispute failure-action";
+                buttonLabel = "Dispute";
+                break;
+            case 10:
+                buttonClass = "resolution";
+                buttonLabel = "Resolution";
+                break;
+            case 12:
+                buttonClass = "adjustment";
+                buttonLabel = "Adjustment";
+                break;
+            case 13:
+                buttonClass = "declined failure-action";
+                buttonLabel = "Declined";
+                break;
+            case 14:
+                buttonClass = "cancelled failure-action";
+                buttonLabel = "Cancelled";
+                break;
+            case 15:
+            case 16:
+            case 19:
+                buttonClass = "view";
+                buttonLabel = "View";
+                break;
+            case 17:
+            case 18:
+                buttonClass = "review";
+                buttonLabel = "Review";
+                break;
+                
+            case 20:
+                buttonClass = "service-performed success-action";
+                buttonLabel = "Done";
+                break;
+            case 21:
+                buttonClass = "closed success-action";
+                buttonLabel = "Closed";
+                break;
+        }
+    
+        return new {
+            buttonClass = buttonClass,
+            buttonLabel = buttonLabel
+        };
+    }
+}
+
 @helper printItem(dynamic item, string senderPrefix = "Sender", string receiverPrefix = "Receiver", string senderUserType = "user") {
   <li>
     @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
@@ -65,33 +180,11 @@
     </ul>
     <div class="actions">
         @{
-            string buttonAction = "view", buttonLabel = "View";
-            if (senderUserType == "customer") {
-                switch ((int)item.MessageThreadStatusID){
-                    case 1:
-                        buttonAction = "respond";
-                        buttonLabel = "Respond";
-                        break;
-                    case 2:
-                        buttonAction = "responded";
-                        buttonLabel = "Responded";
-                        break;
-                }
-            } else if (senderUserType == "provider") {
-                switch ((int)item.MessageThreadStatusID){
-                    case 1:
-                        buttonAction = "waiting-respond";
-                        buttonLabel = "Waiting";
-                        break;
-                    case 2:
-                        buttonAction = "responded";
-                        buttonLabel = "Responded";
-                        break;
-                }
-            }
+            var statusConfig = getItemStatusConfig(item, senderUserType);
+            
             var summary = new LcMessaging.MessageSummary(item, WebSecurity.CurrentUserId);
         }
-        <a class="item-action @buttonAction" href="@(summary.GetMessageUrl())">@buttonLabel</a>
+        <a class="item-action @statusConfig.buttonClass" href="@(summary.GetMessageUrl())">@statusConfig.buttonLabel</a>
         <div class="date item-extra-info">@item.LastMessageDate</div>
     </div>
   </li>

@@ -2,7 +2,7 @@
     // Tools/Calendar
     LcHelpers.ProviderPage();
     
-    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? Request["onboarding"].AsBool(false));
 
     // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }
@@ -16,25 +16,26 @@
 
 <div class="DashboardAvailability">
     <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$dashboard/$availability/">
+        <input type="hidden" name="onboarding" value="@(isInOnboarding)" />
 
         <div id="DashboardWeeklySchedule" class="DashboardSection-page-section is-required">
             <h2 class="DashboardSection-page-section-header">Set your weekly schedule</h2>
-            @RenderPage("Availability/_$WeeklySchedule.cshtml", new { PageState = ModelState })
+            @RenderPage("Availability/$WeeklySchedule.cshtml", new { PageState = ModelState, IsInOnboarding = isInOnboarding })
         </div>
 
         <div id="DashboardWeeklySchedule" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Set your monthly schedule</h2>
-            @RenderPage("Availability/_$MonthlySchedule.cshtml", new { PageState = ModelState })
+            @RenderPage("Availability/$MonthlySchedule.cshtml", new { PageState = ModelState, IsInOnboarding = isInOnboarding })
         </div>
 
         <div id="DashboardAppointments" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Block off other times you're busy</h2>
-            @RenderPage("Availability/_$Appointments.cshtml", new { PageState = ModelState })
+            @RenderPage("Availability/$Appointments.cshtml", new { PageState = ModelState, IsInOnboarding = isInOnboarding })
         </div>
 
         <div id="DashboardCalendarSync" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Sync your existing calendar(s)</h2>
-            @RenderPage("Availability/$CalendarSync.cshtml", new { PageState = ModelState })
+            @RenderPage("Availability/$CalendarSync.cshtml", new { PageState = ModelState, IsInOnboarding = isInOnboarding })
         </div>
 
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

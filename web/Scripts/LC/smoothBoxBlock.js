@@ -40,11 +40,22 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     }
     blocked.data('smooth-box-block-id', bID);
     var box = $('#' + escapeJQuerySelectorValue(bID));
-    // Hiding box:
+    
+    // Hiding/closing box:
     if (contentBox.length === 0) {
+
         box.xhide(options.closeOptions);
+
+        // Restoring the CSS position attribute of the blocked element
+        // to avoid some problems with layout on some edge cases almost
+        // that may be not a problem during blocking but when unblocked.
+        var prev = blocked.data('sbb-previous-css-position');
+        blocked.css('position', prev || '');
+        blocked.data('sbb-previous-css-position', null);
+
         return;
     }
+
     var boxc;
     if (box.length === 0) {
         boxc = $('<div class="smooth-box-block-element"/>');
@@ -81,8 +92,10 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     if (boxInsideBlocked) {
         // Box positioning setup when inside the blocked element:
         box.css('z-index', blocked.css('z-index') + 10);
-        if (!blocked.css('position') || blocked.css('position') == 'static')
+        if (!blocked.css('position') || blocked.css('position') == 'static') {
+            blocked.data('sbb-previous-css-position', blocked.css('position'));
             blocked.css('position', 'relative');
+        }
         //offs = blocked.position();
         box.css('top', 0);
         box.css('left', 0);
@@ -105,8 +118,10 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
             ct = box.outerHeight(true) / 2;
             cl = box.outerWidth(true) / 2;
         }
-        boxc.css('top', ct - boxc.outerHeight(true) / 2);
-        boxc.css('left', cl - boxc.outerWidth(true) / 2);
+        if (options.center === true || options.center === 'vertical')
+            boxc.css('top', ct - boxc.outerHeight(true) / 2);
+        if (options.center === true || options.center === 'horizontal')
+            boxc.css('left', cl - boxc.outerWidth(true) / 2);
     }
     // Last setup
     autoFocus(box);

@@ -1,5 +1,9 @@
 ﻿@using System.Drawing.Imaging;
 @{
+    const int fixedSizeWidth = 112;
+    const int fixedSizeHeight = 118;
+    var sizeName = fixedSizeWidth.ToString() + "x" + fixedSizeHeight.ToString();
+    
     var userId = Request["UserID"].AsInt();
     if (userId == 0) {
         userId = UrlData[0].AsInt();
@@ -36,9 +40,9 @@
     bool imageAdapted = false;
     
     if (userPhoto == "$avatar") {
-        // Standard name of pre-adapted image, implementation uncomplete but basic, just
+        // Standard name of pre-adapted image, just
         // serve ever the profile adapted photo for now instead the big colored original:
-        userPhoto = "$avatar-176x184-gray" + type + ".jpg";
+        userPhoto = "$avatar-" + sizeName + "-gray" + type + ".jpg";
         imageAdapted = true;
     }
     
@@ -52,14 +56,14 @@
         path = Server.MapPath(LcUrl.RenderAppPath + "img/userphotos/u0/avatar.png");
     }
     
-    try{
+    try {
         if (imageAdapted){
             new WebImage(path).Write();
         } else {
             // Transform image to Grayscale and profile photo size to avoid big images:
             // Is inside a using block because ensure close the image ressources and the file
             
-            using (var img = LcImaging.Grayscale(LcImaging.Resize(new System.Drawing.Bitmap(path), 176, 184, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))){
+            using (var img = LcImaging.Grayscale(LcImaging.Resize(new System.Drawing.Bitmap(path), fixedSizeWidth, fixedSizeHeight, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))){
                 // Telling to the browser that this is a JPG image
                 Response.ContentType = "image/jpg";
                 // Send the transformed image to the browser

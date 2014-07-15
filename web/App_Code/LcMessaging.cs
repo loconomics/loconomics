@@ -383,7 +383,7 @@ public class LcMessaging
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "SentTo", "Customer" }
-                ,{ "SentBy", "Provider" }
+                ,{ "SentBy", "Customer" }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", customer.Email }
             }));
@@ -441,6 +441,50 @@ public class LcMessaging
             }));
         }
     }
+
+    public static void SendInstantBooking(int CustomerUserID, int ProviderUserID, int PositionID, int BookingRequestID, int BookingID)
+    {
+        dynamic customer = null, provider = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Customer information
+            customer = db.QuerySingle(sqlGetUserData, CustomerUserID);
+            // Get Provider information
+            provider = db.QuerySingle(sqlGetUserData, ProviderUserID);
+        }
+        if (customer != null && provider != null)
+        {
+            // Create message body based on detailed booking data
+            // TODO #520: say 'instant' in the subject?
+            string subject = LcData.Booking.GetBookingSubject(BookingID);
+            string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
+
+            // #520: MessageTypeID:6 "Booking Request Customer Confirmation"
+            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 6, message, BookingID, "Booking");
+
+            SendMail(provider.Email, LcData.Booking.GetBookingTitleFor(1, customer, LcData.UserInfo.UserType.Provider),
+                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
+                new Dictionary<string, object> {
+                { "BookingID", BookingID }
+                ,{ "BookingRequestID", BookingRequestID }
+                ,{ "SentTo", "Provider" }
+                ,{ "SentBy", "Customer" }
+                ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", provider.Email }
+            }));
+            SendMail(customer.Email, LcData.Booking.GetBookingTitleFor(1, provider, LcData.UserInfo.UserType.Customer),
+                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
+                new Dictionary<string, object> {
+                { "BookingID", BookingID }
+                ,{ "BookingRequestID", BookingRequestID }
+                ,{ "SentTo", "Customer" }
+                ,{ "SentBy", "Customer" }
+                ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
+            }));
+        }
+    }
+
     public static void SendBookingRequestDenegation(int BookingRequestID, bool sentByProvider)
     {
         // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
@@ -508,7 +552,9 @@ public class LcMessaging
     /// <param name="bySystemProviderOrCustomer"></param>
     /// <param name="onlyTo">'p' for provider and 'c' for customer. Will send the email only to that, or 'b' both by default</param>
     /// <param name="reminderType">Specify ONLY If the message is a Reminder. Set the kind of reminder (service, review-firstreminder, review)</param>
-    public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer, char onlyTo = 'b', string reminderType = null)
+    /// <param name="messageTypeID">the parameter bySystemProviderOrCustomer choose automatically a messageTypeID from the 'update' types, but when
+    /// another type is need that can be just specified here and will take precedence.</param>
+    public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer, char onlyTo = 'b', string reminderType = null, int? messageTypeID = null)
     {
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
@@ -533,6 +579,8 @@ public class LcMessaging
             // ThreadStatus=2, responded;
             // MessageType: 'p' provider 15, 'c' customer 16, 's' system 19
             int messageType = bySystemProviderOrCustomer == 'p' ? 15 : bySystemProviderOrCustomer == 'c' ? 16 : 19;
+            if (messageTypeID.HasValue)
+                messageType = messageTypeID.Value;
             int messageID = CreateMessage(thread.ThreadID, 2, messageType, message, BookingID, "Booking", subject);
 
             // default value and explicit value for Status:1
@@ -892,7 +940,7 @@ public class LcMessaging
     {
         try
         {
-            SendMail("iagosrl@gmail.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
+            SendMail("support@loconomics.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
                 exceptionPageContent);
         }
         catch { }

@@ -1,11 +1,20 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     LcHelpers.SecurePage();
     
     var u = LcData.UserInfo.GetUserRow();
     var PageState = PageData["PageState"] ?? ModelState;
     var doReturn = PageState == ModelState;
-    var pos = PageData["Position"];
-
+    var pos = PageData["Position"] ?? LcData.UserInfo.GetUserPos((int)u.UserID, Request["PositionID"].AsInt());
+    
+    if (pos == null) {
+        return;
+    }
+    
+    var requiredAttCatError = "\"{0}\" requires at least one selection";
+    
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    
     var idprefix = "position-" + pos.PositionID + "-services";
     
     var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
@@ -18,7 +27,41 @@
         Validation.Add("position-intro", Validator.StringLength(2000, 0, "Position introduction must be fewer than 2000 characters"));
     }
     
-    if (IsPost && Validation.IsValid()) {
+    // Custom validations
+    if (IsPost && (Validation.IsValid() || isInOnboarding)) {
+        
+        // Check that there is almost one value for required categories, or show error
+        foreach(var cat in dataCats) {
+            
+            if (cat.Value["RequiredInput"]) {
+                var hasOne = false;
+                
+                foreach (var att in cat.Value["ServiceAttributes"]) {
+                
+                    bool wasChecked = (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
+                    if (wasChecked) {
+                        hasOne = true;
+                        break;
+                    }
+                }
+                
+                if (!hasOne) {
+                    PageState.AddFormError(String.Format(requiredAttCatError, cat.Value["ServiceAttributeCategoryName"]));
+                }
+            }
+        }
+        
+        // Since ExperienceLevel is not a service category anymore else an independent table, we need
+        // specific code to save its data.
+        var selExpLevel = Request[String.Format(tplCatName, LcData.ServiceAttCatIDExperienceLevel) + "-level"];
+        if (String.IsNullOrEmpty(selExpLevel)) {
+            PageState.AddFormError(String.Format(requiredAttCatError, LcRessources.GetText("Experience Level")));
+        }
+    }
+    
+    // In onboarding, save all time since we need 'instant saving' #524
+    // (validation errors are still returned when is not valid but in onboarding)
+    if (IsPost && (PageState.IsValid || isInOnboarding)) {
         var sqlSetPosIntro = @"
             UPDATE  UserProfilePositions
             SET     PositionIntro = @2
@@ -189,9 +232,12 @@
             } catch {}
         }
             
-        if (doReturn) {
+        if (doReturn && PageState.IsValid) {
             LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
         }
+        
+        // We must show data but some of them were changed, we need load it again
+        dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services-without-virtual-cats", pos.UserID);
     }
     
     /* Language Levels */
@@ -280,14 +326,14 @@
         </ul>
     </fieldset>
 }
-<fieldset class="DashboardServices">
+<fieldset class="DashboardServices ajax ajax-box" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/YourWork/$Services/?PositionID=@(pos.PositionID)" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
     <p class="DashboardSection-page-section-introduction">
         Fill us in on the services you provide. By conveying your job, experience, and passion with genuine feeling, you’ll attract the type of customers you want.
         Make sure to be clear about what tasks future clients can expect you to perform.
         If we've missed something, <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">let us know</a>.
     </p>
     <ul class="lc-ressources">
-        <li id="lcres-required-attribute-category-error">"{0}" requires at least one selection</li>
+        <li id="lcres-required-attribute-category-error">@requiredAttCatError</li>
     </ul>
 
     <div class="DashboardServices-attributes">

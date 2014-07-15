@@ -51,13 +51,29 @@
         @if (showPricing)
         {
             <h5>Pricing Summary</h5>
-            if (forUserType == LcData.UserInfo.UserType.Provider)
+            if (booking.BookingRequestStatusID == 4 ||
+                booking.BookingID > 0 && booking.BookingStatusID == 6)
             {
-                @LcPricingView.ProviderPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+                // Is a cancelled booking/request
+                if (forUserType == LcData.UserInfo.UserType.Provider)
+                {
+                    @LcPricingView.ProviderCancellationPricingSummary(booking)
+                }
+                else if (forUserType == LcData.UserInfo.UserType.Customer)
+                {
+                    @LcPricingView.CustomerCancellationPricingSummary(booking)
+                }
             }
-            else if (forUserType == LcData.UserInfo.UserType.Provider)
+            else
             {
-                @LcPricingView.CustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+                if (forUserType == LcData.UserInfo.UserType.Provider)
+                {
+                    @LcPricingView.ProviderPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+                }
+                else if (forUserType == LcData.UserInfo.UserType.Provider)
+                {
+                    @LcPricingView.CustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+                }
             }
         }
         

@@ -79,23 +79,39 @@ var changesNotification = {
     registerSave: function (f, els) {
         var fname = getXPath(f);
         if (!this.changesList[fname]) return;
+
         var prevEls = $.extend([], this.changesList[fname]);
+
+        // 'els' (filtered form elements list) can be an array of field 'name's or an array of DOM elements (or mixed)
+        // its converted to an array of 'name's anyway:
+        if (els) {
+            els = $.map(els, function (el) {
+                return (typeof (el) === 'string' ? el : el.name);
+            });
+        }
+
+        // to-remove form list flag: by default true, since when no els list since is all the form saved
         var r = true;
         if (els) {
             this.changesList[fname] = $.grep(this.changesList[fname], function (el) { return ($.inArray(el, els) == -1); });
             // Don't remove 'f' list if is not empty
             r = this.changesList[fname].length === 0;
         }
+
         if (r) {
             $(f).removeClass(this.defaults.changedFormClass);
             delete this.changesList[fname];
-            // link elements from els to clean-up its classes
-            els = prevEls;
         }
+
         // pass data: form, elements registered as save (this can be null), and 'form fully saved' as third param (bool)
-        $(f).trigger('lcChangesNotificationSaveRegistered', [f, els, r]);
+        $(f).trigger('lcChangesNotificationSaveRegistered', [f, els || prevEls, r]);
         var lchn = this;
-        if (els) $.each(els, function () { $('[name="' + escapeJQuerySelectorValue(this) + '"]').removeClass(lchn.defaults.changedElementClass); });
+        if (els) {
+            $.each(els, function () {
+                $('[name="' + escapeJQuerySelectorValue(this) + '"]')
+                .removeClass(lchn.defaults.changedElementClass);
+            });
+        }
         return prevEls;
     }
 };
