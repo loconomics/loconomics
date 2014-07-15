@@ -10,6 +10,7 @@
     var redirect = "";
     bool withLogo = PageData["WithLogo"] ?? true;
     string title = PageData["WelcomePopupTitle"] ?? "Welcome to Loconomics";
+    bool allowBack = PageData["AllowBack"] ?? true;
     
     /* The special case of provider logged but without a position still (it went from facebook redirect)
         doesn't need more of the fields, only JobTitle,
@@ -158,7 +159,10 @@
     </header>
 
     <div class="register">
-        <a class="back-action" href="#back">&lt;&lt;back</a>
+        @if (allowBack)
+        {
+            <a class="back-action" href="#back">&lt;&lt;back</a>
+        }
         <div id="welcomepopupLoading"><img alt="Loading" src="@(LcUrl.AppPath)img/theme/loading.gif" /></div>
         <form action="@(LcUrl.LangPath)Account/$WelcomePopup/@(Request.Url.Query)" method="post" class="ajax ajax-box lightform">
             @if (IsPost)

@@ -118,8 +118,10 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
             ct = box.outerHeight(true) / 2;
             cl = box.outerWidth(true) / 2;
         }
-        boxc.css('top', ct - boxc.outerHeight(true) / 2);
-        boxc.css('left', cl - boxc.outerWidth(true) / 2);
+        if (options.center === true || options.center === 'vertical')
+            boxc.css('top', ct - boxc.outerHeight(true) / 2);
+        if (options.center === true || options.center === 'horizontal')
+            boxc.css('left', cl - boxc.outerWidth(true) / 2);
     }
     // Last setup
     autoFocus(box);
