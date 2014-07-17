@@ -1,5 +1,7 @@
 ﻿@{
-    LcHelpers.TestArea();
+    if (!LcHelpers.InDev) {
+        LcHelpers.TestArea();
+    }
     Layout = "_TestLayout.cshtml";
     
     var url = Request["url"];
