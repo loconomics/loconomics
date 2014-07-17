@@ -20,9 +20,9 @@
                     type: type,
                     data: data
                 }).then(
-                function (d, statusText, xhr) {
+                function (d, status, xhr) {
                     console.log('OK   ', d);
-                    $log.text('OK    ' + xhr.status + ':' + statusText + '\n' + xhr.responseText + '\n');
+                    $log.text('OK    ' + xhr.status + ':' + xhr.statusText + '\n' + xhr.responseText + '\n');
                 }, function (err) {
 
                     var msg = err.responseText;
@@ -36,6 +36,7 @@
                 );
 
             } catch (ex) {
+                $log.text('REQUEST ERROR, See console log.\n' + (ex && ex.toString()));
                 console.error('doRequest', ex);
             }
         }
@@ -62,9 +63,9 @@
             <!-- Some example data as JSON -->
             <label>Raw data as JSON
             <textarea name="rawdata" rows="10">
-            {
-                "name": "Mine"
-            }
+{
+"name": "Mine"
+}
             </textarea>
             </label>
         </div>
@@ -75,5 +76,6 @@
             <button type="button" class="action" data-method="DELETE">DELETE</button>
         </div>
     </form>
+    <h6>Task result (see it formatted in the browser web console):</h6>
     <pre id="log"></pre>
 </div>

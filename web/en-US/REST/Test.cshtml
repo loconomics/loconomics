@@ -10,8 +10,6 @@
 @using WebMatrix.Data;
 @{
     dynamic result = new Dictionary<string, dynamic>();
-    // Error code by default
-    int resultCode = -1;
 
     try {
         
@@ -27,61 +25,131 @@
                 
             case "PUT":
                 
+                result = doPut();
                 break;
                 
             case "DELETE":
                 
+                result = doDelete();
                 break;
         }
-        
-        // Success
-        resultCode = 0;
-
         
     } catch(HttpException http) {
         
         Response.StatusCode = http.GetHttpCode();
         
-        result["ErrorMessage"] = http.Message;
+        result["errorMessage"] = http.Message;
         if (!ModelState.IsValid) {
-            result["Errors"] = ModelState.Errors();
+            result["errors"] = ModelState.Errors();
         }
         
     } catch(Exception ex){
 
-        result["ErrorMessage"] = ex.Message;
+        result["errorMessage"] = ex.Message;
     }
     
     // Output data
-    LcHelpers.ReturnJsonResult(resultCode, result);
+    LcHelpers.ReturnJson(result);
 }
 @functions {
     dynamic doGet() {
         if (!Request["givemeerror"].IsEmpty()) {
             throw new HttpException(400, Request["givemeerror"]);
         }
-            
-        return new {
-            rows = new string[] { "one", "little", "two", "little", "three", "little", "indians" }
-        };
+        
+        if (!UrlData[0].IsEmpty()) {
+            throw new HttpException(404, "That item does not exists (" + UrlData[0] + ")");
+        }
+
+        if (Request["name"] == "indians") {
+            var pos = LcData.UserInfo.GetUserPos();
+            if (pos == null || pos.Count == 0)
+                return new { rows = new object[]{}, message = "You have not positions. Logged?" };
+            else
+                return new { rows = LcData.UserInfo.GetUserPos() };
+        }
+        else {
+            return new {
+                rows = new string[] { "one", "little", "two", "little", "three", "little", "indians" }
+            };
+        }
     }
     
     dynamic doPost() {
         if (!Request["givemeerror"].IsEmpty()) {
             throw new HttpException(500, Request["givemeerror"]);
         }
-        
+
         Validation.Add("short", Validator.StringLength(5, 0, "Short must be 5 or less"));
-        Validation.RequireField("req", LcRessources.RequiredField("Req"));
+        Validation.RequireField("name", LcRessources.RequiredField("Name"));
         Validation.Add("num", Validator.Decimal("Num must be a number"));
         
         if (Validation.IsValid()) {
             
-            return Request.Form.AllKeys.ToDictionary(key => key, key => Request.Form[key]);
+            // Creating a bit of something, an ID and the same input data
+            // TODO: itemData needs to be filtered!
+            var itemData = Request.Form.AllKeys.ToDictionary(key => key, key => Request.Form[key]);
+            itemData["ItemID"] = new Random().Next(0, 100).ToString();
+           
+            // HTTP 201: 'Ok, Created'
+            Response.StatusCode = 201;
+            
+            return itemData;
         }
         else {
-            
+            // Bad request, input data incorrect because of validation rules
             throw new HttpException(400, "Validation rules");
         }
+    }
+    
+    dynamic validateItemID() {
+
+        if (UrlData[0].IsEmpty()) {
+            // Bad Request
+            Response.StatusCode = 400;
+            return new {
+                errorMessage = "Validation rules",
+                errors = new {
+                    id = "An Item ID is required at the URL"
+                }
+            };
+        }
+        else if (!UrlData[0].IsInt()) {
+            // Bad Request
+            Response.StatusCode = 400;
+            return new {
+                errorMessage = "Validation rules",
+                errors = new {
+                    id = "The Item ID must be an integer"
+                }
+            };
+        }
+        return null;
+    }
+    
+    dynamic doPut() {
+        
+        var v = validateItemID();
+        if (v != null)
+            return v;
+
+        // Just reusing 'post' example 
+        var updated = doPost();
+        updated["ItemID"] = UrlData[0];
+        
+        // OK
+        Response.StatusCode = 200;
+        return updated;
+    }
+    
+    dynamic doDelete() {
+
+        var v = validateItemID();
+        if (v != null)
+            return v;
+
+        // I deleted a bit of nothing!
+        Response.StatusCode = 204;
+        return null;
     }
 }
