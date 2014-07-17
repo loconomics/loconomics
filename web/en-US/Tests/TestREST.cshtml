@@ -35,7 +35,10 @@
         'Upcoming Appointments': {
             url: '/en-US/REST/upcoming-appointments',
             get: {
-                limit: 5
+                limit: 5,
+                'api comment': 'The result is an object with three optional properties: upcoming, tomorrow, today; ' +
+                'each of them will contain a list of records (bookings).\n ' +
+                'The property "limit" will limit the amount of records returned in each group.'
             }
         },
         'Get Availability Weekly (pre-REST API)': {
@@ -120,6 +123,7 @@
 
                 type = type && type.toUpperCase();
                 data = data && data.replace(/^\s+/, '') && JSON.parse(data);
+                $('body').addClass('is-loading');
 
                 $.ajax({
                     url: LcUrl.AppPath + url,
@@ -139,9 +143,12 @@
                     console.log('ERROR', msg);
                     $log.text('ERROR ' + err.status + ':' + err.statusText + '\n' + err.responseText + '\n');
                 }
-                );
+                ).always(function () {
+                    $('body').removeClass('is-loading');
+                });
 
             } catch (ex) {
+                $('body').removeClass('is-loading');
                 $log.text('REQUEST ERROR, See console log.\n' + (ex && ex.toString()));
                 console.error('doRequest', ex);
             }
@@ -175,6 +182,13 @@
         text-decoration: underline;
         color: Blue;
     }
+    .loading-spinner {
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    .is-loading .loading-spinner {
+        opacity: 1;
+    }
 </style>
 <div>
     <form>
@@ -182,7 +196,7 @@
         <div>
             <!-- Some example data as JSON -->
             <label>Raw data as JSON
-            <textarea name="rawdata" rows="10">
+            <textarea name="rawdata" rows="7">
 {
 "name": "Mine"
 }
@@ -190,6 +204,7 @@
             </label>
         </div>
         <div class="actions">
+            <img class="loading-spinner" src="@(LcUrl.AppPath)img/theme/loading.gif" alt="Loading..." />
             <button type="button" class="action" data-method="GET">GET</button>
             <button type="button" class="action" data-method="POST">POST</button>
             <button type="button" class="action" data-method="PUT">PUT</button>
