@@ -45,6 +45,10 @@
             doRequest($(this).data('method'), $('[name=url]').val(), $('[name=rawdata]').val());
             return false;
         });
+        $('form').on('submit', function () {
+            doRequest('GET', $('[name=url]').val(), $('[name=rawdata]').val());
+            return false;
+        });
 
     });
 </script>
