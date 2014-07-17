@@ -126,7 +126,7 @@
                 $('body').addClass('is-loading');
 
                 $.ajax({
-                    url: LcUrl.AppPath + url,
+                    url: (LcUrl.AppPath + url).replace(/\/{2}/g, '/'),
                     type: type,
                     data: data
                 }).then(
