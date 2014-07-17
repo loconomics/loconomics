@@ -31,6 +31,49 @@
             all: {
                 givemeerror: 'Something goes wrong'
             }
+        },
+        'Upcoming Appointments': {
+            url: '/en-US/REST/upcoming-appointments',
+            get: {
+                limit: 5
+            }
+        },
+        'Get Availability Weekly (pre-REST API)': {
+            url: '/en-US/calendar/get-availability',
+            get: {
+                type: 'weekly',
+                user: 141,
+                start: '2014-07-17',
+                end: null
+            }
+        },
+        'Get Availability workHours (pre-REST API)': {
+            url: '/en-US/calendar/get-availability',
+            get: {
+                type: 'workHours'
+            }
+        },
+        'Get Availability monthly (pre-REST API)': {
+            url: '/en-US/calendar/get-availability',
+            get: {
+                type: 'monthly',
+                editable: false,
+                'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
+                    'the first month-date for that date; or a given "start" and "end" dates, ' +
+                    'default is the current date',
+                date: null
+            }
+        },
+        'Get Availability monthly-schedule (pre-REST API)': {
+            url: '/en-US/calendar/get-availability',
+            get: {
+                type: 'monthly-schedule',
+                'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
+                    'the first month-date for that date; or a given "start" and "end" dates, ' +
+                    'default is the current date',
+                start: null,
+                end: null
+            }
         }
     };
 
@@ -39,7 +82,7 @@
             data = api[method];
         if (api) {
             $('[name=url]').val(api.url);
-            $('[name=rawdata]').val(JSON.stringify(data));
+            $('[name=rawdata]').val(JSON.stringify(data, null, ' '));
         }
     }
 
@@ -121,6 +164,10 @@
         -moz-box-sizing: border-box !important;
         -webkit-box-sizing: border-box !important;
         width: 100% !important;
+    }
+    #log {
+        max-height: 200px;
+        overflow: auto;
     }
     #apiList li span {
         margin-left: 1em;
