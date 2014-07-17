@@ -54,7 +54,7 @@
 @functions {
     dynamic doGet() {
         if (!Request["givemeerror"].IsEmpty()) {
-            throw new HttpException(400, Request["givemeerror"]);
+            throw new HttpException(500, Request["givemeerror"]);
         }
         
         if (!UrlData[0].IsEmpty()) {
@@ -75,11 +75,7 @@
         }
     }
     
-    dynamic doPost() {
-        if (!Request["givemeerror"].IsEmpty()) {
-            throw new HttpException(500, Request["givemeerror"]);
-        }
-
+    dynamic editItem() {
         Validation.Add("short", Validator.StringLength(5, 0, "Short must be 5 or less"));
         Validation.RequireField("name", LcRessources.RequiredField("Name"));
         Validation.Add("num", Validator.Decimal("Num must be a number"));
@@ -100,6 +96,17 @@
             // Bad request, input data incorrect because of validation rules
             throw new HttpException(400, "Validation rules");
         }
+    }
+    
+    dynamic doPost() {
+        if (!Request["givemeerror"].IsEmpty()) {
+            throw new HttpException(500, Request["givemeerror"]);
+        }
+        if (!UrlData[0].IsEmpty()) {
+            throw new HttpException(500, "Cannot POST to an item");
+        }
+
+        return editItem();
     }
     
     dynamic validateItemID() {
@@ -128,13 +135,16 @@
     }
     
     dynamic doPut() {
-        
+        if (!Request["givemeerror"].IsEmpty()) {
+            throw new HttpException(500, Request["givemeerror"]);
+        }
+
         var v = validateItemID();
         if (v != null)
             return v;
+                
+        var updated = editItem();
 
-        // Just reusing 'post' example 
-        var updated = doPost();
         updated["ItemID"] = UrlData[0];
         
         // OK
@@ -143,6 +153,9 @@
     }
     
     dynamic doDelete() {
+        if (!Request["givemeerror"].IsEmpty()) {
+            throw new HttpException(500, Request["givemeerror"]);
+        }
 
         var v = validateItemID();
         if (v != null)

@@ -5,7 +5,69 @@
     var url = Request["url"];
 }
 <script type="text/javascript">
+
+    var REST_API = {
+        'Test': {
+            url: '/en-US/REST/Test',
+            get: {
+                name: 'indians'
+            },
+            post: {
+                name: 'Me',
+                num: '23g',
+                short: 'No longer than 5'
+            }
+        },
+        'Test item': {
+            url: '/en-US/REST/Test/20',
+            put: {
+                name: 'Me',
+                num: 10
+            },
+            'delete': {}
+        },
+        'Test Server Error': {
+            url: '/en-US/REST/Test',
+            all: {
+                givemeerror: 'Something goes wrong'
+            }
+        }
+    };
+
+    function useApi(name, method) {
+        var api = REST_API[name],
+            data = api[method];
+        if (api) {
+            $('[name=url]').val(api.url);
+            $('[name=rawdata]').val(JSON.stringify(data));
+        }
+    }
+
+    function showApiList() {
+        var $l = $('#apiList');
+        Object.keys(REST_API).forEach(function (name) {
+
+            var $li = $('<li/>')
+            .text(name + ':')
+            .appendTo($l);
+
+            ['all', 'get', 'post', 'put', 'delete'].forEach(function (method) {
+
+                if (REST_API[name][method]) {
+                    $('<span/>')
+                    .text(method)
+                    .on('click', function () {
+                        useApi(name, method);
+                    })
+                    .appendTo($li);
+                }
+            });
+        });
+    }
+
     jQuery(function ($) {
+
+        showApiList();
 
         function doRequest(type, url, data) {
 
@@ -13,6 +75,7 @@
 
             try {
 
+                type = type && type.toUpperCase();
                 data = data && data.replace(/^\s+/, '') && JSON.parse(data);
 
                 $.ajax({
@@ -59,6 +122,12 @@
         -webkit-box-sizing: border-box !important;
         width: 100% !important;
     }
+    #apiList li span {
+        margin-left: 1em;
+        cursor: pointer;
+        text-decoration: underline;
+        color: Blue;
+    }
 </style>
 <div>
     <form>
@@ -82,4 +151,6 @@
     </form>
     <h6>Task result (see it formatted in the browser web console):</h6>
     <pre id="log"></pre>
+    <h6>REST API examples</h6>
+    <ul id="apiList"></ul>
 </div>
