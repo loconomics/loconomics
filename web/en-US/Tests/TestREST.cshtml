@@ -16,7 +16,7 @@
                 data = data && data.replace(/^\s+/, '') && JSON.parse(data);
 
                 $.ajax({
-                    url: LcUrl.LangPath + 'REST/' + url,
+                    url: LcUrl.AppPath + url,
                     type: type,
                     data: data
                 }).then(
@@ -58,7 +58,7 @@
 </style>
 <div>
     <form>
-        <label>REST API URL (relative to REST root) <input type="text" name="url" value="Test" /></label>
+        <label>REST API URL (for example /en-US/REST/Test) <input type="text" name="url" value="/en-US/REST/Test" /></label>
         <div>
             <!-- Some example data as JSON -->
             <label>Raw data as JSON
