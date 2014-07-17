@@ -1,0 +1,58 @@
+﻿@using System.Linq;
+@using System.Web;
+@using System.Web.WebPages;
+@using System.Web.WebPages.Html;
+@using System.Collections;
+@using System.Collections.Generic;
+@*
+    Getting User Upcoming Appointments
+*@
+@using WebMatrix.Data;
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    
+    dynamic result = new Dictionary<string, dynamic>();
+    
+    try {
+        
+        switch (Request.HttpMethod) {
+            case "GET":
+                result = doGet();
+                
+                break;
+            case "POST":
+ 
+                throw new HttpException(400, "POST is not allowed");
+                
+            case "PUT":
+                
+                throw new HttpException(400, "PUT is not allowed");
+                
+            case "DELETE":
+                
+                throw new HttpException(400, "DELETE is not allowed");
+        }
+        
+    } catch(HttpException http) {
+        
+        Response.StatusCode = http.GetHttpCode();
+        
+        result["errorMessage"] = http.Message;
+        if (!ModelState.IsValid) {
+            result["errors"] = ModelState.Errors();
+        }
+        
+    } catch(Exception ex){
+
+        result["errorMessage"] = ex.Message;
+    }
+    
+    // Output data
+    LcHelpers.ReturnJson(result);
+}
+@functions {
+    dynamic doGet() {
+        
+        return LcData.Booking.GetUpcomingBookings(WebSecurity.CurrentUserId, Request["limit"].AsInt(5));
+    }
+}
