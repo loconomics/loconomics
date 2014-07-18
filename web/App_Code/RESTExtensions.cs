@@ -109,7 +109,7 @@ public static class RESTExtensions
     /// </summary>
     /// <param name="Request"></param>
     /// <returns></returns>
-    public static dynamic GetJsonData(this HttpRequest Request, Type type = null)
+    public static dynamic GetJsonData(this HttpRequestBase Request, Type type = null)
     {
         // application/json; charset=UTF-8
         if (Request.ContentType.StartsWith("application/json"))
