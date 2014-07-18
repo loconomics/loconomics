@@ -15,10 +15,20 @@
 
 @functions{
 
-    public static dynamic Login(WebPage page) {
-        
-        page.Validation.RequireField("username", "You must specify a user name.");
-	    page.Validation.RequireField("password", "You must specify a password.");
+    public class LoginResult {
+        public LoginResult() { }
+        public string redirectUrl;
+        public int userId;
+    }
+
+    public static LoginResult Login(WebPage page) {
+
+        if (page.Validation.GetHtml("username") == null) {
+            page.Validation.RequireField("username", "You must specify a user name.");
+        }
+        if (page.Validation.GetHtml("password") == null) {
+	        page.Validation.RequireField("password", "You must specify a password.");
+        }
         
         if (page.Validation.IsValid()) {
             var username = Request.Form["username"];
@@ -40,7 +50,10 @@
             
         if (LcAuth.Login(username, password, rememberMe)) {
 
-            return new { redirectUrl = getRedirectUrl(username) };
+            return new LoginResult {
+                redirectUrl = getRedirectUrl(username),
+                userId = WebSecurity.GetUserId(username)
+            };
         }
         else {
             throw new HttpException(400, "Incorrect Username or password.");
