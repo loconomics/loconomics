@@ -130,7 +130,9 @@
                 $.ajax({
                     url: (LcUrl.AppPath + url).replace(/\/{2}/g, '/'),
                     type: type,
-                    data: data
+                    data: data,
+                    //data: JSON.stringify(data),
+                    //contentType: 'application/json'
                 }).then(
                 function (d, status, xhr) {
                     console.log('OK   ', d);

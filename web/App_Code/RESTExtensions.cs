@@ -101,4 +101,28 @@ public static class RESTExtensions
         Json.Write(info, response.Output);
         response.End();
     }
+
+    /// <summary>
+    /// For request with data provided as type JSON,
+    /// it gets the deserialized JSON object,
+    /// or null otherwise.
+    /// </summary>
+    /// <param name="Request"></param>
+    /// <returns></returns>
+    public static dynamic GetJsonData(this HttpRequest Request, Type type = null)
+    {
+        // application/json; charset=UTF-8
+        if (Request.ContentType.StartsWith("application/json"))
+        {
+            string json;
+            using(var reader = new System.IO.StreamReader(Request.InputStream)){
+                json = reader.ReadToEnd();
+            }
+            // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
+            // breaking the code.
+            //return System.Web.Helpers.Json.Decode(json);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject(json, type);
+        }
+        return null;
+    }
 }

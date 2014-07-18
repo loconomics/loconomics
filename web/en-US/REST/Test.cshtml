@@ -76,6 +76,7 @@
     }
     
     dynamic editItem() {
+        
         Validation.Add("short", Validator.StringLength(5, 0, "Short must be 5 or less"));
         Validation.RequireField("name", LcRessources.RequiredField("Name"));
         Validation.Add("num", Validator.Decimal("Num must be a number"));
