@@ -40,6 +40,7 @@
         
         result["errorMessage"] = http.Message;
         if (!ModelState.IsValid) {
+            result["errorSource"] = "validation";
             result["errors"] = ModelState.Errors();
         }
         

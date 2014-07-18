@@ -22,15 +22,15 @@
                 break;
             case "POST":
  
-                throw new HttpException(400, "POST is not allowed");
+                throw new HttpException(405, "POST is not allowed");
                 
             case "PUT":
                 
-                throw new HttpException(400, "PUT is not allowed");
+                throw new HttpException(405, "PUT is not allowed");
                 
             case "DELETE":
                 
-                throw new HttpException(400, "DELETE is not allowed");
+                throw new HttpException(405, "DELETE is not allowed");
         }
         
     } catch(HttpException http) {

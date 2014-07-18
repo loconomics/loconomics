@@ -79,6 +79,17 @@
                 start: null,
                 end: null
             }
+        },
+        'Login': {
+            url: '/en-US/rest/login',
+            post: {
+                 "username": "some user email",
+                 "password": "",
+                 "redirect": "/en-US/dashboard",
+                 'api comment': 'the returned "redirectUrl" on success must be mandatory when there is a value since sometimes ' +
+                    'will be different from the given "redirect", as for providers in the Onboarding, they must continue that ' +
+                    'at the step given in "redirectUrl". This is the fact for current Website, what rules we will manage on mobile?.'
+            }
         }
     };
 
