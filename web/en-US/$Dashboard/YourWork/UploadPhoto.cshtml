@@ -267,7 +267,7 @@
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
                         if (responseJSON.success)
-                        reloadPhoto(responseJSON.fileURI, responseJSON.photoID);
+                            reloadPhoto(responseJSON.fileURI, responseJSON.photoID);
                     },
                     messages: {
                         typeError: "{file} has invalid extension. Only {extensions} are allowed.",
