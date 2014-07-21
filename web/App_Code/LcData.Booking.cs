@@ -7,6 +7,26 @@ using System.Web.WebPages;
 
 public static partial class LcData
 {
+    public class SqlGenericResult
+    {
+        public int Error = 0;
+        public string ErrorMessage = "";
+        public int ID = 0;
+        public SqlGenericResult() { }
+        public SqlGenericResult(dynamic record)
+        {
+            Error = record.Error;
+            try
+            {
+                ErrorMessage = record.ErrorMessage;
+            } catch {}
+            try
+            {
+                ID = record.ID;
+            } catch {}
+        }
+    }
+
     /// <summary>
     /// Methods to get data related with Bookings
     /// </summary>
@@ -1178,7 +1198,7 @@ public static partial class LcData
 
                 -- We return sucessful operation with Error=0
                 -- and attach the BookingID created instead of an ErrorMessage
-                SELECT 0 As Error, @BookingID As BookingID
+                SELECT 0 As Error, @BookingID As ID
             END TRY
             BEGIN CATCH
                 IF @@TRANCOUNT > 0
@@ -1207,7 +1227,7 @@ public static partial class LcData
         /// -2: provider not available that date
         /// -3: payment error
         /// </returns>
-        public static dynamic ConfirmBooking(int bookingRequestID, string dateType, Database db = null)
+        public static SqlGenericResult ConfirmBooking(int bookingRequestID, string dateType, Database db = null)
         {
             var owned = db == null;
             if (owned)
@@ -1244,7 +1264,7 @@ public static partial class LcData
                 }
                 if (dateID == 0)
                 {
-                    return new
+                    return new SqlGenericResult
                     {
                         Error = -1,
                         ErrorMessage = "We're having issues finding your booking request. Please contact us at support@loconomics.com."
@@ -1275,7 +1295,7 @@ public static partial class LcData
                         WHERE   ID = @0
                     ", dateID);
 
-                    return new
+                    return new SqlGenericResult
                     {
                         Error = -2,
                         // Text: message can end being showed to both customer and provider (but can be customized
@@ -1286,7 +1306,7 @@ public static partial class LcData
                 }
 
                 // Creating booking and updating BookingRequest
-                var result = db.QuerySingle(sqlConfirmBooking, bookingRequestID, dateID);
+                var result = new SqlGenericResult(db.QuerySingle(sqlConfirmBooking, bookingRequestID, dateID));
 
                 // On no errors:
                 if (result.Error == 0)
@@ -1300,11 +1320,11 @@ public static partial class LcData
                         // Get card from transaction
                         string transactionID = db.QueryValue("SELECT coalesce(PaymentTransactionId, '') FROM BookingRequest WHERE BookingRequestID = @0", bookingRequestID);
 
-                        var authorizationError = AuthorizeBookingTransaction(transactionID, result.BookingID, db);
+                        var authorizationError = AuthorizeBookingTransaction(transactionID, result.ID, db);
 
                         if (!String.IsNullOrEmpty(authorizationError))
                         {
-                            return new
+                            return new SqlGenericResult
                             {
                                 Error = -3,
                                 ErrorMessage = authorizationError
@@ -1320,7 +1340,7 @@ public static partial class LcData
                     var settleResult = SettleBookingTransaction(tranID, result.BookingID, db);
                     if (settleResult != null)
                     {
-                        return new
+                        return new SqlGenericResult
                         {
                             Error = -3,
                             ErrorMessage = settleResult
@@ -1334,8 +1354,8 @@ public static partial class LcData
                     // (customer and provider can access contact data from the booking).
                     try
                     {
-                        var description = LcData.Booking.GetBookingEventDescription(result.BookingID);
-                        var location = LcData.Booking.GetBookingLocationAsOneLineText(result.BookingID);
+                        var description = LcData.Booking.GetBookingEventDescription(result.ID);
+                        var location = LcData.Booking.GetBookingLocationAsOneLineText(result.ID);
                         db.Execute(@"
                                 UPDATE  CalendarEvents
                                 SET     Description = @1,
@@ -1516,7 +1536,7 @@ public static partial class LcData
         /// 8	denied with alternatives
         /// </summary>
         /// <param name="BookingRequestID"></param>
-        public static dynamic InvalidateBookingRequest(int BookingRequestID, int BookingRequestStatusID)
+        public static SqlGenericResult InvalidateBookingRequest(int BookingRequestID, int BookingRequestStatusID)
         {
             if (!(new int[] { 3, 4, 5, 6, 8 }).Contains<int>(BookingRequestStatusID))
             {
@@ -1546,7 +1566,7 @@ public static partial class LcData
                 string result = ManageRefundTransaction(booking.PaymentTransactionID, refund, booking.CustomerUserID, booking.ProviderUserID);
 
                 if (result != null)
-                    return (dynamic)new { Error = 9999, ErrorMessage = result };
+                    return (dynamic)new SqlGenericResult { Error = 9999, ErrorMessage = result };
 
                 // All goes fine with payment proccessing, continue
 
@@ -1621,18 +1641,7 @@ public static partial class LcData
             return result;
         }
 
-        public class InvalidateBookingResult
-        {
-            public int Error = 0;
-            public string ErrorMessage = "";
-            public InvalidateBookingResult() { }
-            public InvalidateBookingResult(dynamic record)
-            {
-                Error = record.Error;
-                ErrorMessage = record.ErrorMessage;
-            }
-        }
-        public static InvalidateBookingResult InvalidateBooking(int BookingID, int BookingStatusID)
+        public static SqlGenericResult InvalidateBooking(int BookingID, int BookingStatusID)
         {
             if (!(new int[] { 6, 7 }).Contains<int>(BookingStatusID))
             {
@@ -1729,7 +1738,7 @@ public static partial class LcData
                 string result = ManageRefundTransaction(booking.PaymentTransactionID, refund, booking.CustomerUserID, booking.ProviderUserID);
 
                 if (result != null)
-                    return new InvalidateBookingResult{ Error = 9999, ErrorMessage = result };
+                    return new SqlGenericResult { Error = 9999, ErrorMessage = result };
 
                 // All goes fine with payment proccessing, continue
 
@@ -1737,7 +1746,7 @@ public static partial class LcData
                 SaveRefundAmounts(refund, db);
 
                 // Invalidate in database the booking:
-                return new InvalidateBookingResult(
+                return new SqlGenericResult(
                     db.QuerySingle(sqlInvalidateBooking,
                         BookingID,
                         BookingStatusID

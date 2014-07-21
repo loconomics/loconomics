@@ -38,7 +38,7 @@
             // Success!
                     
             // Send message
-            LcMessaging.SendBookingRequestConfirmation(brID, taskResult.BookingID);
+            LcMessaging.SendBookingRequestConfirmation(brID, taskResult.ID);
 
             // Redirect
             if (redirectUrl == null) {
@@ -48,7 +48,7 @@
                     "dashboard/messages/booking/{1}/"
                 );
             }
-            redirectUrl = String.Format(redirectUrl, brID, taskResult.BookingID);
+            redirectUrl = String.Format(redirectUrl, brID, taskResult.ID);
 
             if (Request.IsAjaxRequest()) {
                 LcHelpers.ReturnJsonResult(3, redirectUrl);
