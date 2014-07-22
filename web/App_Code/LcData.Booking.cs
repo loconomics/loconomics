@@ -2398,11 +2398,11 @@ public static partial class LcData
         }
         public static string GetUrlPathForBookingRequest(int bookingRequestID)
         {
-            return String.Format("Dashboard/Bookings/#!BookingRequest-{0}", bookingRequestID);
+            return String.Format("dashboard/messages/bookingrequest/{0}", bookingRequestID);
         }
         public static string GetUrlPathForBooking(int bookingID, int bookingRequestID = 0)
         {
-            return String.Format("Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", bookingRequestID, bookingID);
+            return String.Format("dashboard/messages/booking/{1}", bookingRequestID, bookingID);
         }
         #endregion
     }
