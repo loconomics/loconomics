@@ -5,7 +5,7 @@
     var u = LcData.UserInfo.GetUserRow();
     int brID = PageData["BookingRequestID"] ?? Request["BookingRequestID"].AsInt();
     string redirectUrl = PageData["RedirectUrl"];
-    string dateType = PageData["ConfirmedDateType"] ?? Request["ConfirmedDateType"];   
+    string dateType = PageData["ConfirmedDateType"] ?? Request["ConfirmedDateType"];    
         
     using (var db = Database.Open("sqlloco")) {
 
@@ -77,7 +77,7 @@
             break; 
     }
 
-    if (PageData["UseRenderReturns"]) {
+    if (PageData["UseRenderReturns"] ?? false) {
         LcHelpers.RenderPageReturns = msg ?? errorMessage;
         return;
     }

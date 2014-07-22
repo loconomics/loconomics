@@ -66,7 +66,7 @@
             
             var fullmsg = "Impossible to cancel that Booking Request. Is already cancelled?";
                 
-            if (PageData["UseRenderReturns"]) {
+            if (PageData["UseRenderReturns"] ?? false) {
                 LcHelpers.RenderPageReturns = fullmsg;
                 return;
             }

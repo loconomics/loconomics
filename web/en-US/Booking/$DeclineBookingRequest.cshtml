@@ -62,7 +62,7 @@
             
             var fullmsg = "We're having problems completing your request.  Please e-mail support@loconomics.com.";
                 
-            if (PageData["UseRenderReturns"]) {
+            if (PageData["UseRenderReturns"] ?? false) {
                 LcHelpers.RenderPageReturns = fullmsg;
                 return;
             }
