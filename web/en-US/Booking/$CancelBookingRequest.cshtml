@@ -78,7 +78,14 @@
                  */
                 LcHelpers.ReturnJsonError(-1, fullmsg);
             } else {
-                throw new HttpException(500, fullmsg);
+                
+                if (PageData["UseRenderReturns"]) {
+                    LcHelpers.RenderPageReturns = fullmsg;
+                    return;
+                } else {
+                    Layout = "../_SiteLayout.cshtml";
+                    @(fullmsg);
+                }
             }
         }
     }

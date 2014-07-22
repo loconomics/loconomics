@@ -12,7 +12,7 @@
         WHERE   R.ProviderUserID = @0
                  AND
                 R.BookingRequestID = @1
-                -- Not Denied Booking Request
+                -- Not Confirmed Booking Request
                  AND
                 R.BookingRequestStatusID <> 7
     ";
@@ -60,21 +60,21 @@
             }
         } else {
             
-            var fullmsg = "We're having problems completing your request.  Please e-mail support@loconomics.com.";
-                
-            if (PageData["UseRenderReturns"] ?? false) {
-                LcHelpers.RenderPageReturns = fullmsg;
-                return;
-            }
+            // At this point, the request:
+            // - Is already confirmed, cannot be declined
+            // - Or it doesn't exists
+            // - Or user is not the provider on that request
+            // Anyway, redirect to the booking, there the user can see:
+            // - That the booking was confirmed, so cannot be declined
+            // - A concrete error if it doesn't exists
+            // - A forbiding page if its not the provider or customer
+            
+            var url = LcUrl.LangPath + String.Format("dashboard/messages/bookingrequest/{0}/", brID);
             
             if (Request.IsAjaxRequest()){
-                /* What? 
-                 * - BookingRequestID and UserID (as ProviderUserID) don't match?
-                 * - BookingRequest is already confirmed?
-                 */
-                LcHelpers.ReturnJsonError(-1, fullmsg);
+                LcHelpers.ReturnJsonResult(1, url);
             } else {
-                throw new HttpException(500, fullmsg);
+                Response.Redirect(url);
             }
         }
     }

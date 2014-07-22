@@ -455,6 +455,7 @@ public static partial class LcData
                         R.CreatedDate As RequestDate,
                         R.UpdatedDate,
                         R.BookingRequestStatusID,
+                        0 As BookingStatusID,
                         R.PositionID,
                         R.CancellationPolicyID,
                         R.InstantBooking,
@@ -530,6 +531,15 @@ public static partial class LcData
                 return db.QuerySingle(sqlGetBookingRequest, BookingRequestID, UserID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
                     IsAdmin);
+            }
+        }
+        public static int GetBookingIDForBookingRequestID(int BookingRequestID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QueryValue(@"
+                    SELECT BookingID FROM Booking WHERE BookingRequestID = @0
+                ", BookingRequestID) ?? 0;
             }
         }
 

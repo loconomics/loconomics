@@ -28,6 +28,9 @@
         reqtimesFileName = "$BookingLinkRequestedTimes.cshtml";
     }
     
+    // Parameter to allow redirect to booking URL when the request is confirmed
+    var redirectOnConfirmedRequest = (string)PageData["RedirectOnConfirmedRequest"];
+    
     // Setting up data
     {
         var brID = Request["BookingRequestID"] ?? (string)PageData["BookingRequestID"];
@@ -41,6 +44,15 @@
             // Booking Request
             isRequest = true;
             prefix = "booking-request-" + brID;
+            
+            // If is a confirmed request (has a bookingID) and a redirect was requested:
+            if (!String.IsNullOrEmpty(redirectOnConfirmedRequest)) {
+                var confirmedBookingID = LcData.Booking.GetBookingIDForBookingRequestID(brID.AsInt());
+                if (confirmedBookingID > 0) {
+                    Response.Redirect(String.Format(redirectOnConfirmedRequest, confirmedBookingID), true);
+                }
+            }
+            
             booking = LcData.Booking.GetBookingRequestForUser(brID.AsInt(), u.UserID, u.IsAdmin);
             if (booking != null) {
                 confirmationLimitDate = booking.UpdatedDate.AddHours(LcData.Booking.ConfirmationLimitInHours);

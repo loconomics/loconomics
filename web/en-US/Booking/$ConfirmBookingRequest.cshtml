@@ -90,7 +90,9 @@
                 LcUrl.LangPath + 
                 String.Format("dashboard/messages/bookingrequest/{0}/", brID));
         } else {
-            throw new HttpException(500, msg ?? errorMessage);
+
+            Layout = "../_SiteLayout.cshtml";
+            @(msg ?? errorMessage);
         }
     }
 }
