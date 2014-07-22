@@ -81,7 +81,7 @@
         </p>
     </div>
 
-    <div style="width:600px;margin-bottom:20px">
+    <div style="width:600px;margin-bottom:20px;overflow:auto">
         <p @LcEmailTemplateHelper.StyleResetP()>Alternatively, copy and paste the following link into your browser to verify your account: @confirmationURL</p>
         @if (!String.IsNullOrEmpty(confirmationToken)) {
         <p>Or go to <a href="@(LcUrl.LangUrl)Account/Confirm/?@(alq)">@(LcUrl.LangUrl)Account/Confirm/</a> and input
