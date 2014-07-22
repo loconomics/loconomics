@@ -9,6 +9,8 @@
     var subform = Request["subform"].AsBool();
     var doReturn = PageState == ModelState && !subform;
     int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    var result = Request["result"] ?? ""; // Could be: empty, "json"
+    var action = Request["action"] ?? ""; // Could be: empty, "order", "save-photo". "delete" is implicit when delete-photo is True
     
     var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
 
@@ -58,10 +60,18 @@
                     try{
                         File.Delete(Server.MapPath(LcUrl.RenderAppPath + photosFolder + photoAddress));
                     }catch{
+                        if (result == "json") {
+                            LcHelpers.ReturnJsonError(-1, "Photo file could not be deleted");
+                        }
                         throw new Exception("Photo file could not be deleted");
                     }
+                    if (result == "json") {
+                        LcHelpers.ReturnJsonResult(0, "Deleted");
+                    }
                 }
-            } else {
+
+            } else if (action == "" || action == "save-photo") {
+                
                 var caption = Request["photo-caption"];
                 var isPrimary = Request["is-primary-photo"].AsBool();
         
@@ -81,26 +91,29 @@
                     EXEC TestAlertShowcaseWork @3, @4
                 ", photoID, caption, isPrimary, userID, positionID);
             }
-            // Indiferent if we are on 'delete' task or 'update details', we try to save the photo gallery
-            // order (RankPosition field on database) if there are data about it
-            var galleryOrder = Request["gallery-order"];
-            if (!String.IsNullOrEmpty(galleryOrder)) {
-                // Comma separated values with the html element IDs that have the format 'UserPhoto-PHOTOID'
-                // where PHOTOID is a number with the database record ID.
-                // Reading that order and sending to the server
-                int orderIndex = 0;
-                foreach (var go in galleryOrder.Split(',')) {
-                    // If we have a valid ID (integer number)
-                    var goID = go.Replace("UserPhoto-", "").AsInt();
-                    // Only if is a valid ID and if is not the ID of a just deleted photo
-                    if (goID > 0 &&
-                        !(delete && photoID == goID)) {
-                        // Save order to the database
-                        db.Execute(@"
-                            UPDATE  ProviderServicePhoto
-                            SET     RankPosition = @1
-                            WHERE   ProviderServicePhotoID = @0
-                        ", goID, ++orderIndex);
+
+            if (action == "" || action == "order") {
+                // Indiferent if we are on 'delete' task or 'update details', we try to save the photo gallery
+                // order (RankPosition field on database) if there are data about it
+                var galleryOrder = Request["gallery-order"];
+                if (!String.IsNullOrEmpty(galleryOrder)) {
+                    // Comma separated values with the html element IDs that have the format 'UserPhoto-PHOTOID'
+                    // where PHOTOID is a number with the database record ID.
+                    // Reading that order and sending to the server
+                    int orderIndex = 0;
+                    foreach (var go in galleryOrder.Split(',')) {
+                        // If we have a valid ID (integer number)
+                        var goID = go.Replace("UserPhoto-", "").AsInt();
+                        // Only if is a valid ID and if is not the ID of a just deleted photo
+                        if (goID > 0 &&
+                            !(delete && photoID == goID)) {
+                            // Save order to the database
+                            db.Execute(@"
+                                UPDATE  ProviderServicePhoto
+                                SET     RankPosition = @1
+                                WHERE   ProviderServicePhotoID = @0
+                            ", goID, ++orderIndex);
+                        }
                     }
                 }
             }
