@@ -6,6 +6,8 @@ var smoothBoxBlock = require('LC/smoothBoxBlock');
 var changesNotification = require('LC/changesNotification');
 
 var sectionSelector = '.DashboardPhotos';
+// On init, the default 'no image' image src will be get it on:
+var defaultImgSrc = null;
 
 exports.on = function (containerSelector) {
     var $c = $(containerSelector);
@@ -44,6 +46,66 @@ function save(data) {
     });
 }
 
+function saveEditedPhoto($f) {
+
+    var id = $f.find('[name=PhotoID]').val(),
+        caption = $f.find('[name=photo-caption]').val(),
+        isPrimary = $f.find('[name=is-primary-photo]').val() === 'True';
+
+    if (id && id > 0) {
+        // Ajax save
+        save({
+            PhotoID: id,
+            'photo-caption': caption,
+            'is-primary-photo': isPrimary,
+        });
+        // Update cache at gallery item
+        var $item = $f.find('.positionphotos-gallery #UserPhoto-' + id);
+        if ($item && $item.length) {
+            $item.attr('alt', caption);
+            if (isPrimary)
+                $item.addClass('is-primary-photo');
+            else
+                $item.removeClass('is-primary-photo');
+        }
+    }
+}
+
+function editSelectedPhoto(form, selected) {
+
+    var editPanel = $('.positionphotos-edit', form);
+
+    // Use given @selected or look for a selected photo in the list
+    selected = selected && selected.length ? selected : $('.positionphotos-gallery > ol > li.selected', form);
+
+    // Mark this as selected
+    selected.addClass('selected').siblings().removeClass('selected');
+
+    if (selected && selected.length > 0) {
+        var selImg = selected.find('img');
+        // Moving selected to be edit panel
+        var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1];
+        editPanel.find('[name=PhotoID]').val(photoID);
+        editPanel.find('img').attr('src', selImg.attr('src') + '?size=normal');
+        editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
+        var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
+        editPanel.find('[name=is-primary-photo]').prop('checked', false);
+        editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
+    } else {
+        if (form.find('.positionphotos-gallery > ol > li').length === 0) {
+            smoothBoxBlock.open(form.find('.no-photos'), editPanel, '', { autofocus: false });
+        } else {
+            smoothBoxBlock.open(form.find('.no-primary-photo'), editPanel, '', { autofocus: false });
+        }
+        // No image:
+        editPanel.find('img').attr('src', defaultImgSrc);
+        // Reset hidden fields manually to avoid browser memory breaking things
+        editPanel.find('[name=PhotoID]').val('');
+        editPanel.find('[name=photo-caption]').val('');
+        editPanel.find('[name=is-primary-photo]').prop('checked', false);
+    }
+}
+
 /* Setup the code that works on the different CRUDL actions on the photos.
   All this are delegates, only need to be setup once on the page
   (if the container $c is not replaced, only the contents, doesn't need to call again this).
@@ -53,11 +115,7 @@ function setupCrudlDelegates($c) {
     .on('change', '.positionphotos-edit input', function () {
         // Instant saving on user changes to the editing form
         var $f = $(this).closest('.positionphotos-edit');
-        save({
-            PhotoID: $f.find('[name=PhotoID]').val(),
-            'photo-caption': $f.find('[name=photo-caption]').val(),
-            'is-primary-photo': $f.find('[name=is-primary-photo]').val(),
-        });
+        saveEditedPhoto($f);
     })
     .on('click', '.positionphotos-tools-upload > a', function () {
         var posID = $(this).closest('form').find('input[name=positionID]').val();
@@ -67,24 +125,14 @@ function setupCrudlDelegates($c) {
     .on('click', '.positionphotos-gallery li a', function () {
         var $t = $(this);
         var form = $t.closest(sectionSelector);
-        var editPanel = $('.positionphotos-edit', form);
+        // Don't lost latest changes:
+        saveEditedPhoto(form);
 
         smoothBoxBlock.closeAll(form);
         // Set this photo as selected
         var selected = $t.closest('li');
-        selected.addClass('selected').siblings().removeClass('selected');
-        //var selected = $('.positionphotos-gallery > ol > li.selected', form);
-        if (selected !== null && selected.length > 0) {
-            var selImg = selected.find('img');
-            // Moving selected to be edit panel
-            var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1];
-            editPanel.find('[name=PhotoID]').val(photoID);
-            editPanel.find('img').attr('src', selImg.attr('src'));
-            editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
-            var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
-            editPanel.find('[name=is-primary-photo]').prop('checked', false);
-            editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
-        }
+        editSelectedPhoto(form, selected);
+
         return false;
     })
     .on('click', '.positionphotos-edit-delete a', function () {
@@ -104,7 +152,11 @@ function setupCrudlDelegates($c) {
         .then(function () {
             // Remove item
             $photoItem.remove();
+
+            editSelectedPhoto(form);
         });
+
+        return false;
     });
 }
 
@@ -137,32 +189,11 @@ function initElements(form) {
         }
     });
 
-    // Set primary photo to be edited
-    var editPanel = $('.positionphotos-edit', form);
-    // Look for a selected photo in the list
-    var selected = $('.positionphotos-gallery > ol > li.selected', form);
-    if (selected !== null && selected.length > 0) {
-        var selImg = selected.find('img');
-        // Moving selected to be edit panel
-        var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1];
-        editPanel.find('[name=PhotoID]').val(photoID);
-        editPanel.find('img').attr('src', selImg.attr('src'));
-        editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
-        var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
-        editPanel.find('[name=is-primary-photo]').prop('checked', false);
-        editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
-    } else {
-        if (form.find('.positionphotos-gallery > ol > li').length === 0) {
-            smoothBoxBlock.open(form.find('.no-photos'), editPanel, '', { autofocus: false });
-        } else {
-            smoothBoxBlock.open(form.find('.no-primary-photo'), editPanel, '', { autofocus: false });
-        }
-        // Reset hidden fields manually to avoid browser memory breaking things
-        editPanel.find('[name=PhotoID]').val('');
-        editPanel.find('[name=photo-caption]').val('');
-        editPanel.find('[name=is-primary-photo]').prop('checked', false);
-    }
-    // Reset delete option
-    editPanel.find('[name=delete-photo]').val('False');
+    defaultImgSrc = form.find('img').attr('src');
 
+    // Set primary photo to be edited
+    editSelectedPhoto(form);
+
+    // Reset delete option
+    form.find('[name=delete-photo]').val('False');
 }

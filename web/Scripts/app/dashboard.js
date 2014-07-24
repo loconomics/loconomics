@@ -126,7 +126,6 @@ function initAvailability(e) {
   is inside the form and replaced on html returned from server.
 **/
 function initYourWorkDom() {
-    console.log('initYourWorkDom');
     /* Your work / pricing */
     require('./dashboard/pricingCrudl').on();
 
