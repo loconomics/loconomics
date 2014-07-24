@@ -36,6 +36,10 @@ function save(data) {
                 // new error for Promise-attached callbacks
                 throw new Error(data.ErrorMessage);
             } else {
+                // Register changes
+                var $c = $(sectionSelector);
+                changesNotification.registerSave($c.closest('form').get(0), $c.find(':input').toArray());
+
                 return data;
             }
         },
