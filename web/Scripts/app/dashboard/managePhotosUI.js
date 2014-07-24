@@ -126,7 +126,7 @@ function setupCrudlDelegates($c) {
     })
     .on('click', '.positionphotos-tools-upload > a', function () {
         var posID = $(this).closest('form').find('input[name=positionID]').val();
-        popup(LcUrl.LangPath + 'dashboard/YourWork/UploadPhoto/?PositionID=' + posID, 'small');
+        popup(LcUrl.LangPath + 'dashboard/YourWork/UploadPhoto/?PositionID=' + posID, { width: 700, height: 670 }, null, null, { autoFocus: false });
         return false;
     })
     .on('click', '.positionphotos-gallery li a', function () {
