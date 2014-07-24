@@ -50,7 +50,7 @@ function saveEditedPhoto($f) {
 
     var id = $f.find('[name=PhotoID]').val(),
         caption = $f.find('[name=photo-caption]').val(),
-        isPrimary = $f.find('[name=is-primary-photo]').val() === 'True';
+        isPrimary = $f.find('[name=is-primary-photo]:checked').val() === 'True';
 
     if (id && id > 0) {
         // Ajax save
@@ -58,11 +58,14 @@ function saveEditedPhoto($f) {
             PhotoID: id,
             'photo-caption': caption,
             'is-primary-photo': isPrimary,
+            result: 'json'
         });
         // Update cache at gallery item
-        var $item = $f.find('.positionphotos-gallery #UserPhoto-' + id);
+        var $item = $f.find('.positionphotos-gallery #UserPhoto-' + id),
+            $img = $item.find('img');
+
         if ($item && $item.length) {
-            $item.attr('alt', caption);
+            $img.attr('alt', caption);
             if (isPrimary)
                 $item.addClass('is-primary-photo');
             else

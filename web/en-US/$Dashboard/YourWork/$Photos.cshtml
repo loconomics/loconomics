@@ -118,6 +118,10 @@
                 }
             }
             
+            if (result == "json") {
+                LcHelpers.ReturnJsonResult(0, "Saved");
+            }
+            
             // If is delete task, return html to refresh page,
             // because of that only return a JSON if is not delete:
             if (!delete && doReturn) {
