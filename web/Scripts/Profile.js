@@ -16,7 +16,8 @@ $(function () {
             var caption = selImg.attr('alt');
             hlPanel.find('img').attr('alt', caption);
             hlPanel.find('.photo-caption').text(caption);
-            hlPanel.find('a').attr('href', selImg.data('large-src'));
+            // disable click to enlarge for now
+            //hlPanel.find('a').attr('href', selImg.data('large-src'));
         }
         return false;
     });

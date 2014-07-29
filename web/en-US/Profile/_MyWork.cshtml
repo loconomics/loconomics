@@ -34,9 +34,11 @@ A picture's worth a thousand words.  Review the provider's photos of his/her wor
 </p>
 
 <div class="highlighted-photo-large gallery-highlighted">
+    @* disabled click to enlarge for now 
     <a title="Click to enlarge" target="_blank" href="@(primaryPhoto == null ? LcUrl.AppPath + "img/theme/user-photo-no-selected.png" : photosFolder + LcUtils.GetNameWithoutSuffix(primaryPhoto.PhotoAddress) + ".jpg")">
+    *@
         <img alt="@(primaryPhoto == null ? "No primary photo" : primaryPhoto.PhotoCaption)" src="@(primaryPhoto == null ? LcUrl.AppPath + "img/theme/user-photo-no-selected.png" : photosFolder + primaryPhoto.PhotoAddress)" />
-    </a>
+    @*</a>*@
     <h5 class="photo-caption">@(primaryPhoto == null ? "" : primaryPhoto.PhotoCaption)</h5>
 </div>
 
