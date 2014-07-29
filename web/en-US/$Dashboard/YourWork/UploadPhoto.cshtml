@@ -99,7 +99,6 @@
         fileName = LcUtils.GetNameWithoutSuffix(fileName);
         
         // TODO: Cropping works bad, wrong area and size, maybe uses the bad file? bad size given?
-        // TODO: After crop, a JS error is throw and nothing show in the image
 
         // Remove previous cropped/sized/adapted photos (except editable one), all start with fileName plus dash
         // File.Delete doesn't allow wildcards, find and delete each one
@@ -428,8 +427,8 @@
                         url: $f.attr('action'),
                         method: $f.attr('method'),
                         data: $f.serialize(),
+                        dataType: 'json',
                         success: function (data) {
-
                             if (data.updated) {
                                 // Photo cropped, resized
                                 reloadPhoto(data.fileURI, data.photoID);
