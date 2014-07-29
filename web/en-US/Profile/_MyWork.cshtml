@@ -34,7 +34,9 @@ A picture's worth a thousand words.  Review the provider's photos of his/her wor
 </p>
 
 <div class="highlighted-photo-large gallery-highlighted">
-    <img alt="@(primaryPhoto == null ? "No primary photo" : primaryPhoto.PhotoCaption)" src="@(primaryPhoto == null ? LcUrl.AppPath + "img/theme/user-photo-no-selected.png" : photosFolder + primaryPhoto.PhotoAddress)" />
+    <a title="Click to enlarge" target="_blank" href="@(primaryPhoto == null ? LcUrl.AppPath + "img/theme/user-photo-no-selected.png" : photosFolder + LcUtils.GetNameWithoutSuffix(primaryPhoto.PhotoAddress) + ".jpg")">
+        <img alt="@(primaryPhoto == null ? "No primary photo" : primaryPhoto.PhotoCaption)" src="@(primaryPhoto == null ? LcUrl.AppPath + "img/theme/user-photo-no-selected.png" : photosFolder + primaryPhoto.PhotoAddress)" />
+    </a>
     <h5 class="photo-caption">@(primaryPhoto == null ? "" : primaryPhoto.PhotoCaption)</h5>
 </div>
 
@@ -47,7 +49,7 @@ A picture's worth a thousand words.  Review the provider's photos of his/her wor
     {
         foreach (var photo in photos)
         {
-            <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@((photo.IsPrimaryPhoto || photo == primaryPhoto) ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)"/></a></li>
+            <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@((photo.IsPrimaryPhoto || photo == primaryPhoto) ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)" data-large-src="@(photosFolder + LcUtils.GetNameWithoutSuffix(photo.PhotoAddress) + ".jpg")" /></a></li>
         }
     }
 </ol>
