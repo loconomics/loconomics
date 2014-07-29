@@ -69,14 +69,14 @@
     .positionphotos-gallery li a{
         display: block;
         width: 128px;
-        height: 80px;
+        height: 96px;
         margin: 3px auto;
         overflow: hidden;
         text-align: center;
     }
     .positionphotos-gallery li a img{
         max-width: 128px;
-        min-height: 80px;
+        min-height: 96px;
     }
     .positionphotos-gallery li.selected a{
         outline: 3px solid #00989a;
@@ -91,6 +91,15 @@
         width: auto;
         height: auto;
     }
+    
+    /* Increased size for the sortable placeholder for
+        better user experience. The height given
+        is the same as the size images took with
+        current styles */
+    .positionphotos-gallery .ui-state-highlight {
+        height: 125px;
+    }
+    
     .positionphotos-edit-caption label,
     .positionphotos-edit-primary label{
         padding: 5px 0;

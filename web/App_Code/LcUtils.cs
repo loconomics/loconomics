@@ -339,5 +339,23 @@ public static class LcUtils
         else
             return value.ToString();
     }
+
+    /// <summary>
+    /// Get the inital part of a string until a 'dash' is found,
+    /// treating the part after the dash (and including that character)
+    /// as the name suffix. Or the same 'name' if there is no dash.
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public static string GetNameWithoutSuffix(string name) {
+        
+        int i = name.IndexOf('-');
+        if (i > -1) {
+            return name.Substring(0, i);
+        }
+        else {
+            return name;
+        }
+    }
     #endregion
 }

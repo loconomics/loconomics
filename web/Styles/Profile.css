@@ -541,14 +541,14 @@ form.report-unauthorized-use textarea {
 .gallery-content li a{
     display: block;
     width: 164px;
-    height: 111px;
+    height: 123px;
     margin: 3px auto;
     overflow: hidden;
     text-align: center;
 }
 .gallery-content li a img{
     max-width: 164px;
-    min-height: 111px;
+    min-height: 123px;
 }
 .gallery-content li.selected a{
     outline: 3px solid #00989a ;
