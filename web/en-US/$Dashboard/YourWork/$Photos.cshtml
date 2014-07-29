@@ -57,8 +57,18 @@
                 
                 if (!String.IsNullOrEmpty(photoAddress)) {
                     // Remove file from user folder
-                    try{
-                        File.Delete(Server.MapPath(LcUrl.RenderAppPath + photosFolder + photoAddress));
+                    try {
+                        // There are several files for the same photo, with suffixes for different
+                        // sizes and optimizations: delete all of them
+                        var fileName = LcUtils.GetNameWithoutSuffix(photoAddress);
+                        var sysFolder = Server.MapPath(LcUrl.RenderAppPath + photosFolder);
+                        // Delete the original file, no suffix
+                        File.Delete(sysFolder + fileName + ".jpg");
+                        // Delete all files with suffix.
+                        // File.Delete doesn't allow wildcards, find and delete each one
+                        foreach (var f in Directory.GetFiles(sysFolder, fileName + "-*", SearchOption.TopDirectoryOnly)) {
+                            File.Delete(f);
+                        }
                     }catch{
                         if (result == "json") {
                             LcHelpers.ReturnJsonError(-1, "Photo file could not be deleted");
