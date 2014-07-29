@@ -97,8 +97,6 @@
         // fileName could be given by a previous save including suffixes,
         // we need it without suffixes in order to work properly:
         fileName = LcUtils.GetNameWithoutSuffix(fileName);
-        
-        // TODO: Cropping works bad, wrong area and size, maybe uses the bad file? bad size given?
 
         // Remove previous cropped/sized/adapted photos (except editable one), all start with fileName plus dash
         // File.Delete doesn't allow wildcards, find and delete each one
@@ -109,7 +107,10 @@
         using (var img = System.Drawing.Image.FromFile(folder + fileName + ".jpg")) {
             
             // Crop, if any size
-            var cropImg = width > 0 ? LcImaging.Crop(img, x, y, width, height) : img;
+            // On cropping:
+            // User used the reduced image (fixed size) to choose what to crop,
+            // while we will crop the 'original', 4x larger image, so multiply every unit
+            var cropImg = width > 0 ? LcImaging.Crop(img, x * 4, y * 4, width * 4, height * 4) : img;
             
             // Size prefix
             var sizeName = "-" + fixedSizeWidth.ToString() + "x" + fixedSizeHeight.ToString();
