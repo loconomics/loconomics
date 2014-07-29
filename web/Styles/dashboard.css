@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-07-10
+/*! Loconomics.com 2014-07-29
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -3273,7 +3273,7 @@ form ul li {
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 
-/* line 112 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
+/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -3772,7 +3772,12 @@ form ul li {
   height: auto;
 }
 
-/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+.DashboardYourWork .DashboardPhotos .positionphotos-gallery .ui-state-highlight {
+  height: 109px;
+}
+
+/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-caption label,
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary label {
   padding: 5px 0;
@@ -3780,12 +3785,12 @@ form ul li {
   margin-right: 15px;
 }
 
-/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 104 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-caption input {
   width: 270px !important;
 }
 
-/* line 98 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary h6 {
   font-size: 1em;
   color: #666;
@@ -3794,12 +3799,12 @@ form ul li {
   display: inline-block;
 }
 
-/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 114 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary input {
   margin: 0 3px;
 }
 
-/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary label {
   padding: 0;
 }

@@ -93,6 +93,14 @@
         
         var folder = Server.MapPath(virtualPath);
         var regularFileName = "";
+        
+        // fileName could be given by a previous save including suffixes,
+        // we need it without suffixes in order to work properly:
+        fileName = GetFileNameWithoutSuffix(fileName);
+        
+        // TODO: Delete all photos on deletion (its in the dashboard/photos file)
+        // TODO: Cropping works bad, wrong area and size, maybe uses the bad file? bad size given?
+        // TODO: After crop, a JS error is throw and nothing show in the image
 
         // Remove previous cropped/sized/adapted photos (except editable one), all start with fileName plus dash
         // File.Delete doesn't allow wildcards, find and delete each one
@@ -131,6 +139,17 @@
     string GetValidFileName(string fileName){
         // Names starting with $ are considered special for us, no allow user to upload a file with that character as prefix:
         return fileName.TrimStart('$');
+    }
+    
+    string GetFileNameWithoutSuffix(string fileName) {
+        
+        int i = fileName.IndexOf('-');
+        if (i > -1) {
+            return fileName.Substring(0, i);
+        }
+        else {
+            return fileName;
+        }
     }
 }
 @{
