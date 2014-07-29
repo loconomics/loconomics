@@ -400,7 +400,7 @@
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
                         if (responseJSON.success) {
-                            reloadPhoto(responseJSON.fileURI, responseJSON.photoID);
+                            appendPhoto(responseJSON.fileURI, responseJSON.photoID);
                             // Go to crop photo:
                             showCropPhoto(responseJSON.fileURI, responseJSON.photoID);
                         }
