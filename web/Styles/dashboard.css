@@ -3741,7 +3741,7 @@ form ul li {
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery li a {
   display: block;
   width: 128px;
-  height: 80px;
+  height: 96px;
   margin: 3px auto;
   overflow: hidden;
   text-align: center;
@@ -3750,7 +3750,7 @@ form ul li {
 /* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery li a img {
   max-width: 128px;
-  min-height: 80px;
+  min-height: 96px;
 }
 
 /* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
@@ -3774,7 +3774,7 @@ form ul li {
 
 /* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery .ui-state-highlight {
-  height: 109px;
+  height: 125px;
 }
 
 /* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
