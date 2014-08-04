@@ -14,7 +14,7 @@
     
     var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
 
-    string photosFolder = LcData.GetUserPhotoFolder(userID);
+    string photosFolder = LcData.Photo.GetUserPhotoFolder(userID);
     Validation.Add("photo-caption", Validator.StringLength(50, 0, "Photo caption must be fewer than 50 characters."));
 
     if (IsPost) {
@@ -25,7 +25,7 @@
             var photoID = Request["PhotoID"].AsInt();
             if (delete) {
 
-                if (LcData.DeletePhoto(photoID, userID, positionID, Server.MapPath(LcUrl.RenderAppPath))) {
+                if (LcData.Photo.DeletePhoto(photoID, userID, positionID, Server.MapPath(LcUrl.RenderAppPath))) {
                     if (result == "json") {
                         LcHelpers.ReturnJsonResult(0, "Deleted");
                     }
@@ -42,7 +42,7 @@
                 var caption = Request["photo-caption"];
                 var isPrimary = Request["is-primary-photo"].AsBool();
         
-                LcData.SaveDbPhoto(photoID, caption, isPrimary, userID, positionID);
+                LcData.Photo.SaveDbPhoto(photoID, caption, isPrimary, userID, positionID);
             }
 
             if (action == "" || action == "order") {
@@ -51,7 +51,7 @@
                 var galleryOrder = Request["gallery-order"];
                 if (!String.IsNullOrEmpty(galleryOrder)) {
 
-                    LcData.SavePhotosOrder(galleryOrder, userID, positionID);
+                    LcData.Photo.SavePhotosOrder(galleryOrder, userID, positionID);
                 }
             }
             
@@ -67,7 +67,7 @@
         }
     }
     
-    dynamic photos = LcData.GetUserPositionPhotos(userID, positionID);
+    dynamic photos = LcData.Photo.GetUserPositionPhotos(userID, positionID);
     
     var n = positionID;
     var formAction = LcUrl.LangPath + "$dashboard/YourWork/$Photos/?subform=true&PositionID=" + positionID;
