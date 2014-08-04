@@ -4,141 +4,8 @@
 @using WebMatrix.Data;
 @using WebMatrix.WebData;
 @functions{
-    const int fixedSizeWidth = 442;
-    const int fixedSizeHeight = 332;
-
-    int RegisterUserPhoto(string fileName, int userId, int positionId){
-        using (var db = Database.Open("sqlloco")){
-            // we update the new photo name
-            return (int)db.QueryValue(@"
-                /* #346: Set as primary if is the first provider-position photo */
-                DECLARE @IsPrimary bit
-                IF NOT EXISTS (
-                    SELECT * FROM ProviderServicePhoto
-                    WHERE UserID = @0
-                        AND PositionID = @1
-                )
-                    SET @IsPrimary = 1
-                ELSE
-                    SET @IsPrimary = 0
-
-                INSERT INTO ProviderServicePhoto (
-                    UserID
-                    ,PositionID
-                    ,PhotoAddress
-                    ,RankPosition
-                    ,CreatedDate
-                    ,UpdatedDate
-                    ,ModifiedBy
-                    ,Active
-                    ,IsPrimaryPhoto
-                ) VALUES (
-	                @0
-	                ,@1
-	                ,@2
-	                ,(SELECT coalesce(max(P2.RankPosition),0) + 1 FROM ProviderServicePhoto As P2 WHERE P2.UserID=@0 AND P2.PositionID=@1)
-	                ,getdate()
-	                ,getdate()
-	                ,'sys'
-	                ,1
-                    ,@IsPrimary
-                )
-                SELECT Cast(@@Identity as int)
-
-                -- Test Alert
-                EXEC TestAlertShowcaseWork @0, @1
-            ", userId, positionId, fileName);
-        }
-    }
-    
-    /// <summary>
-    /// Save the uploaded photo as an image on the user folder
-    /// with a greater size than usual but limited,
-    /// for later use on cropping and resizing tasks.
-    /// </summary>
-    /// <param name="photo"></param>
-    /// <param name="virtualPath"></param>
-    string SaveEditablePhoto(Stream photo, string virtualPath, string fileName) {
-        // Check folder or create
-        var folder = Server.MapPath(virtualPath);
-        if (!Directory.Exists(folder)) {
-            Directory.CreateDirectory(folder);
-        }
-
-        // Use file as image
-        using (var srcImg = System.Drawing.Image.FromStream(photo)) {
-            
-            // Editable image: Resize to maximum allowed size to allow user cropping later
-            var img = LcImaging.Resize(srcImg, fixedSizeWidth * 4, fixedSizeHeight * 4, LcImaging.SizeMode.Contain);
-
-            // Save:
-            img.Save(folder + fileName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-        }
-        
-        // Prepare the image for regular uses
-        var regularFileName = SavePhoto(virtualPath, fileName, 0, 0, 0, 0);
-        
-        photo.Dispose();
-        
-        return regularFileName;
-    }
-    
-    /// <summary>
-    /// Sets the previously uploaded 'editable avatar' image as the
-    /// current user avatar, cropped with the given values and 
-    /// optimized sizes.
-    /// </summary>
-    /// <param name="virtualPath"></param>
-    string SavePhoto(string virtualPath, string fileName, int x, int y, int width, int height) {
-        
-        var folder = Server.MapPath(virtualPath);
-        var regularFileName = "";
-        
-        // fileName could be given by a previous save including suffixes,
-        // we need it without suffixes in order to work properly:
-        fileName = LcUtils.GetNameWithoutSuffix(fileName);
-
-        // Remove previous cropped/sized/adapted photos (except editable one), all start with fileName plus dash
-        // File.Delete doesn't allow wildcards, find and delete each one
-        foreach (var f in Directory.GetFiles(folder, fileName + "-*", SearchOption.TopDirectoryOnly))
-            File.Delete(f);
-
-        // Create optimized files
-        using (var img = System.Drawing.Image.FromFile(folder + fileName + ".jpg")) {
-            
-            // Crop, if any size
-            // On cropping:
-            // User used the reduced image (fixed size) to choose what to crop,
-            // while we will crop the 'original', 4x larger image, so multiply every unit
-            var cropImg = width > 0 ? LcImaging.Crop(img, x * 4, y * 4, width * 4, height * 4) : img;
-            
-            // Size prefix
-            var sizeName = "-" + fixedSizeWidth.ToString() + "x" + fixedSizeHeight.ToString();
-
-            // Save image with regular size
-            
-            using (var modImg = LcImaging.Resize(cropImg, fixedSizeWidth, fixedSizeHeight, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
-                regularFileName = fileName + sizeName + ".jpg";
-                modImg.Save(folder + regularFileName, System.Drawing.Imaging.ImageFormat.Jpeg);
-            }
-
-            // Same as previous but for hi-res 2x devices: (real pixel sizes is double but preserve the original size name to recognize it better adding the @2x suffix)
-            using (var modImg = LcImaging.Resize(cropImg, fixedSizeWidth * 2, fixedSizeHeight * 2, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
-                modImg.Save(folder + fileName + sizeName + "@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-            }
-
-            // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
-            
-            cropImg.Dispose();
-        }
-        
-        return regularFileName;
-    }
-    
-    string GetValidFileName(string fileName){
-        // Names starting with $ are considered special for us, no allow user to upload a file with that character as prefix:
-        return fileName.TrimStart('$');
-    }
+    const int fixedSizeWidth = LcData.Photo.FixedSizeWidth;
+    const int fixedSizeHeight = LcData.Photo.FixedSizeHeight;
 }
 @{
     LcHelpers.SecurePage();
@@ -163,7 +30,7 @@
         photoID = Request["photoID"].AsInt();
         fileName = System.IO.Path.GetFileNameWithoutExtension(photoURI);
 
-        var updatedImageName = SavePhoto(virtualPath,
+        var updatedImageName = LcData.Photo.UploadPhoto(virtualPath,
             fileName,
             (int)Math.Round(Request["x1"].AsDecimal()), 
             (int)Math.Round(Request["y1"].AsDecimal()),
@@ -198,7 +65,7 @@
             try{
                 
                 if (Request.InputStream.Length > 0) {
-                    uploadedFileName = SaveEditablePhoto(Request.InputStream, virtualPath, fileName);
+                    uploadedFileName = LcData.Photo.UploadEditablePhoto(Request.InputStream, Server.MapPath(virtualPath), fileName);
                 } else {
                     // Emulate standard error, next its replaced by better message
                     ModelState.AddFormError("Maximum request length exceeded");
@@ -212,7 +79,7 @@
         
             if (ModelState.IsValid) {
                 // File saved, register it on the database:
-                photoID = RegisterUserPhoto(uploadedFileName, userId, positionId);
+                photoID = LcData.Photo.RegisterUserPhoto(uploadedFileName, userId, positionId);
             }
   
             processed = true;
@@ -232,7 +99,7 @@
             try{
                 
                 if (Request.InputStream.Length > 0) {
-                    uploadedFileName = SaveEditablePhoto(fileuploaded.InputStream, virtualPath, fileName);
+                    uploadedFileName = LcData.Photo.UploadEditablePhoto(fileuploaded.InputStream, Server.MapPath(virtualPath), fileName);
                 } else {
                     // Emulate standard error, next its replaced by better message
                     ModelState.AddFormError("Maximum request length exceeded");
@@ -246,7 +113,7 @@
 
             if (ModelState.IsValid) {
                 // File saved, register it on the database:
-                photoID = RegisterUserPhoto(uploadedFileName, userId, positionId);
+                photoID = LcData.Photo.RegisterUserPhoto(uploadedFileName, userId, positionId);
             }
         }
             

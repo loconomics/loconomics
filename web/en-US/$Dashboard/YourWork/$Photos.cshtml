@@ -14,7 +14,7 @@
     
     var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
 
-    string photosFolder = "img/userphotos/u" + userID.ToString() + "/";
+    string photosFolder = LcData.GetUserPhotoFolder(userID);
     Validation.Add("photo-caption", Validator.StringLength(50, 0, "Photo caption must be fewer than 50 characters."));
 
     if (IsPost) {
