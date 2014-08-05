@@ -92,11 +92,18 @@
         <div id="position[@n]photos-no-primary-photo" class="no-primary-photo">
             Select a photo from the right as your primary photo.
         </div>
-        <fieldset class="positionphotos-edit">
+        <fieldset class="positionphotos-edit DashboardPhotos-editPhoto" data-size-limit="@(LcData.Photo.GetFileSizeLimit())">
             <legend>Edit this photo:</legend>
             <input type="hidden" name="PhotoID" value="" />
+            <input type="hidden" name="photoURI" value="" />
+            <input type="hidden" name="crop-x1" />
+            <input type="hidden" name="crop-y1" />
+            <input type="hidden" name="crop-x2" />
+            <input type="hidden" name="crop-y2" />
+            <input type="hidden" name="crop-w" />
+            <input type="hidden" name="crop-h" />
             <ul>
-                <li class="positionphotos-edit-photo"><img alt="Photo to edit" src="@(LcUrl.AppPath)img/theme/user-photo-no-selected.png" /></li>
+                <li class="positionphotos-edit-photo"><img data-target-width="@LcData.Photo.FixedSizeWidth" data-target-height="@LcData.Photo.FixedSizeHeight" alt="Photo to edit" src="@(LcUrl.AppPath)img/theme/user-photo-no-selected.png" /></li>
                 <li class="positionphotos-edit-caption">
                     <label for="position#@(n)-photos-edit-caption">Caption:</label>
                     <input type="text" id="position#@(n)-photos-edit-caption" name="photo-caption"/>
@@ -106,9 +113,14 @@
                     <label>Yes<input type="radio" name="is-primary-photo" value="True"/></label>
                     <label>No<input type="radio" name="is-primary-photo" value="False"/></label>
                 </li>
-                <li class="positionphotos-edit-delete">
-                    <a href="#delete-photo">Delete this photo</a>
-                    <input type="hidden" name="delete-photo" value="False" />
+                <li class="action-s">
+                    <input type="button" class="DashboardPhotos-editPhoto-save" value="Save photo changes" />
+                    <div class="positionphotos-edit-delete">
+                        <a href="#delete-photo">Delete this photo</a>
+                        <input type="hidden" name="delete-photo" value="False" />
+                    </div>
+                    <div class="FileUploader-uploader">
+                    </div>
                 </li>
             </ul>
         </fieldset>
@@ -123,7 +135,9 @@
         </fieldset>
         <fieldset class="positionphotos-tools">
             <ul>
-                <li class="positionphotos-tools-upload"><a href="#" class="action">Upload photos</a></li>
+                <li class="positionphotos-tools-upload">
+                    <a href="#" class="action">Upload photos Popup</a>
+                </li>
                 <li class="positionphotos-tools-arrange">To arrange photos, drag and drop them in the order you'd like and click save.</li>
             </ul>
         </fieldset>

@@ -5,10 +5,13 @@ var $ = require('jquery');
 require('jquery-ui');
 var smoothBoxBlock = require('LC/smoothBoxBlock');
 var changesNotification = require('LC/changesNotification');
+require('imagesLoaded');
 
 var sectionSelector = '.DashboardPhotos';
 // On init, the default 'no image' image src will be get it on:
 var defaultImgSrc = null;
+
+var editor = null;
 
 exports.on = function (containerSelector) {
     var $c = $(containerSelector);
@@ -21,6 +24,15 @@ exports.on = function (containerSelector) {
     // re-initialize elements
     $c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
         initElements($c);
+    });
+
+    // Editor setup
+    var $ceditor = $('.DashboardPhotos-editPhoto', $c);
+    editor = new Editor({
+        container: $ceditor,
+        positionId: parseInt($c.closest('form').find('[name=positionID]')) || 0,
+        sizeLimit: $ceditor.data('size-limit'),
+        gallery: new Gallery({ container: $c })
     });
 
     // DEPRECATED: With refactoring, exposing javascript for the UploadPhoto Iframe on window to make
@@ -107,13 +119,23 @@ function editSelectedPhoto(form, selected) {
     if (selected && selected.length > 0) {
         var selImg = selected.find('img');
         // Moving selected to be edit panel
-        var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1];
+        var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1],
+            photoUrl = selImg.attr('src'),
+            $img = editPanel.find('img');
+
         editPanel.find('[name=PhotoID]').val(photoID);
-        editPanel.find('img').attr('src', selImg.attr('src') + '?size=normal');
+        editPanel.find('[name=photoURI]').val(photoUrl);
+        $img.attr('src', photoUrl + "?v=" + (new Date()).getTime()); // '?size=normal');
         editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
         var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
         editPanel.find('[name=is-primary-photo]').prop('checked', false);
         editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
+
+        // Cropping
+        $img.imagesLoaded(function () {
+            editor.setupCropPhoto();
+        });
+
     } else {
         if (form.find('.positionphotos-gallery > ol > li').length === 0) {
             smoothBoxBlock.open(form.find('.no-photos'), editPanel, '', { autofocus: false });
@@ -221,6 +243,9 @@ function initElements(form) {
     form.find('[name=delete-photo]').val('False');
 }
 
+/**
+    Gallery Class
+**/
 function Gallery(settings) {
 
     settings = settings || {};
@@ -267,8 +292,8 @@ function Editor(settings) {
 
     settings = settings || {};
 
+    // f.e.: .DashboardPhotos-editPhoto
     this.$container = $(settings.container || 'html');
-    this.$crop = $('#crop-photo', this.$container);
     this.gallery = settings.gallery || new Gallery(this.$container);
     
     var $h = $('html');
@@ -278,8 +303,7 @@ function Editor(settings) {
     // Initializing:
     this.initUploader();
     this.initCropForm();
-    this.setupCropPhoto();
-    this.showEditorIfImage();
+    //this.setupCropPhoto();
 }
 
 Editor.prototype.initUploader = function initUploader() {
@@ -287,7 +311,7 @@ Editor.prototype.initUploader = function initUploader() {
     var thisEditor = this;
 
     var uploader = new qq.FileUploader({
-        element: $('#change-photo-file-uploader', this.$container).get(0),
+        element: $('.FileUploader-uploader', this.$container).get(0),
         // path to server-side upload script
         action: LcUrl.LangPath + 'dashboard/YourWork/UploadPhoto/?PositionID=' + (this.positionId),
         allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
@@ -312,48 +336,45 @@ Editor.prototype.initUploader = function initUploader() {
 // Simple event handler, called from onChange and onSelect
 // event handlers, as per the Jcrop invocation above
 Editor.prototype.showCoords = function showCoords(c) {
-    $('#x1', this.$container).val(c.x);
-    $('#y1', this.$container).val(c.y);
-    $('#x2', this.$container).val(c.x2);
-    $('#y2', this.$container).val(c.y2);
-    $('#w', this.$container).val(c.w);
-    $('#h', this.$container).val(c.h);
+    $('[name=crop-x1]', this.$container).val(c.x);
+    $('[name=crop-y1]', this.$container).val(c.y);
+    $('[name=crop-x2]', this.$container).val(c.x2);
+    $('[name=crop-y2]', this.$container).val(c.y2);
+    $('[name=crop-w]', this.$container).val(c.w);
+    $('[name=crop-h]', this.$container).val(c.h);
 };
 
 Editor.prototype.clearCoords = function clearCoords() {
-    $('#coords input', this.$container).val('');
+    $('input[name=^crop-]', this.$container).val('');
 };
 
 Editor.prototype.showCropPhoto = function showCropPhoto(photoURI, photoID) {
 
-    var $p = this.$crop,
-            thisEditor = this;
-    $p.show();
-
-    $p.find('[name=photoURI]').val(photoURI);
-    $p.find('[name=photoID]').val(photoID);
+    var thisEditor = this;
+    this.$container.find('[name=photoURI]').val(photoURI);
+    this.$container.find('[name=photoID]').val(photoID);
 
     // Set new image
-    $p.find('img')
-        .attr('style', '')
-        .attr('src', photoURI + "?v=" + (new Date()).getTime())
-        .on('load', function () {
-            thisEditor.setupCropPhoto();
-        });
+    this.$container.find('img')
+    .attr('style', '')
+    .attr('src', photoURI + "?v=" + (new Date()).getTime())
+    .on('load', function () {
+        thisEditor.setupCropPhoto();
+    });
 };
 
 Editor.prototype.initCropForm = function initCropForm() {
-    // Setup cropping form
-    var $f = $('form', this.$crop);
+    
+    // Setup cropping "form"
     var thisEditor = this;
 
-    $f.on('submit', function (e) {
+    this.$container.on('click', '.DashboardPhotos-editPhoto-save', function (e) {
         e.preventDefault();
 
         $.ajax({
-            url: $f.attr('action'),
-            method: $f.attr('method'),
-            data: $f.serialize(),
+            url: LcUrl.LangPath + '$dashboard/YourWork/UploadPhoto/',
+            method: 'POST',
+            data: thisEditor.serialize(),
             dataType: 'json',
             success: function (data) {
                 if (data.updated) {
@@ -375,34 +396,13 @@ Editor.prototype.initCropForm = function initCropForm() {
     });
 };
 
-// If an image is loaded, show up the cropping tool
-Editor.prototype.showEditorIfImage = function showEditorIfImage() {
-
-    var $cp = this.$crop,
-        $img = $('#cropimg', this.$crop);
-
-    if ($img.height() > 30) {
-        $cp.show();
-        return true;
-    }
-    else {
-        $cp.hide();
-        $img
-        .off('load.cropper')
-        .off('error.cropper')
-        .one('load.cropper', this.showEditorIfImage.bind(this))
-        .one('error.cropper', this.showEditorIfImage.bind(this));
-        return false;
-    }
-};
-
 Editor.prototype.setupCropPhoto = function setupCropPhoto() {
 
     if (this.jcropApi)
         this.jcropApi.destroy();
 
     var thisEditor = this;
-
+    console.log('setupCropPHoto', this)
     // Setup img cropping
     var $img = $('#cropimg', this.$crop);
     $img.Jcrop({

@@ -22,6 +22,11 @@ public static partial class LcData
         public const int FixedSizeWidth = 442;
         public const int FixedSizeHeight = 332;
 
+        public static int GetFileSizeLimit()
+        {
+            return ASP.LcHelpers.GetMaxRequestSize() * 1024;
+        }
+
         public static string GetValidFileName(string fileName) {
             // Names starting with $ are considered special for us, no allow user to upload a file with that character as prefix:
             return fileName.TrimStart('$');
