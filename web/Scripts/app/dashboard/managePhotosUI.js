@@ -1,4 +1,5 @@
-﻿/** UI logic to manage provider photos (your-work/photos).
+﻿/*global window */
+/** UI logic to manage provider photos (your-work/photos).
 **/
 var $ = require('jquery');
 require('jquery-ui');
@@ -21,6 +22,21 @@ exports.on = function (containerSelector) {
     $c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
         initElements($c);
     });
+
+    // DEPRECATED: With refactoring, exposing javascript for the UploadPhoto Iframe on window to make
+    // it available for it.
+    window.initUploadPhoto = function initUploadPhoto(iframe) {
+        // Document html:
+        var gallery = new Gallery({ container: $('.DashboardPhotos') });
+        // Iframe html:
+        var $h = $('html', iframe);
+        new Editor({
+            container: iframe,
+            positionId: $h.data('position-id'),
+            sizeLimit: $h.data('size-limit'),
+            gallery: gallery
+        });
+    };
 };
 
 function save(data) {
@@ -204,3 +220,202 @@ function initElements(form) {
     // Reset delete option
     form.find('[name=delete-photo]').val('False');
 }
+
+function Gallery(settings) {
+
+    settings = settings || {};
+
+    this.$container = $(settings.container || '.DashboardPhotos');
+    this.$gallery = $('.positionphotos-gallery', this.$container);
+    this.$galleryList = $('ol', this.$gallery);
+    this.tplImg = '<li id="UserPhoto-@@0"><a href="#"><img alt="Uploaded photo" src="@@1"/></a><a class="edit" href="#">Edit</a></li>';
+
+    /**
+       Append a photo element to the gallery collection.
+    **/
+    this.appendPhoto = function appendPhoto(fileName, photoID) {
+
+        var newImg = $(this.tplImg.replace(/@@0/g, photoID).replace(/@@1/g, fileName));
+        // If is there is no photos still, the first will be the primary by default
+        if (this.$galleryList.children().length === 0) {
+            newImg.addClass('is-primary-photo');
+        }
+
+        this.$galleryList
+        .append(newImg)
+        // scroll the gallery to see the new element; using '-2' to avoid some browsers automatic scroll.
+        .animate({ scrollTop: this.$galleryList[0].scrollHeight - this.$galleryList.height() - 2 }, 1400)
+        .find('li:last-child')
+        .effect("highlight", {}, 1600);
+    };
+
+    this.reloadPhoto = function reloadPhoto(fileURI, photoID) {
+
+        // Find item by ID and load with new URI
+        this.$galleryList.find('#UserPhoto-' + photoID)
+        .find('img')
+        .attr('src', fileURI + '?v=' + (new Date()).getTime());
+    };
+}
+
+/**
+    Editor Class
+**/
+var qq = require('fileuploader');
+require('jcrop');
+function Editor(settings) {
+
+    settings = settings || {};
+
+    this.$container = $(settings.container || 'html');
+    this.$crop = $('#crop-photo', this.$container);
+    this.gallery = settings.gallery || new Gallery(this.$container);
+    
+    var $h = $('html');
+    this.positionId = settings.positionId || $h.data('position-id');
+    this.sizeLimit = settings.sizeLimit || $h.data('size-limit');
+
+    // Initializing:
+    this.initUploader();
+    this.initCropForm();
+    this.setupCropPhoto();
+    this.showEditorIfImage();
+}
+
+Editor.prototype.initUploader = function initUploader() {
+
+    var thisEditor = this;
+
+    var uploader = new qq.FileUploader({
+        element: $('#change-photo-file-uploader', this.$container).get(0),
+        // path to server-side upload script
+        action: LcUrl.LangPath + 'dashboard/YourWork/UploadPhoto/?PositionID=' + (this.positionId),
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+        onComplete: function (id, fileName, responseJSON) {
+            if (responseJSON.success) {
+                thisEditor.gallery.appendPhoto(responseJSON.fileURI, responseJSON.photoID);
+                // Go to crop photo:
+                thisEditor.showCropPhoto(responseJSON.fileURI, responseJSON.photoID);
+            }
+        },
+        messages: {
+            typeError: "{file} has invalid extension. Only {extensions} are allowed.",
+            sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
+            minSizeError: "{file} is too small, minimum file size is {minSizeLimit}.",
+            emptyError: "{file} is empty, please select files again without it.",
+            onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
+        },
+        sizeLimit: this.sizeLimit || 'undefined'
+    });
+};
+
+// Simple event handler, called from onChange and onSelect
+// event handlers, as per the Jcrop invocation above
+Editor.prototype.showCoords = function showCoords(c) {
+    $('#x1', this.$container).val(c.x);
+    $('#y1', this.$container).val(c.y);
+    $('#x2', this.$container).val(c.x2);
+    $('#y2', this.$container).val(c.y2);
+    $('#w', this.$container).val(c.w);
+    $('#h', this.$container).val(c.h);
+};
+
+Editor.prototype.clearCoords = function clearCoords() {
+    $('#coords input', this.$container).val('');
+};
+
+Editor.prototype.showCropPhoto = function showCropPhoto(photoURI, photoID) {
+
+    var $p = this.$crop,
+            thisEditor = this;
+    $p.show();
+
+    $p.find('[name=photoURI]').val(photoURI);
+    $p.find('[name=photoID]').val(photoID);
+
+    // Set new image
+    $p.find('img')
+        .attr('style', '')
+        .attr('src', photoURI + "?v=" + (new Date()).getTime())
+        .on('load', function () {
+            thisEditor.setupCropPhoto();
+        });
+};
+
+Editor.prototype.initCropForm = function initCropForm() {
+    // Setup cropping form
+    var $f = $('form', this.$crop);
+    var thisEditor = this;
+
+    $f.on('submit', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $f.attr('action'),
+            method: $f.attr('method'),
+            data: $f.serialize(),
+            dataType: 'json',
+            success: function (data) {
+                if (data.updated) {
+                    // Photo cropped, resized
+                    thisEditor.gallery.reloadPhoto(data.fileURI, data.photoID);
+                }
+                else {
+                    // Photo uploaded
+                    thisEditor.appendPhoto(data.fileURI, data.photoID);
+                }
+                $('#crop-photo').slideUp('fast');
+                    
+                // TODO Close popup #535
+            },
+            error: function (xhr, er) {
+                alert('Sorry, there was an error setting-up your photo. ' + (er || ''));
+            }
+        });
+    });
+};
+
+// If an image is loaded, show up the cropping tool
+Editor.prototype.showEditorIfImage = function showEditorIfImage() {
+
+    var $cp = this.$crop,
+        $img = $('#cropimg', this.$crop);
+
+    if ($img.height() > 30) {
+        $cp.show();
+        return true;
+    }
+    else {
+        $cp.hide();
+        $img
+        .off('load.cropper')
+        .off('error.cropper')
+        .one('load.cropper', this.showEditorIfImage.bind(this))
+        .one('error.cropper', this.showEditorIfImage.bind(this));
+        return false;
+    }
+};
+
+Editor.prototype.setupCropPhoto = function setupCropPhoto() {
+
+    if (this.jcropApi)
+        this.jcropApi.destroy();
+
+    var thisEditor = this;
+
+    // Setup img cropping
+    var $img = $('#cropimg', this.$crop);
+    $img.Jcrop({
+        onChange: this.showCoords.bind(this),
+        onSelect: this.showCoords.bind(this),
+        onRelease: this.clearCoords.bind(this),
+        aspectRatio: $img.data('target-width') / $img.data('target-height')
+    }, function () {
+
+        thisEditor.jcropApi = this;
+        // Initial selection to show user that can choose an area
+        thisEditor.jcropApi.setSelect([0, 0, $img.width(), $img.height()]);
+    });
+
+    return $img;
+};

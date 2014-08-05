@@ -4,141 +4,8 @@
 @using WebMatrix.Data;
 @using WebMatrix.WebData;
 @functions{
-    const int fixedSizeWidth = 442;
-    const int fixedSizeHeight = 332;
-
-    int RegisterUserPhoto(string fileName, int userId, int positionId){
-        using (var db = Database.Open("sqlloco")){
-            // we update the new photo name
-            return (int)db.QueryValue(@"
-                /* #346: Set as primary if is the first provider-position photo */
-                DECLARE @IsPrimary bit
-                IF NOT EXISTS (
-                    SELECT * FROM ProviderServicePhoto
-                    WHERE UserID = @0
-                        AND PositionID = @1
-                )
-                    SET @IsPrimary = 1
-                ELSE
-                    SET @IsPrimary = 0
-
-                INSERT INTO ProviderServicePhoto (
-                    UserID
-                    ,PositionID
-                    ,PhotoAddress
-                    ,RankPosition
-                    ,CreatedDate
-                    ,UpdatedDate
-                    ,ModifiedBy
-                    ,Active
-                    ,IsPrimaryPhoto
-                ) VALUES (
-	                @0
-	                ,@1
-	                ,@2
-	                ,(SELECT coalesce(max(P2.RankPosition),0) + 1 FROM ProviderServicePhoto As P2 WHERE P2.UserID=@0 AND P2.PositionID=@1)
-	                ,getdate()
-	                ,getdate()
-	                ,'sys'
-	                ,1
-                    ,@IsPrimary
-                )
-                SELECT Cast(@@Identity as int)
-
-                -- Test Alert
-                EXEC TestAlertShowcaseWork @0, @1
-            ", userId, positionId, fileName);
-        }
-    }
-    
-    /// <summary>
-    /// Save the uploaded photo as an image on the user folder
-    /// with a greater size than usual but limited,
-    /// for later use on cropping and resizing tasks.
-    /// </summary>
-    /// <param name="photo"></param>
-    /// <param name="virtualPath"></param>
-    string SaveEditablePhoto(Stream photo, string virtualPath, string fileName) {
-        // Check folder or create
-        var folder = Server.MapPath(virtualPath);
-        if (!Directory.Exists(folder)) {
-            Directory.CreateDirectory(folder);
-        }
-
-        // Use file as image
-        using (var srcImg = System.Drawing.Image.FromStream(photo)) {
-            
-            // Editable image: Resize to maximum allowed size to allow user cropping later
-            var img = LcImaging.Resize(srcImg, fixedSizeWidth * 4, fixedSizeHeight * 4, LcImaging.SizeMode.Contain);
-
-            // Save:
-            img.Save(folder + fileName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-        }
-        
-        // Prepare the image for regular uses
-        var regularFileName = SavePhoto(virtualPath, fileName, 0, 0, 0, 0);
-        
-        photo.Dispose();
-        
-        return regularFileName;
-    }
-    
-    /// <summary>
-    /// Sets the previously uploaded 'editable avatar' image as the
-    /// current user avatar, cropped with the given values and 
-    /// optimized sizes.
-    /// </summary>
-    /// <param name="virtualPath"></param>
-    string SavePhoto(string virtualPath, string fileName, int x, int y, int width, int height) {
-        
-        var folder = Server.MapPath(virtualPath);
-        var regularFileName = "";
-        
-        // fileName could be given by a previous save including suffixes,
-        // we need it without suffixes in order to work properly:
-        fileName = LcUtils.GetNameWithoutSuffix(fileName);
-
-        // Remove previous cropped/sized/adapted photos (except editable one), all start with fileName plus dash
-        // File.Delete doesn't allow wildcards, find and delete each one
-        foreach (var f in Directory.GetFiles(folder, fileName + "-*", SearchOption.TopDirectoryOnly))
-            File.Delete(f);
-
-        // Create optimized files
-        using (var img = System.Drawing.Image.FromFile(folder + fileName + ".jpg")) {
-            
-            // Crop, if any size
-            // On cropping:
-            // User used the reduced image (fixed size) to choose what to crop,
-            // while we will crop the 'original', 4x larger image, so multiply every unit
-            var cropImg = width > 0 ? LcImaging.Crop(img, x * 4, y * 4, width * 4, height * 4) : img;
-            
-            // Size prefix
-            var sizeName = "-" + fixedSizeWidth.ToString() + "x" + fixedSizeHeight.ToString();
-
-            // Save image with regular size
-            
-            using (var modImg = LcImaging.Resize(cropImg, fixedSizeWidth, fixedSizeHeight, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
-                regularFileName = fileName + sizeName + ".jpg";
-                modImg.Save(folder + regularFileName, System.Drawing.Imaging.ImageFormat.Jpeg);
-            }
-
-            // Same as previous but for hi-res 2x devices: (real pixel sizes is double but preserve the original size name to recognize it better adding the @2x suffix)
-            using (var modImg = LcImaging.Resize(cropImg, fixedSizeWidth * 2, fixedSizeHeight * 2, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
-                modImg.Save(folder + fileName + sizeName + "@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-            }
-
-            // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
-            
-            cropImg.Dispose();
-        }
-        
-        return regularFileName;
-    }
-    
-    string GetValidFileName(string fileName){
-        // Names starting with $ are considered special for us, no allow user to upload a file with that character as prefix:
-        return fileName.TrimStart('$');
-    }
+    const int fixedSizeWidth = LcData.Photo.FixedSizeWidth;
+    const int fixedSizeHeight = LcData.Photo.FixedSizeHeight;
 }
 @{
     LcHelpers.SecurePage();
@@ -163,7 +30,7 @@
         photoID = Request["photoID"].AsInt();
         fileName = System.IO.Path.GetFileNameWithoutExtension(photoURI);
 
-        var updatedImageName = SavePhoto(virtualPath,
+        var updatedImageName = LcData.Photo.UploadPhoto(virtualPath,
             fileName,
             (int)Math.Round(Request["x1"].AsDecimal()), 
             (int)Math.Round(Request["y1"].AsDecimal()),
@@ -198,7 +65,7 @@
             try{
                 
                 if (Request.InputStream.Length > 0) {
-                    uploadedFileName = SaveEditablePhoto(Request.InputStream, virtualPath, fileName);
+                    uploadedFileName = LcData.Photo.UploadEditablePhoto(Request.InputStream, Server.MapPath(virtualPath), fileName);
                 } else {
                     // Emulate standard error, next its replaced by better message
                     ModelState.AddFormError("Maximum request length exceeded");
@@ -212,7 +79,7 @@
         
             if (ModelState.IsValid) {
                 // File saved, register it on the database:
-                photoID = RegisterUserPhoto(uploadedFileName, userId, positionId);
+                photoID = LcData.Photo.RegisterUserPhoto(uploadedFileName, userId, positionId);
             }
   
             processed = true;
@@ -232,7 +99,7 @@
             try{
                 
                 if (Request.InputStream.Length > 0) {
-                    uploadedFileName = SaveEditablePhoto(fileuploaded.InputStream, virtualPath, fileName);
+                    uploadedFileName = LcData.Photo.UploadEditablePhoto(fileuploaded.InputStream, Server.MapPath(virtualPath), fileName);
                 } else {
                     // Emulate standard error, next its replaced by better message
                     ModelState.AddFormError("Maximum request length exceeded");
@@ -246,7 +113,7 @@
 
             if (ModelState.IsValid) {
                 // File saved, register it on the database:
-                photoID = RegisterUserPhoto(uploadedFileName, userId, positionId);
+                photoID = LcData.Photo.RegisterUserPhoto(uploadedFileName, userId, positionId);
             }
         }
             
@@ -340,10 +207,6 @@
         {
             @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/" + js)
         }
-        <script src="@Href(LcUrl.AppPath + "Scripts/fileuploader/fileuploader.js")" type="text/javascript"></script>
-
-        <script src="@Href(LcUrl.AppPath + "Scripts/jcrop/js/jquery.Jcrop.min.js")" type="text/javascript"></script>
-        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Scripts/jcrop/css/jquery.Jcrop.min.css")" />
 
         <script type="text/javascript">
             @Html.Raw(LcUrl.ToJsVar())
@@ -363,165 +226,7 @@
         </style>
 
         <script type="text/javascript">
-            function appendPhoto(fileName, photoID) {
-                // Add image to the gallery, in the parent document! (this is an iframe)
-                var gallery = jQuery('.DashboardPhotos .positionphotos-gallery > ol', window.parent.document);
-                var tplImg = '<li id="UserPhoto-@@0"><a href="#"><img alt="Uploaded photo" src="@@1"/></a><a class="edit" href="#">Edit</a></li>';
-                var newImg = jQuery(tplImg.replace(/@@0/g, photoID).replace(/@@1/g, fileName));
-                // If is there is no photos still, the first will be the primary by default
-                if (gallery.children().length == 0)
-                    newImg.addClass('is-primary-photo');
-                gallery.append(newImg)
-                    // scroll the gallery to see the new element; using '-2' to avoid some browsers automatic scroll.
-                    .animate({scrollTop: gallery[0].scrollHeight - gallery.height() - 2}, 1400)
-                    .find('li:last-child')
-                    .effect("highlight", {}, 1600);
-            }
-
-            function reloadPhoto(fileURI, photoID) {
-                // Get the gallery in the parent document! (this is an iframe)
-                var gallery = jQuery('.DashboardPhotos .positionphotos-gallery > ol', window.parent.document);
-                // Find item by ID and load with new URI
-                var $li = gallery.find('#UserPhoto-' + photoID);
-                $li.find('img')
-                .attr('src', fileURI + '?v=' + (new Date()).getTime());
-            }
-
-            jQuery(function ($) {
-
-                var $h = $('html'),
-                    positionId = $h.data('position-id'),
-                    sizeLimit = $h.data('size-limit');
-
-                var uploader = new qq.FileUploader({
-                    element: document.getElementById('change-photo-file-uploader'),
-                    // path to server-side upload script
-                    action: LcUrl.LangPath + 'dashboard/YourWork/UploadPhoto/?PositionID=' + (positionId),
-                    allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
-                    onComplete: function (id, fileName, responseJSON) {
-                        if (responseJSON.success) {
-                            appendPhoto(responseJSON.fileURI, responseJSON.photoID);
-                            // Go to crop photo:
-                            showCropPhoto(responseJSON.fileURI, responseJSON.photoID);
-                        }
-                    },
-                    messages: {
-                        typeError: "{file} has invalid extension. Only {extensions} are allowed.",
-                        sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
-                        minSizeError: "{file} is too small, minimum file size is {minSizeLimit}.",
-                        emptyError: "{file} is empty, please select files again without it.",
-                        onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
-                    },
-                    sizeLimit: sizeLimit || 'undefined'
-                });
-            });
-        </script>
-        <script type="text/javascript">
-            jQuery(function ($) {
-
-                // Setup cropping form
-                var $f = $('#crop-photo form');
-                $f.on('submit', function (e) {
-                    e.preventDefault();
-
-                    $.ajax({
-                        url: $f.attr('action'),
-                        method: $f.attr('method'),
-                        data: $f.serialize(),
-                        dataType: 'json',
-                        success: function (data) {
-                            if (data.updated) {
-                                // Photo cropped, resized
-                                reloadPhoto(data.fileURI, data.photoID);
-                            }
-                            else {
-                                // Photo uploaded
-                                appendPhoto(data.fileURI, data.photoID);
-                            }
-                            $('#crop-photo').slideUp('fast');
-                            window.parent.closePopupUserPhoto();
-                        },
-                        error: function (xhr, er) {
-                            alert('Sorry, there was an error setting-up your photo. ' + (er || ''));
-                        }
-                    });
-                });
-
-                setupCropPhoto();
-
-                // Enable crop editor
-                var $cp = $('#crop-photo');
-                // If an image is loaded, show up the cropping tool
-                function showEditorIfImage() {
-                    var $img = $('#cropimg');
-
-                    if ($img.height() > 30) {
-                        $cp.show();
-                        return true;
-                    }
-                    else {
-                        $cp.hide();
-                        $img
-                        .one('load', showEditorIfImage)
-                        .one('error', showEditorIfImage);
-                        return false;
-                    }
-                }
-                showEditorIfImage();
-            });
-
-            function setupCropPhoto() {
-
-                if (setupCropPhoto.api)
-                    setupCropPhoto.api.destroy();
-
-                // Setup img cropping
-                var $img = $('#cropimg');
-                $img.Jcrop({
-                    onChange: showCoords,
-                    onSelect: showCoords,
-                    onRelease: clearCoords,
-                    aspectRatio: $img.data('target-width') / $img.data('target-height')
-                }, function () {
-                    jcrop_api = this;
-                    setupCropPhoto.api = jcrop_api;
-                    // Initial selection to show user that can choose an area
-                    jcrop_api.setSelect([0, 0, $img.width(), $img.height()]);
-                });
-
-                return $img;
-           } 
-            // Simple event handler, called from onChange and onSelect
-            // event handlers, as per the Jcrop invocation above
-            function showCoords(c) {
-                $('#x1').val(c.x);
-                $('#y1').val(c.y);
-                $('#x2').val(c.x2);
-                $('#y2').val(c.y2);
-                $('#w').val(c.w);
-                $('#h').val(c.h);
-            };
-
-            function clearCoords() {
-                $('#coords input').val('');
-            };
-
-            function showCropPhoto(photoURI, photoID) {
-
-                var $p = $('#crop-photo');
-                $p.show();
-
-                $p.find('[name=photoURI]').val(photoURI);
-                $p.find('[name=photoID]').val(photoID);
-
-                // Set new image
-                $p.find('img')
-                .attr('style', '')
-                .attr('src', photoURI + "?v=" + (new Date()).getTime())
-                .on('load', function () {
-                    setupCropPhoto();
-                });
-            }
+            jQuery(function () { window.parent.initUploadPhoto(document) });
         </script>
     </head>
     <body>

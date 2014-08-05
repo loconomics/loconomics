@@ -14,7 +14,7 @@
     
     var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
 
-    string photosFolder = "img/userphotos/u" + userID.ToString() + "/";
+    string photosFolder = LcData.Photo.GetUserPhotoFolder(userID);
     Validation.Add("photo-caption", Validator.StringLength(50, 0, "Photo caption must be fewer than 50 characters."));
 
     if (IsPost) {
@@ -24,60 +24,17 @@
             var delete = Request["delete-photo"].AsBool();
             var photoID = Request["PhotoID"].AsInt();
             if (delete) {
-                // Delete file from database, checking if exist more than one record
-                // using the same image file, returning the PhotoAddress when there is
-                // no more records sharing that address, and 'empty string' when there is more and
-                // cannot be removed (without know the address, cannot be removed ;-)
-                string photoAddress = db.QueryValue(@"
-                    DECLARE @PhotoID int
-                    SET @PhotoID = @0
 
-                    -- Retrieving the PhotoAddress
-                    DECLARE @address varchar(2073)
-                    SELECT  @address = PhotoAddress
-                    FROM    ProviderServicePhoto
-                    WHERE   ProviderServicePhotoID = @PhotoID
-                             AND UserID = @1 AND PositionID = @2
-
-                    DELETE FROM ProviderServicePhoto WHERE ProviderServicePhotoID = @PhotoID
-                            AND UserID = @1 AND PositionID = @2
-
-                    -- Test Alert
-                    EXEC TestAlertShowcaseWork @1, @2
-
-                    -- Checking if there are more records with the same file, or returning the address
-                    IF 0 = (SELECT  count(*)
-                            FROM    ProviderServicePhoto
-                            WHERE   PhotoAddress like @address
-                                    AND UserID = @1 AND PositionID = @2)
-                        SELECT coalesce(@address, '') As PhotoAddress
-                    ELSE
-                        SELECT '' As PhotoAddress
-                ", photoID, userID, positionID);
-                
-                if (!String.IsNullOrEmpty(photoAddress)) {
-                    // Remove file from user folder
-                    try {
-                        // There are several files for the same photo, with suffixes for different
-                        // sizes and optimizations: delete all of them
-                        var fileName = LcUtils.GetNameWithoutSuffix(photoAddress);
-                        var sysFolder = Server.MapPath(LcUrl.RenderAppPath + photosFolder);
-                        // Delete the original file, no suffix
-                        File.Delete(sysFolder + fileName + ".jpg");
-                        // Delete all files with suffix.
-                        // File.Delete doesn't allow wildcards, find and delete each one
-                        foreach (var f in Directory.GetFiles(sysFolder, fileName + "-*", SearchOption.TopDirectoryOnly)) {
-                            File.Delete(f);
-                        }
-                    }catch{
-                        if (result == "json") {
-                            LcHelpers.ReturnJsonError(-1, "Photo file could not be deleted");
-                        }
-                        throw new Exception("Photo file could not be deleted");
-                    }
+                if (LcData.Photo.DeletePhoto(photoID, userID, positionID, Server.MapPath(LcUrl.RenderAppPath))) {
                     if (result == "json") {
                         LcHelpers.ReturnJsonResult(0, "Deleted");
                     }
+                }
+                else {
+                    if (result == "json") {
+                        LcHelpers.ReturnJsonError(-1, "Photo file could not be deleted");
+                    }
+                    throw new Exception("Photo file could not be deleted");   
                 }
 
             } else if (action == "" || action == "save-photo") {
@@ -85,21 +42,7 @@
                 var caption = Request["photo-caption"];
                 var isPrimary = Request["is-primary-photo"].AsBool();
         
-                db.Execute(@"
-                    IF @2 = 1 BEGIN
-                        UPDATE ProviderServicePhoto SET
-                            IsPrimaryPhoto = 0
-                        WHERE   UserID = @3 AND PositionID = @4
-                    END
-
-                    UPDATE ProviderServicePhoto SET
-                        PhotoCaption = @1
-                        ,IsPrimaryPhoto = @2
-                    WHERE   ProviderServicePhotoID = @0 AND UserID = @3 AND PositionID = @4
-
-                    -- Test Alert
-                    EXEC TestAlertShowcaseWork @3, @4
-                ", photoID, caption, isPrimary, userID, positionID);
+                LcData.Photo.SaveDbPhoto(photoID, caption, isPrimary, userID, positionID);
             }
 
             if (action == "" || action == "order") {
@@ -107,24 +50,8 @@
                 // order (RankPosition field on database) if there are data about it
                 var galleryOrder = Request["gallery-order"];
                 if (!String.IsNullOrEmpty(galleryOrder)) {
-                    // Comma separated values with the html element IDs that have the format 'UserPhoto-PHOTOID'
-                    // where PHOTOID is a number with the database record ID.
-                    // Reading that order and sending to the server
-                    int orderIndex = 0;
-                    foreach (var go in galleryOrder.Split(',')) {
-                        // If we have a valid ID (integer number)
-                        var goID = go.Replace("UserPhoto-", "").AsInt();
-                        // Only if is a valid ID and if is not the ID of a just deleted photo
-                        if (goID > 0 &&
-                            !(delete && photoID == goID)) {
-                            // Save order to the database
-                            db.Execute(@"
-                                UPDATE  ProviderServicePhoto
-                                SET     RankPosition = @1
-                                WHERE   ProviderServicePhotoID = @0
-                            ", goID, ++orderIndex);
-                        }
-                    }
+
+                    LcData.Photo.SavePhotosOrder(galleryOrder, userID, positionID);
                 }
             }
             
@@ -140,18 +67,7 @@
         }
     }
     
-    dynamic photos = null;
-    using (var db = Database.Open("sqlloco")) {
-        photos = db.Query(@"
-            SELECT [ProviderServicePhotoID]
-                  ,[PhotoCaption]
-                  ,[PhotoAddress]
-                  ,[IsPrimaryPhoto]
-              FROM [providerservicephoto]
-              WHERE UserID = @0 AND PositionID = @1 AND Active = 1
-              ORDER BY RankPosition
-        ", userID, positionID);
-    }
+    dynamic photos = LcData.Photo.GetUserPositionPhotos(userID, positionID);
     
     var n = positionID;
     var formAction = LcUrl.LangPath + "$dashboard/YourWork/$Photos/?subform=true&PositionID=" + positionID;
@@ -207,7 +123,7 @@
         </fieldset>
         <fieldset class="positionphotos-tools">
             <ul>
-                <li class="positionphotos-tools-upload"><a href="#">Upload photos</a></li>
+                <li class="positionphotos-tools-upload"><a href="#" class="action">Upload photos</a></li>
                 <li class="positionphotos-tools-arrange">To arrange photos, drag and drop them in the order you'd like and click save.</li>
             </ul>
         </fieldset>
