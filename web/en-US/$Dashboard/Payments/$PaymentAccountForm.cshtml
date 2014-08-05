@@ -14,6 +14,7 @@
     string FirstName, LastName, MobilePhone, AlternatePhone, AddressLine1, AddressLine2, City, PostalCode, Aba, AccountNumber, Ssn, StateCode;
     DateTime? BirthDate = null;
     bool? isVenmo = null;
+    Aba = AccountNumber = Ssn = "";
 
     MerchantAccount btAccount = LcPayment.GetProviderPaymentAccount(user.UserID);
 
@@ -37,7 +38,12 @@
         if (btAccount != null) {
             isVenmo = String.IsNullOrEmpty(AccountNumber) && String.IsNullOrEmpty(Aba);
         }
-    } else if (btAccount != null) {
+    } else if (btAccount != null && btAccount.IndividualDetails != null) {
+        // IMPORTANT: We need to strictly check for the null value of IndividualDetails and FundingDetails
+        // since errors can arise, see #554
+        // Because that, and to ensure brantree-update-transition situations, payment
+        // data is not filled here else after this if-else block by checking value for FundingDetails
+        
         FirstName = btAccount.IndividualDetails.FirstName;
         LastName = btAccount.IndividualDetails.LastName;
         MobilePhone = btAccount.IndividualDetails.Phone;
@@ -57,12 +63,7 @@
         BirthDate = btAccount.IndividualDetails.DateOfBirth.IsDateTime() ? 
             (DateTime?)btAccount.IndividualDetails.DateOfBirth.AsDateTime() : 
             null;
-        Aba = btAccount.FundingDetails.RoutingNumber;
-        AccountNumber = String.IsNullOrEmpty(btAccount.FundingDetails.AccountNumberLast4) ? "" : btAccount.FundingDetails.AccountNumberLast4.PadLeft(10, '*');
         Ssn = String.IsNullOrEmpty(btAccount.IndividualDetails.SsnLastFour) ? "" : btAccount.IndividualDetails.SsnLastFour.PadLeft(10, '*');
-        
-        // Is Venmo account if there is no bank informatino
-        isVenmo = String.IsNullOrEmpty(AccountNumber) && String.IsNullOrEmpty(Aba);
     } else {
         FirstName = user.FirstName;
         LastName = LcHelpers.JoinNotEmptyStrings(" ", user.LastName, user.SecondLastName);
@@ -73,8 +74,16 @@
         City = user.City;
         PostalCode = user.PostalCode;
         StateCode = user.StateProvinceCode;
-        
-        Aba = AccountNumber = Ssn = "";
+    }
+    
+    // Payment data
+    // IMPORTANT: We need to strictly check for the null value of IndividualDetails and FundingDetails
+    // since errors can arise, see #554
+    if (!IsPost && btAccount != null && btAccount.FundingDetails != null) {
+        Aba = btAccount.FundingDetails.RoutingNumber;
+        AccountNumber = String.IsNullOrEmpty(btAccount.FundingDetails.AccountNumberLast4) ? "" : btAccount.FundingDetails.AccountNumberLast4.PadLeft(10, '*');
+        // Is Venmo account if there is no bank informatino
+        isVenmo = String.IsNullOrEmpty(AccountNumber) && String.IsNullOrEmpty(Aba);
     }
     
     // Initializing Validation rules
