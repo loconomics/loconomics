@@ -95,6 +95,7 @@ function saveEditedPhoto($f) {
 function editSelectedPhoto(form, selected) {
 
     var editPanel = $('.positionphotos-edit', form);
+    var nonUploaderElementsSelector = '.positionphotos-edit, .DashboardPhotos-editPhoto > legend, .positionphotos-gallery, .positionphotos-tools';
 
     // Use given @selected or look for a selected photo in the list
     selected = selected && selected.length ? selected : $('.positionphotos-gallery > ol > li.selected', form);
@@ -103,6 +104,9 @@ function editSelectedPhoto(form, selected) {
     selected.addClass('selected').siblings().removeClass('selected');
 
     if (selected && selected.length > 0) {
+        
+        form.find(nonUploaderElementsSelector).show();
+
         var selImg = selected.find('img');
         // Moving selected to be edit panel
         var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1],
@@ -126,8 +130,12 @@ function editSelectedPhoto(form, selected) {
 
     } else {
         if (form.find('.positionphotos-gallery > ol > li').length === 0) {
-            smoothBoxBlock.open(form.find('.no-photos'), editPanel, '', { autofocus: false });
+            // #535, avoid the 'there is no photos' and just hide the panel to give quick access
+            // to the 'upload button'. The gallery may need to be hidden too
+            //smoothBoxBlock.open(form.find('.no-photos'), editPanel, '', { autofocus: false });
+            form.find(nonUploaderElementsSelector).hide();
         } else {
+            form.find(nonUploaderElementsSelector).show();
             smoothBoxBlock.open(form.find('.no-primary-photo'), editPanel, '', { autofocus: false });
         }
         // No image:
