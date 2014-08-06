@@ -125,7 +125,9 @@ function editSelectedPhoto(form, selected) {
 
         editPanel.find('[name=PhotoID]').val(photoID);
         editPanel.find('[name=photoURI]').val(photoUrl);
-        $img.attr('src', photoUrl + "?v=" + (new Date()).getTime()); // '?size=normal');
+        $img
+        .attr('src', photoUrl + "?v=" + (new Date()).getTime()) // '?size=normal')
+        .attr('style', '');
         editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
         var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
         editPanel.find('[name=is-primary-photo]').prop('checked', false);
@@ -346,21 +348,6 @@ Editor.prototype.showCoords = function showCoords(c) {
 
 Editor.prototype.clearCoords = function clearCoords() {
     $('input[name=^crop-]', this.$container).val('');
-};
-
-Editor.prototype.showCropPhoto = function showCropPhoto(photoURI, photoID) {
-
-    var thisEditor = this;
-    this.$container.find('[name=photoURI]').val(photoURI);
-    this.$container.find('[name=photoID]').val(photoID);
-
-    // Set new image
-    this.$container.find('.positionphotos-edit-photo > img')
-    .attr('style', '')
-    .attr('src', photoURI + "?v=" + (new Date()).getTime())
-    .on('load', function () {
-        thisEditor.setupCropPhoto();
-    });
 };
 
 Editor.prototype.initCropForm = function initCropForm() {
