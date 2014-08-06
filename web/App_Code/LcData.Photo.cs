@@ -5,6 +5,7 @@ using System.Web;
 using WebMatrix.Data;
 using System.IO;
 using System.Web.WebPages;
+using System.Drawing;
 
 public static partial class LcData
 {
@@ -21,6 +22,11 @@ public static partial class LcData
 
         public const int FixedSizeWidth = 442;
         public const int FixedSizeHeight = 332;
+
+        public static int GetFileSizeLimit()
+        {
+            return ASP.LcHelpers.GetMaxRequestSize() * 1024;
+        }
 
         public static string GetValidFileName(string fileName) {
             // Names starting with $ are considered special for us, no allow user to upload a file with that character as prefix:
@@ -263,6 +269,8 @@ public static partial class LcData
             foreach (var f in Directory.GetFiles(path, fileName + "-*", SearchOption.TopDirectoryOnly))
                 File.Delete(f);
 
+            Image cropImg = null;
+
             // Create optimized files
             using (var img = System.Drawing.Image.FromFile(path + fileName + ".jpg")) {
             
@@ -270,7 +278,7 @@ public static partial class LcData
                 // On cropping:
                 // User used the reduced image (fixed size) to choose what to crop,
                 // while we will crop the 'original', 4x larger image, so multiply every unit
-                var cropImg = width > 0 ? LcImaging.Crop(img, x * 4, y * 4, width * 4, height * 4) : img;
+                cropImg = width > 0 ? LcImaging.Crop(img, x * 4, y * 4, width * 4, height * 4) : img;
             
                 // Size prefix
                 var sizeName = "-" + FixedSizeWidth.ToString() + "x" + FixedSizeHeight.ToString();
@@ -288,9 +296,18 @@ public static partial class LcData
                 }
 
                 // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
-            
-                cropImg.Dispose();
             }
+
+            // if there was a crop:
+            if (width > 0)
+            {
+                // Replace original image with the cropped version, for future 'crop again' tasks
+                using (var replacedEditableImg = LcImaging.Resize(cropImg, FixedSizeWidth * 4, FixedSizeHeight * 4, LcImaging.SizeMode.Contain))
+                {
+                    replacedEditableImg.Save(path + fileName + ".jpg");
+                }
+            }
+            cropImg.Dispose();
         
             return regularFileName;
         }

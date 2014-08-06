@@ -1,12 +1,8 @@
-﻿@* Page being called as a Popup-iframe from your-work/photos to
-    upload new provider photos to its personal folder.
+﻿@* AJAX Page for POST request to upload and crop photos
+    to the user profile.
  *@
 @using WebMatrix.Data;
 @using WebMatrix.WebData;
-@functions{
-    const int fixedSizeWidth = LcData.Photo.FixedSizeWidth;
-    const int fixedSizeHeight = LcData.Photo.FixedSizeHeight;
-}
 @{
     LcHelpers.SecurePage();
     var userId = WebSecurity.CurrentUserId;
@@ -30,12 +26,12 @@
         photoID = Request["photoID"].AsInt();
         fileName = System.IO.Path.GetFileNameWithoutExtension(photoURI);
 
-        var updatedImageName = LcData.Photo.UploadPhoto(virtualPath,
+        var updatedImageName = LcData.Photo.UploadPhoto(Server.MapPath(virtualPath),
             fileName,
-            (int)Math.Round(Request["x1"].AsDecimal()), 
-            (int)Math.Round(Request["y1"].AsDecimal()),
-            (int)Math.Round(Request["w"].AsDecimal()),
-            (int)Math.Round(Request["h"].AsDecimal())
+            (int)Math.Round(Request["crop-x1"].AsDecimal()), 
+            (int)Math.Round(Request["crop-y1"].AsDecimal()),
+            (int)Math.Round(Request["crop-w"].AsDecimal()),
+            (int)Math.Round(Request["crop-h"].AsDecimal())
         );
         
         // NOTE: There is some issues with IE managing this result with contenttype=json
@@ -118,8 +114,6 @@
         }
             
         processed = true;
-    } else {
-        // Manage normal GET
     }
     
     if (processed) {
@@ -175,84 +169,3 @@
         }
     }
 }
-@{
-    // Main assets that allow minification
-    var styleCss = "Styles/common";
-    var loadScripts = new List<string>();
-    // Enabled only on dev
-    if (LcHelpers.InDev) {
-        loadScripts.Add("libs.js");
-        loadScripts.Add("app.js");
-        styleCss += ".css";
-    } else {
-        loadScripts.Add("common.min.js");
-        styleCss += ".min.css";
-    }
-    
-    int sizeLimit = LcHelpers.GetMaxRequestSize() * 1024;
-    // DEBUG: forcing no limit to debug server response on 'maximum request size exceded' error
-    //sizeLimit = 0;
-}
-<html data-position-id="@positionId" data-size-limit="@sizeLimit">
-    <head>
-        @*
-        <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
-        <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
-        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
-
-            Jquery and jquery-ui are already in common.min.js, and we reuse that because is already cached by the client browser.
-        *@
-        @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
-        @foreach (var js in loadScripts)
-        {
-            @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/" + js)
-        }
-
-        <script type="text/javascript">
-            @Html.Raw(LcUrl.ToJsVar())
-        </script>
-        <style type="text/css">
-            html:after,
-            html:before {
-                display: none;
-            }
-            body {
-                font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
-                padding: 1em;
-            }
-            #cropimg {
-                max-width: 100%;
-            }
-        </style>
-
-        <script type="text/javascript">
-            jQuery(function () { window.parent.initUploadPhoto(document) });
-        </script>
-    </head>
-    <body>
-        <div class="change-photo FileUploader">
-            <div id="change-photo-file-uploader" class="FileUploader-uploader">
-            </div>
-            <div id="crop-photo" class="FileUploader-editor" style="display:none">
-                <p>Please use the tool below to crop your photo</p>
-                <img id="cropimg" data-target-width="@fixedSizeWidth" data-target-height="@fixedSizeHeight" alt="Edit photo" />
-                <form action="@(LcUrl.LangPath)$dashboard/YourWork/UploadPhoto/" method="post">
-                    <div id="coords">
-                        <input type="hidden" id="x1" name="x1" />
-                        <input type="hidden" id="y1" name="y1" />
-                        <input type="hidden" id="x2" name="x2" />
-                        <input type="hidden" id="y2" name="y2" />
-                        <input type="hidden" id="w" name="w" />
-                        <input type="hidden" id="h" name="h" />
-                    </div>
-                    <div class="actions">
-                        <input type="hidden" name="crop-photo" value="True" />
-                        <input type="hidden" name="photoURI" value="" />
-                        <input type="hidden" name="photoID" value="" />
-                        <input type="submit" class="save-photo-action" value="Save photo changes" />
-                    </div>
-                </form>
-            </div>
-        </div>
-    </body>
-</html>

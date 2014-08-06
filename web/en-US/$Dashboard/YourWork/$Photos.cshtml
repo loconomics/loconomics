@@ -87,30 +87,42 @@
 
         <input type="hidden" name="gallery-order" value=""/>
         <div id="position[@n]photos-no-photos" class="no-photos">
-            <span class="positionphotos-tools-upload">Start by <a href="#upload-photo">uploading</a> a photo!</span>
+            <span class="positionphotos-tools-upload">Start by uploading a photo!</span>
         </div>
         <div id="position[@n]photos-no-primary-photo" class="no-primary-photo">
             Select a photo from the right as your primary photo.
         </div>
-        <fieldset class="positionphotos-edit">
+        <fieldset class="DashboardPhotos-editPhoto" data-size-limit="@(LcData.Photo.GetFileSizeLimit())">
             <legend>Edit this photo:</legend>
-            <input type="hidden" name="PhotoID" value="" />
-            <ul>
-                <li class="positionphotos-edit-photo"><img alt="Photo to edit" src="@(LcUrl.AppPath)img/theme/user-photo-no-selected.png" /></li>
-                <li class="positionphotos-edit-caption">
-                    <label for="position#@(n)-photos-edit-caption">Caption:</label>
-                    <input type="text" id="position#@(n)-photos-edit-caption" name="photo-caption"/>
-                </li>
-                <li class="positionphotos-edit-primary">
-                    <h6>Make primary photo?</h6>
-                    <label>Yes<input type="radio" name="is-primary-photo" value="True"/></label>
-                    <label>No<input type="radio" name="is-primary-photo" value="False"/></label>
-                </li>
-                <li class="positionphotos-edit-delete">
-                    <a href="#delete-photo">Delete this photo</a>
-                    <input type="hidden" name="delete-photo" value="False" />
-                </li>
-            </ul>
+            <div class="positionphotos-edit">
+                <input type="hidden" name="PhotoID" value="" />
+                <input type="hidden" name="photoURI" value="" />
+                <input type="hidden" name="crop-x1" />
+                <input type="hidden" name="crop-y1" />
+                <input type="hidden" name="crop-x2" />
+                <input type="hidden" name="crop-y2" />
+                <input type="hidden" name="crop-w" />
+                <input type="hidden" name="crop-h" />
+                <ul>
+                    <li class="positionphotos-edit-photo"><img data-target-width="@LcData.Photo.FixedSizeWidth" data-target-height="@LcData.Photo.FixedSizeHeight" alt="Photo to edit" src="@(LcUrl.AppPath)img/theme/user-photo-no-selected-442x332.png" /></li>
+                    <li class="positionphotos-edit-caption">
+                        <label for="position#@(n)-photos-edit-caption">Caption:</label>
+                        <input type="text" id="position#@(n)-photos-edit-caption" name="photo-caption"/>
+                    </li>
+                    <li class="positionphotos-edit-primary">
+                        <h6>Make primary photo?</h6>
+                        <label>Yes<input type="radio" name="is-primary-photo" value="True"/></label>
+                        <label>No<input type="radio" name="is-primary-photo" value="False"/></label>
+                    </li>
+                    <li class="photo-tools">
+                        <input type="button" class="DashboardPhotos-editPhoto-save" value="Save photo changes" />
+                        <a href="#delete-photo" class="DashboardPhotos-editPhoto-delete">Delete this photo</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="FileUploader FileUploader--hideSuccess">
+                <div class="FileUploader-uploader"></div>
+            </div>
         </fieldset>
         <fieldset class="positionphotos-gallery">
             <legend>Stored photos:</legend>
@@ -123,8 +135,7 @@
         </fieldset>
         <fieldset class="positionphotos-tools">
             <ul>
-                <li class="positionphotos-tools-upload"><a href="#" class="action">Upload photos</a></li>
-                <li class="positionphotos-tools-arrange">To arrange photos, drag and drop them in the order you'd like and click save.</li>
+                <li class="positionphotos-tools-arrange">To arrange photos, drag and drop them in the order you'd like.</li>
             </ul>
         </fieldset>
     </fieldset>

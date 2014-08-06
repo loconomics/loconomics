@@ -5,10 +5,14 @@ var $ = require('jquery');
 require('jquery-ui');
 var smoothBoxBlock = require('LC/smoothBoxBlock');
 var changesNotification = require('LC/changesNotification');
+var acb = require('LC/ajaxCallbacks');
+require('imagesLoaded');
 
 var sectionSelector = '.DashboardPhotos';
 // On init, the default 'no image' image src will be get it on:
 var defaultImgSrc = null;
+
+var editor = null;
 
 exports.on = function (containerSelector) {
     var $c = $(containerSelector);
@@ -23,20 +27,14 @@ exports.on = function (containerSelector) {
         initElements($c);
     });
 
-    // DEPRECATED: With refactoring, exposing javascript for the UploadPhoto Iframe on window to make
-    // it available for it.
-    window.initUploadPhoto = function initUploadPhoto(iframe) {
-        // Document html:
-        var gallery = new Gallery({ container: $('.DashboardPhotos') });
-        // Iframe html:
-        var $h = $('html', iframe);
-        new Editor({
-            container: iframe,
-            positionId: $h.data('position-id'),
-            sizeLimit: $h.data('size-limit'),
-            gallery: gallery
-        });
-    };
+    // Editor setup
+    var $ceditor = $('.DashboardPhotos-editPhoto', $c);
+    editor = new Editor({
+        container: $ceditor,
+        positionId: parseInt($c.closest('form').find('[name=positionID]').val()) || 0,
+        sizeLimit: $ceditor.data('size-limit'),
+        gallery: new Gallery({ container: $c })
+    });
 };
 
 function save(data) {
@@ -107,13 +105,25 @@ function editSelectedPhoto(form, selected) {
     if (selected && selected.length > 0) {
         var selImg = selected.find('img');
         // Moving selected to be edit panel
-        var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1];
+        var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1],
+            photoUrl = selImg.attr('src'),
+            $img = editPanel.find('img');
+
         editPanel.find('[name=PhotoID]').val(photoID);
-        editPanel.find('img').attr('src', selImg.attr('src') + '?size=normal');
+        editPanel.find('[name=photoURI]').val(photoUrl);
+        $img
+        .attr('src', photoUrl + "?v=" + (new Date()).getTime()) // '?size=normal')
+        .attr('style', '');
         editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
         var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
         editPanel.find('[name=is-primary-photo]').prop('checked', false);
         editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
+
+        // Cropping
+        $img.imagesLoaded(function () {
+            editor.setupCropPhoto();
+        });
+
     } else {
         if (form.find('.positionphotos-gallery > ol > li').length === 0) {
             smoothBoxBlock.open(form.find('.no-photos'), editPanel, '', { autofocus: false });
@@ -158,7 +168,7 @@ function setupCrudlDelegates($c) {
 
         return false;
     })
-    .on('click', '.positionphotos-edit-delete a', function () {
+    .on('click', '.DashboardPhotos-editPhoto-delete', function () {
 
         var editPanel = $(this).closest('.positionphotos-edit');
         var form = editPanel.closest(sectionSelector);
@@ -221,6 +231,9 @@ function initElements(form) {
     form.find('[name=delete-photo]').val('False');
 }
 
+/**
+    Gallery Class
+**/
 function Gallery(settings) {
 
     settings = settings || {};
@@ -247,6 +260,8 @@ function Gallery(settings) {
         .animate({ scrollTop: this.$galleryList[0].scrollHeight - this.$galleryList.height() - 2 }, 1400)
         .find('li:last-child')
         .effect("highlight", {}, 1600);
+
+        return newImg;
     };
 
     this.reloadPhoto = function reloadPhoto(fileURI, photoID) {
@@ -267,8 +282,8 @@ function Editor(settings) {
 
     settings = settings || {};
 
+    // f.e.: .DashboardPhotos-editPhoto
     this.$container = $(settings.container || 'html');
-    this.$crop = $('#crop-photo', this.$container);
     this.gallery = settings.gallery || new Gallery(this.$container);
     
     var $h = $('html');
@@ -278,8 +293,7 @@ function Editor(settings) {
     // Initializing:
     this.initUploader();
     this.initCropForm();
-    this.setupCropPhoto();
-    this.showEditorIfImage();
+    //this.setupCropPhoto();
 }
 
 Editor.prototype.initUploader = function initUploader() {
@@ -287,15 +301,16 @@ Editor.prototype.initUploader = function initUploader() {
     var thisEditor = this;
 
     var uploader = new qq.FileUploader({
-        element: $('#change-photo-file-uploader', this.$container).get(0),
+        element: $('.FileUploader-uploader', this.$container).get(0),
         // path to server-side upload script
         action: LcUrl.LangPath + 'dashboard/YourWork/UploadPhoto/?PositionID=' + (this.positionId),
         allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
         onComplete: function (id, fileName, responseJSON) {
             if (responseJSON.success) {
-                thisEditor.gallery.appendPhoto(responseJSON.fileURI, responseJSON.photoID);
-                // Go to crop photo:
-                thisEditor.showCropPhoto(responseJSON.fileURI, responseJSON.photoID);
+                var newImgItem = thisEditor.gallery.appendPhoto(responseJSON.fileURI, responseJSON.photoID);
+                // Show in edit panel
+                smoothBoxBlock.closeAll(thisEditor.gallery.$container);
+                editSelectedPhoto(thisEditor.gallery.$container, newImgItem);
             }
         },
         messages: {
@@ -305,67 +320,62 @@ Editor.prototype.initUploader = function initUploader() {
             emptyError: "{file} is empty, please select files again without it.",
             onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
         },
-        sizeLimit: this.sizeLimit || 'undefined'
+        sizeLimit: this.sizeLimit || 'undefined',
+        template: '<div class="qq-uploader">' + 
+                '<div class="qq-upload-drop-area"><span>Drop a file here to upload</span></div>' +
+                '<div class="qq-upload-button">Upload a photo</div>' +
+                '<ul class="qq-upload-list"></ul>' + 
+                '</div>'
     });
 };
 
 // Simple event handler, called from onChange and onSelect
 // event handlers, as per the Jcrop invocation above
 Editor.prototype.showCoords = function showCoords(c) {
-    $('#x1', this.$container).val(c.x);
-    $('#y1', this.$container).val(c.y);
-    $('#x2', this.$container).val(c.x2);
-    $('#y2', this.$container).val(c.y2);
-    $('#w', this.$container).val(c.w);
-    $('#h', this.$container).val(c.h);
+    $('[name=crop-x1]', this.$container).val(c.x);
+    $('[name=crop-y1]', this.$container).val(c.y);
+    $('[name=crop-x2]', this.$container).val(c.x2);
+    $('[name=crop-y2]', this.$container).val(c.y2);
+    $('[name=crop-w]', this.$container).val(c.w);
+    $('[name=crop-h]', this.$container).val(c.h);
 };
 
 Editor.prototype.clearCoords = function clearCoords() {
-    $('#coords input', this.$container).val('');
-};
-
-Editor.prototype.showCropPhoto = function showCropPhoto(photoURI, photoID) {
-
-    var $p = this.$crop,
-            thisEditor = this;
-    $p.show();
-
-    $p.find('[name=photoURI]').val(photoURI);
-    $p.find('[name=photoID]').val(photoID);
-
-    // Set new image
-    $p.find('img')
-        .attr('style', '')
-        .attr('src', photoURI + "?v=" + (new Date()).getTime())
-        .on('load', function () {
-            thisEditor.setupCropPhoto();
-        });
+    $('input[name=^crop-]', this.$container).val('');
 };
 
 Editor.prototype.initCropForm = function initCropForm() {
-    // Setup cropping form
-    var $f = $('form', this.$crop);
+
+    // Setup cropping "form"
     var thisEditor = this;
 
-    $f.on('submit', function (e) {
+    this.$container.on('click', '.DashboardPhotos-editPhoto-save', function (e) {
         e.preventDefault();
 
         $.ajax({
-            url: $f.attr('action'),
-            method: $f.attr('method'),
-            data: $f.serialize(),
+            url: LcUrl.LangPath + '$dashboard/YourWork/UploadPhoto/',
+            type: 'POST',
+            data: thisEditor.$container.serialize() + '&crop-photo=True',
             dataType: 'json',
-            success: function (data) {
-                if (data.updated) {
+            success: function (data, text, jx) {
+                if (data.Code) {
+                    acb.doJSONAction(data, text, jx);
+                }
+                else if (data.updated) {
                     // Photo cropped, resized
                     thisEditor.gallery.reloadPhoto(data.fileURI, data.photoID);
+                    // Refresh edit panel
+                    editSelectedPhoto(thisEditor.gallery.$container);
                 }
                 else {
                     // Photo uploaded
-                    thisEditor.appendPhoto(data.fileURI, data.photoID);
+                    var newImgItem = thisEditor.gallery.appendPhoto(data.fileURI, data.photoID);
+                    // Show in edit panel
+                    smoothBoxBlock.closeAll(thisEditor.gallery.$container);
+                    editSelectedPhoto(thisEditor.gallery.$container, newImgItem);
                 }
                 $('#crop-photo').slideUp('fast');
-                    
+
                 // TODO Close popup #535
             },
             error: function (xhr, er) {
@@ -373,27 +383,6 @@ Editor.prototype.initCropForm = function initCropForm() {
             }
         });
     });
-};
-
-// If an image is loaded, show up the cropping tool
-Editor.prototype.showEditorIfImage = function showEditorIfImage() {
-
-    var $cp = this.$crop,
-        $img = $('#cropimg', this.$crop);
-
-    if ($img.height() > 30) {
-        $cp.show();
-        return true;
-    }
-    else {
-        $cp.hide();
-        $img
-        .off('load.cropper')
-        .off('error.cropper')
-        .one('load.cropper', this.showEditorIfImage.bind(this))
-        .one('error.cropper', this.showEditorIfImage.bind(this));
-        return false;
-    }
 };
 
 Editor.prototype.setupCropPhoto = function setupCropPhoto() {
@@ -404,7 +393,7 @@ Editor.prototype.setupCropPhoto = function setupCropPhoto() {
     var thisEditor = this;
 
     // Setup img cropping
-    var $img = $('#cropimg', this.$crop);
+    var $img = $('.positionphotos-edit-photo > img', this.$container);
     $img.Jcrop({
         onChange: this.showCoords.bind(this),
         onSelect: this.showCoords.bind(this),

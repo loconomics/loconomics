@@ -5,12 +5,25 @@
 @import "../utils/ActionBox"
 @import "../utils/ColorsPalette"
 @import "../utils/Location"
+@import "../utils/Actions"
+@import "../utils/ColorsPalette"
 
 /* TODO: Refactoring NOT complete, needs apply new naming convention, use dashboard variables,
     and reuse styles like BasicForm
 */
 
 .DashboardYourWork .DashboardPhotos {
+    
+    .DashboardPhotos-editPhoto {
+        .DashboardPhotos-editPhoto-save {
+            Action()
+        }
+        
+        .DashboardPhotos-editPhoto-delete {
+            Action($colorRed)
+        }
+    }
+    
     fieldset{
         display: inline-block;
         vertical-align: top;
@@ -42,6 +55,10 @@
     .positionphotos-edit-photo {
         overflow: hidden;
         text-align: center;
+        width: 442px;
+        height: 332px;
+        margin: auto;
+        padding: 0.5em;
     }
     .positionphotos-edit-photo img{
         max-height: 332px;
@@ -51,8 +68,8 @@
         list-style: none;
         padding: 0;
         margin: 0;
-        /* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting to static 349px */
-        height: 420px;
+        /* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting a fixed one */
+        height: 442px;
         overflow: auto;
     }
     .positionphotos-gallery li {
