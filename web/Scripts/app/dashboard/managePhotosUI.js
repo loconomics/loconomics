@@ -5,6 +5,7 @@ var $ = require('jquery');
 require('jquery-ui');
 var smoothBoxBlock = require('LC/smoothBoxBlock');
 var changesNotification = require('LC/changesNotification');
+var acb = require('LC/ajaxCallbacks');
 require('imagesLoaded');
 
 var sectionSelector = '.DashboardPhotos';
@@ -274,6 +275,8 @@ function Gallery(settings) {
         .animate({ scrollTop: this.$galleryList[0].scrollHeight - this.$galleryList.height() - 2 }, 1400)
         .find('li:last-child')
         .effect("highlight", {}, 1600);
+
+        return newImg;
     };
 
     this.reloadPhoto = function reloadPhoto(fileURI, photoID) {
@@ -351,7 +354,7 @@ Editor.prototype.clearCoords = function clearCoords() {
 };
 
 Editor.prototype.initCropForm = function initCropForm() {
-    
+
     // Setup cropping "form"
     var thisEditor = this;
 
@@ -363,17 +366,24 @@ Editor.prototype.initCropForm = function initCropForm() {
             type: 'POST',
             data: thisEditor.$container.serialize() + '&crop-photo=True',
             dataType: 'json',
-            success: function (data) {
-                if (data.updated) {
+            success: function (data, text, jx) {
+                if (data.Code) {
+                    acb.doJSONAction(data, text, jx);
+                }
+                else if (data.updated) {
                     // Photo cropped, resized
                     thisEditor.gallery.reloadPhoto(data.fileURI, data.photoID);
+                    // Refresh edit panel
+                    editSelectedPhoto(thisEditor.gallery.$container);
                 }
                 else {
                     // Photo uploaded
-                    thisEditor.appendPhoto(data.fileURI, data.photoID);
+                    var newImgItem = thisEditor.gallery.appendPhoto(data.fileURI, data.photoID);
+                    // Show in edit panel
+                    editSelectedPhoto(thisEditor.gallery.$container, newImgItem);
                 }
                 $('#crop-photo').slideUp('fast');
-                    
+
                 // TODO Close popup #535
             },
             error: function (xhr, er) {

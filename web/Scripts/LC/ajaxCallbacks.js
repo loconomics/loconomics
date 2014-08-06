@@ -204,20 +204,22 @@ function showOkGoPopup(ctx, data) {
 function doJSONAction(data, text, jx, ctx) {
     // If is a JSON result:
     if (typeof (data) === 'object') {
-        if (ctx.box)
+        if (ctx && ctx.box)
             // Clean previous validation errors
             validation.setValidationSummaryAsValid(ctx.box);
 
         if (data.Code === 0) {
             // Special Code 0: general success code, show message saying that 'all was fine'
             showSuccessMessage(ctx, data.Result, data);
-            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
+            if (ctx && ctx.form && ctx.form.trigger)
+                ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
             // Special Code 1: do a redirect
         } else if (data.Code == 1) {
             redirectTo(data.Result);
         } else if (data.Code == 2) {
             // Special Code 2: show login popup (with the given url at data.Result)
-            ctx.box.unblock();
+            if (ctx && ctx.block && ctx.box.unblock)
+                ctx.box.unblock();
             popup(data.Result, { width: 410, height: 320 });
         } else if (data.Code == 3) {
             // Special Code 3: reload current page content to the given url at data.Result)
@@ -225,7 +227,8 @@ function doJSONAction(data, text, jx, ctx) {
             // this ajax server request.
             //container.unblock(); is blocked and unblocked again by the reload method:
             ctx.autoUnblockLoading = false;
-            ctx.box.reload(data.Result);
+            if (ctx && ctx.box && ctx.box.reload)
+                ctx.box.reload(data.Result);
         } else if (data.Code == 4) {
             // Show SuccessMessage, attaching and event handler to go to RedirectURL
             ctx.box.on('ajaxSuccessPostMessageClosed', function () {
