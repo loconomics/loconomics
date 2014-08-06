@@ -35,21 +35,6 @@ exports.on = function (containerSelector) {
         sizeLimit: $ceditor.data('size-limit'),
         gallery: new Gallery({ container: $c })
     });
-
-    // DEPRECATED: With refactoring, exposing javascript for the UploadPhoto Iframe on window to make
-    // it available for it.
-    window.initUploadPhoto = function initUploadPhoto(iframe) {
-        // Document html:
-        var gallery = new Gallery({ container: $('.DashboardPhotos') });
-        // Iframe html:
-        var $h = $('html', iframe);
-        new Editor({
-            container: iframe,
-            positionId: $h.data('position-id'),
-            sizeLimit: $h.data('size-limit'),
-            gallery: gallery
-        });
-    };
 };
 
 function save(data) {
