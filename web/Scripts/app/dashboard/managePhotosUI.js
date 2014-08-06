@@ -335,7 +335,12 @@ Editor.prototype.initUploader = function initUploader() {
             emptyError: "{file} is empty, please select files again without it.",
             onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
         },
-        sizeLimit: this.sizeLimit || 'undefined'
+        sizeLimit: this.sizeLimit || 'undefined',
+        template: '<div class="qq-uploader">' + 
+                '<div class="qq-upload-drop-area"><span>Drop a file here to upload</span></div>' +
+                '<div class="qq-upload-button">Upload a photo</div>' +
+                '<ul class="qq-upload-list"></ul>' + 
+                '</div>'
     });
 };
 
