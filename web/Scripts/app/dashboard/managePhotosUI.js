@@ -31,7 +31,7 @@ exports.on = function (containerSelector) {
     var $ceditor = $('.DashboardPhotos-editPhoto', $c);
     editor = new Editor({
         container: $ceditor,
-        positionId: parseInt($c.closest('form').find('[name=positionID]')) || 0,
+        positionId: parseInt($c.closest('form').find('[name=positionID]').val()) || 0,
         sizeLimit: $ceditor.data('size-limit'),
         gallery: new Gallery({ container: $c })
     });
@@ -322,9 +322,9 @@ Editor.prototype.initUploader = function initUploader() {
         allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
         onComplete: function (id, fileName, responseJSON) {
             if (responseJSON.success) {
-                thisEditor.gallery.appendPhoto(responseJSON.fileURI, responseJSON.photoID);
-                // Go to crop photo:
-                thisEditor.showCropPhoto(responseJSON.fileURI, responseJSON.photoID);
+                var newImgItem = thisEditor.gallery.appendPhoto(responseJSON.fileURI, responseJSON.photoID);
+                // Show in edit panel
+                editSelectedPhoto(thisEditor.gallery.$container, newImgItem);
             }
         },
         messages: {
