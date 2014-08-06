@@ -29,6 +29,7 @@
     "grunt-contrib-cssmin": "~0.7.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-clean": "~0.5.0",
-    "date-format-lite": "~0.5.0"
+    "date-format-lite": "~0.5.0",
+    "imagesloaded": "~3.1.8"
   }
 }

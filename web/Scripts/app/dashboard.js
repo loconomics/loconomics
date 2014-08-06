@@ -147,8 +147,10 @@ function initYourWorkDom() {
     require('./dashboard/licensesCrudl').on('.DashboardYourWork');
 
     /* Your work / photos */
-    require('./dashboard/managePhotosUI').on('.DashboardYourWork');
-    setInstantSavingSection('.DashboardPhotos');
+    require('./dashboard/managePhotosUI').on('.DashboardPhotos');
+    // PhotosUI is special and cannot do instant-saving on form changes
+    // because of the re-use of the editing form
+    //setInstantSavingSection('.DashboardPhotos');
 
     /* Your work / reviews */
     $('.DashboardYourWork').on('ajaxSuccessPost', 'form', function (event, data) {

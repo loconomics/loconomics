@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-07-10
+/*! Loconomics.com 2014-08-06
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -3273,7 +3273,7 @@ form ul li {
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 
-/* line 112 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
+/* line 134 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -3656,114 +3656,294 @@ form ul li {
   display: block;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 
-/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.begin-action,
+.next-action,
+.finish-action {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #e95d0f;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+  padding: 0.2em 0.6em;
+  line-height: 27px;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.begin-action:hover,
+.next-action:hover,
+.finish-action:hover {
+  -webkit-box-shadow: 0 0 5px 2px #e95d0f;
+  box-shadow: 0 0 5px 2px #e95d0f;
+  background-color: #e95d0f;
+}
+
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.begin-action:after,
+.next-action:after,
+.finish-action:after {
+  content: " ";
+  background: url("../img/theme/right-arrow.png") no-repeat center;
+  width: 29px;
+  height: 27px;
+  line-height: 27px;
+  margin-left: 0.4em;
+  color: #e95d0f;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  vertical-align: middle;
+  display: inline-block;
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+  .begin-action:after,
+  .next-action:after,
+  .finish-action:after {
+    background-image: url("../img/theme/right-arrow@2x.png");
+    -webkit-background-size: 29px 27px;
+    -moz-background-size: 29px 27px;
+    background-size: 29px 27px;
+  }
+}
+
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.Actions {
+  zoom: 1;
+  display: block;
+  clear: both;
+}
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+.Actions:before,
+.Actions:after {
+  content: "";
+  display: table;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+.Actions:after {
+  clear: both;
+}
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 15 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+.DashboardYourWork .DashboardPhotos .DashboardPhotos-editPhoto .DashboardPhotos-editPhoto-save {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #99c027;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.DashboardYourWork .DashboardPhotos .DashboardPhotos-editPhoto .DashboardPhotos-editPhoto-save:hover {
+  -webkit-box-shadow: 0 0 5px 2px #99c027;
+  box-shadow: 0 0 5px 2px #99c027;
+  background-color: #99c027;
+}
+
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+.DashboardYourWork .DashboardPhotos .DashboardPhotos-editPhoto .DashboardPhotos-editPhoto-delete {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #fc0404;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.DashboardYourWork .DashboardPhotos .DashboardPhotos-editPhoto .DashboardPhotos-editPhoto-delete:hover {
+  -webkit-box-shadow: 0 0 5px 2px #fc0404;
+  box-shadow: 0 0 5px 2px #fc0404;
+  background-color: #fc0404;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos fieldset {
   display: inline-block;
   vertical-align: top;
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .no-photos,
 .DashboardYourWork .DashboardPhotos .no-primary-photo {
   display: none;
 }
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos fieldset li {
   margin: 6px 0;
   padding: 0;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit {
-  width: 390px;
+  width: 500px;
 }
 
-/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 41 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery {
-  width: 23%;
+  width: 160px;
 }
 
-/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-tools {
-  width: 14%;
+  display: block;
 }
 
-/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
-.DashboardYourWork .DashboardPhotos .positionphotos-gallery,
+/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit {
   border-right: 4px solid #dadada;
   margin-right: 8px !important;
   padding-right: 4px !important;
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
-.DashboardYourWork .DashboardPhotos .positionphotos-edit,
-.DashboardYourWork .DashboardPhotos .positionphotos-gallery,
-.DashboardYourWork .DashboardPhotos .positionsphotos.tools {
-  height: 370px;
-  overflow: hidden;
-}
-
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-photo {
-  width: 380px;
-  height: 240px;
   overflow: hidden;
   text-align: center;
+  width: 442px;
+  height: 332px;
+  margin: auto;
+  padding: 0.5em;
 }
 
-/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 62 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-photo img {
-  max-height: 240px;
-  max-width: 380px;
+  max-height: 332px;
+  max-width: 442px;
 }
 
-/* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery ol {
   list-style: none;
   padding: 0;
   margin: 0;
-/* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting to static 349px */
-  height: 349px;
+/* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting a fixed one */
+  height: 442px;
   overflow: auto;
 }
 
-/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery li {
   width: 134px;
   overflow: hidden;
 }
 
-/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery li a {
   display: block;
   width: 128px;
-  height: 80px;
+  height: 96px;
   margin: 3px auto;
   overflow: hidden;
   text-align: center;
 }
 
-/* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 86 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery li a img {
   max-width: 128px;
-  min-height: 80px;
+  min-height: 96px;
 }
 
-/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery li.selected a {
   outline: 3px solid #00989a;
 }
 
-/* line 80 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 93 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery li.selected a.edit {
   outline: none;
 }
 
-/* line 83 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 96 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-gallery li a.edit {
   display: block;
   text-align: right;
@@ -3772,7 +3952,12 @@ form ul li {
   height: auto;
 }
 
-/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+.DashboardYourWork .DashboardPhotos .positionphotos-gallery .ui-state-highlight {
+  height: 125px;
+}
+
+/* line 112 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-caption label,
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary label {
   padding: 5px 0;
@@ -3780,12 +3965,12 @@ form ul li {
   margin-right: 15px;
 }
 
-/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-caption input {
   width: 270px !important;
 }
 
-/* line 98 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 120 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary h6 {
   font-size: 1em;
   color: #666;
@@ -3794,17 +3979,17 @@ form ul li {
   display: inline-block;
 }
 
-/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 127 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary input {
   margin: 0 3px;
 }
 
-/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
+/* line 130 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary label {
   padding: 0;
 }
 
-/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
 
 /* line 122 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 

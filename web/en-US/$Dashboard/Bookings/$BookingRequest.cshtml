@@ -15,7 +15,8 @@
         @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { 
             BookingRequestID = brID,
             ExtraTitleClass = "DashboardSection-page-header", 
-            UseLinkActions = true 
+            UseLinkActions = true,
+            RedirectOnConfirmedRequest = LcUrl.LangPath + "dashboard/messages/booking/{0}/"
         })
         break;
     

@@ -37,7 +37,8 @@ module.exports = function (grunt) {
                   './Styles/app/app.css',
                   './Styles/app-includes.css',
                   './Styles/app/w-ProviderPackage.css',
-                  './Styles/smoothness/jquery-ui-1.8.21.custom.css'
+                  './Styles/smoothness/jquery-ui-1.8.21.custom.css',
+                  './Scripts/jcrop/css/jquery.Jcrop.min.css'
                 ],
                 dest: './Styles/common.css',
                 options: {
@@ -92,6 +93,16 @@ module.exports = function (grunt) {
                             path: './Scripts/libs/modernizr.custom.2.6.2.js',
                             exports: 'Modernizr',
                             depends: { 'jquery': 'jquery' }
+                        },
+                        fileuploader: {
+                            path: './Scripts/fileuploader/fileuploader.js',
+                            exports: 'qq',
+                            depends: { 'jquery': 'jquery' }
+                        },
+                        jcrop: {
+                            path: './Scripts/jcrop/js/jquery.Jcrop.min.js',
+                            exports: null,
+                            depends: { 'jquery': 'jquery' }
                         }
                     }
                 }
@@ -115,7 +126,9 @@ module.exports = function (grunt) {
                         'jquery.blockUI',
                         'jquery.ba-hashchange',
                         'jquery.formatter',
-                        'bootstrap'
+                        'bootstrap',
+                        'fileuploader',
+                        'jcrop'
                     ],
                     alias: [
                         './Scripts/LC/StringFormat:StringFormat',

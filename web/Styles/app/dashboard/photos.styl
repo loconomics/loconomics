@@ -5,12 +5,25 @@
 @import "../utils/ActionBox"
 @import "../utils/ColorsPalette"
 @import "../utils/Location"
+@import "../utils/Actions"
+@import "../utils/ColorsPalette"
 
 /* TODO: Refactoring NOT complete, needs apply new naming convention, use dashboard variables,
     and reuse styles like BasicForm
 */
 
 .DashboardYourWork .DashboardPhotos {
+    
+    .DashboardPhotos-editPhoto {
+        .DashboardPhotos-editPhoto-save {
+            Action()
+        }
+        
+        .DashboardPhotos-editPhoto-delete {
+            Action($colorRed)
+        }
+    }
+    
     fieldset{
         display: inline-block;
         vertical-align: top;
@@ -24,42 +37,39 @@
         padding: 0;
     }
     .positionphotos-edit {
-        width: 390px;
+        width: 500px;
     }
     .positionphotos-gallery {
-        width: 23%;
+        width: 160px;
     }
-    .positionphotos-tools{
-        width: 14%;
+    .positionphotos-tools {
+        display: block;
     }
-    .positionphotos-gallery,
-    .positionphotos-edit{
+
+    .positionphotos-edit {
         border-right: 4px solid #DADADA;
         margin-right: 8px !important;
         padding-right: 4px !important;
     }
-    .positionphotos-edit,
-    .positionphotos-gallery,
-    .positionsphotos.tools{
-        height: 370px;
-        overflow: hidden;
-    }
+
     .positionphotos-edit-photo {
-        width: 380px;
-        height: 240px;
         overflow: hidden;
         text-align: center;
+        width: 442px;
+        height: 332px;
+        margin: auto;
+        padding: 0.5em;
     }
     .positionphotos-edit-photo img{
-        max-height: 240px;
-        max-width: 380px;
+        max-height: 332px;
+        max-width: 442px;
     }
     .positionphotos-gallery ol{
         list-style: none;
         padding: 0;
         margin: 0;
-        /* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting to static 349px */
-        height: 349px;
+        /* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting a fixed one */
+        height: 442px;
         overflow: auto;
     }
     .positionphotos-gallery li {
@@ -69,14 +79,14 @@
     .positionphotos-gallery li a{
         display: block;
         width: 128px;
-        height: 80px;
+        height: 96px;
         margin: 3px auto;
         overflow: hidden;
         text-align: center;
     }
     .positionphotos-gallery li a img{
         max-width: 128px;
-        min-height: 80px;
+        min-height: 96px;
     }
     .positionphotos-gallery li.selected a{
         outline: 3px solid #00989a;
@@ -91,6 +101,15 @@
         width: auto;
         height: auto;
     }
+    
+    /* Increased size for the sortable placeholder for
+        better user experience. The height given
+        is the same as the size images took with
+        current styles */
+    .positionphotos-gallery .ui-state-highlight {
+        height: 125px;
+    }
+    
     .positionphotos-edit-caption label,
     .positionphotos-edit-primary label{
         padding: 5px 0;

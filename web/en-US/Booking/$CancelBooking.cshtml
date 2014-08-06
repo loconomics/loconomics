@@ -65,19 +65,21 @@
             
             var fullmsg = "Impossible to cancel that Booking. Is already cancelled?";
                 
-            if (PageData["UseRenderReturns"]) {
+            if (PageData["UseRenderReturns"] ?? false) {
                 LcHelpers.RenderPageReturns = fullmsg;
                 return;
             }
             
-            if (Request.IsAjaxRequest()){
-                /* What? 
-                 * - BookingID and UserID (as CustomerUserID) don't match?
-                 * - Booking is already cancelled?
-                 */
-                LcHelpers.ReturnJsonError(-1, fullmsg);
+            /* What? 
+            * - BookingID and UserID (as CustomerUserID) don't match?
+            * - Booking is already cancelled?
+            */
+            if (PageData["UseRenderReturns"]) {
+                LcHelpers.RenderPageReturns = fullmsg;
+                return;
             } else {
-                throw new HttpException(500, fullmsg);
+                Layout = "../_SiteLayout.cshtml";
+                @(fullmsg);
             }
         }
     }
