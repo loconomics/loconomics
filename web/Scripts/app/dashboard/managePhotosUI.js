@@ -324,6 +324,7 @@ Editor.prototype.initUploader = function initUploader() {
             if (responseJSON.success) {
                 var newImgItem = thisEditor.gallery.appendPhoto(responseJSON.fileURI, responseJSON.photoID);
                 // Show in edit panel
+                smoothBoxBlock.closeAll(thisEditor.gallery.$container);
                 editSelectedPhoto(thisEditor.gallery.$container, newImgItem);
             }
         },
@@ -380,6 +381,7 @@ Editor.prototype.initCropForm = function initCropForm() {
                     // Photo uploaded
                     var newImgItem = thisEditor.gallery.appendPhoto(data.fileURI, data.photoID);
                     // Show in edit panel
+                    smoothBoxBlock.closeAll(thisEditor.gallery.$container);
                     editSelectedPhoto(thisEditor.gallery.$container, newImgItem);
                 }
                 $('#crop-photo').slideUp('fast');
