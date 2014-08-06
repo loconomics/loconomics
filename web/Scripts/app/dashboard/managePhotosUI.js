@@ -183,7 +183,7 @@ function setupCrudlDelegates($c) {
 
         return false;
     })
-    .on('click', '.positionphotos-edit-delete a', function () {
+    .on('click', '.DashboardPhotos-editPhoto-delete', function () {
 
         var editPanel = $(this).closest('.positionphotos-edit');
         var form = editPanel.closest(sectionSelector);

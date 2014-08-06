@@ -5,12 +5,25 @@
 @import "../utils/ActionBox"
 @import "../utils/ColorsPalette"
 @import "../utils/Location"
+@import "../utils/Actions"
+@import "../utils/ColorsPalette"
 
 /* TODO: Refactoring NOT complete, needs apply new naming convention, use dashboard variables,
     and reuse styles like BasicForm
 */
 
 .DashboardYourWork .DashboardPhotos {
+    
+    .DashboardPhotos-editPhoto {
+        .DashboardPhotos-editPhoto-save {
+            Action()
+        }
+        
+        .DashboardPhotos-editPhoto-delete {
+            Action($colorRed)
+        }
+    }
+    
     fieldset{
         display: inline-block;
         vertical-align: top;

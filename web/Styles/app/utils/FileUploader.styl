@@ -11,13 +11,6 @@
 @import "Actions"
 @import "ColorsPalette"
 
-FullButton() {
-    width: 100%;
-    box-sizing: border-box;
-    display: block;
-    text-align: center;
-}
-
 .FileUploader {
     
     &.FileUploader--hideSuccess {
@@ -36,8 +29,7 @@ FullButton() {
         }
         
         .qq-upload-button {
-            Action()
-            FullButton()
+            Action($colorTeal)
         }
 
         .qq-upload-button-hover {}
