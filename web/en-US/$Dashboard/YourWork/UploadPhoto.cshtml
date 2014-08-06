@@ -30,12 +30,12 @@
         photoID = Request["photoID"].AsInt();
         fileName = System.IO.Path.GetFileNameWithoutExtension(photoURI);
 
-        var updatedImageName = LcData.Photo.UploadPhoto(virtualPath,
+        var updatedImageName = LcData.Photo.UploadPhoto(Server.MapPath(virtualPath),
             fileName,
-            (int)Math.Round(Request["x1"].AsDecimal()), 
-            (int)Math.Round(Request["y1"].AsDecimal()),
-            (int)Math.Round(Request["w"].AsDecimal()),
-            (int)Math.Round(Request["h"].AsDecimal())
+            (int)Math.Round(Request["crop-x1"].AsDecimal()), 
+            (int)Math.Round(Request["crop-y1"].AsDecimal()),
+            (int)Math.Round(Request["crop-w"].AsDecimal()),
+            (int)Math.Round(Request["crop-h"].AsDecimal())
         );
         
         // NOTE: There is some issues with IE managing this result with contenttype=json

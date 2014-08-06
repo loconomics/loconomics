@@ -355,7 +355,7 @@ Editor.prototype.showCropPhoto = function showCropPhoto(photoURI, photoID) {
     this.$container.find('[name=photoID]').val(photoID);
 
     // Set new image
-    this.$container.find('img')
+    this.$container.find('.positionphotos-edit-photo > img')
     .attr('style', '')
     .attr('src', photoURI + "?v=" + (new Date()).getTime())
     .on('load', function () {
@@ -373,8 +373,8 @@ Editor.prototype.initCropForm = function initCropForm() {
 
         $.ajax({
             url: LcUrl.LangPath + '$dashboard/YourWork/UploadPhoto/',
-            method: 'POST',
-            data: thisEditor.serialize(),
+            type: 'POST',
+            data: thisEditor.$container.serialize() + '&crop-photo=True',
             dataType: 'json',
             success: function (data) {
                 if (data.updated) {
@@ -402,9 +402,9 @@ Editor.prototype.setupCropPhoto = function setupCropPhoto() {
         this.jcropApi.destroy();
 
     var thisEditor = this;
-    console.log('setupCropPHoto', this)
+
     // Setup img cropping
-    var $img = $('#cropimg', this.$crop);
+    var $img = $('.positionphotos-edit-photo > img', this.$container);
     $img.Jcrop({
         onChange: this.showCoords.bind(this),
         onSelect: this.showCoords.bind(this),
