@@ -26,15 +26,6 @@ exports.on = function (containerSelector) {
     $c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
         initElements($c);
     });
-
-    // Editor setup
-    var $ceditor = $('.DashboardPhotos-editPhoto', $c);
-    editor = new Editor({
-        container: $ceditor,
-        positionId: parseInt($c.closest('form').find('[name=positionID]').val()) || 0,
-        sizeLimit: $ceditor.data('size-limit'),
-        gallery: new Gallery({ container: $c })
-    });
 };
 
 function save(data) {
@@ -95,7 +86,7 @@ function saveEditedPhoto($f) {
 function editSelectedPhoto(form, selected) {
 
     var editPanel = $('.positionphotos-edit', form);
-    var nonUploaderElementsSelector = '.positionphotos-edit, .DashboardPhotos-editPhoto > legend, .positionphotos-gallery, .positionphotos-tools';
+    var nonUploaderElementsSelector = '.positionphotos-edit, .DashboardPhotos-editPhoto > legend, .positionphotos-gallery > legend, .positionphotos-gallery > ol, .positionphotos-tools';
 
     // Use given @selected or look for a selected photo in the list
     selected = selected && selected.length ? selected : $('.positionphotos-gallery > ol > li.selected', form);
@@ -104,8 +95,9 @@ function editSelectedPhoto(form, selected) {
     selected.addClass('selected').siblings().removeClass('selected');
 
     if (selected && selected.length > 0) {
-        
+
         form.find(nonUploaderElementsSelector).show();
+        editor.uploader.setAsSecondary();
 
         var selImg = selected.find('img');
         // Moving selected to be edit panel
@@ -134,8 +126,10 @@ function editSelectedPhoto(form, selected) {
             // to the 'upload button'. The gallery may need to be hidden too
             //smoothBoxBlock.open(form.find('.no-photos'), editPanel, '', { autofocus: false });
             form.find(nonUploaderElementsSelector).hide();
+            editor.uploader.setAsMain();
         } else {
             form.find(nonUploaderElementsSelector).show();
+            editor.uploader.setAsSecondary();
             smoothBoxBlock.open(form.find('.no-primary-photo'), editPanel, '', { autofocus: false });
         }
         // No image:
@@ -207,37 +201,61 @@ function setupCrudlDelegates($c) {
   because needs direct access to the DOM elements.
 */
 function initElements(form) {
-    // Prepare sortable script
-    $(".positionphotos-gallery > ol", form).sortable({
-        placeholder: "ui-state-highlight",
-        update: function () {
-            // Get photo order, a comma separated value of items IDs
-            var order = $(this).sortable("toArray").toString();
-            // Set order in the form element, to be sent later with the form
-            $(this).closest(sectionSelector)
-            .find('[name=gallery-order]')
-            .val(order)
-            // With instant saving, no more notify change for ChangesNotifier, so commenting:
-            //.change()
-            ;
-
-            // Instant saving
-            save({
-                'gallery-order': order,
-                action: 'order',
-                result: 'json'
-            });
-        }
-    });
 
     defaultImgSrc = form.find('img').attr('src');
 
+    var sortable = new Sortable({ container: form });
+
+    // Editor setup
+    var $ceditor = $('.DashboardPhotos-editPhoto', form),
+        positionId = parseInt(form.closest('form').find('[name=positionID]').val()) || 0;
+    editor = new Editor({
+        container: $ceditor,
+        positionId: positionId,
+        sizeLimit: $ceditor.data('size-limit'),
+        gallery: new Gallery({ container: form }),
+        uploader: new Uploader({ container: $('.FileUploader', form), positionId: positionId })
+    });
+
     // Set primary photo to be edited
     editSelectedPhoto(form);
-
-    // Reset delete option
-    form.find('[name=delete-photo]').val('False');
 }
+
+/**
+    Sortable Component Class
+**/
+function Sortable(settings) {
+
+    settings = settings || {};
+    this.$container = $(settings.container || 'body');
+
+    // Prepare sortable script
+    this.sortable = $(".positionphotos-gallery > ol", this.$container).sortable({
+        placeholder: "ui-state-highlight",
+        update: this.onUpdate
+    });
+}
+
+/** Context 'this' is the jquery.sortable on this event handler
+**/
+Sortable.prototype.onUpdate = function onUpdate() {
+    // Get photo order, a comma separated value of items IDs
+    var order = $(this).sortable("toArray").toString();
+    // Set order in the form element, to be sent later with the form
+    $(this).closest(sectionSelector)
+        .find('[name=gallery-order]')
+        .val(order)
+    // With instant saving, no more notify change for ChangesNotifier, so commenting:
+    //.change()
+        ;
+
+    // Instant saving
+    save({
+        'gallery-order': order,
+        action: 'order',
+        result: 'json'
+    });
+};
 
 /**
     Gallery Class
@@ -282,43 +300,32 @@ function Gallery(settings) {
 }
 
 /**
-    Editor Class
+    Uploader Class
 **/
-var qq = require('fileuploader');
-require('jcrop');
-function Editor(settings) {
+function Uploader(settings) {
 
     settings = settings || {};
 
-    // f.e.: .DashboardPhotos-editPhoto
+    // f.e.: .FileUploader
     this.$container = $(settings.container || 'html');
     this.gallery = settings.gallery || new Gallery(this.$container);
-    
-    var $h = $('html');
-    this.positionId = settings.positionId || $h.data('position-id');
-    this.sizeLimit = settings.sizeLimit || $h.data('size-limit');
+    this.positionId = settings.positionId || 0;
+    this.componentClass = settings.componentClass || 'FileUploader';
+    this.secondaryClass = settings.secondaryClass || 'FileUploader--asSecondary';
 
-    // Initializing:
-    this.initUploader();
-    this.initCropForm();
-    //this.setupCropPhoto();
-}
+    var thisUploader = this;
 
-Editor.prototype.initUploader = function initUploader() {
-
-    var thisEditor = this;
-
-    var uploader = new qq.FileUploader({
+    this.qquploader = new qq.FileUploader({
         element: $('.FileUploader-uploader', this.$container).get(0),
         // path to server-side upload script
         action: LcUrl.LangPath + 'dashboard/YourWork/UploadPhoto/?PositionID=' + (this.positionId),
         allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
         onComplete: function (id, fileName, responseJSON) {
             if (responseJSON.success) {
-                var newImgItem = thisEditor.gallery.appendPhoto(responseJSON.fileURI, responseJSON.photoID);
+                var newImgItem = thisUploader.gallery.appendPhoto(responseJSON.fileURI, responseJSON.photoID);
                 // Show in edit panel
-                smoothBoxBlock.closeAll(thisEditor.gallery.$container);
-                editSelectedPhoto(thisEditor.gallery.$container, newImgItem);
+                smoothBoxBlock.closeAll(thisUploader.gallery.$container);
+                editSelectedPhoto(thisUploader.gallery.$container, newImgItem);
             }
         },
         messages: {
@@ -329,13 +336,43 @@ Editor.prototype.initUploader = function initUploader() {
             onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
         },
         sizeLimit: this.sizeLimit || 'undefined',
-        template: '<div class="qq-uploader">' + 
+        template: '<div class="qq-uploader">' +
                 '<div class="qq-upload-drop-area"><span>Drop a file here to upload</span></div>' +
                 '<div class="qq-upload-button">Upload a photo</div>' +
-                '<ul class="qq-upload-list"></ul>' + 
+                '<ul class="qq-upload-list"></ul>' +
                 '</div>'
     });
+}
+
+Uploader.prototype.setAsMain = function setAsMain() {
+    this.$container.removeClass(this.secondaryClass);
 };
+
+Uploader.prototype.setAsSecondary = function setAsSecondary() {
+    this.$container.addClass(this.secondaryClass);
+};
+
+/**
+    Editor Class
+**/
+var qq = require('fileuploader');
+require('jcrop');
+function Editor(settings) {
+
+    settings = settings || {};
+
+    var $h = $('html');
+    this.positionId = settings.positionId || $h.data('position-id');
+    this.sizeLimit = settings.sizeLimit || $h.data('size-limit');
+
+    // f.e.: .DashboardPhotos-editPhoto
+    this.$container = $(settings.container || 'html');
+    this.gallery = settings.gallery || new Gallery({ container: this.$container });
+    this.uploader = settings.uploader || new Uploader({ containe: this.$container, positionId: this.positionId });
+
+    // Initializing:
+    this.initCropForm();
+}
 
 // Simple event handler, called from onChange and onSelect
 // event handlers, as per the Jcrop invocation above
