@@ -400,7 +400,7 @@ Editor.prototype.initCropForm = function initCropForm() {
         $.ajax({
             url: LcUrl.LangPath + '$dashboard/YourWork/UploadPhoto/',
             type: 'POST',
-            data: thisEditor.$container.serialize() + '&crop-photo=True',
+            data: thisEditor.$container.find(':input').serialize() + '&crop-photo=True',
             dataType: 'json',
             success: function (data, text, jx) {
                 if (data.Code) {
