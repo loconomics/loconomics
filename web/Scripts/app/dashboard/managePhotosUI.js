@@ -17,15 +17,18 @@ var editor = null;
 exports.on = function (containerSelector) {
     var $c = $(containerSelector);
 
-    setupCrudlDelegates($c);
+    if ($c.length) {
 
-    initElements($c);
+        setupCrudlDelegates($c);
 
-    // Any time that the form content html is reloaded,
-    // re-initialize elements
-    $c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
         initElements($c);
-    });
+
+        // Any time that the form content html is reloaded,
+        // re-initialize elements
+        $c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
+            initElements($c);
+        });
+    }
 };
 
 function save(data) {
