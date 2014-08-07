@@ -24,6 +24,37 @@
         }
     }
     
+    .FileUploader {
+        .qq-uploader {
+            position: static;
+        
+            .qq-upload-list {
+                position: absolute;
+                text-align: right;
+                background: white;
+                max-height: 100px;
+                overflow: auto;
+        
+                li {
+                    width: auto;
+                    
+                    a {
+                        display: inline;
+                        width: auto;
+                        height: auto;
+                    }
+                }
+            }
+        }
+        
+        &.FileUploader--asSecondary {
+            .qq-upload-list {
+                right: 33px;
+                left: 430px;
+            }
+        }
+    }
+    
     fieldset{
         display: inline-block;
         vertical-align: top;
@@ -67,10 +98,11 @@
     .positionphotos-gallery ol{
         list-style: none;
         padding: 0;
-        margin: 0;
-        /* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting a fixed one */
         height: 442px;
         overflow: auto;
+        margin: 0px 0 5px;
+        /* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting a fixed one */
+        height: 408px;
     }
     .positionphotos-gallery li {
         width: 134px;
