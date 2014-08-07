@@ -29,6 +29,9 @@
     if (data == null) {
         data = LcData.GetPricingPackagesByProviderPosition(providerUserID, positionID, -1, pricingTypeID);
     }
+    
+    // Its first-time customer for that provider And position? #429
+    var isFirstTimeClient = customer == null ? true : LcData.IsFirstTimeCustomer(customer.UserID, providerUserID, positionID);
 
     // Get Fees that apply to the provider and customer
     var feesSet = editable ?
@@ -42,6 +45,12 @@
         {
             // Filtering per PricingTypeID (if data was externally provided without previous filter):
             if (pak.PricingTypeID != pricingTypeID)
+            {
+                continue;
+            }
+            
+            // Filtering first-time only packages to non first-time clients
+            if (pak.FirstTimeClientsOnly && !isFirstTimeClient)
             {
                 continue;
             }

@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-05-22
+/*! Loconomics.com 2014-08-07
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -206,7 +206,7 @@ td { vertical-align: top; }
 Teal	#00989A
 Lt Teal #b5e1e2
 Green	#99C027
-Red 	#E44600
+Red 	#fc0404 --#E44600
 Purple 	#461864
 Blue 	#006A8D
 Orange 	#E95D0F
@@ -320,7 +320,7 @@ form textarea:focus{
     outline: none;
 }
 form input[type="text"].error, form input[type="password"].error {
-    background: #E44600;
+    background: #fc0404;/*$colorRed*/
     color: #fff;
 }
 form select:focus,
@@ -446,7 +446,7 @@ ul.collection { margin: 0; padding: 0; }
 ul.collection.empty { border: 1px dashed #ccc; }
 ul.collection li { list-style-type: none; margin: 0 .5em .5em 0; padding: .1em 1em; display: inline-block; background: #efefef; }
 ul.collection li:before { content: "• "; }
-ul.collection li:hover { color: #efefef; background: #E44600; cursor: pointer; }
+ul.collection li:hover { color: #efefef; background: #fc0404;/*$colorRed*/ cursor: pointer; }
 ul.collection li:hover:before { content: "✖ "; }
 
 div.progress-bar { float: right; vertical-align: middle; margin-left: 1em; } 
@@ -907,22 +907,22 @@ form.has-changes .actions .main-action:hover,
 /* .item-action button, is the main-button equivalent for an item inside a list of items. */
 .actions .item-action {
     text-transform: lowercase;
-    background: #E44600 !important;
+    background: #E95D0F !important;
     font-size: 1em;
     line-height: 180%;
 }
 .actions .item-action:hover{
-    box-shadow: 0 0 5px 2px #E44600;
+    box-shadow: 0 0 5px 2px #E95D0F;/*$colorOrange*/
 }
 /* .cancel-action for cancel buttons */
 .actions .cancel-action {
-    background: none repeat scroll 0 0 #E44600 !important;
+    background: none repeat scroll 0 0 #fc0404 !important;/*$colorRed*/
     font-size: 1.1em;
     line-height: 150%;
     text-transform: lowercase;
 }
 .actions .cancel-action:hover{
-    box-shadow: 0 0 5px 2px #E44600;
+    box-shadow: 0 0 5px 2px #fc0404;/*$colorRed*/
 }
 .add-action {
     background: none repeat scroll 0 0 #00989A;
@@ -2223,10 +2223,10 @@ html.boxshadow #loginBox .field-validation-error{
     margin-top: .5em;
 }
 .w-BookingDetails .w-BookingDetails-actions .item-action {
-    background-color: #E44600 !important;
+    background-color: #E95D0F !important;/*$colorOrange*/
 }
 .w-BookingDetails .w-BookingDetails-actions .item-action:hover {
-    box-shadow: 0 0 5px 2px #E44600;
+    box-shadow: 0 0 5px 2px #E95D0F;/*$colorOrange*/
 }
 
 /*= w-UserInfo in w-BookingDetails */
@@ -2347,9 +2347,9 @@ html.boxshadow #loginBox .field-validation-error{
 
 /** Booking review **/
 .booking-review .booking-summary {
-    border: 1px solid #E44600;
+    border: 1px solid #E95D0F;/*$colorOrange*/
     background: none repeat scroll 0 0 white;
-    border: 2px solid #E44600;
+    border: 2px solid #E95D0F;/*$colorOrange*/
     padding: 10px;
 }
 .booking-review h4 {
@@ -2359,7 +2359,7 @@ html.boxshadow #loginBox .field-validation-error{
     font-size: 1.1em;
 }
 .booking-review legend {
-    color: #E44600 !important;
+    color: #E95D0F !important;/*$colorOrange*/
 }
 .booking-review .message-section {
     border: 1px solid #6C6C6C;
@@ -3039,12 +3039,12 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-05-22
+/*! Loconomics.com 2014-08-07
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.
@@ -3081,7 +3081,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
 /* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
@@ -3091,6 +3091,8 @@ label.visuallyhidden-with-placeholder{
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
 /* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
 /* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
@@ -3099,7 +3101,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
 /* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 
@@ -3127,7 +3129,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
 /* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
@@ -3136,6 +3138,8 @@ label.visuallyhidden-with-placeholder{
 /* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
 /* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
@@ -3198,7 +3202,7 @@ label.visuallyhidden-with-placeholder{
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
   .begin-action:after,
   .next-action:after,
   .finish-action:after {
@@ -3337,7 +3341,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 84 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-errorMessage {
-  color: #e44600;
+  color: #fc0404;
   display: none;
 }
 
@@ -3432,7 +3436,7 @@ label.visuallyhidden-with-placeholder{
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
   .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move:before {
     background-image: url("../img/theme/Actions-move@2x.png");
     -webkit-background-size: 26px 12px;
@@ -3710,7 +3714,7 @@ label.visuallyhidden-with-placeholder{
   pointer-events: none;
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -3736,7 +3740,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
 /* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
@@ -3745,6 +3749,8 @@ label.visuallyhidden-with-placeholder{
 /* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
 /* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
@@ -3792,7 +3798,7 @@ label.visuallyhidden-with-placeholder{
   margin-left: 1em;
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 
 /* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover {
@@ -3979,7 +3985,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
 /* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
@@ -3989,6 +3995,8 @@ label.visuallyhidden-with-placeholder{
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
 /* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
 /* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
@@ -3997,7 +4005,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcome-popup-container {
@@ -4473,7 +4481,7 @@ label.visuallyhidden-with-placeholder{
 
 /* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
 /* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
@@ -4482,6 +4490,8 @@ label.visuallyhidden-with-placeholder{
 /* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
 /* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
@@ -4577,7 +4587,7 @@ input.search-data,
 
 /* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
 /* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
@@ -4586,6 +4596,8 @@ input.search-data,
 /* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
 /* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
@@ -4598,6 +4610,375 @@ input.search-data,
 /* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-small.styl */
 .DashboardSection-sidebarToggle {
   display: none;
+}
+
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+
+/* line 135 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.begin-action,
+.next-action,
+.finish-action {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #e95d0f;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+  padding: 0.2em 0.6em;
+  line-height: 27px;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.begin-action:hover,
+.next-action:hover,
+.finish-action:hover {
+  -webkit-box-shadow: 0 0 5px 2px #e95d0f;
+  box-shadow: 0 0 5px 2px #e95d0f;
+  background-color: #e95d0f;
+}
+
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.begin-action:after,
+.next-action:after,
+.finish-action:after {
+  content: " ";
+  background: url("../img/theme/right-arrow.png") no-repeat center;
+  width: 29px;
+  height: 27px;
+  line-height: 27px;
+  margin-left: 0.4em;
+  color: #e95d0f;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  vertical-align: middle;
+  display: inline-block;
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+  .begin-action:after,
+  .next-action:after,
+  .finish-action:after {
+    background-image: url("../img/theme/right-arrow@2x.png");
+    -webkit-background-size: 29px 27px;
+    -moz-background-size: 29px 27px;
+    background-size: 29px 27px;
+  }
+}
+
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.Actions {
+  zoom: 1;
+  display: block;
+  clear: both;
+}
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+.Actions:before,
+.Actions:after {
+  content: "";
+  display: table;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+.Actions:after {
+  clear: both;
+}
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader.FileUploader--hideSuccess .qq-upload-success {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  height: 0;
+  -webkit-transition: opacity 1s, height 0.5s 1s;
+  -moz-transition: opacity 1s, height 0.5s 1s;
+  -o-transition: opacity 1s, height 0.5s 1s;
+  -ms-transition: opacity 1s, height 0.5s 1s;
+  transition: opacity 1s, height 0.5s 1s;
+  margin: 0 !important;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader.FileUploader--asSecondary {
+  text-align: right;
+}
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-uploader {
+  position: relative;
+  width: 100%;
+}
+
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-button {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #99c027;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.FileUploader .FileUploader-uploader .qq-upload-button:hover {
+  -webkit-box-shadow: 0 0 5px 2px #99c027;
+  box-shadow: 0 0 5px 2px #99c027;
+  background-color: #99c027;
+}
+
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-drop-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 70px;
+  z-index: 2;
+  background: #ff9797;
+  text-align: center;
+}
+
+/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-drop-area span {
+  display: block;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  margin-top: -8px;
+  font-size: 16px;
+}
+
+/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-drop-area-active {
+  background: #ff7171;
+}
+
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-list {
+  padding: 0;
+  list-style: disc;
+  max-height: 120px;
+  overflow: auto;
+}
+
+/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-list li {
+  margin: 0;
+  padding: 0;
+  line-height: 15px;
+  font-size: 12px;
+}
+
+/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-list li:first-child {
+  margin-top: 10px;
+}
+
+/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-list li:last-child {
+  margin-bottom: 10px;
+}
+
+/* line 86 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-file,
+.FileUploader .FileUploader-uploader .qq-upload-spinner,
+.FileUploader .FileUploader-uploader .qq-upload-size,
+.FileUploader .FileUploader-uploader .qq-upload-cancel,
+.FileUploader .FileUploader-uploader .qq-upload-failed-text {
+  margin-right: 7px;
+}
+
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+
+/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-spinner {
+  display: inline-block;
+  background: url("../img/theme/loading-mini.gif");
+  width: 15px;
+  height: 15px;
+  vertical-align: text-bottom;
+}
+
+/* line 98 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-size,
+.FileUploader .FileUploader-uploader .qq-upload-cancel {
+  font-size: 11px;
+}
+
+/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-failed-text {
+  display: none;
+}
+
+/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-uploader .qq-upload-fail .qq-upload-failed-text {
+  display: inline;
+}
+
+/* line 110 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+
+/* line 111 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-editor .jcrop-holder {
+  margin: 0 auto 1em;
+}
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-editor > p {
+  text-align: center;
+  margin: 1em 0 0.5em;
+}
+
+/* line 120 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-editor .save-photo-action {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #e95d0f;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  text-align: center;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.FileUploader .FileUploader-editor .save-photo-action:hover {
+  -webkit-box-shadow: 0 0 5px 2px #e95d0f;
+  box-shadow: 0 0 5px 2px #e95d0f;
+  background-color: #e95d0f;
+}
+
+/* line 126 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-removal {
+  margin-top: 1em;
+}
+
+/* line 130 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+.FileUploader .FileUploader-removal .remove-photo-action {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #fc0404;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  text-align: center;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.FileUploader .FileUploader-removal .remove-photo-action:hover {
+  -webkit-box-shadow: 0 0 5px 2px #fc0404;
+  box-shadow: 0 0 5px 2px #fc0404;
+  background-color: #fc0404;
 }
 
 /*= w-ProviderPackage */
@@ -5328,3 +5709,32 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  */
 .ui-progressbar { height:2em; text-align: left; overflow: hidden; }
 .ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
+/* jquery.Jcrop.min.css v0.9.12 (build:20130126) */
+.jcrop-holder{direction:ltr;text-align:left;}
+.jcrop-vline,.jcrop-hline{background:#FFF url(Jcrop.gif);font-size:0;position:absolute;}
+.jcrop-vline{height:100%;width:1px!important;}
+.jcrop-vline.right{right:0;}
+.jcrop-hline{height:1px!important;width:100%;}
+.jcrop-hline.bottom{bottom:0;}
+.jcrop-tracker{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;height:100%;width:100%;}
+.jcrop-handle{background-color:#333;border:1px #EEE solid;font-size:1px;height:7px;width:7px;}
+.jcrop-handle.ord-n{left:50%;margin-left:-4px;margin-top:-4px;top:0;}
+.jcrop-handle.ord-s{bottom:0;left:50%;margin-bottom:-4px;margin-left:-4px;}
+.jcrop-handle.ord-e{margin-right:-4px;margin-top:-4px;right:0;top:50%;}
+.jcrop-handle.ord-w{left:0;margin-left:-4px;margin-top:-4px;top:50%;}
+.jcrop-handle.ord-nw{left:0;margin-left:-4px;margin-top:-4px;top:0;}
+.jcrop-handle.ord-ne{margin-right:-4px;margin-top:-4px;right:0;top:0;}
+.jcrop-handle.ord-se{bottom:0;margin-bottom:-4px;margin-right:-4px;right:0;}
+.jcrop-handle.ord-sw{bottom:0;left:0;margin-bottom:-4px;margin-left:-4px;}
+.jcrop-dragbar.ord-n,.jcrop-dragbar.ord-s{height:7px;width:100%;}
+.jcrop-dragbar.ord-e,.jcrop-dragbar.ord-w{height:100%;width:7px;}
+.jcrop-dragbar.ord-n{margin-top:-4px;}
+.jcrop-dragbar.ord-s{bottom:0;margin-bottom:-4px;}
+.jcrop-dragbar.ord-e{margin-right:-4px;right:0;}
+.jcrop-dragbar.ord-w{margin-left:-4px;}
+.jcrop-light .jcrop-vline,.jcrop-light .jcrop-hline{background:#FFF;filter:alpha(opacity=70)!important;opacity:.70!important;}
+.jcrop-light .jcrop-handle{-moz-border-radius:3px;-webkit-border-radius:3px;background-color:#000;border-color:#FFF;border-radius:3px;}
+.jcrop-dark .jcrop-vline,.jcrop-dark .jcrop-hline{background:#000;filter:alpha(opacity=70)!important;opacity:.7!important;}
+.jcrop-dark .jcrop-handle{-moz-border-radius:3px;-webkit-border-radius:3px;background-color:#FFF;border-color:#000;border-radius:3px;}
+.solid-line .jcrop-vline,.solid-line .jcrop-hline{background:#FFF;}
+.jcrop-holder img,img.jcrop-preview{max-width:none;}

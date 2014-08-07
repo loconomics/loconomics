@@ -93,7 +93,7 @@
         }
         </div>
 
-        <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">View full profile</a>
+        <a target="_blank" style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">View full profile</a>
     </div>
 }
 @* Mini size is the same for all userType's *@
@@ -104,7 +104,7 @@ else if (size == "mini") {
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
             <div>@extraInfo</div>
         } else {
-            <a href="@printProfileLinkUrl(data, dataPrefix, urlBase)">View profile</a>
+            <a target="_blank" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">View profile</a>
         }
     </div>
 } else {

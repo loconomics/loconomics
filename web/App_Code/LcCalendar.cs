@@ -933,6 +933,9 @@ public static class LcCalendar
 
         using (var db = Database.Open("sqlloco"))
         {
+            // NOTE: The initial of don't get from database the null or empty/white CalendarURL is not good
+            // since we need to iterate that too in order to remove any previous data on profiles that had
+            // an URL but gets removed lately.
             foreach (var p in db.Query("SELECT UserID, CalendarURL FROM CalendarProviderAttributes")) // WHERE dbo.fx_IfNW(CalendarURL, null) is not null"))
             {
                 if (!LcValidators.IsUrl(p.CalendarURL))
@@ -940,8 +943,11 @@ public static class LcCalendar
                     // Remove old events, to avoid persist bad data
                     RemoveImportedEventsForUser(p.UserID);
 
-                    // Return error
-                    yield return new Exception(String.Format("Calendar Import error on UserID:{0} : URL is not valid '{1}'", p.UserID, p.CalendarURL));
+                    // Return error for not null or empty, only malformed
+                    if (!String.IsNullOrWhiteSpace(p.CalendarURL))
+                    {
+                        yield return new Exception(String.Format("Calendar Import error on UserID:{0} : URL is not valid '{1}'", p.UserID, p.CalendarURL));
+                    }
                     continue;
                 }
                 Exception resultEx = null;

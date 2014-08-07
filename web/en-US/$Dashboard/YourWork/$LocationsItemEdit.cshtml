@@ -24,6 +24,7 @@
 
     // Validation rules
     Validation.RequireField("name", LcRessources.RequiredField("Name"));
+    Validation.RequireField("type", LcRessources.RequiredField("Location Type"));
     Validation.RequireField("addressline1", LcRessources.RequiredField("Address Line 1"));
     Validation.RequireField("city", LcRessources.RequiredField("City"));
     Validation.RequireField("state", LcRessources.RequiredField("State"));
@@ -214,6 +215,24 @@
                 <label>Location name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null))" @Validation.GetHtml("name") /></label>
                 @Html.ValidationMessage("name")
             </li>
+            <li class="location-type">
+                <label>Location Type:
+                    @if (location != null && location.UniquePerUser)
+                    {
+                        <input type="text" disabled="disabled" value="@location.AddressType" /> <span>(this type of address cannot be changed)</span>
+                    }
+                    else
+                    {
+                    <select name="type" @Validation.GetHtml("type")>
+                        <option value="">Please select one</option>
+                        @foreach (var t in types)
+                        {
+                            <option @LcHelpers.IsSelected(t.AddressTypeID, Request["type"] ?? (location != null ? location.AddressTypeID : null)) value="@t.AddressTypeID">@t.AddressType</option>
+                        }
+                    </select>
+                    }
+                </label>
+            </li>
             <li class="location-addressline location-addressline1">
                 <label>Address Line 1: <input type="text" name="addressline1" value="@(Request["addressline1"] ?? (location != null ? location.AddressLine1 : null))" title="This address will only be disclosed to clients if you perform services here and only after you accept a booking." class="secure-data" @Validation.GetHtml("addressline1") /></label>
                 @Html.ValidationMessage("addressline1")
@@ -280,25 +299,6 @@
                         </li>
                     </ul>
                 </fieldset>
-            </li>
-        </ul>
-        <ul class="location-type">
-            <li class="location-type">
-                <label>Address Type:
-                    @if (location != null && location.UniquePerUser)
-                    {
-                        <input type="text" disabled="disabled" value="@location.AddressType" /> <span>(this type of address cannot be changed)</span>
-                    }
-                    else
-                    {
-                    <select name="type" @Validation.GetHtml("type")>
-                        @foreach (var t in types)
-                        {
-                            <option @LcHelpers.IsSelected(t.AddressTypeID, Request["type"] ?? (location != null ? location.AddressTypeID : null)) value="@t.AddressTypeID">@t.AddressType</option>
-                        }
-                    </select>
-                    }
-                </label>
             </li>
         </ul>
         <ul class="location-map">

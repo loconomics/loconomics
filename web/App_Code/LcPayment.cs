@@ -75,6 +75,219 @@ public static class LcPayment
     }
     #endregion
 
+    #region Actions: Create or prepare transactions and cards
+    /// <summary>
+    /// Performs a Transaction.Sale for bookingID amount with the
+    /// given creditCardToken.
+    /// The obtained TransactionID is saved on database for the bookingID-its booking-request
+    /// </summary>
+    /// <param name="bookingID"></param>
+    /// <param name="creditCardToken"></param>
+    /// <param name="chargeNow">AKA 'submit for settlement' or just 'settle' the transaction,
+    /// charging the customer credit card right now (on true) or wait for later (false).</param>
+    /// <returns></returns>
+    public static string SaleBookingTransaction(int bookingID, string creditCardToken, bool chargeNow)
+    {
+        Result<Transaction> r = null;
+
+        try
+        {
+            var booking = LcData.Booking.GetBooking(bookingID);
+
+            if (booking == null)
+                throw new Exception("The booking doesn't exists " + bookingID.ToString());
+
+            var gateway = NewBraintreeGateway();
+
+            TransactionRequest request = new TransactionRequest
+            {
+                Amount = booking.TotalPrice,
+                CustomerId = GetCustomerId(booking.CustomerUserID),
+                PaymentMethodToken = creditCardToken,
+                // Now, with Marketplace #408, the receiver of the money for each transaction is
+                // the provider through account at Braintree, and not the Loconomics account:
+                //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+                MerchantAccountId = GetProviderPaymentAccountId(booking.ProviderUserID),
+                // Marketplace #408: since provider receive the money directly, Braintree must discount
+                // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
+                ServiceFeeAmount = booking.FeePrice,
+                Options = new TransactionOptionsRequest
+                {
+                    // Marketplace #408: don't pay provider still, wait for the final confirmation 'release scrow'
+                    HoldInEscrow = true,
+                    // Submit now or not?
+                    SubmitForSettlement = chargeNow
+                }
+            };
+
+            r = gateway.Transaction.Sale(request);
+
+            // Everything goes fine
+            if (r.IsSuccess())
+            {
+                // If the card is a TEMPorarly card (just to perform this transaction)
+                // it must be removed now since was successful used
+                if (creditCardToken.StartsWith(TempSavedCardPrefix))
+                    gateway.CreditCard.Delete(creditCardToken);
+
+                // Save the transactionID
+                if (r.Target != null
+                    && !String.IsNullOrEmpty(r.Target.Id))
+                {
+                    // r.Target.Id => transactionID
+                    LcData.Booking.SetBookingRequestTransaction(booking.BookingRequestID, r.Target.Id);
+                }
+                else
+                {
+                    // Transaction worked but impossible to know the transactionID (weird, is even possible?),
+                    // does not touch the DB (to still know the credit card token) and notify error
+                    return "Impossible to know transaction details, please contact support. BookingID #" + bookingID.ToString();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+        return (r == null || r.IsSuccess() ? null : r.Message);
+    }
+
+    /// <summary>
+    /// Do a transaction ('sale') to be submitted and payed now for the remaining amounts
+    /// of a refund operation.
+    /// It allows records for total refunds, that situation is well managed internally.
+    /// The removal of a temporary card is performed on any case (with or without transaction because of total refund)
+    /// </summary>
+    /// <param name="creditCardToken"></param>
+    /// <param name="refund"></param>
+    /// <param name="customerID"></param>
+    /// <param name="providerID"></param>
+    /// <returns></returns>
+    public static string DoTransactionToRefundFromCard(string creditCardToken, dynamic refund, int customerID, int providerID)
+    {
+        string result = null;
+
+        try
+        {
+            var gateway = NewBraintreeGateway();
+
+            if (!refund.IsTotalRefund && refund.TotalRemaining != 0)
+            {
+                TransactionRequest request = new TransactionRequest
+                {
+                    Amount = refund.TotalRemaining,
+                    CustomerId = GetCustomerId(customerID),
+                    PaymentMethodToken = creditCardToken,
+                    // Now, with Marketplace #408, the receiver of the money for each transaction is
+                    // the provider through account at Braintree, and not the Loconomics account:
+                    //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+                    MerchantAccountId = GetProviderPaymentAccountId(providerID),
+                    // Marketplace #408: since provider receive the money directly, Braintree must discount
+                    // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
+                    ServiceFeeAmount = refund.FeeRemaining,
+                    Options = new TransactionOptionsRequest
+                    {
+                        // Marketplace #408: we normally hold it, but we are refunding so don't hold, pay at the moment
+                        HoldInEscrow = false,
+                        // Submit now
+                        SubmitForSettlement = true
+                    }
+                };
+
+                var r = gateway.Transaction.Sale(request);
+
+                result = r.IsSuccess() ? null : r.Message;
+            }
+
+            // Everything goes fine
+            if (result == null)
+            {
+                // If the card is a TEMPorarly card (just to perform this transaction)
+                // it must be removed now since was successful used
+                if (creditCardToken.StartsWith(TempSavedCardPrefix))
+                    gateway.CreditCard.Delete(creditCardToken);
+            }
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Prefix for the ID/Token of temporarly saved credit cards on Braintree Vault,
+    /// for transactions that doesn't want to save it permanently.
+    /// </summary>
+    public const string TempSavedCardPrefix = "TEMPCARD_";
+
+    public const string TransactionIdIsCardPrefix = "CARD:";
+
+    public static string SaveCardInVault(string customerIdOnBraintree, ref string creditCardToken,
+        string nameOnCard, string cardNumber,
+        string cardExpMonth, string cardExpYear, string cardCvv,
+        LcData.Address address)
+    {
+        BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
+
+        var isTemp = creditCardToken != null && creditCardToken.StartsWith(TempSavedCardPrefix);
+
+        var creditCardRequest = new CreditCardRequest
+        {
+            CustomerId = customerIdOnBraintree,
+            CardholderName = nameOnCard,
+            Number = cardNumber,
+            ExpirationDate = cardExpMonth + "/" + cardExpYear,
+            CVV = cardCvv,
+            BillingAddress = new CreditCardAddressRequest
+            {
+                StreetAddress = address.AddressLine1,
+                ExtendedAddress = address.AddressLine2,
+                Locality = address.City,
+                Region = address.StateProvinceCode,
+                PostalCode = address.PostalCode,
+                CountryCodeAlpha2 = address.CountryCodeAlpha2
+            }
+        };
+
+        Result<CreditCard> resultCreditCard = null;
+
+        // Find or create/update the payment method (credit card) for the customer
+        try{
+            // There is no card token, just throw to go on creation (no need to contact Braintree)
+            if (String.IsNullOrEmpty(creditCardToken))
+                throw new Braintree.Exceptions.NotFoundException("No card token");
+
+            // Find the card
+            gateway.CreditCard.Find(creditCardToken);
+                                    
+            // Update it:
+            resultCreditCard = gateway.CreditCard.Update(creditCardToken, creditCardRequest);
+
+        } catch (Braintree.Exceptions.NotFoundException ex) {
+            // Credit card for customer doesn't exist, create it:
+            if (isTemp)
+                // We set the Token on temp cards
+                creditCardRequest.Token = creditCardToken;
+
+            resultCreditCard = gateway.CreditCard.Create(creditCardRequest);
+        }
+                                
+        if (resultCreditCard.IsSuccess()) {
+            // New Token
+            creditCardToken = resultCreditCard.Target.Token;
+            ASP.LcHelpers.DebugLogger.Log("Created card {0}", creditCardToken);
+        }
+        else {
+            return resultCreditCard.Message;
+        }
+
+        // No error
+        return null;
+    }
+    #endregion
+
     #region Actions: Refund
     /// <summary>
     /// Full refund a transaction ensuring that will be no charge to the customer
@@ -160,8 +373,7 @@ public static class LcPayment
             catch (Braintree.Exceptions.NotFoundException ex) { }
 
             if (transaction == null)
-                // It doesn't exists, 'refunded' ;)
-                return null;
+                return "Payment transaction doesn't exists, impossible to perform the refund.";
 
             if (transaction.Amount > 0)
             {
@@ -171,6 +383,11 @@ public static class LcPayment
                 {
                     // Partial refund transaction.
                     r = gateway.Transaction.Refund(transactionID, amount);
+
+                    // Marketplace #408: just after refund to the customer its amount, pay the rest amount
+                    // to the provider (and fees to us)
+                    if (r.IsSuccess())
+                        r = gateway.Transaction.ReleaseFromEscrow(transactionID);
                 }
                 else if (transaction.Status == TransactionStatus.AUTHORIZED ||
                     transaction.Status == TransactionStatus.AUTHORIZING ||
@@ -183,7 +400,11 @@ public static class LcPayment
                     var request = new TransactionCloneRequest
                     {
                         // Total original amount less refunded amount
-                        Amount = transaction.Amount.Value - amount
+                        Amount = transaction.Amount.Value - amount,
+                        Options = new TransactionOptionsCloneRequest
+                        {
+                            SubmitForSettlement = true
+                        }
                     };
                     Result<Transaction> newResult = gateway.Transaction.
                       CloneTransaction(transactionID, request);
@@ -207,6 +428,12 @@ public static class LcPayment
                             // Try to void new transaction
                             gateway.Transaction.Void(newTransactionID);
                         }
+                        else
+                        {
+                            // Marketplace #408: just after refund to the customer its amount, pay the rest amount
+                            // to the provider (and fees to us)
+                            r = gateway.Transaction.ReleaseFromEscrow(newTransactionID);
+                        }
                     }
                     else
                     {
@@ -215,8 +442,7 @@ public static class LcPayment
                 }
                 else
                 {
-                    // No transaction, no accepted, no charge, nothing to refund
-                    return null;
+                    return "Impossible to refund payment: unknow transaction status.";
                 }
             }
         }
@@ -306,6 +532,40 @@ public static class LcPayment
         } catch (Braintree.Exceptions.NotFoundException ex) {
         }
         return null;
+    }
+
+    /// <summary>
+    /// Find or create Customer on Braintree
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns></returns>
+    public static Braintree.Customer GetOrCreateBraintreeCustomer(int userID)
+    {
+        var gateway = NewBraintreeGateway();
+        
+        string customerIdOnBraintree = GetCustomerId(userID);
+
+        try
+        {
+            return gateway.Customer.Find(customerIdOnBraintree);
+        }
+        catch (Braintree.Exceptions.NotFoundException ex)
+        {
+            // Customer doens't exist, create it:
+            var gcr = new CustomerRequest{
+                Id = customerIdOnBraintree
+            };
+
+            var r = gateway.Customer.Create(gcr);
+            if (r.IsSuccess())
+            {
+                return r.Target;
+            }
+            else
+            {
+                throw new Braintree.Exceptions.BraintreeException("Impossible to create customer #" + customerIdOnBraintree + ":: " + r.Message);
+            }
+        }
     }
     #endregion
 

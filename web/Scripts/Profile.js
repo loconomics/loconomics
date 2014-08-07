@@ -1,6 +1,7 @@
 $(function () {
     /* Photos (MyWork) selection: */
-    $('.position-tab > .mywork').on('click', '.photo-library li a', function () {
+    $('.position-tab > .mywork')
+    .on('click', '.photo-library li a', function () {
         var $t = $(this);
         var cont = $t.closest('.mywork');
         var hlPanel = $('.gallery-highlighted', cont);
@@ -15,6 +16,8 @@ $(function () {
             var caption = selImg.attr('alt');
             hlPanel.find('img').attr('alt', caption);
             hlPanel.find('.photo-caption').text(caption);
+            // disable click to enlarge for now
+            //hlPanel.find('a').attr('href', selImg.data('large-src'));
         }
         return false;
     });

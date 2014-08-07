@@ -27,6 +27,10 @@
     {
         @RenderPage("Bookings/$BookingRequest.cshtml", new { UrlData = sectionUrlData })
     }
+    else if (kind == "bookings" && LcHelpers.InDev)
+    {
+        @RenderPage("../Booking/$BookingsList.cshtml", new { UrlData = sectionUrlData })
+    }
     else if (kind == "")
     {
         @RenderPage("Messages/$ThreadList.cshtml")

@@ -5,205 +5,56 @@
     var u = LcData.UserInfo.GetUserRow();
     int brID = PageData["BookingRequestID"] ?? Request["BookingRequestID"].AsInt();
     string redirectUrl = PageData["RedirectUrl"];
-    string dateType = PageData["ConfirmedDateType"] ?? Request["ConfirmedDateType"];
-
-    var sqlGetBookingDates = @"
-        SELECT  TOP 1
-                R.PreferredDateID,
-                R.AlternativeDate1ID,
-                R.AlternativeDate2ID
-        FROM    BookingRequest As R
-        WHERE   R.ProviderUserID = @0
-                 AND
-                R.BookingRequestID = @1
-                -- Only bookings 'created', but not incomplete, confirmed, cancelled or any other one
-                 AND
-                R.BookingRequestStatusID = 2
-    ";
-    var sqlConfirmBooking = @"
-        -- Parameters
-        DECLARE @BookingRequestID int, @ConfirmedDateID int
-        SET @BookingRequestID = @0
-        SET @ConfirmedDateID = @1
-
-        DECLARE @BookingID int
-        SET @BookingID = -1
-
-        BEGIN TRY
-            BEGIN TRAN
-
-            /*
-             * Creating the Confirmed Booking Record
-             */
-            INSERT INTO Booking (
-                BookingRequestID, ConfirmedDateID,
-                BookingStatusID,
-                TotalPricePaidByCustomer, TotalServiceFeesPaidByCustomer, 
-                TotalPaidToProvider, TotalServiceFeesPaidByProvider, 
-                PricingAdjustmentApplied,
-                CreatedDate, UpdatedDate, ModifiedBy
-            ) VALUES (
-                @BookingRequestID, @ConfirmedDateID,
-                1, --confirmed
-                -- Initial price data to null
-                -- (booking request prices are estimated, here only paid prices go)
-                null, null, null, null,
-                0, -- not applied price adjustement (now, almost)
-                getdate(), getdate(), 'sys'
-            )
-            SET @BookingID = @@Identity
-
-            -- Removing non needed CalendarEvents:
-            DELETE FROM CalendarEvents
-            WHERE ID IN (
-                SELECT TOP 1 PreferredDateID FROM BookingRequest
-                WHERE BookingRequestID = @BookingRequestID AND PreferredDateID <> @ConfirmedDateID
-                UNION
-                SELECT TOP 1 AlternativeDate1ID FROM BookingRequest
-                WHERE BookingRequestID = @BookingRequestID AND AlternativeDate1ID <> @ConfirmedDateID
-                UNION
-                SELECT TOP 1 AlternativeDate2ID FROM BookingRequest
-                WHERE BookingRequestID = @BookingRequestID AND AlternativeDate2ID <> @ConfirmedDateID
-            )
-
-            /*
-             * Update Availability of the CalendarEvent record for the ConfirmedDateID,
-             * from 'tentative' to 'busy'
-             */
-            UPDATE  CalendarEvents
-            SET     CalendarAvailabilityTypeID = 2
-            WHERE   Id = @ConfirmedDateID
-
-            /*
-             * Updating Booking Request status, and removing references to the 
-             * user selected dates (there is already a confirmed date in booking).
-             */
-            UPDATE  BookingRequest
-            SET     BookingRequestStatusID = 7, -- accepted
-                    PreferredDateID = null,
-                    AlternativeDate1ID = null,
-                    AlternativeDate2ID = null
-            WHERE   BookingRequestID = @BookingRequestID
-
-            COMMIT TRAN
-
-            -- We return sucessful operation with Error=0
-            -- and attach the BookingID created instead of an ErrorMessage
-            SELECT 0 As Error, @BookingID As BookingID
-        END TRY
-        BEGIN CATCH
-            IF @@TRANCOUNT > 0
-                ROLLBACK TRAN
-            -- We return error number and message
-            SELECT ERROR_NUMBER() As Error, ERROR_MESSAGE() As ErrorMessage
-        END CATCH
-    ";
+    string dateType = PageData["ConfirmedDateType"] ?? Request["ConfirmedDateType"];    
         
     using (var db = Database.Open("sqlloco")) {
-        var dateID = 0;
-        var dates = db.QuerySingle(sqlGetBookingDates, u.UserID, brID);
-        if (dates != null) {
-            switch (dateType.ToUpper()) {
-                case "PREFERRED":
-                    if (dates.PreferredDateID != null) {
-                        dateID = dates.PreferredDateID;
-                    }
+
+        var taskResult = LcData.Booking.ConfirmBooking(brID, dateType, db);
+        
+        if (taskResult.Error != 0) {
+            // Manage errors on task
+            switch ((int)taskResult.Error) {
+                default:
+                    // We need negative numbers to indicate an error (is our convention for json 'Code')
+                    @OnError(brID, "confirm", taskResult.ErrorMessage, 0 - taskResult.Error);
                     break;
-                case "ALTERNATIVE1":
-                    if (dates.AlternativeDate1ID != null) {
-                        dateID = dates.AlternativeDate1ID;
-                    }
+                case -1:
+                    /* What? 
+                    * - ConfirmedDateType is not correct?
+                    * - BookingRequest is already confirmed or not exists?
+                    */
+                    @OnError(brID, "find", null, -90);
                     break;
-                case "ALTERNATIVE2":
-                    if (dates.AlternativeDate2ID != null) {
-                        dateID = dates.AlternativeDate2ID;
-                    }
+                case -2:
+                    // Is not available
+                    @OnError(brID, "availability", null, -91);
+                    break;
+                case -3:
+                    @OnError(brID, "payment", taskResult.ErrorMessage, -92);
                     break;
             }
         }
-        if (dateID > 0) {
-            // Change the event to be 'transparent'(4) for a while to don't
-            // affect the availability check.
-            // And get the required information from the event to do the
-            // availability check
-            var dateInfo = db.QuerySingle(@"
-                UPDATE  CalendarEvents SET
-                        CalendarAvailabilityTypeID = 4
-                WHERE   ID = @0
-
-                SELECT  ID, StartTime, EndTime
-                FROM    CalendarEvents
-                WHERE   ID = @0
-            ", dateID);
-            var isNotAvailable = !LcCalendar.CheckUserAvailability(u.UserID, dateInfo.StartTime, dateInfo.EndTime);
-            
-            if (isNotAvailable) {
-                // Is not available, restore event to its previous state (availability 'tentative':3)
-                db.Execute(@"
-                    UPDATE  CalendarEvents SET
-                            CalendarAvailabilityTypeID = 3
-                    WHERE   ID = @0
-                ", dateID);
-                @OnError(brID, "availability", null, -91);
-            } else {
-                var result = db.QuerySingle(sqlConfirmBooking, brID, dateID);
-            
-                if (result.Error == 0) {
-                   
-                    // Charge total amount of booking request to the customer (Submit to settlement the transaction)
-                    // Get booking request TransactionID
-                    string tranID = N.DE(db.QueryValue(LcData.Booking.sqlGetTransactionIDFromBookingRequest, brID));
-                    if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:")){
-                        string paymentError = LcPayment.SettleTransaction(tranID);
-                        if (paymentError != null) {
-                            @OnError(brID, "payment", paymentError, -92);
-                        }
-                    }
+        else {
+            // Success!
                     
-                    // Send message
-                    LcMessaging.SendBookingRequestConfirmation(brID, result.BookingID);
-                    
-                    // Update the CalendarEvent to include contact data,
-                    // but this is not so important as the rest because of that it goes
-                    // inside a try-catch
-                    try{
-                        var description = LcData.Booking.GetBookingEventDescription(result.BookingID);
-                        var location = LcData.Booking.GetBookingLocationAsOneLineText(result.BookingID);
-                        db.Execute(@"
-                                UPDATE  CalendarEvents
-                                SET     Description = @1,
-                                        Location = @2
-                                WHERE   Id = @0
-                            ", dateID, description, location);
-                    }
-                    catch {}
-                
-                    if (redirectUrl == null) {
-                        redirectUrl = LcUrl.LangPath + (
-                            Request.IsAjaxRequest() ?
-                            "Booking/$BookingDetailsWidget/?BookingRequestID={0}&BookingID={1}" :
-                            "dashboard/messages/booking/{1}/"
-                        );
-                    }
-                    redirectUrl = String.Format(redirectUrl, brID, result.BookingID);
+            // Send message
+            LcMessaging.SendBookingRequestConfirmation(brID, taskResult.ID);
 
-                    if (Request.IsAjaxRequest()) {
-                        LcHelpers.ReturnJsonResult(3, redirectUrl);
-                    } else {
-                        Response.Redirect(redirectUrl);
-                    }
-                } else {
-                    // We need negative numbers to indicate an error (is our convention for json 'Code')
-                    @OnError(brID, "confirm", result.ErrorMessage, 0 - result.Error);
-                }
+            // Redirect
+            if (redirectUrl == null) {
+                redirectUrl = LcUrl.LangPath + (
+                    Request.IsAjaxRequest() ?
+                    "Booking/$BookingDetailsWidget/?BookingRequestID={0}&BookingID={1}" :
+                    "dashboard/messages/booking/{1}/"
+                );
             }
-        } else {
-            /* What? 
-            * - BookingRequestID and UserID (as ProviderUserID) don't match?
-            * - ConfirmedDateType is not correct?
-            * - BookingRequest is already confirmed?
-            */
-            @OnError(brID, "find", null, -90);
+            redirectUrl = String.Format(redirectUrl, brID, taskResult.ID);
+
+            if (Request.IsAjaxRequest()) {
+                LcHelpers.ReturnJsonResult(3, redirectUrl);
+            } else {
+                Response.Redirect(redirectUrl);
+            }
         }
     }
 }
@@ -213,10 +64,10 @@
     string msg = null;
     switch (task) {
         case "payment":
-            msg = String.Format("We're having issues with your payment.  Please contact us at support@loconomics.com and reference: {0}", errorMessage);
+            msg = String.Format("We're having issues with your payment. Please contact us at support@loconomics.com and reference: {0}", errorMessage);
             break;
         case "find":
-            msg = "We're having issues finding your booking request.  Please contact us at support@loconomics.com.";
+            msg = "We're having issues finding your booking request. Please contact us at support@loconomics.com.";
             break;
         case "confirm":
             msg = string.Format("Error confirming the booking request: {0}", errorMessage);
@@ -226,7 +77,7 @@
             break; 
     }
 
-    if (PageData["UseRenderReturns"]) {
+    if (PageData["UseRenderReturns"] ?? false) {
         LcHelpers.RenderPageReturns = msg ?? errorMessage;
         return;
     }
@@ -239,7 +90,9 @@
                 LcUrl.LangPath + 
                 String.Format("dashboard/messages/bookingrequest/{0}/", brID));
         } else {
-            throw new HttpException(500, msg ?? errorMessage);
+
+            Layout = "../_SiteLayout.cshtml";
+            @(msg ?? errorMessage);
         }
     }
 }

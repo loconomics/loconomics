@@ -5,6 +5,12 @@
 @using WebMatrix.Data;
 @using WebMatrix.WebData;
 @functions{
+    
+    const int fixedSizeWidth = 112;
+    const int fixedSizeHeight = 118;
+    const string avatarName = "$avatar";
+    const string avatarNamePrefix = avatarName + "-";
+    
     void UpdateDb(int userId, bool hasPhoto){
         using (var db = Database.Open("sqlloco")){
             // We set the name, now ever fixed as '$avatar', without extension, to allow TestAlertPhoto validate this,
@@ -18,35 +24,86 @@
             ", hasPhoto ? "$avatar" : null, userId);
         }
     }
-    void SaveAvatar(Stream photo, string virtualPath){
-        var avatarNamePrefix = "$avatar";
+    
+    void DeletePhoto(int userId, string virtualPath) {
         
+        UpdateDb(userId, false);
+        
+        var folder = Server.MapPath(virtualPath);
+
+        foreach (var f in Directory.GetFiles(folder, avatarName + "*", SearchOption.TopDirectoryOnly)) {
+            try {
+                File.Delete(f);
+            }
+            catch {}
+        }
+    }
+    
+    /// <summary>
+    /// Save the uploaded photo as an image on the user folder
+    /// with a greater size than usual but limited,
+    /// for later use on cropping and resizing tasks.
+    /// </summary>
+    /// <param name="photo"></param>
+    /// <param name="virtualPath"></param>
+    void SaveEditableAvatar(Stream photo, string virtualPath) {
         // Check folder or create
         var folder = Server.MapPath(virtualPath);
         if (!Directory.Exists(folder)) {
             Directory.CreateDirectory(folder);
         }
+
+        // Use file as image
+        using (var srcImg = System.Drawing.Image.FromStream(photo)) {
+            
+            // Resize to maximum allowed size (but not upscale) to allow user cropping later
+            var img = LcImaging.Resize(srcImg, fixedSizeWidth * 4, fixedSizeHeight * 4, LcImaging.SizeMode.Contain);
+
+            // Save:
+            img.Save(folder + avatarName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+        }
         
-        // Remove previous photos, original and sized/adapted, all start with avatarNamePrefix
+        photo.Dispose();
+    }
+    
+    /// <summary>
+    /// Sets the previously uploaded 'editable avatar' image as the
+    /// current user avatar, cropped with the given values and 
+    /// optimized sizes.
+    /// </summary>
+    /// <param name="virtualPath"></param>
+    void SaveAvatar(string virtualPath, int x, int y, int width, int height) {
+        
+        var folder = Server.MapPath(virtualPath);
+
+        // Remove previous cropped/sized/adapted photos (except editable one), all start with avatarNamePrefix
         // File.Delete doesn't allow wildcards, find and delete each one
         foreach (var f in Directory.GetFiles(folder, avatarNamePrefix + "*", SearchOption.TopDirectoryOnly))
             File.Delete(f);
 
-        // Save original photo as avatarNamePrefix in jpg format
-        using (var img = System.Drawing.Image.FromStream(photo)) {
-            img.Save(folder + avatarNamePrefix + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-            /*byte[] content = new byte[photo.Length];
-            Request.InputStream.Read(content, 0, (int)photo.Length);
-            File.WriteAllBytes(folder + avatarNamePrefix, content);*/
-            photo.Dispose();
-        
-            // Save image with profile size (-176x184) and grayscale (-gray)
-            using (var modImg = LcImaging.Grayscale(LcImaging.Resize(img, 176, 184, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))) {
-                modImg.Save(folder + avatarNamePrefix + "-176x184-gray.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+        // Create optimized files
+        using (var img = System.Drawing.Image.FromFile(folder + avatarName + ".jpg")) {
+            
+            // Crop
+            var cropImg = LcImaging.Crop(img, x, y, width, height);
+            img.Dispose();
+            
+            // Size prefix
+            var sizeName = fixedSizeWidth.ToString() + "x" + fixedSizeHeight.ToString();
+            
+            // Save image with profile size and original color
+            using (var modImg = LcImaging.Resize(cropImg, fixedSizeWidth, fixedSizeHeight, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
+                modImg.Save(folder + avatarNamePrefix + sizeName + ".jpg");
             }
-            // Same as previous but for hi-res 2x devices: (real pixel sizes is double, 352x368, but preserve the original size name to recognize it better adding the @2x suffix
-            using (var modImg = LcImaging.Grayscale(LcImaging.Resize(img, 352, 368, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))) {
-                modImg.Save(folder + avatarNamePrefix + "-176x184-gray@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            
+            // Save image with profile size and grayscale (-gray)
+            using (var modImg = LcImaging.Grayscale(LcImaging.Resize(cropImg, fixedSizeWidth, fixedSizeHeight, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))) {
+                modImg.Save(folder + avatarNamePrefix + sizeName + "-gray.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            
+            // Same as previous but for hi-res 2x devices: (real pixel sizes is double but preserve the original size name to recognize it better adding the @2x suffix
+            using (var modImg = LcImaging.Grayscale(LcImaging.Resize(cropImg, fixedSizeWidth * 2, fixedSizeHeight * 2, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))) {
+                modImg.Save(folder + avatarNamePrefix + sizeName + "-gray@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
             }
             
             // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
@@ -56,52 +113,49 @@
 @{
     LcHelpers.SecurePage();
     var userId = WebSecurity.CurrentUserId;
-    var ajaxEnabled = true;
     bool processed = false;
-    string virtualPath = LcUrl.RenderAppPath + "img/userphotos/u" + userId.ToString() + "/";
+    string basePath = "img/userphotos/u" + userId.ToString() + "/";
+    string virtualPath = LcUrl.RenderAppPath + basePath;
+    string editableAvatarUrl = LcUrl.AppPath + basePath + avatarName + ".jpg?v=" + DateTime.Now.ToString().Replace(" ", "");
     
-    // Delete file support:
-    if (Request["delete"].AsBool()) {
-        // We don't need the upload staff here, simply update database removing all file, both
-        // managed by next common function:
-        UpdateDb(userId, false);
-        
-        LcHelpers.ReturnJsonResult(0, "Photo was removed");
-    }
+    var cropSaveAvatar = Request["save-avatar"].AsBool();
     
-    // qq File uploader support, XHR Upload
-    if (!String.IsNullOrEmpty(Request["qqfile"])){
-        string fileName = (string)Request["qqfile"];
+    if (cropSaveAvatar) {
         
-        try{
-            if (Request.InputStream.Length > 0) {
-                SaveAvatar(Request.InputStream, virtualPath);
-            } else {
-                // Emulate standard error, next its replaced by better message
-                ModelState.AddFormError("Maximum request length exceeded");
-            }
-        } catch(Exception ex) {
-            ModelState.AddFormError(ex.Message);
-        }
+        SaveAvatar(virtualPath,
+            (int)Math.Round(Request["x1"].AsDecimal()), 
+            (int)Math.Round(Request["y1"].AsDecimal()),
+            (int)Math.Round(Request["w"].AsDecimal()),
+            (int)Math.Round(Request["h"].AsDecimal())
+        );
         
         // File saved, change the user preference at the database:
         UpdateDb(userId, true);
         
-        processed = true;
-    } else if (IsPost){
+        Json.Write(
+            new Dictionary<string, object>(){
+                { "success", "Your photo is ready!" }
+            },
+            Response.Output
+        );
+        Response.End();
+    }
+    else {
+        // Delete file support:
+        if (Request["delete"].AsBool()) {
+            // Remove photo files (all 'avatar-*' files) an update db
+            DeletePhoto(userId, virtualPath);
 
-        var fileuploaded = Request.Files["qqfile"] ?? Request.Files["avatar"];
-            
-        if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName)) {
-            ModelState.AddFormError("Please, select an image");
+            LcHelpers.ReturnJsonResult(0, "Photo was removed");
         }
-
-        if (ModelState.IsValid) {
-            System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
-            
+    
+        // qq File uploader support, XHR Upload
+        if (!String.IsNullOrEmpty(Request["qqfile"])){
+            string fileName = (string)Request["qqfile"];
+        
             try{
                 if (Request.InputStream.Length > 0) {
-                    SaveAvatar(fileuploaded.InputStream, virtualPath);
+                    SaveEditableAvatar(Request.InputStream, virtualPath);
                 } else {
                     // Emulate standard error, next its replaced by better message
                     ModelState.AddFormError("Maximum request length exceeded");
@@ -109,19 +163,44 @@
             } catch(Exception ex) {
                 ModelState.AddFormError(ex.Message);
             }
-            
+        
             // File saved, change the user preference at the database:
             UpdateDb(userId, true);
-        }
         
-        processed = true;
-    } else {
-        // Manage normal GET
-    }
+            processed = true;
+        } else if (IsPost){
 
-    if (processed) {
-        if (ModelState.IsValid) {
-            if (ajaxEnabled) {
+            var fileuploaded = Request.Files["qqfile"] ?? Request.Files["avatar"];
+            
+            if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName)) {
+                ModelState.AddFormError("Please, select an image");
+            }
+
+            if (ModelState.IsValid) {
+                System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
+            
+                try{
+                    if (Request.InputStream.Length > 0) {
+                        SaveEditableAvatar(fileuploaded.InputStream, virtualPath);
+                    } else {
+                        // Emulate standard error, next its replaced by better message
+                        ModelState.AddFormError("Maximum request length exceeded");
+                    }
+                } catch(Exception ex) {
+                    ModelState.AddFormError(ex.Message);
+                }
+            
+                // File saved, change the user preference at the database:
+                UpdateDb(userId, true);
+            }
+        
+            processed = true;
+        } else {
+            // Manage normal GET
+        }
+
+        if (processed) {
+            if (ModelState.IsValid) {
                 // NOTE: There is some issues with IE managing this result with contenttype=json
                 // because of this, here we use directly the Json helper instead our helper
                 //LcHelpers.ReturnJson(
@@ -137,9 +216,7 @@
                         { "success", "File was saved" }
                     }
                 );*/
-            }
-        } else {
-            if (ajaxEnabled) {
+            } else {
                 var errMsg = String.Join("; ", ModelState.Values.First().Errors);
                 
                 // We don't want the ugly default asp.net message for file-size-exceeded
@@ -169,43 +246,57 @@
         }
     }
 }
+@{
+    // Main assets that allow minification
+    var styleCss = "Styles/common";
+    var loadScripts = new List<string>();
+    // Enabled only on dev
+    if (LcHelpers.InDev) {
+        loadScripts.Add("libs.js");
+        loadScripts.Add("app.js");
+        styleCss += ".css";
+    } else {
+        loadScripts.Add("common.min.js");
+        styleCss += ".min.css";
+    }
+}
 <html>
     <head>
         @*<script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
             Jquery its already in common.min.js, and we reuse that because is already cached by the client browser.
         *@
-        <script src="@Href(LcUrl.AppPath + "Scripts/common.min.js")" type="text/javascript"></script>
+        @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
+        @foreach (var js in loadScripts)
+        {
+            @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/" + js)
+        }
+
         <script src="@Href(LcUrl.AppPath + "Scripts/fileuploader/fileuploader.js")" type="text/javascript"></script>
-        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Scripts/fileuploader/fileuploader.css")"/>
+
+        <script src="@Href(LcUrl.AppPath + "Scripts/jcrop/js/jquery.Jcrop.min.js")" type="text/javascript"></script>
+        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Scripts/jcrop/css/jquery.Jcrop.min.css")" />
 
         <script type="text/javascript">
             @Html.Raw(LcUrl.ToJsVar())
         </script>
         <style type="text/css">
+            html:after,
+            html:before {
+                display: none;
+            }
             body {
                 font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
-            }
-            .qq-upload-button {
-                width: 100%;
-                border: none;
-                display: block;
-                font-size: 1em;
-                cursor: pointer;
-            }
-            .qq-upload-list {
-                margin: 15px 0 !important;
-                max-height: 120px !important;
-                overflow: auto;
+                padding: 1em;
             }
         </style>
 
         <script type="text/javascript">
-            @if (ajaxEnabled)
-            {
+            @{
                 int sizeLimit = LcHelpers.GetMaxRequestSize() * 1024;
                 // DEBUG: forcing no limit to debug server response on 'maximum request size exceded' error
                 //sizeLimit = 0;
-            <text>
+            }
+
             $(document).ready(function () {
                 var uploader = new qq.FileUploader({
                     element: document.getElementById('change-photo-file-uploader'),
@@ -213,7 +304,8 @@
                     action: LcUrl.LangPath + 'dashboard/AboutYou/ChangePhoto/',
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
-                        window.parent.reloadUserPhoto();
+                        // Go to crop photo:
+                        showCropPhoto();
                     },
                     messages: {
                         typeError: "{file} has invalid extension. Only {extensions} are allowed.",
@@ -222,43 +314,137 @@
                         emptyError: "{file} is empty, please select files again without it.",
                         onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
                     },
-                    sizeLimit: @(sizeLimit > 0 ? sizeLimit.ToString() : "undefined")
+                    sizeLimit: @(sizeLimit > 0 ? sizeLimit.ToString() : "undefined"),
+                    template: '<div class="qq-uploader actions">' + 
+                            '<div class="qq-upload-drop-area"><span>Drop a file here to upload</span></div>' +
+                            '<div class="qq-upload-button">Choose a photo</div>' +
+                            '<ul class="qq-upload-list"></ul>' + 
+                         '</div>',
                 });
             });
-            </text>
+        </script>
+        <script type="text/javascript">
+            jQuery(function ($) {
+
+                // Setup cropping form
+                var $f = $('#crop-photo form');
+                $f.on('submit', function (e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: $f.attr('action'),
+                        method: $f.attr('method'),
+                        data: $f.serialize(),
+                        success: function (data) {
+                            // Avatar cropped, resized and saved!
+                            window.parent.reloadUserPhoto();
+                            $('#crop-photo').slideUp('fast');
+                            window.parent.closePopupUserPhoto();
+                        },
+                        error: function (xhr, er) {
+                            alert('Sorry, there was an error setting-up your photo. ' + (er || ''));
+                        }
+                    });
+                });
+
+                setupCropPhoto();
+
+                // Enable crop editor
+                var $cp = $('#crop-photo');
+                // If an image is loaded, show up the cropping tool
+                function showEditorIfImage() {
+                    var $img = $('#cropimg');
+
+                    if ($img.height() > 30) {
+                        $cp.show();
+                        return true;
+                    }
+                    else {
+                        $cp.hide();
+                        $img
+                        .one('load', showEditorIfImage)
+                        .one('error', showEditorIfImage);
+                        return false;
+                    }
+                }
+                showEditorIfImage();
+
+                // Setup remove photo
+                $('#delete-photo > button').click(function () {
+                    window.parent.deleteUserPhoto();
+                    $cp.hide();
+                });
+            });
+
+            function setupCropPhoto() {
+                // Setup img cropping
+                var $img = $('#cropimg');
+                $img.Jcrop({
+                    onChange: showCoords,
+                    onSelect: showCoords,
+                    onRelease: clearCoords,
+                    aspectRatio: $img.data('target-width') / $img.data('target-height')
+                }, function () {
+                    jcrop_api = this;
+                    // Initial selection to show user that can choose an area
+                    jcrop_api.setSelect([0, 0, $img.width(), $img.height()]);
+                });
+
+                return $img;
             }
-            else if (IsPost)
-            {
-                <text>
-                reloadUserPhoto();
-                window.close();
-                </text>
+
+            // Simple event handler, called from onChange and onSelect
+            // event handlers, as per the Jcrop invocation above
+            function showCoords(c) {
+                $('#x1').val(c.x);
+                $('#y1').val(c.y);
+                $('#x2').val(c.x2);
+                $('#y2').val(c.y2);
+                $('#w').val(c.w);
+                $('#h').val(c.h);
+            };
+
+            function clearCoords() {
+                $('#coords input').val('');
+            };
+
+            function showCropPhoto() {
+
+                var $p = $('#crop-photo');
+                // Force image reload
+                $p.find('img').attr('src', function() {
+                    return $(this).attr('src') + "?v=" + (new Date()).getTime();
+                });
+
+                $p.show();
+                setupCropPhoto();
             }
         </script>
     </head>
     <body>
-        <div class="change-photo">
-            <div id="change-photo-file-uploader">
-                @if(!ajaxEnabled) {
-                <form action="@(LcUrl.LangPath)$dashboard/AboutYou/ChangePhoto/" method="post" enctype="multipart/form-data">
-                    @Html.ValidationSummary()
-                    <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
-                    <button class="button main-action" type="submit">Upload!</button>
-                </form>
-                }
+        <div class="change-photo FileUploader">
+            <div id="change-photo-file-uploader" class="FileUploader-uploader">
             </div>
-            <div id="delete-photo">
-                <button type="button" class="qq-upload-button">Remove photo</button>
-                <script type="text/javascript">
-                    jQuery('#delete-photo > button').click(function () {
-                        window.parent.deleteUserPhoto();
-                    })
-                    .hover(function () {
-                        jQuery(this).addClass('qq-upload-button-hover');
-                    }, function () {
-                        jQuery(this).removeClass('qq-upload-button-hover');
-                    });
-                </script>
+            <div id="crop-photo" class="FileUploader-editor" style="display:none">
+                <p>Please use the tool below to crop your photo</p>
+                <img src="@editableAvatarUrl" id="cropimg" data-target-width="@fixedSizeWidth" data-target-height="@fixedSizeHeight" alt="Edit photo" />
+                <form action="@(LcUrl.LangPath)$dashboard/AboutYou/ChangePhoto/" method="post">
+                    <div id="coords">
+                        <input type="hidden" id="x1" name="x1" />
+                        <input type="hidden" id="y1" name="y1" />
+                        <input type="hidden" id="x2" name="x2" />
+                        <input type="hidden" id="y2" name="y2" />
+                        <input type="hidden" id="w" name="w" />
+                        <input type="hidden" id="h" name="h" />
+                    </div>
+                    <div class="actions">
+                        <input type="hidden" name="save-avatar" value="True" />
+                        <input type="submit" class="save-photo-action" value="Save photo changes" />
+                    </div>
+                </form>
+            </div>
+            <div id="delete-photo" class="actions FileUploader-removal">
+                <button type="button" class="remove-photo-action">Remove photo</button>
             </div>
         </div>
     </body>

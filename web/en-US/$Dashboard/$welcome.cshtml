@@ -1,6 +1,17 @@
 ﻿@{
     // Tools/Dashboard
     LcHelpers.SecurePage();
+    
+    // For testing purposes only: force to set the user in Onboarding mode
+    // when entering Welcome
+    if (!LcHelpers.InLive) {
+        using (var db = Database.Open("sqlloco")) {
+            db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
+                WebSecurity.CurrentUserId,
+                "welcome"
+            );
+        }
+    }
 }
 <h1 class="DashboardSection-page-header">Activate your profile</h1>
 <p class="DashboardSection-page-introduction">

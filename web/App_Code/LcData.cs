@@ -798,6 +798,21 @@ public static partial class LcData
         }
     }
 
+    public static bool IsFirstTimeCustomer(int customerId, int providerId, int positionId)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            var c = (int)db.QueryValue(@"
+                SELECT count(*) as c
+                FROM BookingRequest As B 
+                WHERE B.BookingRequestStatusID = 7
+                    AND B.CustomerUserID = @0
+                    AND B.ProviderUserID = @1
+                    AND B.PositionID = @2
+            ", customerId, providerId, positionId);
+            return c == 0;
+        }
+    }
     #endregion
     #region Package Type (Provider Packages)
     public class ProviderPackagesView

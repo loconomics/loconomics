@@ -46,12 +46,12 @@ public static class LcImaging
                 if (nPercentH < nPercentW)
                 {
                     nPercent = nPercentH;
-                    destX = System.Convert.ToInt16((Width - (sourceWidth * nPercent)) / 2);
+                    destX = (int)((Width - (sourceWidth * nPercent)) / 2);
                 }
                 else
                 {
                     nPercent = nPercentW;
-                    destY = System.Convert.ToInt16((Height - (sourceHeight * nPercent)) / 2);
+                    destY = (int)((Height - (sourceHeight * nPercent)) / 2);
                 }
                 break;
             case SizeMode.Cover:
@@ -105,15 +105,47 @@ public static class LcImaging
         Graphics grPhoto = Graphics.FromImage(bmPhoto);
         if (sizeMode == SizeMode.Contain)
             grPhoto.Clear(Color.Black);
-        grPhoto.InterpolationMode = 
-                InterpolationMode.HighQualityBicubic;
+
+        grPhoto.SmoothingMode = SmoothingMode.HighQuality;
+        grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
         grPhoto.DrawImage(imgPhoto, 
-            new Rectangle(destX,destY,destWidth,destHeight),
-            new Rectangle(sourceX,sourceY,sourceWidth,sourceHeight),
+            new Rectangle(destX, destY, destWidth, destHeight),
+            new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
             GraphicsUnit.Pixel);
 
         grPhoto.Dispose();
+        return bmPhoto;
+    }
+
+    public static Image Crop(
+        Image imgPhoto,
+        int startX,
+        int startY,
+        int Width,
+        int Height)
+    {
+        if (Width <= 0)
+        {
+            Width = imgPhoto.Width;
+        }
+        if (Height <= 0)
+        {
+            Height = imgPhoto.Height;
+        }
+
+        Bitmap bmPhoto = new Bitmap(Width, Height);
+        bmPhoto.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution);
+
+        using (Graphics grPhoto = Graphics.FromImage(bmPhoto))
+        {
+            grPhoto.SmoothingMode = SmoothingMode.HighQuality;
+            grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            grPhoto.DrawImage(imgPhoto, new Rectangle(0, 0, Width, Height), startX, startY, Width, Height, GraphicsUnit.Pixel);
+        }
         return bmPhoto;
     }
     #endregion

@@ -1,75 +1,12 @@
-﻿@* Page being called as a Popup-iframe from your-work/photos to
-    upload new provider photos to its personal folder.
+﻿@* AJAX Page for POST request to upload and crop photos
+    to the user profile.
  *@
 @using WebMatrix.Data;
 @using WebMatrix.WebData;
-@functions{
-    int RegisterUserPhoto(string fileName, int userId, int positionId){
-        using (var db = Database.Open("sqlloco")){
-            // we update the new photo name
-            return (int)db.QueryValue(@"
-                /* #346: Set as primary if is the first provider-position photo */
-                DECLARE @IsPrimary bit
-                IF NOT EXISTS (
-                    SELECT * FROM ProviderServicePhoto
-                    WHERE UserID = @0
-                        AND PositionID = @1
-                )
-                    SET @IsPrimary = 1
-                ELSE
-                    SET @IsPrimary = 0
-
-                INSERT INTO ProviderServicePhoto (
-                    UserID
-                    ,PositionID
-                    ,PhotoAddress
-                    ,RankPosition
-                    ,CreatedDate
-                    ,UpdatedDate
-                    ,ModifiedBy
-                    ,Active
-                    ,IsPrimaryPhoto
-                ) VALUES (
-	                @0
-	                ,@1
-	                ,@2
-	                ,(SELECT coalesce(max(P2.RankPosition),0) + 1 FROM ProviderServicePhoto As P2 WHERE P2.UserID=@0 AND P2.PositionID=@1)
-	                ,getdate()
-	                ,getdate()
-	                ,'sys'
-	                ,1
-                    ,@IsPrimary
-                )
-                SELECT Cast(@@Identity as int)
-
-                -- Test Alert
-                EXEC TestAlertShowcaseWork @0, @1
-            ", userId, positionId, fileName);
-        }
-    }
-    void SavePhoto(Stream photo, string virtualPath, string fileName){       
-        // Check folder or create
-        var folder = Server.MapPath(virtualPath);
-        if (!Directory.Exists(folder)) {
-            Directory.CreateDirectory(folder);
-        }
-                
-        // Save file on disk
-        byte[] content = new byte[photo.Length];
-        photo.Read(content, 0, (int)photo.Length);
-        File.WriteAllBytes(folder + fileName, content);
-        photo.Dispose();
-    }
-    string GetValidFileName(string fileName){
-        // Names starting with $ are considered special for us, no allow user to upload a file with that character as prefix:
-        return fileName.TrimStart('$');
-    }
-}
 @{
     LcHelpers.SecurePage();
     var userId = WebSecurity.CurrentUserId;
     var positionId = Request["PositionID"].AsInt();
-    var ajaxEnabled = true;
     // This is only for Post uploads
     var uploadedFileURI = "";
     var photoID = 0;
@@ -77,10 +14,44 @@
     
     string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
     string virtualPath = LcUrl.RenderAppPath + filePathInApp;
+    // Automatic name for new photo
+    string fileName = Guid.NewGuid().ToString().Replace("-", "");
+    var uploadedFileName = "";
     
-    // qq File uploader support, XHR Upload
-    if (!String.IsNullOrEmpty(Request["qqfile"])){
-        string fileName = GetValidFileName((string)Request["qqfile"]);
+    var cropPhoto = Request["crop-photo"].AsBool();
+    
+    if (cropPhoto) {
+
+        var photoURI = Request["photoURI"];
+        photoID = Request["photoID"].AsInt();
+        fileName = System.IO.Path.GetFileNameWithoutExtension(photoURI);
+
+        var updatedImageName = LcData.Photo.UploadPhoto(Server.MapPath(virtualPath),
+            fileName,
+            (int)Math.Round(Request["crop-x1"].AsDecimal()), 
+            (int)Math.Round(Request["crop-y1"].AsDecimal()),
+            (int)Math.Round(Request["crop-w"].AsDecimal()),
+            (int)Math.Round(Request["crop-h"].AsDecimal())
+        );
+        
+        // NOTE: There is some issues with IE managing this result with contenttype=json
+        // because of this, here we use directly the Json helper instead our helper
+        //LcHelpers.ReturnJson(
+        Json.Write(
+            new Dictionary<string, object>(){
+                { "success", "File was saved" }
+                ,{ "fileURI", LcUrl.AppPath + filePathInApp + updatedImageName }
+                ,{ "photoID", photoID }
+                ,{ "updated", true }
+            },
+        Response.Output);
+        Response.End();
+    }
+    else if (!String.IsNullOrEmpty(Request["qqfile"])){
+        // qq File uploader support, XHR Upload
+
+        // Old get actual name
+        //string fileName = GetValidFileName((string)Request["qqfile"]);      
 
         // File name limit to 100 instead of database 2073 to avoid problems with the File I/O API. Being aware too
         // that the virtualPath is added to filename.
@@ -88,20 +59,23 @@
             ModelState.AddFormError("File name must be lower than 100 characters.");
         } else {
             try{
-                uploadedFileURI = LcUrl.AppPath + filePathInApp + fileName;
+                
                 if (Request.InputStream.Length > 0) {
-                    SavePhoto(Request.InputStream, virtualPath, fileName);
+                    uploadedFileName = LcData.Photo.UploadEditablePhoto(Request.InputStream, Server.MapPath(virtualPath), fileName);
                 } else {
                     // Emulate standard error, next its replaced by better message
                     ModelState.AddFormError("Maximum request length exceeded");
                 }
+                
+                uploadedFileURI = LcUrl.AppPath + filePathInApp + uploadedFileName;
+                
             } catch(Exception ex) {
                 ModelState.AddFormError(ex.Message);
             }
         
             if (ModelState.IsValid) {
                 // File saved, register it on the database:
-                photoID = RegisterUserPhoto(fileName, userId, positionId);
+                photoID = LcData.Photo.RegisterUserPhoto(uploadedFileName, userId, positionId);
             }
   
             processed = true;
@@ -115,183 +89,83 @@
         }
 
         if (ModelState.IsValid) {
-            string fileName = GetValidFileName(fileuploaded.FileName);
+            // Old get actual name
+            //string fileName = GetValidFileName(fileuploaded.FileName);
             
             try{
-                uploadedFileURI = LcUrl.AppPath + filePathInApp + fileName;
+                
                 if (Request.InputStream.Length > 0) {
-                    SavePhoto(fileuploaded.InputStream, virtualPath, fileName);
+                    uploadedFileName = LcData.Photo.UploadEditablePhoto(fileuploaded.InputStream, Server.MapPath(virtualPath), fileName);
                 } else {
                     // Emulate standard error, next its replaced by better message
                     ModelState.AddFormError("Maximum request length exceeded");
                 }
+                
+                uploadedFileURI = LcUrl.AppPath + filePathInApp + uploadedFileName;
+                
             } catch(Exception ex) {
                 ModelState.AddFormError(ex.Message);
             }
 
             if (ModelState.IsValid) {
                 // File saved, register it on the database:
-                photoID = RegisterUserPhoto(fileName, userId, positionId);
+                photoID = LcData.Photo.RegisterUserPhoto(uploadedFileName, userId, positionId);
             }
         }
             
         processed = true;
-    } else {
-        // Manage normal GET
     }
     
     if (processed) {
         if (ModelState.IsValid) {
-            if (ajaxEnabled) {
-                // NOTE: There is some issues with IE managing this result with contenttype=json
-                // because of this, here we use directly the Json helper instead our helper
-                //LcHelpers.ReturnJson(
-                Json.Write(
-                    new Dictionary<string, object>(){
-                        { "success", "File was saved" }
-                        ,{ "fileURI", uploadedFileURI }
-                        ,{ "photoID", photoID }
-                    },
-                Response.Output);
-                Response.End();
+
+            // NOTE: There is some issues with IE managing this result with contenttype=json
+            // because of this, here we use directly the Json helper instead our helper
+            //LcHelpers.ReturnJson(
+            Json.Write(
+                new Dictionary<string, object>(){
+                    { "success", "File was saved" }
+                    ,{ "fileURI", uploadedFileURI }
+                    ,{ "photoID", photoID }
+                },
+            Response.Output);
+            Response.End();
                 
-               /*LcHelpers.ReturnJson(
-                    new Dictionary<string, object>(){
-                        { "success", "File was saved" }
-                        ,{ "fileURI", virtualPath + fileName }
-                        ,{ "photoID", photoID }
-                    }
-                );*/
-            }
-        } else {
-            if (ajaxEnabled) {
-                var errMsg = String.Join("; ", ModelState.Values.First().Errors);
-                
-                // We don't want the ugly default asp.net message for file-size-exceeded
-                // As of #454 (https://github.com/dani0198/Loconomics/issues/454#issuecomment-37782181)
-                if (errMsg.Contains("Maximum request length exceeded")) {
-                    
-                    var max = LcHelpers.GetMaxRequestSize();
-                    var printMax = "";
-                    if (max > 0) {
-                        printMax = LcHelpers.PrettyFileSize(max * 1024);
-                        
-                        errMsg = "The file is too large, maximum file size is " + printMax;
-                    } else {
-                        errMsg = "The file is too large";
-                    }
+            /*LcHelpers.ReturnJson(
+                new Dictionary<string, object>(){
+                    { "success", "File was saved" }
+                    ,{ "fileURI", virtualPath + fileName }
+                    ,{ "photoID", photoID }
                 }
+            );*/
+
+        } else {
+
+            var errMsg = String.Join("; ", ModelState.Values.First().Errors);
+                
+            // We don't want the ugly default asp.net message for file-size-exceeded
+            // As of #454 (https://github.com/dani0198/Loconomics/issues/454#issuecomment-37782181)
+            if (errMsg.Contains("Maximum request length exceeded")) {
                     
-                // NOTE: IE problems with contentype=json, use JsonHelper directly:
-                //LcHelpers.ReturnJson(
-                Json.Write(
-                    new Dictionary<string, object>(){
-                        { "error", LcRessources.GetText("an-error", errMsg) }
-                    },
-                    Response.Output);
-                Response.End();
+                var max = LcHelpers.GetMaxRequestSize();
+                var printMax = "";
+                if (max > 0) {
+                    printMax = LcHelpers.PrettyFileSize(max * 1024);
+                        
+                    errMsg = "The file is too large, maximum file size is " + printMax;
+                } else {
+                    errMsg = "The file is too large";
+                }
             }
+                    
+            // NOTE: IE problems with contentype=json, use JsonHelper directly:
+            //LcHelpers.ReturnJson(
+            Json.Write(
+                new Dictionary<string, object>(){
+                    { "error", LcRessources.GetText("an-error", errMsg) }
+                },
+                Response.Output);
+            Response.End();
         }
     }
 }
-
-<html>
-    <head>
-        @*
-        <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
-        <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
-        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
-
-            Jquery and jquery-ui are already in common.min.js, and we reuse that because is already cached by the client browser.
-        *@
-        <script src="@Href(LcUrl.AppPath + "Scripts/common.min.js")" type="text/javascript"></script>
-        <script src="@Href(LcUrl.AppPath + "Scripts/fileuploader/fileuploader.js")" type="text/javascript"></script>
-        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Scripts/fileuploader/fileuploader.css")"/>
-
-        <script type="text/javascript">
-            @Html.Raw(LcUrl.ToJsVar())
-        </script>
-        <style type="text/css">
-            body {
-                font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
-            }
-            .qq-upload-button {
-                width: 100%;
-                border: none;
-                display: block;
-                font-size: 1em;
-                cursor: pointer;
-            }
-            .qq-upload-list {
-                margin: 15px 0 !important;
-                max-height: 120px !important;
-                overflow: auto;
-            }
-        </style>
-
-        <script type="text/javascript">
-            function reloadPhoto(fileName, photoID) {
-                // Add image to the gallery, in the parent document! (this is an iframe)
-                var gallery = jQuery('.DashboardPhotos .positionphotos-gallery > ol', window.parent.document);
-                var tplImg = '<li id="UserPhoto-@@0"><a href="#"><img alt="Uploaded photo" src="@@1"/></a><a class="edit" href="#">Edit</a></li>';
-                var newImg = jQuery(tplImg.replace(/@@0/g, photoID).replace(/@@1/g, fileName));
-                // If is there is no photos still, the first will be the primary by default
-                if (gallery.children().length == 0)
-                    newImg.addClass('is-primary-photo');
-                gallery.append(newImg)
-                    // scroll the gallery to see the new element; using '-2' to avoid some browsers automatic scroll.
-                    .animate({scrollTop: gallery[0].scrollHeight - gallery.height() - 2}, 1400)
-                    .find('li:last-child')
-                    .effect("highlight", {}, 1600);
-            }
-            @if (ajaxEnabled)
-            {
-                int sizeLimit = LcHelpers.GetMaxRequestSize() * 1024;
-                // DEBUG: forcing no limit to debug server response on 'maximum request size exceded' error
-                //sizeLimit = 0;
-            <text>
-            jQuery(document).ready(function () {
-                var uploader = new qq.FileUploader({
-                    element: document.getElementById('change-photo-file-uploader'),
-                    // path to server-side upload script
-                    action: '@(LcUrl.LangPath)dashboard/YourWork/UploadPhoto/?PositionID=@(positionId)',
-                    allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
-                    onComplete: function (id, fileName, responseJSON) {
-                        if (responseJSON.success)
-                        reloadPhoto(responseJSON.fileURI, responseJSON.photoID);
-                    },
-                    messages: {
-                        typeError: "{file} has invalid extension. Only {extensions} are allowed.",
-                        sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
-                        minSizeError: "{file} is too small, minimum file size is {minSizeLimit}.",
-                        emptyError: "{file} is empty, please select files again without it.",
-                        onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
-                    },
-                    sizeLimit: @(sizeLimit > 0 ? sizeLimit.ToString() : "undefined")
-                });
-            });
-            </text>
-            }
-            else if (IsPost)
-            {
-                <text>
-                reloadPhoto('@uploadedFileURI', @photoID);
-                window.close();
-                </text>
-            }
-        </script>
-    </head>
-    <body>
-        <div class="change-photo">
-            <div id="change-photo-file-uploader">
-                @if(!ajaxEnabled) {
-                <form id="uploadPhotoForm" action="@(LcUrl.LangPath)$dashboard/YourWork/UploadPhoto/?PositionID=@(positionId)" method="post" enctype="multipart/form-data">
-                    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-                    <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
-                    <button class="button main-action" type="submit">Upload!</button>
-                </form>
-                }
-            </div>
-        </div>
-    </body>
-</html>
