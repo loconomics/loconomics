@@ -86,7 +86,7 @@ function saveEditedPhoto($f) {
 function editSelectedPhoto(form, selected) {
 
     var editPanel = $('.positionphotos-edit', form);
-    var nonUploaderElementsSelector = '.positionphotos-edit, .DashboardPhotos-editPhoto > legend, .positionphotos-gallery, .positionphotos-tools';
+    var nonUploaderElementsSelector = '.positionphotos-edit, .DashboardPhotos-editPhoto > legend, .positionphotos-gallery > legend, .positionphotos-gallery > ol, .positionphotos-tools';
 
     // Use given @selected or look for a selected photo in the list
     selected = selected && selected.length ? selected : $('.positionphotos-gallery > ol > li.selected', form);
@@ -207,13 +207,14 @@ function initElements(form) {
     var sortable = new Sortable({ container: form });
 
     // Editor setup
-    var $ceditor = $('.DashboardPhotos-editPhoto', form);
+    var $ceditor = $('.DashboardPhotos-editPhoto', form),
+        positionId = parseInt(form.closest('form').find('[name=positionID]').val()) || 0;
     editor = new Editor({
         container: $ceditor,
-        positionId: parseInt(form.closest('form').find('[name=positionID]').val()) || 0,
+        positionId: positionId,
         sizeLimit: $ceditor.data('size-limit'),
         gallery: new Gallery({ container: form }),
-        uploader: new Uploader({ container: $('.FileUploader', form) })
+        uploader: new Uploader({ container: $('.FileUploader', form), positionId: positionId })
     });
 
     // Set primary photo to be edited
@@ -360,14 +361,14 @@ function Editor(settings) {
 
     settings = settings || {};
 
-    // f.e.: .DashboardPhotos-editPhoto
-    this.$container = $(settings.container || 'html');
-    this.gallery = settings.gallery || new Gallery(this.$container);
-    this.uploader = settings.uploader || new Uploader(this.$container);
-    
     var $h = $('html');
     this.positionId = settings.positionId || $h.data('position-id');
     this.sizeLimit = settings.sizeLimit || $h.data('size-limit');
+
+    // f.e.: .DashboardPhotos-editPhoto
+    this.$container = $(settings.container || 'html');
+    this.gallery = settings.gallery || new Gallery({ container: this.$container });
+    this.uploader = settings.uploader || new Uploader({ containe: this.$container, positionId: this.positionId });
 
     // Initializing:
     this.initCropForm();

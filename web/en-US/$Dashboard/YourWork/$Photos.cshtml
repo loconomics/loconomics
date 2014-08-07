@@ -129,10 +129,10 @@
                     <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@(photo.IsPrimaryPhoto ? "selected is-primary-photo" : "")"><a href="#edit-photo"><img alt="@photo.PhotoCaption" src="@(LcUrl.AppPath + photosFolder + photo.PhotoAddress)"/></a><a class="edit" href="#">Edit</a></li>
                 }
             </ol>
+            <div class="FileUploader FileUploader--hideSuccess">
+                <div class="FileUploader-uploader"></div>
+            </div>
         </fieldset>
-        <div class="FileUploader FileUploader--hideSuccess">
-            <div class="FileUploader-uploader"></div>
-        </div>
         <fieldset class="positionphotos-tools">
             <ul>
                 <li class="positionphotos-tools-arrange">To arrange photos, drag and drop them in the order you'd like.</li>
