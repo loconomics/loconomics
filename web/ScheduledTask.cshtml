@@ -516,7 +516,8 @@
         
         /*
          * Check:: Authorize postponed transactions 48hours previous to service start-time
-         * If:: Confirmated or performed or complete bookings only, not cancelled or in dispute
+         * If:: Confirmated or performed bookings only, not cancelled or in dispute or completed (completed may be
+         * and old booking already paid
          * If:: Current time is 48 hours before Confirmed Service StartTime
          * If:: BookingRequest PaymentTransactionID is a Card token rather than an actual TransactionID
          * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
@@ -535,7 +536,7 @@
                          INNER JOIN
                         BookingRequest As BR
                           ON BR.BookingRequestID = B.BookingRequestID
-                WHERE   BookingStatusID IN (1, 2, 3, 4) -- confirmed, performed or completed
+                WHERE   BookingStatusID IN (1, 2, 3) -- confirmed, performed or completed
                          AND                       
                         -- at 48 hours before service starts (more than that is fine)
                         getdate() >= dateadd(hh, -48, E.StartTime)
@@ -585,7 +586,8 @@
 
         /*
          * Check:: Charge Customer the day of the service
-         * If:: Confirmated or performed or complete bookings only, not cancelled or in dispute
+         * If:: Confirmated or performed bookings only, not cancelled or in dispute or completed (completed may be
+         * and old booking already paid
          * If:: Current time is the 1 hour after the End Service, or later
          * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
          * Action:: settle booking transaction
@@ -604,7 +606,7 @@
                          INNER JOIN
                         BookingRequest As BR
                           ON BR.BookingRequestID = B.BookingRequestID
-                WHERE   BookingStatusID IN (1, 2, 3, 4) -- confirmed, performed or completed
+                WHERE   BookingStatusID IN (1, 2, 3) -- confirmed, performed
                          AND
                         
                         -- at 1 hour, after service ended (more than that is fine)
