@@ -8,6 +8,7 @@
     
     const int fixedSizeWidth = 112;
     const int fixedSizeHeight = 118;
+    const int originalScale = 5;
     const string avatarName = "$avatar";
     const string avatarNamePrefix = avatarName + "-";
     
@@ -57,7 +58,7 @@
         using (var srcImg = System.Drawing.Image.FromStream(photo)) {
             
             // Resize to maximum allowed size (but not upscale) to allow user cropping later
-            var img = LcImaging.Resize(srcImg, fixedSizeWidth * 4, fixedSizeHeight * 4, LcImaging.SizeMode.Contain);
+            var img = LcImaging.Resize(srcImg, fixedSizeWidth * originalScale, fixedSizeHeight * originalScale, LcImaging.SizeMode.Contain);
 
             // Save:
             img.Save(folder + avatarName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
