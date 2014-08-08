@@ -3,6 +3,10 @@
     const int fixedSizeWidth = 112;
     const int fixedSizeHeight = 118;
     var sizeName = fixedSizeWidth.ToString() + "x" + fixedSizeHeight.ToString();
+    // To fix #558, because the change of size (so file name changed too), we do double try
+    // for a while
+    // TODO FUTURE: When there are no more oldSize (or a few, convert it manually), remove this and its use
+    const string oldSizeName = "176x184";
     
     var userId = Request["UserID"].AsInt();
     if (userId == 0) {
@@ -37,6 +41,10 @@
         userId = 0;
     }
     
+    string userFolder = "img/userphotos/u" + userId.ToString() + "/";
+    // Physical image path to userPhoto
+    string path = HttpContext.Current.Request.MapPath(LcUrl.RenderAppPath + userFolder + userPhoto);
+    
     bool imageAdapted = false;
     
     if (userPhoto == "$avatar") {
@@ -44,12 +52,17 @@
         // serve ever the profile adapted photo for now instead the big colored original:
         userPhoto = "$avatar-" + sizeName + "-gray" + type + ".jpg";
         imageAdapted = true;
-    }
-    
-    string userFolder = "img/userphotos/u" + userId.ToString() + "/";
+        // Update path:
+        path = HttpContext.Current.Request.MapPath(LcUrl.RenderAppPath + userFolder + userPhoto);
+        
+        // Try the old size if it doesn't exists the new:
+        if (!System.IO.File.Exists(path)) {
 
-    // Retrieving image path
-    string path = HttpContext.Current.Request.MapPath(LcUrl.RenderAppPath + userFolder + userPhoto);
+            // Update name and path
+            userPhoto = "$avatar-" + oldSizeName + "-gray" + type + ".jpg";
+            path = HttpContext.Current.Request.MapPath(LcUrl.RenderAppPath + userFolder + userPhoto);
+        }
+    }
 
     if (!System.IO.File.Exists(path)){
         imageAdapted = true;
