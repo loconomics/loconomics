@@ -31,18 +31,64 @@
             // If we have user info
             if (user != null && user["username"] != null)
             {
+                var doVerify = UrlData.Count > 0 && UrlData[0] == "Verify";
+                
                 //string autopassword = userAccessToken.Substring(0, 128);
                 string autopassword = Membership.GeneratePassword(14, 5);
                 string facebookemail = N.W(user.email) ?? user.username + "@facebook.com";
 
-                //Response.Write(userAccessToken);
-                /*Response.Write("\n" + user["username"] + "\n");
-                Response.Write(Json.Encode(user));
-                Response.Write("\n" + autopassword + "\n");
-                Response.Write("\n" + facebookemail + "\n");*/
-
-                // If user don't exists, create it
-                if (!WebSecurity.UserExists(facebookemail)){
+                if (doVerify) {
+                    // User already exists, is requesting a Facebook verification:
+                    LcHelpers.SecurePage();
+                    int userID = WebSecurity.CurrentUserId;
+                    /*
+                    // First, check facebook email with current user id (user must be logged to verify)
+                    int userID = WebSecurity.GetUserId(facebookemail);
+                    if (userID != WebSecurity.CurrentUserId) {
+                        LcHelpers.ReturnJsonResult(2801, "Facebook verification failed: Facebook email don't match current Loconomics user email", true);
+                    }*/
+                    // Compare email and full name
+                    using (var db = Database.Open("sqlloco")) {
+                        var c = (int)db.QueryValue(@"
+                            SELECT  count(*)
+                            FROM    Users As U
+                                     INNER JOIN
+                                    UserProfile As P
+                                      ON U.UserID = P.UserID
+                            WHERE   U.UserID = @0
+                                     AND
+                                    (
+                                    dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, dbo.fx_concatBothOrNothing(U.MiddleIn, '.', ''), ' '), U.LastName, ' '), U.SecondLastName, ' ') = @1
+                                     OR
+                                    dbo.fx_concat(U.FirstName, U.LastName, ' ') = @1
+                                    )
+                        ", userID, ((string)user.name ?? "").Trim());
+                        if (c == 1) {
+                            // Verified, save verification record
+                            db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
+                            // Test social media alert
+                            db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
+                            LcHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
+                        } else {
+                            // Verification failed
+                            /*var debugInfo = " Facebook:" + user.first_name + " " + user.last_name;
+                            debugInfo += " = " + (string)db.QueryValue(@"
+                                SELECT  dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, U.MiddleIn, ' '), U.LastName, ' '), U.SecondLastName, ' ') as loconame
+                                FROM    Users As U
+                                         INNER JOIN
+                                        UserProfile As P
+                                          ON U.UserID = P.UserID
+                                WHERE   U.UserID = @0
+                                         AND
+                                        P.Email = @1
+                            ", userID, facebookemail);*/
+                            // + debugInfo
+                            LcHelpers.ReturnJsonResult(2802, "Facebook verification failed: Facebook full name don't match current Loconomics user full name.", true);
+                        }
+                    }
+                }
+                else if (!WebSecurity.UserExists(facebookemail)){
+                    // If user don't exists, create it
                     //Response.Write("\nEl usuario no existe, se crea\n");
                     using (var db = Database.Open("sqlloco")){
  
@@ -84,55 +130,6 @@
                         } catch (Exception ex) {
                             //transaction.Rollback();
                             //throw ex;
-                        }
-                    }
-                } else if (UrlData.Count > 0 && UrlData[0] == "Verify") {
-                    // User already exists, is requesting a Facebook verification:
-                    LcHelpers.SecurePage();
-                    int userID = WebSecurity.CurrentUserId;
-                    /*
-                    // First, check facebook email with current user id (user must be logged to verify)
-                    int userID = WebSecurity.GetUserId(facebookemail);
-                    if (userID != WebSecurity.CurrentUserId) {
-                        LcHelpers.ReturnJsonResult(2801, "Facebook verification failed: Facebook email don't match current Loconomics user email", true);
-                    }*/
-                    // Compare email and full name
-                    using (var db = Database.Open("sqlloco")) {
-                        var c = (int)db.QueryValue(@"
-                            SELECT  count(*)
-                            FROM    Users As U
-                                     INNER JOIN
-                                    UserProfile As P
-                                      ON U.UserID = P.UserID
-                            WHERE   U.UserID = @0
-                                     AND
-                                    (
-                                    dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, dbo.fx_concatBothOrNothing(U.MiddleIn, '.', ''), ' '), U.LastName, ' '), U.SecondLastName, ' ') = @1
-                                     OR
-                                    dbo.fx_concat(U.FirstName, U.LastName, ' ') = @1
-                                    )
-                        ", userID, user.name);
-                        if (c == 1) {
-                            // Verified, save verification record
-                            db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
-                            // Test social media alert
-                            db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
-                            LcHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
-                        } else {
-                            // Verification failed
-                            /*var debugInfo = " Facebook:" + user.first_name + " " + user.last_name;
-                            debugInfo += " = " + (string)db.QueryValue(@"
-                                SELECT  dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, U.MiddleIn, ' '), U.LastName, ' '), U.SecondLastName, ' ') as loconame
-                                FROM    Users As U
-                                         INNER JOIN
-                                        UserProfile As P
-                                          ON U.UserID = P.UserID
-                                WHERE   U.UserID = @0
-                                         AND
-                                        P.Email = @1
-                            ", userID, facebookemail);*/
-                            // + debugInfo
-                            LcHelpers.ReturnJsonResult(2802, "Facebook verification failed: Facebook full name don't match current Loconomics user full name.", true);
                         }
                     }
                 }
