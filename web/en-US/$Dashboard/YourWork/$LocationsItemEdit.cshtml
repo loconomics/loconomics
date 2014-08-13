@@ -6,6 +6,14 @@
     LcHelpers.ProviderPage();
     
     var isSubform = PageData["IsSubform"] ?? Request["subform"].AsBool();
+    var minimumRadiusUI = PageData["MinimumRadiusUI"] ?? Request["MinimumRadiusUI"].AsBool();
+    var iworkon = Request["iworkon"].AsBool();
+    var itravel = Request["itravel"].AsBool();
+    
+    if (minimumRadiusUI) {
+        // RadiusUI is ever an 'i travel from' (AKA service radius) location
+        itravel = true;
+    }
 
     var u = LcData.UserInfo.GetUserRow();
     var locationID = Request["LocationID"].AsInt();
@@ -23,11 +31,13 @@
     }
 
     // Validation rules
+    if (!minimumRadiusUI) {
+        Validation.RequireField("type", LcRessources.RequiredField("Location Type"));
+        Validation.RequireField("addressline1", LcRessources.RequiredField("Address Line 1"));
+        Validation.RequireField("city", LcRessources.RequiredField("City"));
+        Validation.RequireField("state", LcRessources.RequiredField("State"));
+    }
     Validation.RequireField("name", LcRessources.RequiredField("Name"));
-    Validation.RequireField("type", LcRessources.RequiredField("Location Type"));
-    Validation.RequireField("addressline1", LcRessources.RequiredField("Address Line 1"));
-    Validation.RequireField("city", LcRessources.RequiredField("City"));
-    Validation.RequireField("state", LcRessources.RequiredField("State"));
     Validation.RequireField("postalcode", LcRessources.RequiredField("Zip Code"));
     Validation.RequireField("iworkon", "Are services performed at this location?");
     Validation.RequireField("itravel", "Do you travel to clients from this location?");
@@ -45,28 +55,33 @@
         using (var db = Database.Open("sqlloco")) {
 
             // Validate Postal Code
-            var state = Request["state"].AsInt();
-            var postalCodeID = LcData.GetPostalCodeID(Request["postalcode"], state);
+            var stateId = LcData.GetStateFromZipCode(Request["postalcode"]);           
+            var postalCodeID = LcData.GetPostalCodeID(Request["postalcode"], stateId);
+
             if (postalCodeID == 0) {
+                ModelState.AddFormError("Postal Code not valid");
+            }
+            if (!minimumRadiusUI &&
+                Request["state"].AsInt() != stateId) {
                 ModelState.AddFormError("Postal Code not valid");
             }
             
             // Validate that almost one of the 'location service-type' must be selected
-            if (!Request["iworkon"].AsBool() &&
-                !Request["itravel"].AsBool()) {
+            if (!iworkon &&
+                !itravel) {
                 ModelState.AddFormError("Please select almost one option from: 'I perform services here' or 'I travel to clients from here'.");
             }
             
             // Validate that 'travel from location' is unique
             // Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
-            if (Request["itravel"].AsBool() &&
+            if (itravel &&
                 db.QueryValue(@"
                     SELECT count(*) FROM ServiceAddress
                     WHERE UserID = @0 AND PositionID = @1
                             AND TravelFromLocation = 1 -- Only travel from addresses
                             AND AddressID <> @2 --Don't count this address!
                 ", u.UserID, positionID, locationID) > 0) {
-                ModelState.AddFormError("You already have a 'travel from location' address (can be only one).");
+                ModelState.AddFormError("You already have a service radius location (can be only one).");
             }
             
             // Validate the AddressTypeID, for that types with UniquePerUser=1 must be checked that we don't add 
@@ -97,18 +112,18 @@
                     Request["addressline1"],
                     Request["addressline2"],
                     Request["city"],
-                    state,
+                    stateId,
                     postalCodeID,
                     u.PreferredCountryID,
                     Request["name"],
-                    Request["type"].AsInt(),
+                    Request["type"].AsInt(12), // Option 'Other':12 by default
                     Request["special-instructions"],
                     Request["latitude"].AsDecimal(),
                     Request["longitude"].AsDecimal(),
                     null, //Request["google-map-url"],
                     positionID,
-                    Request["iworkon"].AsBool(),
-                    Request["itravel"].AsBool(),
+                    iworkon,
+                    itravel,
                     Request["travel-radius"].AsDecimal(),
                     Request["travel-transport"].AsInt(),
                     Request["preferred-address"].AsBool()
@@ -161,7 +176,7 @@
         }
     }
     
-    var formAction = LcUrl.LangPath + "$dashboard/YourWork/$LocationsItemEdit/?LocationID=" + locationID + "&PositionID=" + positionID;
+    var formAction = LcUrl.LangPath + "$dashboard/YourWork/$LocationsItemEdit/?LocationID=" + locationID + "&PositionID=" + positionID + "&MinimumRadiusUI=" + minimumRadiusUI;
 }
 @helper printDistanceOptions(string selected){
         <option @LcHelpers.IsSelected(selected, "0.5") value="0.5">0.5 mile</option>
@@ -184,13 +199,13 @@
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
     <fieldset>
-        @if (locationID == 0 && userAddresses.Count > 0)
+        @if (!minimumRadiusUI && locationID == 0 && userAddresses.Count > 0)
         {
             var lastPositionID = 0;
             <ul class="copy-location">
                 <li>
                     <label>Please fill in location information below or select one that you've already used:
-                        <select class="copy-location" data-extra-query="@(Request["iworkon"].AsBool() ? "iworkon=True&" : "")@(Request["itravel"].AsBool() ? "itravel=True&" : "")">
+                        <select class="copy-location" data-extra-query="@(iworkon ? "iworkon=True&" : "")@(itravel ? "itravel=True&" : "")">
                             <option value=""></option>
                             @foreach (var add in userAddresses)
                             {
@@ -212,9 +227,11 @@
         }
         <ul class="location-data">
             <li class="location-name">
-                <label>Location name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null))" @Validation.GetHtml("name") /></label>
+                <label>Location name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null) ?? (minimumRadiusUI ? "Service radius location" : ""))" @Validation.GetHtml("name") /></label>
                 @Html.ValidationMessage("name")
             </li>
+            @if (!minimumRadiusUI)
+            {
             <li class="location-type">
                 <label>Location Type:
                     @if (location != null && location.UniquePerUser)
@@ -252,10 +269,13 @@
                     @Html.ValidationMessage("state")
                 </label>
             </li>
+            }
             <li class="location-zipcode">
                 <label>Zip Code: <input type="text" name="postalcode" value="@(Request["postalcode"] ?? (location != null ? location.PostalCode : null))" data-val-postalcode="Postal Code is not valid" title="This address will only be disclosed to clients if you perform services here and only after you accept a booking." class="secure-data" @Validation.GetHtml("postalcode")/></label>
                 @Html.ValidationMessage("postalcode")
             </li>
+            @if (!minimumRadiusUI)
+            {
             <li class="location-specialinstructions">
                 <label>Special instructions: <textarea rows="3" name="special-instructions" @Validation.GetHtml("special-instructions") placeholder="Do clients need to use an intercomm or follow any special instructions once at the address?">@(Request["special-instructions"] ?? (location != null ? location.SpecialInstructions : null))</textarea></label>
                 @Html.ValidationMessage("special-instructions")
@@ -263,7 +283,10 @@
             <li class="location-preferredaddress input-option">
                 <label><input type="checkbox" name="preferred-address" value="true" @LcHelpers.IsChecked(true, Request["preferred-address"] ?? (location != null && location.IsServiceAddress ? location.PreferredAddress : null)) /> This is my prefered address</label>
             </li>
+            }
         </ul>
+        @if (!minimumRadiusUI)
+        {
         <ul class="location-travel">
             <li class="input-option">
                 I perform services here: 
@@ -284,7 +307,7 @@
                             </select>
                             mile(s) from here.</label>
                             @Html.ValidationMessage("travel-radius")
-                            </li>
+                        </li>
                         <li>
                             <span>I travel by:</span>
                             <ul class="transport-type">
@@ -301,6 +324,20 @@
                 </fieldset>
             </li>
         </ul>
+        }
+        else
+        {
+            <ul class="location-travel">
+                <li>
+                    <label>I will travel up to
+                    <select name="travel-radius" @Validation.GetHtml("travel-radius")>
+                        @printDistanceOptions(Request["travel-radius"] ?? (location != null && location.IsServiceAddress ? location.ServiceRadiusFromLocation : null))
+                    </select>
+                    mile(s) from here.</label>
+                    @Html.ValidationMessage("travel-radius")
+                </li>
+            </ul>
+        }
         <ul class="location-map">
             <li>
                 <strong>GPS Coordinates</strong>
