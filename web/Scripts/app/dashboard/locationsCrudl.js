@@ -206,7 +206,7 @@ function setupGeopositioning($editor) {
         function getLocationRadius() {
 
             // When radius/travel option choosen
-            if ($isRadius.filter(':checked').prop('checked')) {
+            if ($isRadius.filter(':checked[value="True"]').prop('checked')) {
                 // Get radius from form (its in miles or km)
                 var radius = $radius.val();
                 var radiusUnit = LC.distanceUnits[LC.getCurrentCulture().country];
