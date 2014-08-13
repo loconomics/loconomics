@@ -241,17 +241,17 @@ function setupGeopositioning($editor) {
       function getFormAddress() {
         var ad = [];
         function add(field) {
-          if (form.elements[field].value) ad.push(form.elements[field].value);
+          if (form.elements[field] && form.elements[field].value) ad.push(form.elements[field].value);
         }
         add('addressline1');
         add('addressline2');
         add('city');
         add('postalcode');
         var s = form.elements.state;
-        if (s.value) ad.push(s.options[s.selectedIndex].label);
+        if (s && s.value) ad.push(s.options[s.selectedIndex].label);
         ad.push('USA');
-        // Minimum for valid address: 4 fields filled out
-        return ad.length >= 5 ? ad.join(', ') : null;
+        // Minimum for valid address: 2 fields filled out
+        return ad.length >= 2 ? ad.join(', ') : null;
       }
       $form.on('change', '[name=addressline1], [name=addressline2], [name=city], [name=postalcode], [name=state]', function () {
         var address = getFormAddress();
