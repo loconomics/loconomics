@@ -82,6 +82,8 @@ function setupGeopositioning($editor) {
         var m = l.find('.map-selector > .google-map').get(0);
         var $lat = l.find('[name=latitude]');
         var $lng = l.find('[name=longitude]');
+        var $isRadius = $editor.find('[name=itravel]');
+        var $radius = $editor.find('[name=travel-radius]');
 
         // Creating position coordinates
         var myLatlng;
@@ -106,6 +108,7 @@ function setupGeopositioning($editor) {
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         map = new google.maps.Map(m, mapOptions);
+
         // Create the position marker
         var marker = new google.maps.Marker({
             position: myLatlng,
@@ -113,9 +116,15 @@ function setupGeopositioning($editor) {
             draggable: false,
             animation: google.maps.Animation.DROP
         });
+        // Placeholder for the radiusCircle, created on demand
+        var radiusCircle;
+        // Initializing radiusCircle
+        updateRadiusCircle();
+
         // Listen when user clicks map or move the marker to move marker or set position in the form
         google.maps.event.addListener(marker, 'dragend', function (event) {
             setFormCoordinates(marker.getPosition());
+            updateRadiusCircle();
         });
         google.maps.event.addListener(map, 'click', function (event) {
             if (!marker.getDraggable()) return;
@@ -123,12 +132,15 @@ function setupGeopositioning($editor) {
             positionedByUser = true;
             foundLocations.byUser = event.latLng;
             setFormCoordinates(event.latLng);
+            updateRadiusCircle();
         });
         function placeMarker(latlng, dozoom, autosave) {
             marker.setPosition(latlng);
             // Move map
             map.panTo(latlng);
             saveCoordinates(autosave);
+            updateRadiusCircle();
+
             if (dozoom)
             // Set zoom to something more detailed
                 map.setZoom(detailedZoomLevel);
@@ -146,6 +158,65 @@ function setupGeopositioning($editor) {
             $lat.val(latLng.lat()); //marker.position.Xa
             $lng.val(latLng.lng()); //marker.position.Ya
         }
+
+        /**
+        It creates a circle on the map with the given values
+        **/
+        function createRadiusCircle(latlng, radius) {
+
+            return new google.maps.Circle({
+                center: latlng,
+                map: map,
+                clickable: false,
+                radius: getLocationRadius(),
+                fillColor: '#00989A',
+                fillOpacity: 0.3,
+                strokeWeight: 0
+            });
+        }
+        /**
+        Updates the position and radius of current radiusCircle
+        in the map for the current position and radius
+        or the given one.
+        If the circle doesn't exists, its created,
+        or hidden if there is no radius and exists already.
+        **/
+        function updateRadiusCircle(latlng, radius) {
+
+            latlng = latlng && latlng.getLng || marker.getPosition();
+            radius = radius || getLocationRadius();
+
+            if (radius && latlng) {
+                if (radiusCircle) {
+                    radiusCircle.setCenter(latlng);
+                    radiusCircle.setRadius(radius);
+                    radiusCircle.setVisible(true);
+                }
+                else {
+                    radiusCircle = createRadiusCircle(latlng, radius);
+                }
+            } else if (radiusCircle) {
+                radiusCircle.setVisible(false);
+            }
+        }
+        /**
+        Get the service radius as a number in meters usefule for Google Maps
+        from the form whenever apply, else it returns null.
+        **/
+        function getLocationRadius() {
+
+            // When radius/travel option choosen
+            if ($isRadius.filter(':checked').prop('checked')) {
+                // Get radius from form (its in miles or km)
+                var radius = $radius.val();
+                var radiusUnit = LC.distanceUnits[LC.getCurrentCulture().country];
+                // result must go in meters
+                return (radiusUnit == 'miles' ? convertMilesKm(radius, radiusUnit) : radius) * 1000;
+            }
+
+            return null;
+        }
+
         // Listen when user changes form coordinates values to update the map
         $lat.change(updateMapMarker);
         $lng.change(updateMapMarker);
@@ -156,7 +227,11 @@ function setupGeopositioning($editor) {
             marker.setPosition(newPos);
             // Move map
             map.panTo(newPos);
+            updateRadiusCircle();
         }
+        // Listen when user changes service radius from form to update the map
+        $isRadius.change(updateRadiusCircle);
+        $radius.change(updateRadiusCircle);
 
         /*===================
         * AUTO POSITIONING

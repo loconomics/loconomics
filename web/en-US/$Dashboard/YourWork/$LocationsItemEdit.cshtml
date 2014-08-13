@@ -327,6 +327,8 @@
         {
             <ul class="location-travel">
                 <li>
+                    @* Fixed hidden element to allow javascript code to detect that is a radius location *@
+                    <input type="radio" name="itravel" value="True" checked style="display:none" />
                     <label>I will travel up to
                     <select name="travel-radius" @Validation.GetHtml("travel-radius")>
                         @printDistanceOptions(Request["travel-radius"] ?? (location != null && location.IsServiceAddress ? location.ServiceRadiusFromLocation : null))
