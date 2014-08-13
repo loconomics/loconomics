@@ -14,33 +14,36 @@ exports.on = function (containerSelector) {
     var $c = $(containerSelector),
     locationsSelector = '.DashboardLocations',
     $locations = $c.find(locationsSelector).closest('.DashboardSection-page-section'),
-    $others = $locations.siblings()
-      .add($locations.find('.DashboardSection-page-section-introduction'))
-      .add($locations.closest('.DashboardYourWork').siblings());
+    $others = 
+    $locations.siblings()
+    .add($locations.find('.DashboardSection-page-section-introduction'))
+    .add($locations.closest('.DashboardYourWork').siblings());
 
     var crudl = initCrudl(locationsSelector);
 
     var locationMap;
 
     crudl.elements
-  .on(crudl.settings.events['edit-starts'], function () {
-      $others.xhide({ effect: 'height', duration: 'slow' });
-  })
-  .on(crudl.settings.events['edit-ends'], function () {
-      $others.xshow({ effect: 'height', duration: 'slow' });
-  })
-  .on(crudl.settings.events['editor-ready'], function (e, $editor) {
-      //Force execution of the 'has-confirm' script
-      $editor.find('fieldset.has-confirm > .confirm input').change();
+    .on(crudl.settings.events['edit-starts'], function () {
+        $others.xhide({ effect: 'height', duration: 'slow' });
+    })
+    .on(crudl.settings.events['edit-ends'], function () {
+        $others.xshow({ effect: 'height', duration: 'slow' });
+    })
+    .on(crudl.settings.events['editor-ready'], function (e, $editor) {
+        //Force execution of the 'has-confirm' script
+        $editor.find('fieldset.has-confirm > .confirm input').change();
 
-      setupCopyLocation($editor);
+        setupCopyLocation($editor);
 
-      locationMap = setupGeopositioning($editor);
-  })
-  .on(crudl.settings.events['editor-showed'], function (e, $editor) {
-      if (locationMap)
-          mapReady.refreshMap(locationMap);
-  });
+        // Initialize first time only (no map still)
+        if (!locationMap)
+            locationMap = setupGeopositioning($editor);
+    })
+    .on(crudl.settings.events['editor-showed'], function (e, $editor) {
+        if (locationMap)
+            mapReady.refreshMap(locationMap);
+    });
 };
 
 function setupCopyLocation($editor) {

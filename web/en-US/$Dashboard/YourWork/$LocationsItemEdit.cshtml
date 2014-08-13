@@ -39,8 +39,6 @@
     }
     Validation.RequireField("name", LcRessources.RequiredField("Name"));
     Validation.RequireField("postalcode", LcRessources.RequiredField("Zip Code"));
-    Validation.RequireField("iworkon", "Are services performed at this location?");
-    Validation.RequireField("itravel", "Do you travel to clients from this location?");
     Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
     Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
     Validation.Add("travel-radius", Validator.Decimal("Service Radius must be a number"));
@@ -109,9 +107,9 @@
                 db.Execute(LcData.sqlSetServiceAddress,
                     locationID,
                     u.UserID,
-                    Request["addressline1"],
-                    Request["addressline2"],
-                    Request["city"],
+                    Request["addressline1"] ?? "",
+                    Request["addressline2"] ?? "",
+                    Request["city"] ?? "",
                     stateId,
                     postalCodeID,
                     u.PreferredCountryID,
