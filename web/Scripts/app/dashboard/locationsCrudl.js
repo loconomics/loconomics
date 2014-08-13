@@ -371,7 +371,7 @@ function setupGeopositioning($editor) {
         useGmapsGeocode(false, true);
 
         // Link options links:
-        l.on('click', '.options a', function () {
+        l.find('.options a').off('click.map').on('click.map', function () {
             var target = $(this).attr('href').substr(1);
             switch (target) {
                 case 'geolocation':
