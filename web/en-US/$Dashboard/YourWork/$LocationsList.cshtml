@@ -32,7 +32,12 @@
         PageState.AddFormError("Please enter a service radius and/or a service location.");
     }
 }
-@helper printLocation(dynamic location){
+@helper printLocation(dynamic location) {
+    
+    var serviceLocation = ((bool?)location.ServicesPerformedAtLocation) ?? false;
+    var travel = ((bool?)location.TravelFromLocation) ?? false;
+    var minimumRadiusUI = travel && !serviceLocation;
+
     <li class="DashboardLocation-list-item ItemBox crudl-item Location" data-crudl-item-id="@location.AddressID">
         <h1 class="ItemBox-name Location-name">@location.AddressName</h1>
         <span class="Location-line">
@@ -42,10 +47,10 @@
         <span class="Location-city">@location.City</span>
         <span class="Location-state">@location.StateProvinceCode</span>
         <span class="Location-zipcode">@location.PostalCode</span>
-        @if (((bool?)location.ServicesPerformedAtLocation) ?? false) {
+        @if (serviceLocation) {
             <span class="Location-serviceLocation">I perform services here</span>
         }
-        @if (((bool?)location.TravelFromLocation) ?? false) {
+        @if (travel) {
         <div class="Location-serviceRadius">
             <span class="Location-travel-radius-label">I will travel up to <span class="Location-travel-radius">@location.ServiceRadiusFromLocation</span> mile(s) from here</span>
             <span class="Location-travel-transport-label">I travel by: <span class="Location-travel-transport">@location.TransportTypeName</span></span>
@@ -53,7 +58,7 @@
         }
         <div class="actions ItemBox-actions">
             <a href="#delete" class="crudl-delete">Delete</a>
-            <a href="#edit" class="crudl-update">Edit</a>
+            <a href="#edit" class="crudl-update" data-crudl-extra-query="@(minimumRadiusUI ? "MinimumRadiusUI=True" : "")">Edit</a>
         </div>
     </li>
 }
