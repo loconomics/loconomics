@@ -110,12 +110,15 @@ function setupGeopositioning($editor) {
       animation: google.maps.Animation.DROP
     });
     // Listen when user clicks map or move the marker to move marker or set position in the form
-    google.maps.event.addListener(marker, 'dragend', saveCoordinates);
+    google.maps.event.addListener(marker, 'dragend', function (event) {
+      setFormCoordinates(marker.getPosition());
+    });
     google.maps.event.addListener(map, 'click', function (event) {
       if (!marker.getDraggable()) return;
       placeMarker(event.latLng);
       positionedByUser = true;
       foundLocations.byUser = event.latLng;
+      setFormCoordinates(event.latLng);
     });
     function placeMarker(latlng, dozoom, autosave) {
       marker.setPosition(latlng);
@@ -132,9 +135,12 @@ function setupGeopositioning($editor) {
       positionedByUser = true;
       foundLocations.byUser = latLng;
       if (inForm === true) {
+        setFormCoordinates(latLng);
+      }
+    }
+    function setFormCoordinates(latLng) {
         $lat.val(latLng.lat()); //marker.position.Xa
         $lng.val(latLng.lng()); //marker.position.Ya
-      }
     }
     // Listen when user changes form coordinates values to update the map
     $lat.change(updateMapMarker);
