@@ -29,6 +29,42 @@
         }
         // ENDS page execution
     }
+    
+    // Local SQL
+    var sqlGetTransports = @"
+        SELECT *
+        FROM    TransportType
+        WHERE   Active = 1
+    ";
+    var sqlCondAddressID = @"
+        AND L.AddressID = @4
+    ";
+    var sqlGetAddressTypes = @"
+        SELECT  AddressTypeID, AddressType
+        FROM    AddressType
+        WHERE   Active = 1
+                AND Selectable = 1
+                AND ( 
+                 UniquePerUser = 0
+                  OR
+                 0 = (SELECT count(*) FROM Address As A1 WHERE A1.AddressTypeID = AddressType.AddressTypeID
+                    AND A1.UserID = @0)
+                )
+        ORDER BY AddressType.AddressType
+    ";
+    var sqlOrderAddressesByPosition = @"
+        ORDER BY PositionID ASC, AddressName ASC
+    ";
+    
+    // Load location. Its needed both for GET and POST, since at POST some verifications
+    // need the saved location
+    dynamic location = null;
+    using (var db = Database.Open("sqlloco")) {
+        if (locationID > 0) {
+            location = db.QuerySingle(LcData.sqlGetServiceAddresses + sqlCondAddressID, u.UserID, positionID,
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), locationID);
+        }
+    }
 
     // Validation rules
     if (!minimumRadiusUI) {
@@ -55,6 +91,7 @@
             // Validate Postal Code
             var stateId = LcData.GetStateFromZipCode(Request["postalcode"]);           
             var postalCodeID = LcData.GetPostalCodeID(Request["postalcode"], stateId);
+            var typeID = Request["type"].AsInt(12); // Option 'Other':12 by default
 
             if (postalCodeID == 0) {
                 ModelState.AddFormError("Postal Code not valid");
@@ -82,6 +119,13 @@
                 ModelState.AddFormError("You already have a service radius location (can be only one).");
             }
             
+            // Saved locations that are UniquePerUser cannot be changed its type,
+            // as the UI reflects that, we avoid hacking by reseting the typeID to the
+            // previoulsy saved one:
+            if (location != null && location.UniquePerUser) {
+                typeID = location.AddressTypeID;
+            }
+            
             // Validate the AddressTypeID, for that types with UniquePerUser=1 must be checked that we don't add 
             // a repeated address for that type on this user (indifferent from the PositionID)
             var dupeUniqueAddress = db.QueryValue(@"
@@ -98,7 +142,7 @@
                          AND
                         -- Don't count this address!
                         A.AddressID <> @2
-            ", u.UserID, Request["type"].AsInt(), locationID);
+            ", u.UserID, typeID, locationID);
             if (dupeUniqueAddress > 0) {
                 ModelState.AddFormError("You cannot add more than one address of the selected type (only applies to some special types)");
             }
@@ -114,7 +158,7 @@
                     postalCodeID,
                     u.PreferredCountryID,
                     Request["name"],
-                    Request["type"].AsInt(12), // Option 'Other':12 by default
+                    typeID,
                     Request["special-instructions"],
                     Request["latitude"].AsDecimal(),
                     Request["longitude"].AsDecimal(),
@@ -135,36 +179,8 @@
     }
     
     // Load
-    var sqlGetTransports = @"
-        SELECT *
-        FROM    TransportType
-        WHERE   Active = 1
-    ";
-    var sqlCondAddressID = @"
-        AND L.AddressID = @4
-    ";
-    var sqlGetAddressTypes = @"
-        SELECT  AddressTypeID, AddressType
-        FROM    AddressType
-        WHERE   Active = 1
-                AND Selectable = 1
-                AND ( 
-                 UniquePerUser = 0
-                  OR
-                 0 = (SELECT count(*) FROM Address As A1 WHERE A1.AddressTypeID = AddressType.AddressTypeID
-                    AND A1.UserID = @0)
-                )
-        ORDER BY AddressType.AddressType
-    ";
-    var sqlOrderAddressesByPosition = @"
-        ORDER BY PositionID ASC, AddressName ASC
-    ";
-    dynamic transports = null, location = null, types = null, userAddresses = null;
+    dynamic transports = null, types = null, userAddresses = null;
     using (var db = Database.Open("sqlloco")) {
-        if (locationID > 0) {
-            location = db.QuerySingle(LcData.sqlGetServiceAddresses + sqlCondAddressID, u.UserID, positionID,
-                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), locationID);
-        }
         transports = db.Query(sqlGetTransports);
         types = db.Query(sqlGetAddressTypes, u.UserID);
         if (locationID == 0){
@@ -189,7 +205,7 @@
 }
 
 @if (isSubform) {
-    @Html.Raw("<")<text>fieldset data-ajax-fieldset-action="@(formAction)&subform=true" class="crudl-form ajax ajax-box"></text>
+    @Html.Raw("<")<text>fieldset data-ajax-fieldset-action="@(formAction)&subform=true" data-reload-mode="replace-me" class="crudl-form ajax ajax-box"></text>
 } else {
     @Html.Raw("<")<text>form action="@formAction" method="post" class="crudl-form ajax ajax-box" id="@idprefix"></text>
 }
@@ -241,6 +257,7 @@
                 <label>Location Type:
                     @if (location != null && location.UniquePerUser)
                     {
+                        <input type="hidden" value="@(location.AddressTypeID)" name="type" />
                         <input type="text" disabled="disabled" value="@location.AddressType" /> <span>(this type of address cannot be changed)</span>
                     }
                     else
