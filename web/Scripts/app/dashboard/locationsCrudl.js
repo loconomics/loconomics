@@ -395,7 +395,7 @@ function setupGeopositioning($editor) {
                     edit.text(edit.data('edit-label'));
                     break;
                 case 'editcoordinates':
-                    var a = l.find('.gps-lat, .gps-lng, .advice, .find-address-geocode');
+                    var a = l.find('.gps-lat, .gps-lng, .advice, .find-address-geocode, .confirm-gps-action');
                     var b = !a.is(':visible');
                     marker.setDraggable(b);
                     var $t = $(this);

@@ -224,7 +224,7 @@
             </ul>
         }
         <ul class="location-data">
-            <li class="location-name">
+            <li class="location-name" style="@(minimumRadiusUI ? "display:none;" : "")">
                 <label>Location name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null) ?? (minimumRadiusUI ? "Service radius location" : ""))" @Validation.GetHtml("name") /></label>
                 @Html.ValidationMessage("name")
             </li>
@@ -344,9 +344,9 @@
                 <div class="advice warning">Move the pin to the exact address and click confirm</div>
             </li>
             <li class="map-selector"><div class="google-map"></div></li>
-            <li class="options">
+            <li class="options" style="@(minimumRadiusUI ? "display:none;" : "")">
                 @*<a href="#geolocation" class="has-tooltip" title="Use HTML5 Geolocation, best result on devices as tablets and smartphones with GPS">Get my device positioning</a>*@
-                <a href="#confirm" class="has-tooltip action" title="Save map marker coordinates with your address">Confirm</a>
+                <a href="#confirm" class="has-tooltip action confirm-gps-action" title="Save map marker coordinates with your address">Confirm</a>
                 <a href="#editcoordinates" class="has-tooltip action edit-action" title="Move the pin to the exact address and click confirm, or edit coordinates manually (be careful!)" data-cancel-label="Cancel">Edit</a>
                 <a href="#geocode" class="has-tooltip find-address-geocode" title="Using Google Maps Geocoding, we translate your address into coordenates automatically">Find my address in the map</a>
             </li>
