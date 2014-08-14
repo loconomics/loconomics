@@ -228,7 +228,14 @@
                 <label>Location name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null) ?? (minimumRadiusUI ? "Service radius location" : ""))" @Validation.GetHtml("name") /></label>
                 @Html.ValidationMessage("name")
             </li>
-            @if (!minimumRadiusUI)
+            @if (minimumRadiusUI)
+            {
+                <li class="location-zipcode">
+                    <label>Zip Code: <input type="text" name="postalcode" value="@(Request["postalcode"] ?? (location != null ? location.PostalCode : null))" data-val-postalcode="Postal Code is not valid" class="secure-data" @Validation.GetHtml("postalcode")/></label>
+                    @Html.ValidationMessage("postalcode")
+                </li>
+            }
+            else
             {
             <li class="location-type">
                 <label>Location Type:
@@ -267,13 +274,10 @@
                     @Html.ValidationMessage("state")
                 </label>
             </li>
-            }
             <li class="location-zipcode">
                 <label>Zip Code: <input type="text" name="postalcode" value="@(Request["postalcode"] ?? (location != null ? location.PostalCode : null))" data-val-postalcode="Postal Code is not valid" title="This address will only be disclosed to clients if you perform services here and only after you accept a booking." class="secure-data" @Validation.GetHtml("postalcode")/></label>
                 @Html.ValidationMessage("postalcode")
             </li>
-            @if (!minimumRadiusUI)
-            {
             <li class="location-specialinstructions">
                 <label>Special instructions: <textarea rows="3" name="special-instructions" @Validation.GetHtml("special-instructions") placeholder="Do clients need to use an intercomm or follow any special instructions once at the address?">@(Request["special-instructions"] ?? (location != null ? location.SpecialInstructions : null))</textarea></label>
                 @Html.ValidationMessage("special-instructions")
