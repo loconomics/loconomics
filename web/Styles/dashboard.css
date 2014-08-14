@@ -3169,7 +3169,7 @@ form ul li {
 }
 
 /* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
-.Location .Location-city:after {
+.Location .Location-city:not(:empty):after {
   content: ', ';
 }
 
@@ -3648,7 +3648,7 @@ form ul li {
 }
 
 /* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
-.Location .Location-city:after {
+.Location .Location-city:not(:empty):after {
   content: ', ';
 }
 
