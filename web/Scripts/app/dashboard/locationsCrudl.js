@@ -391,7 +391,7 @@ function setupGeopositioning($editor) {
                     saveCoordinates(true);
                     marker.setDraggable(false);
                     foundLocations.confirmed = marker.getPosition();
-                    l.find('.gps-lat, .gps-lng, .advice, .find-address-geocode').hide('fast');
+                    l.find('.gps-lat, .gps-lng, .advice, .find-address-geocode, .confirm-gps-action').hide('fast');
                     var edit = l.find('.edit-action');
                     edit.text(edit.data('edit-label'));
                     break;
@@ -408,7 +408,9 @@ function setupGeopositioning($editor) {
                         // Restore location:
                         placeMarker(foundLocations.confirmed, true, true);
                     }
-                    a.toggle('fast');
+                    a.toggle('fast', function () {
+                        l.find('.confirm-gps-action:visible').css('display', 'inline-block');
+                    });
                     break;
             }
 
