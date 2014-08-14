@@ -146,6 +146,35 @@
             if (dupeUniqueAddress > 0) {
                 ModelState.AddFormError("You cannot add more than one address of the selected type (only applies to some special types)");
             }
+            
+            // We NEED GPS coordinates, so if that was not given we try to get it using Google Maps Geocoding API.
+            // If it fails for the given address, we show a form error asking for a position
+            var lat = Request["latitude"].AsDecimal(0);
+            var lng = Request["longitude"].AsDecimal(0);
+
+            if (lat == 0 && lng == 0) {
+                var addressInline = LcHelpers.JoinNotEmptyStrings(", ",
+                    Request["addressline1"],
+                    Request["addressline2"],
+                    Request["city"],
+                    Request["postalcode"],
+                    // We have a StateID not a Code, no problem, state is implicit
+                    // on postalcode so it works withouth State,
+                    // go with country
+                    LcData.GetCurrentCountryID() == 1 ? "USA" : "ES"
+                );
+
+                var latLng = LcData.Address.GoogleGeoCode(addressInline);
+
+                if (latLng != null) {
+                    lat = latLng.Lat;
+                    lng = latLng.Lng;
+                }
+                else {
+                    // Coordinates are required
+                    ModelState.AddFormError("LJDI: Sorry, it was impossible to us to locate that address in the map, try fixing it or choose a location in the map");
+                }
+            }
 
             if (ModelState.IsValid) {
                 db.Execute(LcData.sqlSetServiceAddress,
@@ -160,8 +189,8 @@
                     Request["name"],
                     typeID,
                     Request["special-instructions"],
-                    Request["latitude"].AsDecimal(),
-                    Request["longitude"].AsDecimal(),
+                    lat,
+                    lng,
                     null, //Request["google-map-url"],
                     positionID,
                     iworkon,
