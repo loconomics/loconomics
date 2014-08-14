@@ -12,14 +12,16 @@ var initCrudl = LC.initCrudl;
 
 exports.on = function (containerSelector) {
     var $c = $(containerSelector),
-    locationsSelector = '.DashboardLocations',
-    $locations = $c.find(locationsSelector).closest('.DashboardSection-page-section'),
-    $others = 
-    $locations.siblings()
-    .add($locations.find('.DashboardSection-page-section-introduction'))
-    .add($locations.closest('.DashboardYourWork').siblings());
+        locationsSelector = '.DashboardLocations',
+        $locations = $c.find(locationsSelector).closest('.DashboardSection-page-section'),
+        $others = $locations.siblings()
+            .add($locations.find('.DashboardSection-page-section-introduction'))
+            .add($locations.closest('.DashboardYourWork').siblings());
 
     var crudl = initCrudl(locationsSelector);
+
+    if (crudl.elements.data('__locationsCrudl_initialized__') === true) return;
+    crudl.elements.data('__locationsCrudl_initialized__', true);
 
     var locationMap;
 
@@ -36,11 +38,10 @@ exports.on = function (containerSelector) {
 
         setupCopyLocation($editor);
 
-        // Initialize first time only (no map still)
-        if (!locationMap)
-            locationMap = setupGeopositioning($editor);
+        locationMap = setupGeopositioning($editor);
     })
     .on(crudl.settings.events['editor-showed'], function (e, $editor) {
+
         if (locationMap)
             mapReady.refreshMap(locationMap);
     });
