@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-08-07
+/*! Loconomics.com 2014-08-14
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -3169,7 +3169,7 @@ form ul li {
 }
 
 /* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
-.Location .Location-city:after {
+.Location .Location-city:not(:empty):after {
   content: ', ';
 }
 
@@ -3241,7 +3241,8 @@ form ul li {
 
 /* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
 .DashboardYourWork .DashboardLocations .crudl-editor .location-map .gps-lat,
-.DashboardYourWork .DashboardLocations .crudl-editor .location-map .gps-lng {
+.DashboardYourWork .DashboardLocations .crudl-editor .location-map .gps-lng,
+.DashboardYourWork .DashboardLocations .crudl-editor .location-map .confirm-gps-action {
   display: none;
 }
 
@@ -3647,7 +3648,7 @@ form ul li {
 }
 
 /* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
-.Location .Location-city:after {
+.Location .Location-city:not(:empty):after {
   content: ', ';
 }
 

@@ -18,6 +18,7 @@ exports.defaultSettings = {
     'edit-starts': 'crudl-edit-starts',
     'editor-ready': 'crudl-editor-ready',
     'editor-showed': 'crudl-editor-showed',
+    'editor-hidden': 'crudl-editor-hidden',
     'create': 'crudl-create',
     'update': 'crudl-update',
     'delete': 'crudl-delete'
@@ -237,7 +238,11 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           var withcallback = $.extend(true, {}, instance.settings.effects['hide-editor']);
           withcallback.complete = oncomplete(withcallback.complete);
           // Hiding editor:
-          dtr.xhide(withcallback);
+          dtr.xhide(withcallback)
+          .queue(function () {
+              crudl.trigger(instance.settings.events['editor-hidden'], [dtr]);
+              dtr.dequeue();
+          });
 
           return false;
         }
