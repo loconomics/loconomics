@@ -1,0 +1,57 @@
+/**
+  HelpPoint component class. #559
+  It is a question mark on html that shows a tooltip text with help.  
+**/
+@import "nib"
+@import "ColorsPalette"
+
+.HelpPoint {
+    border-radius: 100%;
+    background-color: $colorOrange;
+    color: White !important;
+    text-decoration: none !important;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+
+    /* Normal size */
+    font-size: 1em;
+    line-height: 1.3em;
+    height: 1.3em;
+    width: 1.3em;
+    
+    &.size-xl {
+        font-size: 2em;
+    }
+    
+    &.size-lg {
+        font-size: 1.6em;
+    }
+    
+    &.size-sm {
+        font-size: .8em;
+        line-height: 1.2em;
+        height: 1.2em;
+        width: 1.2em;
+    }
+
+    &.size-xs {
+        font-size: .67em;
+        line-height: 1.2em;
+        height: 1.2em;
+        width: 1.2em;
+    }
+}
+
+/* Allowing a container to place a internal HelpPoint on its right
+    (for better placement with a title, for example) */
+.has-HelpPoint {
+    position: relative;
+    
+    > .HelpPoint {
+        top: 50%;
+        right: 0;
+        position: absolute;
+        transform: translateY(-50%);
+    }
+}

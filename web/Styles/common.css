@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-08-14
+/*! Loconomics.com 2014-08-15
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -3039,12 +3039,12 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-08-14
+/*! Loconomics.com 2014-08-15
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.
@@ -4979,6 +4979,112 @@ input.search-data,
   -webkit-box-shadow: 0 0 5px 2px #fc0404;
   box-shadow: 0 0 5px 2px #fc0404;
   background-color: #fc0404;
+}
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint {
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  background-color: #e95d0f;
+  color: White !important;
+  text-decoration: none !important;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+/* Normal size */
+  font-size: 1em;
+  line-height: 1.3em;
+  height: 1.3em;
+  width: 1.3em;
+}
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-xl {
+  font-size: 2em;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-lg {
+  font-size: 1.6em;
+}
+
+/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-sm {
+  font-size: 0.8em;
+  line-height: 1.2em;
+  height: 1.2em;
+  width: 1.2em;
+}
+
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-xs {
+  font-size: 0.67em;
+  line-height: 1.2em;
+  height: 1.2em;
+  width: 1.2em;
+}
+
+/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.has-HelpPoint {
+  position: relative;
+}
+
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.has-HelpPoint > .HelpPoint {
+  top: 50%;
+  right: 0;
+  position: absolute;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 /*= w-ProviderPackage */
