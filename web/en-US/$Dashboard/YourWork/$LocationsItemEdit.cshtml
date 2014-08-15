@@ -241,7 +241,7 @@
 
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
-    <fieldset>
+    <fieldset class="@(minimumRadiusUI ? "is-minimumRadiusUi" : "")">
         @if (!minimumRadiusUI && locationID == 0 && userAddresses.Count > 0)
         {
             var lastPositionID = 0;

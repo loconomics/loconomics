@@ -39,13 +39,32 @@ exports.on = function (containerSelector) {
         setupCopyLocation($editor);
 
         locationMap = setupGeopositioning($editor);
+
+        updateSectionTitle($editor);
     })
     .on(crudl.settings.events['editor-showed'], function (e, $editor) {
 
         if (locationMap)
             mapReady.refreshMap(locationMap);
+    })
+    .on(crudl.settings.events['editor-hidden'], function (e, $editor) {
+
+        updateSectionTitle($editor);
     });
 };
+
+function updateSectionTitle($editor) {
+
+    var isRadius = $editor.find('.is-minimumRadiusUi').length > 0;
+
+    var sectionTitle = $editor.closest('.DashboardSection-page-section').find('.DashboardSection-page-section-header');
+
+    if (isRadius) {
+        sectionTitle.text(sectionTitle.data('radius-title'));
+    } else {
+        sectionTitle.text(sectionTitle.data('default-title'));
+    }
+}
 
 function setupCopyLocation($editor) {
     $editor.find('select.copy-location').change(function () {
