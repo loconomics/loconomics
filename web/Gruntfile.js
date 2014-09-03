@@ -47,6 +47,27 @@ module.exports = function (grunt) {
             }
         },
 
+        notify: {
+            build: {
+                options: {
+                    title: 'Build complete',  // optional
+                    message: 'Build finished successfully.' //required
+                }
+            },
+            browserify: {
+                options: {
+                    title: 'Browserify build complete',  // optional
+                    message: 'Browserify build finished successfully.' //required
+                }
+            },
+            css: {
+                options: {
+                    title: 'CSS build complete',  // optional
+                    message: 'CSS build finished successfully.' //required
+                }
+            }
+        },
+
         browserify: {
             'libs': {
                 'src': [],
@@ -294,7 +315,7 @@ module.exports = function (grunt) {
             },
             'plain-css': {
                 files: ['Styles/app/*.css', 'Gruntfile.js'],
-                tasks: ['stylus:app-includes', 'concat:css-common', 'cssmin:plain-css', 'clean:css-app-includes']
+                tasks: ['stylus:app-includes', 'concat:css-common', 'notify:css', 'cssmin:plain-css', 'clean:css-app-includes']
             }
         }
     });
@@ -308,12 +329,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-notify');
 
     grunt.registerTask('test', ['jshint', 'qunit']);
-    grunt.registerTask('build-js', ['browserify', 'uglify', 'concat:js-common']);
-    grunt.registerTask('build-css', ['stylus', 'concat:css-common', 'cssmin', 'clean:css-app-includes']);
-    grunt.registerTask('build-dev', ['browserify', 'stylus', 'concat:css-common', 'clean:css-app-includes']);
-    grunt.registerTask('build', ['build-js', 'build-css']);
+    grunt.registerTask('build-js', ['browserify', 'notify:browserify', 'uglify', 'concat:js-common']);
+    grunt.registerTask('build-css', ['stylus', 'concat:css-common', 'notify:css', 'cssmin', 'clean:css-app-includes']);
+    grunt.registerTask('build-dev', ['browserify', 'notify:browserify', 'stylus', 'concat:css-common', 'notify:css', 'clean:css-app-includes', 'notify:build']);
+    grunt.registerTask('build', ['build-js', 'build-css', 'notify:build']);
 
     grunt.registerTask('default', ['build', 'test']);
 
