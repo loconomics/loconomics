@@ -4,6 +4,7 @@
 var $ = require('jquery');
 // bootstrap tooltips:
 require('bootstrap');
+var Cookie = require('../LC/Cookie');
 //TODO more dependencies?
 
 var initialized = false;
@@ -41,6 +42,11 @@ exports.autoShow = function autoShowWelcomePopup() {
 exports.show = function welcomePopup() {
     var c = $('#welcomepopup');
     if (c.length === 0) return false;
+
+    // Its a cookie was set to remember the popup was closed
+    // (because was closable), avoid to show it
+    if (Cookie.get('WelcomePopupVisible') === 'false')
+        return false;
 
     var overlay = c.closest('#welcome-popup-overlay');
     overlay.fadeIn(300);
@@ -89,6 +95,7 @@ exports.show = function welcomePopup() {
     else
         closeButton.show().on('click', function () {
             overlay.fadeOut('normal');
+            Cookie.set('WelcomePopupVisible', 'false');
             return false;
         });
 

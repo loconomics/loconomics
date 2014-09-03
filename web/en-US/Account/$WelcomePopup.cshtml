@@ -134,8 +134,8 @@
     }
     
     var idprefix = "welcomepopup";
-    // WelcomePopup is required again #514
-    var closable = false;
+    // WelcomePopup is required again #514 and is optional again #541
+    var closable = true;
 }
 <div id="welcomepopup" class="@(providerWithoutPosition ? "select-position" : "")">
     @if (closable)
