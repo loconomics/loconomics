@@ -119,10 +119,9 @@
                     {
                         <ul class="anonymous-tools">
                                 @howItWorksLi()
-                                @if (!showWelcomePopup) {
-                                    <li><a class="register" href="@(LcUrl.LangPath)Account/Register/">Sign Up</a></li>
-                                    <li><a class="login" href="@(LcUrl.LangPath)Account/Login/">Login</a></li>
-                                }
+                                @*if (!showWelcomePopup) {*@
+                                <li><a class="register" href="@(LcUrl.LangPath)Account/Register/">Sign Up</a></li>
+                                <li><a class="login" href="@(LcUrl.LangPath)Account/Login/">Login</a></li>
                         </ul>
                     }
 			        <ul class="user-tools">

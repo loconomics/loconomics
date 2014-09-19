@@ -32,24 +32,21 @@ exports.autoShow = function autoShowWelcomePopup() {
     $wp.is(':visible') &&
     $wp.closest('#welcome-popup-overlay').length === 0) {
     $wo.hide();
-    exports.show();
+    exports.show(true);
     return;
   } else if ($wo.hasClass('auto-show')) {
-    exports.show();
+    exports.show(true);
   }
 };
 
-exports.show = function welcomePopup() {
+exports.initPopup = function initPopup() {
+
     var c = $('#welcomepopup');
     if (c.length === 0) return false;
 
     var overlay = c.closest('#welcome-popup-overlay');
 
-    // Its a cookie was set to remember the popup was closed
-    // (because was closable), avoid to show it
-    if (Cookie.get('WelcomePopupVisible') !== 'false') {
-        overlay.fadeIn(300);
-    }
+    if (c.data('is-initialized')) return overlay;
 
     /**
     Go to the first step on a already initialized popup
@@ -224,6 +221,24 @@ exports.show = function welcomePopup() {
     // If profile type is prefilled by request:
     c.find('.profile-choice [name=profile-type]:checked').change();
 
-    // All fine
-    return true;
+    c.data('is-initialized', true);
+    return overlay;
+};
+
+exports.show = function showPopup(fromAutoShow) {
+
+    var overlay = exports.initPopup();
+
+    if (overlay && overlay.length) {
+        // Its a cookie was set to remember the popup was closed
+        // (because was closable), avoid to show it
+        if (!fromAutoShow ||
+            Cookie.get('WelcomePopupVisible') !== 'false') {
+            overlay.fadeIn(300);
+        }
+
+        // All fine
+        return true;
+    }
+    else return false;
 };
