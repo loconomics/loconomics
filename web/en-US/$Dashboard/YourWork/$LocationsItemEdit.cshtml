@@ -196,7 +196,7 @@
                     iworkon,
                     itravel,
                     Request["travel-radius"].AsDecimal(),
-                    Request["travel-transport"].AsInt(),
+                    null, //Request["travel-transport"].AsInt(),
                     Request["preferred-address"].AsBool()
                 );
             }
@@ -356,6 +356,7 @@
                             mile(s) from here.</label>
                             @Html.ValidationMessage("travel-radius")
                         </li>
+                        @*
                         <li>
                             <span>I travel by:</span>
                             <ul class="transport-type">
@@ -368,6 +369,7 @@
                             </ul>
                             @Html.ValidationMessage("travel-transport")
                         </li>
+                        *@
                     </ul>
                 </fieldset>
             </li>
