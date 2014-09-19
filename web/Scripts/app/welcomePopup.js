@@ -43,13 +43,13 @@ exports.show = function welcomePopup() {
     var c = $('#welcomepopup');
     if (c.length === 0) return false;
 
+    var overlay = c.closest('#welcome-popup-overlay');
+
     // Its a cookie was set to remember the popup was closed
     // (because was closable), avoid to show it
-    if (Cookie.get('WelcomePopupVisible') === 'false')
-        return false;
-
-    var overlay = c.closest('#welcome-popup-overlay');
-    overlay.fadeIn(300);
+    if (Cookie.get('WelcomePopupVisible') !== 'false') {
+        overlay.fadeIn(300);
+    }
 
     /**
     Go to the first step on a already initialized popup
