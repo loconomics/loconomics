@@ -10,7 +10,7 @@
             icon = "connect-facebook-large.png";
             break;
     }
-    var redirectUrl = PageData["Redirect"] ?? Request["Redirect"];
+    var redirectUrl = PageData["Redirect"] ?? Request["Redirect"] ?? LcUrl.LangPath;
 }
 @helper GetFacebookInitializationScripts(string redirectUrl) {
     var urlsection = PageData["Section"] ?? "Callback"; // Possible values: Callback, Verify, Callback/Provider

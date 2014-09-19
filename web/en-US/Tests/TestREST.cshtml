@@ -1,0 +1,233 @@
+﻿@{
+    if (!LcHelpers.InDev) {
+        LcHelpers.TestArea();
+    }
+    Layout = "_TestLayout.cshtml";
+    
+    var url = Request["url"];
+}
+<script type="text/javascript">
+
+    var REST_API = {
+        'Test': {
+            url: '/en-US/REST/Test',
+            get: {
+                name: 'indians'
+            },
+            post: {
+                name: 'Me',
+                num: '23g',
+                short: 'No longer than 5'
+            }
+        },
+        'Test item': {
+            url: '/en-US/REST/Test/20',
+            put: {
+                name: 'Me',
+                num: 10
+            },
+            'delete': {}
+        },
+        'Test Server Error': {
+            url: '/en-US/REST/Test',
+            all: {
+                givemeerror: 'Something goes wrong'
+            }
+        },
+        'Upcoming Appointments': {
+            url: '/en-US/REST/upcoming-appointments',
+            get: {
+                limit: 5,
+                'api comment': 'The result is an object with three optional properties: upcoming, tomorrow, today; ' +
+                'each of them will contain a list of records (bookings).\n ' +
+                'The property "limit" will limit the amount of records returned in each group.'
+            }
+        },
+        'Get Availability Weekly (pre-REST API)': {
+            url: '/en-US/calendar/get-availability',
+            get: {
+                type: 'weekly',
+                user: 141,
+                start: '2014-07-17',
+                end: null
+            }
+        },
+        'Get Availability workHours (pre-REST API)': {
+            url: '/en-US/calendar/get-availability',
+            get: {
+                type: 'workHours'
+            }
+        },
+        'Get Availability monthly (pre-REST API)': {
+            url: '/en-US/calendar/get-availability',
+            get: {
+                type: 'monthly',
+                editable: false,
+                'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
+                    'the first month-date for that date; or a given "start" and "end" dates, ' +
+                    'default is the current date',
+                date: null
+            }
+        },
+        'Get Availability monthly-schedule (pre-REST API)': {
+            url: '/en-US/calendar/get-availability',
+            get: {
+                type: 'monthly-schedule',
+                'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
+                    'the first month-date for that date; or a given "start" and "end" dates, ' +
+                    'default is the current date',
+                start: null,
+                end: null
+            }
+        },
+        'Login': {
+            url: '/en-US/rest/login',
+            post: {
+                 "username": "some user email",
+                 "password": "",
+                 "redirect": "/en-US/dashboard",
+                 'api comment': 'the returned "redirectUrl" on success must be mandatory when there is a value since sometimes ' +
+                    'will be different from the given "redirect", as for providers in the Onboarding, they must continue that ' +
+                    'at the step given in "redirectUrl". This is the fact for current Website, what rules we will manage on mobile?.'
+            }
+        }
+    };
+
+    function useApi(name, method) {
+        var api = REST_API[name],
+            data = api[method];
+        if (api) {
+            $('[name=url]').val(api.url);
+            $('[name=rawdata]').val(JSON.stringify(data, null, ' '));
+        }
+    }
+
+    function showApiList() {
+        var $l = $('#apiList');
+        Object.keys(REST_API).forEach(function (name) {
+
+            var $li = $('<li/>')
+            .text(name + ':')
+            .appendTo($l);
+
+            ['all', 'get', 'post', 'put', 'delete'].forEach(function (method) {
+
+                if (REST_API[name][method]) {
+                    $('<span/>')
+                    .text(method)
+                    .on('click', function () {
+                        useApi(name, method);
+                    })
+                    .appendTo($li);
+                }
+            });
+        });
+    }
+
+    jQuery(function ($) {
+
+        showApiList();
+
+        function doRequest(type, url, data) {
+
+            $log = $('#log');
+
+            try {
+
+                type = type && type.toUpperCase();
+                data = data && data.replace(/^\s+/, '') && JSON.parse(data);
+                $('body').addClass('is-loading');
+
+                $.ajax({
+                    url: (LcUrl.AppPath + url).replace(/\/{2}/g, '/'),
+                    type: type,
+                    data: data,
+                    //data: JSON.stringify(data),
+                    //contentType: 'application/json'
+                }).then(
+                function (d, status, xhr) {
+                    console.log('OK   ', d);
+                    $log.text('OK    ' + xhr.status + ':' + xhr.statusText + '\n' + xhr.responseText + '\n');
+                }, function (err) {
+
+                    var msg = err.responseText;
+                    try {
+                        msg = JSON.parse(err.responseText);
+                    } catch (ex) { }
+
+                    console.log('ERROR', msg);
+                    $log.text('ERROR ' + err.status + ':' + err.statusText + '\n' + err.responseText + '\n');
+                }
+                ).always(function () {
+                    $('body').removeClass('is-loading');
+                });
+
+            } catch (ex) {
+                $('body').removeClass('is-loading');
+                $log.text('REQUEST ERROR, See console log.\n' + (ex && ex.toString()));
+                console.error('doRequest', ex);
+            }
+        }
+
+        $('form [data-method]').on('click', function () {
+            doRequest($(this).data('method'), $('[name=url]').val(), $('[name=rawdata]').val());
+            return false;
+        });
+        $('form').on('submit', function () {
+            doRequest('GET', $('[name=url]').val(), $('[name=rawdata]').val());
+            return false;
+        });
+
+    });
+</script>
+<style>
+    input, textarea {
+        box-sizing: border-box !important;
+        -moz-box-sizing: border-box !important;
+        -webkit-box-sizing: border-box !important;
+        width: 100% !important;
+    }
+    #log {
+        max-height: 200px;
+        overflow: auto;
+    }
+    #apiList li span {
+        margin-left: 1em;
+        cursor: pointer;
+        text-decoration: underline;
+        color: Blue;
+    }
+    .loading-spinner {
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    .is-loading .loading-spinner {
+        opacity: 1;
+    }
+</style>
+<div>
+    <form>
+        <label>REST API URL (for example /en-US/REST/Test) <input type="text" name="url" value="/en-US/REST/Test" /></label>
+        <div>
+            <!-- Some example data as JSON -->
+            <label>Raw data as JSON
+            <textarea name="rawdata" rows="7">
+{
+"name": "Mine"
+}
+            </textarea>
+            </label>
+        </div>
+        <div class="actions">
+            <img class="loading-spinner" src="@(LcUrl.AppPath)img/theme/loading.gif" alt="Loading..." />
+            <button type="button" class="action" data-method="GET">GET</button>
+            <button type="button" class="action" data-method="POST">POST</button>
+            <button type="button" class="action" data-method="PUT">PUT</button>
+            <button type="button" class="action" data-method="DELETE">DELETE</button>
+        </div>
+    </form>
+    <h6>Task result (see it formatted in the browser web console):</h6>
+    <pre id="log"></pre>
+    <h6>REST API examples</h6>
+    <ul id="apiList"></ul>
+</div>
