@@ -45,7 +45,9 @@ public static class LcAuth
         string lastname,
         string password,
         bool isProvider,
-        string marketingSource = null
+        string marketingSource = null,
+        int genderID = -1,
+        string aboutMe = null
     ) {
         using (var db = Database.Open("sqlloco"))
         {
@@ -58,8 +60,11 @@ public static class LcAuth
 
             // Create Loconomics Customer user
             int userid = WebSecurity.GetUserId(email);
-            db.Execute("exec CreateCustomer @0,@1,@2,@3,@4",
-                userid, firstname, lastname, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6",
+                userid, firstname, lastname,
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                genderID, aboutMe
+            );
 
             // If is provider, update profile with that info (being both customer and provider)
             // It assigns the first OnboardingStep 'welcome' for the new Onboarding Dashboard #454
