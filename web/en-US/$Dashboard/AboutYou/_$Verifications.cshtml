@@ -13,7 +13,7 @@
     }
     
     dynamic checks = null;
-    if (u.CountryID is int && u.StateProvinceID is int) {
+    if (u.IsProvider && u.CountryID is int && u.StateProvinceID is int) {
         checks = LcData.GetUserBackgroundChecks((int)u.UserID, (int)u.CountryID, (int)u.StateProvinceID, false);
     }
     var thereAreBackgroundChecksAvailable = checks != null && checks.Count > 0;
