@@ -8,13 +8,23 @@
         Request["positionid"].AsInt());
     DateTime? dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End, showDate;
     dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = showDate = null;
+    
     showDate = LcHelpers.CreateDateTime(Request["show-date"]);
     if (!showDate.HasValue) {
         showDate = DateTime.Today;
+        
         // Look for the next availabile date
+        int n = 0, nmax = 30;
         while (LcCalendar.HasUserSomeAvailability((int)p.UserID, showDate.Value, showDate.Value.AddDays(1)) == false) {
             // Try the next date
             showDate = showDate.Value.AddDays(1);
+            
+            // We avoid for infinite loops or excessive time consuming by
+            // limiting the number of iterations/dates to check
+            n++;
+            if (n > nmax) {
+                break;
+            }
         }
     }
 
