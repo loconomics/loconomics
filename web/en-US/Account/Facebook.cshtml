@@ -117,17 +117,8 @@
             //LcAuth.SendRegisterUserEmail(user);
 
             int userid = registeredUser.UserID;
-                            
-            using (var db = Database.Open("sqlloco")){
+            LcAuth.ConnectWithFacebookAccount(userid, user.id);
 
-                // Create asociation between locouser and facebookuser
-                db.Execute(string.Format("INSERT INTO {0} ({1}, {2}) VALUES (@0, @1)", "webpages_FacebookCredentials", "UserId", "FacebookId"), userid, user.id);
-                            
-                // Add Facebook verification as confirmed
-                db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userid, 8, DateTime.Now, 1);
-                // Test social media alert
-                db.Execute("EXEC TestAlertSocialMediaVerification @0", userid);
-            }
         } catch {}
     }
     

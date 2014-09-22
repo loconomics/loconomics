@@ -114,6 +114,21 @@ public static class LcAuth
         else
             LcMessaging.SendWelcomeCustomer(user.UserID, user.Email, confirmationUrl, user.ConfirmationToken);
     }
+
+    public static void ConnectWithFacebookAccount(int userID, int facebookID)
+    {
+        using (var db = Database.Open("sqlloco")){
+
+            // Create asociation between locouser and facebookuser
+            db.Execute(string.Format("INSERT INTO {0} ({1}, {2}) VALUES (@0, @1)", "webpages_FacebookCredentials", "UserId", "FacebookId"), userID, facebookID);
+                            
+            // Add Facebook verification as confirmed
+            db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
+            // Test social media alert
+            db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
+        }
+    }
+
     public static bool Login(string email, string password, bool persistCookie = false)
     {
         // Navigate back to the homepage and exit
