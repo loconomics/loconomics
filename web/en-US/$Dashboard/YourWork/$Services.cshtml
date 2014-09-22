@@ -343,10 +343,30 @@
             {
                 if (cat.Value["ServiceAttributes"].Count > 0)
                 {
-                    <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category">
-                        @printCatLegend(cat.Value)
-                        @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
-                    </fieldset>
+                    <div class="@(cat.Value["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category">
+                        <input type="text" autocomplete="off" placeholder="@(cat.Value["ServiceAttributeCategoryName"])" data-autocomplete-id="@cat.Key" />
+                        <button class="action" type="button">Add</button>
+                        <ul class="DashboardServices-attributes-selection"></ul>
+                        <script type="text/javascript">
+                            window.jsonServiceAttributes = window.jsonServiceAttributes || {};
+                            jsonServiceAttributes[@(cat.Key)] = @Html.Raw(Json.Encode(cat.Value["ServiceAttributes"]));
+
+                            @*
+                            (function(){
+                                window.serviceAttributes = window.serviceAttributes || {};
+                                var atts = serviceAttributes[@(cat.Key)] = [];
+                                @foreach(var att in cat.Value["ServiceAttributes"]) {
+                                    <text>
+                                    atts.push({
+                                        value: @(att["ServiceAttributeID"]),
+                                        label: '@(att["ServiceAttribute"])',
+                                        desc: '@(att["ServiceAttributeDescription"])'
+                                    });
+                                    </text>
+                                }
+                            })();*@
+                        </script>
+                    </div>
                 }
             }
         }
@@ -426,3 +446,57 @@
         <textarea rows="4" name="request-more-attributes" placeholder="Please list anything we’ve missed, and we’ll ensure we get it added to your profile right away."></textarea>
     </fieldset>
 </fieldset>
+<script type="text/javascript">
+
+    $(".DashboardServices-attributes-category > input").each(function () {
+
+        var $el = $(this),
+            $cat = $el.parent(),
+            $sel = $cat.find('.DashboardServices-attributes-selection'),
+            selectedOnes = [];
+
+        $el.autocomplete({
+            source: function (request, response) {
+
+                var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+                var list = window['jsonServiceAttributes'];
+                list = list && list[$el.data('autocomplete-id')];
+
+                //var plainList = $.map(list, function(il) { return il.ServiceAttribute
+
+                response($.grep(list, function (value) {
+                    // Not selected still
+                    if (selectedOnes.indexOf(value.ServiceAttributeID) !== -1) {
+                        return false;
+                    }
+                    // Search by name:
+                    value.value = value.ServiceAttribute;
+                    var found = matcher.test(value.value);
+                    // Add to selected cache
+                    if (found) {
+                        selectedOnes.push(value.ServiceAttributeID);
+                    }
+                    // Result
+                    return found;
+                }));
+            },
+            select: function (event, ui) {
+
+                var li = $('<li/>').appendTo($sel);
+                var link = $('<span/>')
+                .text(ui.item.ServiceAttribute)
+                .data('att-id', ui.item.ServiceAttributeID)
+                .appendTo(li)
+                .popover({
+                    content: ui.item.ServiceAttributeDescription,
+                    trigger: 'hover',
+                    container: 'body'
+                });
+
+                // Clear box:
+                $el.val('');
+            }
+        });
+    });
+
+</script>
