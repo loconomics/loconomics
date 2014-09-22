@@ -115,7 +115,7 @@ public static class LcAuth
             LcMessaging.SendWelcomeCustomer(user.UserID, user.Email, confirmationUrl, user.ConfirmationToken);
     }
 
-    public static void ConnectWithFacebookAccount(int userID, int facebookID)
+    public static void ConnectWithFacebookAccount(int userID, long facebookID)
     {
         using (var db = Database.Open("sqlloco")){
 

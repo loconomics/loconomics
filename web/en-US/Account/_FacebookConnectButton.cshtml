@@ -55,8 +55,8 @@
 
         // Attach handler, avoiding double handlers
         jQuery(document)
-        .off('click', 'a.facebook-connect', facebookConnect)
-        .on('click', 'a.facebook-connect', facebookConnect);
+        .off('click', '.FacebookConnectButtonWidget > .facebook-connect', facebookConnect)
+        .on('click', '.FacebookConnectButtonWidget > .facebook-connect', facebookConnect);
     })(window, document);
     </script>
 }
@@ -65,11 +65,12 @@
         <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/connect-facebook.png">
     </a>*@
 
-    <a class="facebook-connect" href="#" data-redirect="@Uri.EscapeDataString(redirectUrl ?? "")" data-profile="customer">
-        @GetFacebookInitializationScripts(redirectUrl)
-        <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/@icon" width="193px" height="24px"/>
-    </a>
-
+    <span class="FacebookConnectButtonWidget">
+        <a class="facebook-connect" href="#" data-redirect="@Uri.EscapeDataString(redirectUrl ?? "")" data-profile="customer">
+            @GetFacebookInitializationScripts(redirectUrl)
+            <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/@icon" width="193px" height="24px"/>
+        </a>
+    </span>
     @*
     @GetFacebookInitializationScripts()
     @Facebook.LoginButton(

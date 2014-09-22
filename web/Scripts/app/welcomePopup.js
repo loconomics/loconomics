@@ -221,6 +221,8 @@ exports.initPopup = function initPopup() {
     // If profile type is prefilled by request:
     c.find('.profile-choice [name=profile-type]:checked').change();
 
+    c.find('.facebook-connect').on('click', facebookConnect.bind(null, c));
+
     c.data('is-initialized', true);
     return overlay;
 };
@@ -242,3 +244,45 @@ exports.show = function showPopup(fromAutoShow) {
     }
     else return false;
 };
+
+/**
+    Attempt to login with Facebook Connect, 
+    and fill the form with the data from Facebook
+**/
+function facebookConnect($container) {
+    var fb = require('../LC/facebookUtils');
+
+    fb.login({ scope: 'email,user_about_me' }, function (auth, FB) {
+        // Set FacebookId to link accounts:
+        $container.find('[name="facebookid"]').val(auth.userID);
+        // Request more user data
+        FB.api('/me', function (user) {
+            //Fill Data
+            var femail = $container.find('[name="email"]').val(user.email);
+            var ffirst = $container.find('[name="firstname"]').val(user.first_name);
+            var flast = $container.find('[name="lasttname"]').val(user.last_name);
+            $container.find('[name="gender"]').val(user.gender);
+            $container.find('[name="about"]').val(user.about);
+
+            // Hide data successfully filled
+            if (ffirst.val())
+                ffirst.closest('li').hide();
+            if (flast.val())
+                flast.closest('li').hide();
+
+            // Email is special, requires confirmation #538,
+            // showing additional message,
+            femail.sibling('.facebook-note').show();
+
+            // Message to notified user is connected with Facebook
+            $container.find('.facebook-logged').show();
+            // and hidding the button
+            $container.find('.facebook-connect').hide();
+
+            // Password is special too, no needed with Facebook
+            $container.find('[name="create-password"]').closest('li').hide();
+        });
+    });
+
+    return false;
+}

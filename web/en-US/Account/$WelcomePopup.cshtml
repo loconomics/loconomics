@@ -46,9 +46,11 @@
         
         Validation.RequireField("email", LcRessources.RequiredField("Email"));
         Validation.RequireField("zipcode", LcRessources.RequiredField("Zip code"));
-        Validation.RequireField("create-password", LcRessources.RequiredField("Password"));
         Validation.Add("email",
             Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
+        
+        // Password has special treatment, since is not required when connected with Facebook
+        //Validation.RequireField("create-password", LcRessources.RequiredField("Password"));
     }
 
     if (IsPost && Validation.IsValid()) {
@@ -83,6 +85,25 @@
         } else {
             redirect += CUSTOMER_REDIRECT;
         }
+        
+        // Password and Facebook Connect
+        var facebookId = Request["facebookid"].AsLong();
+        if (facebookId == 0) {
+            // No Facebook, needs pasword
+            if (Request["create-password"].IsEmpty()) {
+                ModelState.AddError("create-password", LcRessources.RequiredField("Password"));
+            }
+        }
+        
+        // Optional Gender (comes with Facebook)
+        var gender = Request["gender"].IsInt() ? Request["gender"].AsInt(-1) :
+            (Request["gender"] == "female" ? 1 :
+            Request["gender"] == "male" ? 2 :
+            -1);
+        // Ensure a valid value:
+        if (gender != 1 && gender != 2) {
+            gender = -1;
+        }
 
         if (ModelState.IsValid) {
             if (providerWithoutPosition) {
@@ -103,12 +124,17 @@
                             Request["firstname"],
                             Request["lastname"],
                             Request["create-password"],
-                            asProvider
+                            asProvider,
+                            null,
+                            gender,
+                            Request["about"]
                         );
                         LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
-                        LcAuth.SendRegisterUserEmail(user);
-                        // Auto-login:
-                        LcAuth.Login(user.Email, Request["create-password"]);
+                        
+                        if (facebookId != 0) {
+                            LcAuth.ConnectWithFacebookAccount(user.UserID, facebookId);
+                        }
+
                         if (asProvider) {
                             try{
                                 // Add position
@@ -119,6 +145,16 @@
                                 // the form will be showed again to fullfill position information
                             }
                         }
+                        
+                        LcAuth.SendRegisterUserEmail(user);
+                        
+                        // Auto-login:
+                        FormsAuthentication.SetAuthCookie(Request["email"], false);
+                        LcData.UserInfo.RegisterLastLoginTime(0, Request["email"]);
+                        // Commented to use the more generic previous lines
+                        // (valid without password, as required by Facebook Connect)
+                        //LcAuth.Login(user.Email, Request["create-password"]);
+                        
                     } catch (System.Web.Security.MembershipCreateUserException e) {
                         ModelState.AddFormError(e.Message);
                     }
@@ -184,7 +220,10 @@
                 @if (!providerWithoutPosition)
                 {
                 <div class="social choice-option">
-                    @RenderPage("_FacebookConnectButton.cshtml", new { Redirect = redirect, Size = "large" })
+                    <a class="facebook-connect" href="#">
+                        <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/connect-facebook-large.png" width="193px" height="24px"/>
+                    </a>
+                    <span style="display:none" class="facebook-logged">You are successfully logged with <strong>Facebook</strong>. Please, confirm your email address below and the latest details:</span>
                 </div>
                 
                 <p class="choice-or">or</p>
@@ -196,6 +235,9 @@
                 }
 
                 <div class="choice-option">
+                    <input type="hidden" name="facebookid" />
+                    <input type="hidden" name="gender" />
+                    <input type="hidden" name="about" />
                     <ul>
                         @if (!providerWithoutPosition)
                         {
@@ -206,7 +248,10 @@
                         <label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" @Validation.GetHtml("zipcode") @Html.Raw(ModelState.IsValidField("zipcode") ? "" : "class='input-validation-error'") type="text" placeholder="Zip code" name="zipcode" value="@Request["zipcode"]" />
                         <span class="field-validation-error" data-valmsg-for="zipcode" data-valmsg-replace="true"></span>
                         </li>
-                        <li class="provider customer has-personal-data"><label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
+                        <li class="provider customer has-personal-data">
+                            <label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" />
+                            <span class="facebook-note" style="display:none"><strong>IMPORTANT</strong>: Use an e-mail address you check regularly as all booking communications will be sent here. We won't spam you so worry not.</span>
+                            </li>
                         <li class="provider customer has-secure-data"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" type="password" placeholder="Create password" name="create-password" @Validation.GetHtml("create-password")/></li>
                         }
                         <li class="provider job-title has-search-data"><label for="@(idprefix)-jobtitle">Job title</label><input id="@(idprefix)-jobtitle" type="text" placeholder="Job title (you can add more later)" name="jobtitle" @Validation.GetHtml("jobtitle") @Html.Raw(ModelState.IsValidField("jobtitle") ? "" : "class='input-validation-error'") value="@Request["jobtitle"]" /></li>
