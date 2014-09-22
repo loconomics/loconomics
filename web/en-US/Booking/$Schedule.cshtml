@@ -11,6 +11,11 @@
     showDate = LcHelpers.CreateDateTime(Request["show-date"]);
     if (!showDate.HasValue) {
         showDate = DateTime.Today;
+        // Look for the next availabile date
+        while (LcCalendar.HasUserSomeAvailability((int)p.UserID, showDate.Value, showDate.Value.AddDays(1)) == false) {
+            // Try the next date
+            showDate = showDate.Value.AddDays(1);
+        }
     }
 
     if (p == null || c == null || pos == null){
