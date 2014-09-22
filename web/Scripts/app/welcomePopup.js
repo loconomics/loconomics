@@ -211,6 +211,14 @@ exports.initPopup = function initPopup() {
         c.find('.profile-data li.' + this.value + ' input:not([data-val]):not([type=hidden])')
         .attr('data-val-required', '')
         .attr('data-val', true);
+
+        // but remove on password if Facebook Connect is in use
+        if (c.find('[name="facebookid"]').val()) {
+            c.find('[name="create-password"]')
+            .attr('data-val-required', null)
+            .attr('data-val', false);
+        }
+
         LC.setupValidation();
     });
     c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
@@ -272,7 +280,7 @@ function facebookConnect($container) {
 
             // Email is special, requires confirmation #538,
             // showing additional message,
-            femail.sibling('.facebook-note').show();
+            femail.siblings('.facebook-note').show();
 
             // Message to notified user is connected with Facebook
             $container.find('.facebook-logged').show();
