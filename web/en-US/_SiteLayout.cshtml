@@ -82,7 +82,7 @@
         <![endif]-->
         }
     </head>
-    <body class="@PageData["BodyClass"] @(includeWelcomePopup && showWelcomePopup ? "strict-welcome-popup" : "")">
+    <body class="@PageData["BodyClass"] @(includeWelcomePopup && showWelcomePopup ? "strict-welcome-popup" : "")" data-facebook-appid="@Facebook.AppId" data-facebook-language="@Facebook.Language">
         @if (includeWelcomePopup)
         {
             // Annonymous access, Welcome popup

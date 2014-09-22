@@ -222,6 +222,11 @@ var providerWelcome = require('./providerWelcome');
 
 var HelpPoint = require('../LC/HelpPoint').HelpPoint;
 
+// Global access to the Facebook API utils to be used by
+// pages and page-components; any javascript module must
+// require it instead.
+window.facebookUtils = require('../LC/facebookUtils');
+
 /**
  ** Init code
 ***/
