@@ -22,7 +22,7 @@
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-stylus": "~0.11.0",
-    "stylus": "~0.42.0",
+    "stylus": "~0.49.0",
     "grunt-contrib-qunit": "~0.3.0",
     "browsernizr": "~1.0.2",
     "nib": "~1.0.1",

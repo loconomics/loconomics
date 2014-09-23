@@ -1944,7 +1944,7 @@ form ul li {
 
 /* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 191 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 194 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -4025,6 +4025,90 @@ form ul li {
 /* line 162 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary label {
   padding: 0;
+}
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+
+/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\layoutUtils.styl */
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes {
+  margin: 0 0 1.5em;
+}
+
+/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-selection {
+  display: block;
+  zoom: 1;
+  margin-top: 4px;
+}
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\layoutUtils.styl */
+.SelectAttributes .SelectAttributes-selection:before,
+.SelectAttributes .SelectAttributes-selection:after {
+  content: "";
+  display: table;
+}
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\layoutUtils.styl */
+.SelectAttributes .SelectAttributes-selection:after {
+  clear: both;
+}
+
+/* line 15 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-selection .SelectAttributes-item {
+  background: White;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 0.1em 1em !important;
+  margin: 0 1em 6px 0 !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: auto !important;
+  float: left;
+  -webkit-box-shadow: 0px 0px 4px -2px;
+  box-shadow: 0px 0px 4px -2px;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-selection .SelectAttributes-item .SelectAttributes-item-remove {
+  text-decoration: none;
+  display: inline-block;
+  padding: 0.2em 0.6em;
+}
+
+/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-autocomplete {
+  font-size: 0;
+}
+
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-autocomplete .SelectAttributes-autocompleteInput {
+  font-size: 13px;
+}
+
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-autocomplete .SelectAttributes-autocompleteButton {
+  font-size: 13px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 26px;
+  background: #99c027;
+  -webkit-border-radius: 0 4px 4px 0;
+  border-radius: 0 4px 4px 0;
+  margin-left: -3px;
+}
+
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-autocomplete .SelectAttributes-autocompleteButton:hover {
+  -webkit-box-shadow: 0 0 5px 2px #99c027;
+  box-shadow: 0 0 5px 2px #99c027;
 }
 
 /* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */

@@ -83,8 +83,8 @@ function SelectAttributes($c, categoryId) {
         if (item.ServiceAttributeID)
             this.addId(item.ServiceAttributeID);
 
-        var li = $('<li/>').appendTo(this.$sel);
-        var link = $('<span/>')
+        var li = $('<li class="SelectAttributes-item"/>').appendTo(this.$sel);
+        var link = $('<span class="SelectAttributes-item-name"/>')
         .text(item.ServiceAttribute)
         .appendTo(li)
         .popover({
@@ -98,7 +98,7 @@ function SelectAttributes($c, categoryId) {
         .attr('value', item.ServiceAttributeID || item.ServiceAttribute)
         .appendTo(li);
 
-        $('<a href="#" class="remove-action">X</a>')
+        $('<a href="#" class="SelectAttributes-item-remove">X</a>')
         .appendTo(li);
 
         return true;
@@ -133,7 +133,7 @@ function SelectAttributes($c, categoryId) {
     // Handlers
     var selectAtts = this;
 
-    $c.on('click', '.remove-action', function () {
+    $c.on('click', '.SelectAttributes-item-remove', function () {
         selectAtts.remove(this);
     });
 }
@@ -187,7 +187,7 @@ SelectAttributes.prototype.setupAutocomplete = function setupAutocomplete(list) 
     });
 
     // Button handler
-    selectAtts.$c.on('click', '.addnew-action', function () {
+    selectAtts.$c.on('click', '.SelectAttributes-autocompleteButton', function () {
         selectAtts.addNew(selectAtts.$acInput.val());
         selectAtts.$acInput.val('');
     });
