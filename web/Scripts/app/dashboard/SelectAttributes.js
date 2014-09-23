@@ -17,7 +17,7 @@ function SelectAttributes($c, categoryId) {
     // (using an object without prototype because of 
     // the better performance look-up, and we maintain
     // a reference to the whole object too)
-    this.news = [];
+    this.news = {};
     this.news.prototype = null;
 
     this.hasId = function hasId(attId) {
@@ -37,6 +37,11 @@ function SelectAttributes($c, categoryId) {
         }
     };
 
+    this.removeNew = function removeNew(attName) {
+        // Remove from news
+        delete this.news[attName];
+    };
+
     /**
         Check if the given item exists in the 
         selection, either an ID or a new
@@ -45,23 +50,34 @@ function SelectAttributes($c, categoryId) {
     this.has = function has(item) {
         return (
             this.hasId(item.ServiceAttributeID) ||
-            item.ServiceAttribute in this.news
+            (item.ServiceAttribute in this.news)
         );
     };
 
     this.remove = function remove(el) {
 
         var $el = $(el),
-                check = $el.siblings('[type=checkbox]'),
-                parent = $el.closest('li'),
-                val = check.val();
+            check = $el.siblings('[type=checkbox]'),
+            parent = $el.closest('li'),
+            val = check.val();
 
-        this.removeId(val);
+        // Is an ID (integer) or new name?
+        if (/^\d+$/.test(val)) {
+            // Remove from Id
+            this.removeId(val);
+        } else {
+            // Remove from New
+            this.removeNew(val);
+        }
 
         parent.remove();
     };
 
     this.add = function add(item) {
+
+        // Check if is not in the list already
+        if (this.has(item))
+            return false;
 
         // Add to selected cache
         if (item.ServiceAttributeID)
@@ -69,26 +85,32 @@ function SelectAttributes($c, categoryId) {
 
         var li = $('<li/>').appendTo(this.$sel);
         var link = $('<span/>')
-                .text(item.ServiceAttribute)
-                .appendTo(li)
-                .popover({
-                    content: item.ServiceAttributeDescription,
-                    trigger: 'hover',
-                    container: 'body'
-                });
+        .text(item.ServiceAttribute)
+        .appendTo(li)
+        .popover({
+            content: item.ServiceAttributeDescription,
+            trigger: 'hover',
+            container: 'body'
+        });
 
         $('<input type="checkbox" style="display:none" checked="checked" />')
-                .attr('name', 'positionservices-category[' + item.ServiceAttributeCategoryID + ']-attribute[' + item.ServiceAttributeID + ']')
-                .attr('value', item.ServiceAttributeID || item.ServiceAttribute)
-                .appendTo(li);
+        .attr('name', 'positionservices-category[' + item.ServiceAttributeCategoryID + ']-attribute[' + item.ServiceAttributeID + ']')
+        .attr('value', item.ServiceAttributeID || item.ServiceAttribute)
+        .appendTo(li);
 
         $('<a href="#" class="remove-action">X</a>')
-                .appendTo(li);
+        .appendTo(li);
+
+        return true;
     };
 
     this.addNew = function addNew(newAttribute) {
 
         if (typeof (newAttribute) === 'string') {
+            // Avoid empty or whitespace names
+            if (!newAttribute || /^\s+$/.test(newAttribute))
+                return false;
+
             newAttribute = {
                 ServiceAttribute: newAttribute,
                 ServiceAttributeID: 0,
@@ -98,11 +120,14 @@ function SelectAttributes($c, categoryId) {
             };
         }
 
-        // Add to cache:
-        this.news[newAttribute.ServiceAttribute] = newAttribute;
-
         // Add UI element
-        this.add(newAttribute);
+        var wasAdded = this.add(newAttribute);
+
+        if (wasAdded)
+            // Add to cache:
+            this.news[newAttribute.ServiceAttribute] = newAttribute;
+
+        return wasAdded;
     };
 
     // Handlers
