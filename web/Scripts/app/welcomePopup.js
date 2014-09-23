@@ -56,15 +56,16 @@ exports.initPopup = function initPopup() {
         // Show first step
         var step1 = c.find('.profile-choice, header .presentation');
         if (animate)
-            step1.slideDown('fast');
+            step1.slideDown('normal');
         else
             step1.show();
         // Hide second step
         var step2 = c.find('.terms, .profile-data');
         if (animate)
-            step2.slideUp('fast');
+            step2.slideUp('normal');
         else
             step2.hide();
+
         // Hide back-action button
         c.find('.back-action').hide();
         // Reset hidden fields per profile-type
@@ -189,26 +190,40 @@ exports.initPopup = function initPopup() {
     c.find('#welcomepopupLoading').remove();
 
     // Actions
-    c.on('change', '.profile-choice [name=profile-type]', function () {
+    function showStep2(animate) {
+
+        var $profile = c.find('.profile-choice [name=profile-type]:checked');
+        var profile = $profile.val();
+
         // Show back-action button
         c.find('.back-action').show();
 
-        c.find('.profile-data li:not(.' + this.value + ')').hide();
-        c.find('.profile-choice, header .presentation').slideUp('fast');
-        c.find('.terms, .profile-data').slideDown('fast');
+        c.find('.profile-data li:not(.' + profile + ')').hide();
+        var $presentation = c.find('.profile-choice, header .presentation');
+        if (animate)
+            $presentation.slideUp('normal');
+        else
+            $presentation.hide();
+
+        var $profData = c.find('.terms, .profile-data');
+        if (animate)
+            $profData.slideDown('normal');
+        else
+            $profData.show();
+
         // Terms of use different for profile type
-        if (this.value == 'customer')
+        if (profile == 'customer')
             c.find('a.terms-of-use').data('tooltip-url', null);
         // Change facebook redirect link
         var fbc = c.find('.facebook-connect');
         var addRedirect = 'customers';
-        if (this.value == 'provider')
+        if (profile == 'provider')
             addRedirect = 'providers';
         fbc.data('redirect', fbc.data('redirect') + addRedirect);
-        fbc.data('profile', this.value);
+        fbc.data('profile', profile);
 
         // Set validation-required for depending of profile-type form elements:
-        c.find('.profile-data li.' + this.value + ' input:not([data-val]):not([type=hidden])')
+        c.find('.profile-data li.' + profile + ' input:not([data-val]):not([type=hidden])')
         .attr('data-val-required', '')
         .attr('data-val', true);
 
@@ -216,14 +231,16 @@ exports.initPopup = function initPopup() {
         facebookUpdateFieldsStatus(c);
 
         LC.setupValidation();
-    });
+    }
+    c.on('change', '.profile-choice [name=profile-type]', showStep2.bind(null, true));
     c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
         setupPositionAutocomplete(showPositionDescription.tooltip);
-        c.find('.profile-choice [name=profile-type]:checked').change();
+        showStep2(false);
     });
 
-    // If profile type is prefilled by request:
-    c.find('.profile-choice [name=profile-type]:checked').change();
+    // If profile type is prefilled by request, show step2 already:
+    if (c.find('.profile-choice [name=profile-type]:checked').length)
+        showStep2(false);
 
     c.on('click', '.facebook-connect', facebookConnect.bind(null, c));
 
