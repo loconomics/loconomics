@@ -281,7 +281,7 @@ function facebookConnect($container) {
             //Fill Data
             $container.find('[name="email"]').val(user.email);
             $container.find('[name="firstname"]').val(user.first_name);
-            $container.find('[name="lasttname"]').val(user.last_name);
+            $container.find('[name="lastname"]').val(user.last_name);
             $container.find('[name="gender"]').val(user.gender);
             $container.find('[name="about"]').val(user.about);
 

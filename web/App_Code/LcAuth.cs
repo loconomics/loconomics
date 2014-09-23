@@ -51,18 +51,40 @@ public static class LcAuth
     ) {
         using (var db = Database.Open("sqlloco"))
         {
+            // IMPORTANT: The whole process must be complete or rollback, but since
+            // a transaction cannot be done from the start because will collide
+            // with operations done by WebSecurity calls, the first step must
+            // be protected manually.
+            string token = null;
+
             try
             {
-                db.Execute("BEGIN TRANSACTION");
                 // Insert email into the profile table
                 db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
 
                 // Create and associate a new entry in the membership database (is connected automatically
                 // with the previous record created using the automatic UserID generated for it).
-                var token = WebSecurity.CreateAccount(email, password, true);
+                token = WebSecurity.CreateAccount(email, password, true);
+            }
+            catch (Exception ex)
+            {
+                // Manual rollback previous operation:
+                // If CreateAccount failed, nothing was persisted there so nothing require rollback,
+                // only the UserProfile record
+                db.Execute("DELETE FROM UserProfile WHERE Email like @0", email);
 
-                // Create Loconomics Customer user
-                int userid = WebSecurity.GetUserId(email);
+                // Relay exception
+                throw ex;
+            }
+
+            // Create Loconomics Customer user
+            int userid = WebSecurity.GetUserId(email);
+
+            try
+            {
+                // Automatic transaction can be used now:
+                db.Execute("BEGIN TRANSACTION");
+
                 db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6",
                     userid, firstname, lastname,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
@@ -88,10 +110,10 @@ public static class LcAuth
                 // we will hack changing it to true:1 manually -before of time-) and the confirmationToken that we will mantain to allow user confirmation
                 // from the welcome-email sent and to off the alert:15 (with custom code on the Account/Confirm page).
                 db.Execute(@"
-                UPDATE webpages_Membership SET
-                    IsConfirmed = 1
-                WHERE UserId = @0
-            ", userid);
+                    UPDATE webpages_Membership SET
+                        IsConfirmed = 1
+                    WHERE UserId = @0
+                ", userid);
 
                 // Log Marketing URL parameters
                 if (marketingSource == null && System.Web.HttpContext.Current != null)
