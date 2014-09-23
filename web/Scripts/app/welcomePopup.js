@@ -56,15 +56,16 @@ exports.initPopup = function initPopup() {
         // Show first step
         var step1 = c.find('.profile-choice, header .presentation');
         if (animate)
-            step1.slideDown('fast');
+            step1.slideDown('normal');
         else
             step1.show();
         // Hide second step
         var step2 = c.find('.terms, .profile-data');
         if (animate)
-            step2.slideUp('fast');
+            step2.slideUp('normal');
         else
             step2.hide();
+
         // Hide back-action button
         c.find('.back-action').hide();
         // Reset hidden fields per profile-type
@@ -189,39 +190,59 @@ exports.initPopup = function initPopup() {
     c.find('#welcomepopupLoading').remove();
 
     // Actions
-    c.on('change', '.profile-choice [name=profile-type]', function () {
+    function showStep2(animate) {
+
+        var $profile = c.find('.profile-choice [name=profile-type]:checked');
+        var profile = $profile.val();
+
         // Show back-action button
         c.find('.back-action').show();
 
-        c.find('.profile-data li:not(.' + this.value + ')').hide();
-        c.find('.profile-choice, header .presentation').slideUp('fast');
-        c.find('.terms, .profile-data').slideDown('fast');
+        c.find('.profile-data li:not(.' + profile + ')').hide();
+        var $presentation = c.find('.profile-choice, header .presentation');
+        if (animate)
+            $presentation.slideUp('normal');
+        else
+            $presentation.hide();
+
+        var $profData = c.find('.terms, .profile-data');
+        if (animate)
+            $profData.slideDown('normal');
+        else
+            $profData.show();
+
         // Terms of use different for profile type
-        if (this.value == 'customer')
+        if (profile == 'customer')
             c.find('a.terms-of-use').data('tooltip-url', null);
         // Change facebook redirect link
         var fbc = c.find('.facebook-connect');
         var addRedirect = 'customers';
-        if (this.value == 'provider')
+        if (profile == 'provider')
             addRedirect = 'providers';
         fbc.data('redirect', fbc.data('redirect') + addRedirect);
-        fbc.data('profile', this.value);
+        fbc.data('profile', profile);
 
         // Set validation-required for depending of profile-type form elements:
-        c.find('.profile-data li.' + this.value + ' input:not([data-val]):not([type=hidden])')
+        c.find('.profile-data li.' + profile + ' input:not([data-val]):not([type=hidden])')
         .attr('data-val-required', '')
         .attr('data-val', true);
+
+        // if Facebook Connect is in use, update fields and validations
+        facebookUpdateFieldsStatus(c);
+
         LC.setupValidation();
-    });
+    }
+    c.on('change', '.profile-choice [name=profile-type]', showStep2.bind(null, true));
     c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
         setupPositionAutocomplete(showPositionDescription.tooltip);
-        c.find('.profile-choice [name=profile-type]:checked').change();
+        showStep2(false);
     });
 
-    // If profile type is prefilled by request:
-    c.find('.profile-choice [name=profile-type]:checked').change();
+    // If profile type is prefilled by request, show step2 already:
+    if (c.find('.profile-choice [name=profile-type]:checked').length)
+        showStep2(false);
 
-    c.find('.facebook-connect').on('click', facebookConnect.bind(null, c));
+    c.on('click', '.facebook-connect', facebookConnect.bind(null, c));
 
     c.data('is-initialized', true);
     return overlay;
@@ -258,31 +279,58 @@ function facebookConnect($container) {
         // Request more user data
         FB.api('/me', function (user) {
             //Fill Data
-            var femail = $container.find('[name="email"]').val(user.email);
-            var ffirst = $container.find('[name="firstname"]').val(user.first_name);
-            var flast = $container.find('[name="lasttname"]').val(user.last_name);
+            $container.find('[name="email"]').val(user.email);
+            $container.find('[name="firstname"]').val(user.first_name);
+            $container.find('[name="lastname"]').val(user.last_name);
             $container.find('[name="gender"]').val(user.gender);
             $container.find('[name="about"]').val(user.about);
 
-            // Hide data successfully filled
-            if (ffirst.val())
-                ffirst.closest('li').hide();
-            if (flast.val())
-                flast.closest('li').hide();
-
-            // Email is special, requires confirmation #538,
-            // showing additional message,
-            femail.sibling('.facebook-note').show();
-
-            // Message to notified user is connected with Facebook
-            $container.find('.facebook-logged').show();
-            // and hidding the button
-            $container.find('.facebook-connect').hide();
-
-            // Password is special too, no needed with Facebook
-            $container.find('[name="create-password"]').closest('li').hide();
+            facebookUpdateFieldsStatus($container);
         });
     });
 
+    return false;
+}
+
+/**
+    It triggers an update on the status of fields affected
+    by a Facebook Connect: some must be hidden, others showed,
+    some notes appear and some field becomes optional.
+    If there is no an active Facebook Connection/Id, it
+    does nothing and return false.
+**/
+function facebookUpdateFieldsStatus($container) {
+
+    // if Facebook Connect is in use
+    if ($container.find('[name="facebookid"]').val()) {
+        // remove validation on password
+        $container.find('[name="create-password"]')
+            .attr('data-val-required', null)
+            .attr('data-val', false);
+
+        var femail = $container.find('[name="email"]');
+        var ffirst = $container.find('[name="firstname"]');
+        var flast = $container.find('[name="lasttname"]');
+
+        // Hide data successfully filled
+        if (ffirst.val())
+            ffirst.closest('li').hide();
+        if (flast.val())
+            flast.closest('li').hide();
+
+        // Email is special, requires confirmation #538,
+        // showing additional message,
+        femail.siblings('.facebook-note').show();
+
+        // Message to notified user is connected with Facebook
+        $container.find('.facebook-logged').show();
+        // and hidding the button
+        $container.find('.facebook-connect').hide();
+
+        // Password is special too, no needed with Facebook
+        $container.find('[name="create-password"]').closest('li').hide();
+
+        return true;
+    }
     return false;
 }

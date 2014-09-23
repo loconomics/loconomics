@@ -1,4 +1,18 @@
-﻿@using WebMatrix.Data;
+﻿@**
+    This page is used to process responses from 'Connect With Facebook' buttons.
+
+    IMPORTANT:
+    NEEDSREVIEW NEEDSREFACTOR    
+    Currently the account creation here is not being used, superseed by latest changes
+    on WelcomePopup that uses the Javascript API for most of the things synchronized with the normal
+    form back-end of that page to create account, with LcAuth to link Facebook and Loconomics accounts.
+    
+    THIS IS STILL USED but only for the Verification, that connects to Facebook with account/_FacebookConnectButton
+    and redirects here to complete operation, all in a 'popup' that reloads the page on success.
+    It could be simplified with some Javascript, deprecating this, FacebookConnectButton, and the global app.js link
+    with the module facebookUtils.js
+**@
+@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
     {
