@@ -223,7 +223,7 @@
                     <a class="facebook-connect" href="#">
                         <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/connect-facebook-large.png" width="193px" height="24px"/>
                     </a>
-                    <span style="display:none" class="facebook-logged">You are successfully logged with <strong>Facebook</strong>. Please, confirm your email address below and the latest details:</span>
+                    <span style="display:none" class="facebook-logged">You are successfully logged with <strong>Facebook</strong>. Please, confirm your email address below:</span>
                 </div>
                 
                 <p class="choice-or">or</p>
@@ -235,9 +235,9 @@
                 }
 
                 <div class="choice-option">
-                    <input type="hidden" name="facebookid" />
-                    <input type="hidden" name="gender" />
-                    <input type="hidden" name="about" />
+                    <input type="hidden" name="facebookid" value="@Request["facebookid"]" />
+                    <input type="hidden" name="gender" value="@Request["gender"]" />
+                    <input type="hidden" name="about" value="@Request["about"]" />
                     <ul>
                         @if (!providerWithoutPosition)
                         {
