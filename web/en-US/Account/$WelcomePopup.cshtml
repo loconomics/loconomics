@@ -123,18 +123,19 @@
                             Request["email"],
                             Request["firstname"],
                             Request["lastname"],
-                            Request["create-password"],
+                            N.DW(Request["create-password"]) ?? Membership.GeneratePassword(14, 5),
                             asProvider,
                             null,
                             gender,
                             Request["about"]
                         );
-                        LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
-                        
+
                         if (facebookId != 0) {
                             LcAuth.ConnectWithFacebookAccount(user.UserID, facebookId);
                         }
-
+                        
+                        LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
+                        
                         if (asProvider) {
                             try{
                                 // Add position

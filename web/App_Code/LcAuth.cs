@@ -51,58 +51,71 @@ public static class LcAuth
     ) {
         using (var db = Database.Open("sqlloco"))
         {
-            // Insert email into the profile table
-            db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
-
-            // Create and associate a new entry in the membership database (is connected automatically
-            // with the previous record created using the automatic UserID generated for it).
-            var token = WebSecurity.CreateAccount(email, password, true);
-
-            // Create Loconomics Customer user
-            int userid = WebSecurity.GetUserId(email);
-            db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6",
-                userid, firstname, lastname,
-                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
-                genderID, aboutMe
-            );
-
-            // If is provider, update profile with that info (being both customer and provider)
-            // It assigns the first OnboardingStep 'welcome' for the new Onboarding Dashboard #454
-            if (isProvider)
+            try
             {
-                db.Execute(@"UPDATE Users SET 
+                db.Execute("BEGIN TRANSACTION");
+                // Insert email into the profile table
+                db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
+
+                // Create and associate a new entry in the membership database (is connected automatically
+                // with the previous record created using the automatic UserID generated for it).
+                var token = WebSecurity.CreateAccount(email, password, true);
+
+                // Create Loconomics Customer user
+                int userid = WebSecurity.GetUserId(email);
+                db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6",
+                    userid, firstname, lastname,
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    genderID, aboutMe
+                );
+
+                // If is provider, update profile with that info (being both customer and provider)
+                // It assigns the first OnboardingStep 'welcome' for the new Onboarding Dashboard #454
+                if (isProvider)
+                {
+                    db.Execute(@"UPDATE Users SET 
                     IsProvider = 1,
                     OnboardingStep = 'welcome'
                     WHERE UserID = @0
                 ", userid);
-            }
+                }
 
-            // Partial email confirmation to allow user login but still show up email-confirmation-alert. Details:
-            // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
-            // login, what means user MUST can login but too MUST have an email-confirmation-code; we do that reusing the confirmation code
-            // created by asp.net starter-app as until now, but HACKING that system doing a minor change on database, in the 
-            // asp.net webpages generated table called 'webpages_Membership': there are two fields to manage confirmation, a bit field (this
-            // we will hack changing it to true:1 manually -before of time-) and the confirmationToken that we will mantain to allow user confirmation
-            // from the welcome-email sent and to off the alert:15 (with custom code on the Account/Confirm page).
-            db.Execute(@"
+                // Partial email confirmation to allow user login but still show up email-confirmation-alert. Details:
+                // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
+                // login, what means user MUST can login but too MUST have an email-confirmation-code; we do that reusing the confirmation code
+                // created by asp.net starter-app as until now, but HACKING that system doing a minor change on database, in the 
+                // asp.net webpages generated table called 'webpages_Membership': there are two fields to manage confirmation, a bit field (this
+                // we will hack changing it to true:1 manually -before of time-) and the confirmationToken that we will mantain to allow user confirmation
+                // from the welcome-email sent and to off the alert:15 (with custom code on the Account/Confirm page).
+                db.Execute(@"
                 UPDATE webpages_Membership SET
                     IsConfirmed = 1
                 WHERE UserId = @0
             ", userid);
 
-            // Log Marketing URL parameters
-            if (marketingSource == null && System.Web.HttpContext.Current != null)
-                marketingSource = System.Web.HttpContext.Current.Request.Url.Query;
-            if (marketingSource != null)
-                db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, marketingSource);
+                // Log Marketing URL parameters
+                if (marketingSource == null && System.Web.HttpContext.Current != null)
+                    marketingSource = System.Web.HttpContext.Current.Request.Url.Query;
+                if (marketingSource != null)
+                    db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, marketingSource);
 
-            // All done:
-            return new RegisteredUser {
-                UserID = userid,
-                Email = email,
-                ConfirmationToken = token,
-                IsProvider = isProvider
-            };
+                db.Execute("COMMIT TRANSACTION");
+
+                // All done:
+                return new RegisteredUser
+                {
+                    UserID = userid,
+                    Email = email,
+                    ConfirmationToken = token,
+                    IsProvider = isProvider
+                };
+            }
+            catch (Exception ex)
+            {
+                db.Execute("ROLLBACK TRANSACTION");
+
+                throw ex;
+            }
         }
     }
     public static void SendRegisterUserEmail(RegisteredUser user)
