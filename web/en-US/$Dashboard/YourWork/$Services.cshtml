@@ -346,7 +346,7 @@
                     <div class="@(cat.Value["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category SelectAttributes">
                         <div class="SelectAttributes-autocomplete">
                             <input class="SelectAttributes-autocompleteInput" type="text" autocomplete="off" placeholder="@(cat.Value["ServiceAttributeCategoryName"])" data-autocomplete-id="@cat.Key" />
-                            <button class="action SelectAttributes-autocompleteButton" type="button">Add</button>
+                            <button class="action SelectAttributes-autocompleteButton addnew-action" type="button">Add</button>
                         </div>
                         <ul class="SelectAttributes-selection DashboardServices-attributes-selection"></ul>
                         <script type="text/javascript">

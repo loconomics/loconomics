@@ -139,14 +139,15 @@ function initYourWorkDom() {
     $(".SelectAttributes-autocompleteInput").each(function () {
 
         var $el = $(this),
-            selectedAtts = new SelectAttributes($el.closest('.SelectAttributes'));
+            catId = $el.data('autocomplete-id'),
+            selectedAtts = new SelectAttributes($el.closest('.SelectAttributes'), catId);
 
         // NOTE: The data is pulled from a global object,
         // thats added by the page on the body with a inline script.
         // Could be replaced by an AJAX call to JSON data, adding
         // a loading spinner hover SelectAttributes elements
         // while loading the 'attsLists' data.
-        var list = attsLists[$el.data('autocomplete-id')] || [];
+        var list = attsLists[catId] || [];
 
         selectedAtts.setupAutocomplete(list);
         selectedAtts.fillWithCheckedAttributes(list);
