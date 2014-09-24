@@ -482,7 +482,7 @@
                             @printExperienceLevelCat(expLevels, tplCatName)
                             break;*/
                         case LcData.ServiceAttCatIDLanguages:
-                            /* Out of sidebar, after it */
+                            /* Out of sidebar */
                             break;
                         default:
                             <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category">
@@ -493,33 +493,6 @@
                     }
                 }
             }
-        
-            @* OBSOLETE CODE *@
-            @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
-            {
-                var cat = dataCats[LcData.ServiceAttCatIDExperience];
-            <fieldset class="positionservices-yearsexperience @(cat["RequiredInput"] ? reqCatClass : "")">
-                @*<legend>Years Experience</legend>* @
-                @printCatLegend(cat)
-                @printAttSelect(cat["ServiceAttributes"])
-                @*
-                <select name="positionservices-yearsexperience">
-                    <option>+10 years</option>
-                    <option>5 years</option>
-                    <option>1.5 years</option>
-                    <option>1 year</option>
-                    <option>-1 year</option>
-                </select>* @
-            </fieldset>
-            }*@
-            @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
-            {
-                var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
-            <fieldset class="positionservices-clientstypes @(cat["RequiredInput"] ? reqCatClass : "")">
-                @printCatLegend(cat)
-                @printAttCheckList(LcData.ServiceAttCatIDClientTypes, dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"])
-            </fieldset>
-            }*@
         </div>
 
         @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages))
