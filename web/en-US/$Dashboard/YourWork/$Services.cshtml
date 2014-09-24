@@ -82,13 +82,11 @@
                                 if (wasChecked) {
                                     // Set record (insert or update)
                                     db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                                    saveLevelIfLanguage(db, cat, att.ServiceAttributeID, pos, tplAttName);
+                                    //saveLevelIfLanguage(db, cat, att.ServiceAttributeID, pos, tplAttName);
                                 } else {
                                     // Delete record
                                     db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                                    if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
-                                        db.Execute(sqlDelLangLevel, pos.UserID, pos.PositionID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                                    }
+                                    //delLevelIfLanguage(db, cat, att.ServiceAttributeID, pos, tplAttName);
                                 }
                             }
                         }
@@ -149,7 +147,7 @@
                         );
                         // Set record (insert or update)
                         db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, cat.Key, serviceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                        saveLevelIfLanguage(db, cat, serviceAttributeID, pos, tplAttName);
+                        //saveLevelIfLanguage(db, cat, serviceAttributeID, pos, tplAttName);
                     }
                 }
             }
@@ -184,11 +182,11 @@
     dynamic langLevels = LcData.GetLanguageLevels();
     var userLangLevels = LcData.GetUserLanguageLevels(pos.UserID, pos.PositionID);
     /* Experience Levels */
-    dynamic expLevels = LcData.GetExperienceLevels(pos.UserID, pos.PositionID);
-    
-    const string reqCatClass = "is-required";
+    dynamic expLevels = LcData.GetExperienceLevels(pos.UserID, pos.PositionID);   
 }
 @functions {
+    const string reqCatClass = "is-required";
+
     void saveLevelIfLanguage(Database db, dynamic cat, int serviceAttributeID, dynamic pos, string tplAttName) {
         if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
             // If is language, we must save the Language Level value too
@@ -202,6 +200,11 @@
                 LcData.GetCurrentCountryID(),
                 langlevel
             );
+        }
+    }
+    void delLevelIfLanguage(Database db, dynamic cat, int serviceAttributeID, dynamic pos, string tplAttName) {
+        if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
+            db.Execute(sqlDelLangLevel, pos.UserID, pos.PositionID, serviceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
         }
     }
     
@@ -431,6 +434,22 @@
         </ul>
     </fieldset>
 }
+@helper printCategoryAutocompleteAttributes(int catID, dynamic cat) {
+    if (cat["ServiceAttributes"].Count > 0)
+    {
+        <div class="@(cat["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category SelectAttributes">
+            <div class="SelectAttributes-autocomplete">
+                <input class="SelectAttributes-autocompleteInput" type="text" autocomplete="off" placeholder="@(cat["ServiceAttributeCategoryName"])" data-autocomplete-id="@(catID)" />
+                <button class="action SelectAttributes-autocompleteButton" type="button">Add</button>
+            </div>
+            <ul class="SelectAttributes-selection DashboardServices-attributes-selection"></ul>
+            <script type="text/javascript">
+                window.serviceAttributesLists = window.serviceAttributesLists || {};
+                serviceAttributesLists[@(catID)] = @Html.Raw(Json.Encode(cat["ServiceAttributes"]));
+            </script>
+        </div>
+    }    
+}
 <fieldset class="DashboardServices ajax ajax-box" data-ajax-fieldset-action="@(LcUrl.LangPath)$Dashboard/YourWork/$Services/?PositionID=@(pos.PositionID)" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
     <p class="DashboardSection-page-section-introduction">
         Fill us in on the services you provide. By conveying your job, experience, and passion with genuine feeling, you’ll attract the type of customers you want.
@@ -441,27 +460,16 @@
         <li id="lcres-required-attribute-category-error">@requiredAttCatError</li>
     </ul>
 
-    <div class="DashboardServices-attributes">
+    <div class="DashboardServices-attributes clearfix">
         @foreach (var cat in dataCats)
         {
             if (!specialCatIDs.Contains(cat.Key) && cat.Value["SideBarCategory"] == false)
             {
-                if (cat.Value["ServiceAttributes"].Count > 0)
-                {
-                    <div class="@(cat.Value["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category SelectAttributes">
-                        <div class="SelectAttributes-autocomplete">
-                            <input class="SelectAttributes-autocompleteInput" type="text" autocomplete="off" placeholder="@(cat.Value["ServiceAttributeCategoryName"])" data-autocomplete-id="@cat.Key" />
-                            <button class="action SelectAttributes-autocompleteButton" type="button">Add</button>
-                        </div>
-                        <ul class="SelectAttributes-selection DashboardServices-attributes-selection"></ul>
-                        <script type="text/javascript">
-                            window.serviceAttributesLists = window.serviceAttributesLists || {};
-                            serviceAttributesLists[@(cat.Key)] = @Html.Raw(Json.Encode(cat.Value["ServiceAttributes"]));
-                        </script>
-                    </div>
-                }
+                @printCategoryAutocompleteAttributes(cat.Key, cat.Value)
             }
         }
+
+        @printCategoryAutocompleteAttributes(LcData.ServiceAttCatIDLanguages, dataCats[LcData.ServiceAttCatIDLanguages])
 
         <div class="DashboardServices-sidebar">
             @* Because experience level attributes are get from a lookup table, not attributes table, cannot be linked
@@ -494,11 +502,6 @@
                 }
             }
         </div>
-
-        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages))
-        {
-            @printLanguagesCat(dataCats[LcData.ServiceAttCatIDLanguages], langLevels, userLangLevels, tplAttName)            
-        }
     </div>
 
     <fieldset class="DashboardServices-positionIntro">
