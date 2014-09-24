@@ -91,27 +91,6 @@
                             }
                         }
                         break;
-                    // Select One attributes
-                    /*case LcData.ServiceAttCatIDExperience:
-                    //case LcData.ServiceAttCatIDExperienceLevel:
-                        // Get value selected by user
-                        int selectedAttID = Request[String.Format(tplCatName, cat.Key)].AsInt();
-                        // Iterate every attribute in category to unchecked except one was selected
-                        foreach (var att in cat.Value) {
-                            // We check previous value with current to avoid do unneded Database calls
-                            // if value was checked previously and is the same as now, no call is needed
-                            // if value was not checked previously and is not what was selected now, no call is needed
-                            if (!att.UserChecked && att.ServiceAttributeID == selectedAttID ||
-                                att.UserChecked && att.ServiceAttributeID != selectedAttID) {
-                                if (att.ServiceAttributeID == selectedAttID) {
-                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                                } else {
-                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                                }
-                            }
-                        }
-                        break;
-                    */
                 }
             }
             
@@ -376,15 +355,6 @@
 @helper printAttCheck(int catId, dynamic att){
     <label class="has-tooltip" title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
 }
-@helper printAttSelect(dynamic cat){
-    <select title="@cat["ServiceAttributeCategoryName"]" 
-    data-description="@cat["ServiceAttributeCategoryDescription"]" 
-    name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]">
-        @foreach (var att in cat["ServiceAttributes"]){
-        <option @getChecked(att) title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]" value="@att["ServiceAttributeID"]">@att["ServiceAttribute"]</option>
-        }
-    </select>
-}
 @helper printCatLegend(dynamic cat){
     string tittle, desc;
     desc = cat["ServiceAttributeCategoryDescription"];
@@ -411,28 +381,6 @@
             </select>
         </fieldset>
     }
-}
-@helper printLanguagesCat(dynamic cat, dynamic langLevels, dynamic userLangLevels, string tplAttName){
-    <fieldset class="DashboardServices-attributes-languages DashboardServices-attributes-category @(cat["RequiredInput"] ? "is-required" /*reqCatClass*/ : "")">
-        @printCatLegend(cat)
-        <ul>
-            @foreach (var att in cat["ServiceAttributes"])
-            {
-                string selLangLevel = 
-                    Request[String.Format(tplAttName, LcData.ServiceAttCatIDLanguages, att.ServiceAttributeID) + "-level"] ??
-                    (userLangLevels.ContainsKey(att.ServiceAttributeID) ? userLangLevels[att.ServiceAttributeID] : 0).ToString();
-                        
-            <li>@printAttCheck(LcData.ServiceAttCatIDLanguages, att)
-                <select name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]-attribute[@(att.ServiceAttributeID)]-level">
-                    @foreach (var level in langLevels)
-                    {
-                        <option @LcHelpers.IsSelected(level.LanguageLevelID, selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>
-                    }
-                </select>
-            </li>
-            }
-        </ul>
-    </fieldset>
 }
 @helper printCategoryAutocompleteAttributes(int catID, dynamic cat) {
     if (cat["ServiceAttributes"].Count > 0)
@@ -486,11 +434,8 @@
                 {
                     switch ((int)cat.Key)
                     {
-                        /*case LcData.ServiceAttCatIDExperienceLevel:
-                            @printExperienceLevelCat(expLevels, tplCatName)
-                            break;*/
                         case LcData.ServiceAttCatIDLanguages:
-                            /* Out of sidebar */
+                            /* Out of sidebar, but this 'case' is required to avoid it printing twice in 'default' case */
                             break;
                         default:
                             <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category">
