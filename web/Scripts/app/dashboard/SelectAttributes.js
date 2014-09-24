@@ -119,21 +119,41 @@ function SelectAttributes($c, categoryId) {
             if (!newAttribute || /^\s+$/.test(newAttribute))
                 return false;
 
-            newAttribute = {
-                ServiceAttribute: newAttribute,
-                ServiceAttributeID: 0,
-                ServiceAttributeDescription: null,
-                ServiceAttributeCategoryID: this.categoryId,
-                UserChecked: true
-            };
+            var createFromName = true;
+
+            // Search if exists on the source list:
+            if (typeof (this.autocompleteSearch) === 'function') {
+                // Use autocompleteSearch to look for an exact match in
+                // the source list, avoiding attempts to add new attributes
+                // that already exists in the source and has an ID
+                var foundItems = this.autocompleteSearch(newAttribute);
+                if (foundItems && foundItems.length) {
+                    // Get the first found (ideally it must be the only one)
+                    newAttribute = foundItems[0];
+                    // Use this rather than create one
+                    createFromName = false;
+                }
+            }
+
+            if (createFromName) {
+                newAttribute = {
+                    ServiceAttribute: newAttribute,
+                    ServiceAttributeID: 0,
+                    ServiceAttributeDescription: null,
+                    ServiceAttributeCategoryID: this.categoryId,
+                    UserChecked: true
+                };
+            }
         }
 
         // Add UI element
         var wasAdded = this.add(newAttribute);
 
-        if (wasAdded)
+        // If it was added and is a new attribute (ID=0)
+        if (wasAdded && newAttribute.ServiceAttributeID === 0) {
             // Add to cache:
             this.news[newAttribute.ServiceAttribute] = newAttribute;
+        }
 
         return wasAdded;
     };
@@ -168,24 +188,38 @@ SelectAttributes.prototype.setupAutocomplete = function setupAutocomplete(list) 
     // Reference to 'this' for the following closures
     var selectAtts = this;
 
+    /**
+    Performs a search by name on the autocomplete source list
+    using the given exact, case insensitive, name or a regular expression.
+    **/
+    this.autocompleteSearch = function (nameOrMatcher) {
+
+        var matcher = nameOrMatcher;
+        if (typeof (nameOrMatcher) === 'string') {
+            matcher = new RegExp('^' + $.ui.autocomplete.escapeRegex(nameOrMatcher) + '$', 'i');
+        }
+
+        return $.grep(this.autocompleteSource, function (value) {
+            // Only those not selected still
+            if (selectAtts.has(value)) {
+                return false;
+            }
+            // Search by name:
+            // (replaced non-breaking space by a normal one)
+            value.value = value.ServiceAttribute.replace(/\u00a0/g, ' ');
+            var found = matcher.test(value.value);
+            // Result
+            return found;
+        });
+    };
+
     // Autocomplete set-up
     $el.autocomplete({
         source: function (request, response) {
+            // Partial string search
+            var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), 'i');
 
-            var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
-
-            response($.grep(list, function (value) {
-                // Only those not selected still
-                if (selectAtts.has(value)) {
-                    return false;
-                }
-                // Search by name:
-                // (replaced non-breaking space by a normal one)
-                value.value = value.ServiceAttribute.replace(/\u00a0/g, ' ');
-                var found = matcher.test(value.value);
-                // Result
-                return found;
-            }));
+            response(selectAtts.autocompleteSearch(matcher));
         },
         select: function (event, ui) {
 
@@ -204,7 +238,7 @@ SelectAttributes.prototype.setupAutocomplete = function setupAutocomplete(list) 
         if (e.keyCode == 13) {
             // addnew
             selectAtts.addNew(selectAtts.$acInput.val());
-            selectAtts.$acInput.val('');            
+            selectAtts.$acInput.val('');
             // Cancel form-submit:
             return false;
         }
