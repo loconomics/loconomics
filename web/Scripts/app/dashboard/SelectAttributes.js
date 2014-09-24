@@ -182,7 +182,7 @@ SelectAttributes.prototype.setupAutocomplete = function setupAutocomplete(list) 
 
     this.$autocomplete = this.$c.find('.SelectAttributes-autocomplete');
     this.$acButton = this.$autocomplete.find('.SelectAttributes-autocompleteButton');
-    var $el = this.$acInput = this.$autocomplete.find('.SelectAttributes-autocompleteInput');
+    this.$acInput = this.$autocomplete.find('.SelectAttributes-autocompleteInput');
     this.autocompleteSource = list;
 
     // Reference to 'this' for the following closures
@@ -214,22 +214,43 @@ SelectAttributes.prototype.setupAutocomplete = function setupAutocomplete(list) 
     };
 
     // Autocomplete set-up
-    $el.autocomplete({
+    this.$acInput.autocomplete({
         source: function (request, response) {
             // Partial string search
             var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), 'i');
-
             response(selectAtts.autocompleteSearch(matcher));
         },
         select: function (event, ui) {
 
             selectAtts.add(ui.item);
 
-            // Clear box:
-            $el.val('');
+            selectAtts.$acInput
+            // Clean-up value
+            .val('');
+            // Force show list again,
+            // the 'inmediate delay' is because
+            // this handler is followed by
+            // a 'close autocomplete' action,
+            // we need open it after that
+            setTimeout(function () {
+                selectAtts.$acInput.trigger('selectattributesshowlist');
+            }, 1);
+
             return false;
-        }
+        },
+        // To allow show all elements:
+        minLength: 0
     });
+
+    function _performAddNew() {
+        selectAtts.addNew(selectAtts.$acInput.val());
+
+        selectAtts.$acInput
+        // Clean-up value
+        .val('')
+        // Force show list again
+        .trigger('selectattributesshowlist');
+    }
 
     // Press Enter on autocomplete textbox:
     // - to avoid unwanted form-submit
@@ -237,8 +258,7 @@ SelectAttributes.prototype.setupAutocomplete = function setupAutocomplete(list) 
     this.$acInput.on('keypress', function (e) {
         if (e.keyCode == 13) {
             // addnew
-            selectAtts.addNew(selectAtts.$acInput.val());
-            selectAtts.$acInput.val('');
+            _performAddNew();
             // Cancel form-submit:
             return false;
         }
@@ -246,7 +266,12 @@ SelectAttributes.prototype.setupAutocomplete = function setupAutocomplete(list) 
 
     // Button handler
     selectAtts.$c.on('click', '.SelectAttributes-autocompleteButton', function () {
-        selectAtts.addNew(selectAtts.$acInput.val());
-        selectAtts.$acInput.val('');
+        _performAddNew();
+    });
+
+    // Show full list on focus/hovering
+    this.$acInput.on('focus selectattributesshowlist', function () {
+        if (!selectAtts.$acInput.autocomplete('widget').is(':visible'))
+            selectAtts.$acInput.autocomplete('search', '');
     });
 };
