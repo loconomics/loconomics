@@ -363,7 +363,7 @@
     } else {
         tittle = cat["ServiceAttributeCategoryName"];
     }
-    <legend class="has-popup-tooltip" data-description="@desc" title="@tittle">@cat["ServiceAttributeCategoryName"]:</legend>
+    <legend class="has-popup-tooltip DashboardServices-categoryName" data-description="@desc" title="@tittle">@cat["ServiceAttributeCategoryName"]:</legend>
 }
 @helper printExperienceLevelCat(dynamic expLevels, string tplCatName){
     if (expLevels != null && expLevels.Count > 0)
@@ -386,6 +386,7 @@
     if (cat["ServiceAttributes"].Count > 0)
     {
         <div class="@(cat["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category SelectAttributes">
+            <h4 class="DashboardServices-categoryName SelectAttributes-title">@(cat["ServiceAttributeCategoryName"])</h4>
             <div class="SelectAttributes-autocomplete">
                 <input class="SelectAttributes-autocompleteInput" type="text" autocomplete="off" placeholder="@(cat["ServiceAttributeCategoryName"])" data-autocomplete-id="@(catID)" />
                 <button class="action SelectAttributes-autocompleteButton" type="button">Add</button>
