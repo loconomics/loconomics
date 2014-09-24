@@ -54,12 +54,16 @@ function SelectAttributes($c, categoryId) {
         );
     };
 
-    this.remove = function remove(el) {
+    this.remove = function remove(el, silentChange) {
 
         var $el = $(el),
             check = $el.siblings('[type=checkbox]'),
             parent = $el.closest('li'),
             val = check.val();
+
+        if (!silentChange)
+            // notify form change
+            check.change();
 
         // Is an ID (integer) or new name?
         if (/^\d+$/.test(val)) {
@@ -73,7 +77,7 @@ function SelectAttributes($c, categoryId) {
         parent.remove();
     };
 
-    this.add = function add(item) {
+    this.add = function add(item, silentChange) {
 
         // Check if is not in the list already
         if (this.has(item))
@@ -93,10 +97,14 @@ function SelectAttributes($c, categoryId) {
             container: 'body'
         });
 
-        $('<input type="checkbox" style="display:none" checked="checked" />')
+        var $check = $('<input type="checkbox" style="display:none" checked="checked" />')
         .attr('name', 'positionservices-category[' + item.ServiceAttributeCategoryID + ']-attribute[' + item.ServiceAttributeID + ']')
         .attr('value', item.ServiceAttributeID || item.ServiceAttribute)
         .appendTo(li);
+
+        if (!silentChange)
+            // notify form change:
+            $check.change();
 
         $('<a href="#" class="SelectAttributes-item-remove">X</a>')
         .appendTo(li);
@@ -141,10 +149,12 @@ function SelectAttributes($c, categoryId) {
 module.exports = SelectAttributes;
 
 SelectAttributes.prototype.fillWithCheckedAttributes = function fillWithCheckedAttributes(attributes) {
-
+    var self = this;
     attributes.filter(function (att) {
         return att && att.UserChecked;
-    }).forEach(this.add.bind(this));
+    }).forEach(function (item) {
+        self.add(item, true);
+    });
 };
 
 SelectAttributes.prototype.setupAutocomplete = function setupAutocomplete(list) {
