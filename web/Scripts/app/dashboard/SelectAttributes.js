@@ -197,6 +197,19 @@ SelectAttributes.prototype.setupAutocomplete = function setupAutocomplete(list) 
         }
     });
 
+    // Press Enter on autocomplete textbox:
+    // - to avoid unwanted form-submit
+    // - to trigger the addnew action
+    this.$acInput.on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            // addnew
+            selectAtts.addNew(selectAtts.$acInput.val());
+            selectAtts.$acInput.val('');            
+            // Cancel form-submit:
+            return false;
+        }
+    });
+
     // Button handler
     selectAtts.$c.on('click', '.SelectAttributes-autocompleteButton', function () {
         selectAtts.addNew(selectAtts.$acInput.val());
