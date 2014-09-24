@@ -143,6 +143,7 @@ function SelectAttributes($c, categoryId) {
 
     $c.on('click', '.SelectAttributes-item-remove', function () {
         selectAtts.remove(this);
+        return false;
     });
 }
 
