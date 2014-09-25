@@ -30,9 +30,15 @@ public static partial class LcData
             Anonymous = 1,
             Customer = 2,
             Provider = 4,
-            Admin = 8,
-            User = 15,
-            System = 16
+            // All Members are Providers too,
+            // so an option 'only member' does NOT exists
+            // and its value gets reserved for use
+            // grouped with the Provider (then, 12)
+            //OnlyMember = 8,
+            Member = 12,
+            Admin = 16,
+            User = 31,
+            System = 32
         }
         public static UserType ParseUserType(string strtype, UserType defaultTo = UserType.None)
         {
@@ -62,6 +68,8 @@ public static partial class LcData
                     return UserType.Anonymous;
                 case 'n':
                     return UserType.None;
+                case 'm':
+                    return UserType.Member;
                 default:
                     return defaultTo;
             }
@@ -117,6 +125,7 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
+                                ,IsMember
                                 ,AccountStatusID
 
                                 -- Only Providers:
@@ -198,6 +207,7 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
+                                ,IsMember
                                 ,AccountStatusID
 
                                 -- Only Providers:
@@ -666,7 +676,7 @@ public static partial class LcData
         }
         #endregion
 
-        #region Checkes
+        #region Checks
         public class UserPositionActivation
         {
             public List<string> Messages
