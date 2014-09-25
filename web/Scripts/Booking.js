@@ -658,13 +658,17 @@ $(document).ready(function () {
     LC.setupUpdateDetailedPricingSummary();
 
     // Setup Schedule step:
-    $('#schedule').on('endLoadWizardStep', function () {
+    $('#schedule').on('endLoadWizardStep', function (e, $button) {
         // Getting the tab content for payment that is not loaded at the start
         var tab = $('#schedule');
 
         // Loading, with retard
         var loadingtimer = setTimeout(function () {
-            tab.block(loadingBlock);
+            var loadingMsg = $button.data('loading-message');
+            var blockOpts = $.extend({}, loadingBlock, {
+                message: loadingMsg ? loadingBlock.message + '<br/><br/><strong>' + loadingMsg + '</strong><br/><br/>' : loadingBlock.message
+            });
+            tab.block(blockOpts);
         }, gLoadingRetard);
 
         $.ajax({
