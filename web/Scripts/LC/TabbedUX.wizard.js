@@ -20,14 +20,15 @@ exports.init = function initTabbedWizard(TabbedUX, options) {
     }, options);
 
     $("body").delegate(".tabbed.wizard .next", "click", function () {
+        var button = $(this);
         // getting the form
-        var form = $(this).closest('form');
+        var form = button.closest('form');
         // getting the current wizard step-tab
         var currentStep = form.closest('.tab-body');
         // getting the wizard container
         var wizard = form.closest('.tabbed.wizard');
         // getting the wizard-next-step
-        var nextStep = $(this).data('wizard-next-step');
+        var nextStep = button.data('wizard-next-step');
 
         var ctx = {
             box: currentStep,
@@ -57,7 +58,7 @@ exports.init = function initTabbedWizard(TabbedUX, options) {
         ctx.loadingtimer = setTimeout(function () {
             currentStep.block(blockPresets.loading);
         }, options.loadingDelay);
-        
+
         ctx.autoUnblockLoading = true;
 
         var ok = false;
@@ -79,12 +80,12 @@ exports.init = function initTabbedWizard(TabbedUX, options) {
                     if (nextStep) {
                         // If next step is internal url (a next wizard tab)
                         if (/^#/.test(nextStep)) {
-                            $(nextStep).trigger('beginLoadWizardStep');
+                            $(nextStep).trigger('beginLoadWizardStep', [button]);
 
                             TabbedUX.enableTab(nextStep);
 
                             ok = true;
-                            $(nextStep).trigger('endLoadWizardStep');
+                            $(nextStep).trigger('endLoadWizardStep', [button]);
                         } else {
                             // If there is a next-step URI that is not internal link, we load it
                             redirectTo(nextStep);

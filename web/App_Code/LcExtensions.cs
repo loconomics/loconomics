@@ -136,4 +136,13 @@ public static class LcExtensions
                 yield break;
         }
     }
+
+    public static long AsLong(this string text, long alt = 0)
+    {
+        long v = 0;
+        if (long.TryParse(text, out v))
+            return v;
+        else
+            return alt;
+    }
 }

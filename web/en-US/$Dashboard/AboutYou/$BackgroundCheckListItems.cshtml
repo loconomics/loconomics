@@ -7,29 +7,35 @@
     var u = LcData.UserInfo.GetUserRowWithContactData();
     var itemClass = PageData["ItemClass"] ?? "";
     
-    var checks = LcData.GetUserBackgroundChecks(u.UserID, u.CountryID, u.StateProvinceID, true);
+    dynamic checks = null;
+    if (u.IsProvider && u.CountryID is int && u.StateProvinceID is int) {
+        checks = LcData.GetUserBackgroundChecks(u.UserID, u.CountryID, u.StateProvinceID, true);
+    }
 }
-@foreach (var check in checks)
+@if (checks != null)
 {
-    <li class="@itemClass ItemBox">
-        <h1 class="ItemBox-name">@check.BackgroundCheckName</h1>
-        <p>
-            <span class="@(itemClass)-status @(check.StatusID == 2 ? itemClass + "-status--confirmed" : "")">@check.StatusName</span>
-            @if (check.LastVerifiedDate != null)
-            {
-                <span>since @check.LastVerifiedDate.ToShortDateString() </span>
-            }
-        </p>
-        @if (!String.IsNullOrEmpty(check.Summary))
-        {
-            <h5 class="ItemBox-sectionTitle">Status summary:</h5>
-            <p>@check.Summary</p>
-        }
-        <div>
-            <h5 class="ItemBox-sectionTitle">Description:</h5>
+    foreach (var check in checks)
+    {
+        <li class="@itemClass ItemBox">
+            <h1 class="ItemBox-name">@check.BackgroundCheckName</h1>
             <p>
-                @LcHelpers.PrintTextAsHtml(check.BackgroundCheckDescription)
+                <span class="@(itemClass)-status @(check.StatusID == 2 ? itemClass + "-status--confirmed" : "")">@check.StatusName</span>
+                @if (check.LastVerifiedDate != null)
+                {
+                    <span>since @check.LastVerifiedDate.ToShortDateString() </span>
+                }
             </p>
-        </div>
-    </li>
+            @if (!String.IsNullOrEmpty(check.Summary))
+            {
+                <h5 class="ItemBox-sectionTitle">Status summary:</h5>
+                <p>@check.Summary</p>
+            }
+            <div>
+                <h5 class="ItemBox-sectionTitle">Description:</h5>
+                <p>
+                    @LcHelpers.PrintTextAsHtml(check.BackgroundCheckDescription)
+                </p>
+            </div>
+        </li>
+    }
 }
