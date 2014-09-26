@@ -1,5 +1,25 @@
 ﻿@*
     Read and edit Events.
+    
+    Options:
+    GET
+        - types[]:array[int] Optional. List of CalendarEventTypeIDs to filter the events returned.
+            Possible values are the IDs from records on the table [CalendarEventType].
+        - start:datetime Optional. Start date of the range of events included partial or completely
+        - end:datetime Optional. End date of the range of events included partial or completely.
+        - includes[]:array[string] Optional. Names of related Entities to include.
+            Possible values are: 
+            - CalendarAvailabilityType, 
+            - CalendarEventType, 
+            - CalendarRecurrence,
+            - CalendarRecurrenceFrequency (it goes inside CalendarRecurrence)
+            - CalendarEventExceptionsPeriodsList
+            - CalendarEventExceptionsPeriod (it goes inside CalendarEventExceptionsPeriodsList)
+            - CalendarEventRecurrencesPeriodsList
+            - CalendarEventRecurrencesPeriod (it goes inside CalendarEventRecurrencesPeriodsList)
+            - CalendarEventsAttendees
+            - CalendarEventsContacts,
+            - CalendarEventComments
 *@
 @functions{
     public class RestEvents : RestWebPage
@@ -9,7 +29,7 @@
             // Parameters
             int userId = WebSecurity.CurrentUserId;
 
-            var types = Request.QueryString.GetValues("types") ?? Request.QueryString.GetValues("types[]");
+            var types = Request.QueryString.GetValues("types[]");
             var typesIDs = new List<int>();
             if (types != null) {
                 foreach(var type in types) {
@@ -24,8 +44,10 @@
             var start = DateTimeFromISO(Request.QueryString["start"]);
             var end = DateTimeFromISO(Request.QueryString["end"]);
 
+            var includes = Request.QueryString.GetValues("includes[]") ?? new string[]{};
+
             // Data
-            var list = LcCalendar.GetUserEvents(userId, typesIDs.ToArray<int>(), start, end).Select(ev => new {
+            var list = LcCalendar.GetUserEvents(userId, typesIDs.ToArray<int>(), start, end, includes).Select(ev => new {
                 EventID = ev.Id,
                 UserID = ev.UserId,
                 CalendarEventTypeID = ev.EventType,
@@ -55,19 +77,82 @@
                 // the event recurrence details
                 //TimeBlock = ev.TimeBlock,
                 //DayOfWeek = ev.DayofWeek,
-                CalendarAvailabilityType = new {
+
+                CalendarAvailabilityType = includes.Contains("CalendarAvailabilityType") ? new {
                     CalendarAvailabilityTypeID = ev.CalendarAvailabilityType.CalendarAvailabilityTypeID,
                     Name = ev.CalendarAvailabilityType.CalendarAvailabilityTypeName,
                     Description = ev.CalendarAvailabilityType.CalendarAvailabilityTypeDescription,
                     SelectableAs = ev.CalendarAvailabilityType.SelectableAs
-                },
-                CalendarEventType = new {
+                } : null,
+
+                CalendarEventType = includes.Contains("CalendarEventType") ? new {
                     CalendarEventTypeID = ev.CalendarEventType.EventTypeId,
                     Name = ev.CalendarEventType.EventType,
                     DisplayName = ev.CalendarEventType.DisplayName,
                     Description = ev.CalendarEventType.Description
-                }
-                //CalendarReccurrence = ev.CalendarReccurrence
+                } : null,
+
+                CalendarRecurrence = includes.Contains("CalendarRecurrence") ? ev.CalendarReccurrence.Select(r => new {
+                    CalendarRecurrenceID = r.ID,
+                    Count = r.Count,
+                    EvaluationMode = r.EvaluationMode,
+                    CalendarRecurrenceFrequencyTypeID = r.Frequency,
+                    Interval = r.Interval,
+                    RestrictionType = r.RestristionType,
+                    Until = r.Until,
+                    FirstDayOfWeek = r.FirstDayOfWeek,
+
+                    CalendarReccurrenceFrequency = includes.Contains("CalendarRecurrenceFrequency") ? r.CalendarReccurrenceFrequency.Select(f => new {
+                        CalendarReccurrenceFrequencyID = f.ID,
+                        ByDay = f.ByDay,
+                        ByHour = f.ByHour,
+                        ByMinute = f.ByMinute,
+                        ByMonth = f.ByMonth,
+                        ByMonthDay = f.ByMonthDay,
+                        BySecond = f.BySecond,
+                        BySetPosition = f.BySetPosition,
+                        ByWeekNo = f.ByWeekNo,
+                        ByYearDay = f.ByYearDay,
+                        DayOfWeek = f.DayOfWeek,
+                        ExtraValue = f.ExtraValue,
+                        FrequencyDay = f.FrequencyDay
+                    }) : null
+                }) : null,
+                
+                CalendarEventComments = includes.Contains("CalendarEventComments") ? ev.CalendarEventComments.Select(r => new {
+                    Comment = r.Comment,
+                    CalendarEventCommentID = r.Id
+                }) : null,
+                
+                CalendarEventExceptionsPeriodsList = includes.Contains("CalendarEventExceptionsPeriodsList") ? ev.CalendarEventExceptionsPeriodsList.Select(r => new {
+                    CalendarEventExceptionsPeriodsListID = r.Id,
+                    
+                    CalendarEventExceptionsPeriod = includes.Contains("CalendarEventExceptionsPeriod") ? r.CalendarEventExceptionsPeriod.Select(p => new {
+                        DateStart = p.DateStart,
+                        DateEnd = p.DateEnd
+                    }) : null
+                }) : null,
+                
+                CalendarEventRecurrencesPeriodsList = includes.Contains("CalendarEventRecurrencesPeriodsList") ? ev.CalendarEventRecurrencesPeriodList.Select(r => new {
+                    CalendarEventRecurrencesPeriodsListID = r.Id,
+                    
+                    CalendarEventRecurrencesPeriod = includes.Contains("CalendarEventRecurrencesPeriod") ? r.CalendarEventRecurrencesPeriod.Select(p => new {
+                        DateStart = p.DateStart,
+                        DateEnd = p.DateEnd
+                    }) : null
+                }) : null,
+                
+                CalendarEventsAttendees = includes.Contains("CalendarEventsAttendees" ) ? ev.CalendarEventsAttendees.Select(r => new {
+                    CalendarEventsAttendeeID = r.Id,
+                    Attendee = r.Attendee,
+                    Role = r.Role,
+                    Uri = r.Uri
+                }) : null,
+                
+                CalendarEventsContacts = includes.Contains("CalendarEventsContacts") ? ev.CalendarEventsContacts.Select(r => new {
+                    CalendarEventsContactID = r.Id,
+                    Contact = r.Contact
+                }) : null
             });
 
             return list;

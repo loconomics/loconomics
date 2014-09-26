@@ -744,17 +744,30 @@ public static partial class LcCalendar
     /// <param name="start"></param>
     /// <param name="end"></param>
     /// <returns></returns>
-    public static List<CalendarEvents> GetUserEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null)
+    public static List<CalendarEvents> GetUserEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, string[] includes = null)
     {
         types = types == null ? new int[]{} : types;
+        includes = includes == null ? new string[]{} : includes;
+
+        // Names fixes (urgg...) and
+        // subclasses
+        includes = includes.ToList()
+            .Replace("CalendarRecurrenceFrequency", "CalendarReccurrence.CalendarReccurrenceFrequency")
+            .Replace("CalendarEventRecurrencesPeriodsList", "CalendarEventRecurrencesPeriodList")
+            .Replace("CalendarEventRecurrencesPeriod", "CalendarEventRecurrencesPeriodList.CalendarEventRecurrencesPeriod")
+            .Replace("CalendarEventExceptionsPeriod", "CalendarEventExceptionsPeriodsList.CalendarEventExceptionsPeriod")
+            .Replace("CalendarRecurrence", "CalendarReccurrence")
+            .ToArray();
 
         using (var ent = new loconomicsEntities())
         {
-            return ent.CalendarEvents
-                .Include("CalendarAvailabilityType")
-                .Include("CalendarEventType")
-                .Include("CalendarReccurrence")
-                .Include("CalendarReccurrence.CalendarReccurrenceFrequency")
+            var data = (System.Data.Entity.Infrastructure.DbQuery<CalendarEvents>)ent.CalendarEvents;
+            foreach(var include in includes)
+            {
+                data = data.Include(include);
+            }
+
+            return data
                 .Where(c => c.UserId == userID && types.Contains(c.EventType) &&
                     (start.HasValue ? c.EndTime > start : true) &&
                     (end.HasValue ? c.StartTime < end : true))
