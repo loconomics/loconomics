@@ -32,6 +32,31 @@ public class RestWebPage
             return WebPage.ModelState;
         }
     }
+    public System.Web.WebPages.ValidationHelper Validation
+    {
+        get
+        {
+            return WebPage.Validation;
+        }
+    }
+    public IList<string> UrlData
+    {
+        get
+        {
+            return WebPage.UrlData;
+        }
+    }
+    public int StatusCode
+    {
+        get
+        {
+            return WebPage.Response.StatusCode;
+        }
+        set
+        {
+            WebPage.Response.StatusCode = value;
+        }
+    }
 
     public virtual dynamic Get()
     {
