@@ -733,6 +733,17 @@ public static partial class LcCalendar
     #endregion
 
     #region Events in general
+    /// <summary>
+    /// Get Events for the user and given dates and types.
+    /// 
+    /// TODO: Review the date range must be for the events Start and EndTime only
+    /// or must consider multiple occurrences of recurrent events
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="types"></param>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <returns></returns>
     public static List<CalendarEvents> GetUserEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null)
     {
         types = types == null ? new int[]{} : types;
