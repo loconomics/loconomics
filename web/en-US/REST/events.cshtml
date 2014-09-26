@@ -1,0 +1,75 @@
+﻿@*
+    Read and edit Events.
+*@
+@functions{
+    public class RestEvents : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            var types = Request.QueryString.GetValues("types");
+            var typesIDs = new List<int>();
+            if (types != null) {
+                foreach(var type in types) {
+                    typesIDs.Add(type.AsInt(0));
+                }
+            }
+
+            var start = DateTimeFromISO(Request.QueryString["start"]);
+            var end = DateTimeFromISO(Request.QueryString["end"]);
+
+            // Data
+            var list = LcCalendar.GetUserEvents(userId, typesIDs.ToArray<int>(), start, end).Select(ev => new {
+                EventID = ev.Id,
+                UserID = ev.UserId,
+                CalendarEventTypeID = ev.EventType,
+                Summary = ev.Summary,
+                UID = ev.UID,
+                CalendarAvailabilityTypeID = ev.CalendarAvailabilityTypeID,
+                Transparency = ev.Transparency,
+                StartTime = DateTimeToISO(ev.StartTime),
+                EndTime = DateTimeToISO(ev.EndTime),
+                IsAllDay = ev.IsAllDay,
+                StampTime = ev.StampTime,
+                TimeZone = ev.TimeZone,
+                Priority = ev.Priority,
+                Location = ev.Location,
+                UpdatedDate = DateTimeToISO(ev.UpdatedDate),
+                CreatedDate = DateTimeToISO(ev.CreatedDate),
+                ModifyBy = ev.ModifyBy,
+                Class = ev.Class,
+                Organizer = ev.Organizer,
+                Sequence = ev.Sequence,
+                Geo = ev.Geo,
+                CalendarRecurrenceID = ev.RecurrenceId,
+                Description = ev.Description,
+                // NO published TimeBlock and DayOfWeek
+                // since are old and confusing fields,
+                // all that information comes with 
+                // the event recurrence details
+                //TimeBlock = ev.TimeBlock,
+                //DayOfWeek = ev.DayofWeek,
+                CalendarAvailabilityType = new {
+                    CalendarAvailabilityTypeID = ev.CalendarAvailabilityType.CalendarAvailabilityTypeID,
+                    Name = ev.CalendarAvailabilityType.CalendarAvailabilityTypeName,
+                    Description = ev.CalendarAvailabilityType.CalendarAvailabilityTypeDescription,
+                    SelectableAs = ev.CalendarAvailabilityType.SelectableAs
+                },
+                CalendarEventType = new {
+                    CalendarEventTypeID = ev.CalendarEventType.EventTypeId,
+                    Name = ev.CalendarEventType.EventType,
+                    DisplayName = ev.CalendarEventType.DisplayName,
+                    Description = ev.CalendarEventType.Description
+                }
+                //CalendarReccurrence = ev.CalendarReccurrence
+            });
+
+            return list;
+        }
+    }
+}
+@{   
+    new RestEvents().JsonResponse(this);
+}

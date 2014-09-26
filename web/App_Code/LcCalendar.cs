@@ -732,6 +732,26 @@ public static partial class LcCalendar
     }
     #endregion
 
+    #region Events in general
+    public static List<CalendarEvents> GetUserEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null)
+    {
+        types = types == null ? new int[]{} : types;
+
+        using (var ent = new loconomicsEntities())
+        {
+            return ent.CalendarEvents
+                .Include("CalendarAvailabilityType")
+                .Include("CalendarEventType")
+                .Include("CalendarReccurrence")
+                .Include("CalendarReccurrence.CalendarReccurrenceFrequency")
+                .Where(c => c.UserId == userID && types.Contains(c.EventType) &&
+                    (start.HasValue ? c.EndTime > start : true) &&
+                    (end.HasValue ? c.StartTime < end : true))
+                .ToList();
+        }
+    }
+    #endregion
+
     #region Appointments (custom user events)
     public static List<CalendarEvents> GetUserAppointments(int userID)
     {
