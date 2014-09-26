@@ -12,7 +12,7 @@ using System.IO;
 /// <summary>
 /// Calendaring Tasks, wrapper for some CalendarDll features.
 /// </summary>
-public static class LcCalendar
+public static partial class LcCalendar
 {
     #region Booking
     public const string sqlInsBookingEvent = @"

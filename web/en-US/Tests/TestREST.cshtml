@@ -43,6 +43,14 @@
                 'The property "limit" will limit the amount of records returned in each group.'
             }
         },
+        'Get Availability Weekly': {
+            url: '/en-US/REST/availability/weekly',
+            get: {
+                user: 141,
+                start: '2014-07-17',
+                end: null
+            }
+        },
         'Get Availability Weekly (pre-REST API)': {
             url: '/en-US/calendar/get-availability',
             get: {
@@ -52,10 +60,25 @@
                 end: null
             }
         },
+        'Get Availability workHours (alias /weekly-schedule)': {
+            url: '/en-US/REST/availability/workhours',
+            get: {
+            }
+        },
         'Get Availability workHours (pre-REST API)': {
             url: '/en-US/calendar/get-availability',
             get: {
                 type: 'workHours'
+            }
+        },
+        'Get Availability monthly': {
+            url: '/en-US/REST/availability/monthly',
+            get: {
+                editable: false,
+                'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
+                    'the first month-date for that date; or a given "start" and "end" dates, ' +
+                    'default is the current date',
+                date: null
             }
         },
         'Get Availability monthly (pre-REST API)': {
@@ -67,6 +90,16 @@
                     'the first month-date for that date; or a given "start" and "end" dates, ' +
                     'default is the current date',
                 date: null
+            }
+        },
+        'Get Availability monthly-schedule': {
+            url: '/en-US/REST/availability/monthly-schedule',
+            get: {
+                'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
+                    'the first month-date for that date; or a given "start" and "end" dates, ' +
+                    'default is the current date',
+                start: null,
+                end: null
             }
         },
         'Get Availability monthly-schedule (pre-REST API)': {
