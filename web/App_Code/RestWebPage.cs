@@ -142,4 +142,58 @@ public class RestWebPage
     {
         ASP.LcHelpers.ReturnJson(Run(WebPage));
     }
+
+    #region REST utilities
+    /// <summary>
+    /// Date format in ISO-8601, suitable for JSON
+    /// </summary>
+    public const string DateFormat = "yyyy'-'MM'-'dd";
+    /// <summary>
+    /// Time format in ISO-8601, suitable for JSON
+    /// </summary>
+    public const string TimeFormat = @"hh\:mm\:ss";
+    /// <summary>
+    /// Convert a date (in DateTime) in
+    /// ISO string format, or null if not a correct value.
+    /// </summary>
+    /// <param name="date"></param>
+    /// <returns></returns>
+    public static string DateToISO(object date)
+    {
+        return (date is DateTime) ? ((DateTime)date).ToString(DateFormat) : null;
+    }
+    /// <summary>
+    /// Convert a time (as TimeSpan or DateTime) in
+    /// ISO string format, or null if not a correct value.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public static string TimeToISO(object time)
+    {
+        return (time is DateTime) ? ((DateTime)time).TimeOfDay.ToString(TimeFormat) :
+            (time is TimeSpan) ? ((TimeSpan)time).ToString(TimeFormat) :
+            null;
+    }
+    public static string DateTimeToISO(object datetime)
+    {
+        var d = DateToISO(datetime);
+        var t = TimeToISO(datetime);
+
+        if (d != null && t != null)
+        {
+            return d + "T" + t;
+        }
+        else
+        {
+            return d != null ? d : t != null ? t : null;
+        }
+    }
+    public static DateTime? DateTimeFromISO(string datetime)
+    {
+        DateTime dt;
+        return (DateTime.TryParse(datetime, null, System.Globalization.DateTimeStyles.RoundtripKind, out dt)) ?
+            (DateTime?)dt :
+            null;
+    }
+    #endregion
 }
