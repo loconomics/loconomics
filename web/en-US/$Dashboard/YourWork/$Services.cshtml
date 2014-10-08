@@ -70,8 +70,7 @@
                     // Check if selection changes
                     bool wasChecked = wasAttributeFormChecked(cat, att);
                     // We check previous value with current to avoid do unneeded Database calls
-                    // Except for Language to save the Language Level, we need do it anyway
-                    if (att.UserChecked != wasChecked || (int)cat.Key == LcData.ServiceAttCatIDLanguages) {
+                    if (att.UserChecked != wasChecked) {
                         // Value changed, update database
                         if (wasChecked) {
                             // Set record (insert or update)
