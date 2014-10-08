@@ -4014,7 +4014,7 @@ form ul li {
 
 /* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
 
-/* line 70 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\layoutUtils.styl */
+/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\layoutUtils.styl */
 
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
@@ -4080,9 +4080,10 @@ form ul li {
 /* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
 .SelectAttributes .SelectAttributes-autocomplete .SelectAttributes-autocompleteInput {
   font-size: 13px;
+  min-width: 40%;
 }
 
-/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
 .SelectAttributes .SelectAttributes-autocomplete .SelectAttributes-autocompleteButton {
   font-size: 13px;
   -webkit-box-sizing: border-box;
@@ -4095,15 +4096,15 @@ form ul li {
   margin-left: -4px;
 }
 
-/* line 58 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
 .SelectAttributes .SelectAttributes-autocomplete .SelectAttributes-autocompleteButton:hover {
   -webkit-box-shadow: 0 0 5px 2px #99c027;
   box-shadow: 0 0 5px 2px #99c027;
 }
 
-/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
-
 /* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+
+/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
 .SelectAttributes.is-error .SelectAttributes-autocompleteInput {
   -webkit-box-shadow: 0px 0px 5px 1px #fc0404;
   box-shadow: 0px 0px 5px 1px #fc0404;
