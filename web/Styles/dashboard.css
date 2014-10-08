@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-08-15
+/*! Loconomics.com 2014-10-08
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1944,7 +1944,7 @@ form ul li {
 
 /* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 191 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 181 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -2440,42 +2440,27 @@ form ul li {
 }
 
 /* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
-
-/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
-.DashboardYourWork .DashboardServices .DashboardServices-attributes .DashboardServices-sidebar fieldset {
-  overflow: hidden;
-  width: 33%;
-  float: left;
-}
-
-/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
-.DashboardYourWork .DashboardServices .DashboardServices-attributes .DashboardServices-sidebar fieldset li {
-  float: none !important;
-  width: auto !important;
-}
-
-/* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardServices .DashboardServices-attributes .DashboardServices-attributes-languages {
   clear: both;
 }
 
-/* line 76 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardServices .DashboardServices-attributes .DashboardServices-attributes-languages ul li {
   width: 48%;
   white-space: nowrap;
   clear: none;
 }
 
-/* line 82 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 69 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardServices .DashboardServices-attributes .DashboardServices-attributes-languages ul li label,
 .DashboardYourWork .DashboardServices .DashboardServices-attributes .DashboardServices-attributes-languages ul li select {
   display: inline-block;
   width: 46%;
 }
 
-/* line 87 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardServices .DashboardServices-attributes .DashboardServices-attributes-languages ul li label {
   margin-right: 1%;
   overflow: hidden;
@@ -2483,33 +2468,33 @@ form ul li {
   vertical-align: middle;
 }
 
-/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 86 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 100 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 87 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardCancellationPolicy .DashboardCancellationPolicy-info {
   text-decoration: underline;
 }
 
-/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 106 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 93 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 94 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardLicenses .DashboardLicense-licenseDetails ul {
 /* To compensate the dual 6px margin of this last li element
                     and the DashboardLicense-request first li element */
   margin-bottom: -6px;
 }
 
-/* line 112 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardLicenses .DashboardLicense-licenseDetails ul li {
   margin: 6px 0px;
   padding: 0px 10px;
 }
 
-/* line 119 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 106 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 120 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardLicenses .DashboardLicense-request li label {
   font-weight: bold;
   min-width: 230px;
@@ -2517,27 +2502,27 @@ form ul li {
   display: inline-block;
 }
 
-/* line 129 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 116 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 130 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardReviews li {
   padding: 0;
 }
 
-/* line 133 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 120 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardReviews li label {
   display: block;
   padding: 0px 4px;
 }
 
-/* line 138 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardReviews li textarea {
   height: 7em;
 }
 
-/* line 144 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 131 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 146 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 133 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList,
 .DashboardYourWork .DashboardAddPosition .DashboardAddPosition-selectPosition {
   float: left;
@@ -2548,25 +2533,25 @@ form ul li {
   box-sizing: border-box;
 }
 
-/* line 153 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 140 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardAddPosition .DashboardAddPosition-selectPosition-description {
   height: 180px;
   margin-top: 1em;
 }
 
-/* line 158 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 145 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList {
   padding-left: 30px;
 }
 
-/* line 161 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 148 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList li {
   list-style: disc inside;
   margin: 3px 0;
   padding: 0;
 }
 
-/* line 166 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 153 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList li > a,
 .DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList li > a:visited {
   color: #00989b;
@@ -2574,7 +2559,7 @@ form ul li {
   text-transform: lowercase;
 }
 
-/* line 174 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 161 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardAddPosition h4 {
   margin-bottom: 15px !important;
   font-weight: bold;
@@ -4025,6 +4010,104 @@ form ul li {
 /* line 162 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\photos.styl */
 .DashboardYourWork .DashboardPhotos .positionphotos-edit-primary label {
   padding: 0;
+}
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+
+/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\layoutUtils.styl */
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes {
+  margin: 0 0 1.5em;
+}
+
+/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-title {
+  display: none;
+}
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-selection {
+  display: block;
+  zoom: 1;
+  margin-top: 4px;
+}
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\layoutUtils.styl */
+.SelectAttributes .SelectAttributes-selection:before,
+.SelectAttributes .SelectAttributes-selection:after {
+  content: "";
+  display: table;
+}
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\layoutUtils.styl */
+.SelectAttributes .SelectAttributes-selection:after {
+  clear: both;
+}
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-selection .SelectAttributes-item {
+  background: White;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 0.1em 1em !important;
+  margin: 0 1em 6px 0 !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: auto !important;
+  float: left;
+  -webkit-box-shadow: 0px 0px 6px -2px #000;
+  box-shadow: 0px 0px 6px -2px #000;
+}
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-selection .SelectAttributes-item .SelectAttributes-item-remove {
+  text-decoration: none;
+  display: inline-block;
+  padding: 0.2em 0.6em;
+}
+
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-autocomplete {
+  font-size: 0;
+}
+
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-autocomplete .SelectAttributes-autocompleteInput {
+  font-size: 13px;
+  min-width: 40%;
+}
+
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-autocomplete .SelectAttributes-autocompleteButton {
+  font-size: 13px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 26px;
+  background: #99c027;
+  -webkit-border-radius: 0 4px 4px 0;
+  border-radius: 0 4px 4px 0;
+  margin-left: -4px;
+}
+
+/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes .SelectAttributes-autocomplete .SelectAttributes-autocompleteButton:hover {
+  -webkit-box-shadow: 0 0 5px 2px #99c027;
+  box-shadow: 0 0 5px 2px #99c027;
+}
+
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+
+/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\SelectAttributes.styl */
+.SelectAttributes.is-error .SelectAttributes-autocompleteInput {
+  -webkit-box-shadow: 0px 0px 5px 1px #fc0404;
+  box-shadow: 0px 0px 5px 1px #fc0404;
 }
 
 /* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */

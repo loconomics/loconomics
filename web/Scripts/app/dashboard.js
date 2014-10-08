@@ -131,6 +131,38 @@ function initYourWorkDom() {
 
     /* Your work / services */
     require('./dashboard/serviceAttributesValidation').setup($('.DashboardYourWork form'));
+
+    // If we are in ajax-load, re-execute page scripts to update inline global variables
+    if (arguments && arguments[3]) {
+        var scripts = $(arguments[3].responseText).filter('script').map(function () { return (this.text || this.textContent || this.innerHTML || ''); });
+        // 'each' functional style is not valid, for some reason evaling from there doesn't works,
+        // (something like a fake window instance) so we do it with a simple loop:
+        for (var i = 0; i < scripts.length; i++) {
+            $.globalEval(scripts[i]);
+        }
+    }
+
+    // Initialize SelectAttributes components for all categories
+    // of service attributes on the page.
+    var SelectAttributes = require('./dashboard/SelectAttributes');
+    var attsLists = window.serviceAttributesLists || {};
+    $(".SelectAttributes-autocompleteInput").each(function () {
+
+        var $el = $(this),
+            catId = $el.data('autocomplete-id'),
+            selectedAtts = new SelectAttributes($el.closest('.SelectAttributes'), catId);
+
+        // NOTE: The data is pulled from a global object,
+        // thats added by the page on the body with a inline script.
+        // Could be replaced by an AJAX call to JSON data, adding
+        // a loading spinner hover SelectAttributes elements
+        // while loading the 'attsLists' data.
+        var list = attsLists[catId] || [];
+
+        selectedAtts.setupAutocomplete(list);
+        selectedAtts.fillWithCheckedAttributes(list);
+    });
+
     // Instant saving and correct changes tracking
     setInstantSavingSection('.DashboardServices');
 
