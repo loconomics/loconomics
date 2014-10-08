@@ -355,16 +355,6 @@
 @helper printAttCheck(int catId, dynamic att){
     <label class="has-tooltip" title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
 }
-@helper printCatLegend(dynamic cat){
-    string tittle, desc;
-    desc = cat["ServiceAttributeCategoryDescription"];
-    if (String.IsNullOrWhiteSpace(desc)) {
-        desc = tittle = "";
-    } else {
-        tittle = cat["ServiceAttributeCategoryName"];
-    }
-    <legend class="has-popup-tooltip DashboardServices-categoryName" data-description="@desc" title="@tittle">@cat["ServiceAttributeCategoryName"]:</legend>
-}
 @helper printExperienceLevelCat(dynamic expLevels, string tplCatName){
     if (expLevels != null && expLevels.Count > 0)
     {
@@ -412,7 +402,7 @@
     <div class="DashboardServices-attributes clearfix">
         @foreach (var cat in dataCats)
         {
-            if (!specialCatIDs.Contains(cat.Key) && cat.Value["SideBarCategory"] == false)
+            if (!specialCatIDs.Contains(cat.Key))
             {
                 @printCategoryAutocompleteAttributes(cat.Key, cat.Value)
             }
@@ -420,34 +410,11 @@
 
         @printCategoryAutocompleteAttributes(LcData.ServiceAttCatIDLanguages, dataCats[LcData.ServiceAttCatIDLanguages])
 
-        <div class="DashboardServices-sidebar">
-            @* Because experience level attributes are get from a lookup table, not attributes table, cannot be linked
-                to positions, and will never be retrieved in dataCats collection; for that, and because is a general
-                category, is append ever for every position, at top of sidebar;
-                if this changes in a future, and normal-attributes are used instead lookup, in the foreach there are already
-                -commented- code for check its ID, maybe the helper needs redone. *@
-            @printExperienceLevelCat(expLevels, tplCatName)
+        @* Because experience level attributes are get from a lookup table, not attributes table, cannot be linked
+            to positions, and will never be retrieved in dataCats collection; for that, and because is a general
+            category, is append ever for every position, at the end; *@
+        @printExperienceLevelCat(expLevels, tplCatName)
 
-            @foreach (var cat in dataCats)
-            {
-                if ((specialCatIDs.Contains(cat.Key) || cat.Value["SideBarCategory"] == true) &&
-                    cat.Value["ServiceAttributes"].Count > 0)
-                {
-                    switch ((int)cat.Key)
-                    {
-                        case LcData.ServiceAttCatIDLanguages:
-                            /* Out of sidebar, but this 'case' is required to avoid it printing twice in 'default' case */
-                            break;
-                        default:
-                            <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category">
-                                @printCatLegend(cat.Value)
-                                @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
-                            </fieldset>
-                            break;
-                    }
-                }
-            }
-        </div>
     </div>
 
     <fieldset class="DashboardServices-positionIntro">
