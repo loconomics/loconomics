@@ -164,6 +164,31 @@ public static class LcAuth
         }
     }
 
+    /// <summary>
+    /// Get basic user info given a Facebook User ID or null.
+    /// </summary>
+    /// <param name="facebookID"></param>
+    public static RegisteredUser GetFacebookUser(long facebookID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            int? userId = db.QueryValue("SELECT UserId FROM webpages_FacebookCredentials WHERE FacebookId=@0", facebookID);
+            if (userId.HasValue)
+            {
+                var userData = LcData.UserInfo.GetUserRow(userId.Value);
+                return new RegisteredUser {
+                    Email = userData.Email,
+                    IsProvider = userData.IsProvider,
+                    UserID = userId.Value
+                };
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
     public static bool Login(string email, string password, bool persistCookie = false)
     {
         // Navigate back to the homepage and exit

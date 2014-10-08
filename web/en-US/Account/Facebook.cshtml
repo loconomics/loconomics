@@ -7,7 +7,7 @@
     on WelcomePopup that uses the Javascript API for most of the things synchronized with the normal
     form back-end of that page to create account, with LcAuth to link Facebook and Loconomics accounts.
     
-    THIS IS STILL USED but only for the Verification, that connects to Facebook with account/_FacebookConnectButton
+    THIS IS STILL USED for Login and for Verification, that connects to Facebook with account/_FacebookConnectButton
     and redirects here to complete operation, all in a 'popup' that reloads the page on success.
     It could be simplified with some Javascript, deprecating this, FacebookConnectButton, and the global app.js link
     with the module facebookUtils.js
@@ -46,22 +46,30 @@
                 Request.QueryString["profile"] == "provider";
 
             // If we have user info
-            if (user != null && user["username"] != null)
+            if (user != null && user["username"] != null && user["id"] != null)
             {
                 var doVerify = UrlData.Count > 0 && UrlData[0] == "Verify";
                 
-                string facebookemail = N.W(user.email) ?? user.username + "@facebook.com";
+                //string facebookemail = N.W(user.email) ?? user.username + "@facebook.com";
 
                 if (doVerify) {
                     verifyAccount(user);
                 }
+                else {
+                    var lcUser = LcAuth.GetFacebookUser(((string)user.id).AsLong());
+                    if (lcUser != null) {
+                        // Login into the Loconomics account:
+                        FormsAuthentication.SetAuthCookie(lcUser.Email, false);
+                        LcData.UserInfo.RegisterLastLoginTime(lcUser.UserID);
+                    }
+                }
+                
+                /*
+                 * NOTE: Account creation disabled from this page
                 else if (!WebSecurity.UserExists(facebookemail)){
                     createAccount(user, facebookemail, asProvider);
                 }
- 
-                // Login into the Loconomics account:
-                FormsAuthentication.SetAuthCookie(facebookemail, false);
-                LcData.UserInfo.RegisterLastLoginTime(0, facebookemail);
+                 * */
             }
         }
     }
