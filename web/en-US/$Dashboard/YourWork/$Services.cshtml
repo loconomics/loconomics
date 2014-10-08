@@ -16,10 +16,7 @@
     var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
     
     var idprefix = "position-" + pos.PositionID + "-services";
-    
-    var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
-    var tplCatName = "positionservices-category[{0}]";
-    
+      
     var specialCatIDs = LcData.SpecialServicesAttCats;
     var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services-without-virtual-cats", pos.UserID);
     
@@ -58,7 +55,7 @@
             PageState.AddFormError(String.Format(requiredAttCatError, LcRessources.GetText("Experience Level")));
         }
     }
-    
+
     // In onboarding, save all time since we need 'instant saving' #524
     // (validation errors are still returned when is not valid but in onboarding)
     if (IsPost && (PageState.IsValid || isInOnboarding)) {      
@@ -74,7 +71,7 @@
                     default:
                         foreach (var att in cat.Value["ServiceAttributes"]) {
                             // Check if selection changes
-                            bool wasChecked = (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
+                            bool wasChecked = wasAttributeFormChecked(cat, att);
                             // We check previous value with current to avoid do unneeded Database calls
                             // Except for Language to save the Language Level, we need do it anyway
                             if (att.UserChecked != wasChecked || (int)cat.Key == LcData.ServiceAttCatIDLanguages) {
@@ -157,6 +154,20 @@
         dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services-without-virtual-cats", pos.UserID);
     }
     
+    // Exposed attributes are filtered for the wanted properties on the JSON genarated later
+    // NOTE: on 'post' we use the user submitted value for UserChecked rather than the last saved one
+    foreach (var cat in dataCats) {
+        cat.Value["ServiceAttributes"] = ((IList<dynamic>)cat.Value["ServiceAttributes"]).Select(att => new {
+            //EligibleForPackages = att.EligibleForPackages,
+            ServiceAttribute = att.ServiceAttribute,
+            ServiceAttributeCategoryID = att.ServiceAttributeCategoryID,
+            ServiceAttributeDescription = att.ServiceAttributeDescription,
+            ServiceAttributeID = att.ServiceAttributeID,
+            //ServiceCat = att.ServiceCat,
+            UserChecked = IsPost ? wasAttributeFormChecked(cat, att) : att.UserChecked
+        }).ToList();
+    }
+    
     /* Language Levels */
     dynamic langLevels = LcData.GetLanguageLevels();
     var userLangLevels = LcData.GetUserLanguageLevels(pos.UserID, pos.PositionID);
@@ -185,6 +196,13 @@
         if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
             db.Execute(sqlDelLangLevel, pos.UserID, pos.PositionID, serviceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
         }
+    }
+    
+    const string tplAttName = "positionservices-category[{0}]-attribute[{1}]";
+    const string tplCatName = "positionservices-category[{0}]";
+    
+    bool wasAttributeFormChecked(dynamic cat, dynamic att) {
+        return (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
     }
     
     // SQLs
@@ -384,7 +402,7 @@
             <ul class="SelectAttributes-selection DashboardServices-attributes-selection"></ul>
             <script type="text/javascript">
                 window.serviceAttributesLists = window.serviceAttributesLists || {};
-                serviceAttributesLists[@(catID)] = @Html.Raw(Json.Encode(cat["ServiceAttributes"]));
+                window.serviceAttributesLists[@(catID)] = @Html.Raw(Json.Encode(cat["ServiceAttributes"]));
             </script>
         </div>
     }    

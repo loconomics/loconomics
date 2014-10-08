@@ -132,6 +132,16 @@ function initYourWorkDom() {
     /* Your work / services */
     require('./dashboard/serviceAttributesValidation').setup($('.DashboardYourWork form'));
 
+    // If we are in ajax-load, re-execute page scripts to update inline global variables
+    if (arguments && arguments[3]) {
+        var scripts = $(arguments[3].responseText).filter('script').map(function () { return (this.text || this.textContent || this.innerHTML || ''); });
+        // 'each' functional style is not valid, for some reason evaling from there doesn't works,
+        // (something like a fake window instance) so we do it with a simple loop:
+        for (var i = 0; i < scripts.length; i++) {
+            $.globalEval(scripts[i]);
+        }
+    }
+
     // Initialize SelectAttributes components for all categories
     // of service attributes on the page.
     var SelectAttributes = require('./dashboard/SelectAttributes');
