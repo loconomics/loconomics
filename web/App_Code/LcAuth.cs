@@ -95,11 +95,7 @@ public static class LcAuth
                 // It assigns the first OnboardingStep 'welcome' for the new Onboarding Dashboard #454
                 if (isProvider)
                 {
-                    db.Execute(@"UPDATE Users SET 
-                    IsProvider = 1,
-                    OnboardingStep = 'welcome'
-                    WHERE UserID = @0
-                ", userid);
+                    BecomeProvider(userid, db);
                 }
 
                 // Partial email confirmation to allow user login but still show up email-confirmation-alert. Details:
@@ -138,6 +134,25 @@ public static class LcAuth
 
                 throw ex;
             }
+        }
+    }
+    public static void BecomeProvider(int userID, Database db = null)
+    {
+        var ownDb = db == null;
+        if (ownDb)
+        {
+            db = Database.Open("sqlloco");
+        }
+        
+        db.Execute(@"UPDATE Users SET 
+            IsProvider = 1,
+            OnboardingStep = 'welcome'
+            WHERE UserID = @0
+        ", userID);
+
+        if (ownDb)
+        {
+            db.Dispose();
         }
     }
     public static void SendRegisterUserEmail(RegisteredUser user)

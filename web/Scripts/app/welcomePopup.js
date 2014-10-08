@@ -227,6 +227,9 @@ exports.initPopup = function initPopup() {
         .attr('data-val-required', '')
         .attr('data-val', true);
 
+        // For customers become provider, hide new-account fields
+        existingUserHideFields(c);
+
         // if Facebook Connect is in use, update fields and validations
         facebookUpdateFieldsStatus(c);
 
@@ -333,4 +336,19 @@ function facebookUpdateFieldsStatus($container) {
         return true;
     }
     return false;
+}
+
+function existingUserHideFields($container) {
+    var femail = $container.find('[name="email"]'),
+        fpwd = $container.find('[name="create-password"]');
+    if (femail.val()) {
+        // Hide email and password fields
+        femail.closest('li').hide();
+        fpwd.closest('li').hide();
+
+        // remove validation on password
+        fpwd
+            .attr('data-val-required', null)
+            .attr('data-val', false);
+    }
 }
