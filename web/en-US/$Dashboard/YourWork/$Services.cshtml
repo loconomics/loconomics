@@ -66,28 +66,21 @@
             
             // Iterate categories and attributes, save what are checked and remove what not
             foreach (var cat in dataCats) {
-                switch ((int)cat.Key) {
-                    // Simple Check attributes:
-                    default:
-                        foreach (var att in cat.Value["ServiceAttributes"]) {
-                            // Check if selection changes
-                            bool wasChecked = wasAttributeFormChecked(cat, att);
-                            // We check previous value with current to avoid do unneeded Database calls
-                            // Except for Language to save the Language Level, we need do it anyway
-                            if (att.UserChecked != wasChecked || (int)cat.Key == LcData.ServiceAttCatIDLanguages) {
-                                // Value changed, update database
-                                if (wasChecked) {
-                                    // Set record (insert or update)
-                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                                    //saveLevelIfLanguage(db, cat, att.ServiceAttributeID, pos, tplAttName);
-                                } else {
-                                    // Delete record
-                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                                    //delLevelIfLanguage(db, cat, att.ServiceAttributeID, pos, tplAttName);
-                                }
-                            }
+                foreach (var att in cat.Value["ServiceAttributes"]) {
+                    // Check if selection changes
+                    bool wasChecked = wasAttributeFormChecked(cat, att);
+                    // We check previous value with current to avoid do unneeded Database calls
+                    // Except for Language to save the Language Level, we need do it anyway
+                    if (att.UserChecked != wasChecked || (int)cat.Key == LcData.ServiceAttCatIDLanguages) {
+                        // Value changed, update database
+                        if (wasChecked) {
+                            // Set record (insert or update)
+                            db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                        } else {
+                            // Delete record
+                            db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                         }
-                        break;
+                    }
                 }
             }
             
@@ -123,7 +116,6 @@
                         );
                         // Set record (insert or update)
                         db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, cat.Key, serviceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                        //saveLevelIfLanguage(db, cat, serviceAttributeID, pos, tplAttName);
                     }
                 }
             }
@@ -168,36 +160,12 @@
         }).ToList();
     }
     
-    /* Language Levels */
-    dynamic langLevels = LcData.GetLanguageLevels();
-    var userLangLevels = LcData.GetUserLanguageLevels(pos.UserID, pos.PositionID);
     /* Experience Levels */
     dynamic expLevels = LcData.GetExperienceLevels(pos.UserID, pos.PositionID);   
 }
 @functions {
     const string reqCatClass = "is-required";
-
-    void saveLevelIfLanguage(Database db, dynamic cat, int serviceAttributeID, dynamic pos, string tplAttName) {
-        if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
-            // If is language, we must save the Language Level value too
-            // name: positionservices-category[@(cat["ServiceAttributeCategoryID"])-attribute[@(att.ServiceAttributeID)]-level
-            var langlevel = Request[String.Format(tplAttName, cat.Key, serviceAttributeID) + "-level"];
-            db.Execute(sqlSetLangLevel,
-                pos.UserID,
-                pos.PositionID,
-                serviceAttributeID,
-                LcData.GetCurrentLanguageID(),
-                LcData.GetCurrentCountryID(),
-                langlevel
-            );
-        }
-    }
-    void delLevelIfLanguage(Database db, dynamic cat, int serviceAttributeID, dynamic pos, string tplAttName) {
-        if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
-            db.Execute(sqlDelLangLevel, pos.UserID, pos.PositionID, serviceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        }
-    }
-    
+   
     const string tplAttName = "positionservices-category[{0}]-attribute[{1}]";
     const string tplCatName = "positionservices-category[{0}]";
     
@@ -353,25 +321,10 @@
                         AND LanguageID = @2 AND CountryID = @3
     ";
 }
-@helper getChecked(dynamic att){
-    if (att["UserChecked"]) {
-        @Html.Raw("checked='checked'")
-    }
-}
 @helper printSelected(dynamic att, string valueA = null, string valueB = null){
     if ((valueA != null && valueB != null && valueA == valueB) || att["UserChecked"]) {
         @Html.Raw("selected='selected'")
     }
-}
-@helper printAttCheckList(int catId, dynamic atts){
-    <ul>
-        @foreach(var att in atts){
-            <li>@printAttCheck(catId, att)</li>
-        }
-    </ul>
-}
-@helper printAttCheck(int catId, dynamic att){
-    <label class="has-tooltip" title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
 }
 @helper printExperienceLevelCat(dynamic expLevels, string tplCatName){
     if (expLevels != null && expLevels.Count > 0)
