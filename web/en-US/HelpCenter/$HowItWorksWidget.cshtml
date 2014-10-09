@@ -5,12 +5,12 @@
     </header>
 	<div class="tabbed slider-tabs">
 		<p class="tabs-header cushycms">Find out how it works</p>
-        <ul class="tabs" role="navigation">
+        <ul class="tabs">
             <li class="customers current"><a href="#howitworks-customers">Customers</a></li>
             <li class="providers"><a href="#howitworks-providers">Service Providers</a></li>
             <li class="faqs"><a href="#howitworks-faqs">FAQs</a></li>
         </ul>
-		<div id="howitworks-customers" class="tab-body current" role="content">
+		<div id="howitworks-customers" class="tab-body current">
             <h2>How it works for customers</h2>
             <ol>
 			    <li class="find-provider">
@@ -30,7 +30,7 @@
                 <a href="@(LcUrl.LangPath)@(WebSecurity.IsAuthenticated ? "" : "Account/Register/")" class="main-action">Get Started!</a>
             </div>
         </div>
-		<div id="howitworks-providers" class="tab-body" role="content">
+		<div id="howitworks-providers" class="tab-body">
             <h2>How it works for providers</h2>
             <ol>
 			    <li class="create-profile">
@@ -50,7 +50,7 @@
                 <a href="@(LcUrl.LangPath)@(WebSecurity.IsAuthenticated ? "dashboard/" : "Account/ProviderWelcome/")" class="main-action">Get Started!</a>
             </div>
         </div>
-        <div id="howitworks-faqs" class="tab-body" role="content">
+        <div id="howitworks-faqs" class="tab-body">
             @RenderPage("$FAQS.cshtml", true, true, true)
         </div>
 	</div>
