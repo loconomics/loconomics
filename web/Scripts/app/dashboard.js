@@ -57,16 +57,25 @@ $(function () {
     paymentAccount.on('.DashboardPayments');
 
     /* about-you */
-    $('html').on('ajaxFormReturnedHtml', '.DashboardAboutYou form.ajax', initAboutYou);
+    $('html').on('ajaxFormReturnedHtml', '.DashboardAboutYou form.ajax', function (e, $container) {
+        if ($container.is('.DashboardAboutYou') || $container.find('.DashboardAboutYou').length)
+            initAboutYou.apply(null, arguments);
+    });
     initAboutYou();
 
     /* Your work init */
-    $('html').on('ajaxFormReturnedHtml', '.DashboardYourWork form.ajax', initYourWorkDom);
+    $('html').on('ajaxFormReturnedHtml', '.DashboardYourWork form.ajax', function (e, $container) {
+        if ($container.is('.DashboardYourWork') || $container.find('.DashboardYourWork').length)
+            initYourWorkDom.apply(null, arguments);
+    });
     initYourWorkDom();
 
     /* Availabilty */
     initAvailability();
-    $('.DashboardAvailability').on('ajaxFormReturnedHtml', initAvailability);
+    $('.DashboardAvailability').on('ajaxFormReturnedHtml', function (e, $container) {
+        if ($container.is('.DashboardAvailability') || $container.find('.DashboardAvailability').length)
+            initAvailability.apply(null, arguments);
+    });
 });
 
 /**
