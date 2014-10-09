@@ -198,12 +198,12 @@
                     if (ModelState.IsValid) {
                         /*
                          * Payment transaction
-                         */                    
+                         */
                         var transactionID = "";
                         if (TESTING_EMULATEBRAINTREE) {
                             // TESTING, emulate Braintree generating false transactionID,
                             // avoiding comunicate with them.
-                            transactionID = "TEST:" + Guid.NewGuid().ToString();
+                            transactionID = LcPayment.CreateFakeTransactionId();
                         } else {
                         
                             try{

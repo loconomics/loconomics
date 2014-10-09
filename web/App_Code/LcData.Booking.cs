@@ -1409,24 +1409,26 @@ public static partial class LcData
 
             try
             {
-                if (paymentTransactionID != null &&
-                    paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                if (!LcPayment.IsFakeTransaction(paymentTransactionID))
                 {
-                    var cardToken = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
-
-                    if (!String.IsNullOrWhiteSpace(cardToken))
+                    if (paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
                     {
-                        // Transaction authorization, so NOT charge/settle now
-                        var authorizationError = LcPayment.SaleBookingTransaction(bookingID, cardToken, false);
+                        var cardToken = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
 
-                        if (!String.IsNullOrEmpty(authorizationError))
+                        if (!String.IsNullOrWhiteSpace(cardToken))
                         {
-                            return authorizationError;
+                            // Transaction authorization, so NOT charge/settle now
+                            var authorizationError = LcPayment.SaleBookingTransaction(bookingID, cardToken, false);
+
+                            if (!String.IsNullOrEmpty(authorizationError))
+                            {
+                                return authorizationError;
+                            }
                         }
-                    }
-                    else
-                    {
-                        return "Transaction or card identifier gets lost, payment will cannot be performed.";
+                        else
+                        {
+                            return "Transaction or card identifier gets lost, payment will cannot be performed.";
+                        }
                     }
                 }
             }
@@ -1461,7 +1463,7 @@ public static partial class LcData
             try
             {
                 // Charge total amount of booking request to the customer (Submit to settlement the transaction)
-                if (!String.IsNullOrEmpty(paymentTransactionID) && !paymentTransactionID.StartsWith("TEST:"))
+                if (!LcPayment.IsFakeTransaction(paymentTransactionID))
                 {
                     // Since #508, we can have an authorized transaction to be settle or a saved card to perform
                     // the charge without previous authorization;
@@ -1605,7 +1607,7 @@ public static partial class LcData
 
             try
             {
-                if (tranID != null && !tranID.StartsWith("TEST:"))
+                if (!LcPayment.IsFakeTransaction(tranID))
                 {
                     if (tranID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
                     {
