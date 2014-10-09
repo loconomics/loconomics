@@ -61,8 +61,10 @@
     </p>
     <ul>
         <li>
-            <legend>Enter a URL:</legend>https://loconomics.com/<input type="text" name="profile-url" value="@ProfileUrl" @Validation.GetHtml("profile-url") />
-            @Html.ValidationMessage("profile-url")
+            <fieldset>
+                <legend>Enter a URL:</legend>https://loconomics.com/<input type="text" name="profile-url" value="@ProfileUrl" @Validation.GetHtml("profile-url") />
+                @Html.ValidationMessage("profile-url")
+            </fieldset>
         </li>
     </ul>
 </fieldset>
