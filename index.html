@@ -23,37 +23,9 @@
     <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
     <script src="http://getbootstrap.com/assets/js/ie-emulation-modes-warning.js"></script>
     
-    <style type="text/css">
-    .short-definitions dt {
-      display: inline-block;
-      min-width: 30%;
-      line-height: 2em;
-      vertical-align: middle;
-    }
-    .short-definitions dd {
-      display: inline-block;
-      font-family: Courier, "Lucida Console", monospace;
-      margin: 0 2em;
-      line-height: 2em;
-      vertical-align: middle;
-    }
-    .color-sample {
-      display: inline-block;
-      width: 2em;
-      height: 2em;
-      margin: .2em .5em;
-      vertical-align: middle;
-    }
-    @media (max-width: 1200px) {
-      .short-definitions dt {
-        width: 70%;
-      }
-      .short-definitions dd {
-        width: 30%;
-        margin: 0;
-      }
-    }
-    </style>
+    <!-- Site and Styleguide own styles -->
+    <link href="/assets/css/loconomics.css" rel="stylesheet">
+    <link href="/assets/css/styleguide.css" rel="stylesheet">
 
   </head>
   <body>
@@ -131,9 +103,17 @@
               <dt>Light Gray ($colorLtGray)</dt><dd>#CCCCCC <span class="color-sample" style="background-color:#cccccc"></span></dd>
             </dl>
 
-            <h3 id="styleguide-typography">Typografy</h3>
-            <p>TODO..</p>
-
+            <h3 id="styleguide-typography">Typography</h3>
+            <p>We use downloaded web fonts for the site, with some fallbacks for the minor cases where formats WOFF, TrueType, SVG and Embedded-OpenType are not supported.</p>
+            <ul class="typography-list">
+              <li>
+                <strong>Alte Haas Grotesk</strong> (CSS fallbacks: Helvetica, Arial, sans-serif), as in following sample:
+                <div class="typography-sample typo-altehaasgrotesk">Alte Haas Grotesk is the main typography, applies by default to all the text (body copy).</div>
+              </li>
+              <li>
+                <strong>Hand Of Sean</strong> (CSS fallbacks: Arial, sans-serif), as in following sample:
+                <div class="typography-sample typo-handofsean">Hand Of Sean is used for the higher titles only.</div>
+              </li>
           </div>
         </div>
       </div>
