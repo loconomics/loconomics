@@ -2,6 +2,7 @@
     Scripts for the Loconomics Styleguide
 **/
 
+var jQuery = require('jquery');
 jQuery(escapeHtmlCodeSamples);
 
 /**
