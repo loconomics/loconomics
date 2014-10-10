@@ -3,12 +3,20 @@
     helpers for examples, layout, etc.
 **/
 
-/* short-definitions, dl modifier class */
+/* short-definitions, dl modifier class.
+    For big screens, shows elements in the same
+    line when there is space, most times 2 columns
+    at once. If strict columns number is need,
+    use col classes instead.
+    Or small screens it shows one by line with 
+    the short definition on the right in the same line.
+ */
 .short-definitions dt {
   display: inline-block;
   min-width: 30%;
   line-height: 2em;
   vertical-align: middle;
+  font-weight: normal;
 }
 .short-definitions dd {
   display: inline-block;
@@ -27,13 +35,32 @@
   }
 }
 
+/* medium-definitions, dl modifier class.
+    It shows term and definition in the same
+    line, one line per term.
+ */
+.medium-definitions dt {
+  display: inline-block;
+  width: 40%;
+  line-height: 2em;
+  vertical-align: middle;
+  font-weight: normal;
+}
+.medium-definitions dd {
+  display: inline-block;
+  width: 60%;
+  font-family: Courier, "Lucida Console", monospace;
+  line-height: 2em;
+  vertical-align: middle;
+}
+
 /* color-sample class */
 .color-sample {
-  display: inline-block;
-  width: 2em;
-  height: 2em;
-  margin: .2em .5em;
-  vertical-align: middle;
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    margin: .2em .5em;
+    vertical-align: middle;
 }
 
 /* typography-list */
@@ -55,4 +82,30 @@
 }
 .typo-altehaasgrotesk {
     font-family: Alte Haas Grotesk, Helvetica, Arial, sans-serif;
+}
+
+/* Page. Custom header color */
+#Loconomics .bs-docs-masthead,
+#Loconomics .bs-docs-header {
+    color: #333333;
+
+    background-color: #c9e6e6;
+    background: 'url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjOWU2ZTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) no-repeat #c9e6e6';
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(144,216,220,1) 100%) no-repeat #c9e6e6; /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%, #c9e6e6) no-repeat #c9e6e6); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* IE10+ */
+    background: linear-gradient(to bottom, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c9e6e6',GradientType=0 ); /* IE6-8 */
+}
+#Loconomics .bs-docs-header h1,
+#Loconomics .bs-docs-nav .navbar-brand,
+#Loconomics .bs-docs-nav .navbar-nav > li > a {
+    color: #00989A;
+}
+#Loconomics .bs-docs-nav .navbar-nav > li > a:hover,
+#Loconomics .bs-docs-nav .navbar-nav > .active > a,
+#Loconomics .bs-docs-nav .navbar-nav > .active > a:hover {
+    color: Black;
 }

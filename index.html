@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="Loconomics">
   <head>
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
@@ -82,10 +82,10 @@
             <p>Using Bootstrap version 3 right now, custom build.</p>
 
             <h3 id="styleguide-colors-palette">Colors palette</h3>
-            <h4>Used colors without semantic meaning</h4>
+            <h4>Colors without semantic meaning (needs clean-up, some unused, some changed to a non coincident color-name)</h4>
             <dl class="short-definitions">
               <dt>Teal ($colorTeal)</dt><dd>#00989A <span class="color-sample" style="background-color:#00989A"></span></dd>
-              <dt>Light Teal ($colorLtTeal)</dt><dd>#b5e1e2 <span class="color-sample" style="background-color:#b5e1e2"></span></dd>
+              <dt>Light Teal ($colorLtTeal)</dt><dd>#B5E1E2 <span class="color-sample" style="background-color:#B5E1E2"></span></dd>
               <dt>Green ($colorGreen)</dt><dd>#99C027 <span class="color-sample" style="background-color:#99C027"></span></dd>
               <dt>Light Green ($colorLtGreen)</dt><dd>#E65A0F <span class="color-sample" style="background-color:#E65A0F"></span></dd>
               <dt>Red ($colorRed)</dt><dd>#FC0404 <span class="color-sample" style="background-color:#FC0404"></span></dd>
@@ -96,6 +96,20 @@
               <dt>Gray ($colorGray)</dt><dd>#333333 <span class="color-sample" style="background-color:#333333"></span></dd>
               <dt>Medium Gray ($colorMdGray)</dt><dd>#747474 <span class="color-sample" style="background-color:#747474"></span></dd>
               <dt>Light Gray ($colorLtGray)</dt><dd>#CCCCCC <span class="color-sample" style="background-color:#cccccc"></span></dd>
+            </dl>
+            
+            <h4>Semantic colors (Bootstrap set of semantics using Loconomics colors)</h4>
+            <dl class="medium-definitions">
+              <dt>Primary (@brand-primary)</dt><dd><span class="color-sample" style="background-color:#00989A"></span> Teal (#00989A)</dd>
+              <dt>Success (@brand-success)</dt><dd><span class="color-sample" style="background-color:#99C027"></span> Green (#99C027)</dd>
+              <dt>Info (@brand-info)</dt><dd><span class="color-sample" style="background-color:#B5E1E2"></span> Light Teal (#B5E1E2)</dd>
+              <dt>Warning (@brand-warning)</dt><dd><span class="color-sample" style="background-color:#E95D0F"></span> Orange (#E95D0F)</dd>
+              <dt>Danger (@brand-danger)</dt><dd><span class="color-sample" style="background-color:#FC0404"></span> Red (#FC0404)</dd>
+            </dl>
+            
+            <h4>Semantic colors (Loconomics extensions)</h4>
+            <dl class="medium-definitions">
+              <dt>We may need to define colors for other uses</dt><dd>But be aware that Bootstrap build some new colors automatically by modifying the previous ones, with lighter versions for use in backgrounds.</dd>
             </dl>
 
             <h3 id="styleguide-typography">Typography</h3>
