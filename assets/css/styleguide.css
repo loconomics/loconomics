@@ -109,3 +109,9 @@
 #Loconomics .bs-docs-nav .navbar-nav > .active > a:hover {
     color: Black;
 }
+
+/* code */
+#Loconomics .prettyprinted {
+    border: none;
+    padding: 0;
+}
