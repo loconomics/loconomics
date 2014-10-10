@@ -35,23 +35,11 @@
 
     // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }
-<h1 class="DashboardSection-page-header has-HelpPoint">About Your Services @(p != null ? "(" + p.PositionSingular + ")" : "")
-    <a href="#" class="HelpPoint size-sm"
-        data-content="Your profile is your portal to communicating your services to potential clients in the marketplace.
-        We're here to help you along with anything you need to put your best face forward
-        so please don't hesitate to ask for help or send use feedback.">?</a>
-</h1>
-
-<p>
-Testing text, HelpPoint inline with normal size, on hover at bottom and some html for granular control and a title.
-<a href="#" class="HelpPoint"
-    data-placement="bottom"
-    data-trigger="hover"
-    data-html="true"
-    title="Help"
-    data-content="Your <strong>profile</strong> is your portal to communicating your services to potential clients in the marketplace.
-    <br/><br/>We're here to help you along with anything you need to put your best face forward
-    so please don't hesitate to ask for help or send use feedback.">?</a>
+<h1 class="DashboardSection-page-header">About Your Services @(p != null ? "(" + p.PositionSingular + ")" : "")</h1>
+<p class="DashboardSection-page-introduction">
+    Your profile is your portal to communicating your services to potential clients in the marketplace.
+    We're here to help you along with anything you need to put your best face forward
+    so please don't hesitate to ask for help or send use feedback.
 </p>
 
 <div class="DashboardYourWork ajax-box">
