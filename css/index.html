@@ -127,6 +127,31 @@
                 <a href="#" class="HelpPoint size-xl">?</a>
               </code></pre>
             </div>
+            
+            <h3>Positioning</h3>
+            <p>By default the HelpPoint goes inline with the text as any other text or link.</p>
+            <p>To place it on the right side of its container, like for example when used with a title, set the <code>has-HelpPoint</code> class to the container element.</p>
+            <div class="bs-example">
+              <h3 class="has-HelpPoint" style="border-bottom: 1px solid black; padding: .2em 1em">A title with some help on the far right <a href="#" class="HelpPoint">?</a></h3>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint"><code class="html">
+                <h3 class="has-HelpPoint">A title with some help on the far right <a href="#" class="HelpPoint">?</a></h3>
+              </code></pre>
+            </div>
+            
+            <div class="bs-callout bs-callout-warning">
+              <h4>Relative positioning</h4>
+              <p>Because the <code>has-HelpPoint</code> changes the element position to be <code>relative</code>, this may cause conflicts with some layouts where static positioning is explicitely used in the parent element, that cases may need an extra container where to set the class without side effects.</p>
+            </div>
+            <div class="bs-callout bs-callout-warning">
+              <h4>Padding</h4>
+              <p>The Help Point is placed on the right using <code>absolute</code> positioning and a value of <code>right: 0</code>, causing that any padding applied
+                to the container has no effect to the it, something unwanted on some cases. To give it a padding, put a <code>margin-right</code> on the container
+                or overlap the default value of <code>right</code> in the Help Point.
+              </p>
+            </div>
+            
           </div>
         </div>
       </div>
