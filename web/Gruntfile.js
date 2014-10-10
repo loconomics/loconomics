@@ -199,6 +199,31 @@ module.exports = function (grunt) {
                     ]
                 }
             },
+
+            'styleguidelibs': {
+                'src': [],
+                'dest': './Scripts/styleguidelibs.js',
+                'options': {
+                    // Despite that plugins and some other modules doesn't return itselfs,
+                    // we still need the alias to be localizable by the 'require' calls
+                    // in other bundles (must replicate alias in its 'external' option)
+                    // Shim generates already alias for each key.
+                    shim: {
+                        // Using a shim we avoid jquery to detect the CommonJS loader and 
+                        // it attachs itself to the global namespace (window) what let
+                        // the plugins works fine.
+                        jquery: {
+                            path: './Scripts/jquery/jquery-2.1.1_min.js',
+                            exports: 'jQuery'
+                        },
+                        'bootstrap': {
+                            path: './Scripts/libs/bootstrap-3.2.0.min.js',
+                            exports: null,
+                            depends: { 'jquery': 'jquery' }
+                        }
+                    }
+                }
+            },
             'styleguide': {
                 'src': [
                   './Scripts/app/styleguide.js'
