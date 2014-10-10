@@ -273,6 +273,11 @@ module.exports = function (grunt) {
                 files: {
                     'Styles/provider-welcome.css': ['Styles/app/provider-welcome.styl']
                 }
+            },
+            'styleguide': {
+                files: {
+                    'Styles/styleguide.css': ['Styles/app/styleguide.styl']
+                }
             }
         },
 
