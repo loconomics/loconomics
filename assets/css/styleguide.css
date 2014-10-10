@@ -1,117 +1,145 @@
+/*! Loconomics.com 2014-10-10
+   Author: Loconomics Inc. */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
+
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\styleguide.styl */
 /**
-    Set of styles for the StyleGuide design itself: 
-    helpers for examples, layout, etc.
+  Styles that fullfill the in-development Style Guide (more on #757).
+  The result is used directly by the styleguide site to show the custom
+  styles built on top of Bootstrap.
 **/
 
-/* short-definitions, dl modifier class.
-    For big screens, shows elements in the same
-    line when there is space, most times 2 columns
-    at once. If strict columns number is need,
-    use col classes instead.
-    Or small screens it shows one by line with 
-    the short definition on the right in the same line.
- */
-.short-definitions dt {
-  display: inline-block;
-  min-width: 30%;
-  line-height: 2em;
-  vertical-align: middle;
+/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\styleguide.styl */
+/* Currently not embedded
+/@require 'bootstrap' */
+
+/* line 264 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\typographyDefinitions.styl */
+@font-face {
+  font-family: 'Hand Of Sean';
+  src: url("fonts/handsean.otf");
+  src: url("fonts/handsean.eot");
+  src: url("fonts/handsean.eot?#iefix") format('embedded-opentype'), url("fonts/handsean.woff") format('woff'), url("fonts/handsean.ttf") format('truetype'), url("fonts/handsean.svgz#HandOfSeanRegular") format('svg'), url("fonts/handsean.svg#HandOfSeanRegular") format('svg');
   font-weight: normal;
+  font-style: normal;
 }
-.short-definitions dd {
-  display: inline-block;
-  font-family: Courier, "Lucida Console", monospace;
-  margin: 0 2em;
-  line-height: 2em;
-  vertical-align: middle;
-}
-@media (max-width: 1200px) {
-  .short-definitions dt {
-    width: 70%;
-  }
-  .short-definitions dd {
-    width: 30%;
-    margin: 0;
-  }
-}
-
-/* medium-definitions, dl modifier class.
-    It shows term and definition in the same
-    line, one line per term.
- */
-.medium-definitions dt {
-  display: inline-block;
-  width: 40%;
-  line-height: 2em;
-  vertical-align: middle;
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url("fonts/altehaasgroteskregular.eot");
+  src: url("fonts/altehaasgroteskregular.eot?#iefix") format('embedded-opentype'), url("fonts/altehaasgroteskregular.woff") format('woff'), url("fonts/altehaasgroteskregular.ttf") format('truetype'), url("fonts/altehaasgroteskregular.svgz#AlteHaasGroteskRegular") format('svg'), url("fonts/altehaasgroteskregular.svg#AlteHaasGroteskRegular") format('svg');
   font-weight: normal;
+  font-style: normal;
 }
-.medium-definitions dd {
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url("fonts/altehaasgroteskbold.eot");
+  src: url("fonts/altehaasgroteskbold.eot?#iefix") format('embedded-opentype'), url("fonts/altehaasgroteskbold.woff") format('woff'), url("fonts/altehaasgroteskbold.ttf") format('truetype'), url("fonts/altehaasgroteskbold.svgz#AlteHaasGroteskBold") format('svg'), url("fonts/altehaasgroteskbold.svg#AlteHaasGroteskBold") format('svg');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint {
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  background-color: #e95d0f;
+  color: White !important;
+  text-decoration: none !important;
+  font-weight: bold;
   display: inline-block;
-  width: 60%;
-  font-family: Courier, "Lucida Console", monospace;
-  line-height: 2em;
-  vertical-align: middle;
+  text-align: center;
+/* Normal size */
+  font-size: 1em;
+  line-height: 1.3em;
+  height: 1.3em;
+  width: 1.3em;
 }
 
-/* color-sample class */
-.color-sample {
-    display: inline-block;
-    width: 2em;
-    height: 2em;
-    margin: .2em .5em;
-    vertical-align: middle;
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-xl {
+  font-size: 2em;
 }
 
-/* typography-list */
-.typography-list li {
-    margin-bottom: 2em;
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-lg {
+  font-size: 1.6em;
 }
 
-/* typography-sample class and specifics */
-.typography-sample {
-    color: #333333;
-    display: block;
-    margin-top: .5em;
-    margin-left: 3em;
-    border-left: 3px solid #E95D0F;
-    padding-left: 1.5em;
-}
-.typo-handofsean {
-    font-family: Hand Of Sean, Arial, sans-serif;
-}
-.typo-altehaasgrotesk {
-    font-family: Alte Haas Grotesk, Helvetica, Arial, sans-serif;
+/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-sm {
+  font-size: 0.8em;
+  line-height: 1.2em;
+  height: 1.2em;
+  width: 1.2em;
 }
 
-/* Page. Custom header color */
-#Loconomics .bs-docs-masthead,
-#Loconomics .bs-docs-header {
-    color: #333333;
-
-    background-color: #c9e6e6;
-    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjOWU2ZTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) no-repeat #c9e6e6;
-    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(144,216,220,1) 100%) no-repeat #c9e6e6; /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%, #c9e6e6) no-repeat #c9e6e6); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* IE10+ */
-    background: linear-gradient(to bottom, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c9e6e6',GradientType=0 ); /* IE6-8 */
-}
-#Loconomics .bs-docs-header h1,
-#Loconomics .bs-docs-nav .navbar-brand,
-#Loconomics .bs-docs-nav .navbar-nav > li > a {
-    color: #00989A;
-}
-#Loconomics .bs-docs-nav .navbar-nav > li > a:hover,
-#Loconomics .bs-docs-nav .navbar-nav > .active > a,
-#Loconomics .bs-docs-nav .navbar-nav > .active > a:hover {
-    color: Black;
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-xs {
+  font-size: 0.67em;
+  line-height: 1.2em;
+  height: 1.2em;
+  width: 1.2em;
 }
 
-/* code */
-#Loconomics .prettyprinted {
-    border: none;
-    padding: 0;
+/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.has-HelpPoint {
+  position: relative;
+}
+
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.has-HelpPoint > .HelpPoint {
+  top: 50%;
+  right: 0;
+  position: absolute;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
