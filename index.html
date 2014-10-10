@@ -22,6 +22,38 @@
     <!-- Documentation extras -->
     <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
     <script src="http://getbootstrap.com/assets/js/ie-emulation-modes-warning.js"></script>
+    
+    <style type="text/css">
+    .short-definitions dt {
+      display: inline-block;
+      min-width: 30%;
+      line-height: 2em;
+      vertical-align: middle;
+    }
+    .short-definitions dd {
+      display: inline-block;
+      font-family: Courier, "Lucida Console", monospace;
+      margin: 0 2em;
+      line-height: 2em;
+      vertical-align: middle;
+    }
+    .color-sample {
+      display: inline-block;
+      width: 2em;
+      height: 2em;
+      margin: .2em .5em;
+      vertical-align: middle;
+    }
+    @media (max-width: 1200px) {
+      .short-definitions dt {
+        width: 70%;
+      }
+      .short-definitions dd {
+        width: 30%;
+        margin: 0;
+      }
+    }
+    </style>
 
   </head>
   <body>
@@ -83,9 +115,23 @@
             </div>
 
             <h3 id="styleguide-colors-palette">Colors palette</h3>
-            <p>TODO..</p>
+            <h4>Used colors without semantic meaning</h4>
+            <dl class="short-definitions">
+              <dt>Teal ($colorTeal)</dt><dd>#00989A <span class="color-sample" style="background-color:#00989A"></span></dd>
+              <dt>Light Teal ($colorLtTeal)</dt><dd>#b5e1e2 <span class="color-sample" style="background-color:#b5e1e2"></span></dd>
+              <dt>Green ($colorGreen)</dt><dd>#99C027 <span class="color-sample" style="background-color:#99C027"></span></dd>
+              <dt>Light Green ($colorLtGreen)</dt><dd>#E65A0F <span class="color-sample" style="background-color:#E65A0F"></span></dd>
+              <dt>Red ($colorRed)</dt><dd>#FC0404 <span class="color-sample" style="background-color:#FC0404"></span></dd>
+              <dt>Purple ($colorPurple)</dt><dd>#461864 <span class="color-sample" style="background-color:#461864"></span></dd>
+              <dt>Blue ($colorBlue)</dt><dd>#006A8D <span class="color-sample" style="background-color:#006A8D"></span></dd>
+              <dt>Orange ($colorOrange)</dt><dd>#E95D0F <span class="color-sample" style="background-color:#E95D0F"></span></dd>
+              <dt>Yellow ($colorYellow)</dt><dd>#F0B600 <span class="color-sample" style="background-color:#F0B600"></span></dd>
+              <dt>Gray ($colorGray)</dt><dd>#333333 <span class="color-sample" style="background-color:#333333"></span></dd>
+              <dt>Medium Gray ($colorMdGray)</dt><dd>#747474 <span class="color-sample" style="background-color:#747474"></span></dd>
+              <dt>Light Gray ($colorLtGray)</dt><dd>#CCCCCC <span class="color-sample" style="background-color:#cccccc"></span></dd>
+            </dl>
 
-              <h3 id="styleguide-typography">Typografy</h3>
+            <h3 id="styleguide-typography">Typografy</h3>
             <p>TODO..</p>
 
           </div>
