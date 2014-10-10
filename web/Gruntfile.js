@@ -198,6 +198,21 @@ module.exports = function (grunt) {
                         'LC/batchEventHandler'
                     ]
                 }
+            },
+            'styleguide': {
+                'src': [
+                  './Scripts/app/styleguide.js'
+                ],
+                'dest': './Scripts/styleguide.js',
+                'options': {
+                    // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
+                    'debug': true,
+                    // Modules loaded from other bundle (libs.js)
+                    'external': [
+                        'jquery',
+                        'bootstrap'
+                    ]
+                }
             }
         },
 
