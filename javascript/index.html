@@ -84,12 +84,52 @@
               <p>Don't use data attributes from multiple plugins on the same element. For example, a button cannot both have a tooltip and toggle a modal. To accomplish this, use a wrapping element.</p>
             </div>            
 
-            <h3 id="js-help-point">Help Point</h3>
+            <h1 id="js-help-point">Help Point</h1>
             <p>A small marker with a Popover for inline help.</p>
 
             <div class="bs-callout bs-callout-warning">
-              <h4>Sizes and visual options</h4>
-              <p>Visual options, as sizes, for the marker as described in the <a href="/css#css-help-point">CSS Component</a></p>
+              <h4>Display options</h4>
+              <p>Sizes and other pure CSS options for the marker are described in the <a href="/css#css-help-point">CSS Component counterpart</a></p>
+            </div>
+            
+            <h3>Basic example</h3>
+            <p>This component is meant to be used with a short text that triggers a Popover on click to provide in-context help.</p>
+            <p>Just use the <code>HelpPoint</code> class in a link, recommended with <code>href="#"</code>,
+              and the attribute <code>data-content</code> with the desired text.
+            </p>
+            <div class="bs-example">
+              <a href="#" class="HelpPoint size-lg" data-content="Some help text.">?</a>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint"><code class="html">
+                <a href="#" class="HelpPoint size-lg" data-content="Some help text.">?</a>
+              </code></pre>
+            </div>
+
+            <h3>Popover</h3>
+            <p>Since the component just triggers a <strong>Popover</strong>,
+              <a href="http://getbootstrap.com/javascript/#popovers" target="_blank">all its options are available</a> on the element,
+              all the <code>data-*</code> attributes and the optional standard <code>title</code> attribute.
+            </p>
+            <div class="bs-example">
+              <a href="#" class="HelpPoint size-lg"
+                  data-placement="bottom"
+                  data-trigger="hover"
+                  data-html="true"
+                  title="Help"
+                  data-content="Some help text.&lt;br/&gt;It can 
+                    use some &lt;strong&gt;html&lt;/strong&gt;, useful to highlight phrases.">?</a>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint"><code class="html">
+                <a href="#" class="HelpPoint size-lg"
+                  data-placement="bottom"
+                  data-trigger="hover"
+                  data-html="true"
+                  title="Help"
+                  data-content="Some help text.&lt;br/&gt;It can 
+                    use some &lt;strong&gt;html&lt;/strong&gt;, useful to highlight phrases.">?</a>
+              </code></pre>
             </div>
 
           </div>
