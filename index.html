@@ -87,8 +87,9 @@
             <p>Using Bootstrap version 3 right now, custom build.</p>
 
             <h3 id="styleguide-colors-palette">Colors palette</h3>
-            <h4>Colors without semantic meaning (needs clean-up, all this are what we have in our current stylesheets:
-            some unused, some changed to a non coincident color-name)</h4>
+            <h4>Colors without semantic meaning</h4>
+            <p>It needs clean-up, all this are what we have in our current stylesheets:
+            some unused, some changed to a non coincident color-name.</p>
             <dl class="short-definitions">
               <dt>Teal ($colorTeal)</dt><dd>#00989A <span class="color-sample" style="background-color:#00989A"></span></dd>
               <dt>Light Teal ($colorLtTeal)</dt><dd>#B5E1E2 <span class="color-sample" style="background-color:#B5E1E2"></span></dd>
@@ -104,7 +105,9 @@
               <dt>Light Gray ($colorLtGray)</dt><dd>#CCCCCC <span class="color-sample" style="background-color:#cccccc"></span></dd>
             </dl>
             
-            <h4>Semantic colors (Bootstrap set of semantics using Loconomics colors)</h4>
+            <h4>Semantic colors</h4>
+            <p>Bootstrap set of <a href="http://getbootstrap.com/css/#less-variables-colors" target="_blank">semantic colors</a>,
+              here replaced by Loconomics colors from the previous palette.</p>
             <dl class="medium-definitions">
               <dt>Primary (@brand-primary)</dt><dd><span class="color-sample" style="background-color:#00989A"></span> Teal (#00989A)</dd>
               <dt>Success (@brand-success)</dt><dd><span class="color-sample" style="background-color:#99C027"></span> Green (#99C027)</dd>
@@ -112,11 +115,11 @@
               <dt>Warning (@brand-warning)</dt><dd><span class="color-sample" style="background-color:#E95D0F"></span> Orange (#E95D0F)</dd>
               <dt>Danger (@brand-danger)</dt><dd><span class="color-sample" style="background-color:#FC0404"></span> Red (#FC0404)</dd>
             </dl>
-            
-            <h4>Semantic colors (Loconomics extensions)</h4>
-            <dl class="medium-definitions">
-              <dt>We may need to define colors for other uses</dt><dd>But be aware that Bootstrap build some new colors automatically by modifying the previous ones, with lighter versions for use in backgrounds.</dd>
-            </dl>
+
+            <h4>Additional semantic colors</h4>
+            <p>Set of semantics extended by Loconomics, when the basic ones are not enough.</p>
+            <p>Be care that lighter colors based on the semantic ones doesn't need to be defined but may need a review after create our customized bootstrap, since they are created automatically by Bootstrap applying a modifier for uses <a href="http://getbootstrap.com/css/#helper-classes-backgrounds)" target="_blank">like backgrounds</a></p>
+            <p><a href="https://github.com/dani0198/Loconomics/issues/575" target="_blank">To discuss...</a></p>
 
             <h3 id="styleguide-typography">Typography</h3>
             <p>We use downloaded web fonts for the site, with some fallbacks for the minor cases where formats WOFF, TrueType, SVG and Embedded-OpenType are not supported.</p>
