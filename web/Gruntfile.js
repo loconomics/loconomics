@@ -47,6 +47,27 @@ module.exports = function (grunt) {
             }
         },
 
+        notify: {
+            build: {
+                options: {
+                    title: 'Build complete',  // optional
+                    message: 'Build finished successfully.' //required
+                }
+            },
+            browserify: {
+                options: {
+                    title: 'Browserify build complete',  // optional
+                    message: 'Browserify build finished successfully.' //required
+                }
+            },
+            css: {
+                options: {
+                    title: 'CSS build complete',  // optional
+                    message: 'CSS build finished successfully.' //required
+                }
+            }
+        },
+
         browserify: {
             'libs': {
                 'src': [],
@@ -177,6 +198,46 @@ module.exports = function (grunt) {
                         'LC/batchEventHandler'
                     ]
                 }
+            },
+
+            'styleguidelibs': {
+                'src': [],
+                'dest': './Scripts/styleguidelibs.js',
+                'options': {
+                    // Despite that plugins and some other modules doesn't return itselfs,
+                    // we still need the alias to be localizable by the 'require' calls
+                    // in other bundles (must replicate alias in its 'external' option)
+                    // Shim generates already alias for each key.
+                    shim: {
+                        // Using a shim we avoid jquery to detect the CommonJS loader and 
+                        // it attachs itself to the global namespace (window) what let
+                        // the plugins works fine.
+                        jquery: {
+                            path: './Scripts/jquery/jquery-2.1.1_min.js',
+                            exports: 'jQuery'
+                        },
+                        'bootstrap': {
+                            path: './Scripts/libs/bootstrap-3.2.0.min.js',
+                            exports: null,
+                            depends: { 'jquery': 'jquery' }
+                        }
+                    }
+                }
+            },
+            'styleguide': {
+                'src': [
+                  './Scripts/app/styleguide.js'
+                ],
+                'dest': './Scripts/styleguide.js',
+                'options': {
+                    // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
+                    'debug': true,
+                    // Modules loaded from other bundle (libs.js)
+                    'external': [
+                        'jquery',
+                        'bootstrap'
+                    ]
+                }
             }
         },
 
@@ -252,6 +313,11 @@ module.exports = function (grunt) {
                 files: {
                     'Styles/provider-welcome.css': ['Styles/app/provider-welcome.styl']
                 }
+            },
+            'styleguide': {
+                files: {
+                    'Styles/styleguide.css': ['Styles/app/styleguide.styl']
+                }
             }
         },
 
@@ -294,7 +360,7 @@ module.exports = function (grunt) {
             },
             'plain-css': {
                 files: ['Styles/app/*.css', 'Gruntfile.js'],
-                tasks: ['stylus:app-includes', 'concat:css-common', 'cssmin:plain-css', 'clean:css-app-includes']
+                tasks: ['stylus:app-includes', 'concat:css-common', 'notify:css', 'cssmin:plain-css', 'clean:css-app-includes']
             }
         }
     });
@@ -308,12 +374,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-notify');
 
     grunt.registerTask('test', ['jshint', 'qunit']);
-    grunt.registerTask('build-js', ['browserify', 'uglify', 'concat:js-common']);
-    grunt.registerTask('build-css', ['stylus', 'concat:css-common', 'cssmin', 'clean:css-app-includes']);
-    grunt.registerTask('build-dev', ['browserify', 'stylus', 'concat:css-common', 'clean:css-app-includes']);
-    grunt.registerTask('build', ['build-js', 'build-css']);
+    grunt.registerTask('build-js', ['browserify', 'notify:browserify', 'uglify', 'concat:js-common']);
+    grunt.registerTask('build-css', ['stylus', 'concat:css-common', 'notify:css', 'cssmin', 'clean:css-app-includes']);
+    grunt.registerTask('build-dev', ['browserify', 'notify:browserify', 'stylus', 'concat:css-common', 'notify:css', 'clean:css-app-includes', 'notify:build']);
+    grunt.registerTask('build', ['build-js', 'build-css', 'notify:build']);
 
     grunt.registerTask('default', ['build', 'test']);
 

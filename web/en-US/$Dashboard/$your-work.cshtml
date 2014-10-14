@@ -36,11 +36,10 @@
     // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }
 <h1 class="DashboardSection-page-header">About Your Services @(p != null ? "(" + p.PositionSingular + ")" : "")</h1>
-
 <p class="DashboardSection-page-introduction">
     Your profile is your portal to communicating your services to potential clients in the marketplace.
-    We're here to help you along with anything you need to put your best face forward so please don't hesitate
-    to ask for help or send use feedback.
+    We're here to help you along with anything you need to put your best face forward
+    so please don't hesitate to ask for help or send use feedback.
 </p>
 
 <div class="DashboardYourWork ajax-box">
@@ -98,7 +97,7 @@
             </div>
 
             <div id="DashboardLocations" class="DashboardSection-page-section is-required">
-                <h2 class="DashboardSection-page-section-header">Set your service location(s)</h2>
+                <h2 class="DashboardSection-page-section-header" data-radius-title="Set a service radius" data-default-title="Set your service location(s)">Set your service location(s)</h2>
                 @RenderPage("YourWork/_$Locations.cshtml", new { PageState = ModelState, Position = p, IsInOnboarding = isInOnboarding })
             </div>
 

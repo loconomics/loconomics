@@ -126,6 +126,25 @@
     {
         LcData.UserInfo.RegisterLastActivityTime();
         LcHelpers.CloseDebugLogger();
+
+        // IMPORTANT Additional code to make REST pages can
+        // resolve to http code 401.
+        if (Response.Headers.AllKeys.Contains("REST"))
+        {
+            var info = Response.Headers["REST"];
+            var code = Response.Headers["REST-Code"];
+            Response.Headers.Remove("REST");
+            Response.Headers.Remove("REST-Code");
+            
+            Response.TrySkipIisCustomErrors = true;
+            Response.ClearContent();
+            Response.StatusCode = int.Parse(code);
+            Response.RedirectLocation = null;
+            Response.Write(info);
+            Response.Flush();
+            Response.End();
+        }
+        
         /* TESTING
         using (var f = System.IO.File.AppendText(Request.MapPath(LcUrl.RenderAppPath + "EndRequest.log")))
         {

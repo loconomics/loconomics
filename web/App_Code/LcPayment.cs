@@ -301,6 +301,9 @@ public static class LcPayment
     /// <returns></returns>
     public static string RefundTransaction(string transactionID)
     {
+        if (IsFakeTransaction(transactionID))
+            return null;
+
         Result<Transaction> r = null;
 
         try
@@ -358,6 +361,9 @@ public static class LcPayment
     /// <returns></returns>
     public static string RefundTransaction(string transactionID, decimal amount)
     {
+        if (IsFakeTransaction(transactionID))
+            return null;
+
         Result<Transaction> r = null;
 
         try
@@ -464,6 +470,9 @@ public static class LcPayment
     /// <returns></returns>
     public static string SettleTransaction(string transactionID)
     {
+        if (IsFakeTransaction(transactionID))
+            return null;
+
         Result<Transaction> r = null;
 
         try
@@ -490,6 +499,9 @@ public static class LcPayment
     /// <returns></returns>
     public static string ReleaseTransactionFromEscrow(string transactionID)
     {
+        if (IsFakeTransaction(transactionID))
+            return null;
+
         Result<Transaction> r = null;
 
         try
@@ -839,5 +851,17 @@ public static class LcPayment
 
     #endregion
 
+    #endregion
+
+    #region Fake, testing transactions that avoid Braintree
+    public const string FakeTransactionPrefix = "TEST:";
+    public static string CreateFakeTransactionId()
+    {
+        return FakeTransactionPrefix + Guid.NewGuid().ToString();
+    }
+    public static bool IsFakeTransaction(string transactionId)
+    {
+        return String.IsNullOrEmpty(transactionId) || transactionId.StartsWith(FakeTransactionPrefix);
+    }
     #endregion
 }

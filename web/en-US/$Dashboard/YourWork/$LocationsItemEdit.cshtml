@@ -6,6 +6,14 @@
     LcHelpers.ProviderPage();
     
     var isSubform = PageData["IsSubform"] ?? Request["subform"].AsBool();
+    var minimumRadiusUI = PageData["MinimumRadiusUI"] ?? Request["MinimumRadiusUI"].AsBool();
+    var iworkon = Request["iworkon"].AsBool();
+    var itravel = Request["itravel"].AsBool();
+    
+    if (minimumRadiusUI) {
+        // RadiusUI is ever an 'i travel from' (AKA service radius) location
+        itravel = true;
+    }
 
     var u = LcData.UserInfo.GetUserRow();
     var locationID = Request["LocationID"].AsInt();
@@ -21,107 +29,8 @@
         }
         // ENDS page execution
     }
-
-    // Validation rules
-    Validation.RequireField("name", LcRessources.RequiredField("Name"));
-    Validation.RequireField("type", LcRessources.RequiredField("Location Type"));
-    Validation.RequireField("addressline1", LcRessources.RequiredField("Address Line 1"));
-    Validation.RequireField("city", LcRessources.RequiredField("City"));
-    Validation.RequireField("state", LcRessources.RequiredField("State"));
-    Validation.RequireField("postalcode", LcRessources.RequiredField("Zip Code"));
-    Validation.RequireField("iworkon", "Are services performed at this location?");
-    Validation.RequireField("itravel", "Do you travel to clients from this location?");
-    Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
-    Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
-    Validation.Add("travel-radius", Validator.Decimal("Service Radius must be a number"));
-    Validation.Add("name", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
-    Validation.Add("addressline1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
-    Validation.Add("addressline2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
-    Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
-    Validation.Add("special-instructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
-
-    // Save posted data
-    if (IsPost && Validation.IsValid()) {
-        using (var db = Database.Open("sqlloco")) {
-
-            // Validate Postal Code
-            var state = Request["state"].AsInt();
-            var postalCodeID = LcData.GetPostalCodeID(Request["postalcode"], state);
-            if (postalCodeID == 0) {
-                ModelState.AddFormError("Postal Code not valid");
-            }
-            
-            // Validate that almost one of the 'location service-type' must be selected
-            if (!Request["iworkon"].AsBool() &&
-                !Request["itravel"].AsBool()) {
-                ModelState.AddFormError("Please select almost one option from: 'I perform services here' or 'I travel to clients from here'.");
-            }
-            
-            // Validate that 'travel from location' is unique
-            // Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
-            if (Request["itravel"].AsBool() &&
-                db.QueryValue(@"
-                    SELECT count(*) FROM ServiceAddress
-                    WHERE UserID = @0 AND PositionID = @1
-                            AND TravelFromLocation = 1 -- Only travel from addresses
-                            AND AddressID <> @2 --Don't count this address!
-                ", u.UserID, positionID, locationID) > 0) {
-                ModelState.AddFormError("You already have a 'travel from location' address (can be only one).");
-            }
-            
-            // Validate the AddressTypeID, for that types with UniquePerUser=1 must be checked that we don't add 
-            // a repeated address for that type on this user (indifferent from the PositionID)
-            var dupeUniqueAddress = db.QueryValue(@"
-                SELECT count(*)
-                FROM    Address As A
-                         INNER JOIN
-                        AddressType As AT
-                          ON A.AddressTypeID = AT.AddressTypeID
-                WHERE   A.UserID = @0
-                         AND
-                        A.AddressTypeID = @1
-                         AND
-                        AT.UniquePerUser = 1
-                         AND
-                        -- Don't count this address!
-                        A.AddressID <> @2
-            ", u.UserID, Request["type"].AsInt(), locationID);
-            if (dupeUniqueAddress > 0) {
-                ModelState.AddFormError("You cannot add more than one address of the selected type (only applies to some special types)");
-            }
-
-            if (ModelState.IsValid) {
-                db.Execute(LcData.sqlSetServiceAddress,
-                    locationID,
-                    u.UserID,
-                    Request["addressline1"],
-                    Request["addressline2"],
-                    Request["city"],
-                    state,
-                    postalCodeID,
-                    u.PreferredCountryID,
-                    Request["name"],
-                    Request["type"].AsInt(),
-                    Request["special-instructions"],
-                    Request["latitude"].AsDecimal(),
-                    Request["longitude"].AsDecimal(),
-                    null, //Request["google-map-url"],
-                    positionID,
-                    Request["iworkon"].AsBool(),
-                    Request["itravel"].AsBool(),
-                    Request["travel-radius"].AsDecimal(),
-                    Request["travel-transport"].AsInt(),
-                    Request["preferred-address"].AsBool()
-                );
-            }
-        }
-        
-        if (ModelState.IsValid) {
-            LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
-        }
-    }
     
-    // Load
+    // Local SQL
     var sqlGetTransports = @"
         SELECT *
         FROM    TransportType
@@ -146,12 +55,161 @@
     var sqlOrderAddressesByPosition = @"
         ORDER BY PositionID ASC, AddressName ASC
     ";
-    dynamic transports = null, location = null, types = null, userAddresses = null;
+    
+    // Load location. Its needed both for GET and POST, since at POST some verifications
+    // need the saved location
+    dynamic location = null;
     using (var db = Database.Open("sqlloco")) {
         if (locationID > 0) {
             location = db.QuerySingle(LcData.sqlGetServiceAddresses + sqlCondAddressID, u.UserID, positionID,
                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), locationID);
         }
+    }
+
+    // Validation rules
+    if (!minimumRadiusUI) {
+        Validation.RequireField("type", LcRessources.RequiredField("Location Type"));
+        Validation.RequireField("addressline1", LcRessources.RequiredField("Address Line 1"));
+        Validation.RequireField("city", LcRessources.RequiredField("City"));
+        Validation.RequireField("state", LcRessources.RequiredField("State"));
+    }
+    Validation.RequireField("name", LcRessources.RequiredField("Name"));
+    Validation.RequireField("postalcode", LcRessources.RequiredField("Zip Code"));
+    Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
+    Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
+    Validation.Add("travel-radius", Validator.Decimal("Service Radius must be a number"));
+    Validation.Add("name", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
+    Validation.Add("addressline1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
+    Validation.Add("addressline2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
+    Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
+    Validation.Add("special-instructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
+
+    // Save posted data
+    if (IsPost && Validation.IsValid()) {
+        using (var db = Database.Open("sqlloco")) {
+
+            // Validate Postal Code
+            var stateId = LcData.GetStateFromZipCode(Request["postalcode"]);           
+            var postalCodeID = LcData.GetPostalCodeID(Request["postalcode"], stateId);
+            var typeID = Request["type"].AsInt(12); // Option 'Other':12 by default
+
+            if (postalCodeID == 0) {
+                ModelState.AddFormError("Postal Code not valid");
+            }
+            if (!minimumRadiusUI &&
+                Request["state"].AsInt() != stateId) {
+                ModelState.AddFormError("Postal Code not valid");
+            }
+            
+            // Validate that almost one of the 'location service-type' must be selected
+            if (!iworkon &&
+                !itravel) {
+                ModelState.AddFormError("Please select almost one option from: 'I perform services here' or 'I travel to clients from here'.");
+            }
+            
+            // Validate that 'travel from location' is unique
+            // Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
+            if (itravel &&
+                db.QueryValue(@"
+                    SELECT count(*) FROM ServiceAddress
+                    WHERE UserID = @0 AND PositionID = @1
+                            AND TravelFromLocation = 1 -- Only travel from addresses
+                            AND AddressID <> @2 --Don't count this address!
+                ", u.UserID, positionID, locationID) > 0) {
+                ModelState.AddFormError("You already have a service radius location (can be only one).");
+            }
+            
+            // Saved locations that are UniquePerUser cannot be changed its type,
+            // as the UI reflects that, we avoid hacking by reseting the typeID to the
+            // previoulsy saved one:
+            if (location != null && location.UniquePerUser) {
+                typeID = location.AddressTypeID;
+            }
+            
+            // Validate the AddressTypeID, for that types with UniquePerUser=1 must be checked that we don't add 
+            // a repeated address for that type on this user (indifferent from the PositionID)
+            var dupeUniqueAddress = db.QueryValue(@"
+                SELECT count(*)
+                FROM    Address As A
+                         INNER JOIN
+                        AddressType As AT
+                          ON A.AddressTypeID = AT.AddressTypeID
+                WHERE   A.UserID = @0
+                         AND
+                        A.AddressTypeID = @1
+                         AND
+                        AT.UniquePerUser = 1
+                         AND
+                        -- Don't count this address!
+                        A.AddressID <> @2
+            ", u.UserID, typeID, locationID);
+            if (dupeUniqueAddress > 0) {
+                ModelState.AddFormError("You cannot add more than one address of the selected type (only applies to some special types)");
+            }
+            
+            // We NEED GPS coordinates, so if that was not given we try to get it using Google Maps Geocoding API.
+            // If it fails for the given address, we show a form error asking for a position
+            var lat = Request["latitude"].AsDecimal(0);
+            var lng = Request["longitude"].AsDecimal(0);
+
+            if (lat == 0 && lng == 0) {
+                var addressInline = LcHelpers.JoinNotEmptyStrings(", ",
+                    Request["addressline1"],
+                    Request["addressline2"],
+                    Request["city"],
+                    Request["postalcode"],
+                    // We have a StateID not a Code, no problem, state is implicit
+                    // on postalcode so it works withouth State,
+                    // go with country
+                    LcData.GetCurrentCountryID() == 1 ? "USA" : "ES"
+                );
+
+                var latLng = LcData.Address.GoogleGeoCode(addressInline);
+
+                if (latLng != null) {
+                    lat = latLng.Lat;
+                    lng = latLng.Lng;
+                }
+                else {
+                    // Coordinates are required
+                    ModelState.AddFormError("Looks like we're having problems verifying this location. Please double-check it or use the pin to choose a location.");
+                }
+            }
+
+            if (ModelState.IsValid) {
+                db.Execute(LcData.sqlSetServiceAddress,
+                    locationID,
+                    u.UserID,
+                    Request["addressline1"] ?? "",
+                    Request["addressline2"] ?? "",
+                    Request["city"] ?? "",
+                    stateId,
+                    postalCodeID,
+                    u.PreferredCountryID,
+                    Request["name"],
+                    typeID,
+                    Request["special-instructions"],
+                    lat,
+                    lng,
+                    null, //Request["google-map-url"],
+                    positionID,
+                    iworkon,
+                    itravel,
+                    Request["travel-radius"].AsDecimal(),
+                    null, //Request["travel-transport"].AsInt(),
+                    Request["preferred-address"].AsBool()
+                );
+            }
+        }
+        
+        if (ModelState.IsValid) {
+            LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+        }
+    }
+    
+    // Load
+    dynamic transports = null, types = null, userAddresses = null;
+    using (var db = Database.Open("sqlloco")) {
         transports = db.Query(sqlGetTransports);
         types = db.Query(sqlGetAddressTypes, u.UserID);
         if (locationID == 0){
@@ -161,7 +219,7 @@
         }
     }
     
-    var formAction = LcUrl.LangPath + "$dashboard/YourWork/$LocationsItemEdit/?LocationID=" + locationID + "&PositionID=" + positionID;
+    var formAction = LcUrl.LangPath + "$dashboard/YourWork/$LocationsItemEdit/?LocationID=" + locationID + "&PositionID=" + positionID + "&MinimumRadiusUI=" + minimumRadiusUI;
 }
 @helper printDistanceOptions(string selected){
         <option @LcHelpers.IsSelected(selected, "0.5") value="0.5">0.5 mile</option>
@@ -176,21 +234,21 @@
 }
 
 @if (isSubform) {
-    @Html.Raw("<")<text>fieldset data-ajax-fieldset-action="@(formAction)&subform=true" class="crudl-form ajax ajax-box"></text>
+    @Html.Raw("<")<text>fieldset data-ajax-fieldset-action="@(formAction)&subform=true" data-reload-mode="replace-me" class="crudl-form ajax ajax-box"></text>
 } else {
     @Html.Raw("<")<text>form action="@formAction" method="post" class="crudl-form ajax ajax-box" id="@idprefix"></text>
 }
 
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
-    <fieldset>
-        @if (locationID == 0 && userAddresses.Count > 0)
+    <fieldset class="@(minimumRadiusUI ? "is-minimumRadiusUi" : "")">
+        @if (!minimumRadiusUI && locationID == 0 && userAddresses.Count > 0)
         {
             var lastPositionID = 0;
             <ul class="copy-location">
                 <li>
                     <label>Please fill in location information below or select one that you've already used:
-                        <select class="copy-location" data-extra-query="@(Request["iworkon"].AsBool() ? "iworkon=True&" : "")@(Request["itravel"].AsBool() ? "itravel=True&" : "")">
+                        <select class="copy-location" data-extra-query="@(iworkon ? "iworkon=True&" : "")@(itravel ? "itravel=True&" : "")">
                             <option value=""></option>
                             @foreach (var add in userAddresses)
                             {
@@ -211,14 +269,24 @@
             </ul>
         }
         <ul class="location-data">
-            <li class="location-name">
-                <label>Location name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null))" @Validation.GetHtml("name") /></label>
+            <li class="location-name" style="@(minimumRadiusUI ? "display:none;" : "")">
+                <label>Location name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null) ?? (minimumRadiusUI ? "Service radius location" : ""))" @Validation.GetHtml("name") /></label>
                 @Html.ValidationMessage("name")
             </li>
+            @if (minimumRadiusUI)
+            {
+                <li class="location-zipcode">
+                    <label>Zip Code: <input type="text" name="postalcode" value="@(Request["postalcode"] ?? (location != null ? location.PostalCode : null))" data-val-postalcode="Postal Code is not valid" class="secure-data" @Validation.GetHtml("postalcode")/></label>
+                    @Html.ValidationMessage("postalcode")
+                </li>
+            }
+            else
+            {
             <li class="location-type">
                 <label>Location Type:
                     @if (location != null && location.UniquePerUser)
                     {
+                        <input type="hidden" value="@(location.AddressTypeID)" name="type" />
                         <input type="text" disabled="disabled" value="@location.AddressType" /> <span>(this type of address cannot be changed)</span>
                     }
                     else
@@ -263,7 +331,10 @@
             <li class="location-preferredaddress input-option">
                 <label><input type="checkbox" name="preferred-address" value="true" @LcHelpers.IsChecked(true, Request["preferred-address"] ?? (location != null && location.IsServiceAddress ? location.PreferredAddress : null)) /> This is my prefered address</label>
             </li>
+            }
         </ul>
+        @if (!minimumRadiusUI)
+        {
         <ul class="location-travel">
             <li class="input-option">
                 I perform services here: 
@@ -284,7 +355,8 @@
                             </select>
                             mile(s) from here.</label>
                             @Html.ValidationMessage("travel-radius")
-                            </li>
+                        </li>
+                        @*
                         <li>
                             <span>I travel by:</span>
                             <ul class="transport-type">
@@ -297,19 +369,36 @@
                             </ul>
                             @Html.ValidationMessage("travel-transport")
                         </li>
+                        *@
                     </ul>
                 </fieldset>
             </li>
         </ul>
+        }
+        else
+        {
+            <ul class="location-travel">
+                <li>
+                    @* Fixed hidden element to allow javascript code to detect that is a radius location *@
+                    <input type="radio" name="itravel" value="True" checked style="display:none" />
+                    <label>I will travel up to
+                    <select name="travel-radius" @Validation.GetHtml("travel-radius")>
+                        @printDistanceOptions(Request["travel-radius"] ?? (location != null && location.IsServiceAddress ? location.ServiceRadiusFromLocation : null))
+                    </select>
+                    mile(s) from here.</label>
+                    @Html.ValidationMessage("travel-radius")
+                </li>
+            </ul>
+        }
         <ul class="location-map">
             <li>
                 <strong>GPS Coordinates</strong>
                 <div class="advice warning">Move the pin to the exact address and click confirm</div>
             </li>
             <li class="map-selector"><div class="google-map"></div></li>
-            <li class="options">
+            <li class="options" style="@(minimumRadiusUI ? "display:none;" : "")">
                 @*<a href="#geolocation" class="has-tooltip" title="Use HTML5 Geolocation, best result on devices as tablets and smartphones with GPS">Get my device positioning</a>*@
-                <a href="#confirm" class="has-tooltip action" title="Save map marker coordinates with your address">Confirm</a>
+                <a href="#confirm" class="has-tooltip action confirm-gps-action" title="Save map marker coordinates with your address">Confirm</a>
                 <a href="#editcoordinates" class="has-tooltip action edit-action" title="Move the pin to the exact address and click confirm, or edit coordinates manually (be careful!)" data-cancel-label="Cancel">Edit</a>
                 <a href="#geocode" class="has-tooltip find-address-geocode" title="Using Google Maps Geocoding, we translate your address into coordenates automatically">Find my address in the map</a>
             </li>

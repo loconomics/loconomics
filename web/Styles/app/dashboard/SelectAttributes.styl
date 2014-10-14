@@ -1,0 +1,70 @@
+/** SelectAttributes component
+**/
+@import '../utils/layoutUtils'
+@import '../utils/ColorsPalette'
+
+.SelectAttributes {
+    
+    margin 0 0 1.5em
+    
+    .SelectAttributes-title {
+        display none
+    }
+ 
+    .SelectAttributes-selection {
+        display block
+        clearfix()
+        margin-top 4px
+        
+        .SelectAttributes-item {
+            background White
+            border-radius 4px
+            padding .1em 1em !important
+            margin 0 1em 6px 0 !important
+            box-sizing border-box
+            width auto !important
+            float left
+            box-shadow: 0px 0px 6px -2px black;
+        
+            .SelectAttributes-item-remove {
+                text-decoration none
+                display inline-block
+                padding .2em .6em
+            }
+            
+            .SelectAttributes-item-name {
+                
+            }
+            
+        }
+    }
+    
+    .SelectAttributes-autocomplete {
+     
+        font-size 0
+
+        .SelectAttributes-autocompleteInput {
+            font-size 13px
+            min-width: 40%;
+        }
+
+        .SelectAttributes-autocompleteButton {
+            font-size 13px
+            box-sizing border-box
+            height 26px
+            background $colorGreen
+            border-radius 0 4px 4px 0
+            margin-left -4px
+            
+            &:hover {
+                box-shadow: 0 0 5px 2px $colorGreen;
+            }
+        }
+    }
+    
+    &.is-error {
+        .SelectAttributes-autocompleteInput {
+            box-shadow: 0px 0px 5px 1px $colorRed;
+        }
+    }
+}

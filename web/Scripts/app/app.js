@@ -220,6 +220,13 @@ window.escapeJQuerySelectorValue = require('../LC/jqueryUtils').escapeJQuerySele
 
 var providerWelcome = require('./providerWelcome');
 
+var HelpPoint = require('../LC/HelpPoint').HelpPoint;
+
+// Global access to the Facebook API utils to be used by
+// pages and page-components; any javascript module must
+// require it instead.
+window.facebookUtils = require('../LC/facebookUtils');
+
 /**
  ** Init code
 ***/
@@ -233,116 +240,118 @@ $(window).load(function () {
 });
 $(function () {
 
-  providerWelcome.show();
+    providerWelcome.show();
 
-  // Placeholder polyfill
-  LC.placeHolder();
+    // Placeholder polyfill
+    LC.placeHolder();
 
-  // Autofocus polyfill
-  LC.autoFocus();
+    // Autofocus polyfill
+    LC.autoFocus();
 
-  // Generic script for enhanced tooltips and element descriptions
-  LC.initTooltips();
+    // Generic script for enhanced tooltips and element descriptions
+    LC.initTooltips();
 
-  ajaxForms.init();
+    ajaxForms.init();
 
-  welcomePopup.init();
+    welcomePopup.init();
 
-  // Enable the use of popups for some links that by default open a new tab:
-  faqsPopups.enable(LcUrl.LangPath);
-  accountPopups.enable(LcUrl.LangPath);
-  legalPopups.enable(LcUrl.LangPath);
+    // Enable the use of popups for some links that by default open a new tab:
+    faqsPopups.enable(LcUrl.LangPath);
+    accountPopups.enable(LcUrl.LangPath);
+    legalPopups.enable(LcUrl.LangPath);
 
-  // Old availability calendar
-  availabilityCalendarWidget.init(LcUrl.LangPath);
-  // New availability calendar
-  availabilityCalendar.Weekly.enableAll();
+    // Old availability calendar
+    availabilityCalendarWidget.init(LcUrl.LangPath);
+    // New availability calendar
+    availabilityCalendar.Weekly.enableAll();
 
-  popup.connectAction();
+    popup.connectAction();
 
-  // Date Picker
-  LC.datePicker.init();
+    // Date Picker
+    LC.datePicker.init();
 
-  /* Auto calculate table items total (quantity*unitprice=item-total) script */
-  autoCalculate.onTableItems();
-  autoCalculate.onSummary();
+    /* Auto calculate table items total (quantity*unitprice=item-total) script */
+    autoCalculate.onTableItems();
+    autoCalculate.onSummary();
 
-  hasConfirmSupport.on();
+    hasConfirmSupport.on();
 
-  postalCodeValidation.init({ baseUrl: LcUrl.LangPath });
+    postalCodeValidation.init({ baseUrl: LcUrl.LangPath });
 
-  // Tabbed interface
-  tabsAutoload.init(TabbedUX);
-  TabbedUX.init();
-  TabbedUX.focusCurrentLocation();
-  TabbedUX.checkVolatileTabs();
-  sliderTabs.init(TabbedUX);
+    // Tabbed interface
+    tabsAutoload.init(TabbedUX);
+    TabbedUX.init();
+    TabbedUX.focusCurrentLocation();
+    TabbedUX.checkVolatileTabs();
+    sliderTabs.init(TabbedUX);
 
-  tabbedWizard.init(TabbedUX, {
-    loadingDelay: gLoadingRetard
-  });
-
-  tabbedNotifications.init(TabbedUX);
-
-  autofillSubmenu();
-
-  // TODO: 'loadHashBang' custom event in use?
-  // If the hash value follow the 'hash bang' convention, let other
-  // scripts do their work throught a 'loadHashBang' event handler
-  if (/^#!/.test(window.location.hash))
-    $(document).trigger('loadHashBang', window.location.hash.substring(1));
-
-  // Reload buttons
-  $(document).on('click', '.reload-action', function () {
-    // Generic action to call lc.jquery 'reload' function from an element inside itself.
-    var $t = $(this);
-    $t.closest($t.data('reload-target')).reload();
-  });
-
-  /* Enable focus tab on every hash change, now there are two scripts more specific for this:
-  * one when page load (where?),
-  * and another only for links with 'target-tab' class.
-  * Need be study if something of there must be removed or changed.
-  * This is needed for other behaviors to work. */
-  // On target-tab links
-  $(document).on('click', 'a.target-tab', function () {
-    var thereIsTab = TabbedUX.getTab($(this).attr('href'));
-    if (thereIsTab) {
-      TabbedUX.focusTab(thereIsTab);
-      return false;
-    }
-  });
-  // On hash change
-  if ($.fn.hashchange)
-    $(window).hashchange(function () {
-      if (!/^#!/.test(location.hash)) {
-        var thereIsTab = TabbedUX.getTab(location.hash);
-        if (thereIsTab)
-          TabbedUX.focusTab(thereIsTab);
-      }
+    tabbedWizard.init(TabbedUX, {
+        loadingDelay: gLoadingRetard
     });
 
-  // HOME PAGE / SEARCH STUFF
-  homePage.init();
+    tabbedNotifications.init(TabbedUX);
 
-  // Validation auto setup for page ready and after every ajax request
-  // if there is almost one form in the page.
-  // This avoid the need for every page with form to do the setup itself
-  // almost for most of the case.
-  function autoSetupValidation() {
-    if ($(document).has('form').length)
-      validationHelper.setup('form');
-  }
-  autoSetupValidation();
-  $(document).ajaxComplete(autoSetupValidation);
+    autofillSubmenu();
 
-  // TODO: used some time? still required using modules?
-  /*
-  * Communicate that script.js is ready to be used
-  * and the common LC lib too.
-  * Both are ensured to be raised ever after page is ready too.
-  */
-  $(document)
+    HelpPoint.enableAll(document);
+
+    // TODO: 'loadHashBang' custom event in use?
+    // If the hash value follow the 'hash bang' convention, let other
+    // scripts do their work throught a 'loadHashBang' event handler
+    if (/^#!/.test(window.location.hash))
+        $(document).trigger('loadHashBang', window.location.hash.substring(1));
+
+    // Reload buttons
+    $(document).on('click', '.reload-action', function () {
+        // Generic action to call lc.jquery 'reload' function from an element inside itself.
+        var $t = $(this);
+        $t.closest($t.data('reload-target')).reload();
+    });
+
+    /* Enable focus tab on every hash change, now there are two scripts more specific for this:
+    * one when page load (where?),
+    * and another only for links with 'target-tab' class.
+    * Need be study if something of there must be removed or changed.
+    * This is needed for other behaviors to work. */
+    // On target-tab links
+    $(document).on('click', 'a.target-tab', function () {
+        var thereIsTab = TabbedUX.getTab($(this).attr('href'));
+        if (thereIsTab) {
+            TabbedUX.focusTab(thereIsTab);
+            return false;
+        }
+    });
+    // On hash change
+    if ($.fn.hashchange)
+        $(window).hashchange(function () {
+            if (!/^#!/.test(location.hash)) {
+                var thereIsTab = TabbedUX.getTab(location.hash);
+                if (thereIsTab)
+                    TabbedUX.focusTab(thereIsTab);
+            }
+        });
+
+    // HOME PAGE / SEARCH STUFF
+    homePage.init();
+
+    // Validation auto setup for page ready and after every ajax request
+    // if there is almost one form in the page.
+    // This avoid the need for every page with form to do the setup itself
+    // almost for most of the case.
+    function autoSetupValidation() {
+        if ($(document).has('form').length)
+            validationHelper.setup('form');
+    }
+    autoSetupValidation();
+    $(document).ajaxComplete(autoSetupValidation);
+
+    // TODO: used some time? still required using modules?
+    /*
+    * Communicate that script.js is ready to be used
+    * and the common LC lib too.
+    * Both are ensured to be raised ever after page is ready too.
+    */
+    $(document)
     .trigger('lcScriptReady')
     .trigger('lcLibReady');
 });
