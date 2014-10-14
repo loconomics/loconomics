@@ -68,7 +68,7 @@
       <div class="container">
         <h1>Javascript Components</h1>
         <p>Enhanced and reusable UI/UX components.</p>
-        <p>Some of them are built on top of CSS Components that are also usable independently.</p>
+        <p>Some of them are built on top of independent CSS Components.</p>
       </div>
     </div>
 
@@ -89,7 +89,7 @@
 
             <div class="bs-callout bs-callout-warning">
               <h4>Display options</h4>
-              <p>Sizes and other pure CSS options for the marker are described in the <a href="/css#css-help-point">CSS Component counterpart</a></p>
+              <p>Sizes and other pure CSS options for the marker are described in the <a href="/css#css-help-point">its complementary CSS Component</a></p>
             </div>
             
             <h3>Basic example</h3>
@@ -98,6 +98,7 @@
               and the attribute <code>data-content</code> with the desired text.
             </p>
             <div class="bs-example">
+              Click/tap it for extra help. All default options
               <a href="#" class="HelpPoint size-lg" data-content="Some help text.">?</a>
             </div>
             <div class="highlight">
@@ -112,6 +113,7 @@
               all the <code>data-*</code> attributes and the optional standard <code>title</code> attribute.
             </p>
             <div class="bs-example">
+              Hover it with the mouse for extra help (on desktop; just tap it on mobile).
               <a href="#" class="HelpPoint size-lg"
                   data-placement="bottom"
                   data-trigger="hover"
@@ -119,6 +121,7 @@
                   title="Help"
                   data-content="Some help text.&lt;br/&gt;It can 
                     use some &lt;strong&gt;html&lt;/strong&gt;, useful to highlight phrases.">?</a>
+              <p>The popover is placed on bottom, has some html inside <code>data-content</code> (be carefull closing comiles)</p>
             </div>
             <div class="highlight">
               <pre class="prettyprint"><code class="html">
