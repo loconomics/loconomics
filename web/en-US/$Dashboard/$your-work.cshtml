@@ -18,7 +18,17 @@
     
     // If there is no a positionID (as in Onboarding), get the first on the user list:
     if (posID == -1) {
-        p = ((IEnumerable<dynamic>)LcData.UserInfo.GetUserPos()).First<dynamic>();
+        
+        // When in Onboarding, get the latest updated position, since that is the latest the user
+        // added to its profile (when coming form a sign-up for an existing account)
+        if (isInOnboarding) {
+            p = ((IEnumerable<dynamic>)LcData.UserInfo.GetUserPos()).OrderByDescending<dynamic, DateTime>(a => a.UpdatedDate).First<dynamic>();
+        }
+        else {
+            // Get the first position in the list
+            p = ((IEnumerable<dynamic>)LcData.UserInfo.GetUserPos()).First<dynamic>();
+        }
+        
         if (!isInOnboarding) {
             // Do a redirect when not in onboarding to do the job through the more convenient URL
             // and get the option selected in the sidebar menu:

@@ -862,7 +862,7 @@ public class LcMessaging
             if (data != null)
             foreach (var d in data)
             {
-                w.QueryString.Add(d.Key, d.Value.ToString());
+                w.QueryString.Add(d.Key, (d.Value ?? "").ToString());
             }
             if (!w.QueryString.AllKeys.Contains<string>("RequestKey"))
                 w.QueryString["RequestKey"] = SecurityRequestKey;

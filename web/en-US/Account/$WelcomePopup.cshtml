@@ -26,7 +26,7 @@
             // Check if the logged provider has or not a position
             providerWithoutPosition = LcData.UserInfo.GetUserPos().Count == 0;
             
-            if (!providerWithoutPosition) {
+            if (!providerWithoutPosition && !IsPost) {
                 // Is provider with almost one position, doesn't need this page, redirect
                 if (Request.IsAjaxRequest()) {
                     LcHelpers.ReturnJsonResult(1, LcUrl.LangPath);
@@ -107,78 +107,88 @@
         }
 
         if (ModelState.IsValid) {
-            if (providerWithoutPosition) {
-                LcData.UserInfo.InsProviderPosition(u.UserID, positionID);
-                LcHelpers.ReturnJsonResult(1, redirect);
+            // Double check that if the Facebook ID exists already
+            // and load its user data on that case to get updated
+            if (facebookId > 0) {
+                var userFromFbId = LcAuth.GetFacebookUser(facebookId);
+                if (userFromFbId != null) {
+                    u = LcData.UserInfo.GetUserRowWithContactData(userFromFbId.UserID);
+                }
+            }
+            
+            // Create account:
+            if (u == null &&
+                LcAuth.ExistsEmail(Request["email"])) {
+                // User already exists
+                ModelState.AddFormError("Email address is already in use--please click login below.");
             } else {
-                // Create account:
-                if (u == null && LcAuth.ExistsEmail(Request["email"])) {
-                    // User already exists
-                    ModelState.AddFormError("Email address is already in use--please click login below.");
-                } else {
-                    try {
-                        // Check user type to be created
-                        bool asProvider = profileType == "provider";
+                try {
+                    // Check user type to be created
+                    bool asProvider = profileType == "provider";
                         
-                        LcAuth.RegisteredUser user = null;
+                    LcAuth.RegisteredUser user = null;
                         
-                        if (u == null) {
-                            user = 
-                            LcAuth.RegisterUser(
-                                Request["email"],
-                                Request["firstname"],
-                                Request["lastname"],
-                                N.DW(Request["create-password"]) ?? Membership.GeneratePassword(14, 5),
-                                asProvider,
-                                Request.Url.Query,
-                                gender,
-                                Request["about"]
-                            );
-
-                            if (facebookId != 0) {
-                                LcAuth.ConnectWithFacebookAccount(user.UserID, facebookId);
-                            }
-                        }
-                        else {
-                            LcAuth.BecomeProvider(u.UserID);
-                            
-                            user = new LcAuth.RegisteredUser {
-                                Email = u.Email,
-                                UserID = u.UserID,
-                                IsProvider = true
-                            };
-                        }
-                        
-                        LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
-                        
+                    if (u == null) {
+                        user = LcAuth.RegisterUser(
+                            Request["email"],
+                            Request["firstname"],
+                            Request["lastname"],
+                            N.DW(Request["create-password"]) ?? Membership.GeneratePassword(14, 5),
+                            asProvider,
+                            Request.Url.Query,
+                            gender,
+                            Request["about"]
+                        );
+                    }
+                    else {
                         if (asProvider) {
-                            try{
-                                // Add position
-                                LcData.UserInfo.InsProviderPosition(user.UserID, positionID);
-                            } catch {
-                                // If there is an error ONLY with the position creation, still continue as
-                                // successfully because the account was created, after the redirect
-                                // the form will be showed again to fullfill position information
+                            LcAuth.BecomeProvider(u.UserID);
+                        }
+                            
+                        user = new LcAuth.RegisteredUser {
+                            Email = u.Email,
+                            UserID = u.UserID,
+                            IsProvider = asProvider
+                        };
+                    }
+                    
+                    if (facebookId != 0) {
+                        LcAuth.ConnectWithFacebookAccount(user.UserID, facebookId);
+                    }
+                        
+                    LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
+                        
+                    if (asProvider) {
+                        try{
+                            // Add the position.
+                            // For already existint users, if it already has it, 
+                            // the process will activate it and continue silently:
+                            LcData.UserInfo.InsProviderPosition(user.UserID, positionID);
+                        } catch (Exception exInsPos) {
+                            // For the second attempt only
+                            if (providerWithoutPosition) {
+                                throw exInsPos;
                             }
+                            // else: If there is an error ONLY with the position creation, still continue as
+                            // successfully because the account was created, after the redirect
+                            // the form will be showed again to fullfill position information
                         }
-                        
-                        LcAuth.SendRegisterUserEmail(user);
-                        
-                        // Auto-login:
-                        if (u == null) {
-                            FormsAuthentication.SetAuthCookie(Request["email"], false);
-                            LcData.UserInfo.RegisterLastLoginTime(0, Request["email"]);
-                        }
-                        
-                    } catch (System.Web.Security.MembershipCreateUserException e) {
-                        ModelState.AddFormError(e.Message);
                     }
+                        
+                    LcAuth.SendRegisterUserEmail(user);
+                        
+                    // Auto-login (even for current user, to revalidate):
+                    FormsAuthentication.SetAuthCookie(user.Email, false);
+                    LcData.UserInfo.RegisterLastLoginTime(user.UserID);
+                        
+                } catch (System.Web.Security.MembershipCreateUserException e) {
+                    ModelState.AddFormError(e.Message);
+                }
                 
-                    if (ModelState.IsValid) {
-                        // We return a json with result OK and redirect link (Code=1),
-                        // and response end just after this:
-                        LcHelpers.ReturnJsonResult(1, redirect);
-                    }
+                if (ModelState.IsValid) {
+                    // We return a json with result OK and redirect link (Code=1),
+                    // and response end just after this:
+                    LcHelpers.ReturnJsonResult(1, redirect);
                 }
             }
         }

@@ -279,8 +279,7 @@
                          AND SA.TravelFromLocation = 1
                          AND L.Latitude is not null
                          AND L.Longitude is not null
-            " + LcData.sqlCompleteAddressesFilter,
-              p.UserID, pos.PositionID);
+            ", p.UserID, pos.PositionID);
             // Customer locations
             // We only can offer customer locations if provider do travel
             if (providerTravelLocation != null) {
