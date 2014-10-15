@@ -378,7 +378,10 @@
             }
         }
 
-        @printCategoryAutocompleteAttributes(LcData.ServiceAttCatIDLanguages, dataCats[LcData.ServiceAttCatIDLanguages])
+        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages))
+        {
+            @printCategoryAutocompleteAttributes(LcData.ServiceAttCatIDLanguages, dataCats[LcData.ServiceAttCatIDLanguages])
+        }
 
         @* Because experience level attributes are get from a lookup table, not attributes table, cannot be linked
             to positions, and will never be retrieved in dataCats collection; for that, and because is a general
