@@ -322,6 +322,7 @@ function facebookUpdateFieldsStatus($container) {
             flast.closest('li').hide();
 
         // Email is special, requires confirmation #538,
+        femail.show().closest('li').show();
         // showing additional message,
         femail.siblings('.facebook-note').show();
 
@@ -329,6 +330,7 @@ function facebookUpdateFieldsStatus($container) {
         $container.find('.facebook-logged').show();
         // and hidding the button
         $container.find('.facebook-connect').hide();
+        $container.find('.choice-or').hide();
 
         // Password is special too, no needed with Facebook
         $container.find('[name="create-password"]').closest('li').hide();
