@@ -1,7 +1,7 @@
 ﻿@*
     Retrieve the user info for the logged Facebook Account.
     Methods supported:
-    - GET: get a 'user' object with properties userId, email, isProvider, firstName, postalCode; parameters
+    - GET: get a 'user' object with properties userID, email, isProvider, firstName, postalCode; parameters
         - facebook_id:long The Facebook ID related to an existing User Account that will be retrieved
         - signed_request:string The Facebook Signed Request from a succesfull client side user login,
             or alternative to this the Facebook login cookie for this App ('fbsr_*') with the signed request.
@@ -9,9 +9,7 @@
             expose publicly private data through the facebook_id parameter) so the facebook_id is just
             to double check that the explicit requested user account matches the logged user.
 *@
-@{
-    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
-    
+@{   
     dynamic result = new Dictionary<string, dynamic>();
     
     try {
@@ -34,7 +32,7 @@
             }
             else {
                 result["user"] = new {
-                    userId = userInfo.UserID,
+                    userID = userInfo.UserID,
                     email = userInfo.Email,
                     isProvider = userInfo.isProvider,
                     firstName = userInfo.FirstName,
