@@ -78,10 +78,20 @@
     padding-left: 1.5em;
 }
 .typo-handofsean {
-    font-family: Hand Of Sean, Arial, sans-serif;
+    font-family: "Hand Of Sean", Arial, sans-serif;
 }
 .typo-altehaasgrotesk {
-    font-family: Alte Haas Grotesk, Helvetica, Arial, sans-serif;
+    font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
+}
+/* typography samples from Bootstrap built theme */
+.typo-sans-serif {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.typo-serif {
+    font-family: Georgia, "Times New Roman", Times, serif;
+}
+.typo-monospace {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 /* Page. Custom header color */
