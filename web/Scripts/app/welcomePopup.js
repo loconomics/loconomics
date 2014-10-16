@@ -288,7 +288,9 @@ function facebookConnect($container) {
             $container.find('[name="gender"]').val(user.gender);
             $container.find('[name="about"]').val(user.about);
 
-            facebookUpdateFieldsStatus($container);
+            if (facebookUpdateFieldsStatus($container)) {
+                checkUserForFacebookLogin(auth.userID, $container);
+            }
         });
     });
 
@@ -353,4 +355,33 @@ function existingUserHideFields($container) {
             .attr('data-val-required', null)
             .attr('data-val', false);
     }
+}
+
+/** Ping our server for any existing user that matches 
+    the logged FacebookID and update UI notifying that
+**/
+var blockPresets = require('../LC/blockPresets'),
+    LcUrl = require('../LC/LcUrl');
+require('jquery.blockUI');
+function checkUserForFacebookLogin(facebookID, $container) {
+    // Do a server side query to get data for the existing ID 
+    // asociated with the facebookID account, IF ANY.
+    $container.block(blockPresets.loading);
+
+    $.getJSON(LcUrl.RestPath + 'facebook-user', {
+        facebook_id: facebookID
+    }).done(function (data) {
+        $container.find('[name="email"]')
+        .val(data.user.email)
+        .prop('readOnly', true);
+
+        $container.find('[name="zipcode"]')
+        .val(data.user.postalCode);
+
+        $container.find('.facebook-logged').hide();
+        $container.find('.facebook-logged-is-user').show();
+
+    }).always(function () {
+        $container.unblock();
+    });
 }
