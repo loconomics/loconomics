@@ -318,6 +318,11 @@ module.exports = function (grunt) {
                 files: {
                     'Styles/styleguide.css': ['Styles/app/styleguide.styl']
                 }
+            },
+            'styleguide-desktop': {
+                files: {
+                    'Styles/styleguide-desktop.css': ['Styles/app/styleguide-desktop.styl']
+                }
             }
         },
 
