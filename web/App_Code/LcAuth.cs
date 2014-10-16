@@ -179,36 +179,41 @@ public static class LcAuth
         }
     }
 
+    public static int? GetFacebookUserID(long facebookID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QueryValue("SELECT UserId FROM webpages_FacebookCredentials WHERE FacebookId=@0", facebookID);
+        }
+    }
+
     /// <summary>
     /// Get basic user info given a Facebook User ID or null.
     /// </summary>
     /// <param name="facebookID"></param>
     public static RegisteredUser GetFacebookUser(long facebookID)
     {
-        using (var db = Database.Open("sqlloco"))
+        int? userId = GetFacebookUserID(facebookID);
+        if (userId.HasValue)
         {
-            int? userId = db.QueryValue("SELECT UserId FROM webpages_FacebookCredentials WHERE FacebookId=@0", facebookID);
-            if (userId.HasValue)
+            var userData = LcData.UserInfo.GetUserRow(userId.Value);
+            // Check is valid (only edge cases will not be a valid record,
+            // as incomplete manual deletion of user accounts that didn't remove
+            // the Facebook connection).
+            if (userData != null)
             {
-                var userData = LcData.UserInfo.GetUserRow(userId.Value);
-                // Check is valid (only edge cases will not be a valid record,
-                // as incomplete manual deletion of user accounts that didn't remove
-                // the Facebook connection).
-                if (userData != null)
+                return new RegisteredUser
                 {
-                    return new RegisteredUser
-                    {
-                        Email = userData.Email,
-                        IsProvider = userData.IsProvider,
-                        UserID = userId.Value
-                    };
-                }
-                return null;
+                    Email = userData.Email,
+                    IsProvider = userData.IsProvider,
+                    UserID = userId.Value
+                };
             }
-            else
-            {
-                return null;
-            }
+            return null;
+        }
+        else
+        {
+            return null;
         }
     }
 
