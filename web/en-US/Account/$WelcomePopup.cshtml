@@ -88,7 +88,7 @@
         }
         
         // Password and Facebook Connect, or Customer user becoming provider
-        var facebookId = Request["facebookid"].AsLong();
+        var facebookId = getFacebookId();
         if (facebookId == 0 && u == null) {
             // No Facebook, no customer user, needs pasword
             if (Request["create-password"].IsEmpty()) {
@@ -198,6 +198,26 @@
     // WelcomePopup is required again #514 and is optional again #541
     var closable = true;
 }
+@functions{
+    /// <summary>
+    /// Get the Facebook ID doing validations.
+    /// For simplicity and double check, the form parameter 'facebookid'
+    /// is sent but the only secure way to know that is by verifying
+    /// with the Facebook API and the signed cookie, doing a 
+    /// double check.
+    /// </summary>
+    /// <returns></returns>
+    long getFacebookId() {
+        var fid = Request["facebookid"].AsLong();
+        var fuser = LcFacebook.GetUserFromCurrentRequest();
+        var fuserid = fuser != null ? ((string)fuser["id"] ?? "0").AsLong() : 0;
+
+        if (fuserid == fid)
+            return fid;
+
+        return 0;
+    }
+}
 <div id="welcomepopup" class="@(providerWithoutPosition ? "select-position" : "")">
     @if (closable)
     {
@@ -210,7 +230,7 @@
             We’re readying for our launch this summer as a 
             <a href="#" data-toggle="popover" data-placement="bottom" data-trigger="hover"
                 data-content="There are no fat cats in suits here. Just a bunch of hard-working people strengthening local economies...probably even one of your neighbors!">freelancer-owned cooperative</a>
-            and marketplace.<br></br>
+            and marketplace.<br></br/>
             You'll soon be able to find and book therapists to pamper your mind or body, tutors for your upcoming trip to Spain,
             caterers for your next big birthday, and so much more.<br></br>
             For freelancers, we provide you the tools you need to launch and grow your own service-based business while having a seat
