@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-10-15
+/*! Loconomics.com 2014-10-16
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -14,31 +14,7 @@
 /* Currently not embedded
 /@require 'bootstrap' */
 
-/* line 264 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\typographyDefinitions.styl */
-@font-face {
-  font-family: 'Hand Of Sean';
-  src: url("fonts/handsean.otf");
-  src: url("fonts/handsean.eot");
-  src: url("fonts/handsean.eot?#iefix") format('embedded-opentype'), url("fonts/handsean.woff") format('woff'), url("fonts/handsean.ttf") format('truetype'), url("fonts/handsean.svgz#HandOfSeanRegular") format('svg'), url("fonts/handsean.svg#HandOfSeanRegular") format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Alte Haas Grotesk';
-  src: url("fonts/altehaasgroteskregular.eot");
-  src: url("fonts/altehaasgroteskregular.eot?#iefix") format('embedded-opentype'), url("fonts/altehaasgroteskregular.woff") format('woff'), url("fonts/altehaasgroteskregular.ttf") format('truetype'), url("fonts/altehaasgroteskregular.svgz#AlteHaasGroteskRegular") format('svg'), url("fonts/altehaasgroteskregular.svg#AlteHaasGroteskRegular") format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Alte Haas Grotesk';
-  src: url("fonts/altehaasgroteskbold.eot");
-  src: url("fonts/altehaasgroteskbold.eot?#iefix") format('embedded-opentype'), url("fonts/altehaasgroteskbold.woff") format('woff'), url("fonts/altehaasgroteskbold.ttf") format('truetype'), url("fonts/altehaasgroteskbold.svgz#AlteHaasGroteskBold") format('svg'), url("fonts/altehaasgroteskbold.svg#AlteHaasGroteskBold") format('svg');
-  font-weight: bold;
-  font-style: normal;
-}
-
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+/* line 264 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
