@@ -87,27 +87,18 @@
             <p>Using Bootstrap version 3 right now, custom build.</p>
 
             <h3 id="styleguide-colors-palette">Colors palette</h3>
-            <h4>Colors without semantic meaning</h4>
-            <p>It needs clean-up, all this are what we have in our current stylesheets:
-            some unused, some changed to a non coincident color-name.</p>
-            <dl class="short-definitions">
-              <dt>Teal ($colorTeal)</dt><dd>#00989A <span class="color-sample" style="background-color:#00989A"></span></dd>
-              <dt>Light Teal ($colorLtTeal)</dt><dd>#B5E1E2 <span class="color-sample" style="background-color:#B5E1E2"></span></dd>
-              <dt>Green ($colorGreen)</dt><dd>#99C027 <span class="color-sample" style="background-color:#99C027"></span></dd>
-              <dt>Light Green ($colorLtGreen)</dt><dd>#E65A0F <span class="color-sample" style="background-color:#E65A0F"></span></dd>
-              <dt>Red ($colorRed)</dt><dd>#FC0404 <span class="color-sample" style="background-color:#FC0404"></span></dd>
-              <dt>Purple ($colorPurple)</dt><dd>#461864 <span class="color-sample" style="background-color:#461864"></span></dd>
-              <dt>Blue ($colorBlue)</dt><dd>#006A8D <span class="color-sample" style="background-color:#006A8D"></span></dd>
-              <dt>Orange ($colorOrange)</dt><dd>#E95D0F <span class="color-sample" style="background-color:#E95D0F"></span></dd>
-              <dt>Yellow ($colorYellow)</dt><dd>#F0B600 <span class="color-sample" style="background-color:#F0B600"></span></dd>
-              <dt>Gray ($colorGray)</dt><dd>#333333 <span class="color-sample" style="background-color:#333333"></span></dd>
-              <dt>Medium Gray ($colorMdGray)</dt><dd>#747474 <span class="color-sample" style="background-color:#747474"></span></dd>
-              <dt>Light Gray ($colorLtGray)</dt><dd>#CCCCCC <span class="color-sample" style="background-color:#cccccc"></span></dd>
+            <h4>Grayscale colors</h4>
+            <p>Bootstrap set of <a href="http://getbootstrap.com/css/#less-variables-colors" target="_blank">grayscale colors</a>.</p>
+            <dl class="medium-definitions">
+              <dt>@gray-darker:  lighten(#000, 13.5%);</dt><dd><span class="color-sample" style="bakcground-color: #222"></span> (#222)</dd>
+              <dt>@gray-dark:    lighten(#000, 20%);</dt><dd><span class="color-sample" style="bakcground-color: #333"></span> (#333)</dd>
+              <dt>@gray:         lighten(#000, 33.5%);</dt><dd><span class="color-sample" style="bakcground-color: #555"></span> (#555)</dd>
+              <dt>@gray-light:   lighten(#000, 46.7%);</dt><dd><span class="color-sample" style="bakcground-color: #777"></span> (#777)</dd>
+              <dt>@gray-lighter: lighten(#000, 93.5%);</dt><dd><span class="color-sample" style="bakcground-color: #eee"></span> (#eee)</dd>
             </dl>
             
             <h4>Semantic colors</h4>
-            <p>Bootstrap set of <a href="http://getbootstrap.com/css/#less-variables-colors" target="_blank">semantic colors</a>,
-              here replaced by Loconomics colors from the previous palette.</p>
+            <p>Loconomics set of semantic colors based on the <a href="http://getbootstrap.com/css/#less-variables-colors" target="_blank">Bootstrap ones</a>.</p>
             <dl class="medium-definitions">
               <dt>Primary (@brand-primary)</dt><dd><span class="color-sample" style="background-color:#00989A"></span> Teal (#00989A)</dd>
               <dt>Success (@brand-success)</dt><dd><span class="color-sample" style="background-color:#99C027"></span> Green (#99C027)</dd>
@@ -119,7 +110,6 @@
             <h4>Additional semantic colors</h4>
             <p>Set of semantics extended by Loconomics, when the basic ones are not enough.</p>
             <p>Be care that lighter colors based on the semantic ones doesn't need to be defined but may need a review after create our customized bootstrap, since they are created automatically by Bootstrap applying a modifier for uses <a href="http://getbootstrap.com/css/#helper-classes-backgrounds)" target="_blank">like backgrounds</a></p>
-            <p><a href="https://github.com/dani0198/Loconomics/issues/575" target="_blank">To discuss...</a></p>
 
             <h3 id="styleguide-typography">Typography</h3>
             <p>We use downloaded web fonts for the site, with some fallbacks for the minor cases where formats WOFF, TrueType, SVG and Embedded-OpenType are not supported.</p>
