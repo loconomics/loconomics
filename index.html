@@ -90,11 +90,11 @@
             <h4>Grayscale colors</h4>
             <p>Bootstrap set of <a href="http://getbootstrap.com/css/#less-variables-colors" target="_blank">grayscale colors</a>.</p>
             <dl class="medium-definitions">
-              <dt>@gray-darker:  lighten(#000, 13.5%);</dt><dd><span class="color-sample" style="bakcground-color: #222"></span> (#222)</dd>
-              <dt>@gray-dark:    lighten(#000, 20%);</dt><dd><span class="color-sample" style="bakcground-color: #333"></span> (#333)</dd>
-              <dt>@gray:         lighten(#000, 33.5%);</dt><dd><span class="color-sample" style="bakcground-color: #555"></span> (#555)</dd>
-              <dt>@gray-light:   lighten(#000, 46.7%);</dt><dd><span class="color-sample" style="bakcground-color: #777"></span> (#777)</dd>
-              <dt>@gray-lighter: lighten(#000, 93.5%);</dt><dd><span class="color-sample" style="bakcground-color: #eee"></span> (#eee)</dd>
+              <dt>@gray-darker:  lighten(#000, 13.5%);</dt><dd><span class="color-sample" style="background-color: #222"></span> (#222)</dd>
+              <dt>@gray-dark:    lighten(#000, 20%);</dt><dd><span class="color-sample" style="background-color: #333"></span> (#333)</dd>
+              <dt>@gray:         lighten(#000, 33.5%);</dt><dd><span class="color-sample" style="background-color: #555"></span> (#555)</dd>
+              <dt>@gray-light:   lighten(#000, 46.7%);</dt><dd><span class="color-sample" style="background-color: #777"></span> (#777)</dd>
+              <dt>@gray-lighter: lighten(#000, 93.5%);</dt><dd><span class="color-sample" style="background-color: #eee"></span> (#eee)</dd>
             </dl>
             
             <h4>Semantic colors</h4>
@@ -106,10 +106,20 @@
               <dt>Warning (@brand-warning)</dt><dd><span class="color-sample" style="background-color:#E95D0F"></span> Orange (#E95D0F)</dd>
               <dt>Danger (@brand-danger)</dt><dd><span class="color-sample" style="background-color:#FC0404"></span> Red (#FC0404)</dd>
             </dl>
+            
+            <h4>Background semantic colors</h4>
+            <p>How the semantic colors look when used on background; most of them lighter and others with different foreground color for better contrast.</p>
+            <div class="bs-example-bg-classes">
+              <p class="bg-primary">Primary (@brand-primary) as bg-primary</p>
+              <p class="bg-success">Success (@brand-success) as bg-success</p>
+              <p class="bg-info">Info (@brand-info) as bg-info</p>
+              <p class="bg-warning">Warning (@brand-warning) as bg-warning</p>
+              <p class="bg-danger">Danger (@brand-danger) as bg-danger</p>
+            </div>
 
             <h4>Additional semantic colors</h4>
             <p>Set of semantics extended by Loconomics, when the basic ones are not enough.</p>
-            <p>Be care that lighter colors based on the semantic ones doesn't need to be defined but may need a review after create our customized bootstrap, since they are created automatically by Bootstrap applying a modifier for uses <a href="http://getbootstrap.com/css/#helper-classes-backgrounds)" target="_blank">like backgrounds</a></p>
+            <p class="bs-callout bs-callout-info">On development...</p>
 
             <h3 id="styleguide-typography">Typography</h3>
             <p>We use downloaded web fonts for the site, with some fallbacks for the minor cases where formats WOFF, TrueType, SVG and Embedded-OpenType are not supported.</p>
