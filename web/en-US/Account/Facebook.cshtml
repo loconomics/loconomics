@@ -159,43 +159,54 @@
             LcHelpers.ReturnJsonResult(2801, "Facebook verification failed: Facebook email don't match current Loconomics user email", true);
         }*/
         // Compare email and full name
-        using (var db = Database.Open("sqlloco")) {
-            var c = (int)db.QueryValue(@"
-                SELECT  count(*)
+        var facebookName = whitespace((string)user.name ?? "").Trim();
+        var lcUser = LcData.UserInfo.GetUserRow(userID);
+        var shortName = whitespace(lcUser.FirstName + " " + lcUser.LastName).Trim();
+
+        var longName = whitespace(
+            lcUser.FirstName + " " +
+            (String.IsNullOrEmpty(lcUser.MiddleIn) ? "" : lcUser.MiddleIn + ". ") +
+            lcUser.LastName + " " +
+            lcUser.SecondLastName
+        ).Trim();
+
+        var matches = facebookName == shortName || facebookName == longName;
+        
+        if (matches) {
+            using (var db = Database.Open("sqlloco")) {            
+                // Verified, save verification record
+                db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
+                // Test social media alert
+                db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
+                LcHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
+            }
+        } else {
+            // Verification failed
+            /*var debugInfo = " Facebook:" + user.first_name + " " + user.last_name;
+            debugInfo += " = " + (string)db.QueryValue(@"
+                SELECT  dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, U.MiddleIn, ' '), U.LastName, ' '), U.SecondLastName, ' ') as loconame
                 FROM    Users As U
                             INNER JOIN
                         UserProfile As P
                             ON U.UserID = P.UserID
                 WHERE   U.UserID = @0
                             AND
-                        (
-                        dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, dbo.fx_concatBothOrNothing(U.MiddleIn, '.', ''), ' '), U.LastName, ' '), U.SecondLastName, ' ') = @1
-                            OR
-                        dbo.fx_concat(U.FirstName, U.LastName, ' ') = @1
-                        )
-            ", userID, ((string)user.name ?? "").Trim());
-            if (c == 1) {
-                // Verified, save verification record
-                db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
-                // Test social media alert
-                db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
-                LcHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
-            } else {
-                // Verification failed
-                /*var debugInfo = " Facebook:" + user.first_name + " " + user.last_name;
-                debugInfo += " = " + (string)db.QueryValue(@"
-                    SELECT  dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, U.MiddleIn, ' '), U.LastName, ' '), U.SecondLastName, ' ') as loconame
-                    FROM    Users As U
-                                INNER JOIN
-                            UserProfile As P
-                                ON U.UserID = P.UserID
-                    WHERE   U.UserID = @0
-                                AND
-                            P.Email = @1
-                ", userID, facebookemail);*/
-                // + debugInfo
-                LcHelpers.ReturnJsonResult(2802, "Facebook verification failed: Facebook full name don't match current Loconomics user full name.", true);
-            }
+                        P.Email = @1
+            ", userID, facebookemail);*/
+            // + debugInfo
+            var errmsg = "Facebook verification failed: the Facebook full name ('{0}') doesn't match your current Loconomics full name ({1}).";
+            var lcNamesMsg = shortName == longName ? "'{0}'" : "'{0}' or '{1}'";
+            errmsg = String.Format(errmsg, facebookName, String.Format(lcNamesMsg, shortName, longName));
+            LcHelpers.ReturnJsonResult(2802, errmsg, true);
         }
+    }
+    
+    /// <summary>
+    /// Replace every duplicated white-space-like character by a single (standard) white space
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    string whitespace(string str) {
+        return System.Text.RegularExpressions.Regex.Replace(str, @"\s+", " ");
     }
 }
