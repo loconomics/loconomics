@@ -120,7 +120,7 @@
   transform: translateY(-50%);
 }
 
-/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.large.styl */
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -164,41 +164,22 @@
 
 /* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
 
-/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.large.styl */
-.carousel.large {
-  height: 500px;
-/*:var*/
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.styl */
+
+/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.styl */
+.carousel .carousel-inner,
+.carousel .item {
+/* Item must use its container height, to allow for same sized items when
+           an explicit height is set on the carousel */
+  height: 100%;
 }
 
-/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.large.styl */
-.carousel.large .carousel-caption {
-  z-index: 10;
-}
-
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.large.styl */
-.carousel.large .item {
-  height: 500px;
-/*:var*/
-  background-color: #777;
-}
-
-/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.large.styl */
-.carousel.large .carousel-inner > .item > img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  height: 500px;
-}
-@media (min-width: 768px) {
-
-/* line 36 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.large.styl */
-  .carousel.large .carousel-caption p {
-/*:fixed?*/
-    margin-bottom: 20px;
-/*:var*/
-    font-size: 21px;
-/*:var*/
-    line-height: 1.4;
-  }
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\sgcomponents\carousel.styl */
+.carousel .carousel-content {
+/* Avoid internal elements margins to enlarge the carousel
+            and from overflow it
+         */
+  overflow: hidden;
+/* Text between the controls, not in the back */
+  margin: 0 15%;
 }
