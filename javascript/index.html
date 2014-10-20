@@ -102,7 +102,7 @@
               <pre class="prettyprint"><code class="html">
                 <a href="#" class="HelpPoint size-lg" data-content="Some help text.">?</a>
               </code></pre>
-            </div>
+           </div>
 
             <h3>Popover</h3>
             <p>Since the component just triggers a <strong>Popover</strong>,
@@ -129,6 +129,124 @@
                   title="Help"
                   data-content="Some help text.&lt;br/&gt;It can 
                     use some &lt;strong&gt;html&lt;/strong&gt;, useful to highlight phrases.">?</a>
+              </code></pre>
+            </div>
+            
+            <h3>Carousel</h3>
+            <p>The Bootstrap Carousel component is available with <a target="_blank" href="http://getbootstrap.com/javascript/#carousel">all its options as described in official Bootstrap docs</a></p>
+            <p>It's mainly used to expose images, that fit all the Carousel size, with an optional caption over the image.</p>
+            <p>
+              In order to be used with text that flows from the top (and not as a centered caption), an optional sub-element was introduced <code>carousel-content</code>, placed
+              inside a <code>container</code> on each item, allows for text, or any formatted content, as replacement for the single exposed image.
+            </p>
+            <div class="bs-example">           
+              <div id="carouselExample1" class="carousel slide" data-ride="carousel" style="height: 450px">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                  <li data-target="#carouselExample1" data-slide-to="0" class="active"></li>
+                  <li data-target="#carouselExample1" data-slide-to="1"></li>
+                  <li data-target="#carouselExample1" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                  <div class="item active">
+                    <div class="container">
+                      <div class="carousel-content">
+                        <h3>Find a provider</h3>
+                        <p>
+                        Loconomics makes finding the perfect independent professional for your job pretty dang easy. You can comb through profiles and read everyone’s reviews and recommendations before settling on Ms. or Mr. Right. This is not online dating; your specific needs – finally assembling a custom table for the dining room, painting your guest room, getting a deep tissue massage – will be met. Loconomics makes it simple.
+                        </p>
+                        <h3>Book a provider</h3>
+                        <p>
+                        Loconomics uses an ultra-simple three-step booking process that eliminates the usual scheduling, follow-up, and payment hassles. It’s all here. And we’re always waiting in the background to help.
+                        </p>
+                        <h3>Review a provider</h3>
+                        <p>
+                        Your reviews of the providers you’ve found on Loconomics help others decide who to choose. It’s kind of a paying-it-forward thing. Plus, if you find you can talk forever about Tanya’s magical massaging thumbs, why not help her out a little with a glowing review? Loconomics is a community, and a positive one where great people doing great work can find eager customers.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTAwIj48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzc3NyIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQ1MCIgeT0iMjUwIiBzdHlsZT0iZmlsbDojNzc3O2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjU2cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+OTAweDUwMDwvdGV4dD48L3N2Zz4=" data-src="holder.js/900x500/auto/#777:#777" alt=" ">
+                    <div class="container">
+                      <div class="carousel-caption">
+                        <h1>Headline over image.</h1>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="container">
+                      <div class="carousel-content">
+                        <h3>Find a provider</h3>
+                        <p>
+                        Loconomics makes finding the perfect independent professional for your job pretty dang easy. You can comb through profiles and read everyone’s reviews and recommendations before settling on Ms. or Mr. Right. This is not online dating; your specific needs – finally assembling a custom table for the dining room, painting your guest room, getting a deep tissue massage – will be met. Loconomics makes it simple.
+                        </p>
+                      </div>
+                      <div class="carousel-caption">
+                        <h1>Headline over text.</h1>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <a class="left carousel-control" href="#carouselExample1" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                <a class="right carousel-control" href="#carouselExample1" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+              </div>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint"><code class="html">
+              
+                <div id="carouselExample" class="carousel slide" data-ride="carousel" style="height: 450px">
+                  <!-- Indicators -->
+                  <ol class="carousel-indicators">
+                    <li data-target="#carouselExample" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExample" data-slide-to="1"></li>
+                    <li data-target="#carouselExample" data-slide-to="2"></li>
+                  </ol>
+                  <div class="carousel-inner">
+                    <div class="item active">
+                      <div class="container">
+                        <div class="carousel-content">
+                          <h3>Find a provider</h3>
+                          <p>
+                          Loconomics makes finding....
+                          </p>
+                         </div>
+                      </div>
+                    </div>
+                    <div class="item">
+                      <img src="..." alt="...">
+                      <div class="container">
+                        <div class="carousel-caption">
+                          <h1>Headline over image.</h1>
+                          <p>...</p>
+                          <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="item">
+                      <div class="container">
+                        <div class="carousel-content">
+                          <h3>Find a provider</h3>
+                          <p>
+                          Loconomics makes finding...
+                          </p>
+                        </div>
+                        <div class="carousel-caption">
+                          <h1>Headline over text.</h1>
+                          <p>...</p>
+                          <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <a class="left carousel-control" href="#carouselExample" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                  <a class="right carousel-control" href="#carouselExample" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                </div>
+              
               </code></pre>
             </div>
 
