@@ -361,25 +361,42 @@ function existingUserHideFields($container) {
     the logged FacebookID and update UI notifying that
 **/
 var blockPresets = require('../LC/blockPresets'),
-    LcUrl = require('../LC/LcUrl');
+    LcUrl = require('../LC/LcUrl'),
+    redirectTo = require('../LC/redirectTo');
 require('jquery.blockUI');
 function checkUserForFacebookLogin(facebookID, $container) {
     // Do a server side query to get data for the existing ID 
     // asociated with the facebookID account, IF ANY.
     $container.block(blockPresets.loading);
-
+    // The call must include the Facebook ID parameter
+    // and the Facebook login cookie
     $.getJSON(LcUrl.RestPath + 'facebook-user', {
-        facebook_id: facebookID
+        facebook_id: facebookID,
+        do_login: true
     }).done(function (data) {
+
+        var isCustomer = ($container.find('[name="profile-type"]:checked').val() === 'customer');
+
         $container.find('[name="email"]')
         .val(data.user.email)
-        .prop('readOnly', true);
+        .prop('readOnly', true)
+        .hide()
+        .siblings('.facebook-note')
+        .hide();
 
-        $container.find('[name="zipcode"]')
+        var fzip = $container.find('[name="zipcode"]')
         .val(data.user.postalCode);
+        if (fzip.val()) fzip.hide();
 
         $container.find('.facebook-logged').hide();
-        $container.find('.facebook-logged-is-user').show();
+        $container.find('.facebook-logged-is-user')
+        .show()
+        .find('.provider').toggle(!isCustomer);
+
+        // For customers, go Home or just reload
+        if (isCustomer) {
+            redirectTo(LcUrl.LangPath);
+        }
 
     }).always(function () {
         $container.unblock();

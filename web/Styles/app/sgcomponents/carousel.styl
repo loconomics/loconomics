@@ -1,0 +1,31 @@
+/**
+  Additions and small modifications for the Bootstrap Carousel component.
+  Part of the StyleGuide
+  Base: http://getbootstrap.com/examples/carousel/
+**/
+@import "nib"
+
+/*$carousel-control-width = @carousel-control-width*/
+$carousel-control-width = 15%
+
+.carousel {
+    
+    .carousel-inner,
+    .item {
+        /* Item must use its container height, to allow for same sized items when
+           an explicit height is set on the carousel */
+        height: 100%;
+    }
+    
+    /* New sub-element 'carousel-content':
+        allows for text content inside Carousel items (better inside '.item > .container'),
+        so its fit between the controls and not beside them as images do */
+    .carousel-content {
+        /* Avoid internal elements margins to enlarge the carousel
+            and from overflow it
+         */
+        overflow: hidden;
+        /* Text between the controls, not in the back */
+        margin: 0 $carousel-control-width;
+    }
+}

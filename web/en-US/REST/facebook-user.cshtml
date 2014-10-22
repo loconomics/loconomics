@@ -2,6 +2,7 @@
     Retrieve the user info for the logged Facebook Account.
     Methods supported:
     - GET: get a 'user' object with properties userID, email, isProvider, firstName, postalCode; parameters
+        - do_login:bool Whether to perform the login in Loconomics if the user exists (creating login cookie).
         - facebook_id:long The Facebook ID related to an existing User Account that will be retrieved
         - signed_request:string The Facebook Signed Request from a succesfull client side user login,
             or alternative to this the Facebook login cookie for this App ('fbsr_*') with the signed request.
@@ -38,6 +39,13 @@
                     firstName = userInfo.FirstName,
                     postalCode = userInfo.PostalCode
                 };
+                
+                var doLogin = Request["do_login"].AsBool();
+                if (doLogin) {
+                    // Set user as logged
+                    FormsAuthentication.SetAuthCookie(userInfo.Email, false);
+                    LcData.UserInfo.RegisterLastLoginTime(userInfo.UserID);
+                }
             }
         }
         else {
