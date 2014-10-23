@@ -45,59 +45,114 @@ public static class LcAuth
         string lastname,
         string password,
         bool isProvider,
-        string marketingSource = null
+        string marketingSource = null,
+        int genderID = -1,
+        string aboutMe = null
     ) {
         using (var db = Database.Open("sqlloco"))
         {
-            // Insert email into the profile table
-            db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
+            // IMPORTANT: The whole process must be complete or rollback, but since
+            // a transaction cannot be done from the start because will collide
+            // with operations done by WebSecurity calls, the first step must
+            // be protected manually.
+            string token = null;
 
-            // Create and associate a new entry in the membership database (is connected automatically
-            // with the previous record created using the automatic UserID generated for it).
-            var token = WebSecurity.CreateAccount(email, password, true);
+            try
+            {
+                // Insert email into the profile table
+                db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
+
+                // Create and associate a new entry in the membership database (is connected automatically
+                // with the previous record created using the automatic UserID generated for it).
+                token = WebSecurity.CreateAccount(email, password, true);
+            }
+            catch (Exception ex)
+            {
+                // Manual rollback previous operation:
+                // If CreateAccount failed, nothing was persisted there so nothing require rollback,
+                // only the UserProfile record
+                db.Execute("DELETE FROM UserProfile WHERE Email like @0", email);
+
+                // Relay exception
+                throw ex;
+            }
 
             // Create Loconomics Customer user
             int userid = WebSecurity.GetUserId(email);
-            db.Execute("exec CreateCustomer @0,@1,@2,@3,@4",
-                userid, firstname, lastname, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
 
-            // If is provider, update profile with that info (being both customer and provider)
-            // It assigns the first OnboardingStep 'welcome' for the new Onboarding Dashboard #454
-            if (isProvider)
+            try
             {
-                db.Execute(@"UPDATE Users SET 
-                    IsProvider = 1,
-                    OnboardingStep = 'welcome'
-                    WHERE UserID = @0
+                // Automatic transaction can be used now:
+                db.Execute("BEGIN TRANSACTION");
+
+                db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6",
+                    userid, firstname, lastname,
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    genderID, aboutMe
+                );
+
+                // If is provider, update profile with that info (being both customer and provider)
+                // It assigns the first OnboardingStep 'welcome' for the new Onboarding Dashboard #454
+                if (isProvider)
+                {
+                    BecomeProvider(userid, db);
+                }
+
+                // Partial email confirmation to allow user login but still show up email-confirmation-alert. Details:
+                // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
+                // login, what means user MUST can login but too MUST have an email-confirmation-code; we do that reusing the confirmation code
+                // created by asp.net starter-app as until now, but HACKING that system doing a minor change on database, in the 
+                // asp.net webpages generated table called 'webpages_Membership': there are two fields to manage confirmation, a bit field (this
+                // we will hack changing it to true:1 manually -before of time-) and the confirmationToken that we will mantain to allow user confirmation
+                // from the welcome-email sent and to off the alert:15 (with custom code on the Account/Confirm page).
+                db.Execute(@"
+                    UPDATE webpages_Membership SET
+                        IsConfirmed = 1
+                    WHERE UserId = @0
                 ", userid);
+
+                // Log Marketing URL parameters
+                if (marketingSource == null && System.Web.HttpContext.Current != null)
+                    marketingSource = System.Web.HttpContext.Current.Request.Url.Query;
+                if (marketingSource != null)
+                    db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, marketingSource);
+
+                db.Execute("COMMIT TRANSACTION");
+
+                // All done:
+                return new RegisteredUser
+                {
+                    UserID = userid,
+                    Email = email,
+                    ConfirmationToken = token,
+                    IsProvider = isProvider
+                };
             }
+            catch (Exception ex)
+            {
+                db.Execute("ROLLBACK TRANSACTION");
 
-            // Partial email confirmation to allow user login but still show up email-confirmation-alert. Details:
-            // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
-            // login, what means user MUST can login but too MUST have an email-confirmation-code; we do that reusing the confirmation code
-            // created by asp.net starter-app as until now, but HACKING that system doing a minor change on database, in the 
-            // asp.net webpages generated table called 'webpages_Membership': there are two fields to manage confirmation, a bit field (this
-            // we will hack changing it to true:1 manually -before of time-) and the confirmationToken that we will mantain to allow user confirmation
-            // from the welcome-email sent and to off the alert:15 (with custom code on the Account/Confirm page).
-            db.Execute(@"
-                UPDATE webpages_Membership SET
-                    IsConfirmed = 1
-                WHERE UserId = @0
-            ", userid);
+                throw ex;
+            }
+        }
+    }
+    public static void BecomeProvider(int userID, Database db = null)
+    {
+        var ownDb = db == null;
+        if (ownDb)
+        {
+            db = Database.Open("sqlloco");
+        }
+        
+        db.Execute(@"UPDATE Users SET 
+            IsProvider = 1,
+            OnboardingStep = 'welcome'
+            WHERE UserID = @0
+        ", userID);
 
-            // Log Marketing URL parameters
-            if (marketingSource == null && System.Web.HttpContext.Current != null)
-                marketingSource = System.Web.HttpContext.Current.Request.Url.Query;
-            if (marketingSource != null)
-                db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, marketingSource);
-
-            // All done:
-            return new RegisteredUser {
-                UserID = userid,
-                Email = email,
-                ConfirmationToken = token,
-                IsProvider = isProvider
-            };
+        if (ownDb)
+        {
+            db.Dispose();
         }
     }
     public static void SendRegisterUserEmail(RegisteredUser user)
@@ -109,6 +164,59 @@ public static class LcAuth
         else
             LcMessaging.SendWelcomeCustomer(user.UserID, user.Email, confirmationUrl, user.ConfirmationToken);
     }
+
+    public static void ConnectWithFacebookAccount(int userID, long facebookID)
+    {
+        using (var db = Database.Open("sqlloco")){
+
+            // Create asociation between locouser and facebookuser
+            db.Execute(string.Format("INSERT INTO {0} ({1}, {2}) VALUES (@0, @1)", "webpages_FacebookCredentials", "UserId", "FacebookId"), userID, facebookID);
+                            
+            // Add Facebook verification as confirmed
+            db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
+            // Test social media alert
+            db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
+        }
+    }
+
+    public static int? GetFacebookUserID(long facebookID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QueryValue("SELECT UserId FROM webpages_FacebookCredentials WHERE FacebookId=@0", facebookID);
+        }
+    }
+
+    /// <summary>
+    /// Get basic user info given a Facebook User ID or null.
+    /// </summary>
+    /// <param name="facebookID"></param>
+    public static RegisteredUser GetFacebookUser(long facebookID)
+    {
+        int? userId = GetFacebookUserID(facebookID);
+        if (userId.HasValue)
+        {
+            var userData = LcData.UserInfo.GetUserRow(userId.Value);
+            // Check is valid (only edge cases will not be a valid record,
+            // as incomplete manual deletion of user accounts that didn't remove
+            // the Facebook connection).
+            if (userData != null)
+            {
+                return new RegisteredUser
+                {
+                    Email = userData.Email,
+                    IsProvider = userData.IsProvider,
+                    UserID = userId.Value
+                };
+            }
+            return null;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public static bool Login(string email, string password, bool persistCookie = false)
     {
         // Navigate back to the homepage and exit

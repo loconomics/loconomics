@@ -97,6 +97,29 @@ public static class LcCalendar
         }
         return true;
     }
+
+    /// <summary>
+    /// Check if the user has some block available for between dateStart and dateEnd.
+    /// With almost one block available (free), will return true, and false for when there is
+    /// no available block at all, just the opposite to GetUserAvailability.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="dateStart"></param>
+    /// <param name="dateEnd"></param>
+    /// <returns></returns>
+    public static bool HasUserSomeAvailability(int userID, DateTime dateStart, DateTime dateEnd)
+    {
+        foreach (var e in GetUserAvailability(userID, dateStart, dateEnd))
+        {
+            var edt = e.DateSet + e.TimeBlock;
+            if ((e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.FREE ||
+                e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.TRANSPARENT) &&
+                edt >= dateStart &&
+                edt < dateEnd)
+                return true;
+        }
+        return false;
+    }
     #endregion
 
     #region Provider Work Hours (AKA Weekly Schedule)

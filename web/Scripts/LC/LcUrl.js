@@ -25,5 +25,7 @@ var LcUrl = {
 LcUrl.LangUrl = url + LcUrl.LangPath;
 LcUrl.JsonPath = LcUrl.LangPath + 'JSON/';
 LcUrl.JsonUrl = url + LcUrl.JsonPath;
+LcUrl.RestPath = LcUrl.LangPath + 'REST/';
+LcUrl.RestUrl = url + LcUrl.RestPath;
 
 module.exports = LcUrl;

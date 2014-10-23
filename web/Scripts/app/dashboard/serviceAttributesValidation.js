@@ -33,7 +33,7 @@ exports.setup = function setupServiceAttributesValidation(containerSelector, opt
 
         f.find(options.requiredSelector).each(function () {
           var fs = $(this);
-          var cat = fs.children('legend').text();
+          var cat = fs.children('.DashboardServices-categoryName').text();
           // What type of validation apply?
           if (fs.is('.' + options.selectOneClass))
           // if the cat is a 'validation-select-one', a 'select' element with a 'positive'

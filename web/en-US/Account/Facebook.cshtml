@@ -1,12 +1,26 @@
-﻿@using WebMatrix.Data;
+﻿@**
+    This page is used to process responses from 'Connect With Facebook' buttons.
+
+    IMPORTANT:
+    NEEDSREVIEW NEEDSREFACTOR    
+    Currently the account creation here is not being used, superseed by latest changes
+    on WelcomePopup that uses the Javascript API for most of the things synchronized with the normal
+    form back-end of that page to create account, with LcAuth to link Facebook and Loconomics accounts.
+    
+    THIS IS STILL USED for Login and for Verification, that connects to Facebook with account/_FacebookConnectButton
+    and redirects here to complete operation, all in a 'popup' that reloads the page on success.
+    It could be simplified with some Javascript, deprecating this, FacebookConnectButton, and the global app.js link
+    with the module facebookUtils.js
+**@
+@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    //try
     {
         /* Page to be redirected from Facebook Login, with next syntax if OK:
             YOUR_REDIRECT_URI?
                 state=YOUR_STATE_VALUE
                &code=CODE_GENERATED_BY_FACEBOOK
+         
          * or next if FAILS (user don't grant the application)
             YOUR_REDIRECT_URI?
                 error_reason=user_denied
@@ -24,126 +38,45 @@
         // If there is not an error (error means that user don't grant our application, or cancel login or facebook login fails)
         if (Request["error"] == null)
         {
-            string userAccessToken = getUserAccessToken();
-            //Response.Write(userAccessToken);
-            var user = getUserFromAccessToken(userAccessToken);
+            var user = LcFacebook.GetUserFromCurrentRequest();
+
+            bool asProvider = 
+                UrlData.Count > 1 && UrlData[1] == "Provider" ||
+                Request.QueryString["profile"] == "provider";
 
             // If we have user info
-            if (user != null && user["username"] != null)
+            if (user != null && user["username"] != null && user["id"] != null)
             {
                 var doVerify = UrlData.Count > 0 && UrlData[0] == "Verify";
                 
-                //string autopassword = userAccessToken.Substring(0, 128);
-                string autopassword = Membership.GeneratePassword(14, 5);
-                string facebookemail = N.W(user.email) ?? user.username + "@facebook.com";
+                //string facebookemail = N.W(user.email) ?? user.username + "@facebook.com";
 
                 if (doVerify) {
-                    // User already exists, is requesting a Facebook verification:
-                    LcHelpers.SecurePage();
-                    int userID = WebSecurity.CurrentUserId;
-                    /*
-                    // First, check facebook email with current user id (user must be logged to verify)
-                    int userID = WebSecurity.GetUserId(facebookemail);
-                    if (userID != WebSecurity.CurrentUserId) {
-                        LcHelpers.ReturnJsonResult(2801, "Facebook verification failed: Facebook email don't match current Loconomics user email", true);
-                    }*/
-                    // Compare email and full name
-                    using (var db = Database.Open("sqlloco")) {
-                        var c = (int)db.QueryValue(@"
-                            SELECT  count(*)
-                            FROM    Users As U
-                                     INNER JOIN
-                                    UserProfile As P
-                                      ON U.UserID = P.UserID
-                            WHERE   U.UserID = @0
-                                     AND
-                                    (
-                                    dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, dbo.fx_concatBothOrNothing(U.MiddleIn, '.', ''), ' '), U.LastName, ' '), U.SecondLastName, ' ') = @1
-                                     OR
-                                    dbo.fx_concat(U.FirstName, U.LastName, ' ') = @1
-                                    )
-                        ", userID, ((string)user.name ?? "").Trim());
-                        if (c == 1) {
-                            // Verified, save verification record
-                            db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
-                            // Test social media alert
-                            db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
-                            LcHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
-                        } else {
-                            // Verification failed
-                            /*var debugInfo = " Facebook:" + user.first_name + " " + user.last_name;
-                            debugInfo += " = " + (string)db.QueryValue(@"
-                                SELECT  dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, U.MiddleIn, ' '), U.LastName, ' '), U.SecondLastName, ' ') as loconame
-                                FROM    Users As U
-                                         INNER JOIN
-                                        UserProfile As P
-                                          ON U.UserID = P.UserID
-                                WHERE   U.UserID = @0
-                                         AND
-                                        P.Email = @1
-                            ", userID, facebookemail);*/
-                            // + debugInfo
-                            LcHelpers.ReturnJsonResult(2802, "Facebook verification failed: Facebook full name don't match current Loconomics user full name.", true);
-                        }
+                    verifyAccount(user);
+                }
+                else {
+                    var lcUser = LcAuth.GetFacebookUser(((string)user.id).AsLong());
+                    if (lcUser != null) {
+                        // Login into the Loconomics account:
+                        FormsAuthentication.SetAuthCookie(lcUser.Email, false);
+                        LcData.UserInfo.RegisterLastLoginTime(lcUser.UserID);
                     }
                 }
+                
+                /*
+                 * NOTE: Account creation disabled from this page
                 else if (!WebSecurity.UserExists(facebookemail)){
-                    // If user don't exists, create it
-                    //Response.Write("\nEl usuario no existe, se crea\n");
-                    using (var db = Database.Open("sqlloco")){
- 
-                        // TOREVIEW: Asp.net DataBase Helper doesn't support transactions, but are needed
-                        // to avoid problems creating the account letting bad records in some tables.
-                        //db.Connection.Open();
-                        //var transaction = db.Connection.BeginTransaction();
-                        try{
-                            // Create user profile with email
-                            db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", facebookemail);
-
-                            // Create user security account
-                            WebSecurity.CreateAccount(facebookemail, autopassword, false);
-                            int userid = WebSecurity.GetUserId(facebookemail);
-
-                            // Create Loconomics Customer user
-                            var genderID = (user.gender == "female" ? 1 : 2);
-                            string aboutme = null;
-                            try {
-                                aboutme = (string)user.about;
-                            } catch {}
-                            db.Execute("EXEC dbo.CreateCustomer @0,@1,@2,1,1,@3,@4",
-                                userid, user.first_name, user.last_name, genderID, aboutme);
-                            
-                            // If is provider, update profile with that info (being both customer and provider)
-                            if (Request.QueryString["profile"] == "provider") {
-                                db.Execute("UPDATE Users SET IsProvider = 1 WHERE UserID = @0", userid);
-                            }
-
-                            // Create asociation between locouser and facebookuser
-                            db.Execute(string.Format("INSERT INTO {0} ({1}, {2}) VALUES (@0, @1)", "webpages_FacebookCredentials", "UserId", "FacebookId"), userid, user.id);
-                            
-                            // Add Facebook verification as confirmed
-                            db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userid, 8, DateTime.Now, 1);
-                            // Test social media alert
-                            db.Execute("EXEC TestAlertSocialMediaVerification @0", userid);
-                            
-                            //transaction.Commit();
-                        } catch (Exception ex) {
-                            //transaction.Rollback();
-                            //throw ex;
-                        }
-                    }
+                    createAccount(user, facebookemail, asProvider);
                 }
-                //Response.Write("\nAutoLogin\n");
-                // Login into the Loconomics account:
-                FormsAuthentication.SetAuthCookie(facebookemail, false);
+                 * */
             }
         }
     }
-    // catch{}
     
     // Redirect the user to the page:
     // If we are on /Callback/Provider/, go to the provider sign-up to continue the wizard.
     string redirectUrl = null;
+
     if (UrlData.Count > 1 && 
         UrlData[0] == "Callback" && 
         UrlData[1] == "Provider") {
@@ -152,6 +85,7 @@
         // Redirect to the desired page or to home:
         redirectUrl = N.W(Request.QueryString["Redirect"]) ?? LcUrl.LangPath;
     }
+
     if (Request.IsAjaxRequest()){
         LcHelpers.ReturnJsonResult(1, redirectUrl);
     } else {
@@ -172,102 +106,107 @@
     }*/
 }
 @functions{
-    dynamic parseSignedRequest(string cookieSignedRequest){
-        // cookieSignedRequest: encoded_sig + "." + payload
-        var list = cookieSignedRequest.Split('.');
-        
-        var data = Json.Decode(base64UrlDecode(list[1]));
-        
-        // There is no the recommended validation checking ensuring that encoded_sig (list[0]) match
-        // the data object after apply a sha256 hash.
-        // (see: https://github.com/facebook/php-sdk/blob/master/src/base_facebook.php)
 
-        return data;
-    }
-    string base64UrlDecode(string input){
+    /// <summary>
+    /// Create account for the given Facebook @user and @facebookemail
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="facebookemail"></param>
+    /// <param name="asProvider"></param>
+    void createAccount(dynamic user, string facebookemail, bool asProvider){
+        // If user don't exists, create it
         try{
-            string decodedJson = input.Replace("=", string.Empty).Replace('-', '+').Replace('_', '/');
-            return System.Text.UTF8Encoding.UTF8.GetString(
-                Convert.FromBase64String(
-                    decodedJson.PadRight(decodedJson.Length + (4 - decodedJson.Length % 4) % 4, '=')
-                ));
-        }catch{}
-        return "";
+            string autopassword = Membership.GeneratePassword(14, 5);
+            var genderID = (user.gender == "female" ? 1 : 2);
+            string aboutme = null;
+            try {
+                aboutme = (string)user.about;
+            } catch {}
+
+            var registeredUser = 
+            LcAuth.RegisterUser(
+                facebookemail,
+                user.first_name,
+                user.last_name,
+                autopassword,
+                asProvider,
+                null,
+                genderID,
+                aboutme
+            );
+            //LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
+            //LcAuth.SendRegisterUserEmail(user);
+
+            int userid = registeredUser.UserID;
+            LcAuth.ConnectWithFacebookAccount(userid, user.id);
+
+        } catch {}
     }
-    dynamic getSignedRequest(){
-        
-        dynamic sr = Session["facebookUserSignedRequest"];
-        
-        if (sr == null){
-            string strSR = Request["signed_request"];
-            if (strSR == null){
-                // We need to read the user Facebook Cookie to get the user access_token
-                var cookie_name = "fbsr_" + Facebook.AppId;
+    
+    /// <summary>
+    /// Verify current logged account with the Facebook
+    /// credentials/info given at @user.
+    /// </summary>
+    /// <param name="user"></param>
+    void verifyAccount(dynamic user) {
+        // User already exists, is requesting a Facebook verification:
+        LcHelpers.SecurePage();
+        int userID = WebSecurity.CurrentUserId;
+        /*
+        // First, check facebook email with current user id (user must be logged to verify)
+        int userID = WebSecurity.GetUserId(facebookemail);
+        if (userID != WebSecurity.CurrentUserId) {
+            LcHelpers.ReturnJsonResult(2801, "Facebook verification failed: Facebook email don't match current Loconomics user email", true);
+        }*/
+        // Compare email and full name
+        var facebookName = whitespace((string)user.name ?? "").Trim();
+        var lcUser = LcData.UserInfo.GetUserRow(userID);
+        var shortName = whitespace(lcUser.FirstName + " " + lcUser.LastName).Trim();
 
-                if (Request.Cookies.AllKeys.Contains<string>(cookie_name))
-                    strSR = Request.Cookies[cookie_name].Value;
-            }
+        var longName = whitespace(
+            lcUser.FirstName + " " +
+            (String.IsNullOrEmpty(lcUser.MiddleIn) ? "" : lcUser.MiddleIn + ". ") +
+            lcUser.LastName + " " +
+            lcUser.SecondLastName
+        ).Trim();
 
-            if (N.W(strSR) != null)
-                // cookie_value is the Facebook Signed Request (fbsr), we must parse it
-                sr = parseSignedRequest(strSR);
-            
-            if (sr != null){
-                Session["facebookUserId"] = N.W(sr.user_id) ?? "me";
+        var matches = facebookName == shortName || facebookName == longName;
+        
+        if (matches) {
+            using (var db = Database.Open("sqlloco")) {            
+                // Verified, save verification record
+                db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
+                // Test social media alert
+                db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
+                LcHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
             }
-            
-            Session["facebookUserSignedRequest"] = sr;
-            //Response.Write(Json.Encode(sr));
+        } else {
+            // Verification failed
+            /*var debugInfo = " Facebook:" + user.first_name + " " + user.last_name;
+            debugInfo += " = " + (string)db.QueryValue(@"
+                SELECT  dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, U.MiddleIn, ' '), U.LastName, ' '), U.SecondLastName, ' ') as loconame
+                FROM    Users As U
+                            INNER JOIN
+                        UserProfile As P
+                            ON U.UserID = P.UserID
+                WHERE   U.UserID = @0
+                            AND
+                        P.Email = @1
+            ", userID, facebookemail);*/
+            // + debugInfo
+            var errmsg = "Facebook verification failed: the Facebook full name ('{0}') doesn't match your current Loconomics full name ({1}).";
+            var lcNamesMsg = shortName == longName ? "'{0}'" : "'{0}' or '{1}'";
+            errmsg = String.Format(errmsg, facebookName, String.Format(lcNamesMsg, shortName, longName));
+            LcHelpers.ReturnJsonResult(2802, errmsg, true);
         }
-        return sr;
     }
-    string getUserAccessToken(){
-        var signed_request = getSignedRequest();
-        
-        if (signed_request != null){
-            if (signed_request.oauth_token != null)
-                return signed_request.oauth_token;
-            else{
-                return getAccessTokenFromCode(N.W(signed_request.code) ?? Request["code"] ?? "");
-            }
-        }
-        return null;
-    }
-    string getAccessTokenFromCode(string code){
-        // Do a server request to Facebook to interchange the CODE for a valid acces_token (to get the user information later)
-        WebClient browser = new WebClient();
-        // bugfix: 'type=client_cred' query parameter is required but not documented at facebook!*^!:-S||
-        var url =
-            String.Format("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={0}&redirect_uri={1}&client_secret={2}&code={3}",
-                (Facebook.AppId),     // YOUR_APP_ID
-                HttpUtility.UrlEncode(LcUrl.LangUrl),   // YOUR_REDIRECT_URI
-                (Facebook.AppSecret), // YOUR_APP_SECRET
-                HttpUtility.UrlEncode(code));  // CODE_GENERATED_BY_FACEBOOK
-
-            try{
-                var response = browser.DownloadString(url);
-                // Response is OK (throw exception if not)
-                // The result is a string in queryString format as the template:
-                //  access_token=USER_ACESS_TOKEN&expires=NUMBER_OF_SECONDS_UNTIL_TOKEN_EXPIRES
-                var query = HttpUtility.ParseQueryString(response, System.Text.Encoding.UTF8);
-                return query["access_token"];
-            }catch{}
-        return null;
-    }
-    dynamic getUserFromAccessToken(string userAccessToken){
-        try{
-            var browser = new WebClient();
-            // Do a server request to Facebook to get the user information
-            var url = String.Format("https://graph.facebook.com/{0}?access_token={1}", //&fields=id,name,first_name,last_name,gender,about",
-                Session["facebookUserId"] ?? "me",
-                (userAccessToken)); // YOUR_USER_ACCESS_TOKEN
-                
-            var response = browser.DownloadString(url);
-            //Response.Write(url + "<br/>\n" + response);
-            //Response.End();
-            // Response is OK (throw exception if not)
-            return Json.Decode(response);
-        }catch{}
-        return null;
+    
+    /// <summary>
+    /// Replace every duplicated white-space-like character by a single (standard) white space
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    string whitespace(string str) {
+        return System.Text.RegularExpressions.Regex.Replace(str, @"\s+", " ");
     }
 }

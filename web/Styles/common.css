@@ -1,40 +1,5 @@
-/*! Loconomics.com 2014-08-07
+/*! Loconomics.com 2014-10-23
    Author: Loconomics Inc. */
-@font-face {
-    font-family: 'Hand Of Sean';
-    src: url('fonts/handsean.otf');
-    src: url('fonts/handsean.eot');
-    src: url('fonts/handsean.eot?#iefix') format('embedded-opentype'),
-         url('fonts/handsean.woff') format('woff'),
-         url('fonts/handsean.ttf') format('truetype'),
-         url('fonts/handsean.svgz#HandOfSeanRegular') format('svg'),
-         url('fonts/handsean.svg#HandOfSeanRegular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Alte Haas Grotesk';
-    src: url('fonts/altehaasgroteskregular.eot');
-    src: url('fonts/altehaasgroteskregular.eot?#iefix') format('embedded-opentype'),
-         url('fonts/altehaasgroteskregular.woff') format('woff'),
-         url('fonts/altehaasgroteskregular.ttf') format('truetype'),
-         url('fonts/altehaasgroteskregular.svgz#AlteHaasGroteskRegular') format('svg'),
-         url('fonts/altehaasgroteskregular.svg#AlteHaasGroteskRegular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Alte Haas Grotesk';
-    src: url('fonts/altehaasgroteskbold.eot');
-    src: url('fonts/altehaasgroteskbold.eot?#iefix') format('embedded-opentype'),
-         url('fonts/altehaasgroteskbold.woff') format('woff'),
-         url('fonts/altehaasgroteskbold.ttf') format('truetype'),
-         url('fonts/altehaasgroteskbold.svgz#AlteHaasGroteskBold') format('svg'),
-         url('fonts/altehaasgroteskbold.svg#AlteHaasGroteskBold') format('svg');
-    font-weight: bold;
-    font-style: normal;
-}
-
 [draggable=true] {
   -khtml-user-drag: element;
   -webkit-user-drag: element;
@@ -238,14 +203,14 @@ html:before {
     /* fallback */
     background: url('../img/theme/page-background.png') repeat-x left top #c9e6e6;
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-    background: 'url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjOWU2ZTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) no-repeat #c9e6e6';
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjOWU2ZTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) no-repeat #c9e6e6;
     background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(144,216,220,1) 100%) no-repeat #c9e6e6; /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%, #c9e6e6) no-repeat #c9e6e6); /* Chrome,Safari4+ */
     background: -webkit-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Chrome10+,Safari5.1+ */
     background: -o-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Opera 11.10+ */
     background: -ms-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* IE10+ */
     background: linear-gradient(to bottom, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* W3C */
-    filter: 'progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c9e6e6',GradientType=0 ); /* IE6-8 */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c9e6e6',GradientType=0 ); /* IE6-8 */
 }
 /* fallback old browsers as ie and without :before support */
 html.oldie, html.no-generatedcontent {
@@ -3039,7 +3004,7 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-08-07
+/*! Loconomics.com 2014-10-23
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -3055,7 +3020,31 @@ label.visuallyhidden-with-placeholder{
   Including styl files generally need for the app.
 **/
 
-/* line 264 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 264 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\typographyDefinitions.styl */
+@font-face {
+  font-family: 'Hand Of Sean';
+  src: url("fonts/handsean.otf");
+  src: url("fonts/handsean.eot");
+  src: url("fonts/handsean.eot?#iefix") format('embedded-opentype'), url("fonts/handsean.woff") format('woff'), url("fonts/handsean.ttf") format('truetype'), url("fonts/handsean.svgz#HandOfSeanRegular") format('svg'), url("fonts/handsean.svg#HandOfSeanRegular") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url("fonts/altehaasgroteskregular.eot");
+  src: url("fonts/altehaasgroteskregular.eot?#iefix") format('embedded-opentype'), url("fonts/altehaasgroteskregular.woff") format('woff'), url("fonts/altehaasgroteskregular.ttf") format('truetype'), url("fonts/altehaasgroteskregular.svgz#AlteHaasGroteskRegular") format('svg'), url("fonts/altehaasgroteskregular.svg#AlteHaasGroteskRegular") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url("fonts/altehaasgroteskbold.eot");
+  src: url("fonts/altehaasgroteskbold.eot?#iefix") format('embedded-opentype'), url("fonts/altehaasgroteskbold.woff") format('woff'), url("fonts/altehaasgroteskbold.ttf") format('truetype'), url("fonts/altehaasgroteskbold.svgz#AlteHaasGroteskBold") format('svg'), url("fonts/altehaasgroteskbold.svg#AlteHaasGroteskBold") format('svg');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -4614,7 +4603,7 @@ input.search-data,
 
 /* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 135 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 139 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
@@ -4794,6 +4783,11 @@ input.search-data,
   -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
   -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
   transition: background-color 1s, box-shadow 0.5s, width 2s;
+  width: 100%;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 /* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
@@ -4803,11 +4797,11 @@ input.search-data,
   background-color: #99c027;
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-drop-area {
   position: absolute;
   top: 0;
@@ -4820,7 +4814,7 @@ input.search-data,
   text-align: center;
 }
 
-/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-drop-area span {
   display: block;
   position: absolute;
@@ -4830,12 +4824,12 @@ input.search-data,
   font-size: 16px;
 }
 
-/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-drop-area-active {
   background: #ff7171;
 }
 
-/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 69 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-list {
   padding: 0;
   list-style: disc;
@@ -4843,7 +4837,7 @@ input.search-data,
   overflow: auto;
 }
 
-/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 75 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-list li {
   margin: 0;
   padding: 0;
@@ -4851,17 +4845,17 @@ input.search-data,
   font-size: 12px;
 }
 
-/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-list li:first-child {
   margin-top: 10px;
 }
 
-/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 85 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-list li:last-child {
   margin-bottom: 10px;
 }
 
-/* line 86 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-file,
 .FileUploader .FileUploader-uploader .qq-upload-spinner,
 .FileUploader .FileUploader-uploader .qq-upload-size,
@@ -4870,9 +4864,9 @@ input.search-data,
   margin-right: 7px;
 }
 
-/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 94 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-spinner {
   display: inline-block;
   background: url("../img/theme/loading-mini.gif");
@@ -4881,36 +4875,36 @@ input.search-data,
   vertical-align: text-bottom;
 }
 
-/* line 98 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-size,
 .FileUploader .FileUploader-uploader .qq-upload-cancel {
   font-size: 11px;
 }
 
-/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 106 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-failed-text {
   display: none;
 }
 
-/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 109 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-fail .qq-upload-failed-text {
   display: inline;
 }
 
-/* line 110 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 114 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 111 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-editor .jcrop-holder {
   margin: 0 auto 1em;
 }
 
-/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 119 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-editor > p {
   text-align: center;
   margin: 1em 0 0.5em;
 }
 
-/* line 120 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-editor .save-photo-action {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -4943,12 +4937,12 @@ input.search-data,
   background-color: #e95d0f;
 }
 
-/* line 126 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 130 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-removal {
   margin-top: 1em;
 }
 
-/* line 130 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 134 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-removal .remove-photo-action {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -4979,6 +4973,112 @@ input.search-data,
   -webkit-box-shadow: 0 0 5px 2px #fc0404;
   box-shadow: 0 0 5px 2px #fc0404;
   background-color: #fc0404;
+}
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint {
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  background-color: #e95d0f;
+  color: White !important;
+  text-decoration: none !important;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+/* Normal size */
+  font-size: 1em;
+  line-height: 1.3em;
+  height: 1.3em;
+  width: 1.3em;
+}
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-xl {
+  font-size: 2em;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-lg {
+  font-size: 1.6em;
+}
+
+/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-sm {
+  font-size: 0.8em;
+  line-height: 1.2em;
+  height: 1.2em;
+  width: 1.2em;
+}
+
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.HelpPoint.size-xs {
+  font-size: 0.67em;
+  line-height: 1.2em;
+  height: 1.2em;
+  width: 1.2em;
+}
+
+/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.has-HelpPoint {
+  position: relative;
+}
+
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+.has-HelpPoint > .HelpPoint {
+  top: 50%;
+  right: 0;
+  position: absolute;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 /*= w-ProviderPackage */

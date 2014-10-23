@@ -59,6 +59,11 @@
                     }
                 </li>
             }
+            // If there was something, close latest list
+            if (!String.IsNullOrEmpty(lastAlertType))
+            {
+                @Html.Raw("</ul>")
+            }
         }
 
         </div>
