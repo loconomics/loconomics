@@ -5,6 +5,7 @@ using System.Web;
 using WebMatrix.Data;
 using WebMatrix.WebData;
 using System.Web.WebPages;
+using System.Net;
 
 public static partial class LcData
 {
@@ -104,6 +105,47 @@ public static partial class LcData
                         return "";
                 }
             }
+        }
+
+        public class LatLng
+        {
+            public decimal Lat;
+            public decimal Lng;
+            public LatLng() { }
+        }
+
+        public static LatLng GoogleGeoCode(string address)
+        {
+            try
+            {
+                string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=true&address=";
+                var uri = new Uri(url + Uri.EscapeDataString(address));
+
+                using (WebClient wc = new WebClient())
+                {
+                    wc.Encoding = System.Text.Encoding.UTF8;
+                    wc.Headers["User-Agent"] = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0";
+                    var response = wc.DownloadString(uri.ToString());
+
+                    var googleResults = (dynamic)Newtonsoft.Json.JsonConvert.DeserializeObject(response);
+
+                    if (googleResults.results.Count > 0)
+                    {
+                        return new LatLng {
+                            Lat = googleResults.results[0].geometry.location.lat,
+                            Lng = googleResults.results[0].geometry.location.lng
+                        };
+                    }
+                    //foreach (var result in googleResults.results)
+                    //{
+                    //    Console.WriteLine("[" + result.geometry.location.lat + "," + result.geometry.location.lng + "] " + result.formatted_address);
+                    //}
+                }
+            }
+            catch { }
+
+            // No results
+            return null;
         }
     }
 }

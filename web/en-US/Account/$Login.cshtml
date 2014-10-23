@@ -1,16 +1,12 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    // Initialize general page variables
-    var username = "";
-    var password = "";
-    var rememberMe = false;
-    
+   
     var showHeader = PageData["ShowHeader"] ?? true;
     var showTools = PageData["ShowTools"] ?? true;
-    string redirect =  N.W(Request.QueryString["ReturnUrl"]) ??
-        N.W(PageData["Redirect"]) ?? N.W(Request.QueryString["Redirect"]) ?? N.W(Request.Form["Redirect"]) ??
-        LcUrl.LangPath;
+    string redirect =  N.W(Request["ReturnUrl"]) ??
+        N.W(PageData["Redirect"]) ??
+        N.W(Request["Redirect"]);
     Session["RegisterWaitConfirmation"] = PageData["RegisterWaitConfirmation"] ?? true;
     
     var facebookAppId = Facebook.AppId;
@@ -36,76 +32,32 @@
         }
     }*/
 
-    
-    if (IsPost && Validation.IsValid()){
-
-        username = Request.Form["username"];
-        password = Request.Form["password"];
-        rememberMe = Request.Form["rememberMe"].AsBool();
-        
-        if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
+    if (IsPost) {
+        try {
+            
+            var result = LcAuthHelper.Login(this);
+            
+            // Everything fine, do redirection:
             // We return a json with result OK and redirect link (Code=1),
             // and response end just after this:
-            LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "Account/AccountLockedOut/");
-        }
-        
-        // #454: User is auto-logged on registering, allowing it to do the Onboarding,
-        // But next times, it is required to confirm email before logged.
-        // Since we set IsConfirmed as true on database to let 'auto-logging on register', 
-        // we must check for the existance of a confirmation token:
-        var userId = WebSecurity.GetUserId(username);
-        string token = userId == -1 ? null :
-            Database
-            .Open("sqlloco")
-            // coalesce used to avoid the value 'DbNull' to be returned, just 'empty' when there is no token,
-            // is already confirmed
-            .QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userId);
-
-        if (userId > -1 && !String.IsNullOrWhiteSpace(token)) {
-            // Resend confirmation mail
-            var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");
+            LcHelpers.ReturnJsonResult(1, N.W(result.redirectUrl) ?? LcUrl.LangPath);
             
-            var isProvider = Database
-                .Open("sqlloco")
-                .QueryValue("SELECT IsProvider FROM users WHERE UserID=@0", userId);
-
-            if (isProvider) {
-                LcMessaging.SendWelcomeProvider(userId, username, confirmationUrl);
-            } else {
-                LcMessaging.SendWelcomeCustomer(userId, username, confirmationUrl, token);
-            }
+        } catch (HttpException ex) {
             
-            ModelState.AddFormError("Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.");
-        }
-        // Attempt to login to the Security object using provided creds
-        else if (LcAuth.Login(username, password, rememberMe)) {
-           
-            // Check Onboarding status (#455):
-            string onboardingStep = Database.Open("sqlloco").QueryValue("SELECT coalesce(OnboardingStep, '') FROM users WHERE UserID=@0", WebSecurity.GetUserId(username));
-            if (!String.IsNullOrEmpty(onboardingStep)) {
-                redirect = LcUrl.LangPath + "dashboard/" + onboardingStep + "/";
-            }
-            // The redirect cannot be done to an url inside the /Account/ segment:
-            else if (redirect.Contains("/Account/")) {
-                redirect = LcUrl.LangPath;
-            }
+            // Documented posible codes are:
+            // HttpCode:400
+            // Validation error, left the page send the html with the errors.
+            // Or incorrect user/password, show message
+            // HttpCode:409
+            // Account locked or not confirmed
             
-            // Be carefully with hash value: if a user enter from an external link in an email
-            // or bookmark and in some specific cases inside the web,
-            // hash value will be send it well but some other times will not be send it;
-            // a javascript add the 'HASH' parameter to allow the server to know what is the
-            // stripped hash value, re-adding it just now if url doesn't contain it.
-            string hash = Request.QueryString["HASH"];
-            if (!redirect.Contains('#') && !string.IsNullOrEmpty(hash)) {
-                redirect += "#" + hash;
+            // On any case, show the error message and left the page render the html
+            // with all the information
+            // but avoiding repeat the validation tittle for the case of a validation error
+            // that uses that on the exception message
+            if (ex.Message != LcRessources.ValidationSummaryTitle) {
+                ModelState.AddFormError(ex.Message);
             }
-
-            // We return a json with result OK and redirect link (Code=1),
-            // and response end just after this:
-            LcHelpers.ReturnJsonResult(1, redirect);
-        }
-        else {
-            ModelState.AddFormError("Incorrect Username or password.");
         }
     }
 }
@@ -141,7 +93,7 @@
                 <ul>
                     <li class="username">
                         <label for="username" autofocus @if(!ModelState.IsValidField("username")){<text>class="error-label"</text>}>E-mail address:</label>
-                        <input type="text" id="username" class="@(ModelState.IsValidField("Ausername") ? "" : "input-validation-error")" name="username" value="@username" title="Username" @Validation.GetHtml("username")/>
+                        <input type="text" id="username" class="@(ModelState.IsValidField("Ausername") ? "" : "input-validation-error")" name="username" value="@Request["username"]" title="Username" @Validation.GetHtml("username")/>
                         @* Write any username validation errors to the page *@
                         @Html.ValidationMessage("username")
                     </li>
@@ -152,7 +104,7 @@
                         @Html.ValidationMessage("password")
                     </li>
                     <li class="remember-me">
-                        <input type="checkbox" id="rememberMe" name="rememberMe" value="true" title="Remember Me" @if (rememberMe) {<text>checked="checked"</text>} />
+                        <input type="checkbox" id="rememberMe" name="rememberMe" value="true" title="Remember Me" @if (Request["rememberMe"].AsBool()) {<text>checked="checked"</text>} />
                         <label class="checkbox" for="rememberMe">Remember me next time</label>
                     </li>
                     <li class="actions">

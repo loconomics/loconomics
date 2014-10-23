@@ -6,13 +6,17 @@
     var doReturn = PageState == ModelState;
     
     var hasEmailVerification = LcData.UserInfo.HasEmailVerification(u.UserID);
+    var hasFacebookVerification = LcData.UserInfo.HasFacebookVerification(u.UserID);
     
     // Code for tests: testing the confirm-email button independant of the real state
     if (!LcHelpers.InLive && Request["confirmemail"].AsBool()){
         hasEmailVerification = false;
     }
     
-    var checks = LcData.GetUserBackgroundChecks(u.UserID, u.CountryID, u.StateProvinceID, false);
+    dynamic checks = null;
+    if (u.IsProvider && u.CountryID is int && u.StateProvinceID is int) {
+        checks = LcData.GetUserBackgroundChecks((int)u.UserID, (int)u.CountryID, (int)u.StateProvinceID, false);
+    }
     var thereAreBackgroundChecksAvailable = checks != null && checks.Count > 0;
 }
 @* CRUDL: Right now, Crudl is disabled because there is no need for it and no editor pages (there is not edition capability for verifications) *@
@@ -20,13 +24,16 @@
     <div class="DashboardVerifications-editor crudl-editor BasicForm" data-source-url="@(LcUrl.LangUrl)$dashboard/AboutYou/$VerificationEdit/"></div>
     <div class="DashboardVerifications-list crudl-viewer">
         <div class="DashboardVerifications-actions ActionsBoxList">
-            <div class="ActionBox">
-                <a href="#connect-with-facebook">Connect with Facebook</a>
-                <p>
-                    Letting potential @(u.IsProvider ? "clients" : "service providers") know you have a trusted online presence
-                    helps them know you're real.
-                </p>
-            </div>
+            @if (!hasFacebookVerification)
+            {
+                <div class="ActionBox">
+                    <a href="#connect-with-facebook">Connect with Facebook</a>
+                    <p>
+                        Letting potential @(u.IsProvider ? "clients" : "service providers") know you have a trusted online presence
+                        helps them know you're real.
+                    </p>
+                </div>
+            }
             @if (!hasEmailVerification)
             {
                 <div class="ActionBox">

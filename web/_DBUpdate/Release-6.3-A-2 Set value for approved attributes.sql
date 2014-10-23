@@ -1,0 +1,1 @@
+update serviceattribute set approved = 1

@@ -4,12 +4,12 @@ exports.init = function () {
     var s = $('#search-location');
     s.prop('readonly', true);
     s.autocomplete({
-        source: LC.searchLocations
-                                , autoFocus: true
-                                , minLength: 0
-                                , select: function () {
-                                    return false;
-                                }
+        source: LC.searchLocations,
+        autoFocus: true,
+        minLength: 0,
+        select: function () {
+            return false;
+        }
     });
     s.on('focus click', function () { s.autocomplete('search', ''); });
 
