@@ -1,6 +1,15 @@
 ﻿@*
-    Read and edit Events.
-    
+    Read Events 'as is' in the iCalendar back-end, will possibilities to retrieve
+    all the related data that forms a complete event or a selected subset, plus
+    basic events filtering.
+
+    TODO: Editing capabilites not implemented, waiting for when may be need it.
+
+    NOTE: This is a full API for all the back-end data, a bit complex and excessive
+        but full complaining with iCalendar standard.
+        It exists a simplified API to manage events for the reduced data commonly used
+        and some convenience options, more suitable for the UI; see /REST/events.
+
     Options:
     GET
         - types[]:array[int] Optional. List of CalendarEventTypeIDs to filter the events returned.
@@ -20,6 +29,10 @@
             - CalendarEventsAttendees
             - CalendarEventsContacts,
             - CalendarEventComments
+
+    GET /@id
+        - @id:int the Event Id to retrieve; must be owned by the current user or 'not found' is returned
+        - includes[]:array[string] Optional. Same as in GET.
 *@
 @functions{
     public class RestEvents : RestWebPage
