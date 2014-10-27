@@ -19,19 +19,20 @@
      */
 
     // Check user
-    var u = LcData.UserInfo.GetUserRow();
+    var u = LcData.UserInfo.GetUserRowWithContactData();
     bool providerWithoutPosition = false;
     if (u != null) {
         if (u.IsProvider) {
             // Check if the logged provider has or not a position
             providerWithoutPosition = LcData.UserInfo.GetUserPos().Count == 0;
-        }
-        if (!providerWithoutPosition) {
-            // Is customer or provider with almost one position, doesn't need this page, redirect
-            if (Request.IsAjaxRequest()) {
-                LcHelpers.ReturnJsonResult(1, LcUrl.LangPath);
-            } else {
-                Response.Redirect(LcUrl.LangPath);
+            
+            if (!providerWithoutPosition && !IsPost) {
+                // Is provider with almost one position, doesn't need this page, redirect
+                if (Request.IsAjaxRequest()) {
+                    LcHelpers.ReturnJsonResult(1, LcUrl.LangPath);
+                } else {
+                    Response.Redirect(LcUrl.LangPath);
+                }
             }
         }
     }
@@ -86,10 +87,10 @@
             redirect += CUSTOMER_REDIRECT;
         }
         
-        // Password and Facebook Connect
-        var facebookId = Request["facebookid"].AsLong();
-        if (facebookId == 0) {
-            // No Facebook, needs pasword
+        // Password and Facebook Connect, or Customer user becoming provider
+        var facebookId = getFacebookId();
+        if (facebookId == 0 && u == null) {
+            // No Facebook, no customer user, needs pasword
             if (Request["create-password"].IsEmpty()) {
                 ModelState.AddError("create-password", LcRessources.RequiredField("Password"));
             }
@@ -106,65 +107,88 @@
         }
 
         if (ModelState.IsValid) {
-            if (providerWithoutPosition) {
-                LcData.UserInfo.InsProviderPosition(u.UserID, positionID);
-                LcHelpers.ReturnJsonResult(1, redirect);
+            // Double check that if the Facebook ID exists already
+            // and load its user data on that case to get updated
+            if (facebookId > 0) {
+                var userFromFbId = LcAuth.GetFacebookUser(facebookId);
+                if (userFromFbId != null) {
+                    u = LcData.UserInfo.GetUserRowWithContactData(userFromFbId.UserID);
+                }
+            }
+            
+            // Create account:
+            if (u == null &&
+                LcAuth.ExistsEmail(Request["email"])) {
+                // User already exists
+                ModelState.AddFormError("Email address is already in use--please click login below.");
             } else {
-                // Create account:
-                if (LcAuth.ExistsEmail(Request["email"])) {
-                    // User already exists
-                    ModelState.AddFormError("Email address is already in use--please click login below.");
-                } else {
-                    try {
-                        // Check user type to be created
-                        bool asProvider = profileType == "provider";
-                        var user = 
-                        LcAuth.RegisterUser(
+                try {
+                    // Check user type to be created
+                    bool asProvider = profileType == "provider";
+                        
+                    LcAuth.RegisteredUser user = null;
+                        
+                    if (u == null) {
+                        user = LcAuth.RegisterUser(
                             Request["email"],
                             Request["firstname"],
                             Request["lastname"],
                             N.DW(Request["create-password"]) ?? Membership.GeneratePassword(14, 5),
                             asProvider,
-                            null,
+                            Request.Url.Query,
                             gender,
                             Request["about"]
                         );
-
-                        if (facebookId != 0) {
-                            LcAuth.ConnectWithFacebookAccount(user.UserID, facebookId);
-                        }
-                        
-                        LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
-                        
+                    }
+                    else {
                         if (asProvider) {
-                            try{
-                                // Add position
-                                LcData.UserInfo.InsProviderPosition(user.UserID, positionID);
-                            } catch {
-                                // If there is an error ONLY with the position creation, still continue as
-                                // successfully because the account was created, after the redirect
-                                // the form will be showed again to fullfill position information
-                            }
+                            LcAuth.BecomeProvider(u.UserID);
                         }
-                        
-                        LcAuth.SendRegisterUserEmail(user);
-                        
-                        // Auto-login:
-                        FormsAuthentication.SetAuthCookie(Request["email"], false);
-                        LcData.UserInfo.RegisterLastLoginTime(0, Request["email"]);
-                        // Commented to use the more generic previous lines
-                        // (valid without password, as required by Facebook Connect)
-                        //LcAuth.Login(user.Email, Request["create-password"]);
-                        
-                    } catch (System.Web.Security.MembershipCreateUserException e) {
-                        ModelState.AddFormError(e.Message);
+                            
+                        user = new LcAuth.RegisteredUser {
+                            Email = u.Email,
+                            UserID = u.UserID,
+                            IsProvider = asProvider
+                        };
                     }
+                    
+                    if (facebookId != 0) {
+                        LcAuth.ConnectWithFacebookAccount(user.UserID, facebookId);
+                    }
+                        
+                    LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
+                        
+                    if (asProvider) {
+                        try{
+                            // Add the position.
+                            // For already existint users, if it already has it, 
+                            // the process will activate it and continue silently:
+                            LcData.UserInfo.InsProviderPosition(user.UserID, positionID);
+                        } catch (Exception exInsPos) {
+                            // For the second attempt only
+                            if (providerWithoutPosition) {
+                                throw exInsPos;
+                            }
+                            // else: If there is an error ONLY with the position creation, still continue as
+                            // successfully because the account was created, after the redirect
+                            // the form will be showed again to fullfill position information
+                        }
+                    }
+                        
+                    LcAuth.SendRegisterUserEmail(user);
+                        
+                    // Auto-login (even for current user, to revalidate):
+                    FormsAuthentication.SetAuthCookie(user.Email, false);
+                    LcData.UserInfo.RegisterLastLoginTime(user.UserID);
+                        
+                } catch (System.Web.Security.MembershipCreateUserException e) {
+                    ModelState.AddFormError(e.Message);
+                }
                 
-                    if (ModelState.IsValid) {
-                        // We return a json with result OK and redirect link (Code=1),
-                        // and response end just after this:
-                        LcHelpers.ReturnJsonResult(1, redirect);
-                    }
+                if (ModelState.IsValid) {
+                    // We return a json with result OK and redirect link (Code=1),
+                    // and response end just after this:
+                    LcHelpers.ReturnJsonResult(1, redirect);
                 }
             }
         }
@@ -173,6 +197,26 @@
     var idprefix = "welcomepopup";
     // WelcomePopup is required again #514 and is optional again #541
     var closable = true;
+}
+@functions{
+    /// <summary>
+    /// Get the Facebook ID doing validations.
+    /// For simplicity and double check, the form parameter 'facebookid'
+    /// is sent but the only secure way to know that is by verifying
+    /// with the Facebook API and the signed cookie, doing a 
+    /// double check.
+    /// </summary>
+    /// <returns></returns>
+    long getFacebookId() {
+        var fid = Request["facebookid"].AsLong();
+        var fuser = LcFacebook.GetUserFromCurrentRequest();
+        var fuserid = fuser != null ? ((string)fuser["id"] ?? "0").AsLong() : 0;
+
+        if (fuserid == fid)
+            return fid;
+
+        return 0;
+    }
 }
 <div id="welcomepopup" class="@(providerWithoutPosition ? "select-position" : "")">
     @if (closable)
@@ -183,10 +227,10 @@
     <header>
         <h1 class="@(withLogo ? "has-icon" : "")">@(title)</h1>
         <div class="presentation">
-            We’re readying for our launch this summer as a 
+            We’re readying for our launch this winter as a 
             <a href="#" data-toggle="popover" data-placement="bottom" data-trigger="hover"
                 data-content="There are no fat cats in suits here. Just a bunch of hard-working people strengthening local economies...probably even one of your neighbors!">freelancer-owned cooperative</a>
-            and marketplace.<br></br>
+            and marketplace.<br></br/>
             You'll soon be able to find and book therapists to pamper your mind or body, tutors for your upcoming trip to Spain,
             caterers for your next big birthday, and so much more.<br></br>
             For freelancers, we provide you the tools you need to launch and grow your own service-based business while having a seat
@@ -225,6 +269,7 @@
                         <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/connect-facebook-large.png" width="193px" height="24px"/>
                     </a>
                     <span style="display:none" class="facebook-logged">You are successfully logged with <strong>Facebook</strong>. Please, confirm your email address below:</span>
+                    <span style="display:none" class="facebook-logged-is-user">You've already created an account with <strong>Facebook</strong>. <span class="provider">Please add another job title below.</span></span>
                 </div>
                 
                 <p class="choice-or">or</p>
@@ -242,15 +287,15 @@
                     <ul>
                         @if (!providerWithoutPosition)
                         {
-                        <li class="provider customer has-personal-data"><label for="@(idprefix)-firstname">First name</label><input id="@(idprefix)-firstname" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
+                        <li class="provider customer has-personal-data"><label for="@(idprefix)-firstname">First name</label><input id="@(idprefix)-firstname" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@(Request["firstname"] ?? (u != null ? u.FirstName : ""))" /></li>
                         @* class="provider customer  *@
-                        <li class="has-personal-data"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
+                        <li class="has-personal-data"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@(Request["lastname"] ?? (u != null ? u.LastName : ""))" /></li>
                         <li class="provider customer has-personal-data">
-                        <label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" @Validation.GetHtml("zipcode") @Html.Raw(ModelState.IsValidField("zipcode") ? "" : "class='input-validation-error'") type="text" placeholder="Zip code" name="zipcode" value="@Request["zipcode"]" />
+                        <label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" @Validation.GetHtml("zipcode") @Html.Raw(ModelState.IsValidField("zipcode") ? "" : "class='input-validation-error'") type="text" placeholder="Zip code" name="zipcode" value="@(Request["zipcode"] ?? (u != null ? u.PostalCode : ""))" />
                         <span class="field-validation-error" data-valmsg-for="zipcode" data-valmsg-replace="true"></span>
                         </li>
                         <li class="provider customer has-personal-data">
-                            <label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" />
+                            <label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@(Request["email"] ?? (u != null ? u.Email : ""))" />
                             <span class="facebook-note" style="display:none"><strong>IMPORTANT</strong>: Use an e-mail address you check regularly as all booking communications will be sent here. We won't spam you so worry not.</span>
                             </li>
                         <li class="provider customer has-secure-data"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" type="password" placeholder="Create password" name="create-password" @Validation.GetHtml("create-password")/></li>

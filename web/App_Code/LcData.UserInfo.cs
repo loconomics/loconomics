@@ -905,6 +905,17 @@ public static partial class LcData
                 return N.D(db.QueryValue(@"SELECT ConfirmationToken FROM webpages_Membership WHERE UserId=@0", userID)) == null;
             }
         }
+
+        public static bool HasFacebookVerification(int userID)
+        {
+            using (var db = Database.Open("sqlloco")) {
+                return (db.QueryValue(@"
+                    SELECT count(*)
+                    FROM userverification
+                    WHERE UserId=@0 AND PositionID=0 AND VerificationID=8 AND VerificationStatusID=1",
+                userID)) == 1;
+            }
+        }
         #endregion
 
         #region Stats

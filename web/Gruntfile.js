@@ -198,6 +198,46 @@ module.exports = function (grunt) {
                         'LC/batchEventHandler'
                     ]
                 }
+            },
+
+            'styleguidelibs': {
+                'src': [],
+                'dest': './Scripts/styleguidelibs.js',
+                'options': {
+                    // Despite that plugins and some other modules doesn't return itselfs,
+                    // we still need the alias to be localizable by the 'require' calls
+                    // in other bundles (must replicate alias in its 'external' option)
+                    // Shim generates already alias for each key.
+                    shim: {
+                        // Using a shim we avoid jquery to detect the CommonJS loader and 
+                        // it attachs itself to the global namespace (window) what let
+                        // the plugins works fine.
+                        jquery: {
+                            path: './Scripts/jquery/jquery-2.1.1_min.js',
+                            exports: 'jQuery'
+                        },
+                        'bootstrap': {
+                            path: './Scripts/libs/bootstrap-3.2.0.min.js',
+                            exports: null,
+                            depends: { 'jquery': 'jquery' }
+                        }
+                    }
+                }
+            },
+            'styleguide': {
+                'src': [
+                  './Scripts/app/styleguide.js'
+                ],
+                'dest': './Scripts/styleguide.js',
+                'options': {
+                    // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
+                    'debug': true,
+                    // Modules loaded from other bundle (libs.js)
+                    'external': [
+                        'jquery',
+                        'bootstrap'
+                    ]
+                }
             }
         },
 
@@ -272,6 +312,16 @@ module.exports = function (grunt) {
             'provider-welcome': {
                 files: {
                     'Styles/provider-welcome.css': ['Styles/app/provider-welcome.styl']
+                }
+            },
+            'styleguide': {
+                files: {
+                    'Styles/styleguide.css': ['Styles/app/styleguide.styl']
+                }
+            },
+            'styleguide-desktop': {
+                files: {
+                    'Styles/styleguide-desktop.css': ['Styles/app/styleguide-desktop.styl']
                 }
             }
         },

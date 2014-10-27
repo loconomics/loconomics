@@ -227,6 +227,9 @@ exports.initPopup = function initPopup() {
         .attr('data-val-required', '')
         .attr('data-val', true);
 
+        // For customers become provider, hide new-account fields
+        existingUserHideFields(c);
+
         // if Facebook Connect is in use, update fields and validations
         facebookUpdateFieldsStatus(c);
 
@@ -285,7 +288,9 @@ function facebookConnect($container) {
             $container.find('[name="gender"]').val(user.gender);
             $container.find('[name="about"]').val(user.about);
 
-            facebookUpdateFieldsStatus($container);
+            if (facebookUpdateFieldsStatus($container)) {
+                checkUserForFacebookLogin(auth.userID, $container);
+            }
         });
     });
 
@@ -319,6 +324,7 @@ function facebookUpdateFieldsStatus($container) {
             flast.closest('li').hide();
 
         // Email is special, requires confirmation #538,
+        femail.show().closest('li').show();
         // showing additional message,
         femail.siblings('.facebook-note').show();
 
@@ -326,6 +332,7 @@ function facebookUpdateFieldsStatus($container) {
         $container.find('.facebook-logged').show();
         // and hidding the button
         $container.find('.facebook-connect').hide();
+        $container.find('.choice-or').hide();
 
         // Password is special too, no needed with Facebook
         $container.find('[name="create-password"]').closest('li').hide();
@@ -333,4 +340,65 @@ function facebookUpdateFieldsStatus($container) {
         return true;
     }
     return false;
+}
+
+function existingUserHideFields($container) {
+    var femail = $container.find('[name="email"]'),
+        fpwd = $container.find('[name="create-password"]');
+    if (femail.val()) {
+        // Hide email and password fields
+        femail.closest('li').hide();
+        fpwd.closest('li').hide();
+
+        // remove validation on password
+        fpwd
+            .attr('data-val-required', null)
+            .attr('data-val', false);
+    }
+}
+
+/** Ping our server for any existing user that matches 
+    the logged FacebookID and update UI notifying that
+**/
+var blockPresets = require('../LC/blockPresets'),
+    LcUrl = require('../LC/LcUrl'),
+    redirectTo = require('../LC/redirectTo');
+require('jquery.blockUI');
+function checkUserForFacebookLogin(facebookID, $container) {
+    // Do a server side query to get data for the existing ID 
+    // asociated with the facebookID account, IF ANY.
+    $container.block(blockPresets.loading);
+    // The call must include the Facebook ID parameter
+    // and the Facebook login cookie
+    $.getJSON(LcUrl.RestPath + 'facebook-user', {
+        facebook_id: facebookID,
+        do_login: true
+    }).done(function (data) {
+
+        var isCustomer = ($container.find('[name="profile-type"]:checked').val() === 'customer');
+
+        $container.find('[name="email"]')
+        .val(data.user.email)
+        .prop('readOnly', true)
+        .hide()
+        .siblings('.facebook-note')
+        .hide();
+
+        var fzip = $container.find('[name="zipcode"]')
+        .val(data.user.postalCode);
+        if (fzip.val()) fzip.hide();
+
+        $container.find('.facebook-logged').hide();
+        $container.find('.facebook-logged-is-user')
+        .show()
+        .find('.provider').toggle(!isCustomer);
+
+        // For customers, go Home or just reload
+        if (isCustomer) {
+            redirectTo(LcUrl.LangPath);
+        }
+
+    }).always(function () {
+        $container.unblock();
+    });
 }

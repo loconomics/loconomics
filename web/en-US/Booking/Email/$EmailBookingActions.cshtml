@@ -8,12 +8,12 @@
         {
             // What the user see if is the Customer in the booking
             case LcData.UserInfo.UserType.Customer:
-            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
+            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@(PageData["viewOnSiteUrl"])/review/" target="_blank">
                 @(info.Booking.ReviewedByCustomer == true ? "View my review" : "Review provider")
             </a>
             if (info.Booking.ReviewedByProvider == true)
             {
-            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
+            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@(PageData["viewOnSiteUrl"])/review/?asUserId=@(info.PairUserID)" target="_blank">
                 View provider review
             </a>
             }
@@ -21,12 +21,12 @@
 
             // What the user see if is the Provider in the booking
             case LcData.UserInfo.UserType.Provider:
-            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
+            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@(PageData["viewOnSiteUrl"])/review/" target="_blank">
                 @(info.Booking.ReviewedByProvider == true ? "View my review" : "Review customer")
             </a>
             if (info.Booking.ReviewedByCustomer == true)
             {
-            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
+            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@(PageData["viewOnSiteUrl"])/review/?asUserId=@(info.PairUserID)" target="_blank">
                 View customer review
             </a>
             }

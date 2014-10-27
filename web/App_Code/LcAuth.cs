@@ -95,11 +95,7 @@ public static class LcAuth
                 // It assigns the first OnboardingStep 'welcome' for the new Onboarding Dashboard #454
                 if (isProvider)
                 {
-                    db.Execute(@"UPDATE Users SET 
-                    IsProvider = 1,
-                    OnboardingStep = 'welcome'
-                    WHERE UserID = @0
-                ", userid);
+                    BecomeProvider(userid, db);
                 }
 
                 // Partial email confirmation to allow user login but still show up email-confirmation-alert. Details:
@@ -140,6 +136,25 @@ public static class LcAuth
             }
         }
     }
+    public static void BecomeProvider(int userID, Database db = null)
+    {
+        var ownDb = db == null;
+        if (ownDb)
+        {
+            db = Database.Open("sqlloco");
+        }
+        
+        db.Execute(@"UPDATE Users SET 
+            IsProvider = 1,
+            OnboardingStep = 'welcome'
+            WHERE UserID = @0
+        ", userID);
+
+        if (ownDb)
+        {
+            db.Dispose();
+        }
+    }
     public static void SendRegisterUserEmail(RegisteredUser user)
     {
         var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(user.ConfirmationToken);
@@ -161,6 +176,44 @@ public static class LcAuth
             db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
             // Test social media alert
             db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
+        }
+    }
+
+    public static int? GetFacebookUserID(long facebookID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QueryValue("SELECT UserId FROM webpages_FacebookCredentials WHERE FacebookId=@0", facebookID);
+        }
+    }
+
+    /// <summary>
+    /// Get basic user info given a Facebook User ID or null.
+    /// </summary>
+    /// <param name="facebookID"></param>
+    public static RegisteredUser GetFacebookUser(long facebookID)
+    {
+        int? userId = GetFacebookUserID(facebookID);
+        if (userId.HasValue)
+        {
+            var userData = LcData.UserInfo.GetUserRow(userId.Value);
+            // Check is valid (only edge cases will not be a valid record,
+            // as incomplete manual deletion of user accounts that didn't remove
+            // the Facebook connection).
+            if (userData != null)
+            {
+                return new RegisteredUser
+                {
+                    Email = userData.Email,
+                    IsProvider = userData.IsProvider,
+                    UserID = userId.Value
+                };
+            }
+            return null;
+        }
+        else
+        {
+            return null;
         }
     }
 

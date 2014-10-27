@@ -82,9 +82,6 @@
 </p>
 
     <fieldset class="DashboardPhotos ajax ajax-box" data-ajax-fieldset-action="@(formAction)" data-reload-mode="replace-content" @Html.Raw(isInOnboarding ? "data-instant-saving='true'" : "")>
-        @* Quick&Dirty solution for the fieldset.ajax.submit using a hidden button, for the 'delete' photo task: *@
-        <input type="submit" class="ajax-fieldset-submit" value="" style="display:none" />
-
         <input type="hidden" name="gallery-order" value=""/>
         <div id="position[@n]photos-no-photos" class="no-photos">
             <span class="positionphotos-tools-upload">Start by uploading a photo!</span>

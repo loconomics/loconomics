@@ -1,0 +1,1 @@
+update servicecategorypositionattribute set approved = 1
