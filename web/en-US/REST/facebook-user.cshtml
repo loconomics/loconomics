@@ -10,12 +10,11 @@
             expose publicly private data through the facebook_id parameter) so the facebook_id is just
             to double check that the explicit requested user account matches the logged user.
 *@
-@{   
-    dynamic result = new Dictionary<string, dynamic>();
-    
-    try {
-        if (Request.HttpMethod == "GET") {
-            
+@functions{
+    public class RestFacebookUser : RestWebPage
+    {
+        public override dynamic Get()
+        {
             var fid = Request["facebook_id"].AsLong(0);
             var fuser = LcFacebook.GetUserFromCurrentRequest();
             var fuserid = fuser != null ? ((string)fuser["id"] ?? "0").AsLong(0) : 0;
@@ -32,7 +31,7 @@
                 throw new HttpException(404, "User doesn't exists");
             }
             else {
-                result["user"] = new {
+                var facebookUser = new {
                     userID = userInfo.UserID,
                     email = userInfo.Email,
                     isProvider = userInfo.isProvider,
@@ -46,26 +45,12 @@
                     FormsAuthentication.SetAuthCookie(userInfo.Email, false);
                     LcData.UserInfo.RegisterLastLoginTime(userInfo.UserID);
                 }
+                
+                return new { user = facebookUser };
             }
         }
-        else {
-            throw new HttpException(405, "Method is not allowed");
-        }
-    } catch(HttpException http) {
-        
-        Response.StatusCode = http.GetHttpCode();
-        
-        result["errorMessage"] = http.Message;
-        if (!ModelState.IsValid) {
-            result["errors"] = ModelState.Errors();
-        }
-        
-    } catch(Exception ex){
-
-        result["errorMessage"] = ex.Message;
     }
-    
-    
-    // Output data
-    LcHelpers.ReturnJson(result);
+}
+@{   
+    new RestFacebookUser().JsonResponse(this);
 }
