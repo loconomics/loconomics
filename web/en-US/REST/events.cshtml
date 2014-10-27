@@ -28,7 +28,16 @@
         {
             // Parameters
             int userId = WebSecurity.CurrentUserId;
+            
+            var includes = Request.QueryString.GetValues("includes[]") ?? new string[]{};
+            
+            // Item ID
+            if (UrlData[0].IsInt())
+            {
+                return GetItem(UrlData[0].AsInt(0), userId, includes);
+            }
 
+            // More parameters
             var types = Request.QueryString.GetValues("types[]");
             var typesIDs = new List<int>();
             if (types != null) {
@@ -44,15 +53,31 @@
             var start = DateTimeFromISO(Request.QueryString["start"]);
             var end = DateTimeFromISO(Request.QueryString["end"]);
 
-            var includes = Request.QueryString.GetValues("includes[]") ?? new string[]{};
-
             // Data
             var list = LcCalendar.GetUserEvents(userId, typesIDs.ToArray<int>(), start, end, includes);
 
             return list;
         }
+        
+        public dynamic GetItem(int eventID, int userID, string[] includes)
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            if (eventID > 0)
+            {
+                var item = (IEnumerable<dynamic>)LcCalendar.GetUserEvents(userID, null, null, null, includes, eventID);
+                if (item != null && item.Count() > 0)
+                {
+                    return item.First();
+                }
+            }
+
+            throw new HttpException(404, "Event not found.");
+        }
     }
 }
-@{   
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
     new RestEvents().JsonResponse(this);
 }

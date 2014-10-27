@@ -745,7 +745,7 @@ public static partial class LcCalendar
     /// <param name="start"></param>
     /// <param name="end"></param>
     /// <returns></returns>
-    public static dynamic GetUserEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, string[] includes = null)
+    public static dynamic GetUserEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, string[] includes = null, int eventID = 0)
     {
         types = types == null ? new int[]{} : types;
         includes = includes == null ? new string[]{} : includes;
@@ -768,10 +768,21 @@ public static partial class LcCalendar
                 data = data.Include(include);
             }
 
-            return data
+            IQueryable<CalendarEvents> query;
+            if (eventID > 0)
+            {
+                query = data
+                .Where(c => c.UserId == userID && c.Id == eventID);
+            }
+            else
+            {
+                query = data
                 .Where(c => c.UserId == userID && types.Contains(c.EventType) &&
                     (start.HasValue ? c.EndTime > start : true) &&
-                    (end.HasValue ? c.StartTime < end : true))
+                    (end.HasValue ? c.StartTime < end : true));
+            }
+
+            return query
                 .ToList()
                 .Select(ev => new {
                     EventID = ev.Id,
