@@ -14,6 +14,35 @@
 
     GET /@id
         - @id:int the Event Id to retrieve; must be owned by the current user or 'not found' is returned
+
+    POST
+        - EventTypeID:int
+        - AvailabilityTypeID:int
+        - Summary:string
+        - StartTime:datetime
+        - EndTime:datetime
+        - IsAllDay:bool
+        - Location:string
+        - Description:string
+        - FrequencyTypeID:int
+        - Ending:string Possible values allowed: never, date, ocurrences
+        - Count:int? For Ending 'ocurrences', number of ocurrences/repetitions of the recurrent event
+        - Until:datetime? For Ending 'date', datetime of the latest recurrent ocurrence of the event
+        - Interval:int Interval of repetition, 'every each X days/months/etc.',
+        - SelectedWeekDays[]:array[int] List of week days for the recurrent rule, when the FrequencyTypeID
+            is 'weekly'. Sunday is 0, up to Saturday 6
+        - MonthlyWeekDay:bool Express if, for FrequencyTypeID 'monthly', the recurrent day must be the
+            day of the month (value false, by default), or the day of the week (value true).
+
+    PUT /@id
+        # Same parameters set than POST
+
+    Limitations for edition methods:
+    - On edition success, a "GET /@id" result is returned so the generated EventID can be read and any other
+        server side edition (UpdateDate field, for example)
+    - Events marked with ReadOnly:true will not be modified even if a request is performed, the untouched event
+        is returned
+    - Events with a read-only EventTypeID will fail to insert/edit/delet.
 *@
 @functions{
     public class RestEvents : RestWebPage

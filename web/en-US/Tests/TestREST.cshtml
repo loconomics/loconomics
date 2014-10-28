@@ -124,6 +124,43 @@
                     'at the step given in "redirectUrl". This is the fact for current Website, what rules we will manage on mobile?.'
             }
         },
+        'Events and to add event': {
+            url: '/en-US/rest/events',
+            get: {
+                 "types": [3, 5],
+                 "start": "2014-01-01T12:00:00",
+                 "end": "2014-09-30T10:00:00Z",
+                 'api comment': 'types is optional, and will return all the types except "work hours" by default (To review if this is.' +
+                    'the most optimal. ' +
+                    'Optional start and end dates to reduce the results, accepting ISO strings.'
+            },
+            post: {
+                "EventTypeID":3,
+                "Summary":"Housekeeper services for JoshuaProvider D.",
+                "AvailabilityTypeID":3,
+                "StartTime":"2014-03-25T09:00:00",
+                "EndTime":"2014-03-25T19:00:00",
+                "IsAllDay":false,
+                "TimeZone":"-8",
+                "Location":"null",
+                "Description":"test description of a REST event"
+            }
+        },
+        'Event (single)': {
+            url: '/en-US/rest/events/353',
+            get: {},
+            put: {
+                "EventTypeID":3,
+                "Summary":"Housekeeper services for JoshuaProvider D.",
+                "AvailabilityTypeID":3,
+                "StartTime":"2014-03-25T09:00:00",
+                "EndTime":"2014-03-25T19:00:00",
+                "IsAllDay":false,
+                "TimeZone":"-8",
+                "Location":"null",
+                "Description":"test description of a REST event"
+            }
+        },
         'iCalendar Events': {
             url: '/en-US/rest/icalendar/events',
             get: {
