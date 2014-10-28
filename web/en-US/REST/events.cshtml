@@ -19,15 +19,15 @@
     public class RestEvents : RestWebPage
     {
         public override dynamic Get()
-        {
-            // Parameters
-            int userId = WebSecurity.CurrentUserId;
-            
+        {           
             // Item ID
             if (UrlData[0].IsInt())
             {
-                return GetItem(UrlData[0].AsInt(0), userId,);
+                return GetItem(UrlData[0].AsInt(0));
             }
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
 
             // More parameters
             var types = Request.QueryString.GetValues("types[]");
@@ -51,10 +51,10 @@
             return list;
         }
         
-        public dynamic GetItem(int eventID, int userID)
+        public dynamic GetItem(int eventID)
         {
             // Parameters
-            int userId = WebSecurity.CurrentUserId;
+            int userID = WebSecurity.CurrentUserId;
 
             if (eventID > 0)
             {
@@ -66,6 +66,51 @@
             }
 
             throw new HttpException(404, "Event not found.");
+        }
+        
+        public dynamic SetItem(int eventID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            
+            LcCalendar.SetSimplifiedEvent(userID, eventID,
+                Request["type"].AsInt(),
+                Request["availability"].AsInt(),
+                Request["summary"],
+                Request["StarTime"].AsDateTime(),
+                Request["EndTime"].AsDateTime(),
+                Request["allday"].AsBool(),
+                Request["location"],
+                Request["description"],
+                rrule    
+            );
+            
+            // Return database copy
+            return GetItem(eventID);
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count > 0)
+                throw new HttpException(405, "Method not allowed.");
+
+            return SetItem(0);
+        }
+
+        public override dynamic Put()
+        {           
+            dynamic updated = null;
+            if (UrlData.Count == 1)
+                updated = SetItem(UrlData[0].AsInt(0));
+
+            if (updated == null) {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Event not found.");
+            }
+
+            return updated;
         }
     }
 }

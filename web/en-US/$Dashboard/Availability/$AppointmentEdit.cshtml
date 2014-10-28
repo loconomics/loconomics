@@ -55,6 +55,7 @@
         if (Request["repeat"].AsBool() && repeatFrequency.HasValue) {
             rrule = new LcCalendar.SimplifiedRecurrenceRule {
                 FrequencyTypeID = repeatFrequency.Value,
+                Ending = Request["repeat-ends"],
                 Count = Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
                 Until = Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
                 Interval = Request["repeat-every"].AsInt(1),

@@ -1282,6 +1282,11 @@ public static partial class LcCalendar
             var dbevent = ent.CalendarEvents.Find(EventID);
             if (dbevent == null)
             {
+                // Deleted or bad ID
+                if (EventID > 0)
+                    return;
+
+                // New one to be created:
                 dbevent = ent.CalendarEvents.Create();
                 ent.CalendarEvents.Add(dbevent);
                 dbevent.UserId = userID;
