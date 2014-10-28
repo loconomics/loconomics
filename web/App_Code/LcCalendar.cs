@@ -959,9 +959,9 @@ public static partial class LcCalendar
                     UserID = ev.UserId,
                     CalendarEventTypeID = ev.EventType,
                     Summary = ev.Summary,
-                    UID = ev.UID,
+                    //UID = ev.UID,
                     AvailabilityTypeID = ev.CalendarAvailabilityTypeID,
-                    Transparency = ev.Transparency,
+                    //Transparency = ev.Transparency,
                     StartTime = ev.StartTime,
                     EndTime = ev.EndTime,
                     IsAllDay = ev.IsAllDay,
@@ -978,10 +978,20 @@ public static partial class LcCalendar
                     //Geo = ev.Geo,
                     //CalendarRecurrenceID = ev.RecurrenceId,
                     Description = ev.Description,
-                    RecurrenceRule = GetSimplifiedRecurrenceRule(ev.CalendarReccurrence)
+                    RecurrenceRule = GetSimplifiedRecurrenceRule(ev.CalendarReccurrence),
+                    ReadOnly = ReadOnlyEventTypes.Contains(ev.EventType)
                 });
         }
     }
+
+    /// <summary>
+    /// Events of type 'booking', 'imported' and 'monthly schedule'
+    /// cannot be directly edited.
+    /// A booking event gets edited from editing its booking.
+    /// Other types can be edited/created/deleted from a specific
+    /// API (monthly and weekly schedule, booking events).
+    /// </summary>
+    public static readonly int[] ReadOnlyEventTypes = new int[] { 1, 2, 4, 6 };
 
     public static void SetSimplifiedEvent(int UserID, int EventID,
         int EventTypeID,
@@ -996,6 +1006,10 @@ public static partial class LcCalendar
     {
         int? repeatFrequency = null;
         List<int> selectedWeekDays = null;
+
+        // Avoid standard edition of read-only types
+        if (ReadOnlyEventTypes.Contains(EventTypeID))
+            return;
 
         if (RRule != null)
         {

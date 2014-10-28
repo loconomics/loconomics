@@ -73,15 +73,58 @@
             // Parameters
             int userID = WebSecurity.CurrentUserId;
             
+            Validation.RequireField("Summary", LcRessources.RequiredField("Summary"));
+            Validation.RequireField("StartTime", LcRessources.RequiredField("Start Date"));
+            Validation.RequireField("EndTime", LcRessources.RequiredField("End Date"));
+            Validation.Add("StartTime", Validator.DateTime("Start date/time is not valid"));
+            Validation.Add("EndDate", Validator.DateTime("End date/time is not valid"));
+            Validation.Add("Interval", Validator.Integer("'Repeat every' must be a number"));
+            Validation.Add("Count", Validator.Integer("Number of occurrences must be a number"));
+            Validation.Add("Until", Validator.DateTime("Repetition End Date is not valid"));
+            
+            if (!Validation.IsValid()) {
+                throw new HttpException(404, LcRessources.ValidationSummaryTitle);
+            }
+            
+            LcCalendar.SimplifiedRecurrenceRule rrule = null;
+            int repeatFrequency = Request["FrequencyTypeID"].AsInt(0);
+            List<int> selectedWeekDays = new List<int>();
+            if (Request.Form.AllKeys.Contains<string>("SelectedWeekDays[]")) {
+                foreach(var w in Request.Form.GetValues("SelectedWeekDays[]")){
+                    // Try-catch because a bad-request can send non-valid values or repeated
+                    // ones, making the list-addition fail. For normal use, that problem
+                    // never will happen, because of that a better control 
+                    // without try-catch is over-complicate the code
+                    try{
+                        selectedWeekDays.Add(w.AsInt());
+                    }catch{}
+                }
+            }
+            
+            if (repeatFrequency > 0) {
+                rrule = new LcCalendar.SimplifiedRecurrenceRule {
+                    FrequencyTypeID = repeatFrequency,
+                    Ending = Request["Ending"],
+                    Count = Request["Ending"] == "ocurrences" ? (int?)Request["Count"].AsInt() : null,
+                    Until = Request["Ending"] == "date" ? (DateTime?)Request["Until"].AsDateTime() : null,
+                    Interval = Request["Interval"].AsInt(1),
+                    SelectedWeekDays = selectedWeekDays,
+                    MonthlyWeekDay = Request["MonthlyWeekDay"].AsBool()
+                };
+            }
+            else {
+                rrule = null;
+            }
+            
             LcCalendar.SetSimplifiedEvent(userID, eventID,
-                Request["type"].AsInt(),
-                Request["availability"].AsInt(),
-                Request["summary"],
+                Request["EventTypeID"].AsInt(),
+                Request["AvailabilityTypeID"].AsInt(),
+                Request["Summary"],
                 Request["StarTime"].AsDateTime(),
                 Request["EndTime"].AsDateTime(),
-                Request["allday"].AsBool(),
-                Request["location"],
-                Request["description"],
+                Request["IsAllDay"].AsBool(),
+                Request["Location"],
+                Request["Description"],
                 rrule    
             );
             
