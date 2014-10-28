@@ -928,7 +928,7 @@ public static partial class LcCalendar
     /// <param name="end"></param>
     /// <param name="eventID"></param>
     /// <returns></returns>
-    public static dynamic GetSimplifiedEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, int eventID = 0)
+    public static IEnumerable<dynamic> GetSimplifiedEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, int eventID = 0)
     {
         types = types == null ? new int[] { } : types;
 
@@ -1065,6 +1065,26 @@ public static partial class LcCalendar
             selectedWeekDays,
             RRule != null ? RRule.MonthlyWeekDay ? "week-day" : "month-day" : null
         );
+    }
+
+    /// <summary>
+    /// Deletes and returns the deleted event, or null if doesn't exists.
+    /// Blocks deletion of ReadOnly Types.
+    /// </summary>
+    /// <param name="UserID"></param>
+    /// <param name="EventID"></param>
+    /// <returns></returns>
+    public static dynamic DelSimplifiedEvent(int UserID, int EventID)
+    {
+        var item = GetSimplifiedEvents(UserID, null, null, null, EventID).First();
+
+        // Avoid standard edition of read-only types
+        if (ReadOnlyEventTypes.Contains((int)item.EventTypeID))
+            throw new ConstraintException("Cannot be deleted");
+
+        DelUserAppointment(UserID, EventID);
+
+        return item;
     }
 
     public class SimplifiedRecurrenceRule

@@ -97,6 +97,26 @@
             throw new HttpException(404, "Event not found.");
         }
         
+        public dynamic DelItem(int eventID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            try {
+                var item = LcCalendar.DelSimplifiedEvent(userID, eventID);
+                if (item != null) {
+                    return item;
+                }
+
+                throw new HttpException(404, "Event not found.");
+            }
+            catch (ConstraintException delEx)
+            {
+                // The event cannot be deleted:
+                throw new HttpException(400, delEx.Message);
+            }
+        }
+        
         public dynamic SetItem(int eventID)
         {
             // Parameters
@@ -183,6 +203,22 @@
             }
 
             return updated;
+        }
+
+        public override dynamic Delete()
+        {
+            dynamic deleted = null;
+            if (UrlData.Count == 1)
+                deleted = DelItem(UrlData[0].AsInt(0));
+
+            if (deleted == null) {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Event not found.");
+            }
+          
+            return deleted;
         }
     }
 }
