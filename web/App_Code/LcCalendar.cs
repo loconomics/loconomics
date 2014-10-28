@@ -893,6 +893,277 @@ public static partial class LcCalendar
                 });
         }
     }
+
+    public static dynamic GetAvailabiliyTypes()
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(@"
+                SELECT  CalendarAvailabilityTypeID As AvailabilityTypeID, SelectableAs As DisplayName
+                FROM    CalendarAvailabilityType
+                WHERE   LanguageID = @0 AND CountryID = @1
+                        AND SelectableAs is not null
+            ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+    }
+
+    public static dynamic GetEventTypes(bool onlySelectable)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            var sql = @"SELECT EventTypeID, EventType As InternalName, DisplayName FROM CalendarEventType";
+            if (onlySelectable)
+                sql += " WHERE DisplayName is not null";
+            return db.Query(sql);
+        }
+    }
+
+    #region Simplified Events API
+    /// <summary>
+    /// TODO Return Events records by dates-range or event ocurrences (so including recurrence ocurrences)
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="types"></param>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <param name="eventID"></param>
+    /// <returns></returns>
+    public static dynamic GetSimplifiedEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, int eventID = 0)
+    {
+        types = types == null ? new int[] { } : types;
+
+        using (var ent = new loconomicsEntities())
+        {
+            var data = (System.Data.Entity.Infrastructure.DbQuery<CalendarEvents>)ent.CalendarEvents
+                .Include("CalendarReccurrence")
+                .Include("CalendarReccurrence.CalendarReccurrenceFrequency");
+
+            IQueryable<CalendarEvents> query;
+            if (eventID > 0)
+            {
+                query = data
+                .Where(c => c.UserId == userID && c.Id == eventID);
+            }
+            else
+            {
+                query = data
+                .Where(c => c.UserId == userID && types.Contains(c.EventType) &&
+                    (start.HasValue ? c.EndTime > start : true) &&
+                    (end.HasValue ? c.StartTime < end : true));
+            }
+
+            return query
+                .ToList()
+                .Select(ev => new {
+                    EventID = ev.Id,
+                    UserID = ev.UserId,
+                    CalendarEventTypeID = ev.EventType,
+                    Summary = ev.Summary,
+                    UID = ev.UID,
+                    AvailabilityTypeID = ev.CalendarAvailabilityTypeID,
+                    Transparency = ev.Transparency,
+                    StartTime = ev.StartTime,
+                    EndTime = ev.EndTime,
+                    IsAllDay = ev.IsAllDay,
+                    //StampTime = ev.StampTime,
+                    TimeZone = ev.TimeZone,
+                    //Priority = ev.Priority,
+                    Location = ev.Location,
+                    UpdatedDate = ev.UpdatedDate,
+                    CreatedDate = ev.CreatedDate,
+                    //ModifyBy = ev.ModifyBy,
+                    //Class = ev.Class,
+                    //Organizer = ev.Organizer,
+                    //Sequence = ev.Sequence,
+                    //Geo = ev.Geo,
+                    //CalendarRecurrenceID = ev.RecurrenceId,
+                    Description = ev.Description,
+                    RecurrenceRule = GetSimplifiedRecurrenceRule(ev.CalendarReccurrence)
+                });
+        }
+    }
+
+    public class SimplifiedRecurrenceRule
+    {
+        /// <summary>
+        /// Type frequency choosen, for example 'monthly, daily, yearly'.
+        /// </summary>
+        public int FrequencyTypeID;
+        /// <summary>
+        /// Frequency amount of the repetition,
+        /// 'repeat every Interval days/months/years/etc.'.
+        /// Its 1 by default.
+        /// </summary>
+        public int Interval;
+        /// <summary>
+        /// Date when repetition ends, if Ending is 'date'
+        /// </summary>
+        public DateTime? Until;
+        /// <summary>
+        /// Number of ocurrences for the repetition,
+        /// if Ending is 'ocurrences'
+        /// </summary>
+        public int? Count;
+        /// <summary>
+        /// String enumeration describing the kind of ending
+        /// of the recurrence, could be:
+        /// - never: never ends (default)
+        /// - date: ends on the Until date
+        /// - ocurrences: ends after Count ocurrences
+        /// </summary>
+        public string Ending;
+        /// <summary>
+        /// List of week days when repetition must happens,
+        /// for weekly frequencies.
+        /// Sunday is 0 up to Saturday 6.
+        /// </summary>
+        public List<int>SelectedWeekDays;
+        /// <summary>
+        /// It specifies if the recurrence for a Montly Frequency (6)
+        /// happens the day of the month (false)
+        /// or the day of the week (true).
+        /// Its false by default.
+        /// </summary>
+        public bool MonthlyWeekDay;
+        /// <summary>
+        /// It specifies if the parsed recurrence rule has set
+        /// options incompatible with the simplified recurrence
+        /// rule description that this object can hold.
+        /// </summary>
+        public bool Incompatible;
+        /// <summary>
+        /// It specifies if the parsed recurrences object has
+        /// more than one rule specified, too many to be managed
+        /// by the this simplification scheme, so only the 
+        /// first rule is included.
+        /// </summary>
+        public bool TooMany;
+        public SimplifiedRecurrenceRule() { }
+    }
+
+    public static SimplifiedRecurrenceRule GetSimplifiedRecurrenceRule(IEnumerable<CalendarReccurrence> calRecurrences)
+    {
+        if (calRecurrences == null)
+            return null;
+        else
+        {
+            SimplifiedRecurrenceRule rrule = null;
+            foreach (var rec in calRecurrences)
+            {
+                if (rrule == null)
+                {
+                    rrule = GetSimplifiedRecurrenceRule(rec);
+                }
+                else
+                {
+                    rrule.TooMany = true;
+                    break;
+                }
+            }
+            return rrule;
+        }
+    }
+
+    /// <summary>
+    /// Get an object with the Recurrence Rule options of a database record
+    /// for a recurrence.
+    /// Its a simplification of the common used options.
+    /// </summary>
+    /// <param name="calRecurrence"></param>
+    /// <returns></returns>
+    public static SimplifiedRecurrenceRule GetSimplifiedRecurrenceRule(CalendarReccurrence calRecurrence)
+    {
+        if (calRecurrence == null || !calRecurrence.Frequency.HasValue)
+            return null;
+
+        List<int> selectedWeekDays = new List<int>();
+        var monthlyWeekDay = false;
+        int repeatFrequency = calRecurrence.Frequency.Value;
+        var recEnds = "never";
+        bool incompatible = false;
+
+        if (calRecurrence.Until != null) {
+            recEnds = "date";
+        } else if (calRecurrence.Count != null && calRecurrence.Count > 0) {
+            recEnds = "ocurrences";
+        }
+
+        if (calRecurrence.CalendarReccurrenceFrequency != null && calRecurrence.CalendarReccurrenceFrequency.Count > 0)
+        {
+            foreach (var rf in calRecurrence.CalendarReccurrenceFrequency)
+            {
+                if (rf.DayOfWeek.HasValue &&
+                    !selectedWeekDays.Contains(rf.DayOfWeek.Value))
+                {
+                    selectedWeekDays.Add(rf.DayOfWeek.Value);
+                }
+                // If monthly, we check that there are almost one frequency record
+                // that has a ByDay:true, FrequencyDay, and DayOfWeek
+                // to detect that was set the 'week-day' option.
+                if (repeatFrequency == 6 &&
+                    rf.ByDay.HasValue && rf.ByDay.Value &&
+                    rf.DayOfWeek.HasValue &&
+                    rf.FrequencyDay.HasValue)
+                {
+                    monthlyWeekDay = true;
+                }
+
+                // Check incompatible options for the simplified scheme
+                if ((rf.ByHour.HasValue && rf.ByHour.Value) ||
+                    (rf.ByMinute.HasValue && rf.ByMinute.Value) ||
+                    (rf.ByMonth.HasValue && rf.ByMonth.Value) ||
+                    //(rf.ByMonthDay.HasValue && rf.ByMonthDay.Value) || // TODO Only if different from the Startdate->MonthDay
+                    (rf.BySecond.HasValue && rf.BySecond.Value) ||
+                    (rf.BySetPosition.HasValue && rf.BySetPosition.Value) ||
+                    (rf.ByWeekNo.HasValue && rf.ByWeekNo.Value)
+                    //(rf.ByYearDay.HasValue && rf.ByYearDay.Value) // TODO Only if different from the Startdate->YearDay
+                    )
+                    incompatible = true;
+            }
+            // Only if there is week-days
+            if (selectedWeekDays.Count > 0)
+            {
+                // Detect Weekly frequency Presets:
+                if (repeatFrequency == 5)
+                {
+                    if (selectedWeekDays.Count == 3 &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Wednesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Friday))
+                    {
+                        repeatFrequency = 502;
+                    }
+                    if (selectedWeekDays.Count == 2 &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Thursday))
+                    {
+                        repeatFrequency = 503;
+                    }
+                    if (selectedWeekDays.Count == 5 &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Wednesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Friday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Thursday))
+                    {
+                        repeatFrequency = 501;
+                    }
+                }
+            }
+        }
+
+        return new SimplifiedRecurrenceRule {
+            FrequencyTypeID = repeatFrequency,
+            Interval = calRecurrence.Interval.HasValue ? calRecurrence.Interval.Value : 1,
+            Until = calRecurrence.Until,
+            Count = calRecurrence.Count,
+            Ending = recEnds,
+            SelectedWeekDays = selectedWeekDays,
+            MonthlyWeekDay = monthlyWeekDay,
+            Incompatible = incompatible
+        };
+    }
+    #endregion
     #endregion
 
     #region Appointments (custom user events)
