@@ -1002,6 +1002,7 @@ public static partial class LcCalendar
         bool IsAllDay,
         string Location,
         string Description,
+        string TimeZone,
         SimplifiedRecurrenceRule RRule)
     {
         var previousItem = GetSimplifiedEvents(UserID, null, null, null, EventID).First();
@@ -1067,7 +1068,8 @@ public static partial class LcCalendar
             Location,
             Description,
             selectedWeekDays,
-            RRule != null ? RRule.MonthlyWeekDay ? "week-day" : "month-day" : null
+            RRule != null ? RRule.MonthlyWeekDay ? "week-day" : "month-day" : null,
+            TimeZone
         );
     }
 
@@ -1082,11 +1084,14 @@ public static partial class LcCalendar
     {
         var item = GetSimplifiedEvents(UserID, null, null, null, EventID).First();
 
-        // Avoid standard edition of read-only types
-        if (ReadOnlyEventTypes.Contains((int)item.EventTypeID))
-            throw new ConstraintException("Cannot be deleted");
+        if (item)
+        {
+            // Avoid standard edition of read-only types
+            if (ReadOnlyEventTypes.Contains((int)item.EventTypeID))
+                throw new ConstraintException("Cannot be deleted");
 
-        DelUserAppointment(UserID, EventID);
+            DelUserAppointment(UserID, EventID);
+        }
 
         return item;
     }
@@ -1313,7 +1318,8 @@ public static partial class LcCalendar
         string Location,
         string Description,
         List<int> WeekDays = null,
-        string monthlyOption = "month-day")
+        string monthlyOption = "month-day",
+        string TimeZone = null)
     {
         using (var ent = new loconomicsEntities())
         {
@@ -1339,6 +1345,12 @@ public static partial class LcCalendar
                 StartTime = dt;
             }
 
+            // Auto TimeZone to server local
+            if (String.IsNullOrEmpty(TimeZone))
+            {
+                TimeZone = System.TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).ToString("t");
+            }
+
             dbevent.EventType = EventTypeID;
             dbevent.CalendarAvailabilityTypeID = AvailabilityTypeID;
             dbevent.Summary = Summary;
@@ -1351,6 +1363,7 @@ public static partial class LcCalendar
                 EndTime = EndTime.AddDays(1);
             dbevent.EndTime = EndTime;
             dbevent.IsAllDay = IsAllDay;
+            dbevent.TimeZone = TimeZone;
             dbevent.Location = Location;
             dbevent.Description = Description;
 

@@ -22,6 +22,7 @@
         - StartTime:datetime
         - EndTime:datetime
         - IsAllDay:bool
+        - TimeZone:string
         - Location:string
         - Description:string
         - FrequencyTypeID:int
@@ -37,12 +38,15 @@
     PUT /@id
         # Same parameters set than POST
 
+    DELETE /@id
+        No more parameters than the ID, and as usual locked to be owned by the current logged user.
+        It returns the deleted event if everything is successful.
+
     Limitations for edition methods:
     - On edition success, a "GET /@id" result is returned so the generated EventID can be read and any other
         server side edition (UpdateDate field, for example)
-    - Events marked with ReadOnly:true will not be modified even if a request is performed, the untouched event
-        is returned
-    - Events with a read-only EventTypeID will fail to insert/edit/delet.
+    - Events marked with ReadOnly:true will not be modified even if a request is performed, a 400 error happens.
+    - Events with a read-only EventTypeID will fail to insert/edit/delete with a 400 error.
 *@
 @functions{
     public class RestEvents : RestWebPage
@@ -176,7 +180,8 @@
                 Request["IsAllDay"].AsBool(),
                 Request["Location"],
                 Request["Description"],
-                rrule    
+                Request["TimeZone"],
+                rrule
             );
             }
             catch (ConstraintException delEx)
