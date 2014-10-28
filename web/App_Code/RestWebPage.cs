@@ -123,11 +123,23 @@ public class RestWebPage
                 result["errors"] = ModelState.Errors();
             }
 
+            if (WebPage.Response.StatusCode == 500)
+            {
+                if (ASP.LcHelpers.InDev)
+                    result["exception"] = http;
+                else
+                    LcLogger.LogAspnetError(http);
+            }
         }
         catch (Exception ex)
         {
             result = new Dictionary<string, dynamic>();
             result["errorMessage"] = ex.Message;
+
+            if (ASP.LcHelpers.InDev)
+                result["exception"] = ex;
+            else
+                LcLogger.LogAspnetError(ex);
         }
 
         return result;
