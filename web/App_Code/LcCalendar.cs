@@ -957,7 +957,7 @@ public static partial class LcCalendar
                 .Select(ev => new {
                     EventID = ev.Id,
                     UserID = ev.UserId,
-                    CalendarEventTypeID = ev.EventType,
+                    EventTypeID = ev.EventType,
                     Summary = ev.Summary,
                     //UID = ev.UID,
                     AvailabilityTypeID = ev.CalendarAvailabilityTypeID,
