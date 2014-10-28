@@ -10,6 +10,8 @@
     var u = LcData.UserInfo.GetUserRow();
     var eventID = Request["AppointmentID"].AsInt();
     var idprefix = "editEvent" + eventID.ToString();
+    
+    LcCalendar.SimplifiedRecurrenceRule rrule = null;
 
     if (Request["Action"] == "delete") {
 
@@ -49,67 +51,40 @@
     
     // Save posted data
     if (IsPost && Validation.IsValid()) {
-        var repeatEvery = Request["repeat-every"].AsInt(1);
-        // Special frequencies with an ID of 2-hundred have forced
-        // an interval/repeatEvery value of 2
-        if ((int)repeatFrequency / 100 == 2) {
-            repeatEvery = 2;
-            // And the code of frequency MUST be changed to its 'real' equivalent:
-            repeatFrequency -= 200;
+        
+        if (Request["repeat"].AsBool() && repeatFrequency.HasValue) {
+            rrule = new LcCalendar.SimplifiedRecurrenceRule {
+                FrequencyTypeID = repeatFrequency.Value,
+                Count = Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
+                Until = Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
+                Interval = Request["repeat-every"].AsInt(1),
+                SelectedWeekDays = selectedWeekDays,
+                MonthlyWeekDay = monthlyOption == "week-day"
+            };
         }
-        // Weekly frequency presets: 5 hundred values
-        if ((int)repeatFrequency / 100 == 5) {
-            // Interval to 1
-            repeatEvery = 1;
-            // Set week-days
-            selectedWeekDays.Clear();
-            if (repeatFrequency == 501 || repeatFrequency == 502) {
-                selectedWeekDays.Add((int)DayOfWeek.Monday);
-                selectedWeekDays.Add((int)DayOfWeek.Wednesday);
-                selectedWeekDays.Add((int)DayOfWeek.Friday);
-            }
-            if (repeatFrequency == 501 || repeatFrequency == 503) {
-                selectedWeekDays.Add((int)DayOfWeek.Tuesday);
-                selectedWeekDays.Add((int)DayOfWeek.Thursday);
-            }
-            // Finally, set frequency to 'weekly':
-            repeatFrequency = 5;
+        else {
+            rrule = null;
         }
         
         var startDT = (Request["startdate"] + " " + Request["starttime"]).AsDateTime();
         var endDT = (Request["enddate"] + " " + Request["endtime"]).AsDateTime();
         
-        if (endDT < startDT){
-            var dt = endDT;
-            endDT = startDT;
-            startDT = dt;
-        }
-        
-        if (ModelState.IsValid) {
-            
-            LcCalendar.SetUserAppointment(u.UserID,
-                eventID,
-                Request["type"].AsInt(),
-                Request["availability"].AsInt(),
-                Request["summary"],
-                startDT,
-                endDT,
-                Request["allday"].AsBool(),
-                Request["repeat"].AsBool(),
-                repeatFrequency.Value,
-                repeatEvery,
-                Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
-                Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
-                Request["location"],
-                Request["description"],
-                selectedWeekDays,
-                monthlyOption
-            );
+        LcCalendar.SetSimplifiedEvent(u.UserID,
+            eventID,
+            Request["type"].AsInt(),
+            Request["availability"].AsInt(),
+            Request["summary"],
+            startDT,
+            endDT,
+            Request["allday"].AsBool(),
+            Request["location"],
+            Request["description"],
+            rrule
+        );
 
-            // All was fine, AJAX-JSON response
-            if (ModelState.IsValid) {
-                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
-            }
+        // All was fine, AJAX-JSON response
+        if (ModelState.IsValid) {
+            LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
         }
     }
     
@@ -119,14 +94,17 @@
     var repeatFrequencies = LcCalendar.GetRecurrenceFrequencyTypes();
     dynamic calEvent = LcCalendar.GetUserAppointment((int)u.UserID, eventID);
     
-    LcCalendar.SimplifiedRecurrenceRule rrule = LcCalendar.GetSimplifiedRecurrenceRule(
+    rrule = LcCalendar.GetSimplifiedRecurrenceRule(
         calEvent == null ? null : calEvent.CalendarReccurrence
     );
     var calEventIsRecurrent = rrule != null;
-    var recEnds = rrule.Ending;
-    selectedWeekDays = rrule.SelectedWeekDays;
-    repeatFrequency = rrule.FrequencyTypeID;
-    monthlyOption = rrule.MonthlyWeekDay ? "week-day" : "month-day";
+    var recEnds = "never";
+    if (calEventIsRecurrent) {
+        recEnds = rrule.Ending;
+        selectedWeekDays = rrule.SelectedWeekDays;
+        repeatFrequency = rrule.FrequencyTypeID;
+        monthlyOption = rrule.MonthlyWeekDay ? "week-day" : "month-day";
+    }
     
     var formAction = LcUrl.LangPath + "$dashboard/Availability/$AppointmentEdit/?AppointmentID=" + eventID;
 }

@@ -983,6 +983,76 @@ public static partial class LcCalendar
         }
     }
 
+    public static void SetSimplifiedEvent(int UserID, int EventID,
+        int EventTypeID,
+        int AvailabilityTypeID,
+        string Summary,
+        DateTime StartTime,
+        DateTime EndTime,
+        bool IsAllDay,
+        string Location,
+        string Description,
+        SimplifiedRecurrenceRule RRule)
+    {
+        int? repeatFrequency = null;
+        List<int> selectedWeekDays = null;
+
+        if (RRule != null)
+        {
+            repeatFrequency = RRule.FrequencyTypeID;
+            selectedWeekDays = RRule.SelectedWeekDays;
+
+            // Special frequencies with an ID of 2-hundred have forced
+            // an interval/repeatEvery value of 2
+            if ((int)repeatFrequency / 100 == 2)
+            {
+                RRule.Interval = 2;
+                // And the code of frequency MUST be changed to its 'real' equivalent:
+                repeatFrequency -= 200;
+            }
+            // Weekly frequency presets: 5 hundred values
+            if ((int)repeatFrequency / 100 == 5)
+            {
+                // Interval to 1
+                RRule.Interval = 1;
+                // Set week-days
+                selectedWeekDays.Clear();
+                if (repeatFrequency == 501 || repeatFrequency == 502)
+                {
+                    selectedWeekDays.Add((int)DayOfWeek.Monday);
+                    selectedWeekDays.Add((int)DayOfWeek.Wednesday);
+                    selectedWeekDays.Add((int)DayOfWeek.Friday);
+                }
+                if (repeatFrequency == 501 || repeatFrequency == 503)
+                {
+                    selectedWeekDays.Add((int)DayOfWeek.Tuesday);
+                    selectedWeekDays.Add((int)DayOfWeek.Thursday);
+                }
+                // Finally, set frequency to 'weekly':
+                repeatFrequency = 5;
+            }
+        }
+
+        SetUserAppointment(UserID,
+            EventID,
+            EventTypeID,
+            AvailabilityTypeID,
+            Summary,
+            StartTime,
+            EndTime,
+            IsAllDay,
+            RRule != null,
+            repeatFrequency ?? 1,
+            RRule != null ? RRule.Interval : 0,
+            RRule != null ? RRule.Until : null,
+            RRule != null ? RRule.Count : null,
+            Location,
+            Description,
+            selectedWeekDays,
+            RRule != null ? RRule.MonthlyWeekDay ? "week-day" : "month-day" : null
+        );
+    }
+
     public class SimplifiedRecurrenceRule
     {
         /// <summary>
@@ -1120,7 +1190,7 @@ public static partial class LcCalendar
                     )
                     incompatible = true;
             }
-            // Only if there is week-days
+            // Only if there are week-days
             if (selectedWeekDays.Count > 0)
             {
                 // Detect Weekly frequency Presets:
@@ -1218,6 +1288,13 @@ public static partial class LcCalendar
                 dbevent.CreatedDate = DateTime.Now;
             } else if (dbevent.UserId != userID)
                 return;
+
+            // Dates swap
+            if (EndTime < StartTime){
+                var dt = EndTime;
+                EndTime = StartTime;
+                StartTime = dt;
+            }
 
             dbevent.EventType = EventTypeID;
             dbevent.CalendarAvailabilityTypeID = AvailabilityTypeID;
