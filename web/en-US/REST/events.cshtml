@@ -165,6 +165,8 @@
                 rrule = null;
             }
 
+            try
+            {
             LcCalendar.SetSimplifiedEvent(userID, eventID,
                 Request["EventTypeID"].AsInt(),
                 Request["AvailabilityTypeID"].AsInt(),
@@ -176,6 +178,12 @@
                 Request["Description"],
                 rrule    
             );
+            }
+            catch (ConstraintException delEx)
+            {
+                // The event cannot be inserted/updated:
+                throw new HttpException(400, delEx.Message);   
+            }
             
             // Return database copy
             return GetItem(eventID);

@@ -1004,12 +1004,16 @@ public static partial class LcCalendar
         string Description,
         SimplifiedRecurrenceRule RRule)
     {
+        var previousItem = GetSimplifiedEvents(UserID, null, null, null, EventID).First();
+
+        // Avoid standard edition of read-only types,
+        // and conversion of an editable into a non editable event:
+        if (ReadOnlyEventTypes.Contains((int)previousItem.EventTypeID) ||
+            ReadOnlyEventTypes.Contains(EventTypeID))
+            throw new ConstraintException("Cannot be inserted/updated");
+
         int? repeatFrequency = null;
         List<int> selectedWeekDays = null;
-
-        // Avoid standard edition of read-only types
-        if (ReadOnlyEventTypes.Contains(EventTypeID))
-            return;
 
         if (RRule != null)
         {
