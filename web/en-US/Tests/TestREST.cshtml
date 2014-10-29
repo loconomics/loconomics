@@ -60,9 +60,20 @@
                 end: null
             }
         },
-        'Get Availability workHours (alias /weekly-schedule)': {
-            url: '/en-US/REST/availability/workhours',
+        'Get/put Availability Weekly Schedule (aka work-hours)': {
+            url: '/en-US/REST/availability/weekly-schedule',
             get: {
+            },
+            put: {
+                'all-time': false,
+                'json-data': '{'+
+                 '   "defaultStatus":"unavailable",'+
+                 '   "status":"available",'+
+                 '   "slots":{'+
+                 '       "sunday":["00:00:00","00:15:00","00:30:00","00:45:00"],'+
+                 '       "tuesday":["14:00:00","14:15:00","14:30:00","14:45:00"]'+
+                 '   }'+
+                '}'
             }
         },
         'Get Availability workHours (pre-REST API)': {
@@ -92,7 +103,7 @@
                 date: null
             }
         },
-        'Get Availability monthly-schedule': {
+        'Get/put Availability monthly-schedule': {
             url: '/en-US/REST/availability/monthly-schedule',
             get: {
                 'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
@@ -100,6 +111,10 @@
                     'default is the current date',
                 start: null,
                 end: null
+            },
+            put: {
+                'json-data':
+                    '{"defaultStatus":"available","slots":{"2014-09-28":{},"2014-09-29":{"source":"user","status":"unavailable"},"2014-10-15":{"source":"user","status":"available"},"2014-11-08":{} }}'
             }
         },
         'Get Availability monthly-schedule (pre-REST API)': {

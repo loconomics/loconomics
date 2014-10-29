@@ -2,6 +2,9 @@
     Query the user availability.
     For documentation, read App_Code/RestPages/RestAvailability.cs
 *@
-@{   
+@{
+    if (Request.HttpMethod.ToUpper() == "PUT") {
+        Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    }
     new RestAvailability().JsonResponse(this);
 }

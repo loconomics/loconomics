@@ -642,15 +642,24 @@ public static partial class LcCalendar
         }
     }
 
-    public static void SaveMonthlyCalendarJsonData(int userID, dynamic data)
+    public static DatesRange SaveMonthlyCalendarJsonData(int userID, dynamic data)
     {
         var ent = new loconomicsEntities();
+        // Max for Start and Min for End for easy comparision when filling
+        // actual values later
+        var range = new DatesRange(DateTime.MaxValue, DateTime.MinValue);
 
         if (data.slots != null)
         {
             foreach (var slot in data.slots)
             {
                 var date = DateTime.Parse(slot.Name);
+                // Updating dates range
+                if (date < range.Start)
+                    range.Start = date;
+                if (date > range.End)
+                    range.End = date;
+
                 var avail = slot.Value;
                 // We save only slots/appointments modified by the user
                 if (avail.source == "user") {
@@ -687,6 +696,11 @@ public static partial class LcCalendar
         }
 
         ent.SaveChanges();
+
+        if (range.Start == DateTime.MaxValue)
+            return null;
+        else
+            return range;
     }
     #endregion
 
