@@ -1010,10 +1010,13 @@ public static partial class LcCalendar
                     //UID = ev.UID,
                     AvailabilityTypeID = ev.CalendarAvailabilityTypeID,
                     //Transparency = ev.Transparency,
-                    StartTime = ev.StartTime,
-                    EndTime = ev.EndTime,
+                    // Providing UTC ever as result (for JSON output)
+                    StartTime = ev.StartTime.ToUniversalTime(),
+                    EndTime = ev.EndTime.ToUniversalTime(),
+                    Kind = ev.StartTime.Kind,
                     IsAllDay = ev.IsAllDay,
                     //StampTime = ev.StampTime,
+                    // The source timezone, if any, the dates will be on UTC.
                     TimeZone = ev.TimeZone,
                     //Priority = ev.Priority,
                     Location = ev.Location,
@@ -1028,8 +1031,10 @@ public static partial class LcCalendar
                     Description = ev.Description,
                     RecurrenceRule = GetSimplifiedRecurrenceRule(ev.CalendarReccurrence),
                     RecurrenceOccurrences = iev == null ? null : iev.GetOccurrences(start.Value, end.Value).Select(oc => new {
-                        StartTime = oc.Period.StartTime.UTC.ToLocalTime(),
-                        EndTime = oc.Period.EndTime.UTC.ToLocalTime()
+                        // Ugly conversion because of a bad internal conversion of iCalendar, treating the
+                        // original value as UTC when is local time-zone based:
+                        StartTime = new DateTime(oc.Period.StartTime.Ticks, DateTimeKind.Unspecified).ToUniversalTime(),
+                        EndTime = new DateTime(oc.Period.EndTime.Ticks, DateTimeKind.Unspecified).ToUniversalTime()
                     }),
                     ReadOnly = ReadOnlyEventTypes.Contains(ev.EventType)
                 };
