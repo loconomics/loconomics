@@ -91,9 +91,7 @@
             var end = DateTimeFromISO(Request.QueryString["end"]);
 
             // Data
-            var list = LcCalendar.GetSimplifiedEvents(userId, typesIDs.ToArray<int>(), start, end);
-
-            return list;
+            return LcCalendar.GetSimplifiedEvents(userId, typesIDs.ToArray<int>(), start, end);
         }
         
         public dynamic GetItem(int eventID)

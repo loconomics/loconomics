@@ -946,6 +946,17 @@ public static partial class LcCalendar
     {
         types = types == null ? new int[] { } : types;
 
+        if (!start.HasValue)
+            start = DateTime.Today;
+        if (!end.HasValue)
+            end = start.Value.AddDays(7);
+
+        // Avoid excessive date range, limiting to 90 days
+        if (end.Value - start.Value > TimeSpan.FromDays(90))
+        {
+            end = start.Value.AddDays(90);
+        }
+
         using (var ent = new loconomicsEntities())
         {
             var data = (System.Data.Entity.Infrastructure.DbQuery<CalendarEvents>)ent.CalendarEvents
@@ -962,13 +973,36 @@ public static partial class LcCalendar
             {
                 query = data
                 .Where(c => c.UserId == userID && types.Contains(c.EventType) &&
-                    (start.HasValue ? c.EndTime > start : true) &&
-                    (end.HasValue ? c.StartTime < end : true));
+                    ((
+                        // Dates Range
+                        (c.EndTime > start) &&
+                        (c.StartTime < end)
+                     ) ||
+                        // OR, if they are Recurrence, any Date Range
+                        // (because its occurrences may happen inside the range)
+                        c.CalendarReccurrence.Any()
+                    )
+                );
             }
+            
+            // iCalendar is needed to calculate each event occurrences
+            var calUtils = new CalendarUtils();
 
-            return query
-                .ToList()
-                .Select(ev => new {
+            // TODO Support for real, user attached or event attached, Time Zones (the fields
+            // exists, but has not valid values: user.TimeZone and event.TimeZone)
+            //var tzid = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").Id;
+            var tzid = "Pacific Standard Time";
+
+            foreach(var ev in query.ToList())
+            {
+                iEvent iev = ev.CalendarReccurrence.Count > 0 ? calUtils.CreateEvent(ev, tzid) : null;
+                if (iev != null)
+                {
+                    var iCal = calUtils.GetICalendarLibraryInstance();
+                    iCal.Events.Add(iev);
+                }
+
+                yield return new {
                     EventID = ev.Id,
                     UserID = ev.UserId,
                     EventTypeID = ev.EventType,
@@ -993,8 +1027,13 @@ public static partial class LcCalendar
                     //CalendarRecurrenceID = ev.RecurrenceId,
                     Description = ev.Description,
                     RecurrenceRule = GetSimplifiedRecurrenceRule(ev.CalendarReccurrence),
+                    RecurrenceOccurrences = iev == null ? null : iev.GetOccurrences(start.Value, end.Value).Select(oc => new {
+                        StartTime = oc.Period.StartTime.UTC.ToLocalTime(),
+                        EndTime = oc.Period.EndTime.UTC.ToLocalTime()
+                    }),
                     ReadOnly = ReadOnlyEventTypes.Contains(ev.EventType)
-                });
+                };
+            }
         }
     }
 
@@ -1598,9 +1637,9 @@ public static partial class LcCalendar
         var userinfo = LcData.UserInfo.GetUserRowWithContactData(UserID);
         if (userinfo != null)
         {
-            var tznumber = userinfo.TimeZone;
+            //var tznumber = userinfo.TimeZone;
             // TODO: for now, the value from database is discarted, an offset is not valid, we need a name, I set the only
-            // one used today:
+            // one used today (on iCalendar, the CreateEvent discards the event.TimeZone too):
             TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             calUser.DefaultTimeZone = tz;
         }

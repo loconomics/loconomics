@@ -103,7 +103,7 @@ namespace CalendarDll
 
             if (ocurrence.Source != null)
             {
-                eventSource = (ocurrence.Source.GetType() == typeof(iEvent)) ? (iEvent)(ocurrence.Source) : null;
+                eventSource = ocurrence.Source as iEvent;
                 result.CalendarAvailabilityTypeID = (int)eventSource.AvailabilityID;
                 result.EventSummary = eventSource.Summary;
             }
