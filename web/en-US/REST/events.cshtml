@@ -14,6 +14,8 @@
 
     GET /@id
         - @id:int the Event Id to retrieve; must be owned by the current user or 'not found' is returned
+        - start:datetime Optional. Start date of the occurrences to included with the event, if is recurrent
+        - end:datetime Optional. End date of the occurrences to included with the event, if is recurrent
 
     POST
         - EventTypeID:int Required
@@ -101,7 +103,12 @@
 
             if (eventID > 0)
             {
-                var item = (IEnumerable<dynamic>)LcCalendar.GetSimplifiedEvents(userID, null, null, null, eventID);
+                // Optionally, a dates range can be included to generate the ocurrences
+                // of a reccurrent event for that time frame:
+                var start = DateTimeFromISO(Request.QueryString["start"]);
+                var end = DateTimeFromISO(Request.QueryString["end"]);
+                
+                var item = (IEnumerable<dynamic>)LcCalendar.GetSimplifiedEvents(userID, null, start, end, eventID);
                 if (item != null && item.Count() > 0)
                 {
                     return item.First();

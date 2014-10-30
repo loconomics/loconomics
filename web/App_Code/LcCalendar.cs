@@ -945,6 +945,7 @@ public static partial class LcCalendar
     public static IEnumerable<dynamic> GetSimplifiedEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, int eventID = 0)
     {
         types = types == null ? new int[] { } : types;
+        var thereAreDates = start.HasValue || end.HasValue;
 
         if (!start.HasValue)
             start = DateTime.Today;
@@ -996,30 +997,38 @@ public static partial class LcCalendar
             foreach(var ev in query.ToList())
             {
                 IEnumerable<dynamic> occurrences = null;
-                // Getting an iEvent only for recurrent events, for occurrences calculations
-                iEvent iev = ev.CalendarReccurrence.Count > 0 ? calUtils.CreateEvent(ev, tzid) : null;
-                if (iev != null)
+
+                // Occurrences are not calculated if a specific eventID was requested
+                // without filtering dates (the possibility to set dates allow for query
+                // occurrences of a specific event)
+                if (eventID == 0 || thereAreDates)
                 {
-                    // An iEvent needs to be attached to an iCalendar in order
-                    // to work when getting the occurrences.
-                    var iCal = calUtils.GetICalendarLibraryInstance();
-                    iCal.Events.Add(iev);
-
-                    // Getting occurrences datetime ranges
-                    occurrences = iev.GetOccurrences(start.Value, end.Value).Select(oc => new {
-                        // Ugly conversion because of a bad internal conversion of iCalendar, treating the
-                        // original value as UTC when is local time-zone based:
-                        StartTime = new DateTime(oc.Period.StartTime.Ticks, DateTimeKind.Unspecified).ToUniversalTime(),
-                        EndTime = new DateTime(oc.Period.EndTime.Ticks, DateTimeKind.Unspecified).ToUniversalTime()
-                    });
-
-                    // If there are no occurrences for the expected date time range, no need 
-                    // to include the event (an occurrence is returned too for the first
-                    // time the event happen, not only for repetitions, so is OK do it this way),
-                    // so we continue with the next discarding the current.
-                    if (occurrences.Count() == 0)
+                    // Getting an iEvent only for recurrent events, for occurrences calculations
+                    iEvent iev = ev.CalendarReccurrence.Count > 0 ? calUtils.CreateEvent(ev, tzid) : null;
+                    if (iev != null)
                     {
-                        continue;
+                        // An iEvent needs to be attached to an iCalendar in order
+                        // to work when getting the occurrences.
+                        var iCal = calUtils.GetICalendarLibraryInstance();
+                        iCal.Events.Add(iev);
+
+                        // Getting occurrences datetime ranges
+                        occurrences = iev.GetOccurrences(start.Value, end.Value).Select(oc => new
+                        {
+                            // Ugly conversion because of a bad internal conversion of iCalendar, treating the
+                            // original value as UTC when is local time-zone based:
+                            StartTime = new DateTime(oc.Period.StartTime.Ticks, DateTimeKind.Unspecified).ToUniversalTime(),
+                            EndTime = new DateTime(oc.Period.EndTime.Ticks, DateTimeKind.Unspecified).ToUniversalTime()
+                        });
+
+                        // If there are no occurrences for the expected date time range, no need 
+                        // to include the event (an occurrence is returned too for the first
+                        // time the event happen, not only for repetitions, so is OK do it this way),
+                        // so we continue with the next discarding the current.
+                        if (occurrences.Count() == 0)
+                        {
+                            continue;
+                        }
                     }
                 }
 
