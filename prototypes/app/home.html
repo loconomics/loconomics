@@ -20,6 +20,21 @@ body {
   min-height: 2000px;
   padding-top: 70px;
 }
+
+.app-nav {
+  position: relative;
+}
+.app-nav .navbar-brand {
+  float: none;
+  display: inline-block;
+}
+.app-nav .navbar-toggle {
+  float: none;
+}
+.app-nav .navbar-action {
+  margin: 8px 0;
+}
+
     </style>    
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -33,16 +48,19 @@ body {
 
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+      <div class="container app-nav">     
+        <div class="row">
+        <div class="col-xs-3 text-left">
+          <button type="button" class="navbar-toggle collapsed btn btn-default" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Loconomics</a>
         </div>
+        <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
+        <div class="col-xs-3 text-right navbar-action"><a class="btn btn-default" href="#add"><span class="glyphicon glyphicon-plus"></span></a></div>
+        </div> 
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
@@ -53,9 +71,6 @@ body {
             <li><a href="services.html">Services</a></li>
             <li><a href="account.html">Account</a></li>
             <li><a href="logout.html">Logout</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#add">+</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
