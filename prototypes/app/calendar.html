@@ -12,7 +12,7 @@
     <!-- Bootstrap core CSS -->
     <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
     <!-- Styles build following the Styleguide -->
-    <link href="../../assets/css/styleguide.css" rel="stylesheet">    
+    <link href="../../assets/css/styleguide.css" rel="stylesheet">
     <!-- Styles for this Prototype -->
     <link href="proto.css" rel="stylesheet">
 
@@ -21,6 +21,8 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
+    <link href="calendar/css/bic_calendar.css" rel="stylesheet" type="text/css">    
   </head>
 
   <body>
@@ -42,8 +44,8 @@
         </div> 
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="home.html">Home</a></li>
-            <li><a href="calendar.html">Calendar</a></li>
+            <li><a href="home.html">Home</a></li>
+            <li class="active"><a href="calendar.html">Calendar</a></li>
             <li><a href="inbox.html">Inbox</a></li>
             <li><a href="clients.html">Clients</a></li>
             <li><a href="payments.html">Payments</a></li>
@@ -57,11 +59,7 @@
 
     <div class="container">
 
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Welcome</h1>
-        <p>No news.</p>
-      </div>
+      <div id="demo"></div>
 
     </div> <!-- /container -->
 
@@ -70,5 +68,20 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="../../assets/javascript/styleguidelibs.js"></script>
     <script src="../../assets/javascript/styleguide.js"></script>
+    <script src="calendar/js/bic_calendar.js"></script>
+    <script>
+    $(document).ready( function(){
+     
+      var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+       
+      var dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+
+      $('#demo').bic_calendar({
+          monthNames: monthNames,
+          dayNames: dayNames,
+          events: {}
+      });
+    } );
+    </script>
   </body>
 </html>
