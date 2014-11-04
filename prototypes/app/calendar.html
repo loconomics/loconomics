@@ -187,8 +187,7 @@
     <script src="../../assets/javascript/styleguidelibs.js"></script>
     <script src="../../assets/javascript/styleguide.js"></script>
     <script src="vendor/bic_calendar/js/bic_calendar.js"></script>
-    <script src="vendor/stephband/jquery.event.move.js"></script>
-    <script src="vendor/stephband/jquery.event.swipe.js"></script>
+    <script src="vendor/jquerymobile/jquery.mobile.custom.min.js"></script>
     <script>
     $(document).ready( function(){
      
@@ -209,15 +208,6 @@
       })
       .on('swiperight', function() {
         cal.bic_calendar('instance').previousMonth();
-      })
-      // Re-enable vertical scroll
-      .on('movestart', function(e) {
-        // If the movestart is heading off in an upwards or downwards
-        // direction, prevent it so that the browser scrolls normally.
-        if ((e.distX > e.distY && e.distX < -e.distY) ||
-            (e.distX < e.distY && e.distX > -e.distY)) {
-          e.preventDefault();
-        }
       });
 
     } );
