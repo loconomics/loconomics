@@ -1,0 +1,54 @@
+@import "nib"
+@import "styl/mediaQueries"
+
+body {
+  padding-top: 70px;
+  padding-bottom: 10px;
+}
+
+.app-nav {
+  position: relative;
+}
+.app-nav .navbar-brand {
+  float: none;
+  display: inline-block;
+  
+  text-indent: -99999px;
+  background: url("../../assets/images/logo-loconomics-header-mini.png") no-repeat center;
+  hr-image("../../assets/images/logo-loconomics-header-mini@2x.png", 100px, 39px);
+  min-width: 100px;
+  min-height: 39px;
+}
+.app-nav .navbar-toggle {
+  float: none;
+}
+.app-nav .navbar-action {
+  margin: 8px 0;
+}
+
+/* calendar */
+.appointments {
+    margin-top: 1em;
+}
+.appointments .btn-link {
+    text-align: left;
+}
+
+/* listview */
+.listview {
+    display: table;
+    width: 100%;
+    box-sizing: border-box;
+}
+.listview-item {
+    display: table-row;
+}
+.listview-item-content {
+    display: table-cell;
+    vertical-align: middle;
+}
+.listview-item-icon {
+    display: inline-block;
+    width: 14px;
+    heigh: 14px;
+}
