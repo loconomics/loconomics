@@ -139,13 +139,13 @@
                     showMonthDays(month, year);
 
                     //next-previous month controllers
-                    var nextMonthButton = $('<td><a href="#" class="button-month-next"><i class="glyphicon glyphicon-arrow-right" ></i></a></td>');
+                    var nextMonthButton = $('<td><a href="#" class="pull-right btn btn-link"><i class="glyphicon glyphicon-chevron-right" ></i></a></td>');
                     //event
                     nextMonthButton.click(function(e) {
                         e.preventDefault();
                         nextMonth();
                     })
-                    var previousMonthButton = $('<td><a href="#" class="button-month-previous"><i class="glyphicon glyphicon-arrow-left" ></i></a></td>');
+                    var previousMonthButton = $('<td><a href="#" class="pull-left btn btn-link"><i class="glyphicon glyphicon-chevron-left" ></i></a></td>');
                     //event
                     previousMonthButton.click(function(e) {
                         e.preventDefault();

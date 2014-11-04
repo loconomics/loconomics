@@ -21,14 +21,6 @@
 .bic_calendar .header{
     padding: 10px 0 10px 0;
 }
-.bic_calendar .button-month-previous{
-    padding: 5px;
-    float: left;
-}
-.bic_calendar .button-month-next{
-    padding: 5px;
-    float: right;
-}
 .bic_calendar .button-year-previous{
     padding: 5px;
     float: left;
