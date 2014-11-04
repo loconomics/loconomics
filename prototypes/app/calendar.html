@@ -196,12 +196,30 @@
        
       var dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
-      $('#monthlyCalendar').bic_calendar({
+      var cal = $('#monthlyCalendar');
+      cal.bic_calendar({
           monthNames: monthNames,
           dayNames: dayNames,
           events: {},
           displayYearController: false
       });
+      cal
+      .on('swipeleft', function() {
+        cal.bic_calendar('instance').nextMonth();
+      })
+      .on('swiperight', function() {
+        cal.bic_calendar('instance').previousMonth();
+      })
+      // Re-enable vertical scroll
+      .on('movestart', function(e) {
+        // If the movestart is heading off in an upwards or downwards
+        // direction, prevent it so that the browser scrolls normally.
+        if ((e.distX > e.distY && e.distX < -e.distY) ||
+            (e.distX < e.distY && e.distX > -e.distY)) {
+          e.preventDefault();
+        }
+      });
+
     } );
     </script>
   </body>
