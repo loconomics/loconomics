@@ -249,7 +249,12 @@ $.fn.bic_calendar = function(options) {
 
             //print year n month in layers
             textMonthCurrentLayer.text(monthNames[month]);
-            textYearCurrentLayer.text(year);
+            if (displayYearController === true) {
+                textYearCurrentLayer.text(year);
+            }
+            else {
+                textMonthCurrentLayer.text(monthNames[month] + ' ' + year);
+            }
 
             //show days of the month
             var daysCounter = 1;
