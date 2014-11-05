@@ -288,7 +288,7 @@
                             dayCode += '<td id="' + calendarId + '_' + daysCounter + "_" + nMonth + "_" + year + '" data-date="' + nMonth + "/" + daysCounter + "/" + year + '" ';
                             //add weekDay
                             dayCode += ' class="day week-day-' + i + '"';
-                            dayCode += '><div><a>' + daysCounter + '</a></div></span>';
+                            dayCode += '><div>' + daysCounter + '</div></span>';
                             if (i == 6)
                                 dayCode += '</tr>';
                             daysCounter++;
@@ -305,7 +305,7 @@
                         dayCode += '<td id="' + calendarId + '_' + daysCounter + "_" + nMonth + "_" + year + '" data-date="' + nMonth + "/" + daysCounter + "/" + year + '" ';
                         //add weekDay
                         dayCode += ' class="day week-day-' + ((currentWeekDay - 1) % 7) + '"';
-                        dayCode += '><div><a>' + daysCounter + '</a></div></td>';
+                        dayCode += '><div>' + daysCounter + '</div></td>';
                         if (currentWeekDay % 7 == 0)
                             dayCode += "</tr>";
                         daysCounter++;
@@ -462,6 +462,7 @@
                     if (enableSelect == true) {
 
                         var eventBicCalendarSelect;
+                        return;
 
                         elem.on('click', 'td.day', function() {
                             //if multiSelect
