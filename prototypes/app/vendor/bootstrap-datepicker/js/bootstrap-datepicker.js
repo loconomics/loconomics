@@ -298,12 +298,30 @@
 									.text(year + '-' + (year + 9))
 									.end()
 								.find('td');
-			year -= 1;
-			for (var i = -1; i < 11; i++) {
-				html += '<span class="year'+(i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' active' : '')+'">'+year+'</span>';
-				year += 1;
-			}
-			yearCont.html(html);
+			
+            year -= 1;
+            if (this._yearsCreated !== true) {
+
+                for (var i = -1; i < 11; i++) {
+                    html += '<span class="year'+(i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' active' : '')+'">'+year+'</span>';
+                    year += 1;
+                }
+                
+                yearCont.html(html);
+                this._yearsCreated = true;
+            }
+            else {
+                
+                var yearSpan = yearCont.find('span:first-child()');
+                for (var i = -1; i < 11; i++) {
+                    //html += '<span class="year'+(i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' active' : '')+'">'+year+'</span>';
+                    yearSpan
+                    .text(year)
+                    .attr('class', 'year' + (i === -1 || i === 10 ? ' old' : '') + (currentYear === year ? ' active' : ''));
+                    year += 1;
+                    yearSpan = yearSpan.next();
+                }
+            }
 		},
         
         moveDate: function(dir) {
