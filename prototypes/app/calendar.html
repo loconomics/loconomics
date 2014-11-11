@@ -6,6 +6,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/vnd.microsoft.icon" href="../../assets/images/favicon.ico" />
+    <!--
+    <meta
+      name="viewport"
+      content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+      -->
 
     <title>Loconomics</title>
 
@@ -205,8 +210,6 @@
           displayYearController: false
       });*/
       cal.datepicker();
-      
-      $.event.special.swipe.scrollSupressionThreshold = 4;
       
       cal
       .on('swipeleft', function() {

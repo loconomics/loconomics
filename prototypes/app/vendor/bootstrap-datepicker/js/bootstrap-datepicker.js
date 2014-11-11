@@ -31,10 +31,7 @@
         
 		this.picker = $(DPGlobal.template)
 							.appendTo(this.isPlaceholder ? this.element : 'body')
-							.on({
-								click: $.proxy(this.click, this)//,
-								//mousedown: $.proxy(this.mousedown, this)
-							});
+							.on('click tap', $.proxy(this.click, this));
         this.picker.addClass(this.isPlaceholder ? 'container' : 'dropdown-menu');
 		
         if (this.isPlaceholder) {
@@ -56,9 +53,9 @@
 			});
 		} else {
 			if (this.component){
-				this.component.on('click', $.proxy(this.show, this));
+				this.component.on('click tap', $.proxy(this.show, this));
 			} else {
-				this.element.on('click', $.proxy(this.show, this));
+				this.element.on('click tap', $.proxy(this.show, this));
 			}
 		}
 	
