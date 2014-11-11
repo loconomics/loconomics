@@ -218,28 +218,68 @@
 			var clsName,
 				prevY,
 				prevM;
-			while(prevMonth.valueOf() < nextMonth) {
-				if (prevMonth.getDay() === this.weekStart) {
-					html.push('<tr>');
-				}
-				clsName = this.onRender(prevMonth);
-				prevY = prevMonth.getFullYear();
-				prevM = prevMonth.getMonth();
-				if ((prevM < month &&  prevY === year) ||  prevY < year) {
-					clsName += ' old';
-				} else if ((prevM > month && prevY === year) || prevY > year) {
-					clsName += ' new';
-				}
-				if (prevMonth.valueOf() === currentDate) {
-					clsName += ' active';
-				}
-				html.push('<td class="day '+clsName+'">'+prevMonth.getDate() + '</td>');
-				if (prevMonth.getDay() === this.weekEnd) {
-					html.push('</tr>');
-				}
-				prevMonth.setDate(prevMonth.getDate()+1);
-			}
-			this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
+                
+            if (this._daysCreated !== true) {
+                // Create html (first time only)
+           
+                while(prevMonth.valueOf() < nextMonth) {
+                    if (prevMonth.getDay() === this.weekStart) {
+                        html.push('<tr>');
+                    }
+                    clsName = this.onRender(prevMonth);
+                    prevY = prevMonth.getFullYear();
+                    prevM = prevMonth.getMonth();
+                    if ((prevM < month &&  prevY === year) ||  prevY < year) {
+                        clsName += ' old';
+                    } else if ((prevM > month && prevY === year) || prevY > year) {
+                        clsName += ' new';
+                    }
+                    if (prevMonth.valueOf() === currentDate) {
+                        clsName += ' active';
+                    }
+                    html.push('<td class="day '+clsName+'">'+prevMonth.getDate() + '</td>');
+                    if (prevMonth.getDay() === this.weekEnd) {
+                        html.push('</tr>');
+                    }
+                    prevMonth.setDate(prevMonth.getDate()+1);
+                }
+                
+                this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
+                this._daysCreated = true;
+            }
+            else {
+                // Update days values
+                
+                var weekTr = this.picker.find('.datepicker-days tbody tr:first-child()');
+                var dayTd = null;
+                while(prevMonth.valueOf() < nextMonth) {
+                    var currentWeekDayIndex = prevMonth.getDay() - this.weekStart;
+
+                    clsName = this.onRender(prevMonth);
+                    prevY = prevMonth.getFullYear();
+                    prevM = prevMonth.getMonth();
+                    if ((prevM < month &&  prevY === year) ||  prevY < year) {
+                        clsName += ' old';
+                    } else if ((prevM > month && prevY === year) || prevY > year) {
+                        clsName += ' new';
+                    }
+                    if (prevMonth.valueOf() === currentDate) {
+                        clsName += ' active';
+                    }
+                    //html.push('<td class="day '+clsName+'">'+prevMonth.getDate() + '</td>');
+                    dayTd = weekTr.find('td:eq(' + currentWeekDayIndex + ')');
+                    dayTd
+                    .attr('class', 'day ' + clsName)
+                    .text(prevMonth.getDate());
+                    
+                    // Next week?
+                    if (prevMonth.getDay() === this.weekEnd) {
+                        weekTr = weekTr.next('tr');
+                    }
+                    prevMonth.setDate(prevMonth.getDate()+1);
+                }
+            }
+
 			var currentYear = this.date.getFullYear();
 			
 			var months = this.picker.find('.datepicker-months')

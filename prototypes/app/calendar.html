@@ -206,6 +206,8 @@
       });*/
       cal.datepicker();
       
+      $.event.special.swipe.scrollSupressionThreshold = 4;
+      
       cal
       .on('swipeleft', function() {
         //cal.bic_calendar('instance').nextMonth();
