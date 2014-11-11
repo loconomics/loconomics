@@ -111,15 +111,19 @@
 }
 .datepicker td span {
   display: block;
-  width: 47px;
-  height: 54px;
-  line-height: 54px;
   float: left;
-  margin: 2px;
   cursor: pointer;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  width: 25%;
+  margin: 0;
+  height: 70px;
+  line-height: 70px;
 }
 .datepicker td span:hover {
   background: #eeeeee;
@@ -179,4 +183,9 @@
   cursor: pointer;
   width: 16px;
   height: 16px;
+}
+
+.datepicker-years tr > td,
+.datepicker-months tr > td {
+    padding: 0 !important;
 }
