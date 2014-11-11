@@ -27,7 +27,6 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     
-    <link href="vendor/bic_calendar/css/bic_calendar.css" rel="stylesheet" type="text/css">
     <link href="vendor/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" type="text/css">
   </head>
 
@@ -192,32 +191,19 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="../../assets/javascript/styleguidelibs.js"></script>
     <script src="../../assets/javascript/styleguide.js"></script>
-    <script src="vendor/bic_calendar/js/bic_calendar.js"></script>
     <script src="vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script src="vendor/jquerymobile/jquery.mobile.custom.min.js"></script>
     <script>
     $(document).ready( function(){
      
       var cal = $('#monthlyCalendar');
-
-      /*
-      var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      var dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-      cal.bic_calendar({
-          monthNames: monthNames,
-          dayNames: dayNames,
-          events: {},
-          displayYearController: false
-      });*/
       cal.datepicker();
       
       cal
       .on('swipeleft', function() {
-        //cal.bic_calendar('instance').nextMonth();
         cal.datepicker('moveDate', 'next');
       })
       .on('swiperight', function() {
-        //cal.bic_calendar('instance').previousMonth();
         cal.datepicker('moveDate', 'prev');
       });
 
