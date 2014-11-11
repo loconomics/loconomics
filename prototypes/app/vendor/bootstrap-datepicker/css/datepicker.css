@@ -189,3 +189,13 @@
 .datepicker-months tr > td {
     padding: 0 !important;
 }
+.datepicker-months .switch,
+.datepicker-years .switch {
+    width: 72.4% !important;
+}
+.datepicker-months .prev,
+.datepicker-months .next,
+.datepicker-years .prev,
+.datepicker-years .next {
+    width: 14% !important;
+}
