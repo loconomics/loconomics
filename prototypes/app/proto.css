@@ -103,31 +103,123 @@ body {
 }
 
 /* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-/* listview */
+/* listview component */
 
 /* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview {
-  display: table;
+/* same gap as buttons, equals
+        to the implicit gap in $actionWidth */
   width: 100%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-.listview-item {
-  display: table-row;
-}
-
-/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-.listview-item-content {
-  display: table-cell;
-  vertical-align: middle;
-}
-
 /* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-.listview-item-icon {
+.listview .listview-item {
+  position: relative;
+  max-width: 100%;
+}
+
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview .listview-item .listview-item-marker,
+.listview .listview-item .listview-item-content,
+.listview .listview-item .listview-item-action {
+  white-space: normal;
+  word-wrap: break-word;
+  display: inline-block;
+  vertical-align: middle;
+  max-height: 33px;
+  overflow: hidden;
+}
+
+/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview .listview-item .listview-item-marker {
+  width: 28px;
+  line-height: 33px;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  text-align: center;
+}
+
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview .listview-item .listview-item-content {
+  text-align: left;
+  max-width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview .listview-item .listview-item-content * {
+  overflow: hidden;
+  text-align: left;
+  white-space: normal;
+  word-wrap: break-word;
+  max-height: 33px;
+}
+
+/* line 89 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview .listview-item .listview-item-content .listview-item-icon {
   display: inline-block;
   width: 14px;
-  heigh: 14px;
+  height: 14px;
+}
+
+/* line 96 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview .listview-item .listview-item-action {
+  width: 40px;
+  overflow: hidden;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+}
+
+/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+
+/* line 111 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+
+/* line 113 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview--twolines .listview-item .listview-item-marker,
+.listview--twolines .listview-item .listview-item-content,
+.listview--twolines .listview-item .listview-item-action {
+  max-height: 52px;
+}
+
+/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview--twolines .listview-item .listview-item-marker {
+  line-height: 52px;
+}
+
+/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+
+/* line 122 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview--twolines .listview-item .listview-item-content * {
+  max-height: 52px;
+}
+
+/* line 127 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview--twolines .listview-item .listview-item-action {
+/* from Bootstrap btn-link styles 2x6padding */
+  line-height: 40px;
+}
+
+/* line 134 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+
+/* line 138 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+
+/* line 139 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview--largemarker .listview-item .listview-item-marker {
+  width: 56px;
+}
+
+/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.listview--largemarker .listview-item .listview-item-content {
+  padding-left: 68px;
 }

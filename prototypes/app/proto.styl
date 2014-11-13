@@ -35,21 +35,117 @@ body {
     text-align: left;
 }
 
-/* listview */
+/* listview component */
 .listview {
-    display: table;
+    $heightLimit = 33px;
+    $markerWidth = 28px;
+    $actionWidth = 40px;
+    $iconSize = 14px;
+    /* same gap as buttons, equals
+        to the implicit gap in $actionWidth */
+    $contentGap = 12px;
+
     width: 100%;
     box-sizing: border-box;
+    
+    .listview-item {
+        position: relative;
+        max-width: 100%;
+        
+        .listview-item-marker,
+        .listview-item-content,
+        .listview-item-action {
+            white-space: normal;
+            word-wrap: break-word;
+            display: inline-block;
+            vertical-align: middle;
+            max-height: $heightLimit;
+            overflow: hidden;
+        }
+        
+        .listview-item-marker {
+            width: $markerWidth;
+            line-height: $heightLimit;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            text-align: center;
+        }
+        
+        .listview-item-content {
+            text-align: left;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding-left: $markerWidth + $contentGap;
+            padding-right: $actionWidth;
+            
+            * {
+                overflow: hidden;
+                text-align: left;
+                white-space: normal;
+                word-wrap: break-word;
+                max-height: $heightLimit;
+            }
+            
+            .listview-item-icon {
+                display: inline-block;
+                width: $iconSize;
+                height: $iconSize;
+            }
+        }
+        
+        .listview-item-action {
+            width: $actionWidth;
+            overflow: hidden;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            right: 0px;
+        }
+    } 
+
 }
-.listview-item {
-    display: table-row;
+
+.listview--twolines {
+    $heightLimit = 52px;
+    
+    .listview-item {
+
+        .listview-item-marker,
+        .listview-item-content,
+        .listview-item-action {
+            max-height: $heightLimit;
+        }
+    
+        .listview-item-marker {
+            line-height: $heightLimit;
+        }
+        
+        .listview-item-content {
+            * {
+                max-height: $heightLimit;
+            }
+        }
+        
+        .listview-item-action {
+            $action-button-padding = 12px; /* from Bootstrap btn-link styles 2x6padding */
+            line-height: ($heightLimit - $action-button-padding);
+        }
+    }
 }
-.listview-item-content {
-    display: table-cell;
-    vertical-align: middle;
-}
-.listview-item-icon {
-    display: inline-block;
-    width: 14px;
-    heigh: 14px;
+
+.listview--largemarker {
+    $markerWidthLarge = 56px;
+    $contentGap = 12px;
+
+    .listview-item {
+        .listview-item-marker {
+            width: $markerWidthLarge;
+        }
+
+        .listview-item-content {
+            padding-left: $markerWidthLarge + $contentGap;
+        }
+    }
 }
