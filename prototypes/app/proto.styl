@@ -1,38 +1,54 @@
 @import "nib"
 @import "styl/mediaQueries"
 
-body {
-  padding-top: 70px;
-  padding-bottom: 10px;
+$container-padding-left = 5px;
+$container-padding-right = 5px;
+
+.app {   
+    body {
+      padding-top: 51px;
+      padding-bottom: 10px;
+    }
+
+    /*
+        Standard components customized for app
+    */
+    /* Container */
+    .container {
+        padding-left: $container-padding-left;
+        padding-right: $container-padding-right;
+    }
+    /* app-nav (new class under .navbar) */
+    .app-nav {
+      position: relative;
+    }
+    .app-nav .navbar-brand {
+      float: none;
+      display: inline-block;
+      
+      text-indent: -99999px;
+      background: url("../../assets/images/logo-loconomics-header-mini.png") no-repeat center;
+      hr-image("../../assets/images/logo-loconomics-header-mini@2x.png", 100px, 39px);
+      min-width: 100px;
+      min-height: 39px;
+    }
+    .app-nav .navbar-toggle {
+      float: none;
+      margin-right: 0;
+    }
+    .app-nav .navbar-action {
+      margin: 8px 0;
+    }
 }
 
-.app-nav {
-  position: relative;
-}
-.app-nav .navbar-brand {
-  float: none;
-  display: inline-block;
-  
-  text-indent: -99999px;
-  background: url("../../assets/images/logo-loconomics-header-mini.png") no-repeat center;
-  hr-image("../../assets/images/logo-loconomics-header-mini@2x.png", 100px, 39px);
-  min-width: 100px;
-  min-height: 39px;
-}
-.app-nav .navbar-toggle {
-  float: none;
-  margin-right: 0;
-}
-.app-nav .navbar-action {
-  margin: 8px 0;
-}
-
-/* calendar */
-.appointments {
-    margin-top: 1em;
-}
-.appointments .btn-link {
-    text-align: left;
+/* Calendar app page */
+.app-calendar {
+    .appointments {
+        margin-top: 1em;
+    }
+    .appointments .btn-link {
+        text-align: left;
+    }
 }
 
 /* listview component */
@@ -148,4 +164,29 @@ body {
             padding-left: $markerWidthLarge + $contentGap;
         }
     }
+}
+
+/** section-title text class **/
+/*BSVAR*/
+$gray-lighter = lighten(#000, 93.5%);
+$gray = lighten(#000, 33.5%);
+
+.SectionTitle {
+    font-size: 1em;
+    padding: .5em 1em;
+    margin: 0;
+    text-align: center;
+    font-weight: bold;
+    background: $gray-lighter;
+    border: 1px solid $gray;
+    border-right-width: 0;
+    border-left-width: 0;
+    
+    .HelpPoint {
+        right: 1em;
+    }
+}
+/* Inside a container, remove the margin gap */
+.container .SectionTitle {
+    margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-right);
 }

@@ -47,19 +47,27 @@
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\mediaQueries.styl */
 
-/* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-body {
-  padding-top: 70px;
+/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+
+/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.app body {
+  padding-top: 51px;
   padding-bottom: 10px;
 }
 
-/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-.app-nav {
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.app .container {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.app .app-nav {
   position: relative;
 }
 
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-.app-nav .navbar-brand {
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.app .app-nav .navbar-brand {
   float: none;
   display: inline-block;
   text-indent: -99999px;
@@ -70,7 +78,7 @@ body {
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
 /* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\mediaQueries.styl */
-  .app-nav .navbar-brand {
+  .app .app-nav .navbar-brand {
     background-image: url("../../assets/images/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
     -moz-background-size: 100px 39px;
@@ -78,34 +86,36 @@ body {
   }
 }
 
-/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-.app-nav .navbar-toggle {
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.app .app-nav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-.app-nav .navbar-action {
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.app .app-nav .navbar-action {
   margin: 8px 0;
 }
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-/* calendar */
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* Calendar app page */
 
-/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-.appointments {
+/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.app-calendar .appointments {
   margin-top: 1em;
 }
 
-/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
-.appointments .btn-link {
+/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.app-calendar .appointments .btn-link {
   text-align: left;
 }
 
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 /* listview component */
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview {
 /* same gap as buttons, equals
         to the implicit gap in $actionWidth */
@@ -115,13 +125,13 @@ body {
   box-sizing: border-box;
 }
 
-/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview .listview-item {
   position: relative;
   max-width: 100%;
 }
 
-/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview .listview-item .listview-item-marker,
 .listview .listview-item .listview-item-content,
 .listview .listview-item .listview-item-action {
@@ -133,7 +143,7 @@ body {
   overflow: hidden;
 }
 
-/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 80 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview .listview-item .listview-item-marker {
   width: 28px;
   line-height: 33px;
@@ -144,7 +154,7 @@ body {
   text-align: center;
 }
 
-/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview .listview-item .listview-item-content {
   text-align: left;
   max-width: 100%;
@@ -155,7 +165,7 @@ body {
   padding-right: 40px;
 }
 
-/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 97 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview .listview-item .listview-item-content * {
   overflow: hidden;
   text-align: left;
@@ -164,14 +174,14 @@ body {
   max-height: 33px;
 }
 
-/* line 89 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview .listview-item .listview-item-content .listview-item-icon {
   display: inline-block;
   width: 14px;
   height: 14px;
 }
 
-/* line 96 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 112 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview .listview-item .listview-item-action {
   width: 40px;
   overflow: hidden;
@@ -181,45 +191,77 @@ body {
   right: 0px;
 }
 
-/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 
-/* line 111 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 127 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 
-/* line 113 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 129 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview--twolines .listview-item .listview-item-marker,
 .listview--twolines .listview-item .listview-item-content,
 .listview--twolines .listview-item .listview-item-action {
   max-height: 52px;
 }
 
-/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 133 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview--twolines .listview-item .listview-item-marker {
   line-height: 52px;
 }
 
-/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 137 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 
-/* line 122 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 138 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview--twolines .listview-item .listview-item-content * {
   max-height: 52px;
 }
 
-/* line 127 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview--twolines .listview-item .listview-item-action {
 /* from Bootstrap btn-link styles 2x6padding */
   line-height: 40px;
 }
 
-/* line 134 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 150 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 
-/* line 138 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 154 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 
-/* line 139 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 155 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview--largemarker .listview-item .listview-item-marker {
   width: 56px;
 }
 
-/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 159 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview--largemarker .listview-item .listview-item-content {
   padding-left: 68px;
+}
+
+/* line 165 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/** section-title text class **/
+
+/* line 166 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/*BSVAR*/
+
+/* line 170 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.SectionTitle {
+  font-size: 1em;
+  padding: 0.5em 1em;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+  background: #eee;
+  border: 1px solid #555;
+  border-right-width: 0;
+  border-left-width: 0;
+}
+
+/* line 181 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.SectionTitle .HelpPoint {
+  right: 1em;
+}
+
+/* line 185 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* Inside a container, remove the margin gap */
+
+/* line 186 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+.container .SectionTitle {
+  margin: 0 -5px 0 -5px;
 }
