@@ -1,0 +1,116 @@
+/**
+    ListView component
+**/
+.ListView {
+    $heightLimit = 33px;
+    $markerWidth = 28px;
+    $actionWidth = 40px;
+    $iconSize = 14px;
+    /* same gap as buttons, equals
+        to the implicit gap in $actionWidth */
+    $contentGap = 12px;
+
+    width: 100%;
+    box-sizing: border-box;
+    
+    .ListView-item {
+        position: relative;
+        max-width: 100%;
+        
+        .ListView-item-marker,
+        .ListView-item-content,
+        .ListView-item-action {
+            white-space: normal;
+            word-wrap: break-word;
+            display: inline-block;
+            vertical-align: middle;
+            max-height: $heightLimit;
+            overflow: hidden;
+        }
+        
+        .ListView-item-marker {
+            width: $markerWidth;
+            line-height: $heightLimit;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            text-align: center;
+        }
+        
+        .ListView-item-content {
+            text-align: left;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding-left: $markerWidth + $contentGap;
+            padding-right: $actionWidth;
+            
+            * {
+                overflow: hidden;
+                text-align: left;
+                white-space: normal;
+                word-wrap: break-word;
+                max-height: $heightLimit;
+            }
+            
+            .ListView-item-icon {
+                display: inline-block;
+                width: $iconSize;
+                height: $iconSize;
+            }
+        }
+        
+        .ListView-item-action {
+            width: $actionWidth;
+            overflow: hidden;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            right: 0px;
+        }
+    } 
+
+}
+
+.ListView--twolines {
+    $heightLimit = 52px;
+    
+    .ListView-item {
+
+        .ListView-item-marker,
+        .ListView-item-content,
+        .ListView-item-action {
+            max-height: $heightLimit;
+        }
+    
+        .ListView-item-marker {
+            line-height: $heightLimit;
+        }
+        
+        .ListView-item-content {
+            * {
+                max-height: $heightLimit;
+            }
+        }
+        
+        .ListView-item-action {
+            $action-button-padding = 12px; /* from Bootstrap btn-link styles 2x6padding */
+            line-height: ($heightLimit - $action-button-padding);
+        }
+    }
+}
+
+.ListView--largemarker {
+    $markerWidthLarge = 56px;
+    $contentGap = 12px;
+
+    .ListView-item {
+        .ListView-item-marker {
+            width: $markerWidthLarge;
+        }
+
+        .ListView-item-content {
+            padding-left: $markerWidthLarge + $contentGap;
+        }
+    }
+}

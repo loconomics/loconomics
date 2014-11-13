@@ -1,0 +1,45 @@
+@import "nib"
+@import "utils/mediaQueries"
+
+$container-padding-left = 5px;
+$container-padding-right = 5px;
+
+.app {   
+    body {
+      padding-top: 51px;
+      padding-bottom: 10px;
+    }
+
+    /*
+        Standard components customized for app
+    */
+    /* Container */
+    .container {
+        padding-left: $container-padding-left;
+        padding-right: $container-padding-right;
+    }
+    /* app-nav (new class under .navbar) */
+    .app-nav {
+      position: relative;
+    }
+    .app-nav .navbar-brand {
+      float: none;
+      display: inline-block;
+      
+      text-indent: -99999px;
+      background: url("../../assets/images/logo-loconomics-header-mini.png") no-repeat center;
+      hr-image("../../assets/images/logo-loconomics-header-mini@2x.png", 100px, 39px);
+      min-width: 100px;
+      min-height: 39px;
+    }
+    .app-nav .navbar-toggle {
+      float: none;
+      margin-right: 0;
+    }
+    .app-nav .navbar-action {
+      margin: 8px 0;
+    }
+}
+
+@import 'components/ListView.styl'
+@import 'components/SectionTitle.styl'

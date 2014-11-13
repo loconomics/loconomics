@@ -48,14 +48,14 @@ module.exports = function (grunt) {
             },
             proto: {
                 files: {
-                    'proto.css': ['proto.styl']
+                    'proto.css': ['./styl/proto.styl']
                 }
             }
         },
 
         watch: {
             css: {
-                files: ['**/*.styl', 'Gruntfile.js'],
+                files: ['./styl/**/*.styl', 'Gruntfile.js'],
                 tasks: ['build-css']
             }
         }
