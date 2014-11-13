@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-11-11
+/*! LoconomicsAppProto 2014-11-13
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -81,30 +81,31 @@ body {
 /* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .app-nav .navbar-toggle {
   float: none;
+  margin-right: 0;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .app-nav .navbar-action {
   margin: 8px 0;
 }
 
-/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 /* calendar */
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .appointments {
   margin-top: 1em;
 }
 
-/* line 33 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .appointments .btn-link {
   text-align: left;
 }
 
-/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 /* listview */
 
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview {
   display: table;
   width: 100%;
@@ -113,18 +114,18 @@ body {
   box-sizing: border-box;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview-item {
   display: table-row;
 }
 
-/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview-item-content {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\proto.styl */
 .listview-item-icon {
   display: inline-block;
   width: 14px;
