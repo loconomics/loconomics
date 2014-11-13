@@ -9,6 +9,7 @@
 
 .ListView {
     $heightLimit = 33px;
+    $markerIconSize = 24px;
     $markerWidth = 28px;
     $actionWidth = 40px;
     $iconSize = 14px;
@@ -42,6 +43,12 @@
             bottom: 0px;
             left: 0px;
             text-align: center;
+            
+            /* If a Bootstrap glypicon is used, adjust to the best size */
+            .glyphicon {
+                font-size: $markerIconSize;
+                line-height: $heightLimit;
+            }
         }
         
         .ListView-item-content {
@@ -97,6 +104,7 @@
 **/
 .ListView--twolines {
     $heightLimit = 52px;
+    $markerIconSize = 24px;
     
     .ListView-item {
 
@@ -108,6 +116,12 @@
     
         .ListView-item-marker {
             line-height: $heightLimit;
+            
+            /* If a Bootstrap glypicon is used, adjust to the best size */
+            .glyphicon {
+                font-size: $markerIconSize;
+                line-height: $heightLimit;
+            }
         }
         
         .ListView-item-content {
