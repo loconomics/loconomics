@@ -1,6 +1,12 @@
 /**
     ListView component
 **/
+
+/*REQUIRE: vars 
+    $container-padding-left
+    $container-padding-right
+*/
+
 .ListView {
     $heightLimit = 33px;
     $markerWidth = 28px;
@@ -68,10 +74,27 @@
             bottom: 0px;
             right: 0px;
         }
-    } 
+    }
+    
+    .ListView-divider {
+        text-align: center;
+        padding: 0.3em 1em;
+        border: 1px solid black;
+        border-right-width: 0;
+        border-left-width: 0;
+        
+        /* more styles later for parent: .container */
+    }
 
 }
 
+/* Inside a container */
+.container .ListView .ListView-divider {
+    margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-right);
+}
+
+/** Modifier 'twolines'
+**/
 .ListView--twolines {
     $heightLimit = 52px;
     
@@ -100,6 +123,8 @@
     }
 }
 
+/** Modifier 'largemarker'
+**/
 .ListView--largemarker {
     $markerWidthLarge = 56px;
     $contentGap = 12px;
