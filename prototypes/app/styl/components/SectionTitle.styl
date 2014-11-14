@@ -6,6 +6,9 @@
 $gray-lighter = lighten(#000, 93.5%);
 $gray = lighten(#000, 33.5%);
 
+/*Manually computed from some BSVARs*/
+$aligned-to-action-buttons-right = 7px; /* padding-right plus border */
+
 .SectionTitle {
     font-size: 1em;
     padding: .5em 1em;
@@ -18,10 +21,14 @@ $gray = lighten(#000, 33.5%);
     border-left-width: 0;
     
     .HelpPoint {
-        right: 1em;
+        right: $aligned-to-action-buttons-right;
     }
 }
 /* Inside a container, remove the margin gap */
 .container .SectionTitle {
     margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-right);
+    
+    .HelpPoint {
+        right: $container-padding-right + $aligned-to-action-buttons-right;
+    }
 }
