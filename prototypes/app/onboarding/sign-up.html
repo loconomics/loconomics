@@ -27,11 +27,11 @@
       <div class="container app-nav">     
         <div class="row">
           <div class="col-xs-3 text-left navbar-action">
-            <a class="btn btn-default" href="#back"><span class="glyphicon glyphicon-arrow-left"></span></a>
+            <a class="btn btn-default" href="javascript:history.go(-1);"><span class="glyphicon glyphicon-arrow-left"></span></a>
           </div>
           <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
           <div class="col-xs-3 text-right navbar-action">
-            <a class="btn btn-default btn-link" href="#login">Log in</a>
+            <a class="btn btn-default btn-link" href="log-in.html">Log in</a>
           </div>
         </div> 
       </div>
@@ -39,7 +39,7 @@
 
     <div class="container app-welcome">
 
-      <div class="LeadContent">       
+      <div class="LeadContent">
         <h3>Sign up for a free trial</h3>
         
         <div>
@@ -60,7 +60,7 @@
             <label for="accountPassword">Password</label>
             <input type="password" class="form-control" id="accountPassword" placeholder="Password">
           </div>
-          <button id="accountSignUpBtn" type="submit" data-loading-text="Creating... (fake)" class="btn btn-primary btn-block" autocomplete="off">
+          <button id="accountSignUpBtn" type="submit" data-loading-text="Creating... (fake loading)" class="btn btn-primary btn-block" autocomplete="off">
             Create account
           </button>
           <script>
