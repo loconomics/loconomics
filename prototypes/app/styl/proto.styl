@@ -4,7 +4,19 @@
 $container-padding-left = 5px;
 $container-padding-right = 5px;
 
-.app {   
+/* We use ever all the available screen */
+html.app,
+html.app > body {
+    height: 100%;
+}
+html.app > body > .container,
+html.app > body > .container-fluid,
+html.app > body > .activity {
+    min-height: 100%;
+}
+
+/* More app specific styles */
+.app {
     body {
       padding-top: 51px;
       padding-bottom: 10px;
@@ -17,6 +29,10 @@ $container-padding-right = 5px;
     .container {
         padding-left: $container-padding-left;
         padding-right: $container-padding-right;
+        
+        .has-bottom-navbar {
+            padding-bottom: 10px + 50px;
+        }
     }
     /* app-nav (new class under .navbar) */
     .app-nav {
@@ -38,6 +54,46 @@ $container-padding-right = 5px;
     }
     .app-nav .navbar-action {
       margin: 8px 0;
+    }
+    
+    /* Each page/dialog/section is an 'activity' */
+    .activity {
+        /* settings specially important for the use of navbar
+           but applied to all for consistent results
+           with/without navbar
+        */
+        min-height: 100%;
+        position: relative;
+        overflow: auto;
+        
+        /* other styles */
+        /* ...*/
+    
+        /* activity-navbar (new class for .navbar components)
+           Its a navbar specific of an activity, placed on
+           bottom
+        */
+        .activity-navbar {
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+            
+            background: none;
+            border-color: transparent;
+        }
+        
+        /*VAR from a Bootstrap value:*/
+        $bs-navbar-height = 50px;
+
+        /* activity must be notified of the navbar to fix
+           available space
+        */
+        &.has-navbar {
+            padding-bottom: $bs-navbar-height + 10px;
+        }
     }
     
     /**

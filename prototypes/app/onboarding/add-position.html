@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/vnd.microsoft.icon" href="../../../assets/images/favicon.ico" />
+
+    <title>Loconomics</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../../assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Styles build following the Styleguide -->
+    <link href="../../../assets/css/styleguide.css" rel="stylesheet">    
+    <!-- Styles for this Prototype -->
+    <link href="../proto.css" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container app-nav">     
+        <div class="row">
+          <div class="col-xs-3 text-left navbar-action">
+            <a class="btn btn-default" href="home.html"><span class="glyphicon glyphicon-arrow-left"></span></a>
+          </div>
+          <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
+          <div class="col-xs-3 text-right navbar-action">
+            <a class="btn btn-default btn-link" href="index.html" title="Log out"><span class="glyphicon glyphicon-log-out"></span></a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container app-add-position activity has-navbar">
+
+      <div class="LeadContent">        
+        <h3><span class="glyphicon glyphicon-user"></span> Add one or more job title(s)</h3>
+        
+        <form role="form">
+          <div class="input-group">
+            <label for="addPositionSearch" class="sr-only">Search</label>
+            <input type="text" class="form-control" id="addPositionSearch" placeholder="search">
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-primary">
+                Add <span class="glyphicon glyphicon-chevron-right"></span>
+              </button>
+            </span>
+          </div>
+        </form>
+      </div>
+
+      <div class="ListView">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">1.</div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content">
+            Massage Therapist
+          </a>
+          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-trash"></span></a>
+        </div>
+      </div>
+
+      <div class="navbar navbar-default activity-navbar">
+        <div class="container">
+          <button type="button" class="btn btn-primary btn-block">
+            Save and continue
+          </button>
+        </div>
+      </div>
+      
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../../assets/javascript/styleguidelibs.js"></script>
+    <script src="../../../assets/javascript/styleguide.js"></script>
+  </body>
+</html>
