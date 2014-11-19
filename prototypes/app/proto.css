@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-11-14
+/*! LoconomicsAppProto 2014-11-19
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -275,4 +275,19 @@
 /* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .container .SectionTitle .HelpPoint {
   right: 12px;
+}
+
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
+
+/* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
+.LeadContent {
+  padding: 30px 15px;
+}
+
+/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
+.LeadContent h1,
+.LeadContent h2,
+.LeadContent h3,
+.LeadContent .lead {
+  text-align: center;
 }
