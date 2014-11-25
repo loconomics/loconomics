@@ -1,10 +1,14 @@
 @import "nib"
 @import "utils/mediaQueries"
 
+/** Vendor styles **/
+@import '../vendor/bootstrap-datepicker/css/datepicker.css'
+
+/** Vars */
 $container-padding-left = 5px;
 $container-padding-right = 5px;
 
-/* We use ever all the available screen */
+/** We use ever all the available screen **/
 html.app,
 html.app > body {
     height: 100%;
@@ -43,8 +47,8 @@ html.app > body > .activity {
       display: inline-block;
       
       text-indent: -99999px;
-      background: url("../../assets/images/logo-loconomics-header-mini.png") no-repeat center;
-      hr-image("../../assets/images/logo-loconomics-header-mini@2x.png", 100px, 39px);
+      background: url("../../../assets/images/logo-loconomics-header-mini.png") no-repeat center;
+      hr-image("../../../assets/images/logo-loconomics-header-mini@2x.png", 100px, 39px);
       min-width: 100px;
       min-height: 39px;
     }
@@ -119,7 +123,7 @@ html.app > body > .activity {
         clear: both;
         display: block;
     }
-    
+
     .iconized-title {
         display: table;
 
