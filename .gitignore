@@ -5,3 +5,4 @@ packages/
 _logs/*
 node_modules/*
 **/node_modules/*
+**/app.session
