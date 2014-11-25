@@ -23,9 +23,11 @@ exports.init = function initCalendar($activity) {
 
     cal.on('changeDate', function(e) {
     
-        var date = moment(e.date);
-        dateTitle.text(date.format('LL'));
-        cal.removeClass('is-visible');
+        if (e.viewMode === 'days') {
+            var date = moment(e.date);
+            dateTitle.text(date.format('LL'));
+            cal.removeClass('is-visible');
+        }
     });
 
     dayCal
