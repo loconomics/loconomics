@@ -131,7 +131,6 @@
     <style>
       #monthlyCalendar {
         position: absolute;
-        display: none;
         top: 100px;
         left: 10px;
         right: 10px;
@@ -147,12 +146,25 @@
         left: 50%;
         margin-left: -1px;
       }
+      
+      /** smooth transition and visible state **/
+      #monthlyCalendar {
+        opacity: 0;
+        transform: translateY(-15px);
+        transition: 600ms all;
+        pointer-events: none;
+      }
+      #monthlyCalendar.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
+      }
     </style>    
     <script>
     $(document).ready( function(){
      
       var cal = $('#monthlyCalendar');
-      cal.show().datepicker().hide();
+      cal.show().datepicker();
       
       var dayCal = $('#dayCalendar');
       
@@ -168,7 +180,7 @@
       
       cal.on('changeDate', function(e) {
         dateTitle.text(e.date.toISOString());
-        cal.hide();
+        cal.removeClass('is-visible');
       });
       
       dayCal
@@ -185,7 +197,7 @@
       });
       
       dateTitle.on('tap', function() {
-        cal.toggle();
+        cal.toggleClass('is-visible');
       });
     } );
     </script>
