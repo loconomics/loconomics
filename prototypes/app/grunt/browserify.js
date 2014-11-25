@@ -24,6 +24,9 @@ module.exports = function(grunt) {
             'external': [
                 'jquery'
             ],
+            'alias': [
+                'moment'
+            ],
             'shim': {
                 'bootstrap-datepicker': {
                     'path': './vendor/bootstrap-datepicker/js/bootstrap-datepicker.js',

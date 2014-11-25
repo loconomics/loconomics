@@ -648,11 +648,11 @@ html.app > body > .activity {
   -o-transform: translateY(-15px);
   -ms-transform: translateY(-15px);
   transform: translateY(-15px);
-  -webkit-transition: 600ms all;
-  -moz-transition: 600ms all;
-  -o-transition: 600ms all;
-  -ms-transition: 600ms all;
-  transition: 600ms all;
+  -webkit-transition: 500ms all;
+  -moz-transition: 500ms all;
+  -o-transition: 500ms all;
+  -ms-transition: 500ms all;
+  transition: 500ms all;
   pointer-events: none;
 }
 

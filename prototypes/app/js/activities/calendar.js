@@ -1,7 +1,8 @@
 /** Calendar activity **/
 'use strict';
 
-var $ = require('jquery');
+var $ = require('jquery'),
+    moment = require('moment');
 
 exports.init = function initCalendar($activity) {
 
@@ -21,7 +22,9 @@ exports.init = function initCalendar($activity) {
     });
 
     cal.on('changeDate', function(e) {
-    dateTitle.text(e.date.toISOString());
+    
+        var date = moment(e.date);
+        dateTitle.text(date.format('LL'));
         cal.removeClass('is-visible');
     });
 

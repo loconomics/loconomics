@@ -3,7 +3,7 @@ module.exports = {
     app: {
         src: [
             'Gruntfile.js',
-            'js/*.js'
+            'js/**/*.js'
         ],
         options: {
             ignores: ['tests/**/*.js', '**/*.min.js'],
