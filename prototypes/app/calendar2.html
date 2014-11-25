@@ -72,8 +72,8 @@
       
       <div id="dayCalendar" class="ListView ListView--largemarker">
         <div class="ListView-item">
-          <div class="ListView-item-marker"></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free (from 12am to 8.00am)</a>
+          <div class="ListView-item-marker">12.00am</div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free (up to 8.00am)</a>
           <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="ListView-item">
@@ -92,9 +92,33 @@
           <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-new-window"></span></a>
         </div>
         <div class="ListView-item">
-          <a href="#" class="btn btn-link btn-block"><span class="ListView-item-icon"></span> Free (from 12.00pm to 11.00pm)</a>
+          <a href="#" class="btn btn-link btn-block"><span class="ListView-item-icon"></span> Free (from 12.00pm to 16.00pm)</a>
           <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>        
+        </div>
+     
+        <div class="ListView-item">
+          <div class="ListView-item-marker">16.00pm</div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon glyphicon glyphicon-tag"></span> Susan Dee</a>
+          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-new-window"></span></a>
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">17.00pm</div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon glyphicon glyphicon-tag"></span> Jaren Freely</a>
+          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-new-window"></span></a>
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">18.30pm</div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon glyphicon glyphicon-tag"></span> Susan Dee</a>
+          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-new-window"></span></a>
+        </div>
+        <div class="ListView-divider">
+          <a href="#" class="btn btn-link btn-block"><span class="ListView-item-icon"></span> Free (from 19.30pm to 10.00pm) <span class="glyphicon glyphicon-plus"></span></a>
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">11.00pm</div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon glyphicon glyphicon-tag"></span> Jaren Freely</a>
+          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-new-window"></span></a>
+        </div>
       </div>
 
     </div> <!-- /container -->
@@ -111,11 +135,19 @@
         position: absolute;
         display: none;
         top: 100px;
-        left: 0;
-        right: 0;
+        left: 10px;
+        right: 10px;
         background: white;
         box-shadow: 0 0 6px 1px #000;
         z-index: 100;
+      }
+      
+      #monthlyCalendar .datepicker:after {
+        left: 50%;
+      }
+      #monthlyCalendar .datepicker:before {
+        left: 50%;
+        margin-left: -1px;
       }
     </style>    
     <script>
