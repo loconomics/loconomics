@@ -679,3 +679,9 @@ html.app > body > .activity {
   transform: translateY(0);
   pointer-events: all;
 }
+
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar] #dateTitle:active,
+[data-activity=calendar] #dateTitle:focus {
+  outline: none;
+}

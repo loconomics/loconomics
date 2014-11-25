@@ -15,7 +15,7 @@ exports.init = function initCalendar($activity) {
 
     cal
     .on('swipeleft', function() {
-        cal.datepicker('moveDate', 'next').hide();
+        cal.datepicker('moveDate', 'next');
     })
     .on('swiperight', function() {
         cal.datepicker('moveDate', 'prev');
