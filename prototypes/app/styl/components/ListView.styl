@@ -13,9 +13,12 @@
     $markerWidth = 28px;
     $actionWidth = 40px;
     $iconSize = 14px;
-    /* same gap as buttons, equals
-        to the implicit gap in $actionWidth */
-    $contentGap = 12px;
+    /* Used the same gap as buttons, equals
+        to the implicit gap in $actionWidth
+        and heights,
+        H for Horizontal and V for Vertical */
+    $contentHGap = 12px;
+    $contentVGap = 6px;
 
     width: 100%;
     box-sizing: border-box;
@@ -37,17 +40,30 @@
         
         .ListView-item-marker {
             width: $markerWidth;
-            line-height: $heightLimit;
             position: absolute;
             top: 0px;
             bottom: 0px;
             left: 0px;
             text-align: center;
-            
+            padding: $contentVGap 0;
+
             /* If a Bootstrap glypicon is used, adjust to the best size */
             .glyphicon {
                 font-size: $markerIconSize;
                 line-height: $heightLimit;
+            }
+            
+            /* For one-line content with ellipsis, use a 'div' */
+            div {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            /* Multiline content support -effective with modifiers like twolines- */
+            p {
+                /* Since a table-cell doesn't fill completely the width -needs a table parent for that, but
+                   its problematic- we set the width explicitely (100% does not work) */
+                width: $markerWidth;
             }
         }
         
@@ -55,8 +71,10 @@
             text-align: left;
             max-width: 100%;
             box-sizing: border-box;
-            padding-left: $markerWidth + $contentGap;
+            padding-left: $markerWidth + $contentHGap;
             padding-right: $actionWidth;
+            padding-top: $contentVGap;
+            padding-bottom: $contentVGap;
             
             * {
                 overflow: hidden;
@@ -86,6 +104,7 @@
             top: 0px;
             bottom: 0px;
             right: 0px;
+            padding: $contentVGap $contentHGap;
         }
     }
     
@@ -110,8 +129,8 @@
 **/
 .ListView--twolines {
     $heightLimit = 52px;
-    /* heightLimit without container paddings, borders */
-    $internalHeight = 38px;
+    /* heightLimit without container paddings */
+    $internalHeight = 40px;
     $markerIconSize = 24px;
     
     .ListView-item {
@@ -124,18 +143,17 @@
         }
     
         .ListView-item-marker {
-            line-height: $heightLimit;
-            
             /* If a Bootstrap glypicon is used, adjust to the best size */
             .glyphicon {
                 font-size: $markerIconSize;
-                line-height: $heightLimit;
+                line-height: $internalHeight;
             }
         }
-        
+    
+        /* Multiline content vertically centered must
+           be wrapped in a paragraph inside the content */
+        .ListView-item-marker,
         .ListView-item-content {
-            /* Multiline content vertically centered must
-               be wrapped in a paragraph inside the content */
             p {
                 vertical-align: middle;
                 display: table-cell;
@@ -154,15 +172,21 @@
 **/
 .ListView--largemarker {
     $markerWidthLarge = 56px;
-    $contentGap = 12px;
+    $contentHGap = 12px;
 
     .ListView-item {
         .ListView-item-marker {
             width: $markerWidthLarge;
+            
+            p {
+                /* Since a table-cell doesn't fill completely the width -needs a table parent for that, but
+                   its problematic- we set the width explicitely (100% does not work) */
+                width: $markerWidthLarge;
+            }
         }
 
         .ListView-item-content {
-            padding-left: $markerWidthLarge + $contentGap;
+            padding-left: $markerWidthLarge + $contentHGap;
         }
     }
 }
