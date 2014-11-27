@@ -7,19 +7,21 @@
     $container-padding-right
 */
 
+/* Component vars */
+$heightLimit = 33px;
+$markerIconSize = 24px;
+$markerWidth = 28px;
+$actionWidth = 40px;
+$iconSize = 14px;
+/* Used the same gap as buttons, equals
+    to the implicit gap in $actionWidth
+    and heights,
+    H for Horizontal and V for Vertical */
+$contentHGap = 12px;
+$contentVGap = 6px;
+    
 .ListView {
-    $heightLimit = 33px;
-    $markerIconSize = 24px;
-    $markerWidth = 28px;
-    $actionWidth = 40px;
-    $iconSize = 14px;
-    /* Used the same gap as buttons, equals
-        to the implicit gap in $actionWidth
-        and heights,
-        H for Horizontal and V for Vertical */
-    $contentHGap = 12px;
-    $contentVGap = 6px;
-
+    /** Base styles and elements */
     width: 100%;
     box-sizing: border-box;
     
@@ -106,6 +108,11 @@
             right: 0px;
             padding: $contentVGap $contentHGap;
         }
+        
+        /* Any row in the listview is expected to be a button/link, so color is reset */
+        .btn, .btn-link {
+            color: $gray-dark;
+        }
     }
     
     .ListView-divider {
@@ -122,7 +129,7 @@
 
 /* Inside a container */
 .container .ListView .ListView-divider {
-    margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-right);
+    margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-left);
 }
 
 /** Modifier 'twolines'
@@ -170,8 +177,8 @@
 
 /** Modifier 'largemarker'
 **/
+$markerWidthLarge = 56px;
 .ListView--largemarker {
-    $markerWidthLarge = 56px;
     $contentHGap = 12px;
 
     .ListView-item {
@@ -198,6 +205,45 @@
     .ListView-item {
         .ListView-item-marker {
             text-align: right;
+        }
+    }
+}
+
+/** Modifier 'colorlabels'
+**/
+.ListView--colorlabels {
+    .ListView-item {
+        &:before {
+            content: '';
+            display: block;
+            border-right: 2px solid $gray-light;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            z-index: 2;
+            left: $markerWidth + round($contentHGap / 2);
+        }
+
+        /* Color modifiers: ListView-item--label-primary, ListView-item--label-success,... */
+        $colors = 'primary' 'success' 'info' 'warning' 'danger'
+        for $color in $colors {
+            &.ListView-item--label-{$color} {
+                &:before {
+                    border-right-color: $fg-colors[$color];
+                }
+
+                /* Labels affect to the action icon too */
+                .ListView-item-action {
+                    color: $fg-colors[$color];
+                }
+            }
+        }
+    }
+
+    /** Support for large markers **/
+    &.ListView--largemarker {
+        .ListView-item:before {
+            left: $markerWidthLarge + round($contentHGap / 2);
         }
     }
 }
