@@ -66,6 +66,12 @@
                 max-height: $heightLimit;
             }
             
+            /* For one-line content with ellipsis, use a 'div' */
+            div {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
             .ListView-item-icon {
                 display: inline-block;
                 width: $iconSize;
@@ -104,6 +110,8 @@
 **/
 .ListView--twolines {
     $heightLimit = 52px;
+    /* heightLimit without container paddings, borders */
+    $internalHeight = 38px;
     $markerIconSize = 24px;
     
     .ListView-item {
@@ -112,6 +120,7 @@
         .ListView-item-content,
         .ListView-item-action {
             max-height: $heightLimit;
+            height: $heightLimit;
         }
     
         .ListView-item-marker {
@@ -125,8 +134,12 @@
         }
         
         .ListView-item-content {
-            * {
-                max-height: $heightLimit;
+            /* Multiline content vertically centered must
+               be wrapped in a paragraph inside the content */
+            p {
+                vertical-align: middle;
+                display: table-cell;
+                height: $internalHeight;
             }
         }
         
@@ -150,6 +163,17 @@
 
         .ListView-item-content {
             padding-left: $markerWidthLarge + $contentGap;
+        }
+    }
+}
+
+/** Modifier 'textualmarker'
+    for only text used on markers
+**/
+.ListView--textualmarker {
+    .ListView-item {
+        .ListView-item-marker {
+            text-align: right;
         }
     }
 }

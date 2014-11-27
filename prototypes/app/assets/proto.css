@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-11-25
+/*! LoconomicsAppProto 2014-11-27
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -481,6 +481,7 @@ html.app > body > .activity {
   box-sizing: border-box;
   padding-left: 40px;
   padding-right: 40px;
+/* For one-line content with ellipsis, use a 'div' */
 }
 
 /* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
@@ -492,14 +493,21 @@ html.app > body > .activity {
   max-height: 33px;
 }
 
-/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 68 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+.ListView .ListView-item .ListView-item-content div {
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-content .ListView-item-icon {
   display: inline-block;
   width: 14px;
   height: 14px;
 }
 
-/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 80 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-action {
   width: 40px;
   overflow: hidden;
@@ -509,7 +517,7 @@ html.app > body > .activity {
   right: 0px;
 }
 
-/* line 84 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-divider {
   text-align: center;
   padding: 0.3em 1em;
@@ -519,62 +527,74 @@ html.app > body > .activity {
 /* more styles later for parent: .container */
 }
 
-/* line 97 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 103 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .container .ListView .ListView-divider {
   margin: 0 -5px 0 -5px;
 }
 
-/* line 103 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
-/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 109 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-marker,
 .ListView--twolines .ListView-item .ListView-item-content,
 .ListView--twolines .ListView-item .ListView-item-action {
   max-height: 52px;
+  height: 52px;
 }
 
-/* line 113 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 122 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-marker {
   line-height: 52px;
 /* If a Bootstrap glypicon is used, adjust to the best size */
 }
 
-/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 126 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-marker .glyphicon {
   font-size: 24px;
   line-height: 52px;
 }
 
-/* line 123 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 132 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-.ListView--twolines .ListView-item .ListView-item-content * {
-  max-height: 52px;
+/* line 135 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+.ListView--twolines .ListView-item .ListView-item-content p {
+  vertical-align: middle;
+  display: table-cell;
+  height: 38px;
 }
 
-/* line 129 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 142 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-action {
 /* from Bootstrap btn-link styles 2x6padding */
   line-height: 40px;
 }
 
-/* line 138 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 151 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 142 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 155 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 156 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-marker {
   width: 56px;
 }
 
-/* line 147 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 160 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-content {
   padding-left: 68px;
 }
 
-/* line 151 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
+/* line 169 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 170 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 171 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+.ListView--textualmarker .ListView-item .ListView-item-marker {
+  text-align: right;
+}
+
+/* line 176 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 
 /* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .SectionTitle {
