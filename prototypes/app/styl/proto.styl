@@ -22,6 +22,7 @@ html.app > body > .activity {
 
 /* More app specific styles */
 .app {
+    /* Space for nav-header on top and a bit blank gap on bottom */
     body {
       padding-top: 51px;
       padding-bottom: 10px;
@@ -32,9 +33,16 @@ html.app > body > .activity {
     */
     /* Container */
     .container {
+        /* Overwriting default Bootstrap margins */
         padding-left: $container-padding-left;
         padding-right: $container-padding-right;
         
+        .row {
+            margin-left: 0 - $container-padding-left
+            margin-right: 0 - $container-padding-right;
+        }
+        
+        /* Space for nav at bottom */
         .has-bottom-navbar {
             padding-bottom: 10px + 50px;
         }
