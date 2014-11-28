@@ -11,7 +11,8 @@ exports.init = function initCalendar($activity) {
 
     var dayCal = $activity.find('#dayCalendar');
 
-    var dateTitle = $activity.find('.CalendarDateHeader > .CalendarDateHeader-date');
+    var $calendarDateHeader = $activity.find('.CalendarDateHeader');
+    var dateTitle = $calendarDateHeader.children('.CalendarDateHeader-date');
 
     cal
     .on('swipeleft', function() {
@@ -20,29 +21,45 @@ exports.init = function initCalendar($activity) {
     .on('swiperight', function() {
         cal.datepicker('moveDate', 'prev');
     });
+    
+    var updateDateTitle = function updateDateTitle(date) {
+        date = moment(date);
+        var dateInfo = dateTitle.children('time:eq(0)');
+        dateInfo.attr('datetime', date.toISOString());
+        dateInfo.text(date.format('LL'));
+        cal.removeClass('is-visible');
+    };
 
     cal.on('changeDate', function(e) {
-    
         if (e.viewMode === 'days') {
-            var date = moment(e.date);
-            var dateInfo = dateTitle.children('time:eq(0)');
-            dateInfo.attr('datetime', date.toISOString());
-            dateInfo.text(date.format('LL'));
-            cal.removeClass('is-visible');
+            updateDateTitle(e.date);
         }
     });
+    // First date:
+    updateDateTitle(cal.datepicker('getValue'));
 
     dayCal
     .on('swipeleft', function() {
-        var d = cal.datepicker('getValue');
-        console.log('left', d);
-        d.setDate(d.getDate() + 1);
-
-        cal.datepicker('setValue', d);
-        console.log('left', d);
+        cal.datepicker('moveValue', 'next', 'date');
     })
     .on('swiperight', function() {
-        cal.datepicker('moveDate', 'prev').hide();
+        cal.datepicker('moveValue', 'prev', 'date');
+    });
+    
+    $calendarDateHeader.on('tap', '.CalendarDateHeader-switch', function(e) {
+        switch (this.getAttribute('href')) {
+            case '#prev':
+                cal.datepicker('moveValue', 'prev', 'date');
+                break;
+            case '#next':
+                cal.datepicker('moveValue', 'next', 'date');
+                break;
+            default:
+                // Lets default:
+                return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
     });
 
     dateTitle.on('tap', function() {

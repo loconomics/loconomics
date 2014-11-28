@@ -159,7 +159,37 @@
 			this.set();
 			this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
 			this.fill();
+            // Notify:
+            this.element.trigger({
+                type: 'changeDate',
+                date: this.date,
+                viewMode: DPGlobal.modes[this.viewMode].clsName
+            });
 		},
+        
+        getValue: function() {
+            return this.date;
+        },
+        
+        moveValue: function(dir, mode) {
+            // dir can be: 'prev', 'next'
+            if (['prev', 'next'].indexOf(dir && dir.toLowerCase()) == -1)
+                // No valid option:
+                return;
+
+            // default mode is the current one
+            mode = mode ?
+                DPGlobal.modesSet[mode] :
+                DPGlobal.modes[this.viewMode];
+
+            this.date['set' + mode.navFnc].call(
+                this.date,
+                this.date['get' + mode.navFnc].call(this.date) + 
+                mode.navStep * (dir === 'prev' ? -1 : 1)
+            );
+            this.setValue(this.date);
+            return this.date;
+        },
 		
 		place: function(){
 			var offset = this.component ? this.component.offset() : this.element.offset();
@@ -322,16 +352,19 @@
             }
 		},
         
-        moveDate: function(dir) {
+        moveDate: function(dir, mode) {
             // dir can be: 'prev', 'next'
             if (['prev', 'next'].indexOf(dir && dir.toLowerCase()) == -1)
                 // No valid option:
                 return;
+                
+            // default mode is the current one
+            mode = mode || this.viewMode;
 
-            this.viewDate['set'+DPGlobal.modes[this.viewMode].navFnc].call(
+            this.viewDate['set'+DPGlobal.modes[mode].navFnc].call(
                 this.viewDate,
-                this.viewDate['get'+DPGlobal.modes[this.viewMode].navFnc].call(this.viewDate) + 
-                DPGlobal.modes[this.viewMode].navStep * (dir === 'prev' ? -1 : 1)
+                this.viewDate['get'+DPGlobal.modes[mode].navFnc].call(this.viewDate) + 
+                DPGlobal.modes[mode].navStep * (dir === 'prev' ? -1 : 1)
             );
             this.fill();
             this.set();
@@ -412,16 +445,33 @@
 		}
 	};
 	
-	$.fn.datepicker = function ( option, val ) {
-		return this.each(function () {
+	$.fn.datepicker = function ( option ) {
+        var vals = Array.prototype.slice.call(arguments, 1);
+        var returned;
+		this.each(function () {
 			var $this = $(this),
 				data = $this.data('datepicker'),
 				options = typeof option === 'object' && option;
 			if (!data) {
 				$this.data('datepicker', (data = new Datepicker(this, $.extend({}, $.fn.datepicker.defaults,options))));
 			}
-			if (typeof option === 'string') data[option](val);
+
+			if (typeof option === 'string') {
+                returned = data[option].apply(data, vals);
+                // There is a value returned by the method?
+                if (typeof(returned !== 'undefined')) {
+                    // Go out the loop to return the value from the first
+                    // element-method execution
+                    return false;
+                }
+                // Follow next loop item
+            }
 		});
+        if (typeof(returned) !== 'undefined')
+            return returned;
+        else
+            // chaining:
+            return this;
 	};
 
 	$.fn.datepicker.defaults = {
@@ -447,7 +497,13 @@
 				clsName: 'years',
 				navFnc: 'FullYear',
 				navStep: 10
-		}],
+            },
+            {
+                clsName: 'day',
+                navFnc: 'Date',
+                navStep: 1
+            }
+        ],
 		dates:{
 			days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
 			daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -551,5 +607,11 @@
 								'</table>'+
 							'</div>'+
 						'</div>';
+    DPGlobal.modesSet = {
+        'date': DPGlobal.modes[3],
+        'month': DPGlobal.modes[0],
+        'year': DPGlobal.modes[1],
+        'decade': DPGlobal.modes[2]
+    };
 
 }( window.jQuery );
