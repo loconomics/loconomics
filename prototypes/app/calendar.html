@@ -6,11 +6,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/vnd.microsoft.icon" href="../../assets/images/favicon.ico" />
-    <!--
     <meta
       name="viewport"
       content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-      -->
 
     <title>Loconomics</title>
 
@@ -35,7 +33,7 @@
       <div class="container app-nav">     
         <div class="row">
           <div class="col-xs-3 text-left navbar-action">
-            <a class="btn btn-default" href="#add"><span class="glyphicon glyphicon-plus"></span></a>
+            <a class="btn btn-default" href="#add" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
           </div>
           <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
           <div class="col-xs-3 text-right">
@@ -62,130 +60,136 @@
       </div>
     </nav>
 
-    <div class="container app-calendar">
-
+    <div class="container app-calendar is-active" data-activity="calendar">
+      
+      <div class="row CalendarDateHeader">
+        <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
+        <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time>July 28, 2014</time> <span class="caret"></span></a>
+        <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
+      </div>
+      
       <div id="monthlyCalendar" class="calendar-placeholder" data-date="today"></div>
       
-      <div class="ListView ListView--largemarker">
-        <div class="ListView-item">
-          <div class="ListView-item-marker">12.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+      <div id="dayCalendar" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags ListView-largemarker">
+        <div class="ListView-item ListView-item--tag-success">
+          <div class="ListView-item-marker"><div>12.00am</div><div class="text-muted">9.00am</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="modal" data-target="#calendarChooseNew"><p>Free</p></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="ListView-item">
-          <div class="ListView-item-marker">1.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+          <div class="ListView-item-marker"><div>9.00am</div><div class="text-muted">10.00am</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>Jaren Freely</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment"><span class="glyphicon glyphicon-new-window"></span></a>
+        </div>
+        <div class="ListView-item ListView-item--tag-success">
+          <div class="ListView-item-marker"><div>10.00am</div><div class="text-muted">11.00am</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="modal" data-target="#calendarChooseNew"><p>Free</p></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
+        </div>
+        <div class="ListView-item ListView-item--tag-warning">
+          <div class="ListView-item-marker"><div>11.00am</div><div class="text-muted">12.45pm</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>CONFIRM-Susan Dee</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment"><span class="glyphicon glyphicon-new-window"></span></a>
+        </div>
+        <div class="ListView-item ListView-item--tag-success">
+          <div class="ListView-item-marker"><div>12.45pm</div><div class="text-muted">16.00pm</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="modal" data-target="#calendarChooseNew"><p>Free</p></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="ListView-item">
-          <div class="ListView-item-marker">2.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+          <div class="ListView-item-marker"><div>16:00pm</div><div class="text-muted">17.15pm</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>Susan Dee</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment">$155</a>
         </div>
         <div class="ListView-item">
-          <div class="ListView-item-marker">3.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">4.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">5.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">6.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">7.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">8.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">9.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon glyphicon glyphicon-tag"></span> Jaren Freely</a>
+          <div class="ListView-item-marker"><div>17:15pm</div><div class="text-muted">18.30pm</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content"><p>Dentist appointment</p></a>
           <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-new-window"></span></a>
         </div>
         <div class="ListView-item">
-          <div class="ListView-item-marker">10.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+          <div class="ListView-item-marker"><div>18:30pm</div><div class="text-muted">19.30pm</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>Susan Dee</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment">$59.90</a>
+        </div>
+        <div class="ListView-item ListView-item--tag-success">
+          <div class="ListView-item-marker"><div>19:30pm</div><div class="text-muted">11.00pm</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="modal" data-target="#calendarChooseNew"><p>Free</p></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="ListView-item">
-          <div class="ListView-item-marker">11.00am</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon glyphicon glyphicon-tag"></span> Susan Dee</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-new-window"></span></a>
+          <div class="ListView-item-marker"><div>11:00pm</div><div class="text-muted">12.00am</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>Jaren Freely</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment"><span class="glyphicon glyphicon-new-window"></span></a>
         </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">1.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">2.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">3.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">4.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">5.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">6.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">7.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">8.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">9.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">10.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">11.00pm</div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><span class="ListView-item-icon"></span> Free</a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+      </div>
+      
+      <!-- Modal -->
+      <div class="modal fade centered" id="calendarChooseNew" tabindex="-1" role="dialog" aria-labelledby="calendarChooseNewLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="calendarChooseNewLabel">Create a new...</h4>
+            </div>
+            <div class="modal-body">
+              <a class="btn btn-block btn-default" href="#" data-toggle="activity" data-target="calendar-appointment">Appointment</a>
+              <a class="btn btn-block btn-default" href="#">Calendar Event</a>
+              <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
         </div>
       </div>
 
     </div> <!-- /container -->
 
+    <div class="container app-calendar-appointment" data-activity="calendar-appointment">
+
+      <div class="row CalendarDateHeader">
+        <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
+        <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time>July 28, 2014</time> <span class="caret"></span></a>
+        <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
+      </div>
+      
+      <div class="CardsDeck CardsDeck--slider">
+        <div class="CardsDeck-switch CardsDeck-switch--previous">
+          <a href="#prev" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous</span></a>
+        </div>
+        <div class="Card AppointmentCard">
+          <ul class="list-unstyled">
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-dashboard"></span> <span class="AppointmentCard-data">10:00a-12:00p</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-user"></span> <span class="AppointmentCard-data">Joshua Danielson</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span> <span class="AppointmentCard-data">Deep Tissue Massage 120m plus 2 more</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span> <span class="AppointmentCard-data">$95.00</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span> <span class="AppointmentCard-data">3150 18th Street San Francisco, CA</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span> <span class="AppointmentCard-data">Looking forward to seeing the new color</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span> <span class="AppointmentCard-data">Ask him about his new color</span>
+            </li>
+          </ul>
+          <div class="AppointmentCard-actions row">
+            <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block">Edit</button></div>
+            <div class="col-xs-6"><button type="button" class="btn btn-default btn-block">Contact</button></div>
+          </div>
+        </div>
+        <div class="CardsDeck-switch CardsDeck-switch--next">
+          <a href="#next" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next</span></a>
+        </div>
+      </div>
+
+    </div> <!-- /container -->
+    
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -193,21 +197,5 @@
     <script src="../../assets/javascript/styleguide.js"></script>
     <script src="assets/libs.js"></script>
     <script src="assets/app.js"></script>
-    <script>
-    $(document).ready( function(){
-     
-      var cal = $('#monthlyCalendar');
-      cal.datepicker();
-      
-      cal
-      .on('swipeleft', function() {
-        cal.datepicker('moveDate', 'next');
-      })
-      .on('swiperight', function() {
-        cal.datepicker('moveDate', 'prev');
-      });
-
-    } );
-    </script>
   </body>
 </html>
