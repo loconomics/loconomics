@@ -3,6 +3,7 @@
 
 var $ = require('jquery'),
     moment = require('moment');
+require('../components/DatePicker');
 
 exports.init = function initCalendar($activity) {
 

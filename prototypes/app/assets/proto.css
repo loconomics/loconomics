@@ -50,242 +50,36 @@
 /* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
 
 /* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
-/** Vendor styles **/
-
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap-datepicker\css\datepicker.css */
-/*!
- * Datepicker for Bootstrap
- *
- * Copyright 2012 Stefan Petre
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- */
-.datepicker {
-  top: 0;
-  left: 0;
-  padding: 4px;
-  margin-top: 1px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  /*.dow {
-    border-top: 1px solid #ddd !important;
-  }*/
-
-}
-.datepicker:before {
-  content: '';
-  display: inline-block;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 7px solid #ccc;
-  border-bottom-color: rgba(0, 0, 0, 0.2);
-  position: absolute;
-  top: -7px;
-  left: 6px;
-}
-.datepicker:after {
-  content: '';
-  display: inline-block;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid #ffffff;
-  position: absolute;
-  top: -6px;
-  left: 7px;
-}
-.datepicker > div {
-  display: none;
-}
-.datepicker table {
-  width: 100%;
-  margin: 0;
-}
-.datepicker td,
-.datepicker th {
-  text-align: center;
-  width: 20px;
-  height: 20px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.datepicker td.day:hover {
-  background: #eeeeee;
-  cursor: pointer;
-}
-.datepicker td.day.disabled {
-  color: #eeeeee;
-}
-.datepicker td.old,
-.datepicker td.new {
-  color: #999999;
-}
-.datepicker td.active,
-.datepicker td.active:hover {
-  color: #ffffff;
-  background-color: #006dcc;
-  background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
-  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
-  background-image: -o-linear-gradient(top, #0088cc, #0044cc);
-  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
-  border-color: #0044cc #0044cc #002a80;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #0044cc;
-  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-}
-.datepicker td.active:hover,
-.datepicker td.active:hover:hover,
-.datepicker td.active:focus,
-.datepicker td.active:hover:focus,
-.datepicker td.active:active,
-.datepicker td.active:hover:active,
-.datepicker td.active.active,
-.datepicker td.active:hover.active,
-.datepicker td.active.disabled,
-.datepicker td.active:hover.disabled,
-.datepicker td.active[disabled],
-.datepicker td.active:hover[disabled] {
-  color: #ffffff;
-  background-color: #0044cc;
-  *background-color: #003bb3;
-}
-.datepicker td.active:active,
-.datepicker td.active:hover:active,
-.datepicker td.active.active,
-.datepicker td.active:hover.active {
-  background-color: #003399 \9;
-}
-.datepicker td span {
-  display: block;
-  float: left;
-  cursor: pointer;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  width: 25%;
-  margin: 0;
-  height: 70px;
-  line-height: 70px;
-}
-.datepicker td span:hover {
-  background: #eeeeee;
-}
-.datepicker td span.active {
-  color: #ffffff;
-  background-color: #006dcc;
-  background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
-  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
-  background-image: -o-linear-gradient(top, #0088cc, #0044cc);
-  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
-  border-color: #0044cc #0044cc #002a80;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #0044cc;
-  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-}
-.datepicker td span.active:hover,
-.datepicker td span.active:focus,
-.datepicker td span.active:active,
-.datepicker td span.active.active,
-.datepicker td span.active.disabled,
-.datepicker td span.active[disabled] {
-  color: #ffffff;
-  background-color: #0044cc;
-  *background-color: #003bb3;
-}
-.datepicker td span.active:active,
-.datepicker td span.active.active {
-  background-color: #003399 \9;
-}
-.datepicker td span.old {
-  color: #999999;
-}
-.datepicker th.switch {
-  width: 145px;
-}
-.datepicker th.next,
-.datepicker th.prev {
-  font-size: 21px;
-}
-.datepicker thead tr:first-child th {
-  cursor: pointer;
-}
-.datepicker thead tr:first-child th:hover {
-  background: #eeeeee;
-}
-.input-append.date .add-on i,
-.input-prepend.date .add-on i {
-  display: block;
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-}
-
-.datepicker-years tr > td,
-.datepicker-months tr > td {
-    padding: 0 !important;
-}
-.datepicker-months .switch,
-.datepicker-years .switch {
-    width: 72.4% !important;
-}
-.datepicker-months .prev,
-.datepicker-months .next,
-.datepicker-years .prev,
-.datepicker-years .next {
-    width: 14% !important;
-}
-
-/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Vars */
 
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** We use ever all the available screen **/
 
-/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 html.app,
 html.app > body {
   height: 100%;
 }
 
-/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 html.app > body > .container,
 html.app > body > .container-fluid,
 html.app > body > .activity {
   min-height: 100%;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /* More app specific styles */
 
-/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 58 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app body {
   padding-top: 51px;
   padding-bottom: 10px;
 }
 
-/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container {
 /* Overwriting default Bootstrap margins */
   padding-left: 5px;
@@ -293,23 +87,23 @@ html.app > body > .activity {
 /* Space for nav at bottom */
 }
 
-/* line 68 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container .row {
   margin-left: -5px;
   margin-right: -5px;
 }
 
-/* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 70 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container .has-bottom-navbar {
   padding-bottom: 60px;
 }
 
-/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 75 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav {
   position: relative;
 }
 
-/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-brand {
   float: none;
   display: inline-block;
@@ -320,7 +114,7 @@ html.app > body > .activity {
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap-datepicker\css\datepicker.css */
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
   .app .app-nav .navbar-brand {
     background-image: url("../../../assets/images/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
@@ -329,18 +123,18 @@ html.app > body > .activity {
   }
 }
 
-/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 87 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 94 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-action {
   margin: 8px 0;
 }
 
-/* line 98 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity {
 /* settings specially important for the use of navbar
            but applied to all for consistent results
@@ -361,7 +155,7 @@ html.app > body > .activity {
         */
 }
 
-/* line 106 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 103 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity .activity-navbar {
   position: absolute;
   bottom: 0px;
@@ -373,68 +167,68 @@ html.app > body > .activity {
   border-color: transparent;
 }
 
-/* line 119 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 116 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity.has-navbar {
   padding-bottom: 50px;
 }
 
-/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .btn-google {
   background-color: #c00;
   color: #fff;
 }
 
-/* line 128 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .btn-facebook {
   background-color: #085394;
   color: #fff;
 }
 
-/* line 134 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 131 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .isolated {
   margin: 14px 0;
   clear: both;
   display: block;
 }
 
-/* line 139 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 136 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title {
   display: table;
 }
 
-/* line 141 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 138 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title .glyphicon {
   vertical-align: middle;
   display: table-cell;
   padding-left: 0.5em;
 }
 
-/* line 146 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title p {
   padding-left: 0.7em;
   vertical-align: middle;
   display: table-cell;
 }
 
-/* line 153 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 150 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 154 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 151 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-complete .success-icon {
   font-size: 4em;
   text-align: center;
   display: block;
 }
 
-/* line 159 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 156 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-complete .lead {
   margin-top: 2em;
   margin-bottom: 2em;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Components styles **/
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
 /* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView {
@@ -786,10 +580,261 @@ html.app > body > .activity {
   text-align: center;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/*
+ * DatePicker JS Component, with several
+ * modes and optional inline-permanent visualization.
+ *
+ * Copyright 2014 Loconomics Coop.
+ *
+ * Based on:
+ * Datepicker for Bootstrap
+ * Copyright 2012 Stefan Petre
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\border.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\flex.styl */
+
+/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\image.styl */
+
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 578 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
+
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker {
+  top: 0;
+  left: 0;
+  padding: 4px;
+  margin-top: 1px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+/* Percentual sizing to being responsive rather than the 
+    original fixed size
+  */
+}
+
+/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker:before {
+  content: '';
+  display: inline-block;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-bottom-color: rgba(0,0,0,0.2);
+  position: absolute;
+  top: -7px;
+  left: 6px;
+}
+
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker:after {
+  content: '';
+  display: inline-block;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #fff;
+  position: absolute;
+  top: -6px;
+  left: 7px;
+}
+
+/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker > div {
+  display: none;
+}
+
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker table {
+  width: 100%;
+  margin: 0;
+}
+
+/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker td,
+.DatePicker th {
+  text-align: center;
+  width: 20px;
+  height: 20px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+
+/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker td.day:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+/* line 69 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker td.day.disabled {
+  color: #eee;
+}
+
+/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker td.old,
+.DatePicker td.new {
+  color: #777;
+}
+
+/* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker td.active,
+.DatePicker td.active:hover {
+  background-color: #006dcc;
+  background-image: -webkit-linear-gradient(top, #08c, #04c);
+  background-image: -moz-linear-gradient(top, #08c, #04c);
+  background-image: -o-linear-gradient(top, #08c, #04c);
+  background-image: -ms-linear-gradient(top, #08c, #04c);
+  background-image: linear-gradient(to bottom, #08c, #04c);
+  background-repeat: repeat-x;
+  border-color: #04c #04c #002a80;
+  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+}
+
+/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker td span {
+  display: block;
+  float: left;
+  cursor: pointer;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+/* Percentual sizing to being responsive rather than the 
+        original fixed size
+      */
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 25%;
+  height: 70px;
+  line-height: 70px;
+  margin: 0;
+}
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker td span:hover {
+  background: #eee;
+}
+
+/* line 94 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker td span.active {
+  background-color: #006dcc;
+  background-image: -webkit-linear-gradient(top, #08c, #04c);
+  background-image: -moz-linear-gradient(top, #08c, #04c);
+  background-image: -o-linear-gradient(top, #08c, #04c);
+  background-image: -ms-linear-gradient(top, #08c, #04c);
+  background-image: linear-gradient(to bottom, #08c, #04c);
+  background-repeat: repeat-x;
+  border-color: #04c #04c #002a80;
+  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+}
+
+/* line 98 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker td span.old {
+  color: #777;
+}
+
+/* line 101 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+
+/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker th.switch {
+  width: 145px;
+}
+
+/* line 104 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker th.next,
+.DatePicker th.prev {
+  font-size: 21px;
+}
+
+/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker thead tr:first-child th {
+  cursor: pointer;
+}
+
+/* line 109 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker thead tr:first-child th:hover {
+  background: #eee;
+}
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker .datepicker-years tr > td,
+.DatePicker .datepicker-months tr > td {
+  padding: 0 !important;
+}
+
+/* line 118 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker .datepicker-months .switch,
+.DatePicker .datepicker-years .switch {
+  width: 72.4% !important;
+}
+
+/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker .datepicker-months .prev,
+.DatePicker .datepicker-months .next,
+.DatePicker .datepicker-years .prev,
+.DatePicker .datepicker-years .next {
+  width: 14% !important;
+}
+
+/* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+
+/* line 126 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+
+/* line 127 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.input-append.date .add-on i,
+.input-prepend.date .add-on i {
+  display: block;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Activities styles **/
 
-/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
 /* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
@@ -826,12 +871,12 @@ html.app > body > .activity {
 }
 
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar] #monthlyCalendar .datepicker:after {
+[data-activity=calendar] #monthlyCalendar .DatePicker:after {
   left: 50%;
 }
 
 /* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar] #monthlyCalendar .datepicker:before {
+[data-activity=calendar] #monthlyCalendar .DatePicker:before {
   left: 50%;
   margin-left: -1px;
 }

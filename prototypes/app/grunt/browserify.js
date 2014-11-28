@@ -28,11 +28,6 @@ module.exports = function(grunt) {
                 'moment'
             ],
             'shim': {
-                'bootstrap-datepicker': {
-                    'path': './vendor/bootstrap-datepicker/js/bootstrap-datepicker.js',
-                    'exports': null,
-                    'depends': { 'jquery': null }
-                },
                 'jquery-mobile':  {
                     'path': './vendor/jquerymobile/jquery.mobile.custom.min.js',
                     'exports': null,

@@ -2,7 +2,6 @@
 
 var $ = require('jquery');
 require('jquery-mobile');
-require('bootstrap-datepicker');
 
 /** Load activities **/
 var activities = {
