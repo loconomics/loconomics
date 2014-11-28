@@ -33,7 +33,7 @@
       <div class="container app-nav">     
         <div class="row">
           <div class="col-xs-3 text-left navbar-action">
-            <a class="btn btn-default" href="#add"><span class="glyphicon glyphicon-plus"></span></a>
+            <a class="btn btn-default" href="#add" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
           </div>
           <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
           <div class="col-xs-3 text-right">
@@ -73,8 +73,8 @@
       <div id="dayCalendar" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags ListView-largemarker">
         <div class="ListView-item ListView-item--tag-success">
           <div class="ListView-item-marker"><div>12.00am</div><div class="text-muted">9.00am</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><p>Free</p></a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="modal" data-target="#calendarChooseNew"><p>Free</p></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><div>9.00am</div><div class="text-muted">10.00am</div></div>
@@ -83,8 +83,8 @@
         </div>
         <div class="ListView-item ListView-item--tag-success">
           <div class="ListView-item-marker"><div>10.00am</div><div class="text-muted">11.00am</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><p>Free</p></a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="modal" data-target="#calendarChooseNew"><p>Free</p></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="ListView-item ListView-item--tag-warning">
           <div class="ListView-item-marker"><div>11.00am</div><div class="text-muted">12.45pm</div></div>
@@ -93,8 +93,8 @@
         </div>
         <div class="ListView-item ListView-item--tag-success">
           <div class="ListView-item-marker"><div>12.45pm</div><div class="text-muted">16.00pm</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><p>Free</p></a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="modal" data-target="#calendarChooseNew"><p>Free</p></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><div>16:00pm</div><div class="text-muted">17.15pm</div></div>
@@ -113,13 +113,30 @@
         </div>
         <div class="ListView-item ListView-item--tag-success">
           <div class="ListView-item-marker"><div>19:30pm</div><div class="text-muted">11.00pm</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><p>Free</p></a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="modal" data-target="#calendarChooseNew"><p>Free</p></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><div>11:00pm</div><div class="text-muted">12.00am</div></div>
           <a href="#" class="btn btn-link btn-block ListView-item-content"><div>Jaren Freely</div><div>Deep Tissue Massage</div></a>
           <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged"><span class="glyphicon glyphicon-new-window"></span></a>
+        </div>
+      </div>
+      
+      <!-- Modal -->
+      <div class="modal fade centered" id="calendarChooseNew" tabindex="-1" role="dialog" aria-labelledby="calendarChooseNewLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="calendarChooseNewLabel">Create a new...</h4>
+            </div>
+            <div class="modal-body">
+              <a class="btn btn-block btn-default" href="#">Appointment</a>
+              <a class="btn btn-block btn-default" href="#">Calendar Event</a>
+              <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
         </div>
       </div>
 

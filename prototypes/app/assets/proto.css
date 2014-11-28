@@ -55,13 +55,13 @@
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** We use ever all the available screen **/
 
-/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 html.app,
 html.app > body {
   height: 100%;
 }
 
-/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 html.app > body > .container,
 html.app > body > .container-fluid,
 html.app > body > .activity {
@@ -71,15 +71,15 @@ html.app > body > .activity {
 /* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /* More app specific styles */
 
-/* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 57 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app body {
   padding-top: 51px;
   padding-bottom: 10px;
 }
 
-/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container {
 /* Overwriting default Bootstrap margins */
   padding-left: 5px;
@@ -87,23 +87,23 @@ html.app > body > .activity {
 /* Space for nav at bottom */
 }
 
-/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 69 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container .row {
   margin-left: -5px;
   margin-right: -5px;
 }
 
-/* line 70 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container .has-bottom-navbar {
   padding-bottom: 60px;
 }
 
-/* line 75 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 79 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav {
   position: relative;
 }
 
-/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 82 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-brand {
   float: none;
   display: inline-block;
@@ -123,18 +123,18 @@ html.app > body > .activity {
   }
 }
 
-/* line 87 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-action {
   margin: 8px 0;
 }
 
-/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity {
 /* settings specially important for the use of navbar
            but applied to all for consistent results
@@ -155,7 +155,7 @@ html.app > body > .activity {
         */
 }
 
-/* line 103 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity .activity-navbar {
   position: absolute;
   bottom: 0px;
@@ -167,59 +167,90 @@ html.app > body > .activity {
   border-color: transparent;
 }
 
-/* line 116 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 120 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity.has-navbar {
   padding-bottom: 50px;
 }
 
-/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .btn-google {
   background-color: #c00;
   color: #fff;
 }
 
-/* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 129 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .btn-facebook {
   background-color: #085394;
   color: #fff;
 }
 
-/* line 131 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 135 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .isolated {
   margin: 14px 0;
   clear: both;
   display: block;
 }
 
-/* line 136 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 140 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title {
   display: table;
 }
 
-/* line 138 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 142 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title .glyphicon {
   vertical-align: middle;
   display: table-cell;
   padding-left: 0.5em;
 }
 
-/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 147 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title p {
   padding-left: 0.7em;
   vertical-align: middle;
   display: table-cell;
 }
 
-/* line 150 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 155 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 151 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 156 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+.app .modal.centered.in {
+  display: table !important;
+  width: 100%;
+  height: 100%;
+}
+
+/* line 161 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+.app .modal.centered .modal-dialog {
+  display: table-cell;
+  padding: 10px;
+  vertical-align: middle;
+}
+
+/* line 168 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+.app .modal {
+  -webkit-transition: 250ms all;
+  -moz-transition: 250ms all;
+  -o-transition: 250ms all;
+  -ms-transition: 250ms all;
+  transition: 250ms all;
+  background: rgba(0,0,0,0);
+}
+
+/* line 171 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+.app .modal.in {
+  background: rgba(0,0,0,0.4);
+}
+
+/* line 176 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+
+/* line 177 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-complete .success-icon {
   font-size: 4em;
   text-align: center;
   display: block;
 }
 
-/* line 156 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 182 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-complete .lead {
   margin-top: 2em;
   margin-bottom: 2em;

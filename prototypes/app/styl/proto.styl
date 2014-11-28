@@ -146,6 +146,32 @@ html.app > body > .activity {
         }
     }
     
+    /* centered modal */
+    /* TODO: large content gets innacessible using this centering technique */
+    .modal.centered {
+        &.in {
+            display: table !important;
+            width: 100%;
+            height: 100%;
+        }
+    
+        .modal-dialog {
+            display: table-cell;
+            padding: 10px;
+            vertical-align: middle;
+        }
+    }
+    
+    /* why modals has not the standard modal-backdrop? anyway, fix.. */
+    .modal {
+        transition: 250ms all;
+        background: rgba(0, 0, 0, 0);
+
+        &.in {
+            background: rgba(0, 0, 0, .4);
+        }
+    }
+    
     /** Specific pages code */
     .app-complete {
         .success-icon {
