@@ -78,8 +78,8 @@
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><div>9.00am</div><div class="text-muted">10.00am</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><div>Jaren Freely</div><div>Deep Tissue Massage</div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged"><span class="glyphicon glyphicon-new-window"></span></a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>Jaren Freely</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment"><span class="glyphicon glyphicon-new-window"></span></a>
         </div>
         <div class="ListView-item ListView-item--tag-success">
           <div class="ListView-item-marker"><div>10.00am</div><div class="text-muted">11.00am</div></div>
@@ -88,8 +88,8 @@
         </div>
         <div class="ListView-item ListView-item--tag-warning">
           <div class="ListView-item-marker"><div>11.00am</div><div class="text-muted">12.45pm</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><div>CONFIRM-Susan Dee</div><div>Deep Tissue Massage</div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged"><span class="glyphicon glyphicon-new-window"></span></a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>CONFIRM-Susan Dee</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment"><span class="glyphicon glyphicon-new-window"></span></a>
         </div>
         <div class="ListView-item ListView-item--tag-success">
           <div class="ListView-item-marker"><div>12.45pm</div><div class="text-muted">16.00pm</div></div>
@@ -98,8 +98,8 @@
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><div>16:00pm</div><div class="text-muted">17.15pm</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><div>Susan Dee</div><div>Deep Tissue Massage</div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged">$155</a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>Susan Dee</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment">$155</a>
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><div>17:15pm</div><div class="text-muted">18.30pm</div></div>
@@ -108,8 +108,8 @@
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><div>18:30pm</div><div class="text-muted">19.30pm</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><div>Susan Dee</div><div>Deep Tissue Massage</div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged">$59.90</a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>Susan Dee</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment">$59.90</a>
         </div>
         <div class="ListView-item ListView-item--tag-success">
           <div class="ListView-item-marker"><div>19:30pm</div><div class="text-muted">11.00pm</div></div>
@@ -118,8 +118,8 @@
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><div>11:00pm</div><div class="text-muted">12.00am</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content"><div>Jaren Freely</div><div>Deep Tissue Massage</div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged"><span class="glyphicon glyphicon-new-window"></span></a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>Jaren Freely</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-tagged" data-toggle="activity" data-target="calendar-appointment"><span class="glyphicon glyphicon-new-window"></span></a>
         </div>
       </div>
       
@@ -154,36 +154,34 @@
         <div class="CardsDeck-switch CardsDeck-switch--previous">
           <a href="#prev" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous</span></a>
         </div>
-        <div class="Card">
-          Appointment card
-          Appointment card
-          Appointment card
-          Appointment card
-          Appointment cardAppointment card
-          Appointment card
-          Appointment card
-          Appointment card
-          Appointment cardAppointment card
-          Appointment card
-          Appointment card
-          Appointment card
-          Appointment cardAppointment card
-          Appointment card
-          Appointment card
-          Appointment card
-          Appointment cardAppointment card
-          Appointment card
-          Appointment card
-          Appointment card
-          Appointment cardAppointment card
-          Appointment card
-          Appointment card
-          Appointment card
-          Appointment cardAppointment card
-          Appointment card
-          Appointment card
-          Appointment card
-          Appointment card
+        <div class="Card AppointmentCard">
+          <ul class="list-unstyled">
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-dashboard"></span> <span class="AppointmentCard-data">10:00a-12:00p</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-user"></span> <span class="AppointmentCard-data">Joshua Danielson</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span> <span class="AppointmentCard-data">Deep Tissue Massage 120m plus 2 more</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span> <span class="AppointmentCard-data">$95.00</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span> <span class="AppointmentCard-data">3150 18th Street San Francisco, CA</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span> <span class="AppointmentCard-data">Looking forward to seeing the new color</span>
+            </li>
+            <li>
+              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span> <span class="AppointmentCard-data">Ask him about his new color</span>
+            </li>
+          </ul>
+          <div class="AppointmentCard-actions row">
+            <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block">Edit</button></div>
+            <div class="col-xs-6"><button type="button" class="btn btn-default btn-block">Contact</button></div>
+          </div>
         </div>
         <div class="CardsDeck-switch CardsDeck-switch--next">
           <a href="#next" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next</span></a>

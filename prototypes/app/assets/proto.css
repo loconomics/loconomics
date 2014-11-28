@@ -1030,7 +1030,7 @@ html.app > body > .container-fluid {
   color: #222;
 }
 
-/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
 /* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
@@ -1046,4 +1046,26 @@ html.app > body > .container-fluid {
 .CalendarDateHeader .CalendarDateHeader:active,
 .CalendarDateHeader .CalendarDateHeader:focus {
   outline: none;
+}
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+
+/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+.AppointmentCard li {
+  margin-bottom: 0.9em;
+}
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+.AppointmentCard .AppointmentCard-icon {
+  font-size: 1.8em;
+  margin-right: 0.6em;
+  vertical-align: middle;
+  float: left;
+}
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+.AppointmentCard .AppointmentCard-data {
+  vertical-align: middle;
 }
