@@ -11,7 +11,7 @@ exports.init = function initCalendar($activity) {
 
     var dayCal = $activity.find('#dayCalendar');
 
-    var dateTitle = $activity.find('#dateTitle');
+    var dateTitle = $activity.find('.CalendarDateHeader > .CalendarDateHeader-date');
 
     cal
     .on('swipeleft', function() {

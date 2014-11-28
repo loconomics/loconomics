@@ -842,13 +842,17 @@ html.app > body > .activity {
 }
 
 /* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar] #dateTitle:active,
-[data-activity=calendar] #dateTitle:focus {
-  outline: none;
-}
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar] #dateTitle {
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar] .CalendarDateHeader > .btn {
   font-size: 1.4em;
   color: #222;
+}
+
+/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar] .CalendarDateHeader .CalendarDateHeader:active,
+[data-activity=calendar] .CalendarDateHeader .CalendarDateHeader:focus {
+  outline: none;
 }

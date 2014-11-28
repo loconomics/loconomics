@@ -66,7 +66,11 @@
 
       <div id="monthlyCalendar" class="calendar-placeholder" data-date="today"></div>
       
-      <a id="dateTitle" href="#" class="btn btn-link btn-block btn-default text-center"><time>July 28, 2014</time> <span class="caret"></span></a>
+      <div class="row CalendarDateHeader">
+        <a href="#" class="btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
+        <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time>July 28, 2014</time> <span class="caret"></span></a>
+        <a href="#" class="btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
+      </div>
       
       <div id="dayCalendar" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags ListView-largemarker">
         <div class="ListView-item ListView-item--tag-success">
