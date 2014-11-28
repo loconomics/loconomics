@@ -25,7 +25,9 @@ exports.init = function initCalendar($activity) {
     
         if (e.viewMode === 'days') {
             var date = moment(e.date);
-            dateTitle.text(date.format('LL'));
+            var dateInfo = dateTitle.children('time:eq(0)');
+            dateInfo.attr('datetime', date.toISOString());
+            dateInfo.text(date.format('LL'));
             cal.removeClass('is-visible');
         }
     });

@@ -849,5 +849,6 @@ html.app > body > .activity {
 
 /* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #dateTitle {
+  font-size: 1.4em;
   color: #222;
 }

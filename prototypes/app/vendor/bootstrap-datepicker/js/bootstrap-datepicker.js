@@ -202,8 +202,9 @@
 				year = d.getFullYear(),
 				month = d.getMonth(),
 				currentDate = this.date.valueOf();
-			this.picker.find('.datepicker-days th:eq(1)')
-						.text(DPGlobal.dates.months[month]+' '+year);
+			this.picker
+            .find('.datepicker-days th:eq(1)')
+            .html(DPGlobal.dates.months[month] + ' ' + year + DPGlobal.caretTemplate);
 			var prevMonth = new Date(year, month-1, 28,0,0,0,0),
 				day = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
 			prevMonth.setDate(day);
@@ -281,7 +282,7 @@
 			
 			var months = this.picker.find('.datepicker-months')
 						.find('th:eq(1)')
-							.text(year)
+							.html(year + DPGlobal.caretTemplate)
 							.end()
 						.find('span').removeClass('active');
 			if (currentYear === year) {
@@ -527,7 +528,8 @@
 								'<th class="next">&rsaquo;</th>'+
 							'</tr>'+
 						'</thead>',
-		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>'
+		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',
+        caretTemplate: ' <span class="caret"></span'
 	};
 	DPGlobal.template = '<div class="datepicker">'+
 							'<div class="datepicker-days">'+
