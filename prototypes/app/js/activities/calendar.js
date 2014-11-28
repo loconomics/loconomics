@@ -72,4 +72,19 @@ exports.init = function initCalendar($activity) {
         e.preventDefault();
         e.stopPropagation();
     });
+    
+    $activity.on('tap', '[data-toggle="activity"][data-target="calendar-appointment"]', function(e) {
+        $activity.removeClass('is-active');
+        showAppointment();
+        e.preventDefault();
+    });
 };
+
+function showAppointment() {
+    var $activity = $('[data-activity=calendar-appointment]');
+    
+    $activity.addClass('is-active');
+    
+    
+};
+
