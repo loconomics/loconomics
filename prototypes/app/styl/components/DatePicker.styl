@@ -112,19 +112,27 @@ $datepickerButtonBackground() {
   /* Percentual sizing to being responsive rather than the 
     original fixed size
   */
-  .datepicker-years tr > td,
-  .datepicker-months tr > td
+  .DatePicker-years tr > td,
+  .DatePicker-months tr > td
     padding 0 !important
     
-  .datepicker-months .switch,
-  .datepicker-years .switch
+  .DatePicker-months .switch,
+  .DatePicker-years .switch
     width 72.4% !important
 
-  .datepicker-months .prev,
-  .datepicker-months .next,
-  .datepicker-years .prev,
-  .datepicker-years .next
+  .DatePicker-months .prev,
+  .DatePicker-months .next,
+  .DatePicker-years .prev,
+  .DatePicker-years .next
     width 14% !important
+    
+  /* Carets to visually notify 'clickable headers' */
+  .DatePicker-days,
+  .DatePicker-months
+    th.switch:after
+      content: ''
+      $caret(6px)
+
 
 /* TOREVIEW: Addapt it with other name? */
 .input-append, .input-prepend

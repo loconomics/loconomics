@@ -114,7 +114,7 @@ html.app > body > .activity {
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
   .app .app-nav .navbar-brand {
     background-image: url("../../../assets/images/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
@@ -228,7 +228,7 @@ html.app > body > .activity {
 /* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Components styles **/
 
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
 /* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView {
@@ -648,6 +648,7 @@ html.app > body > .activity {
 /* Percentual sizing to being responsive rather than the 
     original fixed size
   */
+/* Carets to visually notify 'clickable headers' */
 }
 
 /* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
@@ -799,30 +800,46 @@ html.app > body > .activity {
 }
 
 /* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
-.DatePicker .datepicker-years tr > td,
-.DatePicker .datepicker-months tr > td {
+.DatePicker .DatePicker-years tr > td,
+.DatePicker .DatePicker-months tr > td {
   padding: 0 !important;
 }
 
 /* line 118 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
-.DatePicker .datepicker-months .switch,
-.DatePicker .datepicker-years .switch {
+.DatePicker .DatePicker-months .switch,
+.DatePicker .DatePicker-years .switch {
   width: 72.4% !important;
 }
 
 /* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
-.DatePicker .datepicker-months .prev,
-.DatePicker .datepicker-months .next,
-.DatePicker .datepicker-years .prev,
-.DatePicker .datepicker-years .next {
+.DatePicker .DatePicker-months .prev,
+.DatePicker .DatePicker-months .next,
+.DatePicker .DatePicker-years .prev,
+.DatePicker .DatePicker-years .next {
   width: 14% !important;
 }
 
 /* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 
-/* line 126 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 128 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+.DatePicker .DatePicker-days th.switch:after,
+.DatePicker .DatePicker-months th.switch:after {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 6px;
+  vertical-align: middle;
+  border-top: 4px solid;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
 
-/* line 127 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 132 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+
+/* line 133 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+
+/* line 134 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .input-append.date .add-on i,
 .input-prepend.date .add-on i {
   display: block;

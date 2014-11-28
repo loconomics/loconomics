@@ -47,3 +47,20 @@ $bg-colors = {
 
 /** Typo **/
 $font-size-base = 14px;
+
+/** Utilities **/
+$caret-width-base = 4px;
+
+/* Caret mixim
+    TODO: move to a better place
+*/
+$caret($margin-left = 2px) {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: $margin-left;
+  vertical-align: middle;
+  border-top:   $caret-width-base solid;
+  border-right: $caret-width-base solid transparent;
+  border-left:  $caret-width-base solid transparent;
+}
