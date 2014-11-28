@@ -26,7 +26,7 @@ exports.init = function initCalendar($activity) {
         date = moment(date);
         var dateInfo = dateTitle.children('time:eq(0)');
         dateInfo.attr('datetime', date.toISOString());
-        dateInfo.text(date.format('LL'));
+        dateInfo.text(date.format('dddd (M/D)'));
         cal.removeClass('is-visible');
     };
 
