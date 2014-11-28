@@ -209,26 +209,32 @@ $markerWidthLarge = 56px;
     }
 }
 
-/** Modifier 'colorlabels'
+/** Modifier 'colortags'
 **/
-.ListView--colorlabels {
+.ListView--colortags {
     .ListView-item {
-        &:before {
+        &:before,
+        .ListView-item-tagged:before {
             content: '';
             display: block;
             border-right: 2px solid $gray-light;
             position: absolute;
             top: 0;
             bottom: 0;
+            left: 0;
             z-index: 2;
+        }
+
+        &:before {
             left: $markerWidth + round($contentHGap / 2);
         }
 
-        /* Color modifiers: ListView-item--label-primary, ListView-item--label-success,... */
+        /* Color modifiers: ListView-item--tag-primary, ListView-item--tag-success,... */
         $colors = 'primary' 'success' 'info' 'warning' 'danger'
         for $color in $colors {
-            &.ListView-item--label-{$color} {
-                &:before {
+            &.ListView-item--tag-{$color} {
+                &:before,
+                .ListView-item-tagged:before {
                     border-right-color: $fg-colors[$color];
                 }
 
