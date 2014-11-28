@@ -138,7 +138,6 @@ $contentVGap = 6px;
     $heightLimit = 52px;
     /* heightLimit without container paddings */
     $internalHeight = 40px;
-    $markerIconSize = 24px;
     
     .ListView-item {
 
@@ -179,7 +178,6 @@ $contentVGap = 6px;
 **/
 $markerWidthLarge = 56px;
 .ListView--largemarker {
-    $contentHGap = 12px;
 
     .ListView-item {
         .ListView-item-marker {
@@ -250,6 +248,21 @@ $markerWidthLarge = 56px;
     &.ListView--largemarker {
         .ListView-item:before {
             left: $markerWidthLarge + round($contentHGap / 2);
+        }
+    }
+}
+
+/** Modifier 'largeaction'
+**/
+$actionWidthLarge = 60px;
+.ListView--largemarker {
+    .ListView-item {
+        .ListView-item-action {
+            width: $actionWidthLarge;
+        }
+
+        .ListView-item-content {
+            padding-right: $actionWidthLarge;
         }
     }
 }
