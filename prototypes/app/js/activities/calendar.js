@@ -15,10 +15,12 @@ exports.init = function initCalendar($activity) {
     var dateTitle = $calendarDateHeader.children('.CalendarDateHeader-date');
 
     cal
-    .on('swipeleft', function() {
+    .on('swipeleft', function(e) {
+        e.preventDefault();
         cal.datepicker('moveDate', 'next');
     })
-    .on('swiperight', function() {
+    .on('swiperight', function(e) {
+        e.preventDefault();
         cal.datepicker('moveDate', 'prev');
     });
     
@@ -39,10 +41,12 @@ exports.init = function initCalendar($activity) {
     updateDateTitle(cal.datepicker('getValue'));
 
     dayCal
-    .on('swipeleft', function() {
+    .on('swipeleft', function(e) {
+        e.preventDefault();
         cal.datepicker('moveValue', 'next', 'date');
     })
-    .on('swiperight', function() {
+    .on('swiperight', function(e) {
+        e.preventDefault();
         cal.datepicker('moveValue', 'prev', 'date');
     });
     
@@ -62,7 +66,9 @@ exports.init = function initCalendar($activity) {
         e.stopPropagation();
     });
 
-    dateTitle.on('tap', function() {
+    dateTitle.on('tap', function(e) {
         cal.toggleClass('is-visible');
+        e.preventDefault();
+        e.stopPropagation();
     });
 };
