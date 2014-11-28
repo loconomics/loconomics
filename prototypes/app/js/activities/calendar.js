@@ -86,5 +86,5 @@ function showAppointment() {
     $activity.addClass('is-active');
     
     
-};
+}
 

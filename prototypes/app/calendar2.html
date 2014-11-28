@@ -60,15 +60,15 @@
       </div>
     </nav>
 
-    <div class="container app-calendar" data-activity="calendar">
-
-      <div id="monthlyCalendar" class="calendar-placeholder" data-date="today"></div>
+    <div class="container app-calendar is-active" data-activity="calendar">
       
       <div class="row CalendarDateHeader">
         <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
         <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time>July 28, 2014</time> <span class="caret"></span></a>
         <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
       </div>
+      
+      <div id="monthlyCalendar" class="calendar-placeholder" data-date="today"></div>
       
       <div id="dayCalendar" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags ListView-largemarker">
         <div class="ListView-item ListView-item--tag-success">
@@ -142,7 +142,7 @@
 
     </div> <!-- /container -->
 
-    <div class="container app-calendar" data-activity="calendar-appointment">
+    <div class="container app-calendar-appointment" data-activity="calendar-appointment">
 
       <div class="row CalendarDateHeader">
         <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
@@ -150,14 +150,44 @@
         <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
       </div>
       
-      <div class="row CardsDeck">
-        <a href="#prev" class="CardsDeck-switch btn btn-link col-xs-1 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous</span></a>
-        <div class="col-xs-10">
-          <div class="Card">
-            Appointment card
-          </div>
+      <div class="CardsDeck CardsDeck--slider">
+        <div class="CardsDeck-switch CardsDeck-switch--previous">
+          <a href="#prev" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous</span></a>
         </div>
-        <a href="#next" class="CardsDeck-switch btn btn-link col-xs-1 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next</span></a>
+        <div class="Card">
+          Appointment card
+          Appointment card
+          Appointment card
+          Appointment card
+          Appointment cardAppointment card
+          Appointment card
+          Appointment card
+          Appointment card
+          Appointment cardAppointment card
+          Appointment card
+          Appointment card
+          Appointment card
+          Appointment cardAppointment card
+          Appointment card
+          Appointment card
+          Appointment card
+          Appointment cardAppointment card
+          Appointment card
+          Appointment card
+          Appointment card
+          Appointment cardAppointment card
+          Appointment card
+          Appointment card
+          Appointment card
+          Appointment cardAppointment card
+          Appointment card
+          Appointment card
+          Appointment card
+          Appointment card
+        </div>
+        <div class="CardsDeck-switch CardsDeck-switch--next">
+          <a href="#next" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next</span></a>
+        </div>
       </div>
 
     </div> <!-- /container -->

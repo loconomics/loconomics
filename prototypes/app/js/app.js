@@ -17,9 +17,6 @@ $(function() {
         var actName = $activity.data('activity');
         if (activities.hasOwnProperty(actName)) {
             activities[actName].init($activity);
-            
-            // TODO: Only per URL
-            $activity.addClass('is-active');
         }
     });
 });

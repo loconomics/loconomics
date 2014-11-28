@@ -12,17 +12,16 @@ html.app > body {
     height: 100%;
 }
 html.app > body > .container,
-html.app > body > .container-fluid,
-html.app > body > .activity {
+html.app > body > .container-fluid {
     min-height: 100%;
+    height: 100%;
 }
 
 /* More app specific styles */
 .app {
-    /* Space for nav-header on top and a bit blank gap on bottom */
+    /* Space for nav-header on top */
     body {
       padding-top: 51px;
-      padding-bottom: 10px;
     }
 
     /*
@@ -41,7 +40,7 @@ html.app > body > .activity {
         
         /* Space for nav at bottom */
         .has-bottom-navbar {
-            padding-bottom: 10px + 50px;
+            padding-bottom: 50px;
         }
     }
     /* app-nav (new class under .navbar) */
@@ -74,6 +73,7 @@ html.app > body > .activity {
            with/without navbar
         */
         min-height: 100%;
+        height: 100%;
         position: relative;
         overflow: auto;
         
@@ -108,13 +108,13 @@ html.app > body > .activity {
         
         /* Hidden until active */
         display: none;
-        transition: 2000ms all;
+        /*transition: 2000ms all;
         opacity: 0;
-        z-index: 1;
+        z-index: 1;*/
         &.is-active {
             display: block;
-            opacity: 1;
-            z-index: 2;
+           /* opacity: 1;
+            z-index: 2;*/
         }
     }
     
@@ -176,12 +176,7 @@ html.app > body > .activity {
     
     /* why modals has not the standard modal-backdrop? anyway, fix.. */
     .modal {
-        transition: 250ms all;
-        background: rgba(0, 0, 0, 0);
-
-        &.in {
-            background: rgba(0, 0, 0, .4);
-        }
+        background: rgba(0, 0, 0, .4);
     }
     
     /** Specific pages code */

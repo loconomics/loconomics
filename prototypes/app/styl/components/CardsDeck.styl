@@ -11,5 +11,35 @@
     .Card {
         margin: 14px 0;
     }
+    
+    &.CardsDeck--slider {
+    
+        $switchWidth = 40px;
+    
+        padding: 4px $switchWidth;
+    
+        .CardsDeck-switch {
+            max-width: $switchWidth;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            
+            display: table;
+            height: 100%;
+            
+            > * {
+                display: table-cell;
+                vertical-align: middle;
+            }
+            
+            &.CardsDeck-switch--previous {
+                left: 0;
+            }
+            &.CardsDeck-switch--next {
+                right: 0;
+            }
+        }
+    
+    }
 
 }
