@@ -50,7 +50,7 @@ function CalendarActivity($activity) {
     }.bind(this));
     
     this.$dateHeader.on('tap', '.CalendarDateHeader-switch', function(e) {
-        switch (this.getAttribute('href')) {
+        switch (e.currentTarget.getAttribute('href')) {
             case '#prev':
                 this.$datepicker.datepicker('moveValue', 'prev', 'date');
                 break;
