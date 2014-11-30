@@ -889,7 +889,7 @@ html.app > body > .container-fluid {
 
 /* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck {
-  background-color: #eee;
+  background-color: #777;
 }
 
 /* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
@@ -919,21 +919,27 @@ html.app > body > .container-fluid {
 }
 
 /* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+.CardsDeck.CardsDeck--slider .CardsDeck-switch,
+.CardsDeck.CardsDeck--slider .CardsDeck-switch a {
+  color: White;
+}
+
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch.CardsDeck-switch--previous {
   left: 0;
 }
 
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch.CardsDeck-switch--next {
   right: 0;
 }
 
-/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 
 /* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 .Card {
-  -webkit-box-shadow: 0 0 4px 0 #777;
-  box-shadow: 0 0 4px 0 #777;
+  -webkit-box-shadow: 0 3px 4px 1px #333;
+  box-shadow: 0 3px 4px 1px #333;
   margin: 4px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
