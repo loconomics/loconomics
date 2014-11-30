@@ -6,58 +6,56 @@ var $ = require('jquery'),
 require('../components/DatePicker');
 
 exports.init = function initCalendar($activity) {
+    var calendar = new CalendarActivity($activity);
+};
 
-    var cal = $activity.find('#monthlyCalendar');
-    cal.show().datepicker();
+function CalendarActivity($activity) {
 
-    var dayCal = $activity.find('#dayCalendar');
+    /* Getting elements */
+    this.$datepicker = $activity.find('#calendarDatePicker');
+    this.$dailyView = $activity.find('#calendarDailyView');
+    this.$dateHeader = $activity.find('#calendarDateHeader');
+    this.$dateTitle = this.$dateHeader.children('.CalendarDateHeader-date');
+    this.$appointmentView = $activity.find('#calendarAppointmentView');
+    this.$chooseNew = $activity.find('#calendarChooseNew');
+    
+    /* Init components */
+    this.$datepicker.show().datepicker();
 
-    var $calendarDateHeader = $activity.find('.CalendarDateHeader');
-    var dateTitle = $calendarDateHeader.children('.CalendarDateHeader-date');
-
-    cal
+    /* Event handlers */
+    this.$datepicker
     .on('swipeleft', function(e) {
         e.preventDefault();
-        cal.datepicker('moveDate', 'next');
-    })
+        this.$datepicker.datepicker('moveDate', 'next');
+    }.bind(this))
     .on('swiperight', function(e) {
         e.preventDefault();
-        cal.datepicker('moveDate', 'prev');
-    });
-    
-    var updateDateTitle = function updateDateTitle(date) {
-        date = moment(date);
-        var dateInfo = dateTitle.children('time:eq(0)');
-        dateInfo.attr('datetime', date.toISOString());
-        dateInfo.text(date.format('dddd (M/D)'));
-        cal.removeClass('is-visible');
-    };
+        this.$datepicker.datepicker('moveDate', 'prev');
+    }.bind(this));
 
-    cal.on('changeDate', function(e) {
+    this.$datepicker.on('changeDate', function(e) {
         if (e.viewMode === 'days') {
-            updateDateTitle(e.date);
+            this.showDailyView(e.date);
         }
-    });
-    // First date:
-    updateDateTitle(cal.datepicker('getValue'));
+    }.bind(this));
 
-    dayCal
+    this.$dailyView
     .on('swipeleft', function(e) {
         e.preventDefault();
-        cal.datepicker('moveValue', 'next', 'date');
-    })
+        this.$datepicker.datepicker('moveValue', 'next', 'date');
+    }.bind(this))
     .on('swiperight', function(e) {
         e.preventDefault();
-        cal.datepicker('moveValue', 'prev', 'date');
-    });
+        this.$datepicker.datepicker('moveValue', 'prev', 'date');
+    }.bind(this));
     
-    $calendarDateHeader.on('tap', '.CalendarDateHeader-switch', function(e) {
+    this.$dateHeader.on('tap', '.CalendarDateHeader-switch', function(e) {
         switch (this.getAttribute('href')) {
             case '#prev':
-                cal.datepicker('moveValue', 'prev', 'date');
+                this.$datepicker.datepicker('moveValue', 'prev', 'date');
                 break;
             case '#next':
-                cal.datepicker('moveValue', 'next', 'date');
+                this.$datepicker.datepicker('moveValue', 'next', 'date');
                 break;
             default:
                 // Lets default:
@@ -65,26 +63,51 @@ exports.init = function initCalendar($activity) {
         }
         e.preventDefault();
         e.stopPropagation();
-    });
+    }.bind(this));
 
-    dateTitle.on('tap', function(e) {
-        cal.toggleClass('is-visible');
+    this.$dateTitle.on('tap', function(e) {
+        this.$datepicker.toggleClass('is-visible');
         e.preventDefault();
         e.stopPropagation();
-    });
+    }.bind(this));
     
     $activity.on('tap', '[data-toggle="activity"][data-target="calendar-appointment"]', function(e) {
-        $activity.removeClass('is-active');
-        showAppointment();
+        this.$chooseNew.modal('hide');
+        this.showAppointment();
         e.preventDefault();
-    });
+    }.bind(this));
+    
+    /* Visualization */
+    // Start with daily view and initial date:
+    this.showDailyView(this.$datepicker.datepicker('getValue'), true);
 };
 
-function showAppointment() {
-    var $activity = $('[data-activity=calendar-appointment]');
+CalendarActivity.prototype.updateDateTitle = function updateDateTitle(date) {
+    date = moment(date);
+    var dateInfo = this.$dateTitle.children('time:eq(0)');
+    dateInfo.attr('datetime', date.toISOString());
+    dateInfo.text(date.format('dddd (M/D)'));
+    this.$datepicker.removeClass('is-visible');
+};
+
+CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun) {
+
+    if (firstRun || !this.$dailyView.is(':visible')) {
+        this.$appointmentView.hide();
+        this.$dailyView.show();
+    }
+   
+    // Optional date, or maintain current one
+    if (date && date instanceof Date) {
+        this.updateDateTitle(date);
+    }
+
+};
+
+CalendarActivity.prototype.showAppointment = function showAppointment() {
     
-    $activity.addClass('is-active');
-    
-    
-}
+    this.$dailyView.hide();
+    this.$appointmentView.show();
+        
+};
 

@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-11-28
+/*! LoconomicsAppProto 2014-11-30
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -949,7 +949,7 @@ html.app > body > .container-fluid {
 /* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
 /* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar] #monthlyCalendar {
+[data-activity=calendar] #calendarDatePicker {
 /* positioning */
   position: absolute;
   left: 10px;
@@ -980,18 +980,18 @@ html.app > body > .container-fluid {
 }
 
 /* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar] #monthlyCalendar .DatePicker:after {
+[data-activity=calendar] #calendarDatePicker .DatePicker:after {
   left: 50%;
 }
 
 /* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar] #monthlyCalendar .DatePicker:before {
+[data-activity=calendar] #calendarDatePicker .DatePicker:before {
   left: 50%;
   margin-left: -1px;
 }
 
 /* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar] #monthlyCalendar.is-visible {
+[data-activity=calendar] #calendarDatePicker.is-visible {
   opacity: 1;
   -ms-filter: none;
   filter: none;
@@ -1003,34 +1003,7 @@ html.app > body > .container-fluid {
   pointer-events: all;
 }
 
-/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-
-/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-
-/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-.CalendarDateHeader > .btn {
-  font-size: 1.4em;
-  color: #222;
-}
-
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-.CalendarDateHeader .CalendarDateHeader:active,
-.CalendarDateHeader .CalendarDateHeader:focus {
-  outline: none;
-}
-
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar-appointment.styl */
-
-/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar-appointment.styl */
-
-/* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar-appointment.styl */
-[data-activity=calendar-appointment] .btn-link {
-  color: #222;
-}
-
-/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 41 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
 /* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 

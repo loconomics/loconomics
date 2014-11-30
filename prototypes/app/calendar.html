@@ -62,15 +62,16 @@
 
     <div class="container app-calendar is-active" data-activity="calendar">
       
-      <div class="row CalendarDateHeader">
+      <div id="calendarDateHeader" class="row CalendarDateHeader">
         <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
         <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time>July 28, 2014</time> <span class="caret"></span></a>
         <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
       </div>
       
-      <div id="monthlyCalendar" class="calendar-placeholder" data-date="today"></div>
+      <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
       
-      <div id="dayCalendar" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags ListView-largemarker">
+      <!-- Daily View (appointments list) -->
+      <div id="calendarDailyView" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags ListView-largemarker">
         <div class="ListView-item ListView-item--tag-success">
           <div class="ListView-item-marker"><div>12.00am</div><div class="text-muted">9.00am</div></div>
           <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="modal" data-target="#calendarChooseNew"><p>Free</p></a>
@@ -123,34 +124,8 @@
         </div>
       </div>
       
-      <!-- Modal -->
-      <div class="modal fade centered" id="calendarChooseNew" tabindex="-1" role="dialog" aria-labelledby="calendarChooseNewLabel" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-              <h4 class="modal-title" id="calendarChooseNewLabel">Create a new...</h4>
-            </div>
-            <div class="modal-body">
-              <a class="btn btn-block btn-default" href="#" data-toggle="activity" data-target="calendar-appointment">Appointment</a>
-              <a class="btn btn-block btn-default" href="#">Calendar Event</a>
-              <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div> <!-- /container -->
-
-    <div class="container app-calendar-appointment" data-activity="calendar-appointment">
-
-      <div class="row CalendarDateHeader">
-        <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
-        <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time>July 28, 2014</time> <span class="caret"></span></a>
-        <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
-      </div>
-      
-      <div class="CardsDeck CardsDeck--slider">
+      <!-- Appointment View (cards) -->
+      <div id="calendarAppointmentView" class="CardsDeck CardsDeck--slider">
         <div class="CardsDeck-switch CardsDeck-switch--previous">
           <a href="#prev" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous</span></a>
         </div>
@@ -187,9 +162,27 @@
           <a href="#next" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next</span></a>
         </div>
       </div>
+      
+      <!-- Modal calendarChooseNew -->
+      <div id="calendarChooseNew" class="modal fade centered" tabindex="-1" role="dialog" aria-labelledby="calendarChooseNewLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="calendarChooseNewLabel">Create a new...</h4>
+            </div>
+            <div class="modal-body">
+              <a class="btn btn-block btn-default" href="#" data-toggle="activity" data-target="calendar-appointment">Appointment</a>
+              <a class="btn btn-block btn-default" href="#">Calendar Event</a>
+              <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div> <!-- /container -->
-    
+
+   
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
