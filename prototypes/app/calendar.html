@@ -127,30 +127,30 @@
       <!-- Appointment View (cards) -->
       <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--slider">
         <div class="CardsDeck-switch CardsDeck-switch--previous">
-          <a href="#prev" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous</span></a>
+          <a href="#prev" class="btn btn-link btn-default" data-bind="event: { tap: goPrevious }"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous</span></a>
         </div>
-        <div class="Card AppointmentCard">
+        <div class="Card AppointmentCard" data-bind="with: currentAppointment()">
           <ul class="list-unstyled">
             <li>
-              <span class="AppointmentCard-icon glyphicon glyphicon-dashboard"></span> <span class="AppointmentCard-data">10:00a-12:00p</span>
+              <span class="AppointmentCard-icon glyphicon glyphicon-dashboard"></span> <span class="AppointmentCard-data"><span data-bind="text: startTime()"></span>-<span data-bind="text: endTime"></span></span>
             </li>
             <li>
-              <span class="AppointmentCard-icon glyphicon glyphicon-user"></span> <span class="AppointmentCard-data">Joshua Danielson</span>
+              <span class="AppointmentCard-icon glyphicon glyphicon-user"></span> <span class="AppointmentCard-data" data-bind="text: client().fullName()"></span>
             </li>
             <li>
-              <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span> <span class="AppointmentCard-data">Deep Tissue Massage 120m plus 2 more</span>
+              <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span> <span class="AppointmentCard-data" data-bind="text: pricingSummary()"></span>
             </li>
             <li>
-              <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span> <span class="AppointmentCard-data">$95.00</span>
+              <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span> <span class="AppointmentCard-data" data-bind="text: ptotalPrice"></span>
             </li>
             <li>
-              <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span> <span class="AppointmentCard-data">3150 18th Street San Francisco, CA</span>
+              <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span> <span class="AppointmentCard-data" data-bind="text: locationSummary"></span>
             </li>
             <li>
-              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span> <span class="AppointmentCard-data">Looking forward to seeing the new color</span>
+              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span> <span class="AppointmentCard-data" data-bind="text: notesToClient"></span>
             </li>
             <li>
-              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span> <span class="AppointmentCard-data">Ask him about his new color</span>
+              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span> <span class="AppointmentCard-data" data-bind="text: notesToSelf"></span>
             </li>
           </ul>
           <div class="AppointmentCard-actions row">
@@ -159,7 +159,7 @@
           </div>
         </div>
         <div class="CardsDeck-switch CardsDeck-switch--next">
-          <a href="#next" class="btn btn-link btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next</span></a>
+          <a href="#next" class="btn btn-link btn-default" data-bind="event: { tap: goNext }"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next</span></a>
         </div>
       </div>
       

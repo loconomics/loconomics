@@ -13,11 +13,7 @@ module.exports = function(grunt) {
         Libs bundle
     **/
     bconfig.libs = {
-        'src': [
-            // Set of polyfills for Harmony-ES6 features; IE lacks more of them
-            //'./vendor/inexorabletash-polyfill/json2.js',
-            //'./vendor/inexorabletash-polyfill/es5.js'
-        ],
+        'src': [],
         'dest': './assets/libs.js',
         'options': {
             'debug': false,
@@ -25,7 +21,8 @@ module.exports = function(grunt) {
                 'jquery'
             ],
             'alias': [
-                'moment'
+                'moment',
+                'knockout'
             ],
             'shim': {
                 'jquery-mobile':  {

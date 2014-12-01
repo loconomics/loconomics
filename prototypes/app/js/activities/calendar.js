@@ -104,10 +104,73 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
 
 };
 
+var ko = require('knockout');
+var Appointment = require('../models/Appointment');
+
 CalendarActivity.prototype.showAppointment = function showAppointment() {
     
+    // Visualization:
     this.$dailyView.hide();
     this.$appointmentView.show();
+    
+    if (!this.__initedAppointment) {
+        this.__initedAppointment = true;
+        // Data
+        var testData = [
+            new Appointment({
+                startTime: new Date(2014, 11, 1, 10, 0, 0),
+                endTime: new Date(2014, 11, 1, 12, 0, 0),
+                pricingSummary: 'Deep Tissue Massage 120m plus 2 more',
+                ptotalPrice: 95.0,
+                locationSummary: '3150 18th Street San Francisco, CA',
+                notesToClient: 'Looking forward to seeing the new color',
+                notesToSelf: 'Ask him about his new color',
+                client: {
+                    firstName: 'Joshua',
+                    lastName: 'Danielson'
+                }
+            }),
+            new Appointment({
+                startTime: new Date(2014, 11, 1, 13, 0, 0),
+                endTime: new Date(2014, 11, 1, 13, 50, 0),
+                pricingSummary: 'Another Massage 50m',
+                ptotalPrice: 95.0,
+                locationSummary: '3150 18th Street San Francisco, CA',
+                notesToClient: 'Something else',
+                notesToSelf: 'Remember that thing',
+                client: {
+                    firstName: 'Joshua',
+                    lastName: 'Danielson'
+                }
+            }),
+            new Appointment({
+                startTime: new Date(2014, 11, 1, 16, 0, 0),
+                endTime: new Date(2014, 11, 1, 18, 0, 0),
+                pricingSummary: 'Tissue Massage 120m',
+                ptotalPrice: 95.0,
+                locationSummary: '3150 18th Street San Francisco, CA',
+                notesToClient: '',
+                notesToSelf: 'Ask him about the forgotten notes',
+                client: {
+                    firstName: 'Joshua',
+                    lastName: 'Danielson'
+                }
+            }),
+        ];
+        var appointmentsDataView = {
+            appointments: ko.observableArray(testData),
+            currentIndex: ko.observable(0)
+        };
+        appointmentsDataView.currentAppointment = ko.computed(function() {
+            return this.appointments()[this.currentIndex() % this.appointments().length];
+        }, appointmentsDataView);
+        appointmentsDataView.goPrevious = function goPrevious() {
+            this.currentIndex(Math.abs(this.currentIndex() - 1) % this.appointments().length);
+        };
+        appointmentsDataView.goNext = function goNext() {
+            this.currentIndex((this.currentIndex() + 1) % this.appointments().length);
+        };
         
+        ko.applyBindings(appointmentsDataView, this.$appointmentView.get(0));
+    }
 };
-
