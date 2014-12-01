@@ -1,7 +1,10 @@
 'use strict';
 
+/** Global dependencies **/
 var $ = require('jquery');
 require('jquery-mobile');
+var ko = require('knockout');
+ko.bindingHandlers.format = require('../vendor/iagosrl/ko/formatBinding').formatBinding;
 
 /** Load activities **/
 var activities = {

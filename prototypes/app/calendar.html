@@ -132,7 +132,7 @@
         <div class="Card AppointmentCard" data-bind="with: currentAppointment()">
           <ul class="list-unstyled">
             <li>
-              <span class="AppointmentCard-icon glyphicon glyphicon-dashboard"></span> <span class="AppointmentCard-data"><span data-bind="text: startTime()"></span>-<span data-bind="text: endTime"></span></span>
+              <span class="AppointmentCard-icon glyphicon glyphicon-dashboard"></span> <span class="AppointmentCard-data"><span data-bind="text: startTime(), format: { type: 'datetime', format: 'LT' }"></span> - <span data-bind="text: endTime, format: { type: 'datetime', format: 'LT' }"></span></span>
             </li>
             <li>
               <span class="AppointmentCard-icon glyphicon glyphicon-user"></span> <span class="AppointmentCard-data" data-bind="text: client().fullName()"></span>
