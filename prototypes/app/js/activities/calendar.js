@@ -115,6 +115,7 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
     
     if (!this.__initedAppointment) {
         this.__initedAppointment = true;
+        
         // Data
         var testData = [
             new Appointment({
