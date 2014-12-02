@@ -255,7 +255,7 @@ $markerWidthLarge = 56px;
 /** Modifier 'largeaction'
 **/
 $actionWidthLarge = 60px;
-.ListView--largemarker {
+.ListView--largeaction {
     .ListView-item {
         .ListView-item-action {
             width: $actionWidthLarge;
@@ -263,6 +263,31 @@ $actionWidthLarge = 60px;
 
         .ListView-item-content {
             padding-right: $actionWidthLarge;
+        }
+    }
+}
+
+/** Modifier 'flexible' of ListView-item-action.
+    The classes hierarchy is required to preserve correct selector weight
+**/
+.ListView {
+    .ListView-item {
+        .ListView-item-action--flexible {
+            width: auto;
+            min-width: $actionWidth;
+            background-color: #FFF;
+            overflow: visible;
+            
+            /* Gradient ellipsis over the item-content: */
+            &:before {
+                content: '';
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                right: 100%;
+                width: 2em;
+                background-image: linear-gradient(to left, White, rgba(255, 255, 255, 0));
+            }
         }
     }
 }

@@ -563,16 +563,44 @@ html.app > body > .container-fluid {
 /* line 252 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
 /* line 253 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-.ListView--largemarker .ListView-item .ListView-item-action {
+.ListView--largeaction .ListView-item .ListView-item-action {
   width: 60px;
 }
 
 /* line 257 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-.ListView--largemarker .ListView-item .ListView-item-content {
+.ListView--largeaction .ListView-item .ListView-item-content {
   padding-right: 60px;
 }
 
-/* line 262 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
+/* line 266 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 267 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 268 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+.ListView .ListView-item .ListView-item-action--flexible {
+  width: auto;
+  min-width: 40px;
+  background-color: #fff;
+  overflow: visible;
+/* Gradient ellipsis over the item-content: */
+}
+
+/* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+.ListView .ListView-item .ListView-item-action--flexible:before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 100%;
+  width: 2em;
+  background-image: -webkit-linear-gradient(right, White, rgba(255,255,255,0));
+  background-image: -moz-linear-gradient(right, White, rgba(255,255,255,0));
+  background-image: -o-linear-gradient(right, White, rgba(255,255,255,0));
+  background-image: -ms-linear-gradient(right, White, rgba(255,255,255,0));
+  background-image: linear-gradient(to left, White, rgba(255,255,255,0));
+}
+
+/* line 287 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 
 /* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .SectionTitle {
