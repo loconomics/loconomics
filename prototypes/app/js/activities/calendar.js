@@ -90,6 +90,9 @@ CalendarActivity.prototype.updateDateTitle = function updateDateTitle(date) {
     this.$datepicker.removeClass('is-visible');
 };
 
+var ko = require('knockout');
+var CalendarSlot = require('../models/CalendarSlot');
+
 CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun) {
 
     if (firstRun || !this.$dailyView.is(':visible')) {
@@ -101,10 +104,154 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
     if (date && date instanceof Date) {
         this.updateDateTitle(date);
     }
+    
+    if (!this.__initedDailyView) {
+        this.__initedDailyView = true;
+        
+        // Data
+        var testData = [
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 0, 0, 0),
+                endTime: new Date(2014, 11, 2, 9, 0, 0),
+                
+                subject: 'Free',
+                description: null,
+                link: '#calendar/new',
 
+                actionIcon: 'glyphicon glyphicon-plus',
+                actionText: null,
+
+                classNames: 'ListView-item--tag-success'
+            }),
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 9, 0, 0),
+                endTime: new Date(2014, 11, 2, 10, 0, 0),
+                
+                subject: 'Jaren Freely',
+                description: 'Deep Tissue Massage Long Name',
+                link: '#calendar/appointment/1',
+
+                actionIcon: null,
+                actionText: '$59.90',
+
+                classNames: null
+            }),
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 10, 0, 0),
+                endTime: new Date(2014, 11, 2, 11, 0, 0),
+                
+                subject: 'Free',
+                description: null,
+                link: '#calendar/new',
+
+                actionIcon: 'glyphicon glyphicon-plus',
+                actionText: null,
+
+                classNames: 'ListView-item--tag-success'
+            }),
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 11, 0, 0),
+                endTime: new Date(2014, 11, 2, 12, 45, 0),
+                
+                subject: 'CONFIRM-Susan Dee',
+                description: 'Deep Tissue Massage',
+                link: '#calendar/appointment/2',
+
+                actionIcon: null,
+                actionText: '$70',
+
+                classNames: 'ListView-item--tag-warning'
+            }),
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 12, 45, 0),
+                endTime: new Date(2014, 11, 2, 16, 0, 0),
+                
+                subject: 'Free',
+                description: null,
+                link: '#calendar/new',
+
+                actionIcon: 'glyphicon glyphicon-plus',
+                actionText: null,
+
+                classNames: 'ListView-item--tag-success'
+            }),
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 16, 0, 0),
+                endTime: new Date(2014, 11, 2, 17, 15, 0),
+                
+                subject: 'Susan Dee',
+                description: 'Deep Tissue Massage',
+                link: '#calendar/appointment/3',
+
+                actionIcon: 'glyphicon glyphicon-plus',
+                actionText: null,
+
+                classNames: null
+            }),
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 17, 15, 0),
+                endTime: new Date(2014, 11, 2, 18, 30, 0),
+                
+                subject: 'Dentist appointment',
+                description: null,
+                link: '#calendar/event/4',
+
+                actionIcon: 'glyphicon glyphicon-new-window',
+                actionText: null,
+
+                classNames: null
+            }),
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 18, 30, 0),
+                endTime: new Date(2014, 11, 2, 19, 30, 0),
+                
+                subject: 'Susan Dee',
+                description: 'Deep Tissue Massage Long Name',
+                link: '#calendar/appointment/5',
+
+                actionIcon: null,
+                actionText: '$159.90',
+
+                classNames: null
+            }),
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 19, 30, 0),
+                endTime: new Date(2014, 11, 2, 23, 0, 0),
+                
+                subject: 'Free',
+                description: null,
+                link: '#calendar/new',
+
+                actionIcon: 'glyphicon glyphicon-plus',
+                actionText: null,
+
+                classNames: 'ListView-item--tag-success'
+            }),
+            new CalendarSlot({
+                startTime: new Date(2014, 11, 2, 23, 0, 0),
+                endTime: new Date(2014, 11, 3, 0, 0, 0),
+
+                subject: 'Jaren Freely',
+                description: 'Deep Tissue Massage',
+                link: '#calendar/appointment/6',
+
+                actionIcon: null,
+                actionText: '$80',
+
+                classNames: null
+            })
+        ];
+        
+        var dailyDataView = {
+            slots: ko.observableArray(testData),
+            currentIndex: ko.observable(0)
+        };
+        
+        ko.applyBindings(dailyDataView, this.$dailyView.get(0));
+    }
 };
 
-var ko = require('knockout');
+
 var Appointment = require('../models/Appointment');
 
 CalendarActivity.prototype.showAppointment = function showAppointment() {
