@@ -5,6 +5,7 @@
     several showing once at a time.
 **/
 .CardsDeck {
+    $verticalGap = 4px
 
     background-color: $gray-light;
 
@@ -16,7 +17,7 @@
     
         $switchWidth = 40px;
     
-        padding: 4px $switchWidth;
+        padding: $verticalGap $switchWidth;
         position: relative;
         height: 100%;
     
@@ -44,6 +45,43 @@
             }
             &.CardsDeck-switch--next {
                 right: 0;
+            }
+        }
+    
+    }
+    
+    &.CardsDeck--dotsSlider {
+    
+        $gapWidth = 25px;
+    
+        padding: $verticalGap $gapWidth;
+        position: relative;
+        min-height: 100%;
+    
+        .CardsDeck-dots {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 10px;
+            text-align: center;
+           
+            > * {                
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                margin: 1px;
+                text-indent: -999px;
+                border: 1px solid #FFF;
+                border-radius: 10px;
+                /*cursor: pointer;*/
+                background-color: transparent;
+                
+                &.is-active {
+                    margin: 0px;
+                    background-color: #FFF;
+                    height: 12px;
+                    width: 12px;
+                }
             }
         }
     

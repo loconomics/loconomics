@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-12-01
+/*! LoconomicsAppProto 2014-12-02
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -892,19 +892,19 @@ html.app > body > .container-fluid {
   background-color: #777;
 }
 
-/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck .Card {
   margin: 14px 0;
 }
 
-/* line 15 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider {
   padding: 4px 40px;
   position: relative;
   height: 100%;
 }
 
-/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch {
   max-width: 40px;
   position: absolute;
@@ -914,29 +914,67 @@ html.app > body > .container-fluid {
   height: 100%;
 }
 
-/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 33 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch > * {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch,
 .CardsDeck.CardsDeck--slider .CardsDeck-switch a {
   color: White;
 }
 
-/* line 41 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch.CardsDeck-switch--previous {
   left: 0;
 }
 
-/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch.CardsDeck-switch--next {
   right: 0;
 }
 
-/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+.CardsDeck.CardsDeck--dotsSlider {
+  padding: 4px 25px;
+  position: relative;
+  min-height: 100%;
+}
+
+/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+.CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  text-align: center;
+}
+
+/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+.CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > * {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 1px;
+  text-indent: -999px;
+  border: 1px solid #fff;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+/*cursor: pointer;*/
+  background-color: transparent;
+}
+
+/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+.CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > *.is-active {
+  margin: 0px;
+  background-color: #fff;
+  height: 12px;
+  width: 12px;
+}
+
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 
 /* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 .Card {
@@ -1011,7 +1049,22 @@ html.app > body > .container-fluid {
   pointer-events: all;
 }
 
-/* line 41 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar].Alt1 #calendarDateHeader {
+  position: relative;
+  z-index: 2;
+}
+
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar].Alt1 #calendarAppointmentView {
+  margin-top: -42px;
+  padding-top: 46px;
+  padding-bottom: 30px;
+}
+
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
 /* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
