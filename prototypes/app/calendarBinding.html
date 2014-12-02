@@ -74,17 +74,10 @@
       <div id="calendarDailyView" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags" data-bind="foreach: slots">
         <div class="ListView-item" data-bind="css: classNames">
           <div class="ListView-item-marker"><div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div><div class="text-muted" data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="href: link"><p data-bind="text: subject, visible: !description()"></p><div data-bind="text: subject, visible: description()"></div><div data-bind="text: description, visible: description()"></div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="href: link"><span data-bind="css: actionIcon, text: actionText"></span></a>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !description()"></p><div data-bind="text: subject, visible: description()"></div><div data-bind="text: description, visible: description()"></div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
         </div>
       </div>
-      <!--
-      <div class="ListView-item">
-          <div class="ListView-item-marker"><div>9.00am</div><div class="text-muted">10.00am</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>Jaren Freely</div><div>Deep Tissue Massage Large Name</div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-toggle="activity" data-target="calendar-appointment">$59.90</a>
-      </div>
-      -->
       
       <!-- Appointment View (cards) -->
       <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">

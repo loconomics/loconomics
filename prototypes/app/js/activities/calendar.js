@@ -349,6 +349,20 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
                 }
             }
         }.bind(this));
+        
+        this.$dailyView.on('tap', '.ListView-item a', function(e) {
+
+            var link = e.currentTarget.getAttribute('href');
+            if (/^#calendar\/appointment/i.test(link)) {
+                this.$chooseNew.modal('hide');
+                this.showAppointment();
+            }
+            else if (/^#calendar\/new/i.test(link)) {
+                this.$chooseNew.modal('show');
+            }
+
+            e.preventDefault();
+        }.bind(this));
     }
 };
 
