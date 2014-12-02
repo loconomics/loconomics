@@ -1,13 +1,18 @@
 /** Client model **/
 'use strict';
 
-var ko = require('knockout');
+var ko = require('knockout'),
+    Model = require('./Model');
 
-function Client(def) {
-    def = def || {};
+function Client(values) {
     
-    this.firstName = ko.observable(def.firstName);
-    this.lastName = ko.observable(def.lastName);
+    Model(this);
+    
+    this.model.defProperties({
+        firstName: '',
+        lastName: ''
+    }, values);
+
     this.fullName = ko.computed(function() {
         return (this.firstName() + ' ' + this.lastName());
     }, this);
