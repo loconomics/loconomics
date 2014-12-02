@@ -12,6 +12,7 @@ exports.init = function initCalendar($activity) {
 function CalendarActivity($activity) {
 
     /* Getting elements */
+    this.$activity = $activity;
     this.$datepicker = $activity.find('#calendarDatePicker');
     this.$dailyView = $activity.find('#calendarDailyView');
     this.$dateHeader = $activity.find('#calendarDateHeader');
@@ -31,12 +32,6 @@ function CalendarActivity($activity) {
     .on('swiperight', function(e) {
         e.preventDefault();
         this.$datepicker.datepicker('moveDate', 'prev');
-    }.bind(this));
-
-    this.$datepicker.on('changeDate', function(e) {
-        if (e.viewMode === 'days') {
-            this.showDailyView(e.date);
-        }
     }.bind(this));
 
     this.$dailyView
@@ -90,6 +85,18 @@ CalendarActivity.prototype.updateDateTitle = function updateDateTitle(date) {
     this.$datepicker.removeClass('is-visible');
 };
 
+CalendarActivity.prototype.bindDateData = function bindDateData(date) {
+    
+    var sdate = moment(date).format('YYYY-MM-DD');
+    var slotsData = this.dailyDataView.slotsData;
+    
+    if (slotsData.hasOwnProperty(sdate)) {
+        this.dailyDataView.slots(slotsData[sdate]);
+    } else {
+        this.dailyDataView.slots(slotsData['default']);
+    }
+};
+
 var ko = require('knockout');
 var CalendarSlot = require('../models/CalendarSlot');
 
@@ -99,35 +106,24 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
         this.$appointmentView.hide();
         this.$dailyView.show();
     }
-   
-    // Optional date, or maintain current one
-    if (date && date instanceof Date) {
-        this.updateDateTitle(date);
-    }
-    
+
     if (!this.__initedDailyView) {
         this.__initedDailyView = true;
         
         // Data
-        var testData = require('../testdata/calendarSlots');
+        var slotsData = require('../testdata/calendarSlots').calendar;
         
-        var dailyDataView = {
+        this.dailyDataView = {
             slots: ko.observableArray([]),
-            currentIndex: ko.observable(0)
+            slotsData: slotsData
         };
         
-        ko.applyBindings(dailyDataView, this.$dailyView.get(0));
+        ko.applyBindings(this.dailyDataView, this.$dailyView.get(0));
         
+        // Events
         this.$datepicker.on('changeDate', function(e) {
             if (e.viewMode === 'days') {
-                var date = moment(e.date);
-                var sdate = date.format('YYYY-MM-DD');
-                
-                if (testData.hasOwnProperty(sdate)) {
-                    dailyDataView.slots(testData[sdate]);
-                } else {
-                    dailyDataView.slots(testData['default']);
-                }
+                this.showDailyView(e.date);
             }
         }.bind(this));
         
@@ -145,6 +141,12 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
             e.preventDefault();
         }.bind(this));
     }
+    
+    // Optional date, or maintain current one
+    if (date && date instanceof Date) {
+        this.updateDateTitle(date);
+        this.bindDateData(date);
+    }
 };
 
 
@@ -160,7 +162,7 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         this.__initedAppointment = true;
 
         // Data
-        var testData = require('../testdata/calendarAppointments');
+        var testData = require('../testdata/calendarAppointments').appointments;
         var appointmentsDataView = {
             appointments: ko.observableArray(testData),
             currentIndex: ko.observable(0)
@@ -177,6 +179,21 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         appointmentsDataView.goNext = function goNext() {
             this.currentIndex((this.currentIndex() + 1) % this.appointments().length);
         };
+        
+        appointmentsDataView.editMode = ko.observable(false);
+        
+        appointmentsDataView.edit = function edit() {
+            this.editMode(true);
+        }.bind(appointmentsDataView);
+        appointmentsDataView.cancel = function cancel() {
+            this.editMode(false);
+        }.bind(appointmentsDataView);
+        
+        appointmentsDataView.editMode.subscribe(function(isEdit) {
+            
+            this.$activity.toggleClass('in-edit', isEdit);
+            
+        }.bind(this));
         
         ko.applyBindings(appointmentsDataView, this.$appointmentView.get(0));
     }

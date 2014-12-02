@@ -47,6 +47,22 @@
             padding-bottom: 30px;
         }
     }
+    
+    &.in-edit {
+        
+        .CardsDeck-dots,
+        .CalendarDateHeader-switch {
+            visibility: hidden;
+        }
+        
+        .CalendarDateHeader-date {
+            pointer-events: none;
+            
+            .caret {
+                visibility: hidden;
+            }
+        }
+    }
 }
 
 @import '../components/CalendarDateHeader.styl'

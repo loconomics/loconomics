@@ -1092,7 +1092,25 @@ html.app > body > .container-fluid {
   padding-bottom: 30px;
 }
 
-/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+
+/* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar].in-edit .CardsDeck-dots,
+[data-activity=calendar].in-edit .CalendarDateHeader-switch {
+  visibility: hidden;
+}
+
+/* line 57 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar].in-edit .CalendarDateHeader-date {
+  pointer-events: none;
+}
+
+/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar].in-edit .CalendarDateHeader-date .caret {
+  visibility: hidden;
+}
+
+/* line 69 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
 /* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 

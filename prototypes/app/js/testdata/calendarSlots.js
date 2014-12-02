@@ -1,4 +1,6 @@
 /** Calendar Slots test data **/
+var CalendarSlot = require('../models/CalendarSlot');
+
 var testData1 = [
     new CalendarSlot({
         startTime: new Date(2014, 11, 1, 0, 0, 0),

@@ -1,4 +1,6 @@
 /** Calendar Appointments test data **/
+var Appointment = require('../models/Appointment');
+
 var testData = [
     new Appointment({
         startTime: new Date(2014, 11, 1, 10, 0, 0),
