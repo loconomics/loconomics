@@ -141,7 +141,7 @@
               <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span> <span class="AppointmentCard-data" data-bind="text: currentAppointment().pricingSummary()"></span>
             </li>
             <li>
-              <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span> <span class="AppointmentCard-data" data-bind="text: currentAppointment().ptotalPrice"></span>
+              <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span> <span class="AppointmentCard-data" data-bind="text: currentAppointment().ptotalPrice, format: { type: 'number', format: '$0,0.00' }"></span>
             </li>
             <li>
               <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span> <span class="AppointmentCard-data" data-bind="text: currentAppointment().locationSummary"></span>
