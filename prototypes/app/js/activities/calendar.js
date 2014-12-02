@@ -165,26 +165,32 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         var testData = require('../testdata/calendarAppointments').appointments;
         var appointmentsDataView = {
             appointments: ko.observableArray(testData),
-            currentIndex: ko.observable(0)
+            currentIndex: ko.observable(0),
+            editMode: ko.observable(false)
         };
         appointmentsDataView.currentAppointment = ko.computed(function() {
             return this.appointments()[this.currentIndex() % this.appointments().length];
         }, appointmentsDataView);
+ 
         appointmentsDataView.goPrevious = function goPrevious() {
+            if (this.editMode()) return;
+        
             if (this.currentIndex() === 0)
                 this.currentIndex(this.appointments().length - 1);
             else
                 this.currentIndex((this.currentIndex() - 1) % this.appointments().length);
         };
+        
         appointmentsDataView.goNext = function goNext() {
+            if (this.editMode()) return;
+
             this.currentIndex((this.currentIndex() + 1) % this.appointments().length);
         };
-        
-        appointmentsDataView.editMode = ko.observable(false);
-        
+
         appointmentsDataView.edit = function edit() {
             this.editMode(true);
         }.bind(appointmentsDataView);
+        
         appointmentsDataView.cancel = function cancel() {
             this.editMode(false);
         }.bind(appointmentsDataView);
