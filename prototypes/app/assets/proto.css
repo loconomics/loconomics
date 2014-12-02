@@ -1134,8 +1134,12 @@ html.app > body > .container-fluid {
 
 /* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard li {
-  margin-bottom: 0.9em;
   zoom: 1;
+  position: relative;
+/* The elements need a separation, but 
+           they behave as BUTTONS too when in edit mode
+           so need a good touch area */
+  padding: 6px 0;
 }
 
 /* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
@@ -1150,7 +1154,7 @@ html.app > body > .container-fluid {
   clear: both;
 }
 
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-icon {
   font-size: 1.8em;
   margin-right: 0.6em;
@@ -1158,7 +1162,42 @@ html.app > body > .container-fluid {
   float: left;
 }
 
-/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-data {
   vertical-align: middle;
+}
+
+/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+.AppointmentCard .AppointmentCard-editIcon {
+  display: block;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  background: White;
+  padding: 6px 0 6px 10px;
+  -webkit-transition: 300ms opacity;
+  -moz-transition: 300ms opacity;
+  -o-transition: 300ms opacity;
+  -ms-transition: 300ms opacity;
+  transition: 300ms opacity;
+}
+
+/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+
+/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+.AppointmentCard.in-edit li {
+  cursor: pointer;
+}
+
+/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+.AppointmentCard.in-edit li .AppointmentCard-editIcon {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }

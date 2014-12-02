@@ -5,8 +5,13 @@
 .AppointmentCard {
 
     li {
-        margin-bottom: .9em;
         clearfix()
+        position: relative;
+
+        /* The elements need a separation, but 
+           they behave as BUTTONS too when in edit mode
+           so need a good touch area */
+        padding: 6px 0;
     }
 
     .AppointmentCard-icon {
@@ -18,5 +23,31 @@
 
     .AppointmentCard-data {
         vertical-align: middle;
+    }
+    
+    .AppointmentCard-editIcon {
+        display: block;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 2;
+        background: White;
+        padding: 6px 0 6px 10px;
+        
+        transition: 300ms opacity;
+    }
+    
+    &.in-edit {
+        
+        li {
+            cursor: pointer;
+        
+            .AppointmentCard-editIcon {
+                opacity: 1;
+            }
+        }
     }
 }

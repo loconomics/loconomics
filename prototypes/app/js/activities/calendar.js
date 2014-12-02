@@ -192,6 +192,7 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         appointmentsDataView.editMode.subscribe(function(isEdit) {
             
             this.$activity.toggleClass('in-edit', isEdit);
+            this.$appointmentView.find('.AppointmentCard').toggleClass('in-edit', isEdit);
             
         }.bind(this));
         
