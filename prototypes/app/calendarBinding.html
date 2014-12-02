@@ -85,37 +85,57 @@
           <ul class="list-unstyled">
             <li>
                 <span class="AppointmentCard-icon glyphicon glyphicon-dashboard"></span>
-                <span class="AppointmentCard-data"><span data-bind="text: currentAppointment().startTime(), format: { type: 'datetime', format: 'LT' }"></span> - <span data-bind="text: currentAppointment().endTime, format: { type: 'datetime', format: 'LT' }"></span></span>
+                <span class="AppointmentCard-data">
+                  <span data-bind="visible: currentAppointment().startTime()">
+                    <span data-bind="text: currentAppointment().startTime(), format: { type: 'datetime', format: 'LT' }"></span> - <span data-bind="text: currentAppointment().endTime, format: { type: 'datetime', format: 'LT' }"></span>
+                  </span>
+                  <span data-bind="visible: editMode() && !currentAppointment().startTime()" class="AppointmentCard-placeholderLabel">Select date/time</span>
+                </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
             <li>
               <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
-              <span class="AppointmentCard-data" data-bind="text: currentAppointment().client().fullName()"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: (currentAppointment().client() && currentAppointment().client().fullName())"></span>
+                <span data-bind="visible: editMode() && !currentAppointment().client()" class="AppointmentCard-placeholderLabel">Select/Add client</span>
+              </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
             <li>
               <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
-              <span class="AppointmentCard-data" data-bind="text: currentAppointment().pricingSummary()"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().pricingSummary()"></span>
+                <span data-bind="visible: editMode() && !currentAppointment().pricingSummary()" class="AppointmentCard-placeholderLabel">Select/Add service(s)</span>
+              </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
-            <li>
+            <li data-bind="visible: !isNew()">
               <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
               <span class="AppointmentCard-data" data-bind="text: currentAppointment().ptotalPrice, format: { type: 'number', format: '$0,0.00' }"></span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
             <li>
               <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
-              <span class="AppointmentCard-data" data-bind="text: currentAppointment().locationSummary"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().locationSummary"></span>
+                <span data-bind="visible: editMode() && !currentAppointment().locationSummary()" class="AppointmentCard-placeholderLabel">Select/Add location</span>
+              </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
             <li>
               <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
-              <span class="AppointmentCard-data" data-bind="text: currentAppointment().notesToClient"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().notesToClient"></span>
+                <span data-bind="visible: editMode() && !currentAppointment().notesToClient()" class="AppointmentCard-placeholderLabel">Notes to client</span>
+              </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
             <li>
               <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
-              <span class="AppointmentCard-data" data-bind="text: currentAppointment().notesToSelf"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().notesToSelf"></span>
+                <span data-bind="visible: editMode() && !currentAppointment().notesToSelf()" class="AppointmentCard-placeholderLabel">Notes to self</span>
+              </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
           </ul>

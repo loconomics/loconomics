@@ -166,7 +166,8 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         var appointmentsDataView = {
             appointments: ko.observableArray(testData),
             currentIndex: ko.observable(0),
-            editMode: ko.observable(false)
+            editMode: ko.observable(false),
+            isNew: ko.observable(false)
         };
         appointmentsDataView.currentAppointment = ko.computed(function() {
             return this.appointments()[this.currentIndex() % this.appointments().length];
