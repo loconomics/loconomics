@@ -115,7 +115,7 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
     
     if (!this.__initedAppointment) {
         this.__initedAppointment = true;
-        
+
         // Data
         var testData = [
             new Appointment({
@@ -166,7 +166,10 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
             return this.appointments()[this.currentIndex() % this.appointments().length];
         }, appointmentsDataView);
         appointmentsDataView.goPrevious = function goPrevious() {
-            this.currentIndex(Math.abs(this.currentIndex() - 1) % this.appointments().length);
+            if (this.currentIndex() === 0)
+                this.currentIndex(this.appointments().length - 1);
+            else
+                this.currentIndex((this.currentIndex() - 1) % this.appointments().length);
         };
         appointmentsDataView.goNext = function goNext() {
             this.currentIndex((this.currentIndex() + 1) % this.appointments().length);
