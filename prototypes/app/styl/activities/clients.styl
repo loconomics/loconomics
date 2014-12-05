@@ -1,0 +1,43 @@
+/**
+    Clients activity styles
+**/
+[data-activity=clients] {
+    
+    $indexWidth = 43px;
+    
+    #clientsListView {
+        border-right: 1px solid $gray-light;
+        margin-right: $indexWidth - $container-padding-right;
+        
+        .ListView {
+            .ListView-divider {
+                margin-right: 0;
+                padding: 0;
+                background-color: $gray-lighter;
+                text-align: left;
+                
+                span {
+                    background-color: white;
+                    display: inline-block;
+                    padding: 0.3em 1em;
+                    margin-left: 1em;
+                    border: 1px solid $gray-darker;
+                    border-top-width: 0;
+                    border-bottom-width: 0;
+                }
+            }
+        }
+    }
+    
+    #clientsIndex {
+        right: 0px;
+        overflow: hidden;
+        width: $indexWidth;
+        
+        position: absolute;
+        
+        &.affix {
+            position: fixed;
+        }
+    }
+}
