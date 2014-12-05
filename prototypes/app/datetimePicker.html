@@ -62,7 +62,7 @@
 
     <div class="container-fluid app-calendar is-active Alt1" data-activity="datetimePicker">
       
-      <h3 class="text-center" data-bind="text: headerText, visible: headerText">Select a start time</h3>
+      <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-time"></span><span data-bind="text: headerText">Select a start time</span></h1>
       
       <div id="datetimePickerDatePicker" class="calendar-placeholder" data-date="today"></div>
       
@@ -73,7 +73,7 @@
           afternoon: 12:00pm until 5:00pm
           evening: 5:00pm - 11:59pm
         -->
-        <h1 class="SectionTitle" data-bind="text: selectedDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></h1>
+        <h2 class="SectionTitle" data-bind="text: selectedDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></h2>
         
         <div data-bind="foreach: { data: slots, as: 'item' }">
           <a href="#" class="btn btn-link btn-default" data-bind="text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>

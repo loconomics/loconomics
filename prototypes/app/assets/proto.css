@@ -636,7 +636,33 @@ html.app > body > .container-fluid {
   right: 12px;
 }
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+.ActivityTitle {
+  font-size: 20px;
+  padding: 0.7em 1em 0.4em;
+  margin: 0;
+  text-align: left;
+  font-weight: bold;
+}
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+.ActivityTitle > span {
+  vertical-align: bottom;
+  line-height: 1.3em;
+}
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+.ActivityTitle > .glyphicon {
+  font-size: 1.4em;
+  vertical-align: middle;
+  line-height: 1em;
+  vertical-align: middle;
+  margin-right: 12px;
+}
+
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
 
 /* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
 .LeadContent {
@@ -1021,7 +1047,7 @@ html.app > body > .container-fluid {
   padding: 12px 10px;
 }
 
-/* line 202 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 203 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Activities styles **/
 
 /* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
