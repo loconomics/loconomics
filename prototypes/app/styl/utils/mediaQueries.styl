@@ -13,20 +13,3 @@ hr-image($image, $width, $height) {
     background-size: $width $height;
   }
 }
-
-/*
-    Is not a complete range and medias, its desktop-first for now, being
-    the medium size (Md) the default (then the $mediaMd is not required,
-    just left for any case that some style needs to be overwritten or be
-    very explicit for medium-only).
-    There is no 'large' size since the design is contrained to 960px wide.
-*/
-$sizeMdMin = 960px;
-$sizeSmMin = 768px;
-$sizeXsMin = 480px;
-$sizeSmMax = $sizeMdMin - 1;
-$sizeXsMax = $sizeSmMax - 1;
-
-$mediaMd = "only screen and (min-width: " + $sizeMdMin + ")"
-$mediaSm = "only screen and (max-width: " + $sizeSmMax + ")"
-$mediaXs = "only screen and (max-width: " + $sizeXsMax + ")"
