@@ -83,8 +83,8 @@
       <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">
         <div class="Card AppointmentCard">
           <ul class="list-unstyled">
-            <li>
-                <span class="AppointmentCard-icon glyphicon glyphicon-dashboard"></span>
+            <li data-bind="event: { tap: editMode() && pickDateTime }">
+                <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
                 <span class="AppointmentCard-data">
                   <span data-bind="visible: currentAppointment().startTime()">
                     <span data-bind="text: currentAppointment().startTime(), format: { type: 'datetime', format: 'LT' }"></span> - <span data-bind="text: currentAppointment().endTime, format: { type: 'datetime', format: 'LT' }"></span>

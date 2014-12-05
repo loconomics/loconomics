@@ -193,6 +193,10 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
             
         }.bind(this));
         
+        appointmentsDataView.pickDateTime = function pickDateTime() {
+            window.location = 'datetimePicker.html';
+        };
+        
         ko.applyBindings(appointmentsDataView, this.$appointmentView.get(0));
     }
 };

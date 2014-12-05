@@ -32,6 +32,11 @@ function DatetimePickerActivity($activity) {
             dataView.selectedDate(e.date);
         }
     }.bind(this));
+    this.$timePicker.on('tap', '.btn', function(e) {
+        e.preventDefault();
+        
+        history.go(-1);
+    });
     
     // TestingData
     dataView.slotsData = require('../testdata/timeSlots').timeSlots;
