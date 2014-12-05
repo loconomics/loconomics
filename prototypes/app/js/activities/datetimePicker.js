@@ -51,6 +51,45 @@ function ViewModel() {
     this.headerText = ko.observable('Select a time');
     this.selectedDate = ko.observable(new Date());
     this.slots = ko.observableArray([]);
+    this.groupedSlots = ko.computed(function(){
+        /*
+          before 12:00pm (noon) = morning
+          afternoon: 12:00pm until 5:00pm
+          evening: 5:00pm - 11:59pm
+        */
+        var groups = [
+            {
+                group: 'Morning',
+                slots: [],
+                starts: new Time(0, 0),
+                ends: new Time(12, 0)
+            },
+            {
+                group: 'Afternoon',
+                slots: [],
+                starts: new Time(12, 0),
+                ends: new Time(17, 0)
+            },
+            {
+                group: 'Evening',
+                slots: [],
+                starts: new Time(17, 0),
+                ends: new Time(24, 0)
+            }
+        ];
+        var slots = this.slots().sort();
+        slots.forEach(function(slot) {
+            groups.forEach(function(group) {
+                if (slot >= group.starts &&
+                    slot < group.ends) {
+                    group.slots.push(slot);
+                }
+            });
+        });
+
+        return groups;
+
+    }, this);
 
 }
 

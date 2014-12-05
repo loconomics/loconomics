@@ -1,0 +1,32 @@
+/**
+    GroupedTimeSlots component
+**/
+
+.GroupedTimeSlots {
+    
+    display: table;
+    
+    .GroupedTimeSlots-group {
+        display: table-row;
+    }
+
+    .GroupedTimeSlots-groupName,
+    .GroupedTimeSlots-slots {
+        display: table-cell;
+        vertical-align: middle;
+        border-bottom: 1px solid $gray-light;
+    }
+    
+    .GroupedTimeSlots-groupName {
+        padding: 4px;
+        font-weight: bold;
+    }
+
+    .GroupedTimeSlots-slots {       
+        .btn {
+            float: left;
+            padding: 4px 8px;
+            color: $gray-dark;
+        }
+    }
+}
