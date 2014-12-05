@@ -9,7 +9,8 @@ ko.bindingHandlers.format = require('../vendor/iagosrl/ko/formatBinding').format
 /** Load activities **/
 var activities = {
     'calendar': require('./activities/calendar'),
-    'datetimePicker': require('./activities/datetimePicker')
+    'datetimePicker': require('./activities/datetimePicker'),
+    'clients': require('./activities/clients')
 };
 
 /** Page ready **/

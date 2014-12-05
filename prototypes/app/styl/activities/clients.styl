@@ -7,7 +7,9 @@
     
     #clientsListView {
         border-right: 1px solid $gray-light;
+        border-bottom: 1px solid $gray-light;
         margin-right: $indexWidth - $container-padding-right;
+        margin-left: 0 - $container-padding-left;
         
         .ListView {
             .ListView-divider {
@@ -25,6 +27,10 @@
                     border-top-width: 0;
                     border-bottom-width: 0;
                 }
+            }
+            
+            .ListView-item {
+                margin-left: $container-padding-left;
             }
         }
     }
