@@ -48,6 +48,8 @@ var DatePicker = function(element, options) {
     this.picker = $(DPGlobal.template)
                         .appendTo(this.isPlaceholder ? this.element : 'body')
                         .on('click tap', $.proxy(this.click, this));
+    // TODO: to review if 'container' class can be avoided, so in placeholder mode gets optional
+    // if is wanted can be placed on the placeholder element (or container-fluid or nothing)
     this.picker.addClass(this.isPlaceholder ? 'container' : 'dropdown-menu');
     
     if (this.isPlaceholder) {
@@ -74,7 +76,19 @@ var DatePicker = function(element, options) {
             this.element.on('click tap', $.proxy(this.show, this));
         }
     }
+    
+    /* Touch events to swipe dates */
+    this.element
+    .on('swipeleft', function(e) {
+        e.preventDefault();
+        this.moveDate('next');
+    }.bind(this))
+    .on('swiperight', function(e) {
+        e.preventDefault();
+        this.moveDate('prev');
+    }.bind(this));
 
+    /* Set-up view mode */
     this.minViewMode = options.minViewMode||this.element.data('date-minviewmode')||0;
     if (typeof this.minViewMode === 'string') {
         switch (this.minViewMode) {

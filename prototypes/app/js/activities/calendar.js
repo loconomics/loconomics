@@ -24,16 +24,6 @@ function CalendarActivity($activity) {
     this.$datepicker.show().datepicker();
 
     /* Event handlers */
-    this.$datepicker
-    .on('swipeleft', function(e) {
-        e.preventDefault();
-        this.$datepicker.datepicker('moveDate', 'next');
-    }.bind(this))
-    .on('swiperight', function(e) {
-        e.preventDefault();
-        this.$datepicker.datepicker('moveDate', 'prev');
-    }.bind(this));
-
     this.$dailyView
     .on('swipeleft', function(e) {
         e.preventDefault();
