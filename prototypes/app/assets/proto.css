@@ -397,7 +397,8 @@ html.app > body > .container-fluid {
 }
 
 /* line 129 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-.container .ListView .ListView-divider {
+.container .ListView .ListView-divider,
+.container-fluid .ListView .ListView-divider {
   margin: 0 -5px 0 -5px;
 }
 
@@ -624,12 +625,14 @@ html.app > body > .container-fluid {
 }
 
 /* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
-.container .SectionTitle {
+.container .SectionTitle,
+.container-fluid .SectionTitle {
   margin: 0 -5px 0 -5px;
 }
 
 /* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
-.container .SectionTitle .HelpPoint {
+.container .SectionTitle .HelpPoint,
+.container-fluid .SectionTitle .HelpPoint {
   right: 12px;
 }
 
