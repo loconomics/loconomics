@@ -306,7 +306,7 @@ html.app > body > .container-fluid {
   bottom: 0px;
   left: 0px;
   text-align: center;
-  padding: 6px 0;
+  padding: 0;
 /* If a Bootstrap glypicon is used, adjust to the best size */
 /* For one-line content with ellipsis, use a 'div' */
 /* Multiline content support -effective with modifiers like twolines- */
@@ -466,13 +466,14 @@ html.app > body > .container-fluid {
 /* line 199 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--textualmarker .ListView-item .ListView-item-marker {
   text-align: right;
+  padding: 6px 0;
 }
-
-/* line 207 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
 /* line 208 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
 /* line 209 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 210 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item:before,
 .ListView--colortags .ListView-item .ListView-item-tagged:before {
   content: '';
@@ -485,102 +486,102 @@ html.app > body > .container-fluid {
   z-index: 2;
 }
 
-/* line 220 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 221 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item:before {
   left: 34px;
 }
 
-/* line 227 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 228 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 229 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-primary:before,
 .ListView--colortags .ListView-item.ListView-item--tag-primary .ListView-item-tagged:before {
   border-right-color: #00989a;
 }
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-primary .ListView-item-action {
   color: #00989a;
 }
 
-/* line 227 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 228 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 229 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-success:before,
 .ListView--colortags .ListView-item.ListView-item--tag-success .ListView-item-tagged:before {
   border-right-color: #99c027;
 }
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-success .ListView-item-action {
   color: #99c027;
 }
 
-/* line 227 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 228 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 229 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-info:before,
 .ListView--colortags .ListView-item.ListView-item--tag-info .ListView-item-tagged:before {
   border-right-color: #b5e1e2;
 }
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-info .ListView-item-action {
   color: #b5e1e2;
 }
 
-/* line 227 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 228 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 229 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-warning:before,
 .ListView--colortags .ListView-item.ListView-item--tag-warning .ListView-item-tagged:before {
   border-right-color: #e95d0f;
 }
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-warning .ListView-item-action {
   color: #e95d0f;
 }
 
-/* line 227 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 228 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 229 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-danger:before,
 .ListView--colortags .ListView-item.ListView-item--tag-danger .ListView-item-tagged:before {
   border-right-color: #fc0404;
 }
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-danger .ListView-item-action {
   color: #fc0404;
 }
 
-/* line 241 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 242 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 243 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags.ListView--largemarker .ListView-item:before {
   left: 62px;
 }
 
-/* line 251 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 252 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
 /* line 253 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 254 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largeaction .ListView-item .ListView-item-action {
   width: 60px;
 }
 
-/* line 257 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 258 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largeaction .ListView-item .ListView-item-content {
   padding-right: 60px;
 }
 
-/* line 266 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 267 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
 /* line 268 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 269 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-action--flexible {
   width: auto;
   min-width: 40px;
@@ -589,7 +590,7 @@ html.app > body > .container-fluid {
 /* Gradient ellipsis over the item-content: */
 }
 
-/* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 276 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-action--flexible:before {
   content: '';
   position: absolute;
@@ -604,7 +605,7 @@ html.app > body > .container-fluid {
   background-image: linear-gradient(to left, White, rgba(255,255,255,0));
 }
 
-/* line 287 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
+/* line 288 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 
 /* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .SectionTitle {
