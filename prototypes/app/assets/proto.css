@@ -1083,10 +1083,66 @@ html.app > body > .container-fluid {
   padding: 4px 8px;
 }
 
-/* line 204 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+
+/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+.SimpleList {
+/** Base styles and elements */
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+.SimpleList .SimpleList-item {
+  position: relative;
+  max-width: 100%;
+  border-bottom: 1px solid #eee;
+/* Any row in the listview is expected to be a button/link, so color is reset */
+}
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+.SimpleList .SimpleList-item > * {
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: break-word;
+  display: inline-block;
+  vertical-align: middle;
+  max-height: 33px;
+  overflow: hidden;
+  text-align: left;
+  max-width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 6px 12px;
+}
+
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+.SimpleList .SimpleList-item .btn,
+.SimpleList .SimpleList-item .btn-link {
+  color: #333;
+}
+
+/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+.SimpleList .SimpleList-divider {
+  text-align: left;
+  padding: 3px 12px;
+  background-color: #eee;
+}
+
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+.container .ListView .ListView-divider,
+.container-fluid .ListView .ListView-divider {
+  margin: 0 -5px 0 -5px;
+}
+
+/* line 205 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Activities styles **/
 
-/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
 /* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
@@ -1281,39 +1337,11 @@ html.app > body > .container-fluid {
 
 /* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsListView {
-  border-right: 1px solid #777;
-  border-bottom: 1px solid #777;
   margin-right: 38px;
   margin-left: -5px;
 }
 
-/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
-
-/* line 15 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
-[data-activity=clients] #clientsListView .ListView .ListView-divider {
-  margin-right: 0;
-  padding: 0;
-  background-color: #eee;
-  text-align: left;
-}
-
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
-[data-activity=clients] #clientsListView .ListView .ListView-divider span {
-  background-color: #fff;
-  display: inline-block;
-  padding: 0.3em 1em;
-  margin-left: 1em;
-  border: 1px solid #222;
-  border-top-width: 0;
-  border-bottom-width: 0;
-}
-
-/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
-[data-activity=clients] #clientsListView .ListView .ListView-item {
-  margin-left: 5px;
-}
-
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsIndex {
   right: 0px;
   overflow: hidden;
@@ -1321,19 +1349,19 @@ html.app > body > .container-fluid {
   position: absolute;
 }
 
-/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsIndex.affix {
   position: fixed;
 }
 
-/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 
-/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients].is-searching #clientsAddNewButton {
   display: none;
 }
 
-/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients].is-searching .ListView-divider {
   display: none;
 }

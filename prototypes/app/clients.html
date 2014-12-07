@@ -84,17 +84,15 @@
       
       <!-- Daily View (appointments list) -->
       <div id="clientsListView">
-        <div class="ListView" data-bind="foreach: groupedClients">
-          <div class="ListView-divider" data-bind="attr: { 'id': ('clientsListView-' + letter) }">
-            <span data-bind="text: letter"></span>
+        <div class="SimpleList" data-bind="foreach: groupedClients">
+          <div class="SimpleList-divider" data-bind="attr: { 'id': ('clientsListView-' + letter) }">
+            <strong data-bind="text: letter"></strong>
           </div>
           <!-- ko foreach: clients -->
-            <div class="ListView-item">
-              <div class="ListView-item-marker"><span class="glyphicon glyphicon-user"></span></div>
-              <a href="#" class="btn btn-link btn-block ListView-item-content">
-                <div data-bind="text: fullName"></div>
+            <div class="SimpleList-item">
+              <a href="#" class="btn btn-link btn-block">
+                <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
               </a>
-              <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus-sign"></span></a>
             </div>
           <!-- /ko -->
         </div>
