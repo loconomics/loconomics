@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-12-05
+/*! LoconomicsAppProto 2014-12-07
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1324,4 +1324,16 @@ html.app > body > .container-fluid {
 /* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsIndex.affix {
   position: fixed;
+}
+
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+[data-activity=clients].is-searching #clientsAddNewButton {
+  display: none;
+}
+
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+[data-activity=clients].is-searching .ListView-divider {
+  display: none;
 }

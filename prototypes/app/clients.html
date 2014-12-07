@@ -60,20 +60,18 @@
       </div>
     </nav>
 
-    <div class="container-fluid app-calendar is-active Alt1" data-activity="clients">
+    <div class="container-fluid app-calendar is-active Alt1" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
       
       <div class="isolated">
-        <form>
-          <div class="input-group">
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="submit" data-bind="click: search"><span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span></button>
-            </span>
-            <input type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
-          </div><!-- /input-group -->
-        </form>
+        <div class="input-group">
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+          </span>
+          <input type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+        </div><!-- /input-group -->
       </div>
       
-      <div class="isolated">
+      <div id="clientsAddNewButton" class="isolated">
         <button type="button" class="btn btn-primary btn-block">Add new client</button>
       </div>
       
@@ -101,31 +99,6 @@
           <!-- /ko -->
         </div>
       </div>
-        <!--
-          <div id="clientsListView-A" class="ListView-divider">
-            <span>A</span>
-          </div>
-          <div class="ListView-item">
-            <div class="ListView-item-marker"><span class="glyphicon glyphicon-user"></span></div>
-            <a href="#" class="btn btn-link btn-block ListView-item-content">
-              <div>Adam Finch</div>
-            </a>
-            <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus-sign"></span></a>
-          </div>          
-          <div id="clientsListView-B" class="ListView-divider">
-            <span>B</span>
-          </div>
-          <div class="ListView-item">
-            <div class="ListView-item-marker"><span class="glyphicon glyphicon-user"></span></div>
-            <a href="#" class="btn btn-link btn-block ListView-item-content">
-              <div>Ben Finch</div>
-            </a>
-            <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus-sign"></span></a>
-          </div>
-        </div>
-        
-      </div>
-      -->
 
 
     </div> <!-- /container -->

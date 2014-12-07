@@ -20,23 +20,23 @@ function ClientsActivity($activity) {
     ko.applyBindings(dataView, $activity.get(0));
 
     // TestingData
-    dataView.clientsData(require('../testdata/clients').clients);
+    dataView.clients(require('../testdata/clients').clients);
 
 }
 
 function ViewModel() {
 
     // Full list of clients
-    this.clientsData = ko.observableArray([]);
+    this.clients = ko.observableArray([]);
     
     // Search text, used to filter 'clients'
     this.searchText = ko.observable('');
     
-    // Utility to get a filtered list of clients based on clientsData
+    // Utility to get a filtered list of clients based on clients
     this.getFilteredList = function getFilteredList() {
         var s = (this.searchText() || '').toLowerCase();
 
-        return this.clientsData().filter(function(client) {
+        return this.clients().filter(function(client) {
             var n = client && client.fullName() && client.fullName() || '';
             n = n.toLowerCase();
             return n.indexOf(s) > -1;
@@ -44,14 +44,14 @@ function ViewModel() {
     };
 
     // Filtered list of clients
-    this.clients = ko.computed(function() {
+    this.filteredClients = ko.computed(function() {
         return this.getFilteredList();
     }, this);
     
     // Grouped list of filtered clients
     this.groupedClients = ko.computed(function(){
 
-        var clients = this.clients().sort(function(clientA, clientB) {
+        var clients = this.filteredClients().sort(function(clientA, clientB) {
             return clientA.firstName() > clientB.firstName();
         });
         
@@ -77,11 +77,4 @@ function ViewModel() {
         return groups;
 
     }, this);
-    
-    // Explicit search request
-    this.search = function search() {
-        // Trigger the observable calls to get updated clients
-        this.clients();
-    }.bind(this);
-
 }
