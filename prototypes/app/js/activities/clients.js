@@ -57,10 +57,10 @@ function ViewModel() {
         
         var groups = [],
             latestGroup = null,
-            latestLetter = '';
+            latestLetter = null;
 
         clients.forEach(function(client) {
-            var letter = client.firstName()[0];
+            var letter = (client.firstName()[0] || '').toUpperCase();
             if (letter !== latestLetter) {
                 latestGroup = {
                     letter: letter,

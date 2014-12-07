@@ -1335,33 +1335,56 @@ html.app > body > .container-fluid {
 
 /* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 
-/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsListView {
-  margin-right: 38px;
+  margin-right: 20px;
   margin-left: -5px;
 }
 
 /* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
-[data-activity=clients] #clientsIndex {
-  right: 0px;
-  overflow: hidden;
-  width: 43px;
-  position: absolute;
+[data-activity=clients] #clientsListView .SimpleList-divider {
+  text-transform: uppercase;
 }
 
-/* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+[data-activity=clients] #clientsIndex {
+  overflow: hidden;
+  width: 32px;
+  position: absolute;
+  right: 0px;
+  z-index: 20;
+/* divider row height */
+  margin-top: 26px;
+}
+
+/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsIndex.affix {
   position: fixed;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+[data-activity=clients] #clientsIndex > .nav {
+  border-bottom: none;
+}
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+[data-activity=clients] #clientsIndex > .nav a {
+  text-align: center;
+  font-weight: bold;
+  padding: 3px 6px 3px 15px;
+  border: none;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients].is-searching #clientsAddNewButton {
   display: none;
 }
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients].is-searching .ListView-divider {
   display: none;
 }

@@ -3,22 +3,42 @@
 **/
 [data-activity=clients] {
     
-    $indexWidth = 43px;
+    $indexWidth = 25px;
+    $fullIndexWidth = 32px;
     
     #clientsListView {
         margin-right: $indexWidth - $container-padding-right;
         margin-left: 0 - $container-padding-left;
+        
+        .SimpleList-divider {
+            text-transform: uppercase;
+        }
     }
     
     #clientsIndex {
-        right: 0px;
         overflow: hidden;
-        width: $indexWidth;
+        width: $fullIndexWidth;
         
         position: absolute;
+        right: 0px;
+        z-index: 20;
+        /* divider row height */
+        margin-top: 26px;
         
         &.affix {
             position: fixed;
+        }
+        
+        > .nav {
+            border-bottom: none;
+            
+            a {
+                text-align: center;
+                font-weight: bold;
+                padding: 3px 6px 3px 15px;
+                border: none;
+                border-radius: 0;
+            }
         }
     }
     
