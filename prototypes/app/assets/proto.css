@@ -1385,6 +1385,6 @@ html.app > body > .container-fluid {
 }
 
 /* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
-[data-activity=clients].is-searching .ListView-divider {
+[data-activity=clients].is-searching .SimpleList-divider {
   display: none;
 }
