@@ -48,9 +48,9 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="home.html">Home</a></li>
-            <li><a href="calendar.html">Calendar</a></li>
+            <li class="active"><a href="calendar.html">Calendar</a></li>
             <li><a href="inbox.html">Inbox</a></li>
-            <li class="active"><a href="clients.html">Clients</a></li>
+            <li><a href="clients.html">Clients</a></li>
             <li><a href="payments.html">Payments</a></li>
             <li><a href="services.html">Services</a></li>
             <li><a href="account.html">Account</a></li>
@@ -60,42 +60,27 @@
       </div>
     </nav>
 
-    <div class="container-fluid is-active" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
+    <div class="container-fluid is-active" data-activity="services">
       
-      <div class="isolated">
-        <div class="input-group">
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
-          </span>
-          <input type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
-        </div><!-- /input-group -->
-      </div>
+      <h1 class="ActivityTitle" data-bind="visible: headerText"><span data-bind="text: headerText">Services</span></h1>
       
-      <div id="clientsAddNewButton" class="isolated">
-        <button type="button" class="btn btn-primary btn-block">Add new client</button>
-      </div>
-      
-      <div id="clientsIndex" data-spy="affix" data-offset-top="20">
-        <ul class="nav nav-tabs nav-stacked" data-bind="foreach: groupedClients">
-            <li><a href="#clientsListView-A" data-bind="attr: { 'href': ('#clientsListView-' + letter) }, text: letter"></a></li>
-        </ul>
-      </div>
-      
-      <div id="clientsListView">
-        <div class="SimpleList" data-bind="foreach: groupedClients">
-          <div class="SimpleList-divider" data-bind="attr: { 'id': ('clientsListView-' + letter) }">
-            <strong data-bind="text: letter"></strong>
+      <div id="servicesListView">
+        <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedServices">
+          <div class="ListView-divider">
+            <strong data-bind="text: group"></strong>
           </div>
-          <!-- ko foreach: clients -->
-            <div class="SimpleList-item">
-              <a href="#" class="btn btn-link btn-block">
-                <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
+          <!-- ko foreach: services -->
+            <div class="ListView-item">
+              <div class="ListView-item-marker"><p data-bind="text: price, format: { type: 'number', format: '$0,0' }"></p></div>
+              <a href="#" class="btn btn-link btn-block ListView-item-content">
+                <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
+                <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
               </a>
+              <label class="ListView-item-action" data-bind="event: { tap: $root.toggleServiceSelection }"><input type="checkbox" name="services[]" /><span class="sr-only">Selected?</span></label>
             </div>
           <!-- /ko -->
         </div>
       </div>
-
 
     </div> <!-- /container -->
 
