@@ -62,11 +62,11 @@
 
     <div class="container-fluid is-active" data-activity="services">
       
-      <h1 class="ActivityTitle" data-bind="visible: headerText"><span data-bind="text: headerText">Services</span></h1>
+      <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tasks"></span><span data-bind="text: headerText">Services</span><span class="ActivityTitle-action "><button type="button" class="btn btn-primary">Done</button></span></h1>
       
       <div id="servicesListView">
         <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedServices">
-          <div class="ListView-divider">
+          <div class="ListView-divider SectionTitle">
             <strong data-bind="text: group"></strong>
           </div>
           <!-- ko foreach: services -->
@@ -81,7 +81,11 @@
           <!-- /ko -->
         </div>
       </div>
-
+      
+      <div id="servicesAddNewButton" class="isolated">
+        <button type="button" class="btn btn-primary btn-block">Add new service</button>
+      </div>
+      
     </div> <!-- /container -->
 
    

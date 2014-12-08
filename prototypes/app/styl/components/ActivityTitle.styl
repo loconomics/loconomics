@@ -4,20 +4,43 @@
 
 .ActivityTitle {
     font-size: 20px;
-    padding: 0.7em 1em 0.4em;
+    padding: 0.7em 10px 0.4em;
     margin: 0;
     text-align: left;
     font-weight: bold;
     
-    > span {
-        vertical-align: bottom;
-        line-height: 1.3em;
+    /* table layout for better management of the 
+        optional elements */
+    display: table;
+    width: 100%;
+    
+    /* The action and the icon must fit mininum space, one line */
+    > .ActivityTitle-action,
+    > .glyphicon {
+        /* fit minimum space */
+        width: 1%;
+        white-space: nowrap;
     }
+    
+
+    /* Only allowed 'span' elements as childs */
+    > span {
+        line-height: 1.3em;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
     > .glyphicon {
         font-size: 1.4em;
-        vertical-align: middle;
         line-height: 1em;
-        vertical-align: middle;
-        margin-right: 12px;
+        padding-right: 8px;
+        /* Alignment on the left with the upper-left navbar icon */
+        padding-left: 6px;
+    }
+    
+    > .ActivityTitle-action > * {
+        /* adjusting button/link padding to avoid increase the default line height */
+        padding-top: 2px;
+        padding-bottom: 2px;
     }
 }

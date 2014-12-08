@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-12-07
+/*! LoconomicsAppProto 2014-12-08
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -642,28 +642,50 @@ html.app > body > .container-fluid {
 /* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle {
   font-size: 20px;
-  padding: 0.7em 1em 0.4em;
+  padding: 0.7em 10px 0.4em;
   margin: 0;
   text-align: left;
   font-weight: bold;
+/* table layout for better management of the 
+        optional elements */
+  display: table;
+  width: 100%;
+/* The action and the icon must fit mininum space, one line */
+/* Only allowed 'span' elements as childs */
 }
 
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+.ActivityTitle > .ActivityTitle-action,
+.ActivityTitle > .glyphicon {
+/* fit minimum space */
+  width: 1%;
+  white-space: nowrap;
+}
+
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > span {
-  vertical-align: bottom;
   line-height: 1.3em;
+  display: table-cell;
+  vertical-align: middle;
 }
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .glyphicon {
   font-size: 1.4em;
-  vertical-align: middle;
   line-height: 1em;
-  vertical-align: middle;
-  margin-right: 12px;
+  padding-right: 8px;
+/* Alignment on the left with the upper-left navbar icon */
+  padding-left: 6px;
 }
 
-/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+.ActivityTitle > .ActivityTitle-action > * {
+/* adjusting button/link padding to avoid increase the default line height */
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
 
 /* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
 .LeadContent {
