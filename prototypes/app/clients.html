@@ -62,7 +62,7 @@
 
     <div class="container-fluid is-active" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
       
-      <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tags"></span><span data-bind="text: headerText">Clients</span></h1>
+      <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tags"></span><span data-bind="text: headerText">Clients</span><span class="ActivityTitle-action "><!-- TODO: conditionally showed when in select mode since the app-action must be a back button rather than add-nmew --><button type="button" class="btn btn-primary">Add new</button></span></h1>
       
       <div class="isolated">
         <div class="input-group">
@@ -71,10 +71,6 @@
           </span>
           <input type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
         </div><!-- /input-group -->
-      </div>
-      
-      <div id="clientsAddNewButton" class="isolated">
-        <button type="button" class="btn btn-primary btn-block">Add new client</button>
       </div>
       
       <div id="clientsIndex" data-spy="affix" data-offset-top="20">
