@@ -1,4 +1,4 @@
-/** Clients test data **/
+/** Services test data **/
 var Service = require('../models/Service');
 
 var testData = [

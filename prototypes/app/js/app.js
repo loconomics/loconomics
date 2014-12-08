@@ -11,7 +11,8 @@ var activities = {
     'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),
-    'services': require('./activities/services')
+    'services': require('./activities/services'),
+    'locations': require('./activities/locations')
 };
 
 /** Page ready **/
