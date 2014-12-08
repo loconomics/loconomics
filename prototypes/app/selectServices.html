@@ -72,11 +72,11 @@
           <!-- ko foreach: services -->
             <div class="ListView-item">
               <div class="ListView-item-marker"><p data-bind="text: price, format: { type: 'number', format: '$0,0' }"></p></div>
-              <a href="#" class="btn btn-link btn-block ListView-item-content">
+              <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.toggleServiceSelection }">
                 <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
                 <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
               </a>
-              <label class="ListView-item-action" data-bind="event: { tap: $root.toggleServiceSelection }"><input type="checkbox" name="services[]" /><span class="sr-only">Selected?</span></label>
+              <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.toggleServiceSelection }, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }" /></span><span class="sr-only">Selected?</span></a>
             </div>
           <!-- /ko -->
         </div>

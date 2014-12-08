@@ -19,12 +19,17 @@ function ServicesActivity($activity) {
     ko.applyBindings(dataView, $activity.get(0));
 
     // TestingData
-    dataView.services(require('../testdata/services').services);
+    dataView.services(require('../testdata/services').services.map(Selectable));
     
     // TODO: in observable? passed as parameter? Localizable?
     if (dataView.isSelectionMode()) {
         dataView.headerText('Select service(s)');
     }
+}
+
+function Selectable(obj) {
+    obj.isSelected = ko.observable(false);
+    return obj;
 }
 
 function ViewModel() {
@@ -83,6 +88,9 @@ function ViewModel() {
                 return true;
             }
         });
+        
+        service.isSelected(!isSelected);
+
         if (isSelected)
             this.selectedServices.splice(inIndex, 1);
         else
