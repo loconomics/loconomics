@@ -22,9 +22,19 @@ function ClientsActivity($activity) {
     // TestingData
     dataView.clients(require('../testdata/clients').clients);
 
+    // TODO: in observable? passed as parameter? Localizable?
+    if (dataView.isSelectionMode()) {
+        dataView.headerText('Select a client');
+    }
 }
 
 function ViewModel() {
+
+    this.headerText = ko.observable('Clients');
+
+    // Especial mode when instead of pick and edit we are just selecting
+    // (when editing an appointment)
+    this.isSelectionMode = ko.observable(true);
 
     // Full list of clients
     this.clients = ko.observableArray([]);
