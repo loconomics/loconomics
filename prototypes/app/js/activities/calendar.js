@@ -213,15 +213,18 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         };
         
         appointmentsDataView.pickLocation = function pickLocation() {
+            // TODO
             window.location = 'selectLocation.html';
         };
         
         appointmentsDataView.editNotesToClient = function editNotesToClient() {
             // TODO
+            window.location = 'textEditor.html?header=Notes+to+client&text=See+you+in+a+few+weeks.';
         };
         
         appointmentsDataView.editNotesToSelf = function editNotesToSelf() {
             // TODO
+            window.location = 'textEditor.html?header=Notes+to+self&text=Remember+client+preference.';
         };
         
         ko.applyBindings(appointmentsDataView, this.$appointmentView.get(0));

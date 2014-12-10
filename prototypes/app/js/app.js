@@ -12,7 +12,8 @@ var activities = {
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),
     'services': require('./activities/services'),
-    'locations': require('./activities/locations')
+    'locations': require('./activities/locations'),
+    'textEditor': require('./activities/textEditor')
 };
 
 /** Page ready **/
