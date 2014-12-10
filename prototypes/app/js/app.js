@@ -20,6 +20,7 @@ var app = {
     unexpectedError: function unexpectedError(error) {
         // TODO: enhance with dialog
         var str = typeof(error) === 'string' ? error : JSON.stringify(error);
+        console.error('Unexpected error', error);
         window.alert(str);
     },
 
@@ -31,12 +32,18 @@ var app = {
             }
             else {
                 $.get(baseUrl + activityName + '.html').then(function(html) {
-                    var $h = $($.parseHTML(html));
+                    // http://stackoverflow.com/a/12848798
+                    var body = '<div id="body-mock">' + html.replace(/^[\s\S]*<body.*?>|<\/body>[\s\S]*$/g, '') + '</div>';
+                    var $h = $($.parseHTML(body));
+                    //var $h = $($.parseHTML(html));
                     $act = app.findActivityElement(activityName, $h);
-                    if ($act.length)
+                    if ($act.length) {
+                        $('body').append($act);
                         resolve($act);
-                    else
+                    }
+                    else {
                         reject(Error('Activity not found in the source file.'));
+                    }
                     
                 }, reject);
             }
@@ -60,9 +67,12 @@ var app = {
                 $activity: $activity,
                 options: options
             });
-            activities[activityName].init($activity, options);
+            activities[activityName].init($activity, options, app);
             
-            app.hideActivity(currentActivity.name);
+            // Avoid 'goToActivity' case
+            if (currentActivity.name !== activityName) {
+                app.hideActivity(currentActivity.name);
+            }
 
         }).catch(app.unexpectedError);
     },
@@ -106,8 +116,14 @@ $(function() {
         var $activity = $(this);
         var actName = $activity.data('activity');
         if (activities.hasOwnProperty(actName)) {
-            activities[actName].init($activity);
-            app.$currentActivity = $activity;
+            activities[actName].init($activity, null, app);
+            
+            // The first one
+            app.history.push({
+                name: actName,
+                $activity: $activity,
+                options: {}
+            });
         }
     });
 });

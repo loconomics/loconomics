@@ -5,33 +5,45 @@
 
 var $ = require('jquery'),
     ko = require('knockout');
+    
+var singleton = null;
 
-exports.init = function initTextEditor($activity) {
-    new TextEditorActivity($activity);
+exports.init = function initTextEditor($activity, options, app) {
+    
+    if (singleton === null)
+        singleton = new TextEditorActivity($activity, options, app);
+    else
+        singleton.show(options);
 };
 
-function TextEditorActivity($activity) {
+function TextEditorActivity($activity, options, app) {
 
     this.$activity = $activity;
+    this.app = app;
 
-    var dataView = this.dataView = new ViewModel();
+    var dataView = this.dataView = new ViewModel(app);
     ko.applyBindings(dataView, $activity.get(0));
-    
-    // Inmediate focus to the textarea for better usability
-    $activity.find('textarea').get(0).focus();
-    
-    // TODO remove, prototype hack
-    var header = getParameterByName('header');
-    if (header) {
-        dataView.headerText(header);
-    }
-    var presetText = getParameterByName('text');
-    if (presetText) {
-        dataView.text(presetText);
-    }
+   
+    this.show(options);
 }
 
-function ViewModel() {
+TextEditorActivity.prototype.show = function show(options) {
+    
+    options = options || {};
+    this.dataView.saveInfo = options;
+
+    this.dataView.headerText(options.header);
+    this.dataView.text(options.text);
+    if (options.rowsNumber)
+        this.dataView.rowsNumber(options.rowsNumber);
+        
+    // Inmediate focus to the textarea for better usability
+    this.$activity.find('textarea').get(0).focus();
+};
+
+function ViewModel(app) {
+
+    this.app = app;
 
     this.headerText = ko.observable('Text');
 
@@ -42,20 +54,19 @@ function ViewModel() {
     this.rowsNumber = ko.observable(2);
 
     this.cancel = function cancel() {
-        // TODO
-        history.go(-1);
-    };
+
+        app.goBack();
+
+    }.bind(this);
+    
+    // Holding data passed in from another activity,
+    // updated on a save to be returned back
+    this.saveInfo = {};
     
     this.save = function save() {
-        // TODO
-        history.go(-1);
-    };
-}
 
-// TEMPORARY UTILITY
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
-        results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        this.saveInfo.text = this.text();
+        app.goBack(this.saveInfo);
+        
+    }.bind(this);
 }

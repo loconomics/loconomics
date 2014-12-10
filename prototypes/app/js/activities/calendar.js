@@ -5,11 +5,17 @@ var $ = require('jquery'),
     moment = require('moment');
 require('../components/DatePicker');
 
-exports.init = function initCalendar($activity) {
-    var calendar = new CalendarActivity($activity);
+var singleton = null;
+
+exports.init = function initCalendar($activity, options, app) {
+
+    if (singleton === null)
+        singleton = new CalendarActivity($activity, options, app);
+    else
+        singleton.show(options);
 };
 
-function CalendarActivity($activity) {
+function CalendarActivity($activity, options, app) {
 
     /* Getting elements */
     this.$activity = $activity;
@@ -19,6 +25,7 @@ function CalendarActivity($activity) {
     this.$dateTitle = this.$dateHeader.children('.CalendarDateHeader-date');
     this.$appointmentView = $activity.find('#calendarAppointmentView');
     this.$chooseNew = $activity.find('#calendarChooseNew');
+    this.app = app;
     
     /* Init components */
     this.$datepicker.show().datepicker();
@@ -65,6 +72,21 @@ function CalendarActivity($activity) {
     /* Visualization */
     // Start with daily view and initial date:
     this.showDailyView(this.$datepicker.datepicker('getValue'), true);
+};
+
+CalendarActivity.prototype.show = function show(options) {
+
+    options = options || {};
+    // In appointment view
+    if (this.$appointmentView.is(':visible')) {
+        if (options.request === 'textEditor') {
+
+            var apt = this.appointmentsDataView.currentAppointment();
+            if (apt) {
+                apt[options.field](options.text);
+            }
+        }
+    }
 };
 
 CalendarActivity.prototype.updateDateTitle = function updateDateTitle(date) {
@@ -147,6 +169,7 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
     // Visualization:
     this.$dailyView.hide();
     this.$appointmentView.show();
+    var app = this.app;
     
     if (!this.__initedAppointment) {
         this.__initedAppointment = true;
@@ -159,6 +182,9 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
             editMode: ko.observable(false),
             isNew: ko.observable(false)
         };
+        
+        this.appointmentsDataView = appointmentsDataView;
+        
         appointmentsDataView.currentAppointment = ko.computed(function() {
             return this.appointments()[this.currentIndex() % this.appointments().length];
         }, appointmentsDataView);
@@ -218,14 +244,24 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         };
         
         appointmentsDataView.editNotesToClient = function editNotesToClient() {
-            // TODO
-            window.location = 'textEditor.html?header=Notes+to+client&text=See+you+in+a+few+weeks.';
-        };
+
+            app.showActivity('textEditor', {
+                request: 'textEditor',
+                field: 'notesToClient',
+                header: 'Notes to client',
+                text: appointmentsDataView.currentAppointment().notesToClient()
+            });
+        }.bind(this);
         
         appointmentsDataView.editNotesToSelf = function editNotesToSelf() {
-            // TODO
-            window.location = 'textEditor.html?header=Notes+to+self&text=Remember+client+preference.';
-        };
+
+            app.showActivity('textEditor', {
+                request: 'textEditor',
+                field: 'notesToSelf',
+                header: 'Notes to self',
+                text: appointmentsDataView.currentAppointment().notesToSelf()
+            });
+        }.bind(this);
         
         ko.applyBindings(appointmentsDataView, this.$appointmentView.get(0));
     }
