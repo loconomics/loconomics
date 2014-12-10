@@ -34,6 +34,7 @@
     "load-grunt-config": "~0.16.0",
     "time-grunt": "~1.0.0",
     "knockout": "~3.2.0",
-    "numeral": "~1.5.3"
+    "numeral": "~1.5.3",
+    "es6-promise": "~2.0.1"
   }
 }
