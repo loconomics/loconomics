@@ -185,9 +185,19 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         
         this.appointmentsDataView = appointmentsDataView;
         
-        appointmentsDataView.currentAppointment = ko.computed(function() {
-            return this.appointments()[this.currentIndex() % this.appointments().length];
-        }, appointmentsDataView);
+        appointmentsDataView.currentAppointment = ko.computed({
+            read: function() {
+                return this.appointments()[this.currentIndex() % this.appointments().length];
+            },
+            write: function(apt) {
+                var index = this.currentIndex() % this.appointments().length;
+                this.appointments()[index] = apt;
+                this.appointments.valueHasMutated();
+            },
+            owner: appointmentsDataView
+        });
+        
+        appointmentsDataView.originalEditedAppointment = {};
  
         appointmentsDataView.goPrevious = function goPrevious() {
             if (this.editMode()) return;
@@ -209,6 +219,13 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         }.bind(appointmentsDataView);
         
         appointmentsDataView.cancel = function cancel() {
+            // revert changes
+            appointmentsDataView.currentAppointment(new Appointment(appointmentsDataView.originalEditedAppointment));
+            
+            this.editMode(false);
+        }.bind(appointmentsDataView);
+        
+        appointmentsDataView.save = function save() {
             this.editMode(false);
         }.bind(appointmentsDataView);
         
@@ -216,6 +233,11 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
             
             this.$activity.toggleClass('in-edit', isEdit);
             this.$appointmentView.find('.AppointmentCard').toggleClass('in-edit', isEdit);
+            
+            if (isEdit) {
+                // Create a copy of the appointment so we revert on 'cancel'
+                appointmentsDataView.originalEditedAppointment = ko.toJS(appointmentsDataView.currentAppointment());
+            }
             
         }.bind(this));
         
