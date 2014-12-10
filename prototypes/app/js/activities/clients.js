@@ -87,4 +87,12 @@ function ViewModel() {
         return groups;
 
     }, this);
+    
+    this.selectClient = function(selectedClient) {
+        
+        // TODO: communicate with other activities to return the 
+        // selected client
+        history.go(-1);
+
+    }.bind(this);
 }

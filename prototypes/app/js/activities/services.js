@@ -97,4 +97,15 @@ function ViewModel() {
             this.selectedServices.push(service);
 
     }.bind(this);
+    
+    /**
+        Ends the selection process, collecting selection
+        and passing it to the request activity
+    **/
+    this.endSelection = function() {
+        
+        // TODO
+        history.go(-1);
+        
+    }.bind(this);
 }

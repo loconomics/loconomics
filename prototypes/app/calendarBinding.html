@@ -93,7 +93,7 @@
                 </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
-            <li>
+            <li data-bind="event: { tap: editMode() && pickClient }">
               <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: (currentAppointment().client() && currentAppointment().client().fullName())"></span>
@@ -101,7 +101,7 @@
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
-            <li>
+            <li data-bind="event: { tap: editMode() && pickService }">
               <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().pricingSummary()"></span>
@@ -109,12 +109,12 @@
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
-            <li data-bind="visible: !isNew()">
+            <li data-bind="visible: !isNew(), event: { tap: editMode() && changePrice }">
               <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
               <span class="AppointmentCard-data" data-bind="text: currentAppointment().ptotalPrice, format: { type: 'number', format: '$0,0.00' }"></span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
-            <li>
+            <li data-bind="event: { tap: editMode() && pickLocation }">
               <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().locationSummary"></span>
@@ -122,7 +122,7 @@
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
-            <li>
+            <li data-bind="event: { tap: editMode() && editNotesToClient }">
               <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().notesToClient"></span>
@@ -130,7 +130,7 @@
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
-            <li>
+            <li data-bind="event: { tap: editMode() && editNotesToSelf }">
               <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().notesToSelf"></span>

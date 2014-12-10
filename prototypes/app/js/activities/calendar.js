@@ -194,7 +194,34 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         }.bind(this));
         
         appointmentsDataView.pickDateTime = function pickDateTime() {
+            // TODO
             window.location = 'datetimePicker.html';
+        };
+        
+        appointmentsDataView.pickClient = function pickClient() {
+            // TODO
+            window.location = 'clients.html';
+        };
+
+        appointmentsDataView.pickService = function pickService() {
+            // TODO
+            window.location = 'selectServices.html';
+        };
+
+        appointmentsDataView.changePrice = function changePrice() {
+            // TODO
+        };
+        
+        appointmentsDataView.pickLocation = function pickLocation() {
+            window.location = 'selectLocation.html';
+        };
+        
+        appointmentsDataView.editNotesToClient = function editNotesToClient() {
+            // TODO
+        };
+        
+        appointmentsDataView.editNotesToSelf = function editNotesToSelf() {
+            // TODO
         };
         
         ko.applyBindings(appointmentsDataView, this.$appointmentView.get(0));
