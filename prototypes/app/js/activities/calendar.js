@@ -76,10 +76,13 @@ function CalendarActivity($activity, options, app) {
 
 CalendarActivity.prototype.show = function show(options) {
 
-    options = options || {};
     // In appointment view
     if (this.$appointmentView.is(':visible')) {
-        if (options.request === 'textEditor') {
+        // If there are options (there are not on startup or 
+        // on cancelled edition).
+        // And it comes back from the textEditor.
+        if (options != null &&
+            options.request === 'textEditor') {
 
             var apt = this.appointmentsDataView.currentAppointment();
             if (apt) {

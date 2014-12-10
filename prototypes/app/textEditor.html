@@ -65,7 +65,7 @@
       <h1 class="ActivityTitle" id="textEditorTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-edit"></span><span data-bind="text: headerText">Text</span></h1>
       
       <div>
-        <textarea id="textEditorText" data-bind="value: text, attr: { rows: rowsNumber }" aria-labelledby="textEditorTitle" class="form-control" rows="2"></textarea>
+        <textarea id="textEditorText" data-bind="value: text, valueUpdate: 'afterkeydown', attr: { rows: rowsNumber }" aria-labelledby="textEditorTitle" class="form-control" rows="2"></textarea>
       </div>
 
       <div class="row isolated">

@@ -20,6 +20,8 @@ function TextEditorActivity($activity, options, app) {
 
     this.$activity = $activity;
     this.app = app;
+    this.$textarea = this.$activity.find('textarea');
+    this.textarea = this.$textarea.get(0);
 
     var dataView = this.dataView = new ViewModel(app);
     ko.applyBindings(dataView, $activity.get(0));
@@ -38,7 +40,8 @@ TextEditorActivity.prototype.show = function show(options) {
         this.dataView.rowsNumber(options.rowsNumber);
         
     // Inmediate focus to the textarea for better usability
-    this.$activity.find('textarea').get(0).focus();
+    this.textarea.focus();
+    this.$textarea.click();
 };
 
 function ViewModel(app) {
@@ -65,8 +68,9 @@ function ViewModel(app) {
     
     this.save = function save() {
 
+        // Update the info with the new text and pass it back:
         this.saveInfo.text = this.text();
         app.goBack(this.saveInfo);
-        
+
     }.bind(this);
 }
