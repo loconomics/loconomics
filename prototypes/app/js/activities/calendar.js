@@ -322,7 +322,7 @@ CalendarActivity.prototype.showAppointment = function showAppointment(apt) {
 
             app.showActivity('services', {
                 selectServices: true,
-                selectedServices: null
+                selectedServices: appointmentsDataView.currentAppointment().services()
             });
         };
 

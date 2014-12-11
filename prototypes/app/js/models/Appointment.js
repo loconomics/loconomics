@@ -4,7 +4,8 @@
 var ko = require('knockout'),
     Model = require('./Model'),
     Client = require('./Client'),
-    Location = require('./Location');
+    Location = require('./Location'),
+    Service = require('./Service');
 
 function Appointment(values) {
     
@@ -33,7 +34,9 @@ function Appointment(values) {
         return this.location().singleLine();
     }, this);
     
-    this.services = ko.observableArray(values.services || []);    
+    this.services = ko.observableArray((values.services || []).map(function(service) {
+        return (service instanceof Service) ? service : new Service(service);
+    }));
     this.servicesSummary = ko.computed(function() {
         return this.services().map(function(service) {
             return service.name();

@@ -64,8 +64,25 @@ ServicesActivity.prototype.show = function show(options) {
     options = options || {};
     this.requestInfo = options;
 
-    if (options.selectServices === true)
+    if (options.selectServices === true) {
         this.dataView.isSelectionMode(true);
+        
+        /* Trials to presets the selected services, NOT WORKING
+        var services = (options.selectedServices || []);
+        var selectedServices = this.dataView.selectedServices;
+        selectedServices.removeAll();
+        this.dataView.services().forEach(function(service) {
+            services.forEach(function(selService) {
+                if (selService === service) {
+                    service.isSelected(true);
+                    selectedServices.push(service);
+                } else {
+                    service.isSelected(false);
+                }
+            });
+        });
+        */
+    }
 };
 
 function Selectable(obj) {
