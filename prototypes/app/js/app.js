@@ -32,7 +32,7 @@ var app = {
                 resolve($act);
             }
             else {
-                $.get(baseUrl + activityName + '.html').then(function(html) {
+                $.ajax({ url: baseUrl + activityName + '.html', cache: false }).then(function(html) {
                     // http://stackoverflow.com/a/12848798
                     var body = '<div id="body-mock">' + html.replace(/^[\s\S]*<body.*?>|<\/body>[\s\S]*$/g, '') + '</div>';
                     var $h = $($.parseHTML(body));

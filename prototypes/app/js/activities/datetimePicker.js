@@ -8,13 +8,20 @@ var $ = require('jquery'),
     ko = require('knockout'),
     Time = require('../utils/Time');
 require('../components/DatePicker');
+    
+var singleton = null;
 
-exports.init = function initDatetimePicker($activity) {
-    var calendar = new DatetimePickerActivity($activity);
+exports.init = function initDatetimePicker($activity, options, app) {
+
+    if (singleton === null)
+        singleton = new DatetimePickerActivity($activity, app);
+
+    singleton.show(options);
 };
 
-function DatetimePickerActivity($activity) {
+function DatetimePickerActivity($activity, app) {
 
+    this.app = app;
     this.$activity = $activity;
     this.$datePicker = $activity.find('#datetimePickerDatePicker');
     this.$timePicker = $activity.find('#datetimePickerTimePicker');
@@ -32,11 +39,6 @@ function DatetimePickerActivity($activity) {
             dataView.selectedDate(e.date);
         }
     }.bind(this));
-    this.$timePicker.on('tap', '.btn', function(e) {
-        e.preventDefault();
-        
-        history.go(-1);
-    });
     
     // TestingData
     dataView.slotsData = require('../testdata/timeSlots').timeSlots;
@@ -46,7 +48,31 @@ function DatetimePickerActivity($activity) {
     }.bind(this));
 
     this.bindDateData(new Date());
+    
+    // Object to hold the options passed on 'show' as a result
+    // of a request from another activity
+    this.requestInfo = null;
+    
+    // Handler to go back with the selected date-time when
+    // that selection is done (could be to null)
+    this.dataView.selectedDatetime.subscribe(function (datetime) {
+        // We have a request
+        if (this.requestInfo) {
+            // Pass the selected datetime in the info
+            this.requestInfo.selectedDatetime = this.dataView.selectedDatetime();
+            // And go back
+            this.app.goBack(this.requestInfo);
+            // Last, clear requestInfo
+            this.requestInfo = null;
+        }
+    }.bind(this));
 }
+
+DatetimePickerActivity.prototype.show = function show(options) {
+  
+    options = options || {};
+    this.requestInfo = options;
+};
 
 DatetimePickerActivity.prototype.bindDateData = function bindDateData(date) {
 
@@ -108,5 +134,13 @@ function ViewModel() {
         return groups;
 
     }, this);
+    
+    this.selectedDatetime = ko.observable(null);
+    
+    this.selectDatetime = function(selectedDatetime) {
+        
+        this.selectedDatetime(selectedDatetime);
+
+    }.bind(this);
 
 }

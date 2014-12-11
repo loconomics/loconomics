@@ -74,7 +74,7 @@
           <div class="GroupedTimeSlots-group" data-bind="visible: slots.length">
             <div class="GroupedTimeSlots-groupName" data-bind="text: group"></div>
             <div class="GroupedTimeSlots-slots" data-bind="foreach: { data: slots, as: 'item' }">
-              <a href="#" class="btn btn-link btn-default" data-bind="text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
+              <a href="#" class="btn btn-link btn-default" data-bind="event: { tap: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
             </div>
           </div>
         </div>

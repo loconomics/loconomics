@@ -180,7 +180,14 @@ DatePicker.prototype = {
         }
     },
     
-    setValue: function(newDate) {
+    /**
+        Sets a date as value and notify with an event.
+        Parameter dontNotify is only for cases where the calendar or
+        some related component gets already updated but the highlighted
+        date needs to be updated without create infinite recursion 
+        because of notification. In other case, dont use.
+    **/
+    setValue: function(newDate, dontNotify) {
         if (typeof newDate === 'string') {
             this.date = DPGlobal.parseDate(newDate, this.format);
         } else {
@@ -189,12 +196,15 @@ DatePicker.prototype = {
         this.set();
         this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
         this.fill();
-        // Notify:
-        this.element.trigger({
-            type: 'changeDate',
-            date: this.date,
-            viewMode: DPGlobal.modes[this.viewMode].clsName
-        });
+        
+        if (dontNotify !== true) {
+            // Notify:
+            this.element.trigger({
+                type: 'changeDate',
+                date: this.date,
+                viewMode: DPGlobal.modes[this.viewMode].clsName
+            });
+        }
     },
     
     getValue: function() {

@@ -93,6 +93,25 @@ CalendarActivity.prototype.show = function show(options) {
 
                 this.appointmentsDataView.currentAppointment().client(options.selectedClient);
             }
+            else if (typeof(options.selectedDatetime) !== 'undefined') {
+                
+                var booking = this.appointmentsDataView.currentAppointment();
+                booking.startTime(options.selectedDatetime);
+                // TODO Calculate the endTime given an appointment duration, retrieved from the
+                // selected service
+                //var duration = booking.pricing && booking.pricing.duration;
+                // Or by default (if no pricing selected or any) the user preferred
+                // time gap
+                //duration = duration || user.preferences.timeSlotsGap;
+                // PROTOTYPE:
+                var duration = 60; // minutes
+                booking.endTime(moment(booking.startTime()).add(duration, 'minutes').toDate());
+                
+                // Sets the date of the datePicker too:
+                var justDate = moment(options.selectedDatetime).hours(0).minutes(0).seconds(0).toDate();
+                this.bindDateData(justDate);
+                this.updateDateTitle(justDate);
+            }
         }
     }
 };
@@ -103,6 +122,9 @@ CalendarActivity.prototype.updateDateTitle = function updateDateTitle(date) {
     dateInfo.attr('datetime', date.toISOString());
     dateInfo.text(date.format('dddd (M/D)'));
     this.$datepicker.removeClass('is-visible');
+    // Change not from the widget?
+    if (this.$datepicker.datepicker('getValue').toISOString() !== date.toISOString())
+        this.$datepicker.datepicker('setValue', date, true);
 };
 
 CalendarActivity.prototype.bindDateData = function bindDateData(date) {
@@ -250,8 +272,10 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         }.bind(this));
         
         appointmentsDataView.pickDateTime = function pickDateTime() {
-            // TODO
-            window.location = 'datetimePicker.html';
+
+            app.showActivity('datetimePicker', {
+                selectedDatetime: null
+            });
         };
         
         appointmentsDataView.pickClient = function pickClient() {
