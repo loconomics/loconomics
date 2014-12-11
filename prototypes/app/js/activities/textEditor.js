@@ -5,7 +5,6 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
-    util = require('util'),
     EventEmitter = require('events').EventEmitter;
     
 var singleton = null;
@@ -88,4 +87,5 @@ function ViewModel() {
     };
 }
 
-util.inherits(ViewModel, EventEmitter);
+//util.inherits(ViewModel, EventEmitter);
+ViewModel._inherits(EventEmitter);
