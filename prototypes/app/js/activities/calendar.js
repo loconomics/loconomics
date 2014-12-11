@@ -81,12 +81,17 @@ CalendarActivity.prototype.show = function show(options) {
         // If there are options (there are not on startup or 
         // on cancelled edition).
         // And it comes back from the textEditor.
-        if (options != null &&
-            options.request === 'textEditor') {
+        if (options != null) {
+            if (options.request === 'textEditor') {
 
-            var apt = this.appointmentsDataView.currentAppointment();
-            if (apt) {
-                apt[options.field](options.text);
+                var apt = this.appointmentsDataView.currentAppointment();
+                if (apt)
+                    apt[options.field](options.text);
+            }
+            else if (options.selectClient === true &&
+                options.selectedClient) {
+
+                this.appointmentsDataView.currentAppointment().client(options.selectedClient);
             }
         }
     }
@@ -250,8 +255,11 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         };
         
         appointmentsDataView.pickClient = function pickClient() {
-            // TODO
-            window.location = 'clients.html';
+
+            app.showActivity('clients', {
+                selectClient: true,
+                selectedClient: null
+            });
         };
 
         appointmentsDataView.pickService = function pickService() {

@@ -5,28 +5,71 @@
 
 var $ = require('jquery'),
     ko = require('knockout');
+    
+var singleton = null;
 
-exports.init = function initClients($activity) {
-    new ClientsActivity($activity);
+exports.init = function initClients($activity, options, app) {
+
+    if (singleton === null)
+        singleton = new ClientsActivity($activity, app);
+    
+    singleton.show(options);
 };
 
-function ClientsActivity($activity) {
+function ClientsActivity($activity, app) {
 
     this.$activity = $activity;
+    this.app = app;
     this.$index = $activity.find('#clientsIndex');
     this.$listView = $activity.find('#clientsListView');
 
-    var dataView = this.dataView = new ViewModel();
-    ko.applyBindings(dataView, $activity.get(0));
+    this.dataView = new ViewModel();
+    ko.applyBindings(this.dataView, $activity.get(0));
 
     // TestingData
-    dataView.clients(require('../testdata/clients').clients);
+    this.dataView.clients(require('../testdata/clients').clients);
+    
+    // Handler to update header based on a mode change:
+    this.dataView.isSelectionMode.subscribe(function (itIs) {
+        this.dataView.headerText(itIs ? 'Select a client' : 'Clients');
+    }.bind(this));
 
-    // TODO: in observable? passed as parameter? Localizable?
-    if (dataView.isSelectionMode()) {
-        dataView.headerText('Select a client');
-    }
+    // Object to hold the options passed on 'show' as a result
+    // of a request from another activity
+    this.requestInfo = null;
+    
+    // Handler to go back with the selected client when 
+    // selection mode goes off and requestInfo is for
+    // 'select mode'
+    this.dataView.isSelectionMode.subscribe(function (itIs) {
+        // We have a request and
+        // it requested to select a client
+        // and selection mode goes off
+        if (this.requestInfo &&
+            this.requestInfo.selectClient === true &&
+            itIs === false) {
+            
+            // Pass the selected client in the info
+            this.requestInfo.selectedClient = this.dataView.selectedClient();
+            // And go back
+            this.app.goBack(this.requestInfo);
+            // Last, clear requestInfo
+            this.requestInfo = null;
+        }
+    }.bind(this));
 }
+
+ClientsActivity.prototype.show = function show(options) {
+
+    // On every show, search gets reseted
+    this.dataView.searchText('');
+  
+    options = options || {};
+    this.requestInfo = options;
+
+    if (options.selectClient === true)
+        this.dataView.isSelectionMode(true);
+};
 
 function ViewModel() {
 
@@ -34,7 +77,7 @@ function ViewModel() {
 
     // Especial mode when instead of pick and edit we are just selecting
     // (when editing an appointment)
-    this.isSelectionMode = ko.observable(true);
+    this.isSelectionMode = ko.observable(false);
 
     // Full list of clients
     this.clients = ko.observableArray([]);
@@ -88,11 +131,12 @@ function ViewModel() {
 
     }, this);
     
+    this.selectedClient = ko.observable(null);
+    
     this.selectClient = function(selectedClient) {
         
-        // TODO: communicate with other activities to return the 
-        // selected client
-        history.go(-1);
+        this.selectedClient(selectedClient);
+        this.isSelectionMode(false);
 
     }.bind(this);
 }
