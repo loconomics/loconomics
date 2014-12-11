@@ -88,7 +88,7 @@ CalendarActivity.prototype.show = function show(options) {
             if (options.request === 'textEditor') {
 
                 if (booking)
-                    apt[options.field](options.text);
+                    booking[options.field](options.text);
             }
             else if (options.selectClient === true) {
 
@@ -117,6 +117,10 @@ CalendarActivity.prototype.show = function show(options) {
                 // TODO Update Modesl for array, computed pricingSummary and rename service/pricing
                 booking.pricing(options.selectedServices);
                 booking.pricingSummary(options.selectedServices && options.selectedServices[0] && options.selectedServices[0].name);
+            }
+            else if (options.selectLocation === true) {
+                
+                booking.location(options.selectedLocation);
             }
         }
     }
@@ -305,8 +309,11 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         };
         
         appointmentsDataView.pickLocation = function pickLocation() {
-            // TODO
-            window.location = 'selectLocation.html';
+
+            app.showActivity('locations', {
+                selectLocation: true,
+                selectedLocation: appointmentsDataView.currentAppointment().location()
+            });
         };
         
         appointmentsDataView.editNotesToClient = function editNotesToClient() {

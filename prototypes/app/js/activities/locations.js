@@ -5,13 +5,20 @@
 
 var $ = require('jquery'),
     ko = require('knockout');
+    
+var singleton = null;
 
-exports.init = function initLocations($activity) {
-    new LocationsActivity($activity);
+exports.init = function initLocations($activity, options, app) {
+
+    if (singleton === null)
+        singleton = new LocationsActivity($activity, app);
+    
+    singleton.show(options);
 };
 
-function LocationsActivity($activity) {
+function LocationsActivity($activity, app) {
 
+    this.app = app;
     this.$activity = $activity;
     this.$listView = $activity.find('#locationsListView');
 
@@ -21,11 +28,47 @@ function LocationsActivity($activity) {
     // TestingData
     dataView.locations(require('../testdata/locations').locations);
 
-    // TODO: in observable? passed as parameter? Localizable?
-    if (dataView.isSelectionMode()) {
-        dataView.headerText('Select/Add location');
-    }
+    // Handler to update header based on a mode change:
+    this.dataView.isSelectionMode.subscribe(function (itIs) {
+        this.dataView.headerText(itIs ? 'Select/Add location' : 'Locations');
+    }.bind(this));
+
+    // Object to hold the options passed on 'show' as a result
+    // of a request from another activity
+    this.requestInfo = null;
+    
+    // Handler to go back with the selected location when 
+    // selection mode goes off and requestInfo is for
+    // 'select mode'
+    this.dataView.isSelectionMode.subscribe(function (itIs) {
+        // We have a request and
+        // it requested to select a location
+        // and selection mode goes off
+        if (this.requestInfo &&
+            this.requestInfo.selectLocation === true &&
+            itIs === false) {
+            
+            // Pass the selected client in the info
+            this.requestInfo.selectedLocation = this.dataView.selectedLocation();
+            // And go back
+            this.app.goBack(this.requestInfo);
+            // Last, clear requestInfo
+            this.requestInfo = null;
+        }
+    }.bind(this));
 }
+
+LocationsActivity.prototype.show = function show(options) {
+  
+    options = options || {};
+    this.requestInfo = options;
+
+    if (options.selectLocation === true) {
+        this.dataView.isSelectionMode(true);
+        // preset:
+        this.dataView.selectedLocation(options.selectedLocation);
+    }
+};
 
 function ViewModel() {
 
@@ -36,13 +79,14 @@ function ViewModel() {
 
     // Especial mode when instead of pick and edit we are just selecting
     // (when editing an appointment)
-    this.isSelectionMode = ko.observable(true);
+    this.isSelectionMode = ko.observable(false);
 
+    this.selectedLocation = ko.observable(null);
+    
     this.selectLocation = function(selectedLocation) {
         
-        // TODO: communicate with other activities to return the 
-        // selected location
-        history.go(-1);
+        this.selectedLocation(selectedLocation);
+        this.isSelectionMode(false);
 
     }.bind(this);
 }

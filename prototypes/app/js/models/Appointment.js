@@ -3,12 +3,13 @@
 
 var ko = require('knockout'),
     Model = require('./Model'),
-    Client = require('./Client');
+    Client = require('./Client'),
+    Location = require('./Location');
 
 function Appointment(values) {
     
     Model(this);
-    
+
     this.model.defProperties({
         startTime: null,
         endTime: null,
@@ -22,14 +23,18 @@ function Appointment(values) {
         pricing: {}, // TODO future Pricing model
         pricingSummary: '', // TODO Future computed from pricing fields
         
-        location: {}, // TODO future Location model
-        locationSummary: '', // TODO Future computed from location fields
-        
         notesToClient: '',
         notesToSelf: ''
     }, values);
+    
+    values = values || {};
 
     this.client = ko.observable(new Client(values.client));
+    this.location = ko.observable(new Location(values.location));
+    
+    this.locationSummary = ko.computed(function() {
+        return this.location().singleLine();
+    }, this);
 }
 
 module.exports = Appointment;
