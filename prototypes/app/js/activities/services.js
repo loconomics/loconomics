@@ -5,13 +5,20 @@
 
 var $ = require('jquery'),
     ko = require('knockout');
+    
+var singleton = null;
 
-exports.init = function initServices($activity) {
-    new ServicesActivity($activity);
+exports.init = function initServices($activity, options, app) {
+
+    if (singleton === null)
+        singleton = new ServicesActivity($activity, app);
+    
+    singleton.show(options);
 };
 
-function ServicesActivity($activity) {
+function ServicesActivity($activity, app) {
 
+    this.app = app;
     this.$activity = $activity;
     this.$listView = $activity.find('#servicesListView');
 
@@ -21,11 +28,45 @@ function ServicesActivity($activity) {
     // TestingData
     dataView.services(require('../testdata/services').services.map(Selectable));
     
-    // TODO: in observable? passed as parameter? Localizable?
-    if (dataView.isSelectionMode()) {
-        dataView.headerText('Select service(s)');
-    }
+    // Handler to update header based on a mode change:
+    this.dataView.isSelectionMode.subscribe(function (itIs) {
+        this.dataView.headerText(itIs ? 'Select service(s)' : 'Services');
+    }.bind(this));
+
+    // Object to hold the options passed on 'show' as a result
+    // of a request from another activity
+    this.requestInfo = null;
+    
+    // Handler to go back with the selected service when 
+    // selection mode goes off and requestInfo is for
+    // 'select mode'
+    this.dataView.isSelectionMode.subscribe(function (itIs) {
+        // We have a request and
+        // it requested to select a service
+        // and selection mode goes off
+        if (this.requestInfo &&
+            this.requestInfo.selectServices === true &&
+            itIs === false) {
+            
+            // Pass the selected client in the info
+            this.requestInfo.selectedServices = this.dataView.selectedServices();
+            // And go back
+            this.app.goBack(this.requestInfo);
+            // Last, clear requestInfo
+            this.requestInfo = null;
+        }
+    }.bind(this));
 }
+
+ServicesActivity.prototype.show = function show(options) {
+
+  
+    options = options || {};
+    this.requestInfo = options;
+
+    if (options.selectServices === true)
+        this.dataView.isSelectionMode(true);
+};
 
 function Selectable(obj) {
     obj.isSelected = ko.observable(false);
@@ -41,7 +82,7 @@ function ViewModel() {
 
     // Especial mode when instead of pick and edit we are just selecting
     // (when editing an appointment)
-    this.isSelectionMode = ko.observable(true);
+    this.isSelectionMode = ko.observable(false);
 
     // Grouped list of pricings:
     // Defined groups: regular services and add-ons
@@ -99,13 +140,12 @@ function ViewModel() {
     }.bind(this);
     
     /**
-        Ends the selection process, collecting selection
+        Ends the selection process, ready to collect selection
         and passing it to the request activity
     **/
     this.endSelection = function() {
         
-        // TODO
-        history.go(-1);
+        this.isSelectionMode(false);
         
     }.bind(this);
 }

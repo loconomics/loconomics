@@ -82,20 +82,20 @@ CalendarActivity.prototype.show = function show(options) {
         // on cancelled edition).
         // And it comes back from the textEditor.
         if (options != null) {
+        
+            var booking = this.appointmentsDataView.currentAppointment();
+        
             if (options.request === 'textEditor') {
 
-                var apt = this.appointmentsDataView.currentAppointment();
-                if (apt)
+                if (booking)
                     apt[options.field](options.text);
             }
-            else if (options.selectClient === true &&
-                options.selectedClient) {
+            else if (options.selectClient === true) {
 
-                this.appointmentsDataView.currentAppointment().client(options.selectedClient);
+                booking.client(options.selectedClient);
             }
             else if (typeof(options.selectedDatetime) !== 'undefined') {
                 
-                var booking = this.appointmentsDataView.currentAppointment();
                 booking.startTime(options.selectedDatetime);
                 // TODO Calculate the endTime given an appointment duration, retrieved from the
                 // selected service
@@ -111,6 +111,12 @@ CalendarActivity.prototype.show = function show(options) {
                 var justDate = moment(options.selectedDatetime).hours(0).minutes(0).seconds(0).toDate();
                 this.bindDateData(justDate);
                 this.updateDateTitle(justDate);
+            }
+            else if (options.selectServices === true) {
+                
+                // TODO Update Modesl for array, computed pricingSummary and rename service/pricing
+                booking.pricing(options.selectedServices);
+                booking.pricingSummary(options.selectedServices && options.selectedServices[0] && options.selectedServices[0].name);
             }
         }
     }
@@ -287,8 +293,11 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         };
 
         appointmentsDataView.pickService = function pickService() {
-            // TODO
-            window.location = 'selectServices.html';
+
+            app.showActivity('services', {
+                selectServices: true,
+                selectedServices: null
+            });
         };
 
         appointmentsDataView.changePrice = function changePrice() {
