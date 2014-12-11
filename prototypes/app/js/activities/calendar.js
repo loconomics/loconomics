@@ -114,9 +114,7 @@ CalendarActivity.prototype.show = function show(options) {
             }
             else if (options.selectServices === true) {
                 
-                // TODO Update Modesl for array, computed pricingSummary and rename service/pricing
-                booking.pricing(options.selectedServices);
-                booking.pricingSummary(options.selectedServices && options.selectedServices[0] && options.selectedServices[0].name);
+                booking.services(options.selectedServices);
             }
             else if (options.selectLocation === true) {
                 

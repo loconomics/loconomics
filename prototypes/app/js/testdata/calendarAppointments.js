@@ -1,13 +1,15 @@
 /** Calendar Appointments test data **/
 var Appointment = require('../models/Appointment');
 var testLocations = require('./locations').locations;
+var testServices = require('./services').services;
 var ko = require('knockout');
 
 var testData = [
     new Appointment({
         startTime: new Date(2014, 11, 1, 10, 0, 0),
         endTime: new Date(2014, 11, 1, 12, 0, 0),
-        pricingSummary: 'Deep Tissue Massage 120m plus 2 more',
+        //pricingSummary: 'Deep Tissue Massage 120m plus 2 more',
+        services: testServices,
         ptotalPrice: 95.0,
         location: ko.toJS(testLocations[0]),
         notesToClient: 'Looking forward to seeing the new color',
@@ -20,7 +22,8 @@ var testData = [
     new Appointment({
         startTime: new Date(2014, 11, 1, 13, 0, 0),
         endTime: new Date(2014, 11, 1, 13, 50, 0),
-        pricingSummary: 'Another Massage 50m',
+        //pricingSummary: 'Another Massage 50m',
+        services: [testServices[0]],
         ptotalPrice: 95.0,
         location: ko.toJS(testLocations[1]),
         notesToClient: 'Something else',
@@ -33,7 +36,8 @@ var testData = [
     new Appointment({
         startTime: new Date(2014, 11, 1, 16, 0, 0),
         endTime: new Date(2014, 11, 1, 18, 0, 0),
-        pricingSummary: 'Tissue Massage 120m',
+        //pricingSummary: 'Tissue Massage 120m',
+        services: [testServices[1]],
         ptotalPrice: 95.0,
         location: ko.toJS(testLocations[2]),
         notesToClient: '',

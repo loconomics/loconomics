@@ -104,8 +104,8 @@
             <li data-bind="event: { tap: editMode() && pickService }">
               <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
               <span class="AppointmentCard-data">
-                <span data-bind="text: currentAppointment().pricingSummary()"></span>
-                <span data-bind="visible: editMode() && !currentAppointment().pricingSummary()" class="AppointmentCard-placeholderLabel">Select/Add service(s)</span>
+                <span data-bind="text: currentAppointment().servicesSummary()"></span>
+                <span data-bind="visible: editMode() && !currentAppointment().servicesSummary()" class="AppointmentCard-placeholderLabel">Select/Add service(s)</span>
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
