@@ -87,5 +87,4 @@ function ViewModel() {
     };
 }
 
-//util.inherits(ViewModel, EventEmitter);
 ViewModel._inherits(EventEmitter);
