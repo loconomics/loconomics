@@ -63,9 +63,9 @@ function CalendarActivity($activity, options, app) {
         e.stopPropagation();
     }.bind(this));
     
-    $activity.on('tap', '[data-toggle="activity"][data-target="calendar-appointment"]', function(e) {
+    $activity.on('tap', '[data-target="new-booking"]', function(e) {
         this.$chooseNew.modal('hide');
-        this.showAppointment();
+        this.showAppointment(null);
         e.preventDefault();
     }.bind(this));
     
@@ -184,7 +184,8 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
             var link = e.currentTarget.getAttribute('href');
             if (/^#calendar\/appointment/i.test(link)) {
                 this.$chooseNew.modal('hide');
-                this.showAppointment();
+                // TODO: Must pass the appointment instead a fake non-null
+                this.showAppointment({});
             }
             else if (/^#calendar\/new/i.test(link)) {
                 this.$chooseNew.modal('show');
@@ -204,13 +205,13 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
 
 var Appointment = require('../models/Appointment');
 
-CalendarActivity.prototype.showAppointment = function showAppointment() {
+CalendarActivity.prototype.showAppointment = function showAppointment(apt) {
     
     // Visualization:
     this.$dailyView.hide();
     this.$appointmentView.show();
     var app = this.app;
-    
+
     if (!this.__initedAppointment) {
         this.__initedAppointment = true;
 
@@ -220,14 +221,23 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
             appointments: ko.observableArray(testData),
             currentIndex: ko.observable(0),
             editMode: ko.observable(false),
-            isNew: ko.observable(false)
+            newAppointment: ko.observable(null)
         };
         
         this.appointmentsDataView = appointmentsDataView;
         
+        appointmentsDataView.isNew = ko.computed(function(){
+            return this.newAppointment() !== null;
+        }, appointmentsDataView);
+        
         appointmentsDataView.currentAppointment = ko.computed({
             read: function() {
-                return this.appointments()[this.currentIndex() % this.appointments().length];
+                if (this.isNew()) {
+                    return this.newAppointment();
+                }
+                else {
+                    return this.appointments()[this.currentIndex() % this.appointments().length];
+                }
             },
             write: function(apt) {
                 var index = this.currentIndex() % this.appointments().length;
@@ -259,13 +269,27 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         }.bind(appointmentsDataView);
         
         appointmentsDataView.cancel = function cancel() {
-            // revert changes
-            appointmentsDataView.currentAppointment(new Appointment(appointmentsDataView.originalEditedAppointment));
             
+            // if is new, discard
+            if (this.isNew()) {
+                this.newAppointment(null);
+            }
+            else {
+                // revert changes
+                this.currentAppointment(new Appointment(this.originalEditedAppointment));
+            }
+
             this.editMode(false);
         }.bind(appointmentsDataView);
         
         appointmentsDataView.save = function save() {
+            // If is a new one, add it to the collection
+            if (this.isNew()) {
+                this.appointments.push(this.newAppointment());
+                // now, reset
+                this.newAppointment(null);
+            }
+
             this.editMode(false);
         }.bind(appointmentsDataView);
         
@@ -337,5 +361,14 @@ CalendarActivity.prototype.showAppointment = function showAppointment() {
         }.bind(this);
         
         ko.applyBindings(appointmentsDataView, this.$appointmentView.get(0));
+    }
+    
+    if (apt === null) {
+        
+        this.appointmentsDataView.newAppointment(new Appointment());
+        this.appointmentsDataView.editMode(true);
+        
+    } else {
+        // TODO: select appointment 'apt'
     }
 };
