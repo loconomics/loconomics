@@ -36,7 +36,14 @@ exports.autoShow = function autoShowWelcomePopup() {
     return;
   } else if ($wo.hasClass('auto-show')) {
     exports.show(true);
+  } else {
+    exports.afterClose();
   }
+};
+
+/* Do some things after close the popup */
+exports.afterClose = function afterClose() {
+    $('body').removeClass('strict-welcome-popup');
 };
 
 exports.initPopup = function initPopup() {
@@ -94,6 +101,7 @@ exports.initPopup = function initPopup() {
         closeButton.show().on('click', function () {
             overlay.fadeOut('normal');
             Cookie.set('WelcomePopupVisible', 'false');
+            exports.afterClose();
             return false;
         });
 
@@ -261,6 +269,9 @@ exports.show = function showPopup(fromAutoShow) {
         if (!fromAutoShow ||
             Cookie.get('WelcomePopupVisible') !== 'false') {
             overlay.fadeIn(300);
+        }
+        else {
+            exports.afterClose();
         }
 
         // All fine
