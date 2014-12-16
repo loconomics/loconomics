@@ -343,9 +343,12 @@ function facebookUpdateFieldsStatus($container) {
 }
 
 function existingUserHideFields($container) {
-    var femail = $container.find('[name="email"]'),
+    var fuid = $container.find('[name="userid"]'),
+        femail = $container.find('[name="email"]'),
         fpwd = $container.find('[name="create-password"]');
-    if (femail.val()) {
+    // There is an existing user (with userid; just check the email 
+    // for a value is buggy, causing #594
+    if (fuid.val()) {
         // Hide email and password fields
         femail.closest('li').hide();
         fpwd.closest('li').hide();
