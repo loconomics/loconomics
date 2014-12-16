@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-12-10
+/*! LoconomicsAppProto 2014-12-16
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -82,16 +82,16 @@ html.app > body > .container-fluid {
 .app .container,
 .app .container-fluid {
 /* Overwriting default Bootstrap margins */
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 /* Space for nav at bottom */
 }
 
 /* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container .row,
 .app .container-fluid .row {
-  margin-left: -5px;
-  margin-right: -5px;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 
 /* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
@@ -404,7 +404,7 @@ html.app > body > .container-fluid {
 /* line 133 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .container .ListView .ListView-divider,
 .container-fluid .ListView .ListView-divider {
-  margin: 0 -5px 0 -5px;
+  margin: 0 -10px 0 -10px;
 }
 
 /* line 139 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
@@ -420,6 +420,10 @@ html.app > body > .container-fluid {
 }
 
 /* line 151 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+.ListView--twolines .ListView-item .ListView-item-marker {
+/* If a Bootstrap glypicon is used, adjust to the best size */
+  padding: 6px 0;
+}
 
 /* line 153 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-marker .glyphicon {
@@ -427,9 +431,9 @@ html.app > body > .container-fluid {
   line-height: 40px;
 }
 
-/* line 161 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 163 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 162 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 164 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-marker p,
 .ListView--twolines .ListView-item .ListView-item-content p {
   vertical-align: middle;
@@ -437,48 +441,48 @@ html.app > body > .container-fluid {
   height: 40px;
 }
 
-/* line 169 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 171 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-action {
 /* from Bootstrap btn-link styles 2x6padding */
   line-height: 40px;
 }
 
-/* line 179 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 181 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 182 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 183 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 184 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-marker {
   width: 56px;
 }
 
-/* line 185 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 187 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-marker p {
 /* Since a table-cell doesn't fill completely the width -needs a table parent for that, but
                    its problematic- we set the width explicitely (100% does not work) */
   width: 56px;
 }
 
-/* line 192 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 194 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-content {
   padding-left: 68px;
 }
 
-/* line 201 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
-/* line 202 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 203 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 204 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 205 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--textualmarker .ListView-item .ListView-item-marker {
   text-align: right;
   padding: 6px 0;
 }
 
-/* line 212 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
-/* line 213 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 214 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 215 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 216 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item:before,
 .ListView--colortags .ListView-item .ListView-item-tagged:before {
   content: '';
@@ -491,102 +495,102 @@ html.app > body > .container-fluid {
   z-index: 2;
 }
 
-/* line 225 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 227 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item:before {
   left: 34px;
 }
 
-/* line 232 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-primary:before,
 .ListView--colortags .ListView-item.ListView-item--tag-primary .ListView-item-tagged:before {
   border-right-color: #00989a;
 }
 
-/* line 238 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 240 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-primary .ListView-item-action {
   color: #00989a;
 }
 
-/* line 232 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-success:before,
 .ListView--colortags .ListView-item.ListView-item--tag-success .ListView-item-tagged:before {
   border-right-color: #99c027;
 }
 
-/* line 238 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 240 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-success .ListView-item-action {
   color: #99c027;
 }
 
-/* line 232 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-info:before,
 .ListView--colortags .ListView-item.ListView-item--tag-info .ListView-item-tagged:before {
   border-right-color: #b5e1e2;
 }
 
-/* line 238 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 240 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-info .ListView-item-action {
   color: #b5e1e2;
 }
 
-/* line 232 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-warning:before,
 .ListView--colortags .ListView-item.ListView-item--tag-warning .ListView-item-tagged:before {
   border-right-color: #e95d0f;
 }
 
-/* line 238 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 240 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-warning .ListView-item-action {
   color: #e95d0f;
 }
 
-/* line 232 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 233 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-danger:before,
 .ListView--colortags .ListView-item.ListView-item--tag-danger .ListView-item-tagged:before {
   border-right-color: #fc0404;
 }
 
-/* line 238 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 240 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-danger .ListView-item-action {
   color: #fc0404;
 }
 
-/* line 246 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 248 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 247 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 249 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags.ListView--largemarker .ListView-item:before {
   left: 62px;
 }
 
-/* line 256 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
-/* line 257 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 258 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 259 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 260 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largeaction .ListView-item .ListView-item-action {
   width: 60px;
 }
 
-/* line 262 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 264 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largeaction .ListView-item .ListView-item-content {
   padding-right: 60px;
 }
 
-/* line 271 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
-/* line 272 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
-
 /* line 273 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 274 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+
+/* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-action--flexible {
   width: auto;
   min-width: 40px;
@@ -595,7 +599,7 @@ html.app > body > .container-fluid {
 /* Gradient ellipsis over the item-content: */
 }
 
-/* line 280 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 282 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-action--flexible:before {
   content: '';
   position: absolute;
@@ -610,7 +614,7 @@ html.app > body > .container-fluid {
   background-image: linear-gradient(to left, White, rgba(255,255,255,0));
 }
 
-/* line 292 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
+/* line 294 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 
 /* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .SectionTitle {
@@ -633,13 +637,13 @@ html.app > body > .container-fluid {
 /* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
-  margin: 0 -5px 0 -5px;
+  margin: 0 -10px 0 -10px;
 }
 
 /* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .container .SectionTitle .HelpPoint,
 .container-fluid .SectionTitle .HelpPoint {
-  right: 12px;
+  right: 17px;
 }
 
 /* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
@@ -1163,7 +1167,7 @@ html.app > body > .container-fluid {
 /* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
 .container .ListView .ListView-divider,
 .container-fluid .ListView .ListView-divider {
-  margin: 0 -5px 0 -5px;
+  margin: 0 -10px 0 -10px;
 }
 
 /* line 205 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
@@ -1364,8 +1368,8 @@ html.app > body > .container-fluid {
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsListView {
-  margin-right: 20px;
-  margin-left: -5px;
+  margin-right: 15px;
+  margin-left: -10px;
 }
 
 /* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
