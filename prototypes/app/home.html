@@ -59,50 +59,82 @@
 
     <div class="container-fluid app-home">
 
-      <h1 class="SectionTitle has-HelpPoint">Upcoming bookings <a href="#" class="HelpPoint size-lg" data-content="Some help text." data-placement="left">?</a></h1>
-      <div class="ListView ListView--twolines">
-        <div class="ListView-divider">
-          Today
-        </div>
+      <h1 class="SectionTitle has-HelpPoint">Your next booking</h1>
+      <div class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
         <div class="ListView-item">
-          <div class="ListView-item-marker"><p>9a</p></div>
+          <div class="ListView-item-marker">
+            <div>Today</div>
+            <div><strong>11:15a</strong></div>
+          </div>
           <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <div>Jaron Freely - $95</div>
-            <div>DeepTissueMassage longname (120 minutes)</div>
+            <div>Jaron Freely</div>
+            <div>Deep Tissue Massage</div>
+          </a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong>$155</strong></a>
+        </div>
+      </div>
+
+      <h1 class="SectionTitle has-HelpPoint">Upcoming bookings</h1>
+      <div class="ListView ListView--textualmarker ListView--largemarker">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><strong>9</strong></p>
+          </div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content">
+            <p>left today ending @ 6:15p</p>
           </a>
           <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
         <div class="ListView-item">
-          <div class="ListView-item-marker"><p>12p</p></div>
+          <div class="ListView-item-marker">
+            <p><strong>12</strong></p>
+          </div>
           <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <div>Jaron Freely - $95</div>
-            <div>DeepTissue Massage (120 minutes)</div>
+            <p>tomorrow starting @ 8:15p</p>
           </a>
           <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
-        
-        <div class="ListView-divider">
-          Tomorrow
-        </div>
         <div class="ListView-item">
-          <div class="ListView-item-marker"><p>9a</p></div>
+          <div class="ListView-item-marker">
+            <p><strong>135</strong></p>
+          </div>
           <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <div>Jaron Freely - $95</div>
-            <div>DeepTissueMassage (120 minutes)</div>
+            <p>next week</p>
           </a>
           <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
       </div>
       
-      <h1 class="SectionTitle has-HelpPoint">Inbox <a href="#" class="HelpPoint size-lg" data-content="Inbox help text." data-placement="left">?</a></h1>
-      <div class="ListView ListView--twolines">
+      <h1 class="SectionTitle has-HelpPoint">Inbox <a href="#" class="HelpPoint size-lg" data-content="Some help text." data-placement="left">?</a></h1>
+      <div class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
+        <div class="ListView-item ListView-item--tag-warning">
+          <div class="ListView-item-marker"><div>11.00am</div><div class="text-muted">12.45pm</div></div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>CONFIRM-Susan Dee</div><div>Deep Tissue Massage</div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible">$155</a>
+        </div>
+      </div>
+      
+      <h1 class="SectionTitle has-HelpPoint">Performance <a href="#" class="HelpPoint size-lg" data-content="Some help text." data-placement="left">?</a></h1>
+      <div class="ListView ListView--twolines ListView--textualmarker ListView--largemarker">
         <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-user"></span></div>
+          <div class="ListView-item-marker">
+            <div><strong>$2,300</strong></div>
+            <div><strong>$6,000</strong></div>
+          </div>
           <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <div>Massage Therapist Services</div>
-            <div>29 Sep 10:00am - $95</div>
+            <div>already paid this month</div>
+            <div>projected July earnings</div>
           </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-new-window"></span></a>
+          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><strong>95%</strong></p>
+          </div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content">
+            <p>of available time booked in July</p>
+          </a>
+          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
       </div>
       
@@ -126,6 +158,12 @@
           <div class="ListView-item-marker"><span class="glyphicon glyphicon-user"></span></div>
           <a href="#" class="btn btn-link btn-block ListView-item-content">
             <p>Activate your profile in the marketplace</p>
+          </a>
+          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+        </div>
+        <div class="ListView-item">
+          <a href="#" class="btn btn-link btn-block ListView-item-content">
+            <p>Learn more about our cooperative</p>
           </a>
           <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
