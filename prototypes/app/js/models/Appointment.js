@@ -5,8 +5,33 @@ var ko = require('knockout'),
     Model = require('./Model'),
     Client = require('./Client'),
     Location = require('./Location'),
-    Service = require('./Service');
+    Service = require('./Service'),
+    moment = require('moment');
 
+/**
+    Calendar customizations for the display of
+    date/times.
+**/
+moment.locale('en-US-LC', {
+    meridiemParse : /[ap]\.?\.?/i,
+    meridiem : function (hours, minutes, isLower) {
+        if (hours > 11) {
+            return isLower ? 'p' : 'P';
+        } else {
+            return isLower ? 'a' : 'A';
+        }
+    },
+    calendar : {
+        lastDay : '[Yesterday]',
+        sameDay : '[Today]',
+        nextDay : '[Tomorrow]',
+        lastWeek : '[last] dddd',
+        nextWeek : 'dddd',
+        sameElse : 'M/D'
+    }
+});
+
+    
 function Appointment(values) {
     
     Model(this);
@@ -50,6 +75,19 @@ function Appointment(values) {
             return prev + cur.price();
         }, 0));
     }.bind(this));
+    
+    // Smart visualization of date and time
+    this.displayedDate = ko.pureComputed(function() {
+        
+        return moment(this.startTime()).locale('en-US-LC').calendar();
+        
+    }, this);
+    
+    this.displayedStartTime = ko.pureComputed(function() {
+        
+        return moment(this.startTime()).locale('en-US-LC').format('h:ma');
+        
+    }, this);
 }
 
 module.exports = Appointment;

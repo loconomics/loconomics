@@ -15,6 +15,11 @@
     <link href="../../assets/css/styleguide.css" rel="stylesheet">    
     <!-- Styles for this Prototype -->
     <link href="assets/proto.css" rel="stylesheet">
+    
+    <script src="../../assets/javascript/styleguidelibs.js"></script>
+    <script src="../../assets/javascript/styleguide.js"></script>
+    <script src="assets/libs.min.js"></script>
+    <script src="assets/app.js"></script>
   </head>
 
   <body>
@@ -51,20 +56,20 @@
       </div>
     </nav>
 
-    <div class="container-fluid app-home">
+    <div class="container-fluid app-home is-active" data-activity="home">
 
       <h1 class="SectionTitle has-HelpPoint">Your next booking</h1>
       <div id="homeNextBooking" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
-        <div class="ListView-item">
+        <div class="ListView-item" data-bind="with: nextBooking">
           <div class="ListView-item-marker">
-            <div>Today</div>
-            <div><strong>11:15a</strong></div>
+            <div data-bind="text: displayedDate">Today</div>
+            <div><strong data-bind="text: displayedStartTime">11:15a</strong></div>
           </div>
           <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <div>Jaron Freely</div>
-            <div>Deep Tissue Massage</div>
+            <div data-bind="text: client().fullName()">Jaron Freely</div>
+            <div data-bind="text: servicesSummary">Deep Tissue Massage</div>
           </a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong>$155</strong></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong data-bind="text: ptotalPrice, format: { type: 'number', format: '$0,0' }">$155</strong></a>
         </div>
       </div>
 
@@ -164,11 +169,5 @@
       </div>
 
     </div> <!-- /container -->
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../../assets/javascript/styleguidelibs.js"></script>
-    <script src="../../assets/javascript/styleguide.js"></script>
   </body>
 </html>

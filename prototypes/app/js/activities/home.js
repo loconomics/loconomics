@@ -30,7 +30,7 @@ function HomeActivity($activity, app) {
     ko.applyBindings(this.dataView, $activity.get(0));
 
     // TestingData
-    this.dataView.clients(require('../testdata/clients').clients);
+    this.dataView.nextBooking(require('../testdata/calendarAppointments').appointments[0]);
     
     // Object to hold the options passed on 'show' as a result
     // of a request from another activity
@@ -43,9 +43,14 @@ HomeActivity.prototype.show = function show(options) {
     this.requestInfo = options;
 };
 
+var Appointment = require('../models/Appointment');
+
 function ViewModel() {
 
     // ...
     this.upcomingBookings = ko.observableArray([]);
 
+    // :Appointment
+    this.nextBooking = ko.observable(null);
 }
+

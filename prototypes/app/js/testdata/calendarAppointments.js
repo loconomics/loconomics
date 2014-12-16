@@ -6,8 +6,8 @@ var ko = require('knockout');
 
 var testData = [
     new Appointment({
-        startTime: new Date(2014, 11, 1, 10, 0, 0),
-        endTime: new Date(2014, 11, 1, 12, 0, 0),
+        startTime: new Date(2014, 11, 16, 10, 0, 0),
+        endTime: new Date(2014, 11, 1, 16, 0, 0),
         //pricingSummary: 'Deep Tissue Massage 120m plus 2 more',
         services: testServices,
         ptotalPrice: 95.0,
