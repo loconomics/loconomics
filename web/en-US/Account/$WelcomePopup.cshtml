@@ -284,6 +284,11 @@
                     <input type="hidden" name="facebookid" value="@Request["facebookid"]" />
                     <input type="hidden" name="gender" value="@Request["gender"]" />
                     <input type="hidden" name="about" value="@Request["about"]" />
+                    @* We need to mark server-side a user that already exists, since with javascript
+                        we need to manage to hide some fields and validations, as the case of
+                        customer becoming provider. Do it this way, checking a userid, helps
+                        fix the issue #594 *@
+                    <input type="hidden" name="userid" value="@(u != null ? u.UserID : "")" />
                     <ul>
                         @if (!providerWithoutPosition)
                         {
