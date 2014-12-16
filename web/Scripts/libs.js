@@ -1986,6 +1986,8 @@ module.exports=require('m1s7ld');
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"jquery":"NyNeKs"}],"jquery.formatter":[function(require,module,exports){
 module.exports=require('LDivY3');
+},{}],"bootstrap":[function(require,module,exports){
+module.exports=require('vHk1an');
 },{}],"vHk1an":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, define) {
@@ -2006,9 +2008,7 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
 }).call(global, module, undefined);
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":"NyNeKs"}],"bootstrap":[function(require,module,exports){
-module.exports=require('vHk1an');
-},{}],"modernizr":[function(require,module,exports){
+},{"jquery":"NyNeKs"}],"modernizr":[function(require,module,exports){
 module.exports=require('KQyEb6');
 },{}],"KQyEb6":[function(require,module,exports){
 (function (global){
