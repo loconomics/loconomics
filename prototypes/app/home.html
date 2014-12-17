@@ -15,12 +15,11 @@
     <link href="../../assets/css/styleguide.css" rel="stylesheet">    
     <!-- Styles for this Prototype -->
     <link href="assets/proto.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    
+    <script src="../../assets/javascript/styleguidelibs.js"></script>
+    <script src="../../assets/javascript/styleguide.js"></script>
+    <script src="assets/libs.min.js"></script>
+    <script src="assets/app.js"></script>
   </head>
 
   <body>
@@ -57,124 +56,80 @@
       </div>
     </nav>
 
-    <div class="container-fluid app-home">
+    <div class="container-fluid app-home is-active" data-activity="home">
 
       <h1 class="SectionTitle has-HelpPoint">Your next booking</h1>
-      <div class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
-        <div class="ListView-item">
+      <div id="homeNextBooking" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
+        <div class="ListView-item" data-bind="with: nextBooking">
           <div class="ListView-item-marker">
-            <div>Today</div>
-            <div><strong>11:15a</strong></div>
+            <div data-bind="text: displayedDate"></div>
+            <div><strong data-bind="text: displayedStartTime"></strong></div>
           </div>
           <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <div>Jaron Freely</div>
-            <div>Deep Tissue Massage</div>
+            <div data-bind="text: client().fullName()"></div>
+            <div data-bind="text: servicesSummary"></div>
           </a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong>$155</strong></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong data-bind="text: ptotalPrice, format: { type: 'number', format: '$0,0' }"></strong></a>
         </div>
       </div>
 
       <h1 class="SectionTitle has-HelpPoint">Upcoming bookings</h1>
-      <div class="ListView ListView--textualmarker ListView--largemarker">
+      <div id="homeUpcomingBookings" class="ListView ListView--textualmarker ListView--largemarker" data-bind="foreach: upcomingBookings.items">
         <div class="ListView-item">
           <div class="ListView-item-marker">
-            <p><strong>9</strong></p>
+            <p><strong data-bind="text: quantity"></strong></p>
           </div>
           <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>left today ending @ 6:15p</p>
-          </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><strong>12</strong></p>
-          </div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>tomorrow starting @ 8:15p</p>
-          </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><strong>135</strong></p>
-          </div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>next week</p>
+            <p data-bind="text: phrase"></p>
           </a>
           <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
       </div>
       
-      <h1 class="SectionTitle has-HelpPoint">Inbox <a href="#" class="HelpPoint size-lg" data-content="Some help text." data-placement="left">?</a></h1>
-      <div class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
-        <div class="ListView-item ListView-item--tag-warning">
-          <div class="ListView-item-marker"><div>11.00am</div><div class="text-muted">12.45pm</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>CONFIRM-Susan Dee</div><div>Deep Tissue Massage</div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible">$155</a>
+      <h1 class="SectionTitle has-HelpPoint">Inbox <a href="#" class="HelpPoint size-lg" data-bind="attr: { 'data-content': 'Showing your latest ' + inbox.topNumber() + ' messages.' }" data-placement="left">?</a></h1>
+      <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags" data-bind="foreach: inbox.top()">       
+        <div class="ListView-item" data-bind="css: classNames">
+          <div class="ListView-item-marker">
+            <div data-bind="text: displayedDate"></div>
+            <div><span class="text-muted" data-bind="text: displayedTime"></span></div>
+          </div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !content()"></p><div data-bind="text: subject, visible: content()"></div><div data-bind="text: content, visible: content()"></div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
         </div>
       </div>
       
       <h1 class="SectionTitle has-HelpPoint">Performance <a href="#" class="HelpPoint size-lg" data-content="Some help text." data-placement="left">?</a></h1>
-      <div class="ListView ListView--twolines ListView--textualmarker ListView--largemarker">
-        <div class="ListView-item">
+      <div id="homePerformance" class="ListView ListView--twolines ListView--textualmarker ListView--largemarker" data-bind="foreach: performance.items">
+        <div class="ListView-item" data-bind="css: classNames">
           <div class="ListView-item-marker">
-            <div><strong>$2,300</strong></div>
-            <div><strong>$6,000</strong></div>
+            <p data-bind="visible: !markerLine2()"><strong data-bind="text: markerLine1()"></strong></p>
+            <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine1()"></strong></div>
+            <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine2()"></strong></div>
           </div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <div>already paid this month</div>
-            <div>projected July earnings</div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
+            <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
+            <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
+            <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
           </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><strong>95%</strong></p>
-          </div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>of available time booked in July</p>
-          </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
         </div>
       </div>
       
       <h1 class="SectionTitle has-HelpPoint">Get more from Loconomics</h1>
-      <div class="ListView ListView--twolines">
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-calendar"></span></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>Complete your availability to create a cleaner calendar</p>
+      <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
+        <div class="ListView-item" data-bind="css: classNames">
+          <div class="ListView-item-marker">
+            <p><span data-bind="css: markerIcon"></span></p>
+          </div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
+            <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
+            <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
+            <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
           </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-usd"></span></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>Start accepting payments through Loconomics</p>
-          </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-user"></span></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>Activate your profile in the marketplace</p>
-          </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="ListView-item">
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>Learn more about our cooperative</p>
-          </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
         </div>
       </div>
 
     </div> <!-- /container -->
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../../assets/javascript/styleguidelibs.js"></script>
-    <script src="../../assets/javascript/styleguide.js"></script>
   </body>
 </html>
