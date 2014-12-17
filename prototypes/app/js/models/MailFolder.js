@@ -1,4 +1,4 @@
-/** BookingSummary model **/
+/** MailFolder model **/
 'use strict';
 
 var ko = require('knockout'),

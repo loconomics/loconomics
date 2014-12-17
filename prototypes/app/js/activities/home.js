@@ -44,7 +44,8 @@ HomeActivity.prototype.show = function show(options) {
 };
 
 var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
-    MailFolder = require('../models/MailFolder');
+    MailFolder = require('../models/MailFolder'),
+    PerformanceSummary = require('../models/PerformanceSummary');
 
 function ViewModel() {
 
@@ -56,6 +57,8 @@ function ViewModel() {
     this.inbox = new MailFolder({
         topNumber: 4
     });
+    
+    this.performance = new PerformanceSummary();
 }
 
 /** TESTING DATA **/
@@ -71,4 +74,8 @@ function setSomeTestingData(dataView) {
     dataView.upcomingBookings.nextWeek.quantity(123);
     
     dataView.inbox.messages(require('../testdata/messages').messages);
+    
+    dataView.performance.earnings.currentAmount(2400);
+    dataView.performance.earnings.nextAmount(6200.54);
+    dataView.performance.timeBooked.percent(.93);
 }
