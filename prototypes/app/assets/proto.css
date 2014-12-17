@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-12-16
+/*! LoconomicsAppProto 2014-12-17
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -453,19 +453,19 @@ html.app > body > .container-fluid {
 
 /* line 184 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-marker {
-  width: 56px;
+  width: 64px;
 }
 
 /* line 187 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-marker p {
 /* Since a table-cell doesn't fill completely the width -needs a table parent for that, but
                    its problematic- we set the width explicitely (100% does not work) */
-  width: 56px;
+  width: 64px;
 }
 
 /* line 194 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-content {
-  padding-left: 68px;
+  padding-left: 76px;
 }
 
 /* line 203 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
@@ -569,7 +569,7 @@ html.app > body > .container-fluid {
 
 /* line 249 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags.ListView--largemarker .ListView-item:before {
-  left: 62px;
+  left: 70px;
 }
 
 /* line 258 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
