@@ -30,8 +30,8 @@ function HomeActivity($activity, app) {
     ko.applyBindings(this.dataView, $activity.get(0));
 
     // TestingData
-    this.dataView.nextBooking(require('../testdata/calendarAppointments').appointments[0]);
-    
+    setSomeTestingData(this.dataView);
+
     // Object to hold the options passed on 'show' as a result
     // of a request from another activity
     this.requestInfo = null;
@@ -43,14 +43,24 @@ HomeActivity.prototype.show = function show(options) {
     this.requestInfo = options;
 };
 
-var Appointment = require('../models/Appointment');
+var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary');
 
 function ViewModel() {
 
-    // ...
-    this.upcomingBookings = ko.observableArray([]);
+    this.upcomingBookings = new UpcomingBookingsSummary();
 
     // :Appointment
     this.nextBooking = ko.observable(null);
 }
 
+
+/** TESTING DATA **/
+var Time = require('../utils/Time');
+function setSomeTestingData(dataView) {
+    dataView.nextBooking(require('../testdata/calendarAppointments').appointments[0]);
+    dataView.upcomingBookings.today.quantity(8);
+    dataView.upcomingBookings.today.time(new Time(5, 15));
+    dataView.upcomingBookings.tomorrow.quantity(14);
+    dataView.upcomingBookings.tomorrow.time(new Time(8, 30));
+    dataView.upcomingBookings.nextWeek.quantity(123);
+}

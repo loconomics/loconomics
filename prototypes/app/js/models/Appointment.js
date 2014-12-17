@@ -85,7 +85,7 @@ function Appointment(values) {
     
     this.displayedStartTime = ko.pureComputed(function() {
         
-        return moment(this.startTime()).locale('en-US-LC').format('h:ma');
+        return moment(this.startTime()).locale('en-US-LC').format('h:mma');
         
     }, this);
 }
