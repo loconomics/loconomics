@@ -18,8 +18,8 @@ var testData = [
         services: testServices,
         ptotalPrice: 95.0,
         location: ko.toJS(testLocations[0]),
-        notesToClient: 'Looking forward to seeing the new color',
-        notesToSelf: 'Ask him about his new color',
+        preNotesToClient: 'Looking forward to seeing the new color',
+        preNotesToSelf: 'Ask him about his new color',
         client: {
             firstName: 'Joshua',
             lastName: 'Danielson'
@@ -32,8 +32,8 @@ var testData = [
         services: [testServices[0]],
         ptotalPrice: 95.0,
         location: ko.toJS(testLocations[1]),
-        notesToClient: 'Something else',
-        notesToSelf: 'Remember that thing',
+        preNotesToClient: 'Something else',
+        preNotesToSelf: 'Remember that thing',
         client: {
             firstName: 'Joshua',
             lastName: 'Danielson'
@@ -46,8 +46,8 @@ var testData = [
         services: [testServices[1]],
         ptotalPrice: 95.0,
         location: ko.toJS(testLocations[2]),
-        notesToClient: '',
-        notesToSelf: 'Ask him about the forgotten notes',
+        preNotesToClient: '',
+        preNotesToSelf: 'Ask him about the forgotten notes',
         client: {
             firstName: 'Joshua',
             lastName: 'Danielson'

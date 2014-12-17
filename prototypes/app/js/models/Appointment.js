@@ -22,8 +22,10 @@ function Appointment(values) {
         totalPrice: 0,
         ptotalPrice: 0,
         
-        notesToClient: '',
-        notesToSelf: ''
+        preNotesToClient: null,
+        postNotesToClient: null,
+        preNotesToSelf: null,
+        postNotesToSelf: null
     }, values);
     
     values = values || {};
@@ -75,6 +77,14 @@ function Appointment(values) {
         
         return this.displayedStartTime() + '-' + this.displayedEndTime();
         
+    }, this);
+    
+    this.itStarted = ko.pureComputed(function() {
+        return (this.startTime() && new Date() >= this.startTime());
+    }, this);
+    
+    this.itEnded = ko.pureComputed(function() {
+        return (this.endTime() && new Date() >= this.endTime());
     }, this);
 }
 

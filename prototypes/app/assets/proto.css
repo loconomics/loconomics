@@ -1336,7 +1336,7 @@ html.app > body > .container-fluid {
   right: 0;
   z-index: 2;
   background: White;
-  padding: 6px 0 6px 10px;
+  padding: 6px 0 6px 5px;
   -webkit-transition: 300ms opacity;
   -moz-transition: 300ms opacity;
   -o-transition: 300ms opacity;
@@ -1354,16 +1354,17 @@ html.app > body > .container-fluid {
 /* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard.in-edit li {
   cursor: pointer;
+  padding-right: 20px;
 }
 
-/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard.in-edit li .AppointmentCard-editIcon {
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
 
-/* line 58 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 
 /* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 

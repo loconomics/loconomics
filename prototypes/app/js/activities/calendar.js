@@ -337,24 +337,21 @@ CalendarActivity.prototype.showAppointment = function showAppointment(apt) {
                 selectedLocation: appointmentsDataView.currentAppointment().location()
             });
         };
+
+        var textFieldsHeaders = {
+            preNotesToClient: 'Notes to client',
+            postNotesToClient: 'Notes to client (afterwards)',
+            preNotesToSelf: 'Notes to self',
+            postNotesToSelf: 'Booking summary'
+        };
         
-        appointmentsDataView.editNotesToClient = function editNotesToClient() {
+        appointmentsDataView.editTextField = function editTextField(field) {
 
             app.showActivity('textEditor', {
                 request: 'textEditor',
-                field: 'notesToClient',
-                header: 'Notes to client',
-                text: appointmentsDataView.currentAppointment().notesToClient()
-            });
-        }.bind(this);
-        
-        appointmentsDataView.editNotesToSelf = function editNotesToSelf() {
-
-            app.showActivity('textEditor', {
-                request: 'textEditor',
-                field: 'notesToSelf',
-                header: 'Notes to self',
-                text: appointmentsDataView.currentAppointment().notesToSelf()
+                field: field,
+                header: textFieldsHeaders[field],
+                text: appointmentsDataView.currentAppointment()[field]()
             });
         }.bind(this);
         
