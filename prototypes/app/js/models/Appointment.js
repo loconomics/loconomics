@@ -64,6 +64,18 @@ function Appointment(values) {
         return moment(this.startTime()).locale('en-US-LC').format('LT');
         
     }, this);
+    
+    this.displayedEndTime = ko.pureComputed(function() {
+        
+        return moment(this.endTime()).locale('en-US-LC').format('LT');
+        
+    }, this);
+    
+    this.displayedTimeRange = ko.pureComputed(function() {
+        
+        return this.displayedStartTime() + '-' + this.displayedEndTime();
+        
+    }, this);
 }
 
 module.exports = Appointment;

@@ -86,7 +86,8 @@
                 <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
                 <span class="AppointmentCard-data">
                   <span data-bind="visible: currentAppointment().startTime()">
-                    <span data-bind="text: currentAppointment().startTime(), format: { type: 'datetime', format: 'LT' }"></span> - <span data-bind="text: currentAppointment().endTime, format: { type: 'datetime', format: 'LT' }"></span>
+                    <span data-bind="text: currentAppointment().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
+                    <span data-bind="text: currentAppointment().displayedTimeRange()"></span>
                   </span>
                   <span data-bind="visible: editMode() && !currentAppointment().startTime()" class="AppointmentCard-placeholderLabel">Select date/time</span>
                 </span>

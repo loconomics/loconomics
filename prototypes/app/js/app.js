@@ -43,6 +43,8 @@ moment.locale('en-US-LC', {
         llll: 'ddd, MMM D YYYY LT'
     }
 });
+// Left normal english as default:
+moment.locale('en-US');
 
 /** app static class **/
 var app = {
