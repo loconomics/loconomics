@@ -3,11 +3,17 @@ var Appointment = require('../models/Appointment');
 var testLocations = require('./locations').locations;
 var testServices = require('./services').services;
 var ko = require('knockout');
+var moment = require('moment');
 
+var today = moment(),
+    tomorrow = moment().add(1, 'days'),
+    tomorrow10 = tomorrow.clone().hours(10),
+    tomorrow16 = tomorrow.clone().hours(16);
+    
 var testData = [
     new Appointment({
-        startTime: new Date(2014, 11, 16, 10, 0, 0),
-        endTime: new Date(2014, 11, 1, 16, 0, 0),
+        startTime: tomorrow10,
+        endTime: tomorrow16,
         //pricingSummary: 'Deep Tissue Massage 120m plus 2 more',
         services: testServices,
         ptotalPrice: 95.0,
