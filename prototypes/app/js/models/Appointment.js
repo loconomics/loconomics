@@ -28,7 +28,7 @@ function Appointment(values) {
     
     values = values || {};
 
-    this.client = ko.observable(new Client(values.client));
+    this.client = ko.observable(values.client ? new Client(values.client) : null);
 
     this.location = ko.observable(new Location(values.location));
     this.locationSummary = ko.computed(function() {
