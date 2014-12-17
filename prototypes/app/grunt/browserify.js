@@ -23,6 +23,7 @@ module.exports = function(grunt) {
             'alias': [
                 'moment',
                 'knockout',
+                'lodash',
                 // Using a specific browser version of events.EventEmitter, to avoid
                 // the extra load of NodeJS/Browserify 'events' module that has heavy-unneed
                 // dependencies as 'utils'.

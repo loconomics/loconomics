@@ -43,7 +43,8 @@ HomeActivity.prototype.show = function show(options) {
     this.requestInfo = options;
 };
 
-var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary');
+var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
+    MailFolder = require('../models/MailFolder');
 
 function ViewModel() {
 
@@ -51,16 +52,23 @@ function ViewModel() {
 
     // :Appointment
     this.nextBooking = ko.observable(null);
+    
+    this.inbox = new MailFolder({
+        topNumber: 4
+    });
 }
-
 
 /** TESTING DATA **/
 var Time = require('../utils/Time');
+
 function setSomeTestingData(dataView) {
     dataView.nextBooking(require('../testdata/calendarAppointments').appointments[0]);
+    
     dataView.upcomingBookings.today.quantity(8);
     dataView.upcomingBookings.today.time(new Time(5, 15));
     dataView.upcomingBookings.tomorrow.quantity(14);
     dataView.upcomingBookings.tomorrow.time(new Time(8, 30));
     dataView.upcomingBookings.nextWeek.quantity(123);
+    
+    dataView.inbox.messages(require('../testdata/messages').messages);
 }

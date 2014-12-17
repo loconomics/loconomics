@@ -86,12 +86,15 @@
         </div>
       </div>
       
-      <h1 class="SectionTitle has-HelpPoint">Inbox <a href="#" class="HelpPoint size-lg" data-content="Some help text." data-placement="left">?</a></h1>
-      <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
-        <div class="ListView-item ListView-item--tag-warning">
-          <div class="ListView-item-marker"><div>11.00am</div><div class="text-muted">12.45pm</div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content" data-toggle="activity" data-target="calendar-appointment"><div>CONFIRM-Susan Dee</div><div>Deep Tissue Massage</div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible">$155</a>
+      <h1 class="SectionTitle has-HelpPoint">Inbox <a href="#" class="HelpPoint size-lg" data-bind="attr: { 'data-content': 'Showing your latest ' + inbox.topNumber() + ' messages.' }" data-placement="left">?</a></h1>
+      <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags" data-bind="foreach: inbox.top()">       
+        <div class="ListView-item" data-bind="css: classNames">
+          <div class="ListView-item-marker">
+            <div data-bind="text: displayedDate"></div>
+            <div><span class="text-muted" data-bind="text: displayedTime"></span></div>
+          </div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !content()"></p><div data-bind="text: subject, visible: content()"></div><div data-bind="text: content, visible: content()"></div></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
         </div>
       </div>
       
