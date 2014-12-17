@@ -14,8 +14,9 @@ function ListViewItem(values) {
     Model(this);
 
     this.model.defProperties({
-        markerLine1: '',
+        markerLine1: null,
         markerLine2: null,
+        markerIcon: null,
         
         contentLine1: '',
         contentLine2: null,

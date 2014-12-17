@@ -45,7 +45,8 @@ HomeActivity.prototype.show = function show(options) {
 
 var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
     MailFolder = require('../models/MailFolder'),
-    PerformanceSummary = require('../models/PerformanceSummary');
+    PerformanceSummary = require('../models/PerformanceSummary'),
+    GetMore = require('../models/GetMore');
 
 function ViewModel() {
 
@@ -59,6 +60,8 @@ function ViewModel() {
     });
     
     this.performance = new PerformanceSummary();
+    
+    this.getMore = new GetMore();
 }
 
 /** TESTING DATA **/
@@ -78,4 +81,11 @@ function setSomeTestingData(dataView) {
     dataView.performance.earnings.currentAmount(2400);
     dataView.performance.earnings.nextAmount(6200.54);
     dataView.performance.timeBooked.percent(.93);
+    
+    dataView.getMore.model.updateWith({
+        availability: true,
+        payments: true,
+        profile: true,
+        coop: true
+    });
 }

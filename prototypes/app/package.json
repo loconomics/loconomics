@@ -37,6 +37,7 @@
     "numeral": "~1.5.3",
     "es6-promise": "~2.0.1",
     "events": "~1.0.2",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "knockout.mapping": "~2.4.3"
   }
 }

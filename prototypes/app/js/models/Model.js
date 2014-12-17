@@ -25,6 +25,7 @@
 **/
 'use strict';
 var ko = require('knockout');
+ko.mapping = require('knockout.mapping');
 
 function Model(modelObject) {
     
@@ -39,8 +40,16 @@ function Model(modelObject) {
         // Returns the instance
         return model;
     }
-    
+ 
+    // It includes a reference to the object
     this.modelObject = modelObject;
+    // It maintains a list of properties and fields
+    this.propertiesList = [];
+    this.fieldsList = [];
+    // It allow setting the 'ko.mapping.fromJS' mapping options
+    // to control conversions from plain JS objects when 
+    // 'updateWith'.
+    this.mappingOptions = {};
 }
 
 module.exports = Model;
@@ -62,7 +71,9 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
 
     initialValues = initialValues || {};
 
-    var modelObject = this.modelObject;
+    var modelObject = this.modelObject,
+        propertiesList = this.propertiesList;
+
     Object.keys(properties).forEach(function(key) {
         
         var defVal = properties[key];
@@ -77,6 +88,9 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
         if (typeof(initialValues[key]) !== 'undefined') {
             modelObject[key](initialValues[key]);
         }
+        
+        // Add to the internal registry
+        propertiesList.push(key);
     });
 };
 
@@ -91,7 +105,9 @@ Model.prototype.defFields = function defFields(fields, initialValues) {
 
     initialValues = initialValues || {};
 
-    var modelObject = this.modelObject;
+    var modelObject = this.modelObject,
+        fieldsList = this.fieldsList;
+
     Object.keys(properties).each(function(key) {
         
         var defVal = properties[key];
@@ -102,5 +118,13 @@ Model.prototype.defFields = function defFields(fields, initialValues) {
         if (typeof(initialValues[key]) !== 'undefined') {
             modelObject[key] = initialValues[key];
         }
+        
+        // Add to the internal registry
+        fieldsList.push(key);
     });    
+};
+
+Model.prototype.updateWith = function updateWith(data) {
+
+    ko.mapping.fromJS(data, this.mappingOptions, this.modelObject);
 };

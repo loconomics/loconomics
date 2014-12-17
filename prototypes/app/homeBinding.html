@@ -100,49 +100,33 @@
       
       <h1 class="SectionTitle has-HelpPoint">Performance <a href="#" class="HelpPoint size-lg" data-content="Some help text." data-placement="left">?</a></h1>
       <div id="homePerformance" class="ListView ListView--twolines ListView--textualmarker ListView--largemarker" data-bind="foreach: performance.items">
-        <div class="ListView-item">
+        <div class="ListView-item" data-bind="css: classNames">
           <div class="ListView-item-marker">
             <p data-bind="visible: !markerLine2()"><strong data-bind="text: markerLine1()"></strong></p>
-            <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine1()">$2,300</strong></div>
-            <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine2()">$6,000</strong></div>
+            <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine1()"></strong></div>
+            <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine2()"></strong></div>
           </div>
           <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
             <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
-            <div data-bind="visible: contentLine2(), text: contentLine1()">$2,300</div>
-            <div data-bind="visible: contentLine2(), text: contentLine2()">$6,000</div>
+            <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
+            <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
           </a>
-          <a href="#" data-bind="attr: { href: link }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
         </div>
       </div>
       
       <h1 class="SectionTitle has-HelpPoint">Get more from Loconomics</h1>
-      <div id="homeGetMore" class="ListView ListView--twolines">
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-calendar"></span></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>Complete your availability to create a cleaner calendar</p>
+      <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
+        <div class="ListView-item" data-bind="css: classNames">
+          <div class="ListView-item-marker">
+            <p><span data-bind="css: markerIcon"></span></p>
+          </div>
+          <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
+            <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
+            <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
+            <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
           </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-usd"></span></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>Start accepting payments through Loconomics</p>
-          </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-user"></span></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>Activate your profile in the marketplace</p>
-          </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-        </div>
-        <div class="ListView-item">
-          <a href="#" class="btn btn-link btn-block ListView-item-content">
-            <p>Learn more about our cooperative</p>
-          </a>
-          <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          <a href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
         </div>
       </div>
 
