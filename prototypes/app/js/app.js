@@ -5,7 +5,7 @@ var $ = require('jquery');
 require('jquery-mobile');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('../vendor/iagosrl/ko/formatBinding').formatBinding;
-//require('es6-promise').polyfill();
+require('es6-promise').polyfill();
 require('./utils/Function.prototype._inherits');
 
 /** Global static config **/
