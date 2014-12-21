@@ -80,7 +80,7 @@ function setSomeTestingData(dataView) {
     
     dataView.performance.earnings.currentAmount(2400);
     dataView.performance.earnings.nextAmount(6200.54);
-    dataView.performance.timeBooked.percent(.93);
+    dataView.performance.timeBooked.percent(0.93);
     
     dataView.getMore.model.updateWith({
         availability: true,

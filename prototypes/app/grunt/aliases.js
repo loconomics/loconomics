@@ -14,7 +14,7 @@ module.exports = {
 		//,'qunit'
 	],
 	'build-js': [
-		//'jshint',//'newer:jshint',
+		'jshint',//'newer:jshint',
 		'browserify',
 		'uglify',//'newer:uglify'
         'notify:browserify'

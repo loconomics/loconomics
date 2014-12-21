@@ -6,7 +6,7 @@ module.exports = {
             'js/**/*.js'
         ],
         options: {
-            ignores: ['tests/**/*.js', '**/*.min.js'],
+            ignores: ['tests/**/*.js', '**/*.min.js', 'assets/**/*.js'],
             jshintrc: '.jshintrc',
             // options here to override JSHint defaults
             browser: true,

@@ -28,7 +28,7 @@
     "dojo": false,
 
     // Custom predefined globals.
-    "predef": [],
+    "predef": ["Promise"],
 
     // Development
 

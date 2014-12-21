@@ -72,29 +72,29 @@ function CalendarActivity($activity, options, app) {
     /* Visualization */
     // Start with daily view and initial date:
     this.showDailyView(this.$datepicker.datepicker('getValue'), true);
-};
+}
 
 CalendarActivity.prototype.show = function show(options) {
+    /* jshint maxcomplexity:10 */
 
     // In appointment view
     if (this.$appointmentView.is(':visible')) {
         // If there are options (there are not on startup or 
         // on cancelled edition).
         // And it comes back from the textEditor.
-        if (options != null) {
+        if (options !== null) {
         
             var booking = this.appointmentsDataView.currentAppointment();
         
-            if (options.request === 'textEditor') {
+            if (options.request === 'textEditor' && booking) {
 
-                if (booking)
-                    booking[options.field](options.text);
+                booking[options.field](options.text);
             }
-            else if (options.selectClient === true) {
+            else if (options.selectClient === true && booking) {
 
                 booking.client(options.selectedClient);
             }
-            else if (typeof(options.selectedDatetime) !== 'undefined') {
+            else if (typeof(options.selectedDatetime) !== 'undefined' && booking) {
                 
                 booking.startTime(options.selectedDatetime);
                 // TODO Calculate the endTime given an appointment duration, retrieved from the
@@ -112,11 +112,11 @@ CalendarActivity.prototype.show = function show(options) {
                 this.bindDateData(justDate);
                 this.updateDateTitle(justDate);
             }
-            else if (options.selectServices === true) {
+            else if (options.selectServices === true && booking) {
                 
                 booking.services(options.selectedServices);
             }
-            else if (options.selectLocation === true) {
+            else if (options.selectLocation === true && booking) {
                 
                 booking.location(options.selectedLocation);
             }
@@ -204,6 +204,7 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
 var Appointment = require('../models/Appointment');
 
 CalendarActivity.prototype.showAppointment = function showAppointment(apt) {
+    /*jshint maxstatements:38*/
     
     // Visualization:
     this.$dailyView.hide();

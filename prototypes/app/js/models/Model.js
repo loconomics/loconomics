@@ -108,9 +108,9 @@ Model.prototype.defFields = function defFields(fields, initialValues) {
     var modelObject = this.modelObject,
         fieldsList = this.fieldsList;
 
-    Object.keys(properties).each(function(key) {
+    Object.keys(fields).each(function(key) {
         
-        var defVal = properties[key];
+        var defVal = fields[key];
         // Create field with default value
         modelObject[key] = defVal;
         
