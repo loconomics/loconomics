@@ -7,6 +7,7 @@ var ko = require('knockout');
 ko.bindingHandlers.format = require('../vendor/iagosrl/ko/formatBinding').formatBinding;
 require('es6-promise').polyfill();
 require('./utils/Function.prototype._inherits');
+require('./utils/Function.prototype._delayed');
 
 /** Global static config **/
 var baseUrl = '/prototypes/app/';

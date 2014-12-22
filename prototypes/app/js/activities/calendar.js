@@ -35,11 +35,11 @@ function CalendarActivity($activity, options, app) {
     .on('swipeleft', function(e) {
         e.preventDefault();
         this.$datepicker.datepicker('moveValue', 'next', 'date');
-    }.bind(this))
+    }.bind(this)._delayed(110))
     .on('swiperight', function(e) {
         e.preventDefault();
         this.$datepicker.datepicker('moveValue', 'prev', 'date');
-    }.bind(this));
+    }.bind(this)._delayed(110));
     
     this.$dateHeader.on('tap', '.CalendarDateHeader-switch', function(e) {
         switch (e.currentTarget.getAttribute('href')) {

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/vnd.microsoft.icon" href="../../assets/images/favicon.ico" />
+
+    <title>Loconomics</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Styles build following the Styleguide -->
+    <link href="../../assets/css/styleguide.css" rel="stylesheet">    
+    <!-- Styles for this Prototype -->
+    <link href="assets/proto.css" rel="stylesheet">
+    
+    <script src="../../assets/javascript/styleguidelibs.js"></script>
+    <script src="../../assets/javascript/styleguide.js"></script>
+    <script src="assets/libs.min.js"></script>
+    <script src="assets/app.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid app-nav">     
+        <div class="row">
+          <div class="col-xs-3 text-left navbar-action">
+            <a class="btn btn-default" href="#add"><span class="glyphicon glyphicon-plus"></span></a>
+          </div>
+          <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
+          <div class="col-xs-3 text-right">
+            <button type="button" class="navbar-toggle collapsed btn btn-default" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+        </div> 
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="home.html">Home</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+            <li><a href="inbox.html">Inbox</a></li>
+            <li><a href="clients.html">Clients</a></li>
+            <li><a href="payments.html">Payments</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="account.html">Account</a></li>
+            <li><a href="logout.html">Logout</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container-fluid app-home is-active" data-activity="test">
+
+        <h1 class="ActivityTitle">Test</h1>
+        <div id="counter">
+            Test counter: <span id="counterNumber"></span>
+        </div>
+        <p style="background: black;color:white">
+            Some testing text.<br/>
+            In a paragraph.<br/><br/>
+            Text test ending.
+        </p>
+        <a href="#" class="btn btn-default btn-link btn-block">Link button 1</a>
+        <a href="#" class="btn btn-default btn-link btn-block">Link button 2</a>
+        <a href="#" class="btn btn-default btn-link btn-block">Link button 3</a>
+        <button type="button" class="btn btn-default btn-block">Button 1</button>
+        <button type="button" class="btn btn-default btn-block">Button 2</button>
+        <button type="button" class="btn btn-default btn-block">Button 3</button>
+        <style>
+            .btn {
+                position: relative;
+            }
+        </style>
+        <script>
+            $(function() {
+                var cn = $('#counterNumber'),
+                    num = 0,
+                    act = $('[data-activity="test"]'),
+                    tpl;
+                
+                var count = function count() {
+                    num++;
+                    cn.text(num);
+                };
+                var perform = function() {
+                    tpl = act.find('.btn').first();
+                    act.append(tpl.clone());
+                    tpl.remove();
+                };
+                
+                act.on('swipeleft', '.btn', function () {
+                    count();
+                    // It works. but only after a timeout >100ms
+                    // Why JQM, why!?!?!?
+                    setTimeout(perform, 110);
+                });
+                
+                /* // It works, manual touch events; not further testing
+                var x, change;
+                act
+                    .on('touchstart', '.btn', function(e) {
+                        $(e.currentTarget).addClass('open')
+                        x = e.originalEvent.targetTouches[0].pageX // anchor point
+                    })
+                    .on('touchmove', '.btn', function(e) {
+                        change = e.originalEvent.targetTouches[0].pageX - x;
+                    })
+                    .on('touchend', '.btn', function(e) {
+                        if (Math.abs(change) > 50) {
+                            count();
+                            perform();
+                        }
+                    });*/
+                
+               /* act.on('click', '.btn', function () {
+                    count();
+                });*/
+                
+            });
+        </script>
+    </div> <!-- /container -->
+  </body>
+</html>

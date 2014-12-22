@@ -32,7 +32,7 @@ module.exports = function(grunt) {
             ],
             'shim': {
                 'jquery-mobile':  {
-                    'path': './vendor/jquerymobile/jquery.mobile.custom.min.js',
+                    'path': './vendor/jquerymobile/jquery.mobile.custom.js',
                     'exports': null,
                     'depends': { 'jquery': null }
                 }
