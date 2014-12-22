@@ -34,12 +34,18 @@ function CalendarActivity($activity, options, app) {
     this.$dailyView
     .on('swipeleft', function(e) {
         e.preventDefault();
+        // Hack to solve the freezy-swipe and tap-after bug on JQM:
+        $(document).trigger('touchend');
+        // Change date
         this.$datepicker.datepicker('moveValue', 'next', 'date');
-    }.bind(this)._delayed(110))
+    }.bind(this))
     .on('swiperight', function(e) {
         e.preventDefault();
+        // Hack to solve the freezy-swipe and tap-after bug on JQM:
+        $(document).trigger('touchend');
+        // Change date
         this.$datepicker.datepicker('moveValue', 'prev', 'date');
-    }.bind(this)._delayed(110));
+    }.bind(this));
     
     this.$dateHeader.on('tap', '.CalendarDateHeader-switch', function(e) {
         switch (e.currentTarget.getAttribute('href')) {
