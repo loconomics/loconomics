@@ -16165,8 +16165,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 },{}],"moment":[function(require,module,exports){
 module.exports=require('qye9jK');
 },{}],"jquery-mobile":[function(require,module,exports){
-module.exports=require('6BymZV');
-},{}],"6BymZV":[function(require,module,exports){
+module.exports=require('pNB5ul');
+},{}],"pNB5ul":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, define) {
 
 ; require("jquery");

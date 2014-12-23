@@ -148,6 +148,12 @@ var activities = {
 
 /** Page ready **/
 $(function() {
+    
+    // NOTE: Safari bug workaround, min-height/height on html doesn't work as expected,
+    // getting bigger than viewport. May be a problem only on Safari and not in 
+    // the WebView, double check.
+    $('html').height(window.innerHeight + 'px');
+    
     // Detect activities loaded in the current document
     // and initialize them:
     $('[data-activity]').each(function() {

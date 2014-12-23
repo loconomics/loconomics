@@ -1,84 +1,84 @@
-/*! LoconomicsAppProto 2014-12-21
+/*! LoconomicsAppProto 2014-12-23
    Author: Loconomics Inc. */
 
-/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
 
-/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\border.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\border.styl */
 
-/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\color-image.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\flex.styl */
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\flex.styl */
 
-/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\gradients.styl */
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
 
-/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\iconic.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\image.styl */
+/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\image.styl */
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\overflow.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 578 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+/* line 578 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
 
-/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\mediaQueries.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\mediaQueries.styl */
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
+/* line 16 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Vars */
 
-/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** We use ever all the available screen **/
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 html.app,
 html.app > body {
   height: 100%;
 }
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 21 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 html.app > body > .container,
 html.app > body > .container-fluid {
   min-height: 100%;
   height: 100%;
 }
 
-/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /* More app specific styles */
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app body {
   padding-top: 51px;
 }
 
-/* line 33 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 33 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container,
 .app .container-fluid {
 /* Overwriting default Bootstrap margins */
@@ -87,25 +87,25 @@ html.app > body > .container-fluid {
 /* Space for nav at bottom */
 }
 
-/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container .row,
 .app .container-fluid .row {
   margin-left: -10px;
   margin-right: -10px;
 }
 
-/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .container .has-bottom-navbar,
 .app .container-fluid .has-bottom-navbar {
   padding-bottom: 50px;
 }
 
-/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 47 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav {
   position: relative;
 }
 
-/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-brand {
   float: none;
   display: inline-block;
@@ -116,7 +116,7 @@ html.app > body > .container-fluid {
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
+/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
   .app .app-nav .navbar-brand {
     background-image: url("../../../assets/images/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
@@ -125,18 +125,18 @@ html.app > body > .container-fluid {
   }
 }
 
-/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 59 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 63 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-action {
   margin: 8px 0;
 }
 
-/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity,
 .app [data-activity] {
 /* settings specially important for the use of navbar
@@ -164,7 +164,7 @@ html.app > body > .container-fluid {
         z-index: 1;*/
 }
 
-/* line 84 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 84 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity .activity-navbar,
 .app [data-activity] .activity-navbar {
   position: absolute;
@@ -177,13 +177,13 @@ html.app > body > .container-fluid {
   border-color: transparent;
 }
 
-/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 102 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity.has-navbar,
 .app [data-activity].has-navbar {
   padding-bottom: 50px;
 }
 
-/* line 111 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 111 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .activity.is-active,
 .app [data-activity].is-active {
   display: block;
@@ -191,86 +191,86 @@ html.app > body > .container-fluid {
             z-index: 2;*/
 }
 
-/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 121 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .btn-google {
   background-color: #c00;
   color: #fff;
 }
 
-/* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 125 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .btn-facebook {
   background-color: #085394;
   color: #fff;
 }
 
-/* line 136 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 136 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .isolated {
   margin: 14px 0;
   clear: both;
   display: block;
 }
 
-/* line 142 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 142 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title {
   display: table;
 }
 
-/* line 145 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 145 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title .glyphicon {
   vertical-align: middle;
   display: table-cell;
   padding-left: 0.5em;
 }
 
-/* line 151 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 151 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title p {
   padding-left: 0.7em;
   vertical-align: middle;
   display: table-cell;
 }
 
-/* line 160 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 160 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 161 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 161 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .modal.centered.in {
   display: table !important;
   width: 100%;
   height: 100%;
 }
 
-/* line 167 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 167 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .modal.centered .modal-dialog {
   display: table-cell;
   padding: 10px;
   vertical-align: middle;
 }
 
-/* line 175 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 175 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .modal {
   background: rgba(0,0,0,0.4);
 }
 
-/* line 180 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 180 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 181 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 181 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-complete .success-icon {
   font-size: 4em;
   text-align: center;
   display: block;
 }
 
-/* line 187 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 187 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-complete .lead {
   margin-top: 2em;
   margin-bottom: 2em;
 }
 
-/* line 194 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 194 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Components styles **/
 
-/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView {
 /** Base styles and elements */
   width: 100%;
@@ -279,7 +279,7 @@ html.app > body > .container-fluid {
   box-sizing: border-box;
 }
 
-/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item {
   position: relative;
   max-width: 100%;
@@ -287,7 +287,7 @@ html.app > body > .container-fluid {
 /* Any row in the listview is expected to be a button/link, so color is reset */
 }
 
-/* line 33 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 33 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-marker,
 .ListView .ListView-item .ListView-item-content,
 .ListView .ListView-item .ListView-item-action {
@@ -299,7 +299,7 @@ html.app > body > .container-fluid {
   overflow: hidden;
 }
 
-/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-marker {
   width: 28px;
   position: absolute;
@@ -313,27 +313,27 @@ html.app > body > .container-fluid {
 /* Multiline content support -effective with modifiers like twolines- */
 }
 
-/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-marker .glyphicon {
   font-size: 24px;
   line-height: 33px;
 }
 
-/* line 58 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-marker div {
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 64 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-marker p {
 /* Since a table-cell doesn't fill completely the width -needs a table parent for that, but
                    its problematic- we set the width explicitely (100% does not work) */
   width: 28px;
 }
 
-/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-content {
   text-align: left;
   max-width: 100%;
@@ -347,7 +347,7 @@ html.app > body > .container-fluid {
 /* For one-line content with ellipsis, use a 'div' */
 }
 
-/* line 80 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 80 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-content * {
   overflow: hidden;
   text-align: left;
@@ -356,21 +356,21 @@ html.app > body > .container-fluid {
   max-height: 33px;
 }
 
-/* line 89 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 89 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-content div {
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* line 94 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 94 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-content .ListView-item-icon {
   display: inline-block;
   width: 14px;
   height: 14px;
 }
 
-/* line 101 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 101 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-action {
   width: 40px;
   overflow: hidden;
@@ -381,18 +381,18 @@ html.app > body > .container-fluid {
   padding: 6px 12px;
 }
 
-/* line 110 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 110 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-action .glyphicon {
   font-size: 1.3em;
 }
 
-/* line 116 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 116 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .btn,
 .ListView .ListView-item .btn-link {
   color: #333;
 }
 
-/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 121 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-divider {
   text-align: center;
   padding: 0.3em 1em;
@@ -402,17 +402,17 @@ html.app > body > .container-fluid {
 /* more styles later for parent: .container */
 }
 
-/* line 134 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 134 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .container .ListView .ListView-divider,
 .container-fluid .ListView .ListView-divider {
   margin: 0 -10px 0 -10px;
 }
 
-/* line 140 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 140 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 145 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 145 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 147 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 147 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-marker,
 .ListView--twolines .ListView-item .ListView-item-content,
 .ListView--twolines .ListView-item .ListView-item-action {
@@ -420,21 +420,21 @@ html.app > body > .container-fluid {
   height: 52px;
 }
 
-/* line 152 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 152 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-marker {
 /* If a Bootstrap glypicon is used, adjust to the best size */
   padding: 6px 0;
 }
 
-/* line 154 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 154 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-marker .glyphicon {
   font-size: 24px;
   line-height: 40px;
 }
 
-/* line 164 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 164 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 165 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 165 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-marker p,
 .ListView--twolines .ListView-item .ListView-item-content p {
   vertical-align: middle;
@@ -442,48 +442,48 @@ html.app > body > .container-fluid {
   height: 40px;
 }
 
-/* line 172 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 172 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--twolines .ListView-item .ListView-item-action {
 /* from Bootstrap btn-link styles 2x6padding */
   line-height: 40px;
 }
 
-/* line 182 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 182 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 184 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 184 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 185 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 185 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-marker {
   width: 64px;
 }
 
-/* line 188 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 188 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-marker p {
 /* Since a table-cell doesn't fill completely the width -needs a table parent for that, but
                    its problematic- we set the width explicitely (100% does not work) */
   width: 64px;
 }
 
-/* line 195 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 195 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largemarker .ListView-item .ListView-item-content {
   padding-left: 76px;
 }
 
-/* line 204 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 204 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 205 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 205 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 206 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 206 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--textualmarker .ListView-item .ListView-item-marker {
   text-align: right;
   padding: 6px 0;
 }
 
-/* line 215 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 215 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 216 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 216 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 217 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 217 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item:before,
 .ListView--colortags .ListView-item .ListView-item-tagged:before {
   content: '';
@@ -496,102 +496,102 @@ html.app > body > .container-fluid {
   z-index: 2;
 }
 
-/* line 228 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 228 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item:before {
   left: 34px;
 }
 
-/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 236 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 236 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-primary:before,
 .ListView--colortags .ListView-item.ListView-item--tag-primary .ListView-item-tagged:before {
   border-right-color: #00989a;
 }
 
-/* line 241 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 241 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-primary .ListView-item-action {
   color: #00989a;
 }
 
-/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 236 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 236 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-success:before,
 .ListView--colortags .ListView-item.ListView-item--tag-success .ListView-item-tagged:before {
   border-right-color: #99c027;
 }
 
-/* line 241 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 241 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-success .ListView-item-action {
   color: #99c027;
 }
 
-/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 236 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 236 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-info:before,
 .ListView--colortags .ListView-item.ListView-item--tag-info .ListView-item-tagged:before {
   border-right-color: #b5e1e2;
 }
 
-/* line 241 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 241 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-info .ListView-item-action {
   color: #b5e1e2;
 }
 
-/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 236 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 236 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-warning:before,
 .ListView--colortags .ListView-item.ListView-item--tag-warning .ListView-item-tagged:before {
   border-right-color: #e95d0f;
 }
 
-/* line 241 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 241 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-warning .ListView-item-action {
   color: #e95d0f;
 }
 
-/* line 235 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 235 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 236 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 236 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-danger:before,
 .ListView--colortags .ListView-item.ListView-item--tag-danger .ListView-item-tagged:before {
   border-right-color: #fc0404;
 }
 
-/* line 241 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 241 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags .ListView-item.ListView-item--tag-danger .ListView-item-action {
   color: #fc0404;
 }
 
-/* line 249 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 249 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 250 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 250 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--colortags.ListView--largemarker .ListView-item:before {
   left: 70px;
 }
 
-/* line 259 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 259 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 260 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 260 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 261 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 261 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largeaction .ListView-item .ListView-item-action {
   width: 60px;
 }
 
-/* line 265 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 265 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView--largeaction .ListView-item .ListView-item-content {
   padding-right: 60px;
 }
 
-/* line 274 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 274 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 275 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
-/* line 276 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 276 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-action--flexible {
   width: auto;
   min-width: 40px;
@@ -600,7 +600,7 @@ html.app > body > .container-fluid {
 /* Gradient ellipsis over the item-content: */
 }
 
-/* line 283 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 283 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView .ListView-item .ListView-item-action--flexible:before {
   content: '';
   position: absolute;
@@ -615,9 +615,9 @@ html.app > body > .container-fluid {
   background-image: linear-gradient(to left, White, rgba(255,255,255,0));
 }
 
-/* line 295 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
+/* line 295 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .SectionTitle {
   font-size: 1em;
   padding: 0.5em 1em;
@@ -630,26 +630,26 @@ html.app > body > .container-fluid {
   border-left-width: 0;
 }
 
-/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .SectionTitle .HelpPoint {
   right: 7px;
 }
 
-/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
   margin: 0 -10px 0 -10px;
 }
 
-/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SectionTitle.styl */
 .container .SectionTitle .HelpPoint,
 .container-fluid .SectionTitle .HelpPoint {
   right: 17px;
 }
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle {
   font-size: 20px;
   padding: 0.7em 10px 0.4em;
@@ -664,7 +664,7 @@ html.app > body > .container-fluid {
 /* Only allowed 'span' elements as childs */
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .ActivityTitle-action,
 .ActivityTitle > .glyphicon {
 /* fit minimum space */
@@ -672,14 +672,14 @@ html.app > body > .container-fluid {
   white-space: nowrap;
 }
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > span {
   line-height: 1.3em;
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .glyphicon {
   font-size: 1.4em;
   line-height: 1em;
@@ -688,21 +688,21 @@ html.app > body > .container-fluid {
   padding-left: 6px;
 }
 
-/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .ActivityTitle-action > * {
 /* adjusting button/link padding to avoid increase the default line height */
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
-/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
 
-/* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
+/* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
 .LeadContent {
   padding: 15px;
 }
 
-/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
+/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
 .LeadContent h1,
 .LeadContent h2,
 .LeadContent h3,
@@ -710,7 +710,7 @@ html.app > body > .container-fluid {
   text-align: center;
 }
 
-/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 /*
  * DatePicker JS Component, with several
  * modes and optional inline-permanent visualization.
@@ -725,49 +725,49 @@ html.app > body > .container-fluid {
  *
  */
 
-/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
 
-/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\border.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\border.styl */
 
-/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\color-image.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\flex.styl */
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\flex.styl */
 
-/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\gradients.styl */
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
 
-/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\iconic.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\image.styl */
+/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\image.styl */
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\overflow.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 578 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+/* line 578 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
 
-/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 24 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker {
   top: 0;
   left: 0;
@@ -781,7 +781,7 @@ html.app > body > .container-fluid {
 /* Carets to visually notify 'clickable headers' */
 }
 
-/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker:before {
   content: '';
   display: inline-block;
@@ -794,7 +794,7 @@ html.app > body > .container-fluid {
   left: 6px;
 }
 
-/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker:after {
   content: '';
   display: inline-block;
@@ -806,18 +806,18 @@ html.app > body > .container-fluid {
   left: 7px;
 }
 
-/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker > div {
   display: none;
 }
 
-/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker table {
   width: 100%;
   margin: 0;
 }
 
-/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 59 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker td,
 .DatePicker th {
   text-align: center;
@@ -827,26 +827,26 @@ html.app > body > .container-fluid {
   border-radius: 4px;
 }
 
-/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 65 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 
-/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 66 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker td.day:hover {
   background: #eee;
   cursor: pointer;
 }
 
-/* line 69 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 69 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker td.day.disabled {
   color: #eee;
 }
 
-/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker td.old,
 .DatePicker td.new {
   color: #777;
 }
 
-/* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 73 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker td.active,
 .DatePicker td.active:hover {
   background-color: #006dcc;
@@ -862,7 +862,7 @@ html.app > body > .container-fluid {
   text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 }
 
-/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 77 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker td span {
   display: block;
   float: left;
@@ -881,12 +881,12 @@ html.app > body > .container-fluid {
   margin: 0;
 }
 
-/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker td span:hover {
   background: #eee;
 }
 
-/* line 94 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 94 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker td span.active {
   background-color: #006dcc;
   background-image: -webkit-linear-gradient(top, #08c, #04c);
@@ -901,47 +901,47 @@ html.app > body > .container-fluid {
   text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 }
 
-/* line 98 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 98 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker td span.old {
   color: #777;
 }
 
-/* line 101 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 101 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 
-/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 102 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker th.switch {
   width: 145px;
 }
 
-/* line 104 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 104 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker th.next,
 .DatePicker th.prev {
   font-size: 21px;
 }
 
-/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 107 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker thead tr:first-child th {
   cursor: pointer;
 }
 
-/* line 109 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 109 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker thead tr:first-child th:hover {
   background: #eee;
 }
 
-/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 115 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker .DatePicker-years tr > td,
 .DatePicker .DatePicker-months tr > td {
   padding: 0 !important;
 }
 
-/* line 118 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 118 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker .DatePicker-months .switch,
 .DatePicker .DatePicker-years .switch {
   width: 72.4% !important;
 }
 
-/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 121 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker .DatePicker-months .prev,
 .DatePicker .DatePicker-months .next,
 .DatePicker .DatePicker-years .prev,
@@ -949,9 +949,9 @@ html.app > body > .container-fluid {
   width: 14% !important;
 }
 
-/* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 125 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 
-/* line 128 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 128 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .DatePicker .DatePicker-days th.switch:after,
 .DatePicker .DatePicker-months th.switch:after {
   content: '';
@@ -965,11 +965,11 @@ html.app > body > .container-fluid {
   border-left: 4px solid transparent;
 }
 
-/* line 132 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 132 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 
-/* line 133 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 133 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 
-/* line 134 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
+/* line 134 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\DatePicker.styl */
 .input-append.date .add-on i,
 .input-prepend.date .add-on i {
   display: block;
@@ -978,26 +978,26 @@ html.app > body > .container-fluid {
   height: 16px;
 }
 
-/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 
-/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck {
   background-color: #777;
 }
 
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck .Card {
   margin: 14px 0;
 }
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 16 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider {
   padding: 4px 40px;
   position: relative;
   height: 100%;
 }
 
-/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 24 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch {
   max-width: 40px;
   position: absolute;
@@ -1007,36 +1007,36 @@ html.app > body > .container-fluid {
   height: 100%;
 }
 
-/* line 33 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 33 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch > * {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch,
 .CardsDeck.CardsDeck--slider .CardsDeck-switch a {
   color: White;
 }
 
-/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch.CardsDeck-switch--previous {
   left: 0;
 }
 
-/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 45 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch.CardsDeck-switch--next {
   right: 0;
 }
 
-/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider {
   padding: 4px 25px;
   position: relative;
   min-height: 100%;
 }
 
-/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots {
   position: absolute;
   left: 0;
@@ -1045,7 +1045,7 @@ html.app > body > .container-fluid {
   text-align: center;
 }
 
-/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > * {
   display: inline-block;
   width: 10px;
@@ -1059,7 +1059,7 @@ html.app > body > .container-fluid {
   background-color: transparent;
 }
 
-/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > *.is-active {
   margin: 0px;
   background-color: #fff;
@@ -1067,9 +1067,9 @@ html.app > body > .container-fluid {
   width: 12px;
 }
 
-/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+/* line 90 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 
-/* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+/* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 .Card {
   -webkit-box-shadow: 0 3px 4px 1px #333;
   box-shadow: 0 3px 4px 1px #333;
@@ -1080,20 +1080,20 @@ html.app > body > .container-fluid {
   padding: 12px 10px;
 }
 
-/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
 .GroupedTimeSlots {
   display: table;
   width: 100%;
 }
 
-/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
 .GroupedTimeSlots .GroupedTimeSlots-group {
   display: table-row;
 }
 
-/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
 .GroupedTimeSlots .GroupedTimeSlots-groupName,
 .GroupedTimeSlots .GroupedTimeSlots-slots {
   display: table-cell;
@@ -1101,23 +1101,23 @@ html.app > body > .container-fluid {
   border-bottom: 1px solid #777;
 }
 
-/* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
+/* line 20 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
 .GroupedTimeSlots .GroupedTimeSlots-groupName {
   padding: 4px;
   font-weight: bold;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
 .GroupedTimeSlots .GroupedTimeSlots-slots .btn {
   float: left;
   padding: 4px 8px;
 }
 
-/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
 .SimpleList {
 /** Base styles and elements */
   width: 100%;
@@ -1126,7 +1126,7 @@ html.app > body > .container-fluid {
   box-sizing: border-box;
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
 .SimpleList .SimpleList-item {
   position: relative;
   max-width: 100%;
@@ -1134,7 +1134,7 @@ html.app > body > .container-fluid {
 /* Any row in the listview is expected to be a button/link, so color is reset */
 }
 
-/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
 .SimpleList .SimpleList-item > * {
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
@@ -1152,33 +1152,33 @@ html.app > body > .container-fluid {
   padding: 6px 12px;
 }
 
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+/* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
 .SimpleList .SimpleList-item .btn,
 .SimpleList .SimpleList-item .btn-link {
   color: #333;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+/* line 43 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
 .SimpleList .SimpleList-divider {
   text-align: left;
   padding: 3px 12px;
   background-color: #eee;
 }
 
-/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
+/* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\SimpleList.styl */
 .container .ListView .ListView-divider,
 .container-fluid .ListView .ListView-divider {
   margin: 0 -10px 0 -10px;
 }
 
-/* line 205 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 205 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Activities styles **/
 
-/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
-/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
-/* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker {
 /* positioning */
   position: absolute;
@@ -1209,18 +1209,18 @@ html.app > body > .container-fluid {
   pointer-events: none;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 17 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:after {
   left: 50%;
 }
 
-/* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 20 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:before {
   left: 50%;
   margin-left: -1px;
 }
 
-/* line 31 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker.is-visible {
   opacity: 1;
   -ms-filter: none;
@@ -1233,62 +1233,62 @@ html.app > body > .container-fluid {
   pointer-events: all;
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 39 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
-/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].Alt1 #calendarDateHeader {
   position: relative;
   z-index: 2;
 }
 
-/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 44 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].Alt1 #calendarAppointmentView {
   margin-top: -42px;
   padding-top: 46px;
   padding-bottom: 30px;
 }
 
-/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
-/* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 53 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].in-edit .CardsDeck-dots,
 [data-activity=calendar].in-edit .CalendarDateHeader-switch {
   visibility: hidden;
 }
 
-/* line 57 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 57 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].in-edit .CalendarDateHeader-date {
   pointer-events: none;
 }
 
-/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].in-edit .CalendarDateHeader-date .caret {
   visibility: hidden;
 }
 
-/* line 69 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 69 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
-/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
-/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 .CalendarDateHeader > .btn {
   font-size: 1.4em;
   color: #222;
 }
 
-/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 .CalendarDateHeader .CalendarDateHeader:active,
 .CalendarDateHeader .CalendarDateHeader:focus {
   outline: none;
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
-/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard li {
   zoom: 1;
   position: relative;
@@ -1298,19 +1298,19 @@ html.app > body > .container-fluid {
   padding: 6px 0;
 }
 
-/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
+/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
 .AppointmentCard li:before,
 .AppointmentCard li:after {
   content: "";
   display: table;
 }
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
 .AppointmentCard li:after {
   clear: both;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 17 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-icon {
   font-size: 1.8em;
   margin-right: 0.6em;
@@ -1318,12 +1318,12 @@ html.app > body > .container-fluid {
   float: left;
 }
 
-/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 24 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-data {
   vertical-align: middle;
 }
 
-/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-editIcon {
   display: block;
   opacity: 0;
@@ -1344,42 +1344,42 @@ html.app > body > .container-fluid {
   transition: 300ms opacity;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 43 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-placeholderLabel {
   color: #777;
 }
 
-/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 47 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
-/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 49 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard.in-edit li {
   cursor: pointer;
   padding-right: 20px;
 }
 
-/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard.in-edit li .AppointmentCard-editIcon {
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
 
-/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 
-/* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 
-/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsListView {
   margin-right: 15px;
   margin-left: -10px;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsListView .SimpleList-divider {
   text-transform: uppercase;
 }
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsIndex {
   overflow: hidden;
   width: 32px;
@@ -1390,17 +1390,17 @@ html.app > body > .container-fluid {
   margin-top: 26px;
 }
 
-/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsIndex.affix {
   position: fixed;
 }
 
-/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsIndex > .nav {
   border-bottom: none;
 }
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients] #clientsIndex > .nav a {
   text-align: center;
   font-weight: bold;
@@ -1410,14 +1410,14 @@ html.app > body > .container-fluid {
   border-radius: 0;
 }
 
-/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 45 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 
-/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients].is-searching #clientsAddNewButton {
   display: none;
 }
 
-/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 [data-activity=clients].is-searching .SimpleList-divider {
   display: none;
 }
