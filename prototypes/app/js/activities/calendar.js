@@ -31,6 +31,7 @@ function CalendarActivity($activity, options, app) {
     this.$datepicker.show().datepicker();
 
     /* Event handlers */
+    // Swipe date on gesture
     this.$dailyView
     .on('swipeleft', function(e) {
         e.preventDefault();
@@ -47,6 +48,7 @@ function CalendarActivity($activity, options, app) {
         this.$datepicker.datepicker('moveValue', 'prev', 'date');
     }.bind(this));
     
+    // Changing date with buttons:
     this.$dateHeader.on('tap', '.CalendarDateHeader-switch', function(e) {
         switch (e.currentTarget.getAttribute('href')) {
             case '#prev':
@@ -63,6 +65,7 @@ function CalendarActivity($activity, options, app) {
         e.stopPropagation();
     }.bind(this));
 
+    // Showing datepicker when pressing the title
     this.$dateTitle.on('tap', function(e) {
         this.$datepicker.toggleClass('is-visible');
         e.preventDefault();
