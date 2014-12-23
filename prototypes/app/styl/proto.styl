@@ -5,6 +5,7 @@
 /** Vars */
 $container-padding-left = 10px;
 $container-padding-right = 10px;
+$app-var-height = 51px;
 
 /** We use ever all the available screen **/
 html.app,
@@ -21,7 +22,7 @@ html.app > body > .container-fluid {
 .app {
     /* Space for nav-header on top */
     body {
-        padding-top: 51px;
+        padding-top: $app-var-height;
     }
 
     /*
@@ -159,19 +160,24 @@ html.app > body > .container-fluid {
         }
     }
     
-    /* centered modal */
-    /* TODO: large content gets innacessible using this centering technique */
-    .modal.centered {
-        &.in {
-            display: table !important;
-            width: 100%;
-            height: 100%;
-        }
-    
+    /* bottom modal */
+    .modal.bottom {
         .modal-dialog {
-            display: table-cell;
+            position: absolute;
             padding: 10px;
-            vertical-align: middle;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    }
+    
+    /* top modal: modals appear on top by default, but
+        needs an extra margin to avoid hide the top
+        nav (thats blocked but gets more nice UI)
+    */
+    .modal {
+        .modal-dialog {
+            padding-top: $app-var-height;
         }
     }
     
