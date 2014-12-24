@@ -1250,40 +1250,7 @@ html.app > body > .container-fluid {
   pointer-events: all;
 }
 
-/* line 56 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-
-/* line 57 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar].Alt1 #calendarDateHeader {
-  position: relative;
-  z-index: 2;
-}
-
-/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar].Alt1 #calendarAppointmentView {
-  margin-top: -42px;
-  padding-top: 46px;
-  padding-bottom: 30px;
-}
-
-/* line 68 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-
-/* line 70 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar].in-edit .CardsDeck-dots,
-[data-activity=calendar].in-edit .CalendarDateHeader-switch {
-  visibility: hidden;
-}
-
-/* line 74 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar].in-edit .CalendarDateHeader-date {
-  pointer-events: none;
-}
-
-/* line 77 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar].in-edit .CalendarDateHeader-date .caret {
-  visibility: hidden;
-}
-
-/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 57 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
@@ -1301,7 +1268,29 @@ html.app > body > .container-fluid {
   outline: none;
 }
 
-/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+
+/* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+[data-activity=appointment].in-edit .CardsDeck-dots,
+[data-activity=appointment].in-edit .CalendarDateHeader-switch {
+  visibility: hidden;
+}
+
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+[data-activity=appointment].in-edit .CalendarDateHeader-date {
+  pointer-events: none;
+}
+
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+[data-activity=appointment].in-edit .CalendarDateHeader-date .caret {
+  visibility: hidden;
+}
+
+/* line 21 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
 /* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 

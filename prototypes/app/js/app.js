@@ -144,7 +144,8 @@ var activities = {
     'services': require('./activities/services'),
     'locations': require('./activities/locations'),
     'textEditor': require('./activities/textEditor'),
-    'home': require('./activities/home')
+    'home': require('./activities/home'),
+    'appointment': require('./activities/appointment')
 };
 
 /** Page ready **/

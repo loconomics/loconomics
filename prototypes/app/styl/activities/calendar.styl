@@ -51,36 +51,6 @@
             pointer-events: all;
         }
     }
-    
-    /* Prototype alternative 1 */
-    &.Alt1 {
-        #calendarDateHeader {
-            position: relative;
-            z-index: 2;
-        }
-        #calendarAppointmentView {
-            margin-top: -42px;
-            padding-top: 46px;
-            padding-bottom: 30px;
-        }
-    }
-    
-    &.in-edit {
-        
-        .CardsDeck-dots,
-        .CalendarDateHeader-switch {
-            visibility: hidden;
-        }
-        
-        .CalendarDateHeader-date {
-            pointer-events: none;
-            
-            .caret {
-                visibility: hidden;
-            }
-        }
-    }
 }
 
 @import '../components/CalendarDateHeader.styl'
-@import '../components/AppointmentCard.styl'

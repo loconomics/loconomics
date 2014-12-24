@@ -4,6 +4,8 @@
 var $ = require('jquery'),
     moment = require('moment');
 require('../components/DatePicker');
+var ko = require('knockout');
+var CalendarSlot = require('../models/CalendarSlot');
 
 var singleton = null;
 
@@ -23,14 +25,20 @@ function CalendarActivity($activity, options, app) {
     this.$dailyView = $activity.find('#calendarDailyView');
     this.$dateHeader = $activity.find('#calendarDateHeader');
     this.$dateTitle = this.$dateHeader.children('.CalendarDateHeader-date');
-    this.$appointmentView = $activity.find('#calendarAppointmentView');
-    this.$chooseNew = $activity.find('#calendarChooseNew');
+    this.$chooseNew = $('#calendarChooseNew');
     this.app = app;
     
     /* Init components */
     this.$datepicker.show().datepicker();
+    this.currentDate = ko.observable();
 
     /* Event handlers */
+    // date change
+    this.currentDate.subscribe(function(date) {
+        this.updateDateTitle(date);
+        this.bindDateData(date);
+    }.bind(this));
+    
     // Swipe date on gesture
     this.$dailyView
     .on('swipeleft', function(e) {
@@ -79,58 +87,17 @@ function CalendarActivity($activity, options, app) {
     }.bind(this));
     
     /* Visualization */
-    // Start with daily view and initial date:
-    this.showDailyView(this.$datepicker.datepicker('getValue'), true);
+    this.show(options);
+    // Set date to match datepicker for first update
+    this.currentDate(this.$datepicker.datepicker('getValue'));
 }
 
 CalendarActivity.prototype.show = function show(options) {
-    /* jshint maxcomplexity:10 */
+    
+    if (options && (options.date instanceof Date))
+        this.currentDate(options.date);
 
-    // In appointment view
-    if (this.$appointmentView.is(':visible')) {
-        // If there are options (there are not on startup or 
-        // on cancelled edition).
-        // And it comes back from the textEditor.
-        if (options !== null) {
-        
-            var booking = this.appointmentsDataView.currentAppointment();
-        
-            if (options.request === 'textEditor' && booking) {
-
-                booking[options.field](options.text);
-            }
-            else if (options.selectClient === true && booking) {
-
-                booking.client(options.selectedClient);
-            }
-            else if (typeof(options.selectedDatetime) !== 'undefined' && booking) {
-                
-                booking.startTime(options.selectedDatetime);
-                // TODO Calculate the endTime given an appointment duration, retrieved from the
-                // selected service
-                //var duration = booking.pricing && booking.pricing.duration;
-                // Or by default (if no pricing selected or any) the user preferred
-                // time gap
-                //duration = duration || user.preferences.timeSlotsGap;
-                // PROTOTYPE:
-                var duration = 60; // minutes
-                booking.endTime(moment(booking.startTime()).add(duration, 'minutes').toDate());
-                
-                // Sets the date of the datePicker too:
-                var justDate = moment(options.selectedDatetime).hours(0).minutes(0).seconds(0).toDate();
-                this.bindDateData(justDate);
-                this.updateDateTitle(justDate);
-            }
-            else if (options.selectServices === true && booking) {
-                
-                booking.services(options.selectedServices);
-            }
-            else if (options.selectLocation === true && booking) {
-                
-                booking.location(options.selectedLocation);
-            }
-        }
-    }
+    this.showDailyView();
 };
 
 CalendarActivity.prototype.updateDateTitle = function updateDateTitle(date) {
@@ -156,15 +123,7 @@ CalendarActivity.prototype.bindDateData = function bindDateData(date) {
     }
 };
 
-var ko = require('knockout');
-var CalendarSlot = require('../models/CalendarSlot');
-
-CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun) {
-
-    if (firstRun || !this.$dailyView.is(':visible')) {
-        this.$appointmentView.hide();
-        this.$dailyView.show();
-    }
+CalendarActivity.prototype.showDailyView = function showDailyView(date) {
 
     if (!this.__initedDailyView) {
         this.__initedDailyView = true;
@@ -182,7 +141,7 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
         // Events
         this.$datepicker.on('changeDate', function(e) {
             if (e.viewMode === 'days') {
-                this.showDailyView(e.date);
+                this.currentDate(e.date);
             }
         }.bind(this));
         
@@ -201,179 +160,12 @@ CalendarActivity.prototype.showDailyView = function showDailyView(date, firstRun
             e.preventDefault();
         }.bind(this));
     }
-    
-    // Optional date, or maintain current one
-    if (date && date instanceof Date) {
-        this.updateDateTitle(date);
-        this.bindDateData(date);
-    }
 };
-
-
-var Appointment = require('../models/Appointment');
 
 CalendarActivity.prototype.showAppointment = function showAppointment(apt) {
-    /*jshint maxstatements:38*/
     
-    // Visualization:
-    this.$dailyView.hide();
-    this.$appointmentView.show();
-    var app = this.app;
-
-    if (!this.__initedAppointment) {
-        this.__initedAppointment = true;
-
-        // Data
-        var testData = require('../testdata/calendarAppointments').appointments;
-        var appointmentsDataView = {
-            appointments: ko.observableArray(testData),
-            currentIndex: ko.observable(0),
-            editMode: ko.observable(false),
-            newAppointment: ko.observable(null)
-        };
-        
-        this.appointmentsDataView = appointmentsDataView;
-        
-        appointmentsDataView.isNew = ko.computed(function(){
-            return this.newAppointment() !== null;
-        }, appointmentsDataView);
-        
-        appointmentsDataView.currentAppointment = ko.computed({
-            read: function() {
-                if (this.isNew()) {
-                    return this.newAppointment();
-                }
-                else {
-                    return this.appointments()[this.currentIndex() % this.appointments().length];
-                }
-            },
-            write: function(apt) {
-                var index = this.currentIndex() % this.appointments().length;
-                this.appointments()[index] = apt;
-                this.appointments.valueHasMutated();
-            },
-            owner: appointmentsDataView
-        });
-        
-        appointmentsDataView.originalEditedAppointment = {};
- 
-        appointmentsDataView.goPrevious = function goPrevious() {
-            if (this.editMode()) return;
-        
-            if (this.currentIndex() === 0)
-                this.currentIndex(this.appointments().length - 1);
-            else
-                this.currentIndex((this.currentIndex() - 1) % this.appointments().length);
-        };
-        
-        appointmentsDataView.goNext = function goNext() {
-            if (this.editMode()) return;
-
-            this.currentIndex((this.currentIndex() + 1) % this.appointments().length);
-        };
-
-        appointmentsDataView.edit = function edit() {
-            this.editMode(true);
-        }.bind(appointmentsDataView);
-        
-        appointmentsDataView.cancel = function cancel() {
-            
-            // if is new, discard
-            if (this.isNew()) {
-                this.newAppointment(null);
-            }
-            else {
-                // revert changes
-                this.currentAppointment(new Appointment(this.originalEditedAppointment));
-            }
-
-            this.editMode(false);
-        }.bind(appointmentsDataView);
-        
-        appointmentsDataView.save = function save() {
-            // If is a new one, add it to the collection
-            if (this.isNew()) {
-                this.appointments.push(this.newAppointment());
-                // now, reset
-                this.newAppointment(null);
-            }
-
-            this.editMode(false);
-        }.bind(appointmentsDataView);
-        
-        appointmentsDataView.editMode.subscribe(function(isEdit) {
-            
-            this.$activity.toggleClass('in-edit', isEdit);
-            this.$appointmentView.find('.AppointmentCard').toggleClass('in-edit', isEdit);
-            
-            if (isEdit) {
-                // Create a copy of the appointment so we revert on 'cancel'
-                appointmentsDataView.originalEditedAppointment = ko.toJS(appointmentsDataView.currentAppointment());
-            }
-            
-        }.bind(this));
-        
-        appointmentsDataView.pickDateTime = function pickDateTime() {
-
-            app.showActivity('datetimePicker', {
-                selectedDatetime: null
-            });
-        };
-        
-        appointmentsDataView.pickClient = function pickClient() {
-
-            app.showActivity('clients', {
-                selectClient: true,
-                selectedClient: null
-            });
-        };
-
-        appointmentsDataView.pickService = function pickService() {
-
-            app.showActivity('services', {
-                selectServices: true,
-                selectedServices: appointmentsDataView.currentAppointment().services()
-            });
-        };
-
-        appointmentsDataView.changePrice = function changePrice() {
-            // TODO
-        };
-        
-        appointmentsDataView.pickLocation = function pickLocation() {
-
-            app.showActivity('locations', {
-                selectLocation: true,
-                selectedLocation: appointmentsDataView.currentAppointment().location()
-            });
-        };
-
-        var textFieldsHeaders = {
-            preNotesToClient: 'Notes to client',
-            postNotesToClient: 'Notes to client (afterwards)',
-            preNotesToSelf: 'Notes to self',
-            postNotesToSelf: 'Booking summary'
-        };
-        
-        appointmentsDataView.editTextField = function editTextField(field) {
-
-            app.showActivity('textEditor', {
-                request: 'textEditor',
-                field: field,
-                header: textFieldsHeaders[field],
-                text: appointmentsDataView.currentAppointment()[field]()
-            });
-        }.bind(this);
-        
-        ko.applyBindings(appointmentsDataView, this.$appointmentView.get(0));
-    }
-    
-    if (apt === null) {
-        
-        this.appointmentsDataView.newAppointment(new Appointment());
-        this.appointmentsDataView.editMode(true);
-        
-    } else {
-        // TODO: select appointment 'apt'
-    }
+    this.app.showActivity('appointment', {
+        date: this.currentDate()
+    });
 };
+
