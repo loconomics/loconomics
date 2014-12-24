@@ -61,6 +61,8 @@
 
     <div class="container-fluid app-calendar is-active" data-activity="appointment">
       
+      <h1 class="ActivityTitle"><span class="glyphicon glyphicon-calendar"></span><span data-bind="text: currentDate(), format: { type: 'datetime', format: 'dddd [(]M/D[)]' }"></span><span class="ActivityTitle-action "><button type="button" class="btn btn-primary" data-bind="event: { tap: returnToCalendar }">back</button></span></h1>
+        
       <!-- Appointment View (cards) -->
       <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">
         <div class="Card AppointmentCard">

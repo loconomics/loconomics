@@ -256,12 +256,12 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
             }
         }.bind(this);
         
-        appointmentsDataView.currentDate = ko.pureComputed(function() {
+        appointmentsDataView.currentDate = ko.computed(function() {
             
             var apt = this.currentAppointment(),
                 justDate = null;
 
-            if (apt && apt.starTime())
+            if (apt && apt.startTime())
                 justDate = moment(apt.startTime()).hours(0).minutes(0).seconds(0).toDate();
             
             return justDate;
