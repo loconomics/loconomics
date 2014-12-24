@@ -1033,12 +1033,12 @@ html.app > body > .container-fluid {
 
 /* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider {
-  padding: 4px 25px;
+  padding: 4px 25px 30px 25px;
   position: relative;
   min-height: 100%;
 }
 
-/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots {
   position: absolute;
   left: 0;
@@ -1047,7 +1047,7 @@ html.app > body > .container-fluid {
   text-align: center;
 }
 
-/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 68 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > * {
   display: inline-block;
   width: 10px;
@@ -1061,7 +1061,7 @@ html.app > body > .container-fluid {
   background-color: transparent;
 }
 
-/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 79 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > *.is-active {
   margin: 0px;
   background-color: #fff;
@@ -1069,7 +1069,7 @@ html.app > body > .container-fluid {
   width: 12px;
 }
 
-/* line 90 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 
 /* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 .Card {
