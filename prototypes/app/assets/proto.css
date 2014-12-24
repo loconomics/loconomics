@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-12-23
+/*! LoconomicsAppProto 2014-12-24
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1180,13 +1180,28 @@ html.app > body > .container-fluid {
 
 /* line 2 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
-/* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar] #calendarDailyView {
+  padding-top: 42px;
+  min-height: 100%;
+}
+
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+[data-activity=calendar] #calendarDateHeader {
+  height: 42px;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+/* line 20 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker {
 /* positioning */
   position: absolute;
   left: 10px;
   right: 10px;
   z-index: 100;
+  top: 42px;
 /* pop-up decoration */
   background: #fff;
   -webkit-box-shadow: 0 0 6px 1px #000;
@@ -1211,18 +1226,18 @@ html.app > body > .container-fluid {
   pointer-events: none;
 }
 
-/* line 17 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 34 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:after {
   left: 50%;
 }
 
-/* line 20 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:before {
   left: 50%;
   margin-left: -1px;
 }
 
-/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 48 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker.is-visible {
   opacity: 1;
   -ms-filter: none;
@@ -1235,40 +1250,40 @@ html.app > body > .container-fluid {
   pointer-events: all;
 }
 
-/* line 39 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 56 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
-/* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 57 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].Alt1 #calendarDateHeader {
   position: relative;
   z-index: 2;
 }
 
-/* line 44 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].Alt1 #calendarAppointmentView {
   margin-top: -42px;
   padding-top: 46px;
   padding-bottom: 30px;
 }
 
-/* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 68 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
-/* line 53 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 70 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].in-edit .CardsDeck-dots,
 [data-activity=calendar].in-edit .CalendarDateHeader-switch {
   visibility: hidden;
 }
 
-/* line 57 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 74 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].in-edit .CalendarDateHeader-date {
   pointer-events: none;
 }
 
-/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 77 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar].in-edit .CalendarDateHeader-date .caret {
   visibility: hidden;
 }
 
-/* line 69 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
+/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
 

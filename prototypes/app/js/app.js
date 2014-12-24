@@ -8,6 +8,7 @@ ko.bindingHandlers.format = require('../vendor/iagosrl/ko/formatBinding').format
 require('es6-promise').polyfill();
 require('./utils/Function.prototype._inherits');
 require('./utils/Function.prototype._delayed');
+var layoutUpdateEvent = require('../vendor/iagosrl/layoutUpdateEvent');
 
 /** Global static config **/
 var baseUrl = '/prototypes/app/';
@@ -149,10 +150,23 @@ var activities = {
 /** Page ready **/
 $(function() {
     
-    // NOTE: Safari bug workaround, min-height/height on html doesn't work as expected,
+    // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
+    // and can be triggered manually by any script to notify changes on layout that
+    // may require adjustments on other scripts that listen to it.
+    // The event is throttle, guaranting that the minor handlers are executed rather
+    // than a lot of them in short time frames (as happen with 'resize' events).
+    layoutUpdateEvent.on();
+    
+    // NOTE: Safari iOS bug workaround, min-height/height on html doesn't work as expected,
     // getting bigger than viewport. May be a problem only on Safari and not in 
     // the WebView, double check.
-    $('html').height(window.innerHeight + 'px');
+    var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
+    if (iOS) {
+        $('html').height(window.innerHeight + 'px');
+        $(window).on('layoutUpdate', function() {
+            $('html').height(window.innerHeight + 'px');
+        });        
+    }
     
     // Detect activities loaded in the current document
     // and initialize them:
