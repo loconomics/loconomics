@@ -73,21 +73,20 @@ AppointmentActivity.prototype.show = function show(options) {
         }
     }
     
-    this.showAppointment();
+    this.showAppointment(options && options.appointmentId);
 };
 
 var Appointment = require('../models/Appointment');
 
-AppointmentActivity.prototype.showAppointment = function showAppointment(apt) {
+AppointmentActivity.prototype.showAppointment = function showAppointment(aptId) {
     /*jshint maxstatements:36*/
     
-    if (apt === null) {
-        
+    if (aptId) {
+        // TODO: select appointment 'aptId'
+
+    } else if (aptId === 0) {
         this.appointmentsDataView.newAppointment(new Appointment());
-        this.appointmentsDataView.editMode(true);
-        
-    } else {
-        // TODO: select appointment 'apt'
+        this.appointmentsDataView.editMode(true);        
     }
 };
 

@@ -30,39 +30,44 @@ function CalendarActivity($activity, app) {
     
     /* Init components */
     this.$datepicker.show().datepicker();
-    this.currentDate = ko.observable();
-    
-    // Data
-    var slotsData = require('../testdata/calendarSlots').calendar;
-    this.dailyDataView = {
-        slots: ko.observableArray([]),
-        slotsData: slotsData
-    };
 
-    ko.applyBindings(this.dailyDataView, this.$dailyView.get(0));
+    // Data
+    this.dataView = new ViewModel();
+    ko.applyBindings(this.dataView, $activity.get(0));
+
+    // Testing data
+    this.dataView.slotsData(require('../testdata/calendarSlots').calendar);
+    
+    // Object to hold the options passed on 'show' as a result
+    // of a request from another activity
+    this.requestInfo = null;
 
     /* Event handlers */
-    // date change
-    this.currentDate.subscribe(function(date) {
-        this.updateDateTitle(date);
-        this.bindDateData(date);
+    // Update datepicker selected date on date change (from 
+    // a different source than the datepicker itself
+    this.dataView.currentDate.subscribe(function(date) {
+        
+        var mdate = moment(date);
+
+        this.$datepicker.removeClass('is-visible');
+        // Change not from the widget?
+        if (this.$datepicker.datepicker('getValue').toISOString() !== mdate.toISOString())
+            this.$datepicker.datepicker('setValue', date, true);
+
     }.bind(this));
-    
+
     // Swipe date on gesture
     this.$dailyView
-    .on('swipeleft', function(e) {
+    .on('swipeleft swiperight', function(e) {
         e.preventDefault();
+        
+        var dir = e.type === 'swipeleft' ? 'next' : 'prev';
+        
         // Hack to solve the freezy-swipe and tap-after bug on JQM:
         $(document).trigger('touchend');
         // Change date
-        this.$datepicker.datepicker('moveValue', 'next', 'date');
-    }.bind(this))
-    .on('swiperight', function(e) {
-        e.preventDefault();
-        // Hack to solve the freezy-swipe and tap-after bug on JQM:
-        $(document).trigger('touchend');
-        // Change date
-        this.$datepicker.datepicker('moveValue', 'prev', 'date');
+        this.$datepicker.datepicker('moveValue', dir, 'date');
+
     }.bind(this));
     
     // Changing date with buttons:
@@ -88,71 +93,82 @@ function CalendarActivity($activity, app) {
         e.preventDefault();
         e.stopPropagation();
     }.bind(this));
-    
-    $activity.on('tap', '[data-target="new-booking"]', function(e) {
-        this.$chooseNew.modal('hide');
-        this.showAppointment(null);
-        e.preventDefault();
-    }.bind(this));
-    
+
+    // Updating view date when picked another one
     this.$datepicker.on('changeDate', function(e) {
         if (e.viewMode === 'days') {
-            this.currentDate(e.date);
+            this.dataView.currentDate(e.date);
         }
-    }.bind(this));
-
-    this.$dailyView.on('tap', '.ListView-item a', function(e) {
-
-        var link = e.currentTarget.getAttribute('href');
-        if (/^#calendar\/appointment/i.test(link)) {
-            this.$chooseNew.modal('hide');
-            // TODO: Must pass the appointment instead a fake non-null
-            this.showAppointment({});
-        }
-        else if (/^#calendar\/new/i.test(link)) {
-            this.$chooseNew.modal('show');
-        }
-
-        e.preventDefault();
     }.bind(this));
     
     // Set date to match datepicker for first update
-    this.currentDate(this.$datepicker.datepicker('getValue'));
+    this.dataView.currentDate(this.$datepicker.datepicker('getValue'));
 }
 
 CalendarActivity.prototype.show = function show(options) {
+    /* jshint maxcomplexity:8 */
     
     if (options && (options.date instanceof Date))
-        this.currentDate(options.date);
-};
-
-CalendarActivity.prototype.updateDateTitle = function updateDateTitle(date) {
-    date = moment(date);
-    var dateInfo = this.$dateTitle.children('time:eq(0)');
-    dateInfo.attr('datetime', date.toISOString());
-    dateInfo.text(date.format('dddd (M/D)'));
-    this.$datepicker.removeClass('is-visible');
-    // Change not from the widget?
-    if (this.$datepicker.datepicker('getValue').toISOString() !== date.toISOString())
-        this.$datepicker.datepicker('setValue', date, true);
-};
-
-CalendarActivity.prototype.bindDateData = function bindDateData(date) {
+        this.dataView.currentDate(options.date);
     
-    var sdate = moment(date).format('YYYY-MM-DD');
-    var slotsData = this.dailyDataView.slotsData;
-    
-    if (slotsData.hasOwnProperty(sdate)) {
-        this.dailyDataView.slots(slotsData[sdate]);
-    } else {
-        this.dailyDataView.slots(slotsData['default']);
+    if (options && options.route) {
+        switch (options.route.segments[0]) {
+            
+            case 'appointment':
+                this.$chooseNew.modal('hide');
+                // Pass Appointment ID
+                var aptId = options.route.segments[1];
+                this.showAppointment(aptId || 0);
+                break;
+
+            case 'new':
+                switch (options.route.segments[1]) {
+                
+                    case 'booking':
+                        this.$chooseNew.modal('hide');
+                        this.showAppointment(0);
+                        break;
+
+                    case 'event':
+                        // TODO Implement new-event form opening
+                        break;
+                        
+                    default:
+                        this.$chooseNew.modal('show');
+                        break;
+                }
+                break;
+        }
     }
 };
 
 CalendarActivity.prototype.showAppointment = function showAppointment(apt) {
     
+    // TODO: implement showing the given 'apt'
     this.app.showActivity('appointment', {
-        date: this.currentDate()
+        date: this.dataView.currentDate(),
+        appointmentId: apt
     });
 };
 
+function ViewModel() {
+
+    this.slots = ko.observableArray([]);
+    this.slotsData = ko.observable({});
+    this.currentDate = ko.observable(new Date());
+    
+    // Update current slots on date change
+    this.currentDate.subscribe(function (date) {
+
+        var mdate = moment(date),
+            sdate = mdate.format('YYYY-MM-DD');
+        
+        var slots = this.slotsData();
+
+        if (slots.hasOwnProperty(sdate)) {
+            this.slots(slots[sdate]);
+        } else {
+            this.slots(slots['default']);
+        }
+    }.bind(this));
+}

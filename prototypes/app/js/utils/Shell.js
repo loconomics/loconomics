@@ -116,7 +116,7 @@ var shell = {
             this.activities[activityName]
             .init($activity, this)
             .show(options);
-            
+
             // Avoid going to the same activity
             if (currentActivity &&
                 currentActivity.name !== activityName) {
@@ -126,6 +126,66 @@ var shell = {
         }.bind(this)).catch(this.unexpectedError);
     },
     
+    parseActivityLink: function getActivityFromLink(link) {
+        
+        link = link || '';
+        
+        // hashbang support: remove the #! and use the rest as the link
+        link = link.replace(/^#!/, '');
+
+        // Remove the baseUrl to get the app base.
+        var path = link.replace(new RegExp('^' + escapeRegExp(this.baseUrl), 'i'), '');
+        //var activityName = path.split('/')[1] || '';
+        // Get first segment or page name (anything until a slash or extension beggining)
+        var match = /^\/?([^\/\.]+)[^\/]*(\/.*)*$/.exec(path);
+        
+        var parsed = {
+            root: true,
+            activity: null,
+            segments: null,
+            path: null
+        };
+        
+        if (match) {
+            parsed.root = false;
+            if (match[1]) {
+                parsed.activity = match[1];
+
+                if (match[2]) {
+                    parsed.path = match[2];
+                    parsed.segments = match[2].replace(/^\//, '').split('/');
+                }
+                else {
+                    parsed.path = '/';
+                    parsed.segments = [];
+                }
+            }
+        }
+
+        return parsed;
+    },
+    
+    /** Route a link throught activities.
+        Returns true if was routed and false if not
+    **/
+    route: function route(link) {
+        
+        var parsedLink = this.parseActivityLink(link);
+        
+        // Check if is not root and the activity is registered
+        if (parsedLink.activity &&
+            this.activities.hasOwnProperty(parsedLink.activity)) {
+            
+            // Show the activity passing the route options
+            this.showActivity(parsedLink.activity, {
+                route: parsedLink
+            });
+            
+            return true;
+        }
+        return false;
+    },
+
     init: function init() {
         /*
         // Detect activities loaded in the current document
@@ -140,13 +200,20 @@ var shell = {
         */
         
         // Visualize the activity that matches current URL
-        var path = document.location.pathname.replace(new RegExp('^' + escapeRegExp(this.baseUrl), 'i'), '');
-        //var currentActivityName = path.split('/')[1] || '';
-        var currentActivityName = /^\/?([^\/\.]*)/.exec(path);
-        currentActivityName = currentActivityName && currentActivityName[1] || '';
-        if (currentActivityName) {
-            this.showActivity(currentActivityName);
-        }
+        this.route(document.location.pathname);
+        
+        // Route pressed links
+        // TODO Update with HistoryAPI and remove preventDefault
+        $(document).on('tap', 'a, [data-href]', function(e) {
+            // Get Link
+            var link = e.currentTarget.getAttribute('href') || e.currentTarget.getAttribute('data-href');
+
+            // Route it
+            if (this.route(link)) {
+                // TODO Remove when implemented HistoryAPI and pushState...
+                e.preventDefault();
+            }
+        }.bind(this));
     }
 };
 

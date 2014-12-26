@@ -88,5 +88,6 @@ $(function() {
     // TODO Remove when out of prototype!
     app.baseUrl = '/prototypes/app/';
     app.init();
+    // DEBUG
     window.app = app;
 });
