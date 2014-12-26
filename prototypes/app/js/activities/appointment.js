@@ -169,6 +169,8 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
                 this.appointments.push(this.newAppointment());
                 // now, reset
                 this.newAppointment(null);
+                // current index must be the just-added apt
+                this.currentIndex(this.appointments().length - 1);
             }
 
             this.editMode(false);
