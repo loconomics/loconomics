@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-12-24
+/*! LoconomicsAppProto 2014-12-26
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1281,16 +1281,12 @@ html.app > body > .container-fluid {
 }
 
 /* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
-[data-activity=appointment].in-edit .CalendarDateHeader-date {
+[data-activity=appointment].in-edit .ActivityTitle-action {
   pointer-events: none;
-}
-
-/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
-[data-activity=appointment].in-edit .CalendarDateHeader-date .caret {
   visibility: hidden;
 }
 
-/* line 21 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
 /* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
