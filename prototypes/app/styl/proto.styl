@@ -3,8 +3,8 @@
 @import 'utils/styleguideVars.styl'
 
 /** Vars */
-$container-padding-left = 10px;
-$container-padding-right = 10px;
+$container-padding-left = round($grid-gutter-width / 2);
+$container-padding-right = round($grid-gutter-width / 2);
 $app-var-height = 51px;
 
 /** We use ever all the available screen **/
@@ -28,23 +28,19 @@ html.app > body > .container-fluid {
     /*
         Standard components customized for app
     */
-    /* Container */
+    /* Container
+        TODO:DEPRECATED: remove when all pages use [data-activity]
+    */
     .container,
     .container-fluid {
-        /* Overwriting default Bootstrap margins */
-        padding-left: $container-padding-left;
-        padding-right: $container-padding-right;
-        
-        .row {
-            margin-left: 0 - $container-padding-left
-            margin-right: 0 - $container-padding-right;
-        }
-        
+    
         /* Space for nav at bottom */
         .has-bottom-navbar {
             padding-bottom: 50px;
         }
     }
+    
+
     /* app-nav (new class under .navbar) */
     .app-nav {
       position: relative;
