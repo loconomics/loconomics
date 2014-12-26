@@ -38,19 +38,24 @@ function TextEditorActivity($activity, app) {
     // returns back to the requester activity giving it
     // the new text
     this.dataView.on('saved', function() {
-        if (this.requestInfo) {        
+        if (this.requestInfo) {
             // Update the info with the new text
             this.requestInfo.text = this.dataView.text();
         }
-        //  and pass it back
-        this.app.goBack(this.requestInfo);
+        // blur text box to force close the on-screen keyboard
+        this.textarea.blur();
 
+        // and pass it back
+        this.app.goBack(this.requestInfo);
     }.bind(this));
  
     // Handler the cancel event
     this.dataView.on('cancel', function() {
+        // blur text box to force close the on-screen keyboard
+        this.textarea.blur();
+        // return, nothing changed
         app.goBack();
-    });
+    }.bind(this));
 }
 
 TextEditorActivity.prototype.show = function show(options) {

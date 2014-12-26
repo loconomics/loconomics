@@ -101,6 +101,10 @@ var shell = {
         var activityName = previousActivity.name;
         this.currentZIndex--;
         
+        // If there are no explicit options, use the currentActivity options
+        // to enable the communication between activities:
+        options = options || currentActivity.options;
+        
         // Ensure its loaded, and do anything later
         this.loadActivity(activityName).then(function($activity) {
             
