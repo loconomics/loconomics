@@ -3,16 +3,22 @@
 **/
 
 .ActivityTitle {
-    font-size: 20px;
-    padding: 0.7em 10px 0.4em;
+    font-size: 20px;    
     margin: 0;
     text-align: left;
     font-weight: bold;
     
+    /* Like a row, it use full width
+        but we enforce the internal gap
+    */
+    margin-left: 0 - $container-padding-left;
+    margin-right: 0 - $container-padding-right;
+    padding: 0.7em ($container-padding-right + 10px) 0.4em ($container-padding-left + 10px);
+    
     /* table layout for better management of the 
         optional elements */
     display: table;
-    width: 100%;
+    width: auto;
     
     /* The action and the icon must fit mininum space, one line */
     > .ActivityTitle-action,
