@@ -125,7 +125,7 @@
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
             
-            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: currentAppointment().itStarted()">
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: !isNew() && currentAppointment().itStarted()">
               <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().postNotesToClient"></span>
@@ -133,7 +133,7 @@
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon glyphicon-pencil"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: currentAppointment().itStarted()">
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: !isNew() && currentAppointment().itStarted()">
               <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().postNotesToSelf"></span>
