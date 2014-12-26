@@ -19,7 +19,7 @@ function Appointment(values) {
         endTime: null,
         
         // Event summary:
-        summary: '',
+        summary: 'New booking',
         
         subtotalPrice: 0,
         feePrice: 0,

@@ -166,6 +166,12 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         appointmentsDataView.save = function save() {
             // If is a new one, add it to the collection
             if (this.isNew()) {
+                // TODO: some fieds need some kind of calculation that is persisted
+                // son cannot be computed. Simulated:
+                this.newAppointment().summary('Massage Therapist Booking');
+                this.newAppointment().id(4);
+                
+                // Add to the list:
                 this.appointments.push(this.newAppointment());
                 // now, reset
                 this.newAppointment(null);
