@@ -9,15 +9,15 @@ var $ = require('jquery'),
     
 var singleton = null;
 
-exports.init = function initTextEditor($activity, options, app) {
+exports.init = function initTextEditor($activity, app) {
     
     if (singleton === null)
-        singleton = new TextEditorActivity($activity, options, app);
+        singleton = new TextEditorActivity($activity, app);
     
-    singleton.show(options);
+    return singleton;
 };
 
-function TextEditorActivity($activity, options, app) {
+function TextEditorActivity($activity, app) {
 
     // Fields
     this.$activity = $activity;

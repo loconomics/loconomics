@@ -11,12 +11,12 @@ require('../components/DatePicker');
     
 var singleton = null;
 
-exports.init = function initDatetimePicker($activity, options, app) {
+exports.init = function initDatetimePicker($activity, app) {
 
     if (singleton === null)
         singleton = new DatetimePickerActivity($activity, app);
 
-    singleton.show(options);
+    return singleton;
 };
 
 function DatetimePickerActivity($activity, app) {

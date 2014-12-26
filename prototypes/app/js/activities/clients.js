@@ -8,12 +8,12 @@ var $ = require('jquery'),
     
 var singleton = null;
 
-exports.init = function initClients($activity, options, app) {
+exports.init = function initClients($activity, app) {
 
     if (singleton === null)
         singleton = new ClientsActivity($activity, app);
     
-    singleton.show(options);
+    return singleton;
 };
 
 function ClientsActivity($activity, app) {

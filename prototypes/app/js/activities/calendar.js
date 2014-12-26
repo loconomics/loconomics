@@ -9,15 +9,15 @@ var CalendarSlot = require('../models/CalendarSlot');
 
 var singleton = null;
 
-exports.init = function initCalendar($activity, options, app) {
+exports.init = function initCalendar($activity, app) {
 
     if (singleton === null)
-        singleton = new CalendarActivity($activity, options, app);
-    else
-        singleton.show(options);
+        singleton = new CalendarActivity($activity, app);
+    
+    return singleton;
 };
 
-function CalendarActivity($activity, options, app) {
+function CalendarActivity($activity, app) {
 
     /* Getting elements */
     this.$activity = $activity;
@@ -31,6 +31,15 @@ function CalendarActivity($activity, options, app) {
     /* Init components */
     this.$datepicker.show().datepicker();
     this.currentDate = ko.observable();
+    
+    // Data
+    var slotsData = require('../testdata/calendarSlots').calendar;
+    this.dailyDataView = {
+        slots: ko.observableArray([]),
+        slotsData: slotsData
+    };
+
+    ko.applyBindings(this.dailyDataView, this.$dailyView.get(0));
 
     /* Event handlers */
     // date change
@@ -86,8 +95,27 @@ function CalendarActivity($activity, options, app) {
         e.preventDefault();
     }.bind(this));
     
-    /* Visualization */
-    this.show(options);
+    this.$datepicker.on('changeDate', function(e) {
+        if (e.viewMode === 'days') {
+            this.currentDate(e.date);
+        }
+    }.bind(this));
+
+    this.$dailyView.on('tap', '.ListView-item a', function(e) {
+
+        var link = e.currentTarget.getAttribute('href');
+        if (/^#calendar\/appointment/i.test(link)) {
+            this.$chooseNew.modal('hide');
+            // TODO: Must pass the appointment instead a fake non-null
+            this.showAppointment({});
+        }
+        else if (/^#calendar\/new/i.test(link)) {
+            this.$chooseNew.modal('show');
+        }
+
+        e.preventDefault();
+    }.bind(this));
+    
     // Set date to match datepicker for first update
     this.currentDate(this.$datepicker.datepicker('getValue'));
 }
@@ -96,8 +124,6 @@ CalendarActivity.prototype.show = function show(options) {
     
     if (options && (options.date instanceof Date))
         this.currentDate(options.date);
-
-    this.showDailyView();
 };
 
 CalendarActivity.prototype.updateDateTitle = function updateDateTitle(date) {
@@ -120,45 +146,6 @@ CalendarActivity.prototype.bindDateData = function bindDateData(date) {
         this.dailyDataView.slots(slotsData[sdate]);
     } else {
         this.dailyDataView.slots(slotsData['default']);
-    }
-};
-
-CalendarActivity.prototype.showDailyView = function showDailyView(date) {
-
-    if (!this.__initedDailyView) {
-        this.__initedDailyView = true;
-        
-        // Data
-        var slotsData = require('../testdata/calendarSlots').calendar;
-        
-        this.dailyDataView = {
-            slots: ko.observableArray([]),
-            slotsData: slotsData
-        };
-        
-        ko.applyBindings(this.dailyDataView, this.$dailyView.get(0));
-        
-        // Events
-        this.$datepicker.on('changeDate', function(e) {
-            if (e.viewMode === 'days') {
-                this.currentDate(e.date);
-            }
-        }.bind(this));
-        
-        this.$dailyView.on('tap', '.ListView-item a', function(e) {
-
-            var link = e.currentTarget.getAttribute('href');
-            if (/^#calendar\/appointment/i.test(link)) {
-                this.$chooseNew.modal('hide');
-                // TODO: Must pass the appointment instead a fake non-null
-                this.showAppointment({});
-            }
-            else if (/^#calendar\/new/i.test(link)) {
-                this.$chooseNew.modal('show');
-            }
-
-            e.preventDefault();
-        }.bind(this));
     }
 };
 

@@ -8,15 +8,15 @@ require('../components/DatePicker');
 
 var singleton = null;
 
-exports.init = function initAppointment($activity, options, app) {
+exports.init = function initAppointment($activity, app) {
 
     if (singleton === null)
-        singleton = new AppointmentActivity($activity, options, app);
-    else
-        singleton.show(options);
+        singleton = new AppointmentActivity($activity, app);
+    
+    return singleton;
 };
 
-function AppointmentActivity($activity, options, app) {
+function AppointmentActivity($activity, app) {
 
     /* Getting elements */
     this.$activity = $activity;
@@ -29,8 +29,6 @@ function AppointmentActivity($activity, options, app) {
     this.requestInfo = null;
     
     this.initAppointment();
-    
-    this.show(options);
 }
 
 AppointmentActivity.prototype.show = function show(options) {
