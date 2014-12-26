@@ -29,7 +29,13 @@ var shell = {
                 resolve($act);
             }
             else {
-                $.ajax({ url: this.baseUrl + activityName + '.html', cache: false }).then(function(html) {
+                $.ajax({
+                    url: this.baseUrl + activityName + '.html',
+                    cache: false,
+                    // We are loading the program, so any in between interaction
+                    // will be problematic.
+                    async: false
+                }).then(function(html) {
                     // http://stackoverflow.com/a/12848798
                     var body = '<div id="body-mock">' + html.replace(/^[\s\S]*<body.*?>|<\/body>[\s\S]*$/g, '') + '</div>';
                     var $h = $($.parseHTML(body));
@@ -60,6 +66,9 @@ var shell = {
             
             $activity.css('zIndex', ++this.currentZIndex).show();
             var currentActivity = this.history[this.history.length - 1];
+            
+            // NOTE:FUTURE: HistoryAPI.pushState(..)
+            
             this.history.push({
                 name: activityName,
                 $activity: $activity,
@@ -71,21 +80,12 @@ var shell = {
             .show(options);
             
             // Avoid going to the same activity
-            // (can happen with goToActivity)
             if (currentActivity &&
                 currentActivity.name !== activityName) {
                 this.hideActivity(currentActivity.name);
             }
 
         }.bind(this)).catch(this.unexpectedError);
-    },
-
-    goToActivity: function goToActivity(activityName, options) {
-
-        var currentActivity = this.history.pop();
-        this.hideActivity(currentActivity.name);
-        this.currentZIndex--;
-        this.showActivity(activityName, options);
     },
 
     hideActivity: function hideActivity(activityName) {
@@ -96,8 +96,30 @@ var shell = {
     
     goBack: function goBack(options) {
 
-        var previousActivity = this.history[this.history.length - 2];
-        this.goToActivity(previousActivity.name, options);
+        var currentActivity = this.history.pop();
+        var previousActivity = this.history[this.history.length - 1];
+        var activityName = previousActivity.name;
+        this.currentZIndex--;
+        
+        // Ensure its loaded, and do anything later
+        this.loadActivity(activityName).then(function($activity) {
+            
+            $activity.show();
+            
+            // NOTE:FUTURE: Going to the previous activity with HistoryAPI
+            // must replaceState with new 'options'?
+            
+            this.activities[activityName]
+            .init($activity, this)
+            .show(options);
+            
+            // Avoid going to the same activity
+            if (currentActivity &&
+                currentActivity.name !== activityName) {
+                this.hideActivity(currentActivity.name);
+            }
+
+        }.bind(this)).catch(this.unexpectedError);
     },
     
     init: function init() {
@@ -121,7 +143,6 @@ var shell = {
         if (currentActivityName) {
             this.showActivity(currentActivityName);
         }
-        console.log('currenta ctivity', currentActivityName);
     }
 };
 
