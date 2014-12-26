@@ -13,8 +13,13 @@ function Appointment(values) {
     Model(this);
 
     this.model.defProperties({
+        id: null,
+        
         startTime: null,
         endTime: null,
+        
+        // Event summary:
+        summary: '',
         
         subtotalPrice: 0,
         feePrice: 0,
@@ -85,6 +90,32 @@ function Appointment(values) {
     
     this.itEnded = ko.pureComputed(function() {
         return (this.endTime() && new Date() >= this.endTime());
+    }, this);
+    
+    this.isNew = ko.pureComputed(function() {
+        return (!this.id());
+    }, this);
+    
+    this.stateHeader = ko.pureComputed(function() {
+        
+        // TODO review texts with Josh
+        var text = '';
+        if (!this.isNew()) {
+            if (this.itStarted()) {
+                if (this.itEnded()) {
+                    text = 'Past:';
+                }
+                else {
+                    text = 'Now:';
+                }
+            }
+            else {
+                text = 'Upcoming:';
+            }
+        }
+
+        return text;
+        
     }, this);
 }
 
