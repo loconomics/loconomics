@@ -13,7 +13,22 @@ var shell = {
     
     baseUrl: '',
     
-    activities: [],
+    activities: {},
+
+    specialRoutes: {
+        'go-back': function (route) {
+            // go back in history, almost one
+            this.goBack();
+            
+            // go back x times:
+            var num = parseInt(route.segments[0], 10);
+            if (num > 0) {
+                while(num-->1) {
+                    this.goBack();
+                }
+            }
+        }
+    },
 
     unexpectedError: function unexpectedError(error) {
         // TODO: enhance with dialog
@@ -172,16 +187,25 @@ var shell = {
         
         var parsedLink = this.parseActivityLink(link);
         
-        // Check if is not root and the activity is registered
-        if (parsedLink.activity &&
-            this.activities.hasOwnProperty(parsedLink.activity)) {
+        // Check if is not root
+        if (parsedLink.activity) {
+            //  and the activity is registered
+            if (this.activities.hasOwnProperty(parsedLink.activity)) {
             
-            // Show the activity passing the route options
-            this.showActivity(parsedLink.activity, {
-                route: parsedLink
-            });
-            
-            return true;
+                // Show the activity passing the route options
+                this.showActivity(parsedLink.activity, {
+                    route: parsedLink
+                });
+
+                return true;
+            }
+            //  or is a special route
+            else if (this.specialRoutes.hasOwnProperty(parsedLink.activity)) {
+                
+                this.specialRoutes[parsedLink.activity].call(this, parsedLink);
+                
+                return true;
+            }
         }
         return false;
     },

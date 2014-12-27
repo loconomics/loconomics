@@ -166,17 +166,24 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         appointmentsDataView.save = function save() {
             // If is a new one, add it to the collection
             if (this.isNew()) {
+                
+                var newApt = this.newAppointment();
                 // TODO: some fieds need some kind of calculation that is persisted
                 // son cannot be computed. Simulated:
-                this.newAppointment().summary('Massage Therapist Booking');
-                this.newAppointment().id(4);
+                newApt.summary('Massage Therapist Booking');
+                newApt.id(4);
                 
                 // Add to the list:
-                this.appointments.push(this.newAppointment());
+                this.appointments.push(newApt);
                 // now, reset
                 this.newAppointment(null);
                 // current index must be the just-added apt
                 this.currentIndex(this.appointments().length - 1);
+                
+                // On adding a new one, the confirmation page must be showed
+                app.showActivity('bookingConfirmation', {
+                    booking: newApt
+                });
             }
 
             this.editMode(false);

@@ -53,7 +53,7 @@ moment.locale('en-US');
 var app = new Shell();
 
 /** Load activities **/
-var activities = app.activities = {
+app.activities = {
     'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),
@@ -61,7 +61,8 @@ var activities = app.activities = {
     'locations': require('./activities/locations'),
     'textEditor': require('./activities/textEditor'),
     'home': require('./activities/home'),
-    'appointment': require('./activities/appointment')
+    'appointment': require('./activities/appointment'),
+    'bookingConfirmation': require('./activities/bookingConfirmation')
 };
 
 /** Page ready **/
