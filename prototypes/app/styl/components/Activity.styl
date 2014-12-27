@@ -1,0 +1,51 @@
+/** Activity component **/
+
+@import 'ActivityTitle.styl';
+@import 'ActivityNavbar.styl';
+
+Activity() {
+    /* settings specially important for the use of navbar
+       but applied to all for consistent results
+       with/without navbar
+    */
+    min-height: 100%;
+    height: 100%;
+    position: relative;
+    overflow: auto;
+
+    /* activity must be notified of the navbar to fix
+       available space
+    */
+    &.has-navbar {
+        padding-bottom: $activityNavbarHeight;
+    }
+
+    /* activity can set its title as freeze,
+        will fix available space, and reuse
+        the mixims from the ActivityTitle component.
+    */
+    &.has-frozenTitle {
+        
+        padding-top: $activityTitleHeight;
+        
+        .ActivityTitle {
+            FreezeActivityTitle()
+        }
+    }
+
+    /* Hidden until active */
+    display: none;
+    /*transition: 2000ms all;
+    opacity: 0;
+    z-index: 1;*/
+    &.is-active {
+        display: block;
+       /* opacity: 1;
+        z-index: 2;*/
+    }
+}
+
+.Activity,
+[data-activity] {
+    Activity();
+}

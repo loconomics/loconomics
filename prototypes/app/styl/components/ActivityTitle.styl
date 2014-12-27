@@ -2,6 +2,33 @@
     ActivityTitle text class
 **/
 
+// One line title height
+$activityTitleHeight = 50px;
+
+/* Freeze one-line header */
+FreezeActivityTitle() {
+    // Size and position
+    width: auto;
+    height: $activityTitleHeight;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    right: 0;
+    top: $app-var-height;
+    
+    // negative margin to become full-size over the
+    // container padding is not needed:
+    margin: 0;
+    
+    // Default color
+    background: White;
+    
+    // One line, ellipsis
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .ActivityTitle {
     font-size: 20px;    
     margin: 0;
@@ -18,8 +45,7 @@
     /* table layout for better management of the 
         optional elements */
     display: table;
-    width: auto;
-    
+
     /* The action and the icon must fit mininum space, one line */
     > .ActivityTitle-action,
     > .glyphicon {

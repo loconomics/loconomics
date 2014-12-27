@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2014-12-26
+/*! LoconomicsAppProto 2014-12-27
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -55,13 +55,13 @@
 /* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** We use ever all the available screen **/
 
-/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 html.app,
 html.app > body {
   height: 100%;
 }
 
-/* line 25 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 html.app > body > .container,
 html.app > body > .container-fluid {
   min-height: 100%;
@@ -71,27 +71,19 @@ html.app > body > .container-fluid {
 /* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /* More app specific styles */
 
-/* line 30 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 43 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 45 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app body {
   padding-top: 51px;
 }
 
-/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
-
-/* line 39 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
-.app .container .has-bottom-navbar,
-.app .container-fluid .has-bottom-navbar {
-  padding-bottom: 50px;
-}
-
-/* line 44 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 49 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav {
   position: relative;
 }
 
-/* line 47 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-brand {
   float: none;
   display: inline-block;
@@ -102,7 +94,7 @@ html.app > body > .container-fluid {
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\styleguideVars.styl */
   .app .app-nav .navbar-brand {
     background-image: url("../../../assets/images/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
@@ -111,113 +103,58 @@ html.app > body > .container-fluid {
   }
 }
 
-/* line 56 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 65 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-nav .navbar-action {
   margin: 8px 0;
 }
 
-/* line 64 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
-.app .activity,
-.app [data-activity] {
-/* settings specially important for the use of navbar
-           but applied to all for consistent results
-           with/without navbar
-        */
-  min-height: 100%;
-  height: 100%;
-  position: relative;
-  overflow: auto;
-/* other styles */
-/* ...*/
-/* activity-navbar (new class for .navbar components)
-           Its a navbar specific of an activity, placed on
-           bottom
-        */
-/*VAR from a Bootstrap value:*/
-/* activity must be notified of the navbar to fix
-           available space
-        */
-/* Hidden until active */
-  display: none;
-/*transition: 2000ms all;
-        opacity: 0;
-        z-index: 1;*/
-}
-
-/* line 81 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
-.app .activity .activity-navbar,
-.app [data-activity] .activity-navbar {
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  padding-bottom: 0px;
-  margin-bottom: 0px;
-  background: none;
-  border-color: transparent;
-}
-
-/* line 99 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
-.app .activity.has-navbar,
-.app [data-activity].has-navbar {
-  padding-bottom: 50px;
-}
-
-/* line 108 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
-.app .activity.is-active,
-.app [data-activity].is-active {
-  display: block;
-/* opacity: 1;
-            z-index: 2;*/
-}
-
-/* line 118 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 69 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .btn-google {
   background-color: #c00;
   color: #fff;
 }
 
-/* line 122 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 73 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .btn-facebook {
   background-color: #085394;
   color: #fff;
 }
 
-/* line 133 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 79 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .isolated {
   margin: 14px 0;
   clear: both;
   display: block;
 }
 
-/* line 139 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 84 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title {
   display: table;
 }
 
-/* line 142 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title .glyphicon {
   vertical-align: middle;
   display: table-cell;
   padding-left: 0.5em;
 }
 
-/* line 148 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .iconized-title p {
   padding-left: 0.7em;
   vertical-align: middle;
   display: table-cell;
 }
 
-/* line 156 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 99 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 157 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 100 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .modal.bottom .modal-dialog {
   position: absolute;
   padding: 10px;
@@ -226,37 +163,37 @@ html.app > body > .container-fluid {
   bottom: 0;
 }
 
-/* line 170 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 109 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 171 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 110 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .modal .modal-dialog {
   padding-top: 51px;
 }
 
-/* line 177 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 115 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .modal {
   background: rgba(0,0,0,0.4);
 }
 
-/* line 182 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 119 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 
-/* line 183 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 120 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-complete .success-icon {
   font-size: 4em;
   text-align: center;
   display: block;
 }
 
-/* line 189 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 125 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 .app .app-complete .lead {
   margin-top: 2em;
   margin-bottom: 2em;
 }
 
-/* line 196 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Components styles **/
 
-/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 
 /* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ListView.styl */
 .ListView {
@@ -635,9 +572,11 @@ html.app > body > .container-fluid {
   right: 17px;
 }
 
-/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Activity.styl */
 
-/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle {
   font-size: 20px;
   margin: 0;
@@ -652,12 +591,11 @@ html.app > body > .container-fluid {
 /* table layout for better management of the 
         optional elements */
   display: table;
-  width: auto;
 /* The action and the icon must fit mininum space, one line */
 /* Only allowed 'span' elements as childs */
 }
 
-/* line 24 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .ActivityTitle-action,
 .ActivityTitle > .glyphicon {
 /* fit minimum space */
@@ -665,14 +603,14 @@ html.app > body > .container-fluid {
   white-space: nowrap;
 }
 
-/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > span {
   line-height: 1.3em;
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 64 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .glyphicon {
   font-size: 1.4em;
   line-height: 1em;
@@ -681,14 +619,96 @@ html.app > body > .container-fluid {
   padding-left: 6px;
 }
 
-/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 72 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .ActivityTitle-action > * {
 /* adjusting button/link padding to avoid increase the default line height */
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
-/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
+/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityNavbar.styl */
+
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityNavbar.styl */
+.ActivityNavbar {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  height: 50px;
+  overflow: hidden;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  background: none;
+  border-color: transparent;
+}
+
+/* line 48 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Activity.styl */
+.Activity,
+[data-activity] {
+/* settings specially important for the use of navbar
+       but applied to all for consistent results
+       with/without navbar
+    */
+  min-height: 100%;
+  height: 100%;
+  position: relative;
+  overflow: auto;
+/* activity must be notified of the navbar to fix
+       available space
+    */
+/* activity can set its title as freeze,
+        will fix available space, and reuse
+        the mixims from the ActivityTitle component.
+    */
+/* Hidden until active */
+  display: none;
+/*transition: 2000ms all;
+    opacity: 0;
+    z-index: 1;*/
+}
+
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Activity.styl */
+.Activity.has-navbar,
+[data-activity].has-navbar {
+  padding-bottom: 50px;
+}
+
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Activity.styl */
+.Activity.has-frozenTitle,
+[data-activity].has-frozenTitle {
+  padding-top: 50px;
+}
+
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Activity.styl */
+.Activity.has-frozenTitle .ActivityTitle,
+[data-activity].has-frozenTitle .ActivityTitle {
+  width: auto;
+  height: 50px;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  right: 0;
+  top: 51px;
+  margin: 0;
+  background: White;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* line 41 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Activity.styl */
+.Activity.is-active,
+[data-activity].is-active {
+  display: block;
+/* opacity: 1;
+        z-index: 2;*/
+}
+
+/* line 24 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
 
 /* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\LeadContent.styl */
 .LeadContent {
@@ -1183,7 +1203,7 @@ html.app > body > .container-fluid {
   margin: 0 -10px 0 -10px;
 }
 
-/* line 207 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\proto.styl */
 /** Activities styles **/
 
 /* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
@@ -1280,39 +1300,7 @@ html.app > body > .container-fluid {
 
 /* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
 
-/* line 2 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
-
-/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
-[data-activity=appointment] .ActivityTitle {
-  height: 50px;
-  overflow: hidden;
-  position: relative;
-  z-index: 100;
-  background: White;
-}
-
-/* line 15 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
-[data-activity=appointment] #calendarAppointmentView {
-  margin-top: -50px;
-/* 4px from CardsDeck padding-top */
-  padding-top: 54px;
-}
-
-/* line 21 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
-
-/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
-[data-activity=appointment].in-edit .CardsDeck-dots,
-[data-activity=appointment].in-edit .CalendarDateHeader-switch {
-  visibility: hidden;
-}
-
-/* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
-[data-activity=appointment].in-edit .ActivityTitle-action {
-  pointer-events: none;
-  visibility: hidden;
-}
-
-/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
 /* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
@@ -1390,6 +1378,22 @@ html.app > body > .container-fluid {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+
+/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+[data-activity=appointment].in-edit .CardsDeck-dots,
+[data-activity=appointment].in-edit .CalendarDateHeader-switch {
+  visibility: hidden;
+}
+
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+[data-activity=appointment].in-edit .ActivityTitle-action {
+  pointer-events: none;
+  visibility: hidden;
 }
 
 /* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */

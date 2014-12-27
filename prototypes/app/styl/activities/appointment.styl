@@ -1,23 +1,9 @@
 /** Appointment activity styles */
+
+@import '../components/AppointmentCard.styl'
+
 [data-activity=appointment] {
 
-    /* Computed height, so can be reused later */
-    $title-height = 50px;
-    
-    .ActivityTitle {
-        height: $title-height;
-        overflow: hidden;
-        position: relative;
-        z-index: 100;
-        background: White;
-    }
-    
-    #calendarAppointmentView {
-        margin-top: 0 - $title-height;
-        /* 4px from CardsDeck padding-top */
-        padding-top: $title-height + 4px;
-    }
-    
     &.in-edit {
         
         .CardsDeck-dots,
@@ -31,5 +17,3 @@
         }
     }
 }
-
-@import '../components/AppointmentCard.styl'

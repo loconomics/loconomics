@@ -20,26 +20,10 @@ html.app > body > .container-fluid {
 
 /* More app specific styles */
 .app {
-    /* Space for nav-header on top */
+    /* Space for app-nav on top */
     body {
         padding-top: $app-var-height;
     }
-
-    /*
-        Standard components customized for app
-    */
-    /* Container
-        TODO:DEPRECATED: remove when all pages use [data-activity]
-    */
-    .container,
-    .container-fluid {
-    
-        /* Space for nav at bottom */
-        .has-bottom-navbar {
-            padding-bottom: 50px;
-        }
-    }
-    
 
     /* app-nav (new class under .navbar) */
     .app-nav {
@@ -62,60 +46,7 @@ html.app > body > .container-fluid {
     .app-nav .navbar-action {
       margin: 8px 0;
     }
-    
-    /* Each page/dialog/section is an 'activity' */
-    .activity,
-    [data-activity] {
-        /* settings specially important for the use of navbar
-           but applied to all for consistent results
-           with/without navbar
-        */
-        min-height: 100%;
-        height: 100%;
-        position: relative;
-        overflow: auto;
-        
-        /* other styles */
-        /* ...*/
-    
-        /* activity-navbar (new class for .navbar components)
-           Its a navbar specific of an activity, placed on
-           bottom
-        */
-        .activity-navbar {
-            position: absolute;
-            bottom: 0px;
-            left: 0px;
-            right: 0px;
-            padding-bottom: 0px;
-            margin-bottom: 0px;
-            
-            background: none;
-            border-color: transparent;
-        }
-        
-        /*VAR from a Bootstrap value:*/
-        $bs-navbar-height = 50px;
 
-        /* activity must be notified of the navbar to fix
-           available space
-        */
-        &.has-navbar {
-            padding-bottom: $bs-navbar-height;
-        }
-        
-        /* Hidden until active */
-        display: none;
-        /*transition: 2000ms all;
-        opacity: 0;
-        z-index: 1;*/
-        &.is-active {
-            display: block;
-           /* opacity: 1;
-            z-index: 2;*/
-        }
-    }
-    
     /**
         Custom Buttons --very specific
     **/
@@ -156,6 +87,7 @@ html.app > body > .container-fluid {
         }
     }
     
+    /** Customized or extended Bootstrap components **/
     /* bottom modal */
     .modal.bottom {
         .modal-dialog {
@@ -200,7 +132,7 @@ html.app > body > .container-fluid {
 /** Components styles **/
 @import 'components/ListView.styl'
 @import 'components/SectionTitle.styl'
-@import 'components/ActivityTitle.styl'
+@import 'components/Activity.styl'
 @import 'components/LeadContent.styl'
 @import 'components/DatePicker.styl'
 @import 'components/CardsDeck.styl'
