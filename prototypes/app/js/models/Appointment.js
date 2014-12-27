@@ -98,12 +98,11 @@ function Appointment(values) {
     
     this.stateHeader = ko.pureComputed(function() {
         
-        // TODO review texts with Josh
         var text = '';
         if (!this.isNew()) {
             if (this.itStarted()) {
                 if (this.itEnded()) {
-                    text = 'Past:';
+                    text = 'Completed:';
                 }
                 else {
                     text = 'Now:';
