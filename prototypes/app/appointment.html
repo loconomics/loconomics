@@ -116,7 +116,7 @@
               <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().preNotesToClient"></span>
-                <span data-bind="visible: editMode() && !currentAppointment().preNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client</span>
+                <span data-bind="visible: !currentAppointment().preNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client</span>
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().preNotesToClient(), 'glyphicon-plus': !currentAppointment().preNotesToClient()}"></span></span>
             </li>
@@ -124,7 +124,7 @@
               <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().preNotesToSelf"></span>
-                <span data-bind="visible: editMode() && !currentAppointment().preNotesToSelf()" class="AppointmentCard-placeholderLabel">Notes to self</span>
+                <span data-bind="visible: !currentAppointment().preNotesToSelf()" class="AppointmentCard-placeholderLabel">Notes to self</span>
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().preNotesToSelf(), 'glyphicon-plus': !currentAppointment().preNotesToSelf()}"></span></span>
             </li>
@@ -133,7 +133,7 @@
               <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().postNotesToClient"></span>
-                <span data-bind="visible: editMode() && !currentAppointment().postNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client (afterwards)</span>
+                <span data-bind="visible: !currentAppointment().postNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client (afterwards)</span>
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().postNotesToClient(), 'glyphicon-plus': !currentAppointment().postNotesToClient()}"></span></span>
             </li>
@@ -141,7 +141,7 @@
               <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
               <span class="AppointmentCard-data">
                 <span data-bind="text: currentAppointment().postNotesToSelf"></span>
-                <span data-bind="visible: editMode() && !currentAppointment().postNotesToSelf()" class="AppointmentCard-placeholderLabel">Booking summary (seen only by you)</span>
+                <span data-bind="visible: !currentAppointment().postNotesToSelf()" class="AppointmentCard-placeholderLabel">Booking summary (seen only by you)</span>
               </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().postNotesToSelf(), 'glyphicon-plus': !currentAppointment().postNotesToSelf()}"></span></span>
             </li>
