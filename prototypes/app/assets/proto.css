@@ -633,7 +633,7 @@ html.app > body > .container-fluid {
 
 /* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityNavbar.styl */
 .ActivityNavbar {
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   left: 0px;
   right: 0px;
@@ -644,7 +644,7 @@ html.app > body > .container-fluid {
   text-overflow: ellipsis;
   padding-bottom: 0px;
   margin-bottom: 0px;
-  background: none;
+  background: White;
   border-color: transparent;
 }
 
