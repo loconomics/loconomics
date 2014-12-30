@@ -2,7 +2,12 @@
     AppointmentCard Component.
     Visualization of a Calendar Appointment/Booking in a Card.
 **/
+
+@import 'Card.styl';
+
 .AppointmentCard {
+    
+    $editIconWidth = 15px;
 
     li {
         clearfix()
@@ -11,18 +16,21 @@
         /* The elements need a separation, but 
            they behave as BUTTONS too when in edit mode
            so need a good touch area */
-        padding: 6px 0;
+        padding: 8px 0;
     }
 
     .AppointmentCard-icon {
         font-size: 1.8em;
-        margin-right: .6em;
-        vertical-align: middle;
-        float: left;
+        position: absolute;
     }
 
     .AppointmentCard-data {
-        vertical-align: middle;
+        left: 40px;
+        position: relative;
+        display: inline-block;
+        margin-right: ($Card_gap + $editIconWidth);
+        /* centering vertically the first line with the icon */
+        top: -3px;
     }
     
     .AppointmentCard-editIcon {
@@ -36,6 +44,7 @@
         z-index: 2;
         background: White;
         padding: 6px 0 6px 5px;
+        width: $editIconWidth;
         
         transition: 300ms opacity;
     }
@@ -48,8 +57,6 @@
         
         li {
             cursor: pointer;
-            
-            padding-right: 20px;
         
             .AppointmentCard-editIcon {
                 opacity: 1;

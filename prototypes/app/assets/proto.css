@@ -1090,7 +1090,7 @@ html.app > body > .container-fluid {
 
 /* line 96 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 
-/* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 .Card {
   -webkit-box-shadow: 0 3px 4px 1px #333;
   box-shadow: 0 3px 4px 1px #333;
@@ -1101,26 +1101,26 @@ html.app > body > .container-fluid {
   padding: 20px;
 }
 
-/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 .Card .Card-title {
   border-bottom: 3px solid #555;
   margin-bottom: 10px;
 }
 
-/* line 15 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+/* line 17 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 .Card .Card-title h2 {
   font-size: 1.2em;
   margin: 0 0 4px;
 }
 
-/* line 20 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 .Card .Card-title h3 {
   font-size: 1em;
   margin: 2px 0 4px;
   color: #777;
 }
 
-/* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
 
 /* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\GroupedTimeSlots.styl */
 .GroupedTimeSlots {
@@ -1315,16 +1315,48 @@ html.app > body > .container-fluid {
 
 /* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
-/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
 
-/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+.Card {
+  -webkit-box-shadow: 0 3px 4px 1px #333;
+  box-shadow: 0 3px 4px 1px #333;
+  margin: 4px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  background-color: White;
+  padding: 20px;
+}
+
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+.Card .Card-title {
+  border-bottom: 3px solid #555;
+  margin-bottom: 10px;
+}
+
+/* line 17 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+.Card .Card-title h2 {
+  font-size: 1.2em;
+  margin: 0 0 4px;
+}
+
+/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Card.styl */
+.Card .Card-title h3 {
+  font-size: 1em;
+  margin: 2px 0 4px;
+  color: #777;
+}
+
+/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard li {
   zoom: 1;
   position: relative;
 /* The elements need a separation, but 
            they behave as BUTTONS too when in edit mode
            so need a good touch area */
-  padding: 6px 0;
+  padding: 8px 0;
 }
 
 /* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
@@ -1339,20 +1371,23 @@ html.app > body > .container-fluid {
   clear: both;
 }
 
-/* line 17 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-icon {
   font-size: 1.8em;
-  margin-right: 0.6em;
-  vertical-align: middle;
-  float: left;
+  position: absolute;
 }
 
-/* line 24 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-data {
-  vertical-align: middle;
+  left: 40px;
+  position: relative;
+  display: inline-block;
+  margin-right: 35px;
+/* centering vertically the first line with the icon */
+  top: -3px;
 }
 
-/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-editIcon {
   display: block;
   opacity: 0;
@@ -1366,6 +1401,7 @@ html.app > body > .container-fluid {
   z-index: 2;
   background: White;
   padding: 6px 0 6px 5px;
+  width: 15px;
   -webkit-transition: 300ms opacity;
   -moz-transition: 300ms opacity;
   -o-transition: 300ms opacity;
@@ -1373,20 +1409,19 @@ html.app > body > .container-fluid {
   transition: 300ms opacity;
 }
 
-/* line 43 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-placeholderLabel {
   color: #777;
 }
 
-/* line 47 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 56 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 
-/* line 49 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard.in-edit li {
   cursor: pointer;
-  padding-right: 20px;
 }
 
-/* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 .AppointmentCard.in-edit li .AppointmentCard-editIcon {
   opacity: 1;
   -ms-filter: none;
@@ -1409,7 +1444,7 @@ html.app > body > .container-fluid {
   visibility: hidden;
 }
 
-/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 
 /* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\clients.styl */
 
