@@ -56,7 +56,8 @@
     &.CardsDeck--dotsSlider {
     
         $gapWidth = 16px;
-        $dotsReservedHeight = 30px;
+        $dotsReservedHeight = 40px;
+        $dotsColor = $gray; // #FFF;
     
         padding: $verticalGap $gapWidth $dotsReservedHeight $gapWidth;
         position: relative;
@@ -75,14 +76,14 @@
                 height: 10px;
                 margin: 1px;
                 text-indent: -999px;
-                border: 1px solid #FFF;
+                border: 1px solid $dotsColor;
                 border-radius: 10px;
                 /*cursor: pointer;*/
                 background-color: transparent;
                 
                 &.is-active {
                     margin: 0px;
-                    background-color: #FFF;
+                    background-color: $dotsColor;
                     height: 12px;
                     width: 12px;
                 }

@@ -996,7 +996,7 @@ html.app > body > .container-fluid {
 
 /* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 
-/* line 99 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\lcGradientBackground.styl */
+/* line 100 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\utils\lcGradientBackground.styl */
 
 /* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 
@@ -1079,12 +1079,12 @@ html.app > body > .container-fluid {
 
 /* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider {
-  padding: 4px 16px 30px 16px;
+  padding: 4px 16px 40px 16px;
   position: relative;
   min-height: 100%;
 }
 
-/* line 64 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 65 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots {
   position: absolute;
   left: 0;
@@ -1093,29 +1093,29 @@ html.app > body > .container-fluid {
   text-align: center;
 }
 
-/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 72 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > * {
   display: inline-block;
   width: 10px;
   height: 10px;
   margin: 1px;
   text-indent: -999px;
-  border: 1px solid #fff;
+  border: 1px solid #555;
   -webkit-border-radius: 10px;
   border-radius: 10px;
 /*cursor: pointer;*/
   background-color: transparent;
 }
 
-/* line 82 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 83 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > *.is-active {
   margin: 0px;
-  background-color: #fff;
+  background-color: #555;
   height: 12px;
   width: 12px;
 }
 
-/* line 96 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
+/* line 97 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CardsDeck.styl */
 .ActivityTitle + .CardsDeck {
   margin-top: -10px;
 }
