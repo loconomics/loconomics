@@ -1,17 +1,16 @@
-/** Calendar activity styles */
+/**
+    Calendar activity styles
+**/
+@import '../components/CalendarDateHeader.styl'
+
 [data-activity=calendar] {
 
-    /* It was computed as the 'natural' it needs, but
-        applied explicitely for several adjustments */
-    $headerHeight = 42px;
-    
     #calendarDailyView {
-        padding-top: $headerHeight;
+        padding-top: $calendarDateHeaderHeight;
         min-height: 100%;
     }
     
     #calendarDateHeader {
-        height: $headerHeight;
         position: absolute;
         left: 0;
         right: 0;
@@ -23,7 +22,7 @@
         left: 10px;
         right: 10px;
         z-index: 100;
-        top: $headerHeight;
+        top: $calendarDateHeaderHeight;
         
         /* pop-up decoration */
         background: white;
@@ -52,5 +51,3 @@
         }
     }
 }
-
-@import '../components/CalendarDateHeader.styl'

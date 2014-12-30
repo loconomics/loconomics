@@ -3,16 +3,27 @@
     
     Splitted from activities/calendar
 **/
+
+/* It was computed as the 'natural' it needs, but
+    applied explicitely for several adjustments */
+$calendarDateHeaderHeight = 42px + 10px;
+
 .CalendarDateHeader {
+    
+    height: 42px;
+    
     > .btn {
         font-size: 1.4em;
         color: $gray-darker;
     }
 
-    .CalendarDateHeader{
+    a{
         &:active,
         &:focus {
             outline: none;
         }
     }
+    
+    /* Decoration */
+    box-shadow: 0px 1px 4px 0px black;
 }

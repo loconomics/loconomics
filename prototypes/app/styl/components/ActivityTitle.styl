@@ -3,13 +3,15 @@
 **/
 
 // One line title height
-$activityTitleHeight = 50px;
+$activityTitleInnerHeight = 50px;
+$activityTitleGap = 10px;
+$activityTitleHeight = $activityTitleInnerHeight + $activityTitleGap;
 
 /* Freeze one-line header */
 FreezeActivityTitle() {
     // Size and position
     width: auto;
-    height: $activityTitleHeight;
+    height: $activityTitleInnerHeight;
     position: fixed;
     z-index: 100;
     left: 0;
@@ -31,7 +33,7 @@ FreezeActivityTitle() {
 
 .ActivityTitle {
     font-size: 20px;    
-    margin: 0;
+    margin: 0 0 $activityTitleGap;
     text-align: left;
     font-weight: bold;
     
@@ -45,6 +47,10 @@ FreezeActivityTitle() {
     /* table layout for better management of the 
         optional elements */
     display: table;
+    
+    /* Decoration */
+    // NOTE: Respecting the $activityTitleGap
+    box-shadow: 0px 1px 4px 0px black;
 
     /* The action and the icon must fit mininum space, one line */
     > .ActivityTitle-action,
