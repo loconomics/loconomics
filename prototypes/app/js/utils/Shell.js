@@ -71,7 +71,7 @@ var shell = {
     
     findActivityElement: function findActivityElement(activityName, $root) {
         $root = $root || $(document);
-        // TODO: save name parsing for css selector
+        // TODO: secure name parsing for css selector
         return $root.find('[data-activity="' + activityName + '"]');
     },
     
@@ -81,6 +81,9 @@ var shell = {
             
             $activity.css('zIndex', ++this.currentZIndex).show();
             var currentActivity = this.history[this.history.length - 1];
+            
+            if (currentActivity)
+                this.unfocus(currentActivity.$activity);
             
             // NOTE:FUTURE: HistoryAPI.pushState(..)
             
@@ -120,6 +123,9 @@ var shell = {
         // to enable the communication between activities:
         options = options || currentActivity.options;
         
+        if (currentActivity)
+            this.unfocus(currentActivity.$activity);
+        
         // Ensure its loaded, and do anything later
         this.loadActivity(activityName).then(function($activity) {
             
@@ -139,6 +145,14 @@ var shell = {
             }
 
         }.bind(this)).catch(this.unexpectedError);
+    },
+    
+    unfocus: function unfocus($el) {
+        // blur any focused text box to force to close the on-screen keyboard,
+        // or any other unwanted interaction (normally used when closing
+        // an activity, hiding an element, so it must not be focused).
+        if ($el && $el.find)
+            $el.find(':focus').blur();
     },
     
     parseActivityLink: function getActivityFromLink(link) {

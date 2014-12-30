@@ -42,8 +42,6 @@ function TextEditorActivity($activity, app) {
             // Update the info with the new text
             this.requestInfo.text = this.dataView.text();
         }
-        // blur text box to force close the on-screen keyboard
-        this.textarea.blur();
 
         // and pass it back
         this.app.goBack(this.requestInfo);
@@ -51,8 +49,6 @@ function TextEditorActivity($activity, app) {
  
     // Handler the cancel event
     this.dataView.on('cancel', function() {
-        // blur text box to force close the on-screen keyboard
-        this.textarea.blur();
         // return, nothing changed
         app.goBack();
     }.bind(this));
