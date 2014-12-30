@@ -9,14 +9,13 @@ $activityTitleHeight = $activityTitleInnerHeight + $activityTitleGap;
 
 /* Freeze one-line header */
 FreezeActivityTitle() {
-    // Size and position
-    width: auto;
-    height: $activityTitleInnerHeight;
+    // Position
     position: fixed;
     z-index: 100;
     left: 0;
     right: 0;
     top: $app-var-height;
+    box-sizing: border-box;
     
     // negative margin to become full-size over the
     // container padding is not needed:
@@ -32,6 +31,11 @@ FreezeActivityTitle() {
 }
 
 .ActivityTitle {
+    
+    $lineHeight = 1.3em;
+    $padTop = 14px;
+    $padBottom = 8px;
+    
     font-size: 20px;    
     margin: 0 0 $activityTitleGap;
     text-align: left;
@@ -42,16 +46,44 @@ FreezeActivityTitle() {
     */
     margin-left: 0 - $container-padding-left;
     margin-right: 0 - $container-padding-right;
-    padding: 0.7em ($container-padding-right) 0.4em ($container-padding-left);
+    padding: 0 ($container-padding-right) 0 ($container-padding-left);
     
     /* table layout for better management of the 
         optional elements */
     display: table;
+    width: 100%;
+    height: $activityTitleInnerHeight;
+    box-sizing: content-box;
     
     /* Decoration */
     // NOTE: Respecting the $activityTitleGap
     box-shadow: 0px 1px 4px 0px black;
 
+    /* Only allowed 'span' elements as childs or link buttons */
+    > span {
+        padding: $padTop 0 $padBottom 0;
+        line-height: $lineHeight;
+        display: table-cell;
+        vertical-align: middle;
+    }
+    
+    /* Button links in title */
+    > a.btn {
+        padding: $padTop 0 $padBottom 0;
+        font-size: 20px;
+        color: $gray-dark;
+        border: none;
+        line-height: $lineHeight;
+
+        &:active,
+        &:focus,
+        &:hover {
+            outline: none;
+            text-decoration: none;
+        }
+    }
+    
+    /* Optional elements: shared styles */
     /* The action and the icon must fit mininum space, one line */
     > .ActivityTitle-action,
     > .glyphicon {
@@ -59,15 +91,8 @@ FreezeActivityTitle() {
         width: 1%;
         white-space: nowrap;
     }
-    
 
-    /* Only allowed 'span' elements as childs */
-    > span {
-        line-height: 1.3em;
-        display: table-cell;
-        vertical-align: middle;
-    }
-
+    /* Optional element: icon at the start */
     > .glyphicon {
         font-size: 1.4em;
         line-height: 1em;
@@ -76,9 +101,12 @@ FreezeActivityTitle() {
         padding-left: 6px;
     }
     
+    /* Optional element: action button at the end */
     > .ActivityTitle-action > * {
         /* adjusting button/link padding to avoid increase the default line height */
         padding-top: 2px;
         padding-bottom: 2px;
     }
+    
+
 }

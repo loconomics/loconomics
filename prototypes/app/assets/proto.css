@@ -576,7 +576,7 @@ html.app > body > .container-fluid {
 
 /* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 
-/* line 34 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 33 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle {
   font-size: 20px;
   margin: 0 0 10px;
@@ -587,18 +587,52 @@ html.app > body > .container-fluid {
     */
   margin-left: -10px;
   margin-right: -10px;
-  padding: 0.7em 10px 0.4em 10px;
+  padding: 0 10px 0 10px;
 /* table layout for better management of the 
         optional elements */
   display: table;
+  width: 100%;
+  height: 50px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 /* Decoration */
   -webkit-box-shadow: 0px 1px 4px 0px #000;
   box-shadow: 0px 1px 4px 0px #000;
+/* Only allowed 'span' elements as childs or link buttons */
+/* Button links in title */
+/* Optional elements: shared styles */
 /* The action and the icon must fit mininum space, one line */
-/* Only allowed 'span' elements as childs */
+/* Optional element: icon at the start */
+/* Optional element: action button at the end */
 }
 
-/* line 56 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 63 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+.ActivityTitle > span {
+  padding: 14px 0 8px 0;
+  line-height: 1.3em;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+.ActivityTitle > a.btn {
+  padding: 14px 0 8px 0;
+  font-size: 20px;
+  color: #333;
+  border: none;
+  line-height: 1.3em;
+}
+
+/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+.ActivityTitle > a.btn:active,
+.ActivityTitle > a.btn:focus,
+.ActivityTitle > a.btn:hover {
+  outline: none;
+  text-decoration: none;
+}
+
+/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .ActivityTitle-action,
 .ActivityTitle > .glyphicon {
 /* fit minimum space */
@@ -606,14 +640,7 @@ html.app > body > .container-fluid {
   white-space: nowrap;
 }
 
-/* line 64 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
-.ActivityTitle > span {
-  line-height: 1.3em;
-  display: table-cell;
-  vertical-align: middle;
-}
-
-/* line 70 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 93 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .glyphicon {
   font-size: 1.4em;
   line-height: 1em;
@@ -622,14 +649,14 @@ html.app > body > .container-fluid {
   padding-left: 6px;
 }
 
-/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
+/* line 102 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityTitle.styl */
 .ActivityTitle > .ActivityTitle-action > * {
 /* adjusting button/link padding to avoid increase the default line height */
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
-/* line 84 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityNavbar.styl */
+/* line 110 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityNavbar.styl */
 
 /* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\ActivityNavbar.styl */
 .ActivityNavbar {
@@ -688,13 +715,14 @@ html.app > body > .container-fluid {
 /* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\Activity.styl */
 .Activity.has-frozenTitle .ActivityTitle,
 [data-activity].has-frozenTitle .ActivityTitle {
-  width: auto;
-  height: 50px;
   position: fixed;
   z-index: 100;
   left: 0;
   right: 0;
   top: 51px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   margin: 0;
   background: White;
   -o-text-overflow: ellipsis;
@@ -1248,53 +1276,23 @@ html.app > body > .container-fluid {
 
 /* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
-/* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-
-/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-.CalendarDateHeader {
-  height: 42px;
-/* Decoration */
-  -webkit-box-shadow: 0px 1px 4px 0px #000;
-  box-shadow: 0px 1px 4px 0px #000;
-}
-
-/* line 15 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-.CalendarDateHeader > .btn {
-  font-size: 1.4em;
-  color: #222;
-}
-
-/* line 20 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-
-/* line 21 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\CalendarDateHeader.styl */
-.CalendarDateHeader a:active,
-.CalendarDateHeader a:focus {
-  outline: none;
-}
-
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 
 /* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDailyView {
-  padding-top: 52px;
+/*padding-top: $calendarDateHeaderHeight;*/
   min-height: 100%;
+  padding-top: -10px;
 }
 
-/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
-[data-activity=calendar] #calendarDateHeader {
-  position: absolute;
-  left: 0;
-  right: 0;
-}
-
-/* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker {
 /* positioning */
   position: absolute;
   left: 10px;
   right: 10px;
   z-index: 100;
-  top: 52px;
+  top: 50px;
 /* pop-up decoration */
   background: #fff;
   -webkit-box-shadow: 0 0 6px 1px #000;
@@ -1319,18 +1317,18 @@ html.app > body > .container-fluid {
   pointer-events: none;
 }
 
-/* line 33 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:after {
   left: 50%;
 }
 
-/* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:before {
   left: 50%;
   margin-left: -1px;
 }
 
-/* line 47 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
+/* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker.is-visible {
   opacity: 1;
   -ms-filter: none;
@@ -1343,7 +1341,7 @@ html.app > body > .container-fluid {
   pointer-events: all;
 }
 
-/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
+/* line 49 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\activities\appointment.styl */
 
 /* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\styl\components\AppointmentCard.styl */
 

@@ -1,28 +1,23 @@
 /**
     Calendar activity styles
 **/
-@import '../components/CalendarDateHeader.styl'
+// @require 'ActivityTitle.styl';
 
 [data-activity=calendar] {
 
     #calendarDailyView {
-        padding-top: $calendarDateHeaderHeight;
+        /*padding-top: $calendarDateHeaderHeight;*/
         min-height: 100%;
+        padding-top: (0 - $activityTitleGap);
     }
-    
-    #calendarDateHeader {
-        position: absolute;
-        left: 0;
-        right: 0;
-    }
-    
+
     #calendarDatePicker {
         /* positioning */
         position: absolute;
         left: 10px;
         right: 10px;
         z-index: 100;
-        top: $calendarDateHeaderHeight;
+        top: $activityTitleInnerHeight;
         
         /* pop-up decoration */
         background: white;
