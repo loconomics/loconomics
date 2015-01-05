@@ -1,0 +1,67 @@
+/**
+    App specific styles, including anothers components mods
+    specific for when use in the app context.
+**/
+@import '../utils/appVars.styl'
+@import 'AppNav.styl'
+
+/** We use ever all the available screen **/
+html.app,
+html.app > body {
+    height: 100%;
+}
+
+/* More app specific styles */
+.App {
+    /* Space for app-nav on top */
+    body {
+        padding-top: $app-var-height;
+    }
+
+
+
+    /**
+        Custom Buttons --very specific
+    **/
+    .btn-google {
+        background-color: #CC0000;
+        color: white;
+    }
+    .btn-facebook {
+        background-color: #085394;
+        color: white;
+    }
+    
+    /**
+        Some small utilities,
+        they *may* upgrade to its own class as
+        part of the Styleguide elements.
+    **/
+    
+    /** Customized or extended Bootstrap components **/
+    /* bottom modal */
+    .modal.bottom {
+        .modal-dialog {
+            position: absolute;
+            padding: 10px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    }
+    
+    /* top modal: modals appear on top by default, but
+        needs an extra margin to avoid hide the top
+        nav (thats blocked but gets more nice UI)
+    */
+    .modal {
+        .modal-dialog {
+            padding-top: $app-var-height;
+        }
+    }
+    
+    /* why modals has not the standard modal-backdrop? anyway, fix.. */
+    .modal {
+        background: rgba(0, 0, 0, .4);
+    }
+}
