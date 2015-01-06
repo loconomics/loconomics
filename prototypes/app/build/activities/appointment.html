@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/vnd.microsoft.icon" href="../../assets/images/favicon.ico" />
+    <meta
+      name="viewport"
+      content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+
+    <title>Loconomics</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Styles build following the Styleguide -->
+    <link href="../../assets/css/styleguide.css" rel="stylesheet">
+    <!-- Styles for this Prototype -->
+    <link href="assets/proto.css" rel="stylesheet">
+
+    <script src="../../assets/javascript/styleguidelibs.js"></script>
+    <script src="../../assets/javascript/styleguide.js"></script>
+    <script src="assets/libs.min.js"></script>
+    <script src="assets/app.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid app-nav">     
+        <div class="row">
+          <div class="col-xs-3 text-left navbar-action">
+            <a class="btn btn-default" href="#add" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
+          </div>
+          <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
+          <div class="col-xs-3 text-right">
+            <button type="button" class="navbar-toggle collapsed btn btn-default" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+        </div> 
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="home.html">Home</a></li>
+            <li class="active"><a href="calendar.html">Calendar</a></li>
+            <li><a href="inbox.html">Inbox</a></li>
+            <li><a href="clients.html">Clients</a></li>
+            <li><a href="payments.html">Payments</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="account.html">Account</a></li>
+            <li><a href="logout.html">Logout</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container-fluid app-calendar is-active has-frozenTitle" data-activity="appointment">
+      
+      <h1 class="ActivityTitle"><span class="glyphicon glyphicon-calendar" data-bind="visible: !isNew()"></span><span data-bind="text: currentDate(), format: { type: 'datetime', format: 'dddd [(]M/D[)]' }"></span><span class="ActivityTitle-action "><button type="button" class="btn btn-primary" data-bind="event: { tap: returnToCalendar }">back</button></span></h1>
+        
+      <!-- Appointment View (cards) -->
+      <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">
+        <div class="Card AppointmentCard">
+          <div class="Card-title">
+            <h3 data-bind="text: currentAppointment().stateHeader()"></h3>
+            <h2 data-bind="text: currentAppointment().summary()"></h2>
+          </div>
+          <ul class="list-unstyled">
+            <li data-bind="event: { tap: editMode() && pickDateTime }">
+                <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
+                <span class="AppointmentCard-data">
+                  <span data-bind="visible: currentAppointment().startTime()">
+                    <span data-bind="text: currentAppointment().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
+                    <span data-bind="text: currentAppointment().displayedTimeRange()"></span>
+                  </span>
+                  <span data-bind="visible: editMode() && !currentAppointment().startTime()" class="AppointmentCard-placeholderLabel">Select date/time</span>
+                </span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().startTime(), 'glyphicon-plus': !currentAppointment().startTime()}"></span></span>
+            </li>
+            <li data-bind="event: { tap: editMode() && pickClient }">
+              <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: (currentAppointment().client() && currentAppointment().client().fullName())"></span>
+                <span data-bind="visible: editMode() && !currentAppointment().client()" class="AppointmentCard-placeholderLabel">Select/Add client</span>
+              </span>
+              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().client(), 'glyphicon-plus': !currentAppointment().client()}"></span></span>
+            </li>
+            <li data-bind="event: { tap: editMode() && pickService }">
+              <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().servicesSummary()"></span>
+                <span data-bind="visible: editMode() && !currentAppointment().servicesSummary()" class="AppointmentCard-placeholderLabel">Select/Add service(s)</span>
+              </span>
+              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().servicesSummary(), 'glyphicon-plus': !currentAppointment().servicesSummary()}"></span></span>
+            </li>
+            <li data-bind="visible: !isNew(), event: { tap: editMode() && changePrice }">
+              <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
+              <span class="AppointmentCard-data" data-bind="text: currentAppointment().ptotalPrice, format: { type: 'number', format: '$0,0.00' }"></span>
+              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().ptotalPrice(), 'glyphicon-plus': !currentAppointment().ptotalPrice()}"></span></span>
+            </li>
+            <li data-bind="event: { tap: editMode() && pickLocation }">
+              <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().locationSummary"></span>
+                <span data-bind="visible: editMode() && !currentAppointment().locationSummary()" class="AppointmentCard-placeholderLabel">Select/Add location</span>
+              </span>
+              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().locationSummary(), 'glyphicon-plus': !currentAppointment().locationSummary()}"></span></span>
+            </li>
+
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'preNotesToClient') }">
+              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().preNotesToClient"></span>
+                <span data-bind="visible: !currentAppointment().preNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client</span>
+              </span>
+              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().preNotesToClient(), 'glyphicon-plus': !currentAppointment().preNotesToClient()}"></span></span>
+            </li>
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'preNotesToSelf') }">
+              <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().preNotesToSelf"></span>
+                <span data-bind="visible: !currentAppointment().preNotesToSelf()" class="AppointmentCard-placeholderLabel">Notes to self</span>
+              </span>
+              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().preNotesToSelf(), 'glyphicon-plus': !currentAppointment().preNotesToSelf()}"></span></span>
+            </li>
+            
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: !isNew() && currentAppointment().itStarted()">
+              <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().postNotesToClient"></span>
+                <span data-bind="visible: !currentAppointment().postNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client (afterwards)</span>
+              </span>
+              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().postNotesToClient(), 'glyphicon-plus': !currentAppointment().postNotesToClient()}"></span></span>
+            </li>
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: !isNew() && currentAppointment().itStarted()">
+              <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
+              <span class="AppointmentCard-data">
+                <span data-bind="text: currentAppointment().postNotesToSelf"></span>
+                <span data-bind="visible: !currentAppointment().postNotesToSelf()" class="AppointmentCard-placeholderLabel">Booking summary (seen only by you)</span>
+              </span>
+              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().postNotesToSelf(), 'glyphicon-plus': !currentAppointment().postNotesToSelf()}"></span></span>
+            </li>
+          </ul>
+          <div class="AppointmentCard-actions row" data-bind="visible: !editMode()">
+            <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: edit }">Edit</button></div>
+            <div class="col-xs-6"><button type="button" class="btn btn-default btn-block">Contact client</button></div>
+          </div>
+          <div class="AppointmentCard-actions row" data-bind="visible: editMode()">
+            <div class="col-xs-6"><button type="button" class="btn btn-danger btn-block" data-bind="event: { tap: cancel }">Cancel</button></div>
+            <div class="col-xs-6"><button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }">Save</button></div>
+          </div>
+        </div>
+        <div class="CardsDeck-dots" data-bind="foreach: appointments">
+          <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+        </div>
+      </div>
+    </div> <!-- /container -->
+  </body>
+</html>

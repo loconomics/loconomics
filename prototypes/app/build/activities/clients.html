@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/vnd.microsoft.icon" href="../../assets/images/favicon.ico" />
+    <meta
+      name="viewport"
+      content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+
+    <title>Loconomics</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Styles build following the Styleguide -->
+    <link href="../../assets/css/styleguide.css" rel="stylesheet">
+    <!-- Styles for this Prototype -->
+    <link href="assets/proto.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid app-nav">     
+        <div class="row">
+          <div class="col-xs-3 text-left navbar-action">
+            <a class="btn btn-default" href="#add" data-toggle="modal" data-target="#calendarChooseNew"><span class="glyphicon glyphicon-plus"></span></a>
+          </div>
+          <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
+          <div class="col-xs-3 text-right">
+            <button type="button" class="navbar-toggle collapsed btn btn-default" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+        </div> 
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+            <li><a href="inbox.html">Inbox</a></li>
+            <li class="active"><a href="clients.html">Clients</a></li>
+            <li><a href="payments.html">Payments</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="account.html">Account</a></li>
+            <li><a href="logout.html">Logout</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container-fluid is-active has-frozenTitle" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
+      
+      <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tags"></span><span data-bind="text: headerText">Clients</span><span class="ActivityTitle-action "><!-- TODO: conditionally showed when in select mode since the app-action must be a back button rather than add-nmew --><button type="button" class="btn btn-primary">Add new</button></span></h1>
+      
+      <div class="isolated">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+          </span>
+          <input type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+        </div><!-- /input-group -->
+      </div>
+      
+      <div id="clientsIndex" data-spy="affix" data-offset-top="20">
+        <ul class="nav nav-tabs nav-stacked" data-bind="foreach: groupedClients">
+            <li><a href="#clientsListView-A" data-bind="attr: { 'href': ('#clientsListView-' + letter) }, text: letter"></a></li>
+        </ul>
+      </div>
+      
+      <div id="clientsListView">
+        <div class="SimpleList" data-bind="foreach: groupedClients">
+          <div class="SimpleList-divider" data-bind="attr: { 'id': ('clientsListView-' + letter) }">
+            <strong data-bind="text: letter"></strong>
+          </div>
+          <!-- ko foreach: clients -->
+            <div class="SimpleList-item">
+              <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }">
+                <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
+              </a>
+            </div>
+          <!-- /ko -->
+        </div>
+      </div>
+
+
+    </div> <!-- /container -->
+
+   
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../assets/javascript/styleguidelibs.js"></script>
+    <script src="../../assets/javascript/styleguide.js"></script>
+    <script src="assets/libs.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>
