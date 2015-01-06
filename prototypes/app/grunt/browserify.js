@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     **/
     bconfig.libs = {
         'src': [],
-        'dest': './assets/libs.js',
+        'dest': './build/assets/libs.js',
         'options': {
             'debug': false,
             'external': [
@@ -45,9 +45,9 @@ module.exports = function(grunt) {
     **/
     bconfig.app = {
         'src': [
-            './js/app.js'
+            './source/js/app.js'
         ],
-        'dest': './assets/app.js',
+        'dest': './build/assets/app.js',
         'options': {
             // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
             'debug': true,

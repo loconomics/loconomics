@@ -20,7 +20,7 @@ module.exports = {
     },
     proto: {
         files: {
-            'assets/proto.css': ['./styl/proto.styl']
+            'build/assets/proto.css': ['./source/css/proto.styl']
         }
     }
 };

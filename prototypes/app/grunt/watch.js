@@ -18,7 +18,7 @@ module.exports = {
     },
     
     css: {
-        files: ['./styl/**/*.styl', 'Gruntfile.js'],
+        files: ['./source/css/**/*.styl', './source/css/**/*.css', 'Gruntfile.js'],
         tasks: ['build-css']
     }
 };

@@ -2,11 +2,10 @@ module.exports = {
 
     app: {
         src: [
-            'Gruntfile.js',
-            'js/**/*.js'
+            'source/js/**/*.js'
         ],
         options: {
-            ignores: ['tests/**/*.js', '**/*.min.js', 'assets/**/*.js'],
+            ignores: ['tests/**/*.js', '**/*.min.js', 'build/assets/**/*.js'],
             jshintrc: '.jshintrc',
             // options here to override JSHint defaults
             browser: true,
