@@ -28,7 +28,9 @@ module.exports = function(grunt) {
                 // Using a specific browser version of events.EventEmitter, to avoid
                 // the extra load of NodeJS/Browserify 'events' module that has heavy-unneed
                 // dependencies as 'utils'.
-                './node_modules/events:events'
+                './node_modules/events:events',
+                './vendor/iagosrl/ko/formatBinding:ko/formatBinding',
+                './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent'
             ],
             'shim': {
                 'jquery-mobile':  {

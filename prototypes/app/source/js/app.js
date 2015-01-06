@@ -4,11 +4,11 @@
 var $ = require('jquery');
 require('jquery-mobile');
 var ko = require('knockout');
-ko.bindingHandlers.format = require('../vendor/iagosrl/ko/formatBinding').formatBinding;
+ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 require('es6-promise').polyfill();
 require('./utils/Function.prototype._inherits');
 require('./utils/Function.prototype._delayed');
-var layoutUpdateEvent = require('../vendor/iagosrl/layoutUpdateEvent');
+var layoutUpdateEvent = require('layoutUpdateEvent');
 var Shell = require('./utils/Shell');
 
 /** Global static config **/
