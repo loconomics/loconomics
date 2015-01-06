@@ -23,7 +23,7 @@ module.exports = {
     },
     
     html: {
-        file: ['<%= copyto.html.src %>'],
+        files: ['./source/html/app.html', './source/html/activities/*.html', './source/html/modals/*.html'],
         tasks: ['build-html']
     }
 };
