@@ -24,5 +24,11 @@ module.exports = {
             title: 'CSS build complete',  // optional
             message: 'CSS build finished successfully.' //required
         }
+    },
+    html: {
+        options: {
+            title: 'HTML build complete',  // optional
+            message: 'HTML build finished successfully.' //required
+        }
     }
 };

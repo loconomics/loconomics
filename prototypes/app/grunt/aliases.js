@@ -24,6 +24,10 @@ module.exports = {
 		'cssmin',//'newer:cssmin'
         'notify:css'
 	],
+    'build-html': [
+        'copyto:html',
+        'notify:html'
+    ],
 
 	'build-dev': [
 		'browserify',
@@ -33,6 +37,7 @@ module.exports = {
 	'build': [
         'build-js',
 		'build-css',
+        'build-html',
         'notify:build'
 	]
 };

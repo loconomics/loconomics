@@ -18,9 +18,9 @@ module.exports = {
         'bar/moo'    //  to `paths`, or a plugin you added under `use`
         ]*/
     },
-    proto: {
+    app: {
         files: {
-            'build/assets/proto.css': ['./source/css/proto.styl']
+            'build/assets/css/app.css': ['./source/css/app.styl']
         }
     }
 };

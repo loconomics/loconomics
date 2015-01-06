@@ -67,7 +67,7 @@
   float: none;
   display: inline-block;
   text-indent: -99999px;
-  background: url("../../../assets/images/logo-loconomics-header-mini.png") no-repeat center;
+  background: url("../images/logo-loconomics-header-mini.png") no-repeat center;
   min-width: 100px;
   min-height: 39px;
 }
@@ -75,7 +75,7 @@
 
 /* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
   .AppNav .navbar-brand {
-    background-image: url("../../../assets/images/logo-loconomics-header-mini@2x.png");
+    background-image: url("../images/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
     -moz-background-size: 100px 39px;
     background-size: 100px 39px;
@@ -141,7 +141,7 @@ html.app > body {
   background: rgba(0,0,0,0.4);
 }
 
-/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\proto.styl */
+/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Utilities styles **/
 
 /* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
@@ -153,7 +153,7 @@ html.app > body {
   display: block;
 }
 
-/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\proto.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ListView.styl */
@@ -1234,7 +1234,7 @@ html.app > body {
   margin: 0 -10px 0 -10px;
 }
 
-/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\proto.styl */
+/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */

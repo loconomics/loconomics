@@ -20,5 +20,10 @@ module.exports = {
     css: {
         files: ['./source/css/**/*.styl', './source/css/**/*.css', 'Gruntfile.js'],
         tasks: ['build-css']
+    },
+    
+    html: {
+        file: ['<%= copyto.html.src %>'],
+        tasks: ['build-html']
     }
 };

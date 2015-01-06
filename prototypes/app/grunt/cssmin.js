@@ -11,7 +11,7 @@ module.exports = {
     },
     all: {
         files: {
-            './build/assets/proto.min.css': ['./build/assets/proto.css']
+            './build/assets/css/app.min.css': ['./build/assets/css/app.css']
         }
     }
 };
