@@ -283,6 +283,7 @@ var shell = {
             .addClass('active');
             // Hide menu
             $menu
+            .filter(':visible')
             .collapse('hide');
         };
         
