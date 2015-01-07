@@ -18,7 +18,7 @@ module.exports = NavAction;
 
 /** Static, shared actions **/
 NavAction.goHome = new NavAction({
-    link: '',
+    link: '#!',
     icon: 'glyphicon glyphicon-home'
 });
 

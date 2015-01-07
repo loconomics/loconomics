@@ -228,6 +228,9 @@ var shell = {
         
         var parsedLink = this.parseActivityLink(link);
         
+        // Initially, not found:
+        parsedLink.found = false;
+        
         // Check if is not root
         if (parsedLink.activity) {
             //  and the activity is registered
@@ -238,17 +241,18 @@ var shell = {
                     route: parsedLink
                 });
 
-                return true;
+                parsedLink.found = true;
             }
             //  or is a special route
             else if (this.specialRoutes.hasOwnProperty(parsedLink.activity)) {
                 
                 this.specialRoutes[parsedLink.activity].call(this, parsedLink);
                 
-                return true;
+                parsedLink.found = true;
             }
         }
-        return false;
+        
+        return parsedLink;
     },
 
     init: function init() {
@@ -264,19 +268,45 @@ var shell = {
         }.bind(this));
         */
         
+        // Menu
+        var $menu = $('#navbar');
+        
+        var updateMenu = function updateMenu(name) {
+            // Remove any active
+            $menu
+            .find('li')
+            .removeClass('active');
+            // Add active
+            $menu
+            .find('.go-' + name)
+            .closest('li')
+            .addClass('active');
+            // Hide menu
+            $menu
+            .collapse('hide');
+        };
+        
         // Visualize the activity that matches current URL
-        this.route(document.location.pathname);
+        // NOTE: using the hash for history management, rather
+        // than document.location.pathname
+        var currentRoute = this.route(document.location.hash);
+        if (currentRoute.found)
+            updateMenu(currentRoute.activity);
         
         // Route pressed links
-        // TODO Update with HistoryAPI and remove preventDefault
         $(document).on('tap', 'a, [data-href]', function(e) {
             // Get Link
             var link = e.currentTarget.getAttribute('href') || e.currentTarget.getAttribute('data-href');
 
             // Route it
-            if (this.route(link)) {
-                // TODO Remove when implemented HistoryAPI and pushState...
-                e.preventDefault();
+            var parsedLink = this.route(link);
+            if (parsedLink.found) {
+
+                updateMenu(parsedLink.activity);
+                
+                if (!/#!/.test(link)) {
+                    e.preventDefault();
+                }
             }
         }.bind(this));
         
