@@ -4,7 +4,8 @@
 'use strict';
 
 var $ = require('jquery'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    NavAction = require('../viewmodels/NavAction');
 
 var singleton = null;
 
@@ -35,6 +36,8 @@ function HomeActivity($activity, app) {
     // Object to hold the options passed on 'show' as a result
     // of a request from another activity
     this.requestInfo = null;
+    
+    this.navAction = NavAction.newItem;
 }
 
 HomeActivity.prototype.show = function show(options) {

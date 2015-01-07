@@ -18,14 +18,15 @@
     <link href="assets/css/app.css" rel="stylesheet">
     <script src="assets/js/styleguidelibs.js"></script>
     <script src="assets/js/styleguide.js"></script>
-    <script src="assets/js/libs.min.js"></script>
+    <script src="assets/js/libs.js"></script>
     <script src="assets/js/app.js"></script>
     } else {
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/styleguide.min.css" rel="stylesheet">
+    <link href="assets/css/styleguide.css" rel="stylesheet">
     <link href="assets/css/app.min.css" rel="stylesheet">
-    <script src="assets/js/styleguidelibs.min.js"></script>
-    <script src="assets/js/styleguide.min.js"></script>
+    <!--TODO create minified files for styleguide js and css -->
+    <script src="assets/js/styleguidelibs.js"></script>
+    <script src="assets/js/styleguide.js"></script>
     <script src="assets/js/libs.min.js"></script>
     <script src="assets/js/app.min.js"></script>
     }
@@ -35,8 +36,8 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="AppNav container-fluid">
         <div class="row">
-          <div class="col-xs-3 text-left navbar-action">
-            <a class="btn btn-default" href="#!calendar/new"><span class="glyphicon glyphicon-plus"></span></a>
+          <div class="col-xs-3 text-left navbar-action NavAction">
+            <a class="btn btn-default" href="#" data-bind="visible: navAction(), attr: { href: navAction() && navAction().link }"><span data-bind="attr: { 'class': navAction() && navAction().icon }" class="glyphicon"></span></a>
           </div>
           <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
           <div class="col-xs-3 text-right">

@@ -2,8 +2,10 @@
     The Shell that manages activities.
 **/
 'use strict';
-var $ = require('jquery');
-var escapeRegExp = require('./escapeRegExp');
+var $ = require('jquery'),
+    ko = require('knockout'),
+    escapeRegExp = require('./escapeRegExp'),
+    NavAction = require('../viewmodels/NavAction');
 
 var shell = {
 
@@ -14,6 +16,10 @@ var shell = {
     baseUrl: '',
     
     activities: {},
+    
+    navAction: ko.observable(null),
+    
+    defaultNavAction: null,
 
     specialRoutes: {
         'go-back': function (route) {
@@ -85,7 +91,7 @@ var shell = {
             if (currentActivity)
                 this.unfocus(currentActivity.$activity);
             
-            // NOTE:FUTURE: HistoryAPI.pushState(..)
+            // FUTURE: HistoryAPI.pushState(..)
             
             this.history.push({
                 name: activityName,
@@ -93,10 +99,26 @@ var shell = {
                 options: options
             });
             
-            this.activities[activityName]
-            .init($activity, this)
-            .show(options);
+            var act = this.activities[activityName].init($activity, this);
+            act.show(options);
             
+            // navAction depends on:
+            // When it comes from a parametized request (has options)
+            // of another activity (its opened on top of it, so 
+            // history is greater than 1)
+            if (options && this.history.length > 1) {
+                // Use 'go back'
+                this.navAction(NavAction.goBack);
+            }
+            else if ('navAction' in act) {
+                // Use specializied activity action
+                this.navAction(act.navAction);
+            }
+            else {
+                // Use default action
+                this.navAction(this.defaultNavAction);
+            }
+
             // Avoid going to the same activity
             if (currentActivity &&
                 currentActivity.name !== activityName) {
@@ -252,6 +274,9 @@ var shell = {
                 e.preventDefault();
             }
         }.bind(this));
+        
+        // Set model for navAction
+        ko.applyBindings({ navAction: this.navAction }, $('.NavAction').get(0));
     }
 };
 

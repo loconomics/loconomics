@@ -9,10 +9,8 @@ require('es6-promise').polyfill();
 require('./utils/Function.prototype._inherits');
 require('./utils/Function.prototype._delayed');
 var layoutUpdateEvent = require('layoutUpdateEvent');
-var Shell = require('./utils/Shell');
-
-/** Global static config **/
-var baseUrl = '/prototypes/app/';
+var Shell = require('./utils/Shell'),
+    NavAction = require('./viewmodels/NavAction');
 
 /** Custom Loconomics 'locale' styles for date/times **/
 var moment = require('moment');
@@ -86,9 +84,12 @@ $(function() {
         });
     }
     
+    // App set-up
     // TODO Remove when out of prototype!
-    app.baseUrl = '/prototypes/app/';
+    app.baseUrl = 'activities/';
+    app.defaultNavAction = NavAction.goHome;
     app.init();
+    
     // DEBUG
     window.app = app;
 });

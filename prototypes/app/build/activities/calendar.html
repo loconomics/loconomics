@@ -1,100 +1,21 @@
-<!DOCTYPE html>
-<html lang="en" class="app">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" type="image/vnd.microsoft.icon" href="../../assets/images/favicon.ico" />
-    <meta
-      name="viewport"
-      content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<!-- Activity calendar -->
+<div class="container-fluid has-frozenTitle" data-activity="calendar">
 
-    <title>Loconomics</title>
+  <h1 id="calendarDateHeader" class="CalendarDateHeader ActivityTitle">
+      <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
+      <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time> <span class="caret"></span></a>
+      <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
+  </h1>
 
-    <!-- Bootstrap core CSS -->
-    <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Styles build following the Styleguide -->
-    <link href="../../assets/css/styleguide.css" rel="stylesheet">
-    <!-- Styles for this Prototype -->
-    <link href="assets/proto.css" rel="stylesheet">
+  <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
 
-    <script src="../../assets/javascript/styleguidelibs.js"></script>
-    <script src="../../assets/javascript/styleguide.js"></script>
-    <script src="assets/libs.min.js"></script>
-    <script src="assets/app.js"></script>
-  </head>
-
-  <body>
-
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container-fluid app-nav">     
-        <div class="row">
-          <div class="col-xs-3 text-left navbar-action">
-            <a class="btn btn-default" href="#!calendar/new"><span class="glyphicon glyphicon-plus"></span></a>
-          </div>
-          <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
-          <div class="col-xs-3 text-right">
-            <button type="button" class="navbar-toggle collapsed btn btn-default" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-          </div>
-        </div> 
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="home.html">Home</a></li>
-            <li class="active"><a href="calendar.html">Calendar</a></li>
-            <li><a href="inbox.html">Inbox</a></li>
-            <li><a href="clients.html">Clients</a></li>
-            <li><a href="payments.html">Payments</a></li>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="account.html">Account</a></li>
-            <li><a href="logout.html">Logout</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
-    <div class="container-fluid app-calendar is-active has-frozenTitle" data-activity="calendar">
-      
-      <h1 id="calendarDateHeader" class="CalendarDateHeader ActivityTitle">
-          <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
-          <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time> <span class="caret"></span></a>
-          <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
-      </h1>
-      
-      <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
-      
-      <!-- Daily View (appointments list) -->
-      <div id="calendarDailyView" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags" data-bind="foreach: slots">
-        <div class="ListView-item" data-bind="css: classNames">
-          <div class="ListView-item-marker"><div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div><div class="text-muted" data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></div></div>
-          <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !description()"></p><div data-bind="text: subject, visible: description()"></div><div data-bind="text: description, visible: description()"></div></a>
-          <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
-        </div>
-      </div>
-
-    </div> <!-- /container -->
-      
-    <!-- Modal calendarChooseNew -->
-    <div id="calendarChooseNew" class="modal" tabindex="-1" role="dialog" aria-labelledby="calendarChooseNewLabel" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-              <h4 class="modal-title" id="calendarChooseNewLabel">Create a new...</h4>
-            </div>
-            <div class="modal-body">
-              <a class="btn btn-block btn-default" href="#!calendar/new/booking">Booking</a>
-              <a class="btn btn-block btn-default" href="#!calendar/new/event">Calendar Event</a>
-              <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Cancel</button>
-            </div>
-          </div>
-        </div>
+  <!-- Daily View (appointments list) -->
+  <div id="calendarDailyView" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags" data-bind="foreach: slots">
+    <div class="ListView-item" data-bind="css: classNames">
+      <div class="ListView-item-marker"><div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div><div class="text-muted" data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></div></div>
+      <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !description()"></p><div data-bind="text: subject, visible: description()"></div><div data-bind="text: description, visible: description()"></div></a>
+      <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
     </div>
-  </body>
-</html>
+  </div>
+
+</div>
