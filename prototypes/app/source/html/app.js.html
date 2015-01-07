@@ -1,3 +1,4 @@
+@*context: {debug:bool, includedFiles:[]} *@
 <!DOCTYPE html>
 <html lang="en" class="App">
   <head>
@@ -11,6 +12,7 @@
 
     <title>Loconomics App</title>
 
+    @if(debug) {
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/styleguide.css" rel="stylesheet">
     <link href="assets/css/app.css" rel="stylesheet">
@@ -18,6 +20,15 @@
     <script src="assets/js/styleguide.js"></script>
     <script src="assets/js/libs.min.js"></script>
     <script src="assets/js/app.js"></script>
+    } else {
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/styleguide.min.css" rel="stylesheet">
+    <link href="assets/css/app.min.css" rel="stylesheet">
+    <script src="assets/js/styleguidelibs.min.js"></script>
+    <script src="assets/js/styleguide.min.js"></script>
+    <script src="assets/js/libs.min.js"></script>
+    <script src="assets/js/app.min.js"></script>
+    }
   </head>
   <body>
     <!-- Fixed navbar -->
@@ -51,6 +62,8 @@
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-    <!--AT:CONTENT-->
-   </body>
+    @for(var f=0; f < includedFiles.length; f++) {
+      @render(includedFiles[f])
+    }
+  </body>
 </html>

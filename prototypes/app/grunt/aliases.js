@@ -26,12 +26,15 @@ module.exports = {
 	],
     'build-html': [
         'copyto:html',
+        'bliss:app',
+        'bliss:appDebug',
         'notify:html'
     ],
 
 	'build-dev': [
 		'browserify',
 		'stylus',
+        'bliss:appDebug',
         'notify:build'
 	],
 	'build': [
