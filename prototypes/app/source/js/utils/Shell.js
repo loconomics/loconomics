@@ -83,7 +83,7 @@ var shell = {
     
     showActivity: function showActivity(activityName, options) {
         // Ensure its loaded, and do anything later
-        this.loadActivity(activityName).then(function($activity) {
+        return this.loadActivity(activityName).then(function($activity) {
             
             $activity.css('zIndex', ++this.currentZIndex).show();
             var currentActivity = this.history[this.history.length - 1];
@@ -102,15 +102,8 @@ var shell = {
             var act = this.activities[activityName].init($activity, this);
             act.show(options);
             
-            // navAction depends on:
-            // When it comes from a parametized request (has options)
-            // of another activity (its opened on top of it, so 
-            // history is greater than 1)
-            if (options && this.history.length > 1) {
-                // Use 'go back'
-                this.navAction(NavAction.goBack);
-            }
-            else if ('navAction' in act) {
+            // navAction, if the activity has its own
+            if ('navAction' in act) {
                 // Use specializied activity action
                 this.navAction(act.navAction);
             }
@@ -126,6 +119,18 @@ var shell = {
             }
 
         }.bind(this)).catch(this.unexpectedError);
+    },
+    
+    popActivity: function popActivity(activityName, options) {
+        
+        return (
+            this.showActivity(activityName, options)
+            .then(function() {
+                // Poping an activity on top of another means we want
+                // to quick go back rather than the activity default navAction:
+                this.navAction(NavAction.goBack);
+            }.bind(this))
+        );
     },
 
     hideActivity: function hideActivity(activityName) {

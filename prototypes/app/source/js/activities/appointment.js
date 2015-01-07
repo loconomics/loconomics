@@ -203,14 +203,14 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         
         appointmentsDataView.pickDateTime = function pickDateTime() {
 
-            app.showActivity('datetimePicker', {
+            app.popActivity('datetimePicker', {
                 selectedDatetime: null
             });
         };
         
         appointmentsDataView.pickClient = function pickClient() {
 
-            app.showActivity('clients', {
+            app.popActivity('clients', {
                 selectClient: true,
                 selectedClient: null
             });
@@ -218,7 +218,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
 
         appointmentsDataView.pickService = function pickService() {
 
-            app.showActivity('services', {
+            app.popActivity('services', {
                 selectServices: true,
                 selectedServices: appointmentsDataView.currentAppointment().services()
             });
@@ -230,7 +230,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         
         appointmentsDataView.pickLocation = function pickLocation() {
 
-            app.showActivity('locations', {
+            app.popActivity('locations', {
                 selectLocation: true,
                 selectedLocation: appointmentsDataView.currentAppointment().location()
             });
@@ -245,7 +245,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         
         appointmentsDataView.editTextField = function editTextField(field) {
 
-            app.showActivity('textEditor', {
+            app.popActivity('textEditor', {
                 request: 'textEditor',
                 field: field,
                 header: textFieldsHeaders[field],
