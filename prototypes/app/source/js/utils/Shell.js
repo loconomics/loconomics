@@ -19,6 +19,8 @@ var shell = {
     
     navAction: ko.observable(null),
     
+    status: ko.observable('out'), // 'out', 'login', 'onboarding', 'in'
+    
     defaultNavAction: null,
 
     specialRoutes: {
@@ -41,6 +43,18 @@ var shell = {
         var str = typeof(error) === 'string' ? error : JSON.stringify(error);
         console.error('Unexpected error', error);
         window.alert(str);
+    },
+    
+    updateAppNav: function updateAppNav(activity) {
+        // navAction, if the activity has its own
+        if ('navAction' in activity) {
+            // Use specializied activity action
+            this.navAction(activity.navAction);
+        }
+        else {
+            // Use default action
+            this.navAction(this.defaultNavAction);
+        }
     },
 
     loadActivity: function loadActivity(activityName) {
@@ -102,15 +116,7 @@ var shell = {
             var act = this.activities[activityName].init($activity, this);
             act.show(options);
             
-            // navAction, if the activity has its own
-            if ('navAction' in act) {
-                // Use specializied activity action
-                this.navAction(act.navAction);
-            }
-            else {
-                // Use default action
-                this.navAction(this.defaultNavAction);
-            }
+            this.updateAppNav(act);
 
             // Avoid going to the same activity
             if (currentActivity &&
@@ -141,6 +147,7 @@ var shell = {
     
     goBack: function goBack(options) {
 
+        // TODO: deduplicate code between this and showActivity
         var currentActivity = this.history.pop();
         var previousActivity = this.history[this.history.length - 1];
         var activityName = previousActivity.name;
@@ -158,12 +165,14 @@ var shell = {
             
             $activity.show();
             
-            // NOTE:FUTURE: Going to the previous activity with HistoryAPI
+            // FUTURE: Going to the previous activity with HistoryAPI
             // must replaceState with new 'options'?
             
-            this.activities[activityName]
-            .init($activity, this)
-            .show(options);
+            var act = this.activities[activityName]
+            .init($activity, this);
+            act.show(options);
+
+            this.updateAppNav(act);
 
             // Avoid going to the same activity
             if (currentActivity &&
@@ -199,7 +208,8 @@ var shell = {
             root: true,
             activity: null,
             segments: null,
-            path: null
+            path: null,
+            link: link
         };
         
         if (match) {
@@ -251,8 +261,42 @@ var shell = {
                 parsedLink.found = true;
             }
         }
+        else if (parsedLink.root) {
+            // Root page 'index'
+            this.showActivity('index', {
+                route: parsedLink
+            });
+        }
         
         return parsedLink;
+    },
+    
+    /* Convenient way to navigate to an internal link,
+        updating location and routing.
+        NOTE: right now is just a location.hash change, with the
+        handler on init listening properly */
+    go: function go(link) {
+        var l = /#!/.test(link) ? link : '#!' + link;
+        window.location.hash = l;
+    },
+    
+    updateMenu: function updateMenu(name) {
+        
+        var $menu = this.$menu;
+        
+        // Remove any active
+        $menu
+        .find('li')
+        .removeClass('active');
+        // Add active
+        $menu
+        .find('.go-' + name)
+        .closest('li')
+        .addClass('active');
+        // Hide menu
+        $menu
+        .filter(':visible')
+        .collapse('hide');
     },
 
     init: function init() {
@@ -269,50 +313,49 @@ var shell = {
         */
         
         // Menu
-        var $menu = $('#navbar');
-        
-        var updateMenu = function updateMenu(name) {
-            // Remove any active
-            $menu
-            .find('li')
-            .removeClass('active');
-            // Add active
-            $menu
-            .find('.go-' + name)
-            .closest('li')
-            .addClass('active');
-            // Hide menu
-            $menu
-            .filter(':visible')
-            .collapse('hide');
-        };
+        this.$menu = $('#navbar');
         
         // Visualize the activity that matches current URL
         // NOTE: using the hash for history management, rather
         // than document.location.pathname
         var currentRoute = this.route(document.location.hash);
         if (currentRoute.found)
-            updateMenu(currentRoute.activity);
+            this.updateMenu(currentRoute.activity);
+        
+        var routeLink = function routeLink(link, e) {
+            // Route it
+            var parsedLink = this.route(link);
+            if (parsedLink.found) {
+
+                this.updateMenu(parsedLink.activity);
+                
+                if (!/#!/.test(link)) {
+                    e.preventDefault();
+                }
+                else if (parsedLink.root) {
+                    // NOTE: using the hash for history management, going to root
+                    window.location.hash = '';
+                }
+            }
+        }.bind(this);
         
         // Route pressed links
         $(document).on('tap', 'a, [data-href]', function(e) {
             // Get Link
             var link = e.currentTarget.getAttribute('href') || e.currentTarget.getAttribute('data-href');
+            routeLink(link, e);
+        });
 
-            // Route it
-            var parsedLink = this.route(link);
-            if (parsedLink.found) {
-
-                updateMenu(parsedLink.activity);
-                
-                if (!/#!/.test(link)) {
-                    e.preventDefault();
-                }
-            }
-        }.bind(this));
+        $(window).on('hashchange', function(e) {
+            routeLink(window.location.hash, e);
+        });
         
-        // Set model for navAction
-        ko.applyBindings({ navAction: this.navAction }, $('.NavAction').get(0));
+        // NOTE: this view model, in Shell or in app.js?
+        // Set model for the AppNav
+        ko.applyBindings({
+            navAction: this.navAction,
+            status: this.status
+        }, $('.AppNav').get(0));
     }
 };
 

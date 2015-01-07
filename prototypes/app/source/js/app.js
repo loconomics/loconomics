@@ -50,6 +50,34 @@ moment.locale('en-US');
 /** app static class **/
 var app = new Shell();
 
+// TODO: refactor as model
+//app.model = new AppModel();
+app.model = {
+    user: ko.observable({ // User.newAnonymous()
+        email: ko.observable(''),
+        firstName: ko.observable(''),
+        onboardingStep: ko.observable(null),
+        userType: ko.observable('a')
+    })
+};
+
+// Updating app status on user changes
+function updateStatesOnUserChange() {
+    var user = app.model.user();
+    if (user.onboardingStep()) {
+        app.status('onboarding');
+    }
+    else if (user.userType() === 'a') {
+        app.status('out');
+    }
+    else if (user.userType() === 'p') {
+        app.status('in');
+    }
+}
+app.model.user.subscribe(updateStatesOnUserChange);
+app.model.user().userType.subscribe(updateStatesOnUserChange);
+app.model.user().onboardingStep.subscribe(updateStatesOnUserChange);
+
 /** Load activities **/
 app.activities = {
     'calendar': require('./activities/calendar'),
@@ -60,7 +88,9 @@ app.activities = {
     'textEditor': require('./activities/textEditor'),
     'home': require('./activities/home'),
     'appointment': require('./activities/appointment'),
-    'bookingConfirmation': require('./activities/bookingConfirmation')
+    'bookingConfirmation': require('./activities/bookingConfirmation'),
+    'index': require('./activities/index'),
+    'login': require('./activities/login')
 };
 
 /** Page ready **/

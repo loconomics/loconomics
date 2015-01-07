@@ -23,20 +23,25 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="AppNav container-fluid">
         <div class="row">
-          <div class="col-xs-3 text-left navbar-action NavAction"> <a class="btn btn-default" href="#" data-bind="visible: navAction(), attr: { href: navAction() && navAction().link }"><span data-bind="attr: { 'class': navAction() && navAction().icon }" class="glyphicon"></span></a>
+          <div class="col-xs-3 text-left navbar-action"> <a class="btn btn-default" href="#" data-bind="visible: navAction(), attr: { href: navAction() && navAction().link }"><span data-bind="attr: { 'class': navAction() && navAction().icon }" class="glyphicon"></span></a>
 
           </div>
           <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a>
           </div>
-          <div class="col-xs-3 text-right">
-            <button type="button" class="navbar-toggle collapsed btn btn-default"
+          <div class="col-xs-3 text-right" data-bind="css: { 'navbar-action': status() !== 'in' }">
+            <button data-bind="visible: status() === 'in'" type="button" class="navbar-toggle collapsed btn btn-default"
             data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span>
  <span class="icon-bar"></span>
 
               <span
               class="icon-bar"></span> <span class="icon-bar"></span>
 
-            </button>
+            </button> <a data-bind="visible: status() === 'out'" class="btn btn-default" href="#!login"><span class="glyphicon glyphicon-log-in"></span></a>
+
+            <a
+            data-bind="visible: status() === 'onboarding'" class="btn btn-default"
+            href="/" title="Log out"><span class="glyphicon glyphicon-log-out"></span>
+              </a>
           </div>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
@@ -386,6 +391,23 @@
         </div>
       </div>
     </div>
+    <!-- Activity index -->
+    <div class="container-fluid" data-activity="index">
+      <div class="LeadContent">
+        <div class="embed-responsive embed-responsive-16by9">
+          <video>No video for now</video>
+        </div>
+        <p class="lead">Loconomics is a marketplace for local services owned by the freelancers
+          and employees doing the work. They share in the profits and decision-makina
+          power.</p>
+        <p class="text-center">To learn more, click below:</p>
+        <div> <a href="learnMoreFreelancers.html" class="btn btn-default btn-block">I provide services</a>
+
+          <a
+          href="learnMoreClients.html" class="btn btn-default btn-block">I'm a potential client</a>
+        </div>
+      </div>
+    </div>
     <!-- Activity locations -->
     <div class="container-fluid has-frozenTitle" data-activity="locations">
        <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-globe"></span><span data-bind="text: headerText">Locations</span></h1>
@@ -406,6 +428,33 @@
       <div id="locationsAddNewButtons" class="isolated">
         <button type="button" class="btn btn-primary btn-block">Add client location</button>
         <button type="button" class="btn btn-primary btn-block">Add new location</button>
+      </div>
+    </div>
+    <!-- Activity login -->
+    <div class="container-fluid" data-activity="login">
+      <div class="LeadContent">
+         <h3>Log in to your account</h3>
+
+        <div> <a href="home.html" class="btn btn-default btn-block btn-facebook">Facebook</a>
+
+          <a
+          href="home.html" class="btn btn-default btn-block btn-google">Google</a>
+        </div>
+        <p class="isolated text-center">or</p>
+        <form role="form">
+          <div class="form-group">
+            <label for="accountEmail">Email address</label>
+            <input type="email" class="form-control" id="accountEmail"
+            placeholder="Enter email">
+          </div>
+          <div class="form-group">
+            <label for="accountPassword">Password</label>
+            <input type="password" class="form-control" id="accountPassword"
+            placeholder="Password">
+          </div>
+          <button id="accountLogInBtn" type="submit" data-loading-text="Loging in... (fake loading)"
+          class="btn btn-primary btn-block" autocomplete="off">Log in</button>
+        </form>
       </div>
     </div>
     <!-- Activity services -->
