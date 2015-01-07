@@ -3,7 +3,8 @@
 
 var $ = require('jquery'),
     moment = require('moment'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    NavAction = require('../viewmodels/NavAction');
 require('../components/DatePicker');
 
 var singleton = null;
@@ -27,6 +28,8 @@ function AppointmentActivity($activity, app) {
     // Object to hold the options passed on 'show' as a result
     // of a request from another activity
     this.requestInfo = null;
+    
+    this.navAction = NavAction.newCalendarItem;
     
     this.initAppointment();
 }
@@ -197,6 +200,13 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
             if (isEdit) {
                 // Create a copy of the appointment so we revert on 'cancel'
                 appointmentsDataView.originalEditedAppointment = ko.toJS(appointmentsDataView.currentAppointment());
+                
+                // Remove the navAction
+                app.navAction(null);
+            }
+            else {
+                // Restore the navAction
+                app.navAction(this.navAction);
             }
             
         }.bind(this));
