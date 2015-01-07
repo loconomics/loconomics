@@ -732,7 +732,22 @@
   text-align: center;
 }
 
-/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\LeadContent.styl */
+
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\LeadContent.styl */
+.LeadContent--success .success-icon {
+  font-size: 4em;
+  text-align: center;
+  display: block;
+}
+
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\LeadContent.styl */
+.LeadContent--success .lead {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+/* line 24 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 /*
  * DatePicker JS Component, with several
  * modes and optional inline-permanent visualization.
@@ -1508,21 +1523,4 @@
 /* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\clients.styl */
 [data-activity=clients].is-searching .SimpleList-divider {
   display: none;
-}
-
-/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\onboardingComplete.styl */
-
-/* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\onboardingComplete.styl */
-
-/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\onboardingComplete.styl */
-[data-activity=onboardingComplete] .success-icon {
-  font-size: 4em;
-  text-align: center;
-  display: block;
-}
-
-/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\onboardingComplete.styl */
-[data-activity=onboardingComplete] .lead {
-  margin-top: 2em;
-  margin-bottom: 2em;
 }
