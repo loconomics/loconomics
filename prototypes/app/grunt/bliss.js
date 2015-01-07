@@ -28,7 +28,7 @@ module.exports = function(grunt) {
           options: {
             context: {
                 debug: true,
-                includedFiles: []
+                includedFiles: includedFiles
             }
           }
         }

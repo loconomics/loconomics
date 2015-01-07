@@ -15,7 +15,7 @@
             <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
             <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
           </a>
-          <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.toggleServiceSelection }, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }" /></span><span class="sr-only">Selected?</span></a>
+          <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.toggleServiceSelection }, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
         </div>
       <!-- /ko -->
     </div>
