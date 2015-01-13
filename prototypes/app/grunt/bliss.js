@@ -17,7 +17,8 @@ module.exports = function(grunt) {
           options: {
             context: {
                 debug: false,
-                includedFiles: includedFiles
+                includedFiles: includedFiles,
+                cordovajs: false
             }
           }
         },
@@ -28,7 +29,20 @@ module.exports = function(grunt) {
           options: {
             context: {
                 debug: true,
-                includedFiles: includedFiles
+                includedFiles: includedFiles,
+                cordovajs: false
+            }
+          }
+        },
+        phonegap: {
+          files: {
+            'phonegap/www/index.html': ['source/html/app.js.html']
+          },
+          options: {
+            context: {
+                debug: false,
+                includedFiles: includedFiles,
+                cordovajs: true
             }
           }
         }

@@ -30,5 +30,11 @@ module.exports = {
             title: 'HTML build complete',  // optional
             message: 'HTML build finished successfully.' //required
         }
+    },
+    phonegap: {
+        options: {
+            title: 'PhoneGap build complete',  // optional
+            message: 'PhoneGap build finished successfully.' //required
+        }
     }
 };

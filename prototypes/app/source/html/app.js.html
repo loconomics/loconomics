@@ -13,6 +13,10 @@
     <meta name="format-detection" content="telephone=no" />
       
     <title>Loconomics App</title>
+      
+    @if(cordovajs) {
+    <script type="text/javascript" src="cordova.js"></script>
+    }
 
     @if(debug) {
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -23,8 +27,6 @@
     <script src="assets/js/libs.js"></script>
     <script src="assets/js/app.js"></script>
     } else {
-    <script type="text/javascript" src="cordova.js"></script>
-      
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/styleguide.css" rel="stylesheet">
     <link href="assets/css/app.min.css" rel="stylesheet">

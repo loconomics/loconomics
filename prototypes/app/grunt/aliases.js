@@ -30,6 +30,11 @@ module.exports = {
         'bliss:appDebug',
         'notify:html'
     ],
+    'build-phonegap': [
+        'bliss:phonegap',
+        'copyto:phonegap',
+        'notify:phonegap'
+    ],
 
 	'build-dev': [
 		'browserify',
@@ -41,6 +46,7 @@ module.exports = {
         'build-js',
 		'build-css',
         'build-html',
+        'build-phonegap',
         'notify:build'
 	]
 };

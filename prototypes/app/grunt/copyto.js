@@ -7,5 +7,12 @@ module.exports = {
         src: ['activities/*.html', 'modals/*.html'],
         dest: 'build/',
         filter: 'isFile'
+    },
+    phonegap: {
+        expand: true,
+        cwd: 'build/',
+        src: ['assets/**/*.*'],
+        dest: 'phonegap/www/',
+        filter: 'isFile'
     }
 };
