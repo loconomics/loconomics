@@ -14,5 +14,11 @@ module.exports = {
         src: ['assets/**/*.*'],
         dest: 'phonegap/www/',
         filter: 'isFile'
+    },
+    platform_merges: {
+        expand: true,
+        dest: './phonegap/platforms/',
+        cwd: './phonegap/platform-merges',
+        src: '**'
     }
 };

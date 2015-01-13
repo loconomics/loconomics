@@ -3,3 +3,5 @@ node_modules/*
 **/node_modules/*
 phonegap/www/assets
 phonegap/www/index.html
+phonegap/platforms/
+phonegap/plugins/
