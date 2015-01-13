@@ -1,0 +1,9 @@
+{
+    "lib": {
+        "www": {
+            "id": "com.loconomics.app",
+            "version": "0.1.0",
+            "uri": "https://github.com/dani0198/Loconomics/archive/master.tar.gz"
+        }
+    }
+}
