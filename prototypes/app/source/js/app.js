@@ -94,7 +94,8 @@ app.activities = {
     'learnMore': require('./activities/learnMore'),
     'signup': require('./activities/signup'),
     'contactInfo': require('./activities/contactInfo'),
-    'positions': require('./activities/positions')
+    'positions': require('./activities/positions'),
+    'onboardingHome': require('./activities/onboardingHome')
 };
 
 /** Page ready **/

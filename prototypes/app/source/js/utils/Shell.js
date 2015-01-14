@@ -245,9 +245,10 @@ var shell = {
     /** Route a link throught activities.
         Returns true if was routed and false if not
     **/
-    route: function route(link) {
+    route: function route(link, mode) {
         
         var parsedLink = this.parseActivityLink(link);
+        var modeMethod = mode && mode === 'pop' ? 'popActivity' : 'showActivity';
         
         // Initially, not found:
         parsedLink.found = false;
@@ -258,7 +259,7 @@ var shell = {
             if (this.activities.hasOwnProperty(parsedLink.activity)) {
             
                 // Show the activity passing the route options
-                this.showActivity(parsedLink.activity, {
+                this[modeMethod](parsedLink.activity, {
                     route: parsedLink
                 });
 
@@ -274,7 +275,7 @@ var shell = {
         }
         else if (parsedLink.root) {
             // Root page 'index'
-            this.showActivity('index', {
+            this[modeMethod]('index', {
                 route: parsedLink
             });
         }
@@ -333,9 +334,20 @@ var shell = {
         if (currentRoute.found)
             this.updateMenu(currentRoute.activity);
         
-        var routeLink = function routeLink(link, e) {
+        // Flag to mark processing to avoid double execution
+        // because of hashchange-event, manual routed links
+        // programatic change with route to location
+        var latestProcessedLink = null;
+
+        var routeLink = function routeLink(link, e, mode) {
+            // Its processed already, do nothing
+            if (link === latestProcessedLink) {
+                return;
+            }
+            latestProcessedLink = link;
+
             // Route it
-            var parsedLink = this.route(link);
+            var parsedLink = this.route(link, mode);
             if (parsedLink.found) {
 
                 this.updateMenu(parsedLink.activity);
@@ -354,7 +366,8 @@ var shell = {
         $(document).on('tap', 'a, [data-href]', function(e) {
             // Get Link
             var link = e.currentTarget.getAttribute('href') || e.currentTarget.getAttribute('data-href');
-            routeLink(link, e);
+            var mode = e.currentTarget.getAttribute('data-shell');
+            routeLink(link, e, mode);
         });
 
         $(window).on('hashchange', function(e) {
