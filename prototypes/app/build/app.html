@@ -595,6 +595,19 @@
         </form>
       </div>
     </div>
+    <!- Activity onboardingComplete -->
+    <div class="container-fluid" data-activity="onboardingComplete">
+      <div class="LeadContent LeadContent--success"> <span class="glyphicon glyphicon-ok text-success success-icon" aria-hidden="true"></span>
+
+         <h2>Congratulations!</h2>
+
+        <p class="lead">You're in! Confirm your account by clicking on the e-mail we just sent
+          you (Check your junk-mail).</p>
+        <div> <a href="#!/" class="btn btn-success btn-block">Got it, thanks!</a>
+
+        </div>
+      </div>
+    </div>
     <!-- Activity onboardingHome -->
     <div class="container-fluid" data-activity="onboardingHome">
       <div class="LeadContent">
@@ -620,18 +633,18 @@
       <div class="ListView">
         <div class="ListView-item">
           <div class="ListView-item-marker"><span class="glyphicon glyphicon-screenshot"></span>
-          </div> <a href="add-service-location.html" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="#!locations/new/serviceLocation" data-shell="pop" class="btn btn-link btn-block ListView-item-content">
         Add a service location
       </a>
- <a href="add-service-location.html" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+ <a href="#!locations/new/serviceLocation" data-shell="pop" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><span class="glyphicon glyphicon-send"></span>
-          </div> <a href="add-service-radius.html" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="#!locations/new/serviceRadius" data-shell="pop" class="btn btn-link btn-block ListView-item-content">
         Add a service radius
       </a>
- <a href="add-service-radius.html" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+ <a href="#!locations/new/serviceRadius" data-shell="pop" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
         </div>
         <div class="ListView-item">
@@ -644,10 +657,10 @@
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker"><span class="glyphicon glyphicon-ok"></span>
-          </div> <a href="complete.html" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="#!onboardingComplete" class="btn btn-link btn-block ListView-item-content">
         See the complete page
       </a>
- <a href="complete.html" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+ <a href="#!onboardingComplete" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
         </div>
       </div>

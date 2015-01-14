@@ -98,7 +98,8 @@ app.activities = {
     'contactInfo': require('./activities/contactInfo'),
     'positions': require('./activities/positions'),
     'onboardingHome': require('./activities/onboardingHome'),
-    'locationEdition': require('./activities/locationEdition')
+    'locationEdition': require('./activities/locationEdition'),
+    'onboardingComplete': require('./activities/onboardingComplete')
 };
 
 /** Page ready **/
