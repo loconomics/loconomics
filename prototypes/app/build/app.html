@@ -411,7 +411,7 @@
       </div>
     </div>
     <!-- Activity learnMoreFreelancers -->
-    <div class="container-fluid is-active" data-activity="learnMore">
+    <div class="container-fluid" data-activity="learnMore">
       <div class="LeadContent">
         <div class="embed-responsive embed-responsive-16by9">
           <video>No video for now</video>
@@ -422,28 +422,12 @@
           of like-minded individuals. You share in the profits and decision makina.</p>
         <p
         class="lead" data-bind="visible: profile() === 'customer'"></p>
-          <p> <a href="#!signUp?profile=provider" class="btn btn-default btn-block">Try it out for free<span data-bind="visible: profile() === 'provider'">*</span></a>
+          <p> <a href="#!signup" data-bind="attr: { href: '#!signup/' + profile() }"
+            class="btn btn-default btn-block">Try it out for free<span data-bind="visible: profile() === 'provider'">*</span></a>
 
           </p>
           <p data-bind="visible: profile() === 'provider'">*Your free trial last 90 days and annual membership fees are currently
             $199.</p>
-      </div>
-    </div>
-    <!-- Activity learnMoreFreelancers -->
-    <div class="container-fluid is-active" data-activity="learnMoreFreelancers">
-      <div class="LeadContent">
-        <div class="embed-responsive embed-responsive-16by9">
-          <video>No video for now</video>
-        </div>
-         <h3>Everything you need</h3>
-
-        <p class="lead">Scheduling, payments, client management, marketing tools, and a community
-          of like-minded individuals. You share in the profits and decision makina.</p>
-        <p> <a href="#!signUp?profile=provider" class="btn btn-default btn-block">Try it out for free*</a>
-
-        </p>
-        <p>*Your free trial last 90 days and annual membership fees are currently
-          $199.</p>
       </div>
     </div>
     <!-- Activity locations -->
@@ -521,6 +505,38 @@
       </div>
       <div id="servicesAddNewButton" class="isolated">
         <button type="button" class="btn btn-primary btn-block">Add new service</button>
+      </div>
+    </div>
+    <!-- Activity Signup -->
+    <div class="container-fluid" data-activity="signup">
+      <div class="LeadContent">
+         <h3>Sign up for a free trial</h3>
+
+        <div> <a href="#!home" class="btn btn-default btn-block btn-facebook">Facebook</a>
+
+          <a
+          href="#!home" class="btn btn-default btn-block btn-google">Google</a>
+        </div>
+        <p class="isolated text-center">or</p>
+        <form role="form">
+          <div class="form-group">
+            <label for="accountEmail">Email address</label>
+            <input type="email" class="form-control" id="accountEmail"
+            placeholder="Enter email">
+          </div>
+          <div class="form-group">
+            <label for="accountPassword">Password</label>
+            <input type="password" class="form-control" id="accountPassword"
+            placeholder="Password">
+          </div>
+          <button id="accountSignUpBtn" type="submit" data-loading-text="Creating... (fake loading)"
+          class="btn btn-primary btn-block" autocomplete="off">Create account</button>
+        </form>
+        <p class="isolated">By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/"
+          target="_blank">Terms of Use</a>, <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
+          target="_blank">Privacy Policy &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy" target="_blank">Co-op Membership Agreement</a>
+
+        </p>
       </div>
     </div>
     <!-- Activity textEditor -->

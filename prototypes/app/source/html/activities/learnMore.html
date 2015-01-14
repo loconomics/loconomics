@@ -1,5 +1,5 @@
 <!-- Activity learnMoreFreelancers -->
-<div class="container-fluid is-active" data-activity="learnMore">
+<div class="container-fluid" data-activity="learnMore">
   <div class="LeadContent">
     <div class="embed-responsive embed-responsive-16by9">
       <video>No video for now</video>
@@ -15,7 +15,7 @@
     </p>
 
     <p>
-      <a href="#!signUp?profile=provider" class="btn btn-default btn-block">Try it out for free<span data-bind="visible: profile() === 'provider'">*</span></a>
+      <a href="#!signup" data-bind="attr: { href: '#!signup/' + profile() }" class="btn btn-default btn-block">Try it out for free<span data-bind="visible: profile() === 'provider'">*</span></a>
     </p>
     <p data-bind="visible: profile() === 'provider'">
       *Your free trial last 90 days and annual membership fees are currently $199.

@@ -91,7 +91,8 @@ app.activities = {
     'bookingConfirmation': require('./activities/bookingConfirmation'),
     'index': require('./activities/index'),
     'login': require('./activities/login'),
-    'learnMore': require('./activities/learnMore')
+    'learnMore': require('./activities/learnMore'),
+    'signup': require('./activities/signup')
 };
 
 /** Page ready **/

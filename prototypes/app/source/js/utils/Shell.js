@@ -148,13 +148,15 @@ var shell = {
     
     goBack: function goBack(options) {
 
-        // TODO: deduplicate code between this and showActivity
-        var currentActivity = this.history.pop();
         // If there is no a previous activity to navigate to,
         // go to the index
-        if (!this.history.length) {
+        if (this.history.length < 1) {
             this.showActivity('index', options);
+            return;
         }
+        
+        // TODO: deduplicate code between this and showActivity
+        var currentActivity = this.history.pop();
         
         var previousActivity = this.history[this.history.length - 1];
         var activityName = previousActivity.name;
