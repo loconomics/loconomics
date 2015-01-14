@@ -1,0 +1,39 @@
+<!-- Activity positions -->
+<div class="container-fluid has-navbar" data-activity="positions">
+
+  <div class="">        
+    <h1 class="ActivityTitle">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        <span>Add one or more job title(s)</span>
+    </h1>
+
+    <form role="form">
+      <div class="input-group">
+        <label for="addPositionSearch" class="sr-only">Search</label>
+        <input type="text" class="form-control" id="addPositionSearch" placeholder="search">
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-primary">
+            Add <span class="glyphicon glyphicon-chevron-right"></span>
+          </button>
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <div class="ListView ListView--textualmarker isolated" data-bind="foreach: positions">
+    <div class="ListView-item">
+      <div class="ListView-item-marker"><span data-bind="text: ($index() + 1)">1</span>.</div>
+      <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="text: positionSingular"></a>
+      <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-trash"></span></a>
+    </div>
+  </div>
+
+  <div class="navbar navbar-default ActivityNavbar">
+    <div class="container">
+      <button type="button" class="btn btn-primary btn-block">
+        Save and continue
+      </button>
+    </div>
+  </div>
+
+</div>

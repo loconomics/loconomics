@@ -92,7 +92,9 @@ app.activities = {
     'index': require('./activities/index'),
     'login': require('./activities/login'),
     'learnMore': require('./activities/learnMore'),
-    'signup': require('./activities/signup')
+    'signup': require('./activities/signup'),
+    'contactInfo': require('./activities/contactInfo'),
+    'positions': require('./activities/positions')
 };
 
 /** Page ready **/

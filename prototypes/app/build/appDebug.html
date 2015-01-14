@@ -284,6 +284,45 @@
         </div>
       </div>
     </div>
+    <!-- Activity contactInfo -->
+    <div class="container-fluid has-navbar" data-activity="contactInfo">
+      <form role="form">
+        <div>
+           <h1 class="ActivityTitle">
+            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+            <span>Add contact info</span>
+        </h1>
+
+          <fieldset>
+            <div class="form-group">
+              <label for="contactInfoFirstName">First name</label>
+              <input type="text" class="form-control" id="contactInfoFirstName"
+              required>
+            </div>
+            <div class="form-group">
+              <label for="contactInfoLastName">Last name</label>
+              <input type="text" class="form-control" id="contactInfoLastName"
+              required>
+            </div>
+            <div class="form-group">
+              <label for="contactInfoMobilePhone">Mobile phone</label>
+              <input type="tel" class="form-control" id="contactInfoMobilePhone"
+              required>
+            </div>
+            <div class="form-group">
+              <label for="contactInfoBusinessName">Business name (optional)</label>
+              <input type="text" class="form-control"
+              id="contactInfoBusinessName">
+            </div>
+          </fieldset>
+        </div>
+        <div class="navbar navbar-default ActivityNavbar">
+          <div class="container">
+            <button type="submit" class="btn btn-primary btn-block">Save and continue</button>
+          </div>
+        </div>
+      </form>
+    </div>
     <!-- Activity datetimePicker -->
     <div class="container-fluid has-frozenTitle" data-activity="datetimePicker">
        <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-time"></span><span data-bind="text: headerText">Select a start time</span></h1>
@@ -476,6 +515,41 @@
           <button id="accountLogInBtn" type="submit" data-loading-text="Loging in... (fake loading)"
           class="btn btn-primary btn-block" autocomplete="off">Log in</button>
         </form>
+      </div>
+    </div>
+    <!-- Activity positions -->
+    <div class="container-fluid has-navbar" data-activity="positions">
+      <div class="">
+         <h1 class="ActivityTitle">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        <span>Add one or more job title(s)</span>
+    </h1>
+
+        <form role="form">
+          <div class="input-group">
+            <label for="addPositionSearch" class="sr-only">Search</label>
+            <input type="text" class="form-control" id="addPositionSearch"
+            placeholder="search"> <span class="input-group-btn">
+          <button type="button" class="btn btn-primary">
+            Add <span class="glyphicon glyphicon-chevron-right"></span>
+
+            </button>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div class="ListView ListView--textualmarker isolated" data-bind="foreach: positions">
+        <div class="ListView-item">
+          <div class="ListView-item-marker"><span data-bind="text: ($index() + 1)">1</span>.</div> <a href="#" class="btn btn-link btn-block ListView-item-content"
+          data-bind="text: positionSingular"></a>
+ <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-trash"></span></a>
+
+        </div>
+      </div>
+      <div class="navbar navbar-default ActivityNavbar">
+        <div class="container">
+          <button type="button" class="btn btn-primary btn-block">Save and continue</button>
+        </div>
       </div>
     </div>
     <!-- Activity services -->
