@@ -90,7 +90,8 @@ app.activities = {
     'appointment': require('./activities/appointment'),
     'bookingConfirmation': require('./activities/bookingConfirmation'),
     'index': require('./activities/index'),
-    'login': require('./activities/login')
+    'login': require('./activities/login'),
+    'learnMore': require('./activities/learnMore')
 };
 
 /** Page ready **/

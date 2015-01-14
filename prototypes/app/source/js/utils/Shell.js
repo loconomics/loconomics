@@ -5,7 +5,8 @@
 var $ = require('jquery'),
     ko = require('knockout'),
     escapeRegExp = require('./escapeRegExp'),
-    NavAction = require('../viewmodels/NavAction');
+    NavAction = require('../viewmodels/NavAction'),
+    getUrlQuery = require('../utils/getUrlQuery');
 
 var shell = {
 
@@ -149,6 +150,12 @@ var shell = {
 
         // TODO: deduplicate code between this and showActivity
         var currentActivity = this.history.pop();
+        // If there is no a previous activity to navigate to,
+        // go to the index
+        if (!this.history.length) {
+            this.showActivity('index', options);
+        }
+        
         var previousActivity = this.history[this.history.length - 1];
         var activityName = previousActivity.name;
         this.currentZIndex--;
@@ -209,7 +216,9 @@ var shell = {
             activity: null,
             segments: null,
             path: null,
-            link: link
+            link: link,
+            // URL Query as an object, empty object if no query
+            query: getUrlQuery(link || '?')
         };
         
         if (match) {
