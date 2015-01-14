@@ -49,6 +49,8 @@ moment.locale('en-US');
 
 /** app static class **/
 var app = new Shell();
+// TODO app must to be a plain object with shell as property, not a shell instance
+app.shell = app;
 
 // TODO: refactor as model
 //app.model = new AppModel();
@@ -95,7 +97,8 @@ app.activities = {
     'signup': require('./activities/signup'),
     'contactInfo': require('./activities/contactInfo'),
     'positions': require('./activities/positions'),
-    'onboardingHome': require('./activities/onboardingHome')
+    'onboardingHome': require('./activities/onboardingHome'),
+    'locationEdition': require('./activities/locationEdition')
 };
 
 /** Page ready **/

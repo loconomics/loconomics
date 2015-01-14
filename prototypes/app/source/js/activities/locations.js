@@ -68,6 +68,21 @@ LocationsActivity.prototype.show = function show(options) {
         // preset:
         this.dataView.selectedLocation(options.selectedLocation);
     }
+    else if (options.route && options.route.segments) {
+        var id = options.route.segments[0];
+        if (id) {
+            if (id === 'new') {
+                this.app.shell.showActivity('locationEdition', {
+                    create: options.route.segments[1] // 'serviceRadius', 'serviceLocation'
+                });
+            }
+            else {
+                this.app.shell.showActivity('locationEdition', {
+                    locationID: id
+                });
+            }
+        }
+    }
 };
 
 function ViewModel() {

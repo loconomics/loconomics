@@ -7,17 +7,17 @@
     <div class="ListView ListView--twolines" data-bind="foreach: locations">
       <div class="ListView-item">
         <div class="ListView-item-marker"></div>
-        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.selectLocation }">
+        <a href="#" data-shell="pop" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.selectLocation }, attr: { href: '#!locations/' + locationID() }">
           <div><strong data-bind="text: name"></strong></div><div data-bind="text: singleLine"></div>
         </a>
-        <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.selectLocation }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
+        <a href="#" data-shell="pop" class="ListView-item-action" data-bind="event: { tap: $root.selectLocation }, attr: { href: '#!locations/' + locationID() }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
       </div>
     </div>
   </div>
 
   <div id="locationsAddNewButtons" class="isolated">
-    <button type="button" class="btn btn-primary btn-block">Add client location</button>
-    <button type="button" class="btn btn-primary btn-block">Add new location</button>
+    <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add client location</button>
+    <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add new location</button>
   </div>
 
 </div>

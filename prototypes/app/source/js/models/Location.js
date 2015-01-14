@@ -9,6 +9,7 @@ function Location(values) {
     Model(this);
     
     this.model.defProperties({
+        locationID: 0,
         name: '',
         addressLine1: null,
         addressLine2: null,
@@ -20,7 +21,10 @@ function Location(values) {
         countryID: null,
         latitude: null,
         longitude: null,
-        specialInstructions: null
+        specialInstructions: null,
+        isServiceRadius: false,
+        isServiceLocation: false,
+        serviceRadius: 0
     }, values);
     
     this.singleLine = ko.computed(function() {

@@ -1,0 +1,72 @@
+<!-- Activity locationEdition -->
+<div class="container-fluid has-navbar" data-activity="locationEdition">
+  <div>
+    <h1 class="ActivityTitle">
+        <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
+        <span data-bind="text: header">Location</span>
+    </h1>
+
+    <form role="form" data-bind="with: location()">
+      <div class="form-group">
+        <label for="locationEditionPostalCode">Zip code</label>
+        <input type="number" class="form-control" id="locationEditionPostalCode" data-bind="value: postalCode">
+      </div>
+      <div data-bind="visible: isServiceRadius">
+        <div class="form-group">
+          <label for="locationEditionRadius">Service radius</label>
+          <select class="form-control" id="locationEditionRadius" data-bind="value: serviceRadius">
+            <option value="0.5">0.5 miles</option>
+            <option value="1">1 mile</option>
+            <option value="2">2 miles</option>
+            <option value="3">3 miles</option>
+            <option value="5">5 miles</option>
+            <option value="10">10 miles</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="locationEditionRadiusNumber">Service radius (miles)</label>
+          <input type="number" step=".5" class="form-control" id="locationEditionRadiusNumber" placeholder="n miles" data-bind="value: serviceRadius">
+        </div>
+      </div>
+      <div data-bind="visible: isServiceLocation">
+          <div class="row">
+            <div class="form-group col-xs-8">
+              <label class="control-label">City</label>
+              <p class="form-control-static" data-bind="text: city">San Francisco</p>
+            </div>
+            <div class="form-group col-xs-4">
+              <label class="control-label">State</label>
+              <div>
+                <p class="form-control-static" data-bind="text: stateProvinceCode">CA</p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="locationEditionAddressLine1">Address</label>
+            <input type="text" class="form-control" id="locationEditionAddressLine1" placeholder="street address" data-bind="value: addressLine1">
+          </div>
+          <div class="form-group">
+            <label for="locationEditionAddressLine2">Suite/apt No.</label>
+            <input type="text" class="form-control" id="locationEditionAddressLine2" data-bind="value: addressLine2">
+          </div>
+          <div class="form-group">
+            <label for="locationEditionName">Location name</label>
+            <input type="text" class="form-control" id="locationEditionName" data-bind="value: name">
+          </div>
+          <div class="form-group">
+            <label for="locationEditionSpecialInstructions">Special instructions</label>
+            <textarea rows="2" class="form-control" id="locationEditionSpecialInstructions" data-bind="value: specialInstructions"></textarea>
+          </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="navbar navbar-default ActivityNavbar">
+    <div class="container">
+      <button type="button" class="btn btn-primary btn-block">
+        Save and continue
+      </button>
+    </div>
+  </div>
+
+</div>
