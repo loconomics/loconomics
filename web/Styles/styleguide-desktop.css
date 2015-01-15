@@ -1,9 +1,9 @@
-/*! Loconomics.com 2014-11-14
+/*! Loconomics.com 2014-12-26
    Author: Loconomics Inc. */
 
-/* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
+/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\styleguide-desktop.styl */
+/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\styleguide-desktop.styl */
 /**
   Set of styles used only on the Desktop Website but showed up
   as part of the Style Guide.
@@ -21,11 +21,11 @@
   styles built on top of Bootstrap only for Desktop Site.
 **/
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\styleguide-desktop.styl */
+/* line 18 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\styleguide-desktop.styl */
 /* Require 'bootstrap' in order to work, but not embedded
 @require 'bootstrap' */
 
-/* line 264 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\typographyDefinitions.styl */
+/* line 264 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\typographyDefinitions.styl */
 @font-face {
   font-family: 'Hand Of Sean';
   src: url("fonts/handsean.otf");

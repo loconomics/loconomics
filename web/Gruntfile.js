@@ -106,7 +106,9 @@ module.exports = function (grunt) {
                             depends: { 'jquery': 'jquery' }
                         },
                         'bootstrap': {
-                            path: './Scripts/libs/bootstrap/js/bootstrap.min.js',
+                            // Still using Bootstrap 3.2, that works with jquery-1.7
+                            //path: './Scripts/libs/bootstrap/js/bootstrap.min.js',
+                            path: './Scripts/libs/bootstrap-3.2.0.min.js',
                             exports: null,
                             depends: { 'jquery': 'jquery' }
                         },
@@ -217,7 +219,8 @@ module.exports = function (grunt) {
                             exports: 'jQuery'
                         },
                         'bootstrap': {
-                            path: './Scripts/libs/bootstrap-3.2.0.min.js',
+                            // Using latest Bootstrap version:
+                            path: './Scripts/libs/bootstrap/js/bootstrap.min.js',
                             exports: null,
                             depends: { 'jquery': 'jquery' }
                         }
