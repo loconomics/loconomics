@@ -75,10 +75,14 @@ function LoginActivity($activity, app) {
     }.bind(this));
     
     // Focus first bad field on error
-    this.dataView.loginError.subscribe(function() {
+    this.dataView.loginError.subscribe(function(err) {
         // Login is easy since we mark both unique fields
         // as error on loginError (its a general form error)
-        $activity.find(':input').get(0).focus();
+        var input = $activity.find(':input').get(0);
+        if (err)
+            input.focus();
+        else
+            input.blur();
     });
 }
 
