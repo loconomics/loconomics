@@ -145,4 +145,20 @@ public static class LcExtensions
         else
             return alt;
     }
+
+    public static List<T> Replace<T>(this List<T> list, T lookFor, T replaceWith)
+    {
+        for (int i = 0, l = list.Count; i < l; i++)
+        {
+            var item = list[i];
+            if (item != null && item.Equals(lookFor) ||
+                item == null && lookFor == null)
+            {
+                // Replace with value
+                list[i] = replaceWith;
+            }
+        }
+        // Return the same list for chainability
+        return list;
+    }
 }

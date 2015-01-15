@@ -597,7 +597,9 @@
     /*========= JSON =============*/
     public static void ReturnJson(object jsondata, bool endResponse = true){
         Response.ContentType = "application/json";
-        Json.Write(jsondata, Response.Output);
+        // JSON.NET Works Better: good datetime formatting as ISO-8601 and some bugfixes details.
+        Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(jsondata));
+        //Json.Write(jsondata, Response.Output);
         if (endResponse)
             Response.End();
         else

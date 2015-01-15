@@ -1,170 +1,127 @@
-﻿@using System.Linq;
-@using System.Web;
-@using System.Web.WebPages;
-@using System.Web.WebPages.Html;
-@using System.Collections;
-@using System.Collections.Generic;
-@*
+﻿@*
     Testing page for building a REST API
 *@
-@using WebMatrix.Data;
-@{
-    dynamic result = new Dictionary<string, dynamic>();
+@functions{
+    public class RestTest : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (!Request["givemeerror"].IsEmpty()) {
+                throw new HttpException(500, Request["givemeerror"]);
+            }
+        
+            if (!UrlData[0].IsEmpty()) {
+                throw new HttpException(404, "That item does not exists (" + UrlData[0] + ")");
+            }
 
-    try {
-        
-        switch (Request.HttpMethod) {
-            case "GET":
-                result = doGet();
-                
-                break;
-            case "POST":
- 
-                result = doPost();
-                break;
-                
-            case "PUT":
-                
-                result = doPut();
-                break;
-                
-            case "DELETE":
-                
-                result = doDelete();
-                break;
+            if (Request["name"] == "indians") {
+                var pos = LcData.UserInfo.GetUserPos();
+                if (pos == null || pos.Count == 0)
+                    return new { rows = new object[]{}, message = "You have not positions. Logged?" };
+                else
+                    return new { rows = LcData.UserInfo.GetUserPos() };
+            }
+            else {
+                return new {
+                    rows = new string[] { "one", "little", "two", "little", "three", "little", "indians" }
+                };
+            }
         }
-        
-    } catch(HttpException http) {
-        
-        Response.StatusCode = http.GetHttpCode();
-        
-        result["errorMessage"] = http.Message;
-        if (!ModelState.IsValid) {
-            result["errorSource"] = "validation";
-            result["errors"] = ModelState.Errors();
-        }
-        
-    } catch(Exception ex){
+        public override dynamic Post()
+        {
+            if (!Request["givemeerror"].IsEmpty()) {
+                throw new HttpException(500, Request["givemeerror"]);
+            }
+            if (!UrlData[0].IsEmpty()) {
+                throw new HttpException(500, "Cannot POST to an item");
+            }
 
-        result["errorMessage"] = ex.Message;
-    }
-    
-    // Output data
-    LcHelpers.ReturnJson(result);
-}
-@functions {
-    dynamic doGet() {
-        if (!Request["givemeerror"].IsEmpty()) {
-            throw new HttpException(500, Request["givemeerror"]);
+            return editItem();
         }
-        
-        if (!UrlData[0].IsEmpty()) {
-            throw new HttpException(404, "That item does not exists (" + UrlData[0] + ")");
-        }
+        public override dynamic Put()
+        {
+            if (!Request["givemeerror"].IsEmpty()) {
+                throw new HttpException(500, Request["givemeerror"]);
+            }
 
-        if (Request["name"] == "indians") {
-            var pos = LcData.UserInfo.GetUserPos();
-            if (pos == null || pos.Count == 0)
-                return new { rows = new object[]{}, message = "You have not positions. Logged?" };
-            else
-                return new { rows = LcData.UserInfo.GetUserPos() };
-        }
-        else {
-            return new {
-                rows = new string[] { "one", "little", "two", "little", "three", "little", "indians" }
-            };
-        }
-    }
-    
-    dynamic editItem() {
+            var v = validateItemID();
+            if (v != null)
+                return v;
+                
+            var updated = editItem();
+
+            updated["ItemID"] = UrlData[0];
         
-        Validation.Add("short", Validator.StringLength(5, 0, "Short must be 5 or less"));
-        Validation.RequireField("name", LcRessources.RequiredField("Name"));
-        Validation.Add("num", Validator.Decimal("Num must be a number"));
+            // OK
+            StatusCode = 200;
+            return updated;
+        }
+        public override dynamic Delete()
+        {
+            if (!Request["givemeerror"].IsEmpty()) {
+                throw new HttpException(500, Request["givemeerror"]);
+            }
+
+            var v = validateItemID();
+            if (v != null)
+                return v;
+
+            // I deleted a bit of nothing!
+            StatusCode = 204;
+            return null;
+        }
         
-        if (Validation.IsValid()) {
+        dynamic editItem() {
+        
+            Validation.Add("short", Validator.StringLength(5, 0, "Short must be 5 or less"));
+            Validation.RequireField("name", LcRessources.RequiredField("Name"));
+            Validation.Add("num", Validator.Decimal("Num must be a number"));
+        
+            if (Validation.IsValid()) {
             
-            // Creating a bit of something, an ID and the same input data
-            // TODO: itemData needs to be filtered!
-            var itemData = Request.Form.AllKeys.ToDictionary(key => key, key => Request.Form[key]);
-            itemData["ItemID"] = new Random().Next(0, 100).ToString();
+                // Creating a bit of something, an ID and the same input data
+                // TODO: itemData needs to be filtered!
+                var itemData = Request.Form.AllKeys.ToDictionary(key => key, key => Request.Form[key]);
+                itemData["ItemID"] = new Random().Next(0, 100).ToString();
            
-            // HTTP 201: 'Ok, Created'
-            Response.StatusCode = 201;
+                // HTTP 201: 'Ok, Created'
+                StatusCode = 201;
             
-            return itemData;
+                return itemData;
+            }
+            else {
+                // Bad request, input data incorrect because of validation rules
+                throw new HttpException(400, "Validation rules");
+            }
         }
-        else {
-            // Bad request, input data incorrect because of validation rules
-            throw new HttpException(400, "Validation rules");
-        }
-    }
     
-    dynamic doPost() {
-        if (!Request["givemeerror"].IsEmpty()) {
-            throw new HttpException(500, Request["givemeerror"]);
-        }
-        if (!UrlData[0].IsEmpty()) {
-            throw new HttpException(500, "Cannot POST to an item");
-        }
+        dynamic validateItemID() {
 
-        return editItem();
+            if (UrlData[0].IsEmpty()) {
+                // Bad Request
+                StatusCode = 400;
+                return new {
+                    errorMessage = "Validation rules",
+                    errors = new {
+                        id = "An Item ID is required at the URL"
+                    }
+                };
+            }
+            else if (!UrlData[0].IsInt()) {
+                // Bad Request
+                WebPage.Response.StatusCode = 400;
+                return new {
+                    errorMessage = "Validation rules",
+                    errors = new {
+                        id = "The Item ID must be an integer"
+                    }
+                };
+            }
+            return null;
+        }
     }
-    
-    dynamic validateItemID() {
-
-        if (UrlData[0].IsEmpty()) {
-            // Bad Request
-            Response.StatusCode = 400;
-            return new {
-                errorMessage = "Validation rules",
-                errors = new {
-                    id = "An Item ID is required at the URL"
-                }
-            };
-        }
-        else if (!UrlData[0].IsInt()) {
-            // Bad Request
-            Response.StatusCode = 400;
-            return new {
-                errorMessage = "Validation rules",
-                errors = new {
-                    id = "The Item ID must be an integer"
-                }
-            };
-        }
-        return null;
-    }
-    
-    dynamic doPut() {
-        if (!Request["givemeerror"].IsEmpty()) {
-            throw new HttpException(500, Request["givemeerror"]);
-        }
-
-        var v = validateItemID();
-        if (v != null)
-            return v;
-                
-        var updated = editItem();
-
-        updated["ItemID"] = UrlData[0];
-        
-        // OK
-        Response.StatusCode = 200;
-        return updated;
-    }
-    
-    dynamic doDelete() {
-        if (!Request["givemeerror"].IsEmpty()) {
-            throw new HttpException(500, Request["givemeerror"]);
-        }
-
-        var v = validateItemID();
-        if (v != null)
-            return v;
-
-        // I deleted a bit of nothing!
-        Response.StatusCode = 204;
-        return null;
-    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestTest().JsonResponse(this);
 }

@@ -12,7 +12,7 @@ using System.IO;
 /// <summary>
 /// Calendaring Tasks, wrapper for some CalendarDll features.
 /// </summary>
-public static class LcCalendar
+public static partial class LcCalendar
 {
     #region Booking
     public const string sqlInsBookingEvent = @"
@@ -642,15 +642,24 @@ public static class LcCalendar
         }
     }
 
-    public static void SaveMonthlyCalendarJsonData(int userID, dynamic data)
+    public static DatesRange SaveMonthlyCalendarJsonData(int userID, dynamic data)
     {
         var ent = new loconomicsEntities();
+        // Max for Start and Min for End for easy comparision when filling
+        // actual values later
+        var range = new DatesRange(DateTime.MaxValue, DateTime.MinValue);
 
         if (data.slots != null)
         {
             foreach (var slot in data.slots)
             {
                 var date = DateTime.Parse(slot.Name);
+                // Updating dates range
+                if (date < range.Start)
+                    range.Start = date;
+                if (date > range.End)
+                    range.End = date;
+
                 var avail = slot.Value;
                 // We save only slots/appointments modified by the user
                 if (avail.source == "user") {
@@ -687,6 +696,11 @@ public static class LcCalendar
         }
 
         ent.SaveChanges();
+
+        if (range.Start == DateTime.MaxValue)
+            return null;
+        else
+            return range;
     }
     #endregion
 
@@ -732,6 +746,622 @@ public static class LcCalendar
     }
     #endregion
 
+    #region Events in general
+    /// <summary>
+    /// Get Events for the user and given dates and types.
+    /// Some fields and tables names are fixed to follow a common name-scheming.
+    /// 
+    /// TODO: Review the date range must be for the events Start and EndTime only
+    /// or must consider multiple occurrences of recurrent events
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="types"></param>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <returns></returns>
+    public static dynamic GetUserEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, string[] includes = null, int eventID = 0)
+    {
+        types = types == null ? new int[]{} : types;
+        includes = includes == null ? new string[]{} : includes;
+
+        // Names fixes (urgg...) and
+        // simplified subclasses
+        includes = includes.ToList()
+            .Replace("CalendarRecurrenceFrequency", "CalendarReccurrence.CalendarReccurrenceFrequency")
+            .Replace("CalendarEventRecurrencesPeriodsList", "CalendarEventRecurrencesPeriodList")
+            .Replace("CalendarEventRecurrencesPeriod", "CalendarEventRecurrencesPeriodList.CalendarEventRecurrencesPeriod")
+            .Replace("CalendarEventExceptionsPeriod", "CalendarEventExceptionsPeriodsList.CalendarEventExceptionsPeriod")
+            .Replace("CalendarRecurrence", "CalendarReccurrence")
+            .ToArray();
+
+        using (var ent = new loconomicsEntities())
+        {
+            var data = (System.Data.Entity.Infrastructure.DbQuery<CalendarEvents>)ent.CalendarEvents;
+            foreach(var include in includes)
+            {
+                data = data.Include(include);
+            }
+
+            IQueryable<CalendarEvents> query;
+            if (eventID > 0)
+            {
+                query = data
+                .Where(c => c.UserId == userID && c.Id == eventID);
+            }
+            else
+            {
+                query = data
+                .Where(c => c.UserId == userID && types.Contains(c.EventType) &&
+                    (start.HasValue ? c.EndTime > start : true) &&
+                    (end.HasValue ? c.StartTime < end : true));
+            }
+
+            return query
+                .ToList()
+                .Select(ev => new {
+                    EventID = ev.Id,
+                    UserID = ev.UserId,
+                    CalendarEventTypeID = ev.EventType,
+                    Summary = ev.Summary,
+                    UID = ev.UID,
+                    CalendarAvailabilityTypeID = ev.CalendarAvailabilityTypeID,
+                    Transparency = ev.Transparency,
+                    StartTime = ev.StartTime,
+                    EndTime = ev.EndTime,
+                    IsAllDay = ev.IsAllDay,
+                    StampTime = ev.StampTime,
+                    TimeZone = ev.TimeZone,
+                    Priority = ev.Priority,
+                    Location = ev.Location,
+                    UpdatedDate = ev.UpdatedDate,
+                    CreatedDate = ev.CreatedDate,
+                    ModifyBy = ev.ModifyBy,
+                    Class = ev.Class,
+                    Organizer = ev.Organizer,
+                    Sequence = ev.Sequence,
+                    Geo = ev.Geo,
+                    CalendarRecurrenceID = ev.RecurrenceId,
+                    Description = ev.Description,
+                    // NO published TimeBlock and DayOfWeek
+                    // since are old and confusing fields,
+                    // all that information comes with 
+                    // the event recurrence details
+                    //TimeBlock = ev.TimeBlock,
+                    //DayOfWeek = ev.DayofWeek,
+
+                    CalendarAvailabilityType = includes.Contains("CalendarAvailabilityType") ? new {
+                        CalendarAvailabilityTypeID = ev.CalendarAvailabilityType.CalendarAvailabilityTypeID,
+                        Name = ev.CalendarAvailabilityType.CalendarAvailabilityTypeName,
+                        Description = ev.CalendarAvailabilityType.CalendarAvailabilityTypeDescription,
+                        SelectableAs = ev.CalendarAvailabilityType.SelectableAs
+                    } : null,
+
+                    CalendarEventType = includes.Contains("CalendarEventType") ? new {
+                        CalendarEventTypeID = ev.CalendarEventType.EventTypeId,
+                        Name = ev.CalendarEventType.EventType,
+                        DisplayName = ev.CalendarEventType.DisplayName,
+                        Description = ev.CalendarEventType.Description
+                    } : null,
+
+                    CalendarRecurrence = includes.Contains("CalendarRecurrence") ? ev.CalendarReccurrence.Select(r => new {
+                        CalendarRecurrenceID = r.ID,
+                        Count = r.Count,
+                        EvaluationMode = r.EvaluationMode,
+                        CalendarRecurrenceFrequencyTypeID = r.Frequency,
+                        Interval = r.Interval,
+                        RestrictionType = r.RestristionType,
+                        Until = r.Until,
+                        FirstDayOfWeek = r.FirstDayOfWeek,
+
+                        CalendarReccurrenceFrequency = includes.Contains("CalendarRecurrenceFrequency") ? r.CalendarReccurrenceFrequency.Select(f => new {
+                            CalendarReccurrenceFrequencyID = f.ID,
+                            ByDay = f.ByDay,
+                            ByHour = f.ByHour,
+                            ByMinute = f.ByMinute,
+                            ByMonth = f.ByMonth,
+                            ByMonthDay = f.ByMonthDay,
+                            BySecond = f.BySecond,
+                            BySetPosition = f.BySetPosition,
+                            ByWeekNo = f.ByWeekNo,
+                            ByYearDay = f.ByYearDay,
+                            DayOfWeek = f.DayOfWeek,
+                            ExtraValue = f.ExtraValue,
+                            FrequencyDay = f.FrequencyDay
+                        }) : null
+                    }) : null,
+                
+                    CalendarEventComments = includes.Contains("CalendarEventComments") ? ev.CalendarEventComments.Select(r => new {
+                        Comment = r.Comment,
+                        CalendarEventCommentID = r.Id
+                    }) : null,
+                
+                    CalendarEventExceptionsPeriodsList = includes.Contains("CalendarEventExceptionsPeriodsList") ? ev.CalendarEventExceptionsPeriodsList.Select(r => new {
+                        CalendarEventExceptionsPeriodsListID = r.Id,
+                    
+                        CalendarEventExceptionsPeriod = includes.Contains("CalendarEventExceptionsPeriod") ? r.CalendarEventExceptionsPeriod.Select(p => new {
+                            DateStart = p.DateStart,
+                            DateEnd = p.DateEnd
+                        }) : null
+                    }) : null,
+                
+                    CalendarEventRecurrencesPeriodsList = includes.Contains("CalendarEventRecurrencesPeriodsList") ? ev.CalendarEventRecurrencesPeriodList.Select(r => new {
+                        CalendarEventRecurrencesPeriodsListID = r.Id,
+                    
+                        CalendarEventRecurrencesPeriod = includes.Contains("CalendarEventRecurrencesPeriod") ? r.CalendarEventRecurrencesPeriod.Select(p => new {
+                            DateStart = p.DateStart,
+                            DateEnd = p.DateEnd
+                        }) : null
+                    }) : null,
+                
+                    CalendarEventsAttendees = includes.Contains("CalendarEventsAttendees" ) ? ev.CalendarEventsAttendees.Select(r => new {
+                        CalendarEventsAttendeeID = r.Id,
+                        Attendee = r.Attendee,
+                        Role = r.Role,
+                        Uri = r.Uri
+                    }) : null,
+                
+                    CalendarEventsContacts = includes.Contains("CalendarEventsContacts") ? ev.CalendarEventsContacts.Select(r => new {
+                        CalendarEventsContactID = r.Id,
+                        Contact = r.Contact
+                    }) : null
+                });
+        }
+    }
+
+    public static dynamic GetAvailabiliyTypes()
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(@"
+                SELECT  CalendarAvailabilityTypeID As AvailabilityTypeID, SelectableAs As DisplayName
+                FROM    CalendarAvailabilityType
+                WHERE   LanguageID = @0 AND CountryID = @1
+                        AND SelectableAs is not null
+            ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+    }
+
+    public static dynamic GetEventTypes(bool onlySelectable)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            var sql = @"SELECT EventTypeID, EventType As InternalName, DisplayName FROM CalendarEventType";
+            if (onlySelectable)
+                sql += " WHERE DisplayName is not null";
+            return db.Query(sql);
+        }
+    }
+
+    #region Simplified Events API
+    /// <summary>
+    /// TODO Return Events records by dates-range or event ocurrences (so including recurrence ocurrences)
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="types"></param>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <param name="eventID"></param>
+    /// <returns></returns>
+    public static IEnumerable<dynamic> GetSimplifiedEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, int eventID = 0)
+    {
+        types = types == null ? new int[] { } : types;
+        var thereAreDates = start.HasValue || end.HasValue;
+
+        if (!start.HasValue)
+            start = DateTime.Today;
+        if (!end.HasValue)
+            end = start.Value.AddDays(7);
+
+        // Avoid excessive date range, limiting to 90 days
+        if (end.Value - start.Value > TimeSpan.FromDays(90))
+        {
+            end = start.Value.AddDays(90);
+        }
+
+        using (var ent = new loconomicsEntities())
+        {
+            var data = (System.Data.Entity.Infrastructure.DbQuery<CalendarEvents>)ent.CalendarEvents
+                .Include("CalendarReccurrence")
+                .Include("CalendarReccurrence.CalendarReccurrenceFrequency");
+
+            IQueryable<CalendarEvents> query;
+            if (eventID > 0)
+            {
+                query = data
+                .Where(c => c.UserId == userID && c.Id == eventID);
+            }
+            else
+            {
+                query = data
+                .Where(c => c.UserId == userID && types.Contains(c.EventType) &&
+                    ((
+                        // Dates Range
+                        (c.EndTime > start) &&
+                        (c.StartTime < end)
+                     ) ||
+                        // OR, if they are Recurrence, any Date Range
+                        // (because its occurrences may happen inside the range)
+                        c.CalendarReccurrence.Any()
+                    )
+                );
+            }
+            
+            // iCalendar is needed to calculate each event occurrences
+            var calUtils = new CalendarUtils();
+
+            // TODO Support for real, user attached or event attached, Time Zones (the fields
+            // exists, but has not valid values: user.TimeZone and event.TimeZone)
+            //var tzid = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").Id;
+            var tzid = "Pacific Standard Time";
+
+            foreach(var ev in query.ToList())
+            {
+                IEnumerable<dynamic> occurrences = null;
+
+                // Occurrences are not calculated if a specific eventID was requested
+                // without filtering dates (the possibility to set dates allow for query
+                // occurrences of a specific event)
+                if (eventID == 0 || thereAreDates)
+                {
+                    // Getting an iEvent only for recurrent events, for occurrences calculations
+                    iEvent iev = ev.CalendarReccurrence.Count > 0 ? calUtils.CreateEvent(ev, tzid) : null;
+                    if (iev != null)
+                    {
+                        // An iEvent needs to be attached to an iCalendar in order
+                        // to work when getting the occurrences.
+                        var iCal = calUtils.GetICalendarLibraryInstance();
+                        iCal.Events.Add(iev);
+
+                        // Getting occurrences datetime ranges
+                        occurrences = iev.GetOccurrences(start.Value, end.Value).Select(oc => new
+                        {
+                            // Ugly conversion because of a bad internal conversion of iCalendar, treating the
+                            // original value as UTC when is local time-zone based:
+                            StartTime = new DateTime(oc.Period.StartTime.Ticks, DateTimeKind.Unspecified).ToUniversalTime(),
+                            EndTime = new DateTime(oc.Period.EndTime.Ticks, DateTimeKind.Unspecified).ToUniversalTime()
+                        });
+
+                        // If there are no occurrences for the expected date time range, no need 
+                        // to include the event (an occurrence is returned too for the first
+                        // time the event happen, not only for repetitions, so is OK do it this way),
+                        // so we continue with the next discarding the current.
+                        if (occurrences.Count() == 0)
+                        {
+                            continue;
+                        }
+                    }
+                }
+
+                yield return new {
+                    EventID = ev.Id,
+                    UserID = ev.UserId,
+                    EventTypeID = ev.EventType,
+                    Summary = ev.Summary,
+                    //UID = ev.UID,
+                    AvailabilityTypeID = ev.CalendarAvailabilityTypeID,
+                    //Transparency = ev.Transparency,
+                    // Providing UTC ever as result (for JSON output)
+                    StartTime = ev.StartTime.ToUniversalTime(),
+                    EndTime = ev.EndTime.ToUniversalTime(),
+                    Kind = ev.StartTime.Kind,
+                    IsAllDay = ev.IsAllDay,
+                    //StampTime = ev.StampTime,
+                    // The source timezone, if any, the dates will be on UTC.
+                    TimeZone = ev.TimeZone,
+                    //Priority = ev.Priority,
+                    Location = ev.Location,
+                    UpdatedDate = ev.UpdatedDate,
+                    CreatedDate = ev.CreatedDate,
+                    //ModifyBy = ev.ModifyBy,
+                    //Class = ev.Class,
+                    //Organizer = ev.Organizer,
+                    //Sequence = ev.Sequence,
+                    //Geo = ev.Geo,
+                    //CalendarRecurrenceID = ev.RecurrenceId,
+                    Description = ev.Description,
+                    RecurrenceRule = GetSimplifiedRecurrenceRule(ev.CalendarReccurrence),
+                    RecurrenceOccurrences = occurrences,
+                    ReadOnly = ReadOnlyEventTypes.Contains(ev.EventType)
+                };
+            }
+        }
+    }
+
+    /// <summary>
+    /// Events of type 'booking', 'imported' and 'monthly schedule'
+    /// cannot be directly edited.
+    /// A booking event gets edited from editing its booking.
+    /// Other types can be edited/created/deleted from a specific
+    /// API (monthly and weekly schedule, booking events).
+    /// </summary>
+    public static readonly int[] ReadOnlyEventTypes = new int[] { 1, 2, 4, 6 };
+
+    public static void SetSimplifiedEvent(int UserID, int EventID,
+        int EventTypeID,
+        int AvailabilityTypeID,
+        string Summary,
+        DateTime StartTime,
+        DateTime EndTime,
+        bool IsAllDay,
+        string Location,
+        string Description,
+        string TimeZone,
+        SimplifiedRecurrenceRule RRule)
+    {
+        var previousItem = GetSimplifiedEvents(UserID, null, null, null, EventID).First();
+
+        // Avoid standard edition of read-only types,
+        // and conversion of an editable into a non editable event:
+        if (ReadOnlyEventTypes.Contains((int)previousItem.EventTypeID) ||
+            ReadOnlyEventTypes.Contains(EventTypeID))
+            throw new ConstraintException("Cannot be inserted/updated");
+
+        int? repeatFrequency = null;
+        List<int> selectedWeekDays = null;
+
+        if (RRule != null)
+        {
+            repeatFrequency = RRule.FrequencyTypeID;
+            selectedWeekDays = RRule.SelectedWeekDays;
+
+            // Special frequencies with an ID of 2-hundred have forced
+            // an interval/repeatEvery value of 2
+            if ((int)repeatFrequency / 100 == 2)
+            {
+                RRule.Interval = 2;
+                // And the code of frequency MUST be changed to its 'real' equivalent:
+                repeatFrequency -= 200;
+            }
+            // Weekly frequency presets: 5 hundred values
+            if ((int)repeatFrequency / 100 == 5)
+            {
+                // Interval to 1
+                RRule.Interval = 1;
+                // Set week-days
+                selectedWeekDays.Clear();
+                if (repeatFrequency == 501 || repeatFrequency == 502)
+                {
+                    selectedWeekDays.Add((int)DayOfWeek.Monday);
+                    selectedWeekDays.Add((int)DayOfWeek.Wednesday);
+                    selectedWeekDays.Add((int)DayOfWeek.Friday);
+                }
+                if (repeatFrequency == 501 || repeatFrequency == 503)
+                {
+                    selectedWeekDays.Add((int)DayOfWeek.Tuesday);
+                    selectedWeekDays.Add((int)DayOfWeek.Thursday);
+                }
+                // Finally, set frequency to 'weekly':
+                repeatFrequency = 5;
+            }
+        }
+
+        SetUserAppointment(UserID,
+            EventID,
+            EventTypeID,
+            AvailabilityTypeID,
+            Summary,
+            StartTime,
+            EndTime,
+            IsAllDay,
+            RRule != null,
+            repeatFrequency ?? 1,
+            RRule != null ? RRule.Interval : 0,
+            RRule != null ? RRule.Until : null,
+            RRule != null ? RRule.Count : null,
+            Location,
+            Description,
+            selectedWeekDays,
+            RRule != null ? RRule.MonthlyWeekDay ? "week-day" : "month-day" : null,
+            TimeZone
+        );
+    }
+
+    /// <summary>
+    /// Deletes and returns the deleted event, or null if doesn't exists.
+    /// Blocks deletion of ReadOnly Types.
+    /// </summary>
+    /// <param name="UserID"></param>
+    /// <param name="EventID"></param>
+    /// <returns></returns>
+    public static dynamic DelSimplifiedEvent(int UserID, int EventID)
+    {
+        var item = GetSimplifiedEvents(UserID, null, null, null, EventID).First();
+
+        if (item)
+        {
+            // Avoid standard edition of read-only types
+            if (ReadOnlyEventTypes.Contains((int)item.EventTypeID))
+                throw new ConstraintException("Cannot be deleted");
+
+            DelUserAppointment(UserID, EventID);
+        }
+
+        return item;
+    }
+
+    public class SimplifiedRecurrenceRule
+    {
+        /// <summary>
+        /// Type frequency choosen, for example 'monthly, daily, yearly'.
+        /// </summary>
+        public int FrequencyTypeID;
+        /// <summary>
+        /// Frequency amount of the repetition,
+        /// 'repeat every Interval days/months/years/etc.'.
+        /// Its 1 by default.
+        /// </summary>
+        public int Interval;
+        /// <summary>
+        /// Date when repetition ends, if Ending is 'date'
+        /// </summary>
+        public DateTime? Until;
+        /// <summary>
+        /// Number of ocurrences for the repetition,
+        /// if Ending is 'ocurrences'
+        /// </summary>
+        public int? Count;
+        /// <summary>
+        /// String enumeration describing the kind of ending
+        /// of the recurrence, could be:
+        /// - never: never ends (default)
+        /// - date: ends on the Until date
+        /// - ocurrences: ends after Count ocurrences
+        /// </summary>
+        public string Ending;
+        /// <summary>
+        /// List of week days when repetition must happens,
+        /// for weekly frequencies.
+        /// Sunday is 0 up to Saturday 6.
+        /// </summary>
+        public List<int>SelectedWeekDays;
+        /// <summary>
+        /// It specifies if the recurrence for a Montly Frequency (6)
+        /// happens the day of the month (false)
+        /// or the day of the week (true).
+        /// Its false by default.
+        /// </summary>
+        public bool MonthlyWeekDay;
+        /// <summary>
+        /// It specifies if the parsed recurrence rule has set
+        /// options incompatible with the simplified recurrence
+        /// rule description that this object can hold.
+        /// </summary>
+        public bool Incompatible;
+        /// <summary>
+        /// It specifies if the parsed recurrences object has
+        /// more than one rule specified, too many to be managed
+        /// by the this simplification scheme, so only the 
+        /// first rule is included.
+        /// </summary>
+        public bool TooMany;
+        public SimplifiedRecurrenceRule() { }
+    }
+
+    public static SimplifiedRecurrenceRule GetSimplifiedRecurrenceRule(IEnumerable<CalendarReccurrence> calRecurrences)
+    {
+        if (calRecurrences == null)
+            return null;
+        else
+        {
+            SimplifiedRecurrenceRule rrule = null;
+            foreach (var rec in calRecurrences)
+            {
+                if (rrule == null)
+                {
+                    rrule = GetSimplifiedRecurrenceRule(rec);
+                }
+                else
+                {
+                    rrule.TooMany = true;
+                    break;
+                }
+            }
+            return rrule;
+        }
+    }
+
+    /// <summary>
+    /// Get an object with the Recurrence Rule options of a database record
+    /// for a recurrence.
+    /// Its a simplification of the common used options.
+    /// </summary>
+    /// <param name="calRecurrence"></param>
+    /// <returns></returns>
+    public static SimplifiedRecurrenceRule GetSimplifiedRecurrenceRule(CalendarReccurrence calRecurrence)
+    {
+        if (calRecurrence == null || !calRecurrence.Frequency.HasValue)
+            return null;
+
+        List<int> selectedWeekDays = new List<int>();
+        var monthlyWeekDay = false;
+        int repeatFrequency = calRecurrence.Frequency.Value;
+        var recEnds = "never";
+        bool incompatible = false;
+
+        if (calRecurrence.Until != null) {
+            recEnds = "date";
+        } else if (calRecurrence.Count != null && calRecurrence.Count > 0) {
+            recEnds = "ocurrences";
+        }
+
+        if (calRecurrence.CalendarReccurrenceFrequency != null && calRecurrence.CalendarReccurrenceFrequency.Count > 0)
+        {
+            foreach (var rf in calRecurrence.CalendarReccurrenceFrequency)
+            {
+                if (rf.DayOfWeek.HasValue &&
+                    !selectedWeekDays.Contains(rf.DayOfWeek.Value))
+                {
+                    selectedWeekDays.Add(rf.DayOfWeek.Value);
+                }
+                // If monthly, we check that there are almost one frequency record
+                // that has a ByDay:true, FrequencyDay, and DayOfWeek
+                // to detect that was set the 'week-day' option.
+                if (repeatFrequency == 6 &&
+                    rf.ByDay.HasValue && rf.ByDay.Value &&
+                    rf.DayOfWeek.HasValue &&
+                    rf.FrequencyDay.HasValue)
+                {
+                    monthlyWeekDay = true;
+                }
+
+                // Check incompatible options for the simplified scheme
+                if ((rf.ByHour.HasValue && rf.ByHour.Value) ||
+                    (rf.ByMinute.HasValue && rf.ByMinute.Value) ||
+                    (rf.ByMonth.HasValue && rf.ByMonth.Value) ||
+                    //(rf.ByMonthDay.HasValue && rf.ByMonthDay.Value) || // TODO Only if different from the Startdate->MonthDay
+                    (rf.BySecond.HasValue && rf.BySecond.Value) ||
+                    (rf.BySetPosition.HasValue && rf.BySetPosition.Value) ||
+                    (rf.ByWeekNo.HasValue && rf.ByWeekNo.Value)
+                    //(rf.ByYearDay.HasValue && rf.ByYearDay.Value) // TODO Only if different from the Startdate->YearDay
+                    )
+                    incompatible = true;
+            }
+            // Only if there are week-days
+            if (selectedWeekDays.Count > 0)
+            {
+                // Detect Weekly frequency Presets:
+                if (repeatFrequency == 5)
+                {
+                    if (selectedWeekDays.Count == 3 &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Wednesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Friday))
+                    {
+                        repeatFrequency = 502;
+                    }
+                    if (selectedWeekDays.Count == 2 &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Thursday))
+                    {
+                        repeatFrequency = 503;
+                    }
+                    if (selectedWeekDays.Count == 5 &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Wednesday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Friday) &&
+                        selectedWeekDays.Contains((int)DayOfWeek.Thursday))
+                    {
+                        repeatFrequency = 501;
+                    }
+                }
+            }
+        }
+
+        return new SimplifiedRecurrenceRule {
+            FrequencyTypeID = repeatFrequency,
+            Interval = calRecurrence.Interval.HasValue ? calRecurrence.Interval.Value : 1,
+            Until = calRecurrence.Until,
+            Count = calRecurrence.Count,
+            Ending = recEnds,
+            SelectedWeekDays = selectedWeekDays,
+            MonthlyWeekDay = monthlyWeekDay,
+            Incompatible = incompatible
+        };
+    }
+    #endregion
+    #endregion
+
     #region Appointments (custom user events)
     public static List<CalendarEvents> GetUserAppointments(int userID)
     {
@@ -771,19 +1401,38 @@ public static class LcCalendar
         string Location,
         string Description,
         List<int> WeekDays = null,
-        string monthlyOption = "month-day")
+        string monthlyOption = "month-day",
+        string TimeZone = null)
     {
         using (var ent = new loconomicsEntities())
         {
             var dbevent = ent.CalendarEvents.Find(EventID);
             if (dbevent == null)
             {
+                // Deleted or bad ID
+                if (EventID > 0)
+                    return;
+
+                // New one to be created:
                 dbevent = ent.CalendarEvents.Create();
                 ent.CalendarEvents.Add(dbevent);
                 dbevent.UserId = userID;
                 dbevent.CreatedDate = DateTime.Now;
             } else if (dbevent.UserId != userID)
                 return;
+
+            // Dates swap
+            if (EndTime < StartTime){
+                var dt = EndTime;
+                EndTime = StartTime;
+                StartTime = dt;
+            }
+
+            // Auto TimeZone to server local
+            if (String.IsNullOrEmpty(TimeZone))
+            {
+                TimeZone = System.TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).ToString("t");
+            }
 
             dbevent.EventType = EventTypeID;
             dbevent.CalendarAvailabilityTypeID = AvailabilityTypeID;
@@ -797,6 +1446,7 @@ public static class LcCalendar
                 EndTime = EndTime.AddDays(1);
             dbevent.EndTime = EndTime;
             dbevent.IsAllDay = IsAllDay;
+            dbevent.TimeZone = TimeZone;
             dbevent.Location = Location;
             dbevent.Description = Description;
 
@@ -1017,9 +1667,9 @@ public static class LcCalendar
         var userinfo = LcData.UserInfo.GetUserRowWithContactData(UserID);
         if (userinfo != null)
         {
-            var tznumber = userinfo.TimeZone;
+            //var tznumber = userinfo.TimeZone;
             // TODO: for now, the value from database is discarted, an offset is not valid, we need a name, I set the only
-            // one used today:
+            // one used today (on iCalendar, the CreateEvent discards the event.TimeZone too):
             TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             calUser.DefaultTimeZone = tz;
         }

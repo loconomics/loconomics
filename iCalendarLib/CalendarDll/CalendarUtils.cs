@@ -144,25 +144,7 @@ namespace CalendarDll
             // filled with Events
             //----------------------------------------------------------------------
 
-
-            iCalendar iCal =
-                GetICalendarLibraryInstance();
-
-            // Fill it with Events
-
-            foreach 
-                (var currEvent in 
-                    GetEventsByUserDateRange(
-                        user, 
-                        startDate, 
-                        endDate,
-                        user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
-            {
-                iCal.Events.Add(currEvent);
-            }
-            
-
-
+            iCalendar iCal = GetICalendarEventsFromDBByUserDateRange(user, startDate, endDate);
 
 
             //----------------------------------------------------------------------
@@ -349,21 +331,33 @@ namespace CalendarDll
             DateTime startDate, 
             DateTime endDate)
         {
+            if (user == null)
+                throw new ArgumentNullException("user");
 
+            return GetICalendarForEvents(GetEventsByUserDateRange(
+                user, 
+                startDate, 
+                endDate,
+                user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null));
+        }
+
+        public iCalendar GetICalendarForEvents(IEnumerable<iEvent> events)
+        {
             iCalendar iCal = GetICalendarLibraryInstance();
-
-            if (user != null)
+            foreach (var ievent in events)
             {
-                foreach (var currEvent in GetEventsByUserDateRange(
-                    user, 
-                    startDate, 
-                    endDate,
-                    user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
-                {
-                    iCal.Events.Add(currEvent);
-                }
+                iCal.Events.Add(ievent);
             }
+            return iCal;
+        }
 
+        public iCalendar GetICalendarForEvents(IEnumerable<CalendarEvents> events, string defaultTZID)
+        {
+            iCalendar iCal = GetICalendarLibraryInstance();
+            foreach (var ievent in events)
+            {
+                iCal.Events.Add(CreateEvent(ievent, defaultTZID));
+            }
             return iCal;
         }
 
@@ -436,7 +430,7 @@ namespace CalendarDll
         /// <param name="eventFromDB"></param>
         /// <returns></returns>
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
-        private iEvent CreateEvent(
+        public iEvent CreateEvent(
             CalendarDll.Data.CalendarEvents eventFromDB,
             string defaultTZID)
         {
@@ -1022,13 +1016,11 @@ namespace CalendarDll
                         )
                     ).ToList();
 
-                var iCalEvents = new List<iEvent>();
-
                 foreach (var currEventFromDB in listEventsFromDB)
                 {
                     var iCalEvent = CreateEvent(currEventFromDB, defaultTZID);
 
-                    iCalEvents.Add(iCalEvent);
+                    yield return iCalEvent;
 
                     //----------------------------------------------------------------------
                     // If the Event is a Busy Event
@@ -1054,8 +1046,7 @@ namespace CalendarDll
 
                     if (iCalEvent.EventType == 1)
                     {
-                        var evExt = CreateBetweenEvent(iCalEvent,user);
-                        iCalEvents.Add(evExt);
+                        yield return CreateBetweenEvent(iCalEvent,user);
                     }
 
                     //var newEv = CreateEvent(c);
@@ -1063,9 +1054,7 @@ namespace CalendarDll
 
                     //----------------------------------------------------------------------
 
-                }
-
-                return iCalEvents;            
+                } 
             
             }
 
