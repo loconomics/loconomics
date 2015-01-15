@@ -34,7 +34,9 @@ Rest.prototype.putFile = function putFile(apiUrl, data) {
     return this.request(apiUrl, 'delete', data, 'multipart/form-data');
 };
 
-Rest.prototype.request = function request(apiUrl, httpMethod, data, contenType) {
+Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType) {
+    
+    var thisRest = this;
     
     return Promise.resolve($.ajax({
         url: this.baseUrl + apiUrl,
@@ -42,11 +44,34 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contenType) 
         method: httpMethod,
         // URLENCODED input:
         data: data,
-        contentType: contenType || 'application/x-www-form-urlencoded'
+        contentType: contentType || 'application/x-www-form-urlencoded'
         // Alternate: JSON as input
         //data: JSON.stringify(data),
-        //contentType: contenType || 'application/json'
-    }));
+        //contentType: contentType || 'application/json'
+    })).catch(function(err) {
+        // On authorization error, give oportunity to retry the operation
+        if (err.status === 401) {
+            var retry = request.bind(this, apiUrl, httpMethod, data, contentType);
+            var retryPromise = thisRest.onAuthorizationRequired(retry);
+            if (retryPromise) {
+                // It returned something, expecting is a promise:
+                return Promise.resolve(retryPromise)
+                .catch(function(){
+                    // There is error on retry, just return the
+                    // original call error
+                    return err;
+                });
+            }
+        }
+        // by default, continue propagating the error
+        return err;
+    });
+};
+
+Rest.prototype.onAuthorizationRequired = function onAuthorizationRequired(retry) {
+    // To be implemented outside, by default don't wait
+    // for retry, just return nothing:
+    return;
 };
 
 module.exports = Rest;
