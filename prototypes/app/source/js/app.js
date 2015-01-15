@@ -8,9 +8,13 @@ ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 require('es6-promise').polyfill();
 require('./utils/Function.prototype._inherits');
 require('./utils/Function.prototype._delayed');
+// Promise polyfill, so its not 'require'd per module:
+require('es6-promise').polyfill();
+
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var Shell = require('./utils/Shell'),
-    NavAction = require('./viewmodels/NavAction');
+    NavAction = require('./viewmodels/NavAction'),
+    AppModel = require('./viewmodels/AppModel');
 
 /** Custom Loconomics 'locale' styles for date/times **/
 var moment = require('moment');
@@ -52,28 +56,21 @@ var app = new Shell();
 // TODO app must to be a plain object with shell as property, not a shell instance
 app.shell = app;
 
-// TODO: refactor as model
-//app.model = new AppModel();
-app.model = {
-    user: ko.observable({ // User.newAnonymous()
-        email: ko.observable(''),
-        firstName: ko.observable(''),
-        onboardingStep: ko.observable(null),
-        userType: ko.observable('a')
-    })
-};
+// New app model, that starts with anonymous user
+app.model = new AppModel();
 
 // Updating app status on user changes
 function updateStatesOnUserChange() {
-    var user = app.model.user();
+    var user = app.model.user(),
+        User = user.constructor;
     if (user.onboardingStep()) {
         app.status('onboarding');
     }
-    else if (user.userType() === 'a') {
-        app.status('out');
-    }
-    else if (user.userType() === 'p') {
+    else if (user.isUserType(User.UserType.LoggedUser)) {
         app.status('in');
+    }
+    else {
+        app.status('out');
     }
 }
 app.model.user.subscribe(updateStatesOnUserChange);
