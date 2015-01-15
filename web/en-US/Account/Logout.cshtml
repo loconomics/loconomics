@@ -1,8 +1,6 @@
 ﻿@using WebMatrix.WebData;
 @{
-    // Log out of the current user context
-    WebSecurity.Logout();
-    Session.Clear();
+    LcAuthHelper.Logout();
 
     if (UrlData.Count == 0 || UrlData[0] != "Deleted") {
         // Redirect back to the homepage or return URL

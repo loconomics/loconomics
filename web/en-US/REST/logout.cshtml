@@ -1,0 +1,16 @@
+﻿@*
+    Log-out a user setting removing its authentification cookie.
+*@
+@functions{
+    public class RestLogout : RestWebPage
+    {
+        public override dynamic Post()
+        {
+ 	        LcAuthHelper.Logout();
+            return null;
+        }
+    }
+}
+@{   
+    new RestLogout().JsonResponse(this);
+}

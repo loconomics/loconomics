@@ -43,7 +43,7 @@
         }
     }
 
-    public static dynamic Login(string username, string password, bool rememberMe = false) {
+    public static LoginResult Login(string username, string password, bool rememberMe = false) {
             
         checkAccountIsLocked(username);
         checkAccountIsConfirmed(username);
@@ -58,6 +58,12 @@
         else {
             throw new HttpException(400, "Incorrect Username or password.");
         }
+    }
+    
+    public static void Logout() {
+        // Log out of the current user context
+        WebSecurity.Logout();
+        Session.Clear();
     }
 
     public static string getRedirectUrl(string username) {
