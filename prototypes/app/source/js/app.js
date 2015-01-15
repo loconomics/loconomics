@@ -5,7 +5,7 @@ var $ = require('jquery');
 require('jquery-mobile');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
-require('es6-promise').polyfill();
+var bootknock = require('./utils/bootknockBindingHelpers');
 require('./utils/Function.prototype._inherits');
 require('./utils/Function.prototype._delayed');
 // Promise polyfill, so its not 'require'd per module:
@@ -125,6 +125,9 @@ $(function() {
     app.baseUrl = 'activities/';
     app.defaultNavAction = NavAction.goHome;
     app.init();
+    
+    // Load Knockout binding helpers
+    bootknock.plugIn(ko);
     
     // DEBUG
     window.app = app;

@@ -5,7 +5,8 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
-    NavAction = require('../viewmodels/NavAction');
+    NavAction = require('../viewmodels/NavAction'),
+    User = require('../models/User');
 
 var singleton = null;
 
@@ -21,32 +22,49 @@ function LoginActivity($activity, app) {
 
     this.$activity = $activity;
     this.app = app;
+    this.dataView = new ViewModel();
+    ko.applyBindings(this.dataView, $activity.get(0));
     
     this.navAction = NavAction.goBack;
     
-    // TODO: implement real login
-    // TESTING: the button state with a fake delay
-    $activity.find('#accountLogInBtn').on('click', function (e) {
-        var $btn = $(e.target).button('loading');
-
-        setTimeout(function() {
-        
-            $btn.button('reset');
+    this.dataView.isLogingIn.subscribe(function(v) {
+        if (v === true) {
             
-            // TESTING: populating user
-            fakeLogin(this.app);
-          
-            // NOTE: onboarding or not?
-            var onboarding = false;
-            if (onboarding) {
-                this.app.go('onboardingHome');
-            }
-            else {
-                this.app.go('home');
-            }
-        }, 1000);
+            // Perform loging
+            var $btn = $activity.find('[type="submit"]');
+            $btn.button('loading');
+            
+            var ended = function ended() {
+                this.dataView.isLogingIn(false);
+                $btn.button('reset');
+            }.bind(this);
+            
+            app.model.login(
+                this.dataView.username(),
+                this.dataView.password()
+            ).then(function() {
+                
+                // TODO Get User info
+                fakeLogin(this.app);
+                
+                this.dataView.loginError('');
+                ended();
+                
+                // NOTE: onboarding or not?
+                var onboarding = false;
+                if (onboarding) {
+                    this.app.shell.go('onboardingHome');
+                }
+                else {
+                    this.app.shell.go('home');
+                }
 
-        return false;
+            }.bind(this)).catch(function() {
+                
+                this.dataView.loginError('Invalid username or password');
+                ended();
+            }.bind(this));
+        }
     }.bind(this));
 }
 
@@ -56,12 +74,26 @@ LoginActivity.prototype.show = function show(options) {
     this.app.status('login');
 };
 
+function ViewModel() {
+    
+    this.username = ko.observable('');
+    this.password = ko.observable('');
+    this.loginError = ko.observable('');
+    
+    this.isLogingIn = ko.observable(false);
+    
+    this.performLogin = function performLogin() {
+
+        this.isLogingIn(true);        
+    }.bind(this);
+}
+
 // TODO: remove after implement real login
 function fakeLogin(app) {
-    app.model.user({ // new User({}
-        email: ko.observable('test@loconomics.com'),
-        firstName: ko.observable('Username'),
-        onboardingStep: ko.observable(null),
-        userType: ko.observable('p')
-    });
+    app.model.user(new User({
+        email: 'test@loconomics.com',
+        firstName: 'Username',
+        onboardingStep: null,
+        isProvider: true
+    }));
 }

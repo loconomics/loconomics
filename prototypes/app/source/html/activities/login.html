@@ -13,16 +13,16 @@
       or
     </p>
 
-    <form role="form">
+    <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }">
       <div class="form-group">
         <label for="accountEmail">Email address</label>
-        <input type="email" class="form-control" id="accountEmail" placeholder="Enter email">
+        <input type="email" class="form-control" id="accountEmail" placeholder="Enter email" data-bind="value: username, popover: { content: loginError, trigger: 'focus', container: 'body', placement: 'bottom' }">
       </div>
       <div class="form-group">
         <label for="accountPassword">Password</label>
-        <input type="password" class="form-control" id="accountPassword" placeholder="Password">
+        <input type="password" class="form-control" id="accountPassword" placeholder="Password" data-bind="value: password">
       </div>
-      <button id="accountLogInBtn" type="submit" data-loading-text="Loging in... (fake loading)" class="btn btn-primary btn-block" autocomplete="off">
+      <button type="submit" data-loading-text="Loging in..." class="btn btn-primary btn-block" autocomplete="off">
         Log in
       </button>
     </form>

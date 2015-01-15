@@ -4,9 +4,13 @@
 'use strict';
 var $ = require('jquery');
 
-function Rest() {
+function Rest(optionsOrUrl) {
     
-    this.baseUrl = '';
+    var url = typeof(optionsOrUrl) === 'string' ?
+        optionsOrUrl :
+        optionsOrUrl && optionsOrUrl.url;
+
+    this.baseUrl = url;
 }
 
 Rest.prototype.get = function get(apiUrl, data) {
@@ -32,7 +36,7 @@ Rest.prototype.putFile = function putFile(apiUrl, data) {
 
 Rest.prototype.request = function request(apiUrl, httpMethod, data, contenType) {
     
-    return new Promise.resolve($.ajax({
+    return Promise.resolve($.ajax({
         url: this.baseUrl + apiUrl,
         dataType: 'json',
         method: httpMethod,
