@@ -35,7 +35,7 @@ function User(values) {
         return (this.firstName() + ' ' + this.lastName());
     }, this);
     
-    this.userType = ko.computed({
+    this.userType = ko.pureComputed({
         read: function() {
             var c = this.isCustomer(),
                 p = this.isProvider(),
@@ -43,8 +43,7 @@ function User(values) {
             
             var userType = 0;
             
-            if (!this.email() ||
-                this.userID() < 1) {
+            if (this.isAnonymous()) {
                 userType = userType | UserType.Anonymous;
             }
             if (c)
@@ -62,12 +61,16 @@ function User(values) {
         owner: this
     });
     
+    this.isAnonymous = ko.pureComputed(function(){
+        return this.userID() < 1;
+    }, this);
+    
     /**
         It matches a UserType from the enumeration?
     **/
     this.isUserType = function isUserType(type) {
         return (this.userType() & type);
-    };
+    }.bind(this);
 }
 
 module.exports = User;
@@ -77,8 +80,9 @@ User.UserType = UserType;
 /* Creatint an anonymous user with some pressets */
 User.newAnonymous = function newAnonymous() {
     return new User({
-        email: ko.observable(''),
-        firstName: ko.observable(''),
-        onboardingStep: ko.observable(null)
+        userID: 0,
+        email: '',
+        firstName: '',
+        onboardingStep: null
     });
 };

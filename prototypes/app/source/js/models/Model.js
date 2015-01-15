@@ -125,6 +125,27 @@ Model.prototype.defFields = function defFields(fields, initialValues) {
 };
 
 Model.prototype.updateWith = function updateWith(data) {
+    
+    // We need a plain object for 'fromJS'.
+    // If is a model, extract their properties and fields from
+    // the observables (fromJS), so we not get computed
+    // or functions, just registered properties and fields
+    if (data && data.model instanceof Model) {
+        
+        var plain = {};
+
+        data.model.propertiesList.forEach(function(property) {
+            // Properties are observables, so functions without params:
+            plain[property] = data[property]();
+        });
+        
+        data.model.fieldsList.forEach(function(field) {
+            // Fields are just plain object members for values, just copy:
+            plain[field] = data[field];
+        });
+
+        data = plain;
+    }
 
     ko.mapping.fromJS(data, this.mappingOptions, this.modelObject);
 };

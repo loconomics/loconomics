@@ -40,19 +40,30 @@ function LoginActivity($activity, app) {
             // Clear previous error so makes clear we
             // are attempting
             this.dataView.loginError('');
-            
+        
             var ended = function ended() {
                 this.dataView.isLogingIn(false);
                 $btn.button('reset');
             }.bind(this);
             
+            // After clean-up error (to force some view updates),
+            // validate and abort on error
+            // Manually checking error on each field
+            if (this.dataView.username.error() ||
+                this.dataView.password.error()) {
+                this.dataView.loginError('Review your data');
+                ended();
+                return;
+            }
+            
             app.model.login(
                 this.dataView.username(),
                 this.dataView.password()
-            ).then(function() {
-                
+            ).then(function(loginData) {
+
                 // TODO Get User info
                 fakeLogin(this.app);
+                this.app.model.user().userID(loginData.userId);
                 
                 this.dataView.loginError('');
                 ended();
@@ -104,14 +115,43 @@ function ViewModel() {
 
         this.isLogingIn(true);        
     }.bind(this);
+    
+    // validate username as an email
+    var emailRegexp = /^[-0-9A-Za-z!#$%&'*+/=?^_`{|}~.]+@[-0-9A-Za-z!#$%&'*+/=?^_`{|}~.]+$/;
+    this.username.error = ko.observable('');
+    this.username.subscribe(function(v) {
+        if (v) {
+            if (emailRegexp.test(v)) {
+                this.username.error('');
+            }
+            else {
+                this.username.error('Is not a valid email');
+            }
+        }
+        else {
+            this.username.error('Required');
+        }
+    }.bind(this));
+    
+    // required password
+    this.password.error = ko.observable('');
+    this.password.subscribe(function(v) {
+        var err = '';
+        if (!v)
+            err = 'Required';
+        
+        this.password.error(err);
+    }.bind(this));
 }
 
 // TODO: remove after implement real login
 function fakeLogin(app) {
-    app.model.user(new User({
-        email: 'test@loconomics.com',
-        firstName: 'Username',
-        onboardingStep: null,
-        isProvider: true
-    }));
+    app.model.user().model.updateWith(
+        new User({
+            email: 'test@loconomics.com',
+            firstName: 'Username',
+            onboardingStep: null,
+            isProvider: true
+        })
+    );
 }

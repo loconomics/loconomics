@@ -61,20 +61,20 @@ app.model = new AppModel();
 
 // Updating app status on user changes
 function updateStatesOnUserChange() {
-    var user = app.model.user(),
-        User = user.constructor;
+
+    var user = app.model.user();
+
     if (user.onboardingStep()) {
         app.status('onboarding');
     }
-    else if (user.isUserType(User.UserType.LoggedUser)) {
-        app.status('in');
-    }
-    else {
+    else if (user.isAnonymous()) {
         app.status('out');
     }
+    else {
+        app.status('in');
+    }
 }
-app.model.user.subscribe(updateStatesOnUserChange);
-app.model.user().userType.subscribe(updateStatesOnUserChange);
+app.model.user().isAnonymous.subscribe(updateStatesOnUserChange);
 app.model.user().onboardingStep.subscribe(updateStatesOnUserChange);
 
 /** Load activities **/
@@ -119,6 +119,21 @@ $(function() {
             $('html').height(window.innerHeight + 'px');
         });
     }
+    
+    // Account log-out: this doesn't need an activity, so
+    // we add manually a route for that
+    app.shell.specialRoutes.logout = function(route) {
+        
+        app.model.logout().then(function() {
+            // Anonymous user again
+            app.model.user().model.updateWith(
+                app.model.user().constructor.newAnonymous()
+            );
+            
+            // Go index
+            app.shell.go('#!');
+        });
+    };
     
     // App set-up
     // TODO Remove when out of prototype!
