@@ -27,12 +27,19 @@ function LoginActivity($activity, app) {
     
     this.navAction = NavAction.goBack;
     
+    // Perform log-in request when is requested by the form:
     this.dataView.isLogingIn.subscribe(function(v) {
         if (v === true) {
             
             // Perform loging
+            
+            // Notify state:
             var $btn = $activity.find('[type="submit"]');
             $btn.button('loading');
+            
+            // Clear previous error so makes clear we
+            // are attempting
+            this.dataView.loginError('');
             
             var ended = function ended() {
                 this.dataView.isLogingIn(false);
@@ -66,6 +73,13 @@ function LoginActivity($activity, app) {
             }.bind(this));
         }
     }.bind(this));
+    
+    // Focus first bad field on error
+    this.dataView.loginError.subscribe(function() {
+        // Login is easy since we mark both unique fields
+        // as error on loginError (its a general form error)
+        $activity.find(':input').get(0).focus();
+    });
 }
 
 LoginActivity.prototype.show = function show(options) {
