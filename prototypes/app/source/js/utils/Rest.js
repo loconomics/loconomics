@@ -11,6 +11,9 @@ function Rest(optionsOrUrl) {
         optionsOrUrl && optionsOrUrl.url;
 
     this.baseUrl = url;
+    // Optional extraHeaders for all requests,
+    // usually for authentication tokens
+    this.extraHeaders = null;
 }
 
 Rest.prototype.get = function get(apiUrl, data) {
@@ -42,6 +45,7 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
         url: this.baseUrl + apiUrl,
         dataType: 'json',
         method: httpMethod,
+        headers: this.extraHeaders,
         // URLENCODED input:
         data: data,
         contentType: contentType || 'application/x-www-form-urlencoded'

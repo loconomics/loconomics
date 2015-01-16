@@ -60,10 +60,6 @@ function LoginActivity($activity, app) {
                 this.dataView.username(),
                 this.dataView.password()
             ).then(function(loginData) {
-
-                // TODO Get User info
-                fakeLogin(this.app);
-                this.app.model.user().userID(loginData.userId);
                 
                 this.dataView.loginError('');
                 ended();
@@ -142,16 +138,4 @@ function ViewModel() {
         
         this.password.error(err);
     }.bind(this));
-}
-
-// TODO: remove after implement real login
-function fakeLogin(app) {
-    app.model.user().model.updateWith(
-        new User({
-            email: 'test@loconomics.com',
-            firstName: 'Username',
-            onboardingStep: null,
-            isProvider: true
-        })
-    );
 }

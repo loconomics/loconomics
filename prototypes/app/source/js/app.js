@@ -136,10 +136,11 @@ $(function() {
     };
     
     // App set-up
-    // TODO Remove when out of prototype!
-    app.baseUrl = 'activities/';
-    app.defaultNavAction = NavAction.goHome;
-    app.init();
+    app.shell.baseUrl = 'activities/';
+    app.shell.defaultNavAction = NavAction.goHome;
+    app.model.init().then(
+        app.shell.init.bind(app.shell)
+    );
     
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
