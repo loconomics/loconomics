@@ -135,6 +135,18 @@ $(function() {
         });
     };
     
+    // New app method: goDashboard, just redirect the better
+    // place for current user and state
+    app.goDashboard = function goDashboard() {
+        var onboarding = this.model.user().onboardingStep();
+        if (onboarding) {
+            this.shell.go('onboardingHome/' + onboarding);
+        }
+        else {
+            this.shell.go('home');
+        }
+    };
+    
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
 
@@ -146,6 +158,8 @@ $(function() {
     ).then(function() {
         // Mark the page as ready
         $('html').addClass('is-ready');
+        
+        app.goDashboard();
     });
     
     // DEBUG

@@ -64,14 +64,7 @@ function LoginActivity($activity, app) {
                 this.dataView.loginError('');
                 ended();
                 
-                // NOTE: onboarding or not?
-                var onboarding = false;
-                if (onboarding) {
-                    this.app.shell.go('onboardingHome');
-                }
-                else {
-                    this.app.shell.go('home');
-                }
+                this.app.goDashboard();
 
             }.bind(this)).catch(function() {
                 
