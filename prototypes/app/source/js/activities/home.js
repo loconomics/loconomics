@@ -18,6 +18,8 @@ exports.init = function initHome($activity, app) {
 };
 
 function HomeActivity($activity, app) {
+    
+    this.accessLevel = app.UserType.Provider;
 
     this.$activity = $activity;
     this.app = app;

@@ -19,6 +19,8 @@ exports.init = function initLogin($activity, app) {
 };
 
 function LoginActivity($activity, app) {
+    
+    this.accessLevel = app.UserType.Anonymous;
 
     this.$activity = $activity;
     this.app = app;

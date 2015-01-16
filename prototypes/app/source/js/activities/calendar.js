@@ -20,6 +20,8 @@ exports.init = function initCalendar($activity, app) {
 
 function CalendarActivity($activity, app) {
 
+    this.accessLevel = app.UserType.LoggedUser;
+    
     /* Getting elements */
     this.$activity = $activity;
     this.$datepicker = $activity.find('#calendarDatePicker');

@@ -18,6 +18,8 @@ exports.init = function initClients($activity, app) {
 
 function ClientsActivity($activity, app) {
 
+    this.accessLevel = app.UserType.Provider;
+    
     this.$activity = $activity;
     this.app = app;
     this.$index = $activity.find('#clientsIndex');

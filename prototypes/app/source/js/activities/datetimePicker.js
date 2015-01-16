@@ -21,6 +21,8 @@ exports.init = function initDatetimePicker($activity, app) {
 
 function DatetimePickerActivity($activity, app) {
 
+    this.accessLevel = app.UserType.LoggedUser;
+    
     this.app = app;
     this.$activity = $activity;
     this.$datePicker = $activity.find('#datetimePickerDatePicker');

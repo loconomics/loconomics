@@ -19,6 +19,8 @@ exports.init = function initPositions($activity, app) {
 
 function PositionsActivity($activity, app) {
 
+    this.accessLevel = app.UserType.Provider;
+    
     this.$activity = $activity;
     this.app = app;
     this.dataView = new ViewModel();

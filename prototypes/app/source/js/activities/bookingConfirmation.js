@@ -18,6 +18,8 @@ exports.init = function initClients($activity, app) {
 
 function BookingConfirmationActivity($activity, app) {
 
+    this.accessLevel = app.UserType.LoggedUser;
+    
     this.$activity = $activity;
     this.app = app;
 

@@ -15,6 +15,8 @@ exports.init = function initOnboardingComplete($activity, app) {
 
 function OnboardingCompleteActivity($activity, app) {
 
+    this.accessLevel = app.UserType.LoggedUser;
+    
     this.$activity = $activity;
     this.app = app;
     

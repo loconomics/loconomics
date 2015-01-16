@@ -15,6 +15,8 @@ exports.init = function initContactInfo($activity, app) {
 
 function ContactInfoActivity($activity, app) {
 
+    this.accessLevel = app.UserType.LoggedUser;
+    
     this.$activity = $activity;
     this.app = app;
     

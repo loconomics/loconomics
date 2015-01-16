@@ -19,6 +19,8 @@ exports.init = function initSignup($activity, app) {
 
 function SignupActivity($activity, app) {
 
+    this.accessLevel = app.UserType.Anonymous;
+    
     this.$activity = $activity;
     this.app = app;
     this.dataView = new ViewModel();

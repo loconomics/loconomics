@@ -17,6 +17,8 @@ exports.init = function initLocations($activity, app) {
 };
 
 function LocationsActivity($activity, app) {
+    
+    this.accessLevel = app.UserType.Provider;
 
     this.app = app;
     this.$activity = $activity;

@@ -18,6 +18,8 @@ exports.init = function initServices($activity, app) {
 
 function ServicesActivity($activity, app) {
 
+    this.accessLevel = app.UserType.Provider;
+    
     this.app = app;
     this.$activity = $activity;
     this.$listView = $activity.find('#servicesListView');

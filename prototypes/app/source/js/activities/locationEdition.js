@@ -16,6 +16,8 @@ exports.init = function initLocationEdition($activity, app) {
 };
 
 function LocationEditionActivity($activity, app) {
+    
+    this.accessLevel = app.UserType.Provider;
 
     this.$activity = $activity;
     this.app = app;
