@@ -19,6 +19,11 @@
         public LoginResult() { }
         public string redirectUrl;
         public int userId;
+        /// <summary>
+        /// This is the internal 'AutologinKey'
+        /// that we need now for the secure session-less REST calls
+        /// </summary>
+        public string authKey;
     }
 
     public static LoginResult Login(WebPage page) {
@@ -49,10 +54,14 @@
         checkAccountIsConfirmed(username);
             
         if (LcAuth.Login(username, password, rememberMe)) {
+            
+            var userId = WebSecurity.GetUserId(username);
+            var authKey = LcAuth.GetAutologinKey(userId);
 
             return new LoginResult {
                 redirectUrl = getRedirectUrl(username),
-                userId = WebSecurity.GetUserId(username)
+                userId = userId,
+                authKey = authKey
             };
         }
         else {

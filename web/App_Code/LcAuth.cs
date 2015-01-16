@@ -300,15 +300,19 @@ public static class LcAuth
     /// </summary>
     public static void RequestAutologin(HttpRequest Request)
     {
+        // Using custom headers first, best for security using the REST API.
         var Q = Request.QueryString;
+        var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
+        var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
+
         // Autologin feature for anonymous sessions with autologin parameters on request
         if (!Request.IsAuthenticated
-            && Q["alk"] != null
-            && Q["alu"] != null)
+            && alk != null
+            && alu != null)
         {
             // 'alk' url parameter stands for 'Auto Login Key'
             // 'alu' url parameter stands for 'Auto Login UserID'
-            LcAuth.Autologin(Q["alu"], Q["alk"]);
+            LcAuth.Autologin(alu, alk);
         }
     }
     /// <summary>
