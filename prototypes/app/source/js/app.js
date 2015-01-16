@@ -164,8 +164,6 @@ $(function() {
     ).then(function() {
         // Mark the page as ready
         $('html').addClass('is-ready');
-        
-        app.goDashboard();
     });
     
     // DEBUG

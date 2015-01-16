@@ -34,9 +34,20 @@ AppModel.prototype.init = function init() {
         });
     }.bind(this);
     
-    // first time login
+    // Local data
+    // TODO Investigate why automatic selection an IndexedDB are
+    // failing and we need to use the worse-performance localstorage back-end
+    localforage.config({
+        name: 'LoconomicsApp',
+        version: 0.1,
+        size : 4980736, // Size of database, in bytes. WebSQL-only for now.
+        storeName : 'keyvaluepairs',
+        description : 'Loconomics App',
+        driver: localforage.LOCALSTORAGE
+    });
+
     // First attempt to login from saved credentials
-    var firstTimeLogin = new Promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
         // We just want to check if can get logged.
         // Any result, just return success:
         this.tryLogin().then(resolve, function(doesnMatter){
@@ -45,19 +56,6 @@ AppModel.prototype.init = function init() {
             resolve();
         });
     }.bind(this));
-    
-    return Promise.all([
-        // Local data
-        localforage.config({
-            name: 'LoconomicsApp',
-            version: 0.1,
-            size : 4980736, // Size of database, in bytes. WebSQL-only for now.
-            storeName : 'keyvaluepairs',
-            description : 'Loconomics App',
-            driver: localforage.INDEXEDDB
-        }),
-        firstTimeLogin
-    ]);
 };
 
 /**
