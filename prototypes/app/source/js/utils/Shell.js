@@ -16,6 +16,18 @@ var shell = {
     
     baseUrl: '',
     
+    /**
+        A function to decide if the
+        access is allowed (return true)
+        or not (return false)
+    **/
+    accessControl: function(activity) {
+        // allow access by default
+        return true;
+    },
+    
+    nonAccessActivity: 'index',
+    
     activities: {},
     
     navAction: ko.observable(null),
@@ -115,14 +127,19 @@ var shell = {
             });
             
             var act = this.activities[activityName].init($activity, this);
-            act.show(options);
-            
-            this.updateAppNav(act);
+            if (this.accessControl(act)) {
+                act.show(options);
 
-            // Avoid going to the same activity
-            if (currentActivity &&
-                currentActivity.name !== activityName) {
-                this.hideActivity(currentActivity.name);
+                this.updateAppNav(act);
+
+                // Avoid going to the same activity
+                if (currentActivity &&
+                    currentActivity.name !== activityName) {
+                    this.hideActivity(currentActivity.name);
+                }
+            } else {
+                // redirect
+                this.go(this.nonAccessActivity);
             }
 
         }.bind(this)).catch(this.unexpectedError);
@@ -177,16 +194,20 @@ var shell = {
             // FUTURE: Going to the previous activity with HistoryAPI
             // must replaceState with new 'options'?
             
-            var act = this.activities[activityName]
-            .init($activity, this);
-            act.show(options);
+            var act = this.activities[activityName].init($activity, this);
+            if (this.accessControl(act)) {
+                act.show(options);
 
-            this.updateAppNav(act);
+                this.updateAppNav(act);
 
-            // Avoid going to the same activity
-            if (currentActivity &&
-                currentActivity.name !== activityName) {
-                this.hideActivity(currentActivity.name);
+                // Avoid going to the same activity
+                if (currentActivity &&
+                    currentActivity.name !== activityName) {
+                    this.hideActivity(currentActivity.name);
+                }
+            } else {
+                // redirect
+                this.go(this.nonAccessActivity);
             }
 
         }.bind(this)).catch(this.unexpectedError);
@@ -312,18 +333,7 @@ var shell = {
     },
 
     init: function init() {
-        /*
-        // Detect activities loaded in the current document
-        // and initialize them:
-        var $activities = $('[data-activity]').each(function() {
-            var $activity = $(this);
-            var actName = $activity.data('activity');
-            if (this.activities.hasOwnProperty(actName)) {
-                this.activities[actName].init($activity, null, this);
-            }
-        }.bind(this));
-        */
-        
+
         // Menu
         this.$menu = $('#navbar');
         

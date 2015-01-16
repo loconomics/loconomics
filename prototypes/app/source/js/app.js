@@ -59,6 +59,9 @@ app.shell = app;
 // New app model, that starts with anonymous user
 app.model = new AppModel();
 
+// Shortcut to UserType enumeration used to set permissions
+app.UserType = app.model.user().constructor.UserType;
+
 // Updating app status on user changes
 function updateStatesOnUserChange() {
 
@@ -146,6 +149,9 @@ $(function() {
             this.shell.go('home');
         }
     };
+    
+    // Set-up access control for the shell
+    app.shell.accessControl = require('./utils/accessControl')(app);
     
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
