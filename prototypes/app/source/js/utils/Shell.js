@@ -111,23 +111,24 @@ var shell = {
     showActivity: function showActivity(activityName, options) {
         // Ensure its loaded, and do anything later
         return this.loadActivity(activityName).then(function($activity) {
-            
-            $activity.css('zIndex', ++this.currentZIndex).show();
-            var currentActivity = this.history[this.history.length - 1];
-            
-            if (currentActivity)
-                this.unfocus(currentActivity.$activity);
-            
-            // FUTURE: HistoryAPI.pushState(..)
-            
-            this.history.push({
-                name: activityName,
-                $activity: $activity,
-                options: options
-            });
-            
+        
             var act = this.activities[activityName].init($activity, this);
             if (this.accessControl(act)) {
+                
+                $activity.css('zIndex', ++this.currentZIndex).show();
+                var currentActivity = this.history[this.history.length - 1];
+
+                if (currentActivity)
+                    this.unfocus(currentActivity.$activity);
+
+                // FUTURE: HistoryAPI.pushState(..)
+
+                this.history.push({
+                    name: activityName,
+                    $activity: $activity,
+                    options: options
+                });
+                
                 act.show(options);
 
                 this.updateAppNav(act);
@@ -172,30 +173,32 @@ var shell = {
             return;
         }
         
-        // TODO: deduplicate code between this and showActivity
-        var currentActivity = this.history.pop();
-        
+        // TODO: deduplicate code between this and showActivity    
+
         var previousActivity = this.history[this.history.length - 1];
         var activityName = previousActivity.name;
         this.currentZIndex--;
         
-        // If there are no explicit options, use the currentActivity options
-        // to enable the communication between activities:
-        options = options || currentActivity.options;
-        
-        if (currentActivity)
-            this.unfocus(currentActivity.$activity);
-        
         // Ensure its loaded, and do anything later
         this.loadActivity(activityName).then(function($activity) {
-            
-            $activity.show();
-            
+
             // FUTURE: Going to the previous activity with HistoryAPI
             // must replaceState with new 'options'?
             
             var act = this.activities[activityName].init($activity, this);
             if (this.accessControl(act)) {
+
+                var currentActivity = this.history.pop();
+                
+                // If there are no explicit options, use the currentActivity options
+                // to enable the communication between activities:
+                options = options || currentActivity.options;
+
+                if (currentActivity)
+                    this.unfocus(currentActivity.$activity);
+                
+                $activity.show();
+                
                 act.show(options);
 
                 this.updateAppNav(act);

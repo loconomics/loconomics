@@ -24,7 +24,7 @@ module.exports = function createAccessControl(app) {
         var user = app.model.user();
         var currentType = user && user.userType();
 
-        if (activity && typeof(activity.accessLevel) !== 'undefined') {
+        if (activity && activity.accessLevel) {
 
             return !!(activity.accessLevel & currentType);
         }

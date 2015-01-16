@@ -86,7 +86,7 @@ AppModel.prototype.login = function login(username, password) {
         username: username,
         password: password
     }).then(function(logged) {
-        console.log('logged!', logged);
+
         // use authorization key for each
         // new Rest request
         this.rest.extraHeaders = {
