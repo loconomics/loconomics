@@ -9,8 +9,6 @@ var $ = require('jquery'),
     getUrlQuery = require('../utils/getUrlQuery');
 
 var shell = {
-
-    currentZIndex: 1,
     
     history: [],
     
@@ -115,7 +113,7 @@ var shell = {
             var act = this.activities[activityName].init($activity, this);
             if (this.accessControl(act)) {
                 
-                $activity.css('zIndex', ++this.currentZIndex).show();
+                $activity.show();
                 var currentActivity = this.history[this.history.length - 1];
 
                 if (currentActivity)
@@ -177,7 +175,6 @@ var shell = {
 
         var previousActivity = this.history[this.history.length - 1];
         var activityName = previousActivity.name;
-        this.currentZIndex--;
         
         // Ensure its loaded, and do anything later
         this.loadActivity(activityName).then(function($activity) {
@@ -368,10 +365,10 @@ var shell = {
                 if (!/#!/.test(link)) {
                     e.preventDefault();
                 }
-                else if (parsedLink.root) {
+                /*else if (parsedLink.root) {
                     // NOTE: using the hash for history management, going to root
                     window.location.hash = '';
-                }
+                }*/
             }
         }.bind(this);
         
