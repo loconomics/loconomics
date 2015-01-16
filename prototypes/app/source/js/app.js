@@ -135,15 +135,18 @@ $(function() {
         });
     };
     
+    // Load Knockout binding helpers
+    bootknock.plugIn(ko);
+
     // App set-up
     app.shell.baseUrl = 'activities/';
     app.shell.defaultNavAction = NavAction.goHome;
     app.model.init().then(
         app.shell.init.bind(app.shell)
-    );
-    
-    // Load Knockout binding helpers
-    bootknock.plugIn(ko);
+    ).then(function() {
+        // Mark the page as ready
+        $('html').addClass('is-ready');
+    });
     
     // DEBUG
     window.app = app;

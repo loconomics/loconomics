@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2015-01-15
+/*! LoconomicsAppProto 2015-01-16
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -53,7 +53,7 @@
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 65 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\appVars.styl */
+/* line 82 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\appVars.styl */
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
@@ -114,28 +114,48 @@
 /* why modals has not the standard modal-backdrop? anyway, fix.. */
 }
 
-/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+.App > body > * {
+  visibility: hidden;
+}
+
+/* line 16 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+.App > body > *.SplashScreen {
+  visibility: visible;
+}
+
+/* line 20 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+.App.is-ready > body > * {
+  visibility: inherit;
+}
+
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+.App.is-ready > body > *.SplashScreen {
+  visibility: hidden;
+}
+
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App > body {
   height: 100%;
 /* Space for app-nav on top */
   padding-top: 51px;
 }
 
-/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .btn-google {
   background-color: #c00;
   color: #fff;
 }
 
-/* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 44 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .btn-facebook {
   background-color: #085394;
   color: #fff;
 }
 
-/* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 57 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 41 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal.bottom .modal-dialog {
   position: absolute;
   padding: 10px;
@@ -144,14 +164,14 @@
   bottom: 0;
 }
 
-/* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 72 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal .modal-dialog {
   padding-top: 51px;
 }
 
-/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal {
   background: rgba(0,0,0,0.4);
 }
@@ -171,7 +191,20 @@
 /* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ListView.styl */
+/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+.SplashScreen {
+  position: fixed;
+  top: 40%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  text-align: center;
+}
+
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ListView.styl */
 
 /* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ListView.styl */
 .ListView {
@@ -1264,7 +1297,7 @@
   margin: 0 -10px 0 -10px;
 }
 
-/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
