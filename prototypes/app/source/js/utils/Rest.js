@@ -4,6 +4,27 @@
 'use strict';
 var $ = require('jquery');
 
+function lowerFirstLetter(n) {
+    return n && n[0] && n[0].toLowerCase && (n[0].toLowerCase() + n.slice(1)) || n;
+}
+
+function lowerCamelizeObject(obj) {
+    
+    if (!obj || typeof(obj) !== 'object') return obj;
+
+    var ret = {};
+    for(var k in obj) {
+        if (obj.hasOwnProperty(k)) {
+            var newk = lowerFirstLetter(k);
+            ret[newk] = typeof(obj[k]) === 'object' ?
+                lowerCamelizeObject(obj[k]) :
+                obj[k]
+            ;
+        }
+    }
+    return ret;
+}
+
 function Rest(optionsOrUrl) {
     
     var url = typeof(optionsOrUrl) === 'string' ?
@@ -52,7 +73,9 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
         // Alternate: JSON as input
         //data: JSON.stringify(data),
         //contentType: contentType || 'application/json'
-    })).catch(function(err) {
+    }))
+    .then(lowerCamelizeObject)
+    .catch(function(err) {
         // On authorization error, give oportunity to retry the operation
         if (err.status === 401) {
             var retry = request.bind(this, apiUrl, httpMethod, data, contentType);

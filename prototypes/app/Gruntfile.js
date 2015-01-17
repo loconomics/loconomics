@@ -1,4 +1,4 @@
-﻿/** Grunt tasks configuration
+/** Grunt tasks configuration
 **/
 module.exports = function (grunt) {
 
