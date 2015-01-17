@@ -45,7 +45,7 @@
         It returns the deleted event if everything is successful.
 
     Result scheme describing an event: the same properties described at POST por insert and update with next additional:
-        - EventID:int Server side auto-generated IDentifier
+        - CalendarEventID:int Server side auto-generated IDentifier
         - UserID:int
         - UpdatedDate:DateTime
         - CreatedDate:DateTime
@@ -57,7 +57,7 @@
                 and on any update with this data the additional rules will be deleted.
 
     Limitations for edition methods:
-    - On edition success, a "GET /@id" result is returned so the generated EventID can be read and any other
+    - On edition success, a "GET /@id" result is returned so the generated CalendarEventID can be read and any other
         server side edition (UpdateDate field, for example)
     - Events marked with ReadOnly:true will not be modified even if a request is performed, a 400 error happens.
     - Events with a read-only EventTypeID will fail to insert/edit/delete with a 400 error.

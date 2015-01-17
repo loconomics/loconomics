@@ -799,7 +799,7 @@ public static partial class LcCalendar
             return query
                 .ToList()
                 .Select(ev => new {
-                    EventID = ev.Id,
+                    CalendarEventID = ev.Id,
                     UserID = ev.UserId,
                     CalendarEventTypeID = ev.EventType,
                     Summary = ev.Summary,
@@ -1033,7 +1033,7 @@ public static partial class LcCalendar
                 }
 
                 yield return new {
-                    EventID = ev.Id,
+                    CalendarEventID = ev.Id,
                     UserID = ev.UserId,
                     EventTypeID = ev.EventType,
                     Summary = ev.Summary,
@@ -1076,7 +1076,7 @@ public static partial class LcCalendar
     /// </summary>
     public static readonly int[] ReadOnlyEventTypes = new int[] { 1, 2, 4, 6 };
 
-    public static void SetSimplifiedEvent(int UserID, int EventID,
+    public static void SetSimplifiedEvent(int UserID, int CalendarEventID,
         int EventTypeID,
         int AvailabilityTypeID,
         string Summary,
@@ -1088,7 +1088,7 @@ public static partial class LcCalendar
         string TimeZone,
         SimplifiedRecurrenceRule RRule)
     {
-        var previousItem = GetSimplifiedEvents(UserID, null, null, null, EventID).First();
+        var previousItem = GetSimplifiedEvents(UserID, null, null, null, CalendarEventID).First();
 
         // Avoid standard edition of read-only types,
         // and conversion of an editable into a non editable event:
@@ -1136,7 +1136,7 @@ public static partial class LcCalendar
         }
 
         SetUserAppointment(UserID,
-            EventID,
+            CalendarEventID,
             EventTypeID,
             AvailabilityTypeID,
             Summary,
@@ -1161,11 +1161,11 @@ public static partial class LcCalendar
     /// Blocks deletion of ReadOnly Types.
     /// </summary>
     /// <param name="UserID"></param>
-    /// <param name="EventID"></param>
+    /// <param name="CalendarEventID"></param>
     /// <returns></returns>
-    public static dynamic DelSimplifiedEvent(int UserID, int EventID)
+    public static dynamic DelSimplifiedEvent(int UserID, int CalendarEventID)
     {
-        var item = GetSimplifiedEvents(UserID, null, null, null, EventID).First();
+        var item = GetSimplifiedEvents(UserID, null, null, null, CalendarEventID).First();
 
         if (item)
         {
@@ -1173,7 +1173,7 @@ public static partial class LcCalendar
             if (ReadOnlyEventTypes.Contains((int)item.EventTypeID))
                 throw new ConstraintException("Cannot be deleted");
 
-            DelUserAppointment(UserID, EventID);
+            DelUserAppointment(UserID, CalendarEventID);
         }
 
         return item;
@@ -1386,7 +1386,7 @@ public static partial class LcCalendar
                 .Where(c => c.UserId == userID && c.Id == eventID).FirstOrDefault();
          }
     }
-    public static void SetUserAppointment(int userID, int EventID,
+    public static void SetUserAppointment(int userID, int CalendarEventID,
         int EventTypeID,
         int AvailabilityTypeID,
         string Summary,
@@ -1406,11 +1406,11 @@ public static partial class LcCalendar
     {
         using (var ent = new loconomicsEntities())
         {
-            var dbevent = ent.CalendarEvents.Find(EventID);
+            var dbevent = ent.CalendarEvents.Find(CalendarEventID);
             if (dbevent == null)
             {
                 // Deleted or bad ID
-                if (EventID > 0)
+                if (CalendarEventID > 0)
                     return;
 
                 // New one to be created:
@@ -1515,11 +1515,11 @@ public static partial class LcCalendar
             ent.SaveChanges();
         }
     }
-    public static void DelUserAppointment(int userID, int EventID)
+    public static void DelUserAppointment(int userID, int CalendarEventID)
     {
         using (var ent = new loconomicsEntities())
         {
-            var dbevent = ent.CalendarEvents.Find(EventID);
+            var dbevent = ent.CalendarEvents.Find(CalendarEventID);
             if (dbevent != null && dbevent.UserId == userID)
                 ent.CalendarEvents.Remove(dbevent);
             ent.SaveChanges();
