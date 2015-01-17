@@ -24,6 +24,7 @@
         /// that we need now for the secure session-less REST calls
         /// </summary>
         public string authKey;
+        public dynamic profile;
     }
 
     public static LoginResult Login(WebPage page) {
@@ -39,8 +40,9 @@
             var username = Request.Form["username"];
             var password = Request.Form["password"];
             var rememberMe = Request.Form["rememberMe"].AsBool();
+            var returnProfile = Request.Form["returnProfile"].AsBool();
             
-            return Login(username, password, rememberMe);
+            return Login(username, password, rememberMe, returnProfile);
         }
         else {
             // Bad request, input data incorrect because of validation rules
@@ -48,7 +50,7 @@
         }
     }
 
-    public static LoginResult Login(string username, string password, bool rememberMe = false) {
+    public static LoginResult Login(string username, string password, bool rememberMe = false, bool returnProfile = false) {
             
         checkAccountIsLocked(username);
         checkAccountIsConfirmed(username);
@@ -57,11 +59,17 @@
             
             var userId = WebSecurity.GetUserId(username);
             var authKey = LcAuth.GetAutologinKey(userId);
+            object profile = null;
+            
+            if (returnProfile) {
+                profile = LcData.UserInfo.GetRestUserProfile(userId);
+            }
 
             return new LoginResult {
                 redirectUrl = getRedirectUrl(username),
                 userId = userId,
-                authKey = authKey
+                authKey = authKey,
+                profile = profile
             };
         }
         else {

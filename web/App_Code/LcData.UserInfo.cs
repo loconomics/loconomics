@@ -314,6 +314,62 @@ public static partial class LcData
             return u;
         }
 
+        #region For REST
+        public static dynamic GetRestUserProfile(int userID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(@"
+                    SELECT
+                        -- Basic data
+                        Users.userID
+                        ,UP.email
+
+                        -- Name
+                        ,firstName
+                        ,middleIn
+                        ,lastName
+                        ,secondLastName
+                        ,nickName
+
+                        -- Personal data
+                        ,publicBio
+                        ,genderID
+
+                        -- Preferences
+                        ,preferredLanguageID
+                        ,preferredCountryID
+
+                        -- User Type
+                        ,isProvider
+                        ,isCustomer
+                        ,isMember
+                        ,coalesce(IsAdmin, cast(0 as bit)) As isAdmin
+                        
+
+                        ,mobilePhone
+                        ,alternatePhone
+                        ,providerProfileUrl
+                        ,providerWebsiteUrl
+                        
+                        ,createdDate
+                        ,updatedDate
+                        ,modifiedBy
+                        ,active
+                        ,accountStatusID
+                        
+                        ,bookCode
+                        ,onboardingStep
+
+                    FROM Users
+                            INNER JOIN
+                        UserProfile As UP
+                            ON UP.UserID = Users.UserID                                     
+                    WHERE Users.UserID = @0
+                ", userID);
+            }
+        }
+        #endregion
         #endregion
 
         #region Update personal data
