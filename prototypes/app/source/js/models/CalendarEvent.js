@@ -70,7 +70,7 @@ function CalendarEvent(values) {
     Model(this);
     
     this.model.defProperties({
-        eventID: 0,
+        calendarEventID: 0,
         userID: 0,
         eventTypeID: 3,
         summary: '',

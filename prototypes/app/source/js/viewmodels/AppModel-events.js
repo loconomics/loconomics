@@ -14,7 +14,7 @@ module.exports = function (AppModel) {
         modelListName: 'CalendarEvents',
         urlSingleItem: 'event',
         urlItemsList: 'events',
-        idPropertyName: 'eventID'
+        idPropertyName: 'calendarEventID'
     });
     
     /** # API
