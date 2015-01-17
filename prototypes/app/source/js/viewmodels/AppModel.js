@@ -45,6 +45,16 @@ AppModel.prototype.init = function init() {
         description : 'Loconomics App',
         driver: localforage.LOCALSTORAGE
     });
+    
+    // Get user data from the cached profile if any
+    // (will be updated later
+    // with a new login attempt)
+    localforage.getItem('profile').then(function(profile) {
+        if (profile) {
+            // Set user data
+            this.user().model.updateWith(profile);
+        }
+    }.bind(this));
 
     // First attempt to login from saved credentials
     return new Promise(function(resolve, reject) {
@@ -82,7 +92,8 @@ AppModel.prototype.login = function login(username, password) {
         
     return this.rest.post('login', {
         username: username,
-        password: password
+        password: password,
+        returnProfile: true
     }).then(function(logged) {
 
         // use authorization key for each
@@ -98,28 +109,15 @@ AppModel.prototype.login = function login(username, password) {
             username: username,
             password: password
         });
-        
+        localforage.setItem('profile', logged.profile);
+
         // Set user data
-        // TODO Get User info
-        fakeLogin(this.user());
-        this.user().userID(logged.userId);
-        this.user().email(username);
+        this.user().model.updateWith(logged.profile);
 
         return logged;
     }.bind(this));
 };
 
-// TODO: remove after implement real login
-function fakeLogin(user) {
-    user.model.updateWith(
-        new User({
-            firstName: 'Username',
-            onboardingStep: null,
-            isProvider: true
-        })
-    );
-}
-    
 AppModel.prototype.logout = function logout() {
         
     return this.rest.post('logout').then(function() {
