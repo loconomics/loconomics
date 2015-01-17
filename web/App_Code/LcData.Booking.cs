@@ -96,6 +96,54 @@ public static partial class LcData
                 )
         ORDER BY E.StartTime DESC, B.UpdatedDate DESC, R.UpdatedDate DESC
         ";
+        private const string sqlGetBookingsSumByDateRange = @"
+            SELECT  count(*) as count,
+                    min(E.StartTime) as startTime,
+                    max(E.EndTime) as endTime
+            FROM    Booking As B
+                     INNER JOIN
+                    BookingRequest As R
+                      ON B.BookingRequestID = R.BookingRequestID
+                     INNER JOIN
+                    CalendarEvents As E
+                      ON E.Id = B.ConfirmedDateID
+            WHERE   
+                    -- Any bookings, as provider or customer
+                    (
+                     R.CustomerUserID=@0
+                      OR
+                     R.ProviderUserID=@0
+                    )
+                     AND
+                    (   
+                        E.StartTime >= @1
+                         AND
+                        E.StartTime <= @2
+                    )
+        ";
+        private const string sqlGetNextBookingID = @"
+            SELECT  TOP 1
+                    B.BookingID
+            FROM    Booking As B
+                     INNER JOIN
+                    BookingRequest As R
+                      ON B.BookingRequestID = R.BookingRequestID
+                     INNER JOIN
+                    CalendarEvents As E
+                      ON E.Id = B.ConfirmedDateID
+            WHERE   
+                    -- Any bookings, as provider or customer
+                    (
+                     R.CustomerUserID=@0
+                      OR
+                     R.ProviderUserID=@0
+                    )
+                     AND
+                    (   
+                        E.StartTime >= @1
+                    )
+            ORDER BY E.StartTime ASC
+        ";
         #endregion
 
         public static Dictionary<string, dynamic> GetUpcomingBookings(int userID, int upcomingLimit = 10) {
@@ -131,6 +179,53 @@ public static partial class LcData
                 {
                     ret["upcoming"] = d;
                 }
+            }
+
+            return ret;
+        }
+
+        public class RestUpcomingBookingsInfo
+        {
+            public int quantity;
+            public DateTime? time;
+        }
+
+        public static Dictionary<string, dynamic> GetUpcomingBookingsInfo(int userID)
+        {
+            var ret = new Dictionary<string, dynamic>();
+            
+            // Preparing dates for further filtering
+            var leftToday = DateTime.Now;
+            var tomorrow = DateTime.Today.AddDays(1);
+            // Next week is from tomorrow up to 7 days
+            var nextWeekStart = tomorrow;
+            var nextWeekEnd = nextWeekStart.AddDays(7);
+
+            using (var db = Database.Open("sqlloco"))
+            {
+                dynamic d = null;
+
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, leftToday, tomorrow);
+                ret["today"] = new RestUpcomingBookingsInfo {
+                    quantity = d.count,
+                    // NOTE: What if the endTime is for a different date? Last work hour on the date?
+                    time = d.endTime
+                };
+                
+                // NOTE: what if there is a booking for several days and we are in the middel of that? First work hour on the date?
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, tomorrow, tomorrow.AddDays(1).AddSeconds(-1));
+                ret["tomorrow"] = new RestUpcomingBookingsInfo {
+                    quantity = d.count,
+                    time = d.startTime
+                };
+
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, nextWeekStart, nextWeekEnd);
+                ret["nextWeek"] = new RestUpcomingBookingsInfo {
+                    quantity = d.count,
+                    time = null
+                };
+
+                ret["nextBookingID"] = db.QueryValue(sqlGetNextBookingID, userID, leftToday);
             }
 
             return ret;

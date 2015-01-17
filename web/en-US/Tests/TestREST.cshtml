@@ -34,13 +34,11 @@
                 givemeerror: 'Something goes wrong'
             }
         },
-        'Upcoming Appointments': {
-            url: '/en-US/REST/upcoming-appointments',
+        'Upcoming Bookings': {
+            url: '/en-US/REST/upcoming-bookings',
             get: {
-                limit: 5,
-                'api comment': 'The result is an object with three optional properties: upcoming, tomorrow, today; ' +
-                'each of them will contain a list of records (bookings).\n ' +
-                'The property "limit" will limit the amount of records returned in each group.'
+                'api comment': 'The result is an object with: nextWeek, tomorrow, today, nextBookingID; ' +
+                'first three will contain the quantity of bookings and the time it starts/ends depending on the case.'
             }
         },
         'Get Availability Weekly': {
