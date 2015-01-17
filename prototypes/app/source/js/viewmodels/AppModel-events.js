@@ -12,8 +12,7 @@ module.exports = function (AppModel) {
         Model: CalendarEvent,
         modelName: 'CalendarEvent',
         modelListName: 'CalendarEvents',
-        urlSingleItem: 'event',
-        urlItemsList: 'events',
+        modelUrl: 'events',
         idPropertyName: 'calendarEventID'
     });
     

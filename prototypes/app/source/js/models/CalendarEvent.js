@@ -87,7 +87,11 @@ function CalendarEvent(values) {
         readOnly: false
     }, values);
 
-    this.recurrenceRule = ko.observable(new RecurrenceRule(values && values.recurrenceRule));
+    this.recurrenceRule = ko.observable(
+        values && 
+        values.recurrenceRule && 
+        new RecurrenceRule(values.recurrenceRule)
+    );
     this.recurrenceOccurrences = ko.observableArray([]); //:RecurrenceOccurrence[]
     if (values && values.recurrenceOccurrences) {
         values.recurrenceOccurrences.forEach(function(occurrence) {

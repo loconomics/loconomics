@@ -10,46 +10,38 @@ exports.defineCrudApiForRest = function defineCrudApiForRest(settings) {
         Model = settings.Model,
         modelName = settings.modelName,
         modelListName = settings.modelListName,
-        urlSingleItem = settings.urlSingleItem,
-        urlItemsList = settings.urlItemsList,
+        modelUrl = settings.modelUrl,
         idPropertyName = settings.idPropertyName;
 
     extendedObject['get' + modelListName] = function getList(filters) {
         
-        return getList.raw(filters).then(function(rawItems) {
+        return this.rest.get(modelUrl, filters)
+        .then(function(rawItems) {
 
             return rawItems && rawItems.map(function(rawItem) {
                 return new Model(rawItem);
             });
         });
     };
-
-    extendedObject['get' + modelListName].raw = function getRawList(filters) {
-        return this.rest.get(urlItemsList, filters);
-    };
-    
     
     extendedObject['get' + modelName] = function getItem(itemID) {
         
-        return getItem.raw(itemID).then(function(rawItem) {
+        return this.rest.get(modelUrl + '/' + itemID)
+        .then(function(rawItem) {
             
             return rawItem && new Model(rawItem);
         });
     };
-    
-    extendedObject['get' + modelName].raw = function getRawItem(itemID) {
-        return this.rest.get(urlSingleItem + '/' + itemID);
-    };
 
     extendedObject['post' + modelName] = function postItem(anItem) {
         
-        return this.rest.post(urlItemsList, anItem).then(function(anItem) {
+        return this.rest.post(modelUrl, anItem).then(function(anItem) {
             return new Model(anItem);
         });
     };
 
     extendedObject['put' + modelName] = function putItem(anItem) {
-        return this.rest.put(urlSingleItem + '/' + unwrap(anItem[idPropertyName]), anItem);
+        return this.rest.put(modelUrl + '/' + unwrap(anItem[idPropertyName]), anItem);
     };
     
     extendedObject['set' + modelName] = function setItem(anItem) {
@@ -64,7 +56,7 @@ exports.defineCrudApiForRest = function defineCrudApiForRest(settings) {
         var id = anItem && unwrap(anItem[idPropertyName]) ||
                 anItem;
         if (id)
-            return this.rest.delete(urlSingleItem + '/' + id, anItem)
+            return this.rest.delete(modelUrl + '/' + id, anItem)
             .then(function(deletedItem) {
                 return deletedItem && new Model(deletedItem);
             });
