@@ -24,12 +24,12 @@ function UpcomingBookingsSummary() {
     this.items = ko.pureComputed(function() {
         var items = [];
         
-        if (this.today.quantity())
-            items.push(this.today);
-        if (this.tomorrow.quantity())
-            items.push(this.tomorrow);
-        if (this.nextWeek.quantity())
-            items.push(this.nextWeek);
+        //if (this.today.quantity())
+        items.push(this.today);
+        //if (this.tomorrow.quantity())
+        items.push(this.tomorrow);
+        //if (this.nextWeek.quantity())
+        items.push(this.nextWeek);
 
         return items;
     }, this);

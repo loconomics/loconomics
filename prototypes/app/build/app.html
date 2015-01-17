@@ -361,6 +361,7 @@
  <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong data-bind="text: ptotalPrice, format: { type: 'number', format: '$0,0' }"></strong></a>
 
         </div>
+        <div data-bind="if: !nextBooking()" class="isolated">You have no bookings!</div>
       </div>
        <h1 class="SectionTitle has-HelpPoint">Upcoming bookings</h1>
 

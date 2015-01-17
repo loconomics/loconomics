@@ -46,6 +46,23 @@ HomeActivity.prototype.show = function show(options) {
  
     options = options || {};
     this.requestInfo = options;
+    var v = this.dataView,
+        appModel = this.app.model;
+    
+    // Update data
+    appModel.getUpcomingBookings().then(function(upcoming) {
+
+        if (upcoming.nextBookingID)
+            appModel.getBooking(upcoming.nextBookingID).then(v.nextBooking);
+        else
+            v.nextBooking(null);
+
+        v.upcomingBookings.today.quantity(upcoming.today.quantity);
+        v.upcomingBookings.today.time(upcoming.today.time && new Date(upcoming.today.time));
+        v.upcomingBookings.tomorrow.quantity(upcoming.tomorrow.quantity);
+        v.upcomingBookings.tomorrow.time(upcoming.tomorrow.time && new Date(upcoming.tomorrow.time));
+        v.upcomingBookings.nextWeek.quantity(upcoming.nextWeek.quantity);
+    });
 };
 
 var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
@@ -73,13 +90,6 @@ function ViewModel() {
 var Time = require('../utils/Time');
 
 function setSomeTestingData(dataView) {
-    dataView.nextBooking(require('../testdata/calendarAppointments').appointments[0]);
-    
-    dataView.upcomingBookings.today.quantity(8);
-    dataView.upcomingBookings.today.time(new Time(5, 15));
-    dataView.upcomingBookings.tomorrow.quantity(14);
-    dataView.upcomingBookings.tomorrow.time(new Time(8, 30));
-    dataView.upcomingBookings.nextWeek.quantity(123);
     
     dataView.inbox.messages(require('../testdata/messages').messages);
     
