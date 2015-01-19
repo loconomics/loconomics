@@ -31,6 +31,82 @@
 
             throw new HttpException(404, "Booking not found.");
         }
+        
+        public dynamic SetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            
+            Validation.RequireField("startTime", LcRessources.RequiredField("Start Date and Time"));
+            Validation.RequireField("customerUserID", LcRessources.RequiredField("Customer"));
+            Validation.RequireField("positionID", LcRessources.RequiredField("Position"));
+            Validation.RequireField("addressID", LcRessources.RequiredField("Location"));
+            Validation.Add("customerUserID", Validator.Integer("Choose a valid client"));
+            Validation.Add("positionID", Validator.Integer("Choose a valid Job title"));
+            Validation.Add("addressID", Validator.DateTime("Choose a valid location"));
+
+            if (!Request.Form.AllKeys.Contains<string>("services[]")) {
+                ModelState.AddError("services", "Choose almost one service");
+            }
+            var services = Request.Form.GetValues("services[]");
+            if (services.Length < 1) {
+                ModelState.AddError("services", "Choose almost one service");
+            }
+            var servicesIds = new List<int>();
+            foreach(var service in services) {
+                var sid = service.AsInt(0);
+                if (sid == 0) {
+                    ModelState.AddError("services", "Some specified services are wrong");
+                    break;
+                }
+                servicesIds.Add(sid);
+            }
+            
+            var startTime = DateTimeFromISO(Request["startTime"]);
+            if (!startTime.HasValue) {
+                ModelState.AddError("startTime", "Start date/time is not valid");
+            }
+
+            if (!Validation.IsValid()) {
+                throw new HttpException(404, LcRessources.ValidationSummaryTitle);
+            }
+
+
+            try
+            {
+                if (itemID == 0) {
+                    itemID = LcData.Booking.InsSimplifiedProviderBooking(
+                        userID,
+                        Request["customerUserID"].AsInt(),
+                        Request["positionID"].AsInt(),
+                        Request["addressID"].AsInt(),
+                        startTime.Value,
+                        servicesIds,
+                        Request["preNotesToClient"],
+                        Request["preNotesToSelf"]
+                    );
+                }
+                else {
+                    throw new HttpException(400, "Not implemented");
+                }
+            }
+            catch (ConstraintException delEx)
+            {
+                // The event cannot be inserted/updated:
+                throw new HttpException(400, delEx.Message);
+            }
+            
+            // Return database copy
+            return GetItem(itemID);
+        }
+        
+        public override dynamic Post()
+        {
+            if (UrlData.Count > 0)
+                throw new HttpException(405, "Method not allowed.");
+
+            return SetItem(0);
+        }
     }
 }
 @{

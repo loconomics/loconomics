@@ -188,6 +188,39 @@
             },
             'delete': {}
         },
+        'Bookings and to add booking': {
+            url: '/en-US/rest/bookings',
+            get: {
+                 "start": "2014-06-01T12:00:00",
+                 "end": "2014-09-30T10:00:00Z",
+            },
+            post: {
+                'customerUserID': 141,
+                'positionID': 16,
+                'addressID': 1,
+                'startTime': '2015-01-01T10:00:00Z',
+                'services': [ 1, 3 ],
+                'preNotesToClient': '',
+                'preNotesToSelf': '',
+                'api comment': 'Fields of the Simplified Provider Booking, fits to the App needs. Services is a list of IDs for the provider services/packages.'
+            }
+        },
+        'Booking (single)': {
+            url: '/en-US/rest/bookings/73',
+            get: {},
+            put: {
+                'customerUserID': 141,
+                'positionID': 16,
+                'addressID': 1,
+                'startTime': '2015-01-01T10:00:00Z',
+                'services': [ 1, 3 ],
+                'preNotesToClient': '',
+                'preNotesToSelf': '',
+                'postNotesToClient': '',
+                'postNotesToSelf': '',
+                'api comment': 'Fields of the Simplified Provider Booking, fits to the App needs. Services is a list of IDs for the provider services/packages.'
+            }
+        },
         'Availability Types': {
             url: '/en-US/rest/availability-types',
             get: {},

@@ -388,12 +388,7 @@
                 * Creating events with the passed data by the user for this Booking setting the Time Zone we found 
                 * looking in our Postal Codes table.
                 */
-            var sqlGetTimeZone = @"
-                SELECT  TimeZone
-                FROM    PostalCode
-                WHERE   PostalCodeID = @0
-            ";
-            var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
+            var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, postalCodeID);
             // Save date-times as 'tentative' provider Events
             int? dt1ID, dt2ID, dt3ID;
             dt1ID = dt2ID = dt3ID = null;
