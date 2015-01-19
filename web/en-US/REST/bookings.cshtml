@@ -1,0 +1,39 @@
+﻿@*
+*@
+@functions{
+    public class RestBookings : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            // Item ID
+            if (UrlData[0].IsInt())
+            {
+                return GetItem(UrlData[0].AsInt(0));
+            }
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            var startTime = DateTimeFromISO(Request.QueryString["start"]) ?? DateTime.Today;
+            var endTime = DateTimeFromISO(Request.QueryString["end"]) ?? startTime.AddDays(1);
+            
+            return LcData.Booking.GetRestBookings(userId, startTime, endTime);
+        }
+        
+        public dynamic GetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            if (itemID > 0)
+            {                
+                return LcData.Booking.GetRestBooking(itemID, userID);
+            }
+
+            throw new HttpException(404, "Booking not found.");
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestBookings().JsonResponse(this);
+}

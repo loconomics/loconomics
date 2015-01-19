@@ -277,6 +277,212 @@ public static partial class LcData
                     PP.LanguageID = @2 AND PP.CountryID = @3
             ORDER BY PT.DisplayRank
         ";
+
+        private const string sqlRestSelectBooking = @"
+            SELECT
+                B.BookingID,
+                B.BookingRequestID,
+                B.ConfirmedDateID,
+                B.TotalPricePaidByCustomer,
+                B.TotalServiceFeesPaidByCustomer,
+                B.TotalPaidToProvider,
+                B.TotalServiceFeesPaidByProvider,
+                B.CreatedDate,
+                B.UpdatedDate,
+                B.BookingStatusID,
+                B.PricingAdjustmentApplied,
+
+                R.BookingTypeID,
+                R.ProviderUserID,
+                R.CustomerUserID,
+                R.PositionID,
+                R.PricingEstimateID,
+                R.BookingRequestStatusID,
+                R.SpecialRequests,
+                R.CreatedDate As RCreatedDAte,
+                R.UpdatedDate As RUpdatedDate,
+                R.PreferredDateID,
+                R.AlternativeDate1ID,
+                R.AlternativeDate2ID,
+                R.AddressID,
+                R.CancellationPolicyID,
+                R.InstantBooking,
+
+                Pr.PricingEstimateRevision,
+                Pr.ServiceDuration,
+                Pr.FirstSessionDuration,
+                Pr.SubtotalPrice,
+                Pr.FeePrice,                        
+                Pr.TotalPrice,
+                Pr.PFeePrice,
+                Pr.CreatedDate As PrCreatedDate,
+                Pr.UpdatedDate As PrUpdatedDate,
+                Pr.SubtotalRefunded,
+                Pr.FeeRefunded,
+                Pr.TotalRefunded,
+                Pr.DateRefunded,
+
+                E.StartTime,
+                E.EndTime,
+                E.TimeZone,
+
+                CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
+                    WHERE URP.BookingID = B.BookingID
+                        AND
+                        URP.ProviderUserID = R.ProviderUserID
+                        AND 
+                        URP.PositionID = 0
+                ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByProvider,
+                CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URC
+                    WHERE URC.BookingID = B.BookingID
+                        AND
+                        URC.CustomerUserID = R.CustomerUserID
+                        AND 
+                        URC.PositionID = R.PositionID
+                ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByCustomer
+
+            FROM    Booking As B
+                        INNER JOIN
+                    BookingRequest As R
+                          ON B.BookingRequestID = R.BookingRequestID
+                         INNER JOIN
+                    PricingEstimate As Pr
+                          ON Pr.PricingEstimateID = R.PricingEstimateID
+                            AND Pr.PricingEstimateRevision = (
+                                SELECT  TOP 1 SubPr.PricingEstimateRevision
+                                FROM    PricingEstimate As SubPr
+                                WHERE   SubPr.PricingEstimateID = R.PricingEstimateID
+                                ORDER BY PricingEstimateRevision DESC
+                            )
+                        INNER JOIN
+                    CalendarEvents As E
+                        ON E.Id = B.ConfirmedDateID
+        ";
+        private const string sqlRestGetPricingEstimateDetail = @"
+            SELECT  ProviderPackageID,
+                    ProviderPricingDataInput,
+                    CustomerPricingDataInput,
+                    HourlyPrice,
+                    SubtotalPrice,
+                    FeePrice,
+                    TotalPrice,
+                    ServiceDuration,
+                    FirstSessionDuration,
+                    CreatedDate,
+                    UpdatedDate
+            FROM    PricingEstimateDetail
+            WHERE   PricingEstimateID = @0 AND PricingEstimateRevision = @1
+        ";
+        #endregion
+
+        #region REST
+        private static dynamic CreateRestBookingObject(dynamic booking, Database db)
+        {
+            if (booking == null) return null;
+
+            var detailsData = (IEnumerable<dynamic>)db.Query(sqlRestGetPricingEstimateDetail, booking.PricingEstimateID, booking.PricingEstimateRevision);
+            var details = detailsData.Select(detail => {
+                return new {
+                    providerPackageID = detail.ProviderPackageID,
+                    providerPricingDataInput = detail.ProviderPricingDataInput,
+                    customerPricingDataInput = detail.customerPricingDataInput,
+                    hourlyPrice = detail.HourlyPrice,
+                    subtotalPrice = detail.SubtotalPrice,
+                    feePrice = detail.FeePrice,
+                    totalPrice = detail.TotalPrice,
+                    serviceDuration = detail.ServiceDuration,
+                    firstSessionDuration = detail.FirstSessionDuration,
+                    createdDate = detail.createdDate,
+                    updatedDate = detail.updatedDate
+                };
+            }).ToList();
+
+            return new
+            {
+                bookingID = booking.BookingID,
+                bookingRequestID = booking.BookingRequestID,
+                confirmedDateID = booking.ConfirmedDateID,
+                totalPricePaidByCustomer = booking.TotalPricePaidByCustomer,
+                totalServiceFeesPaidByCustomer = booking.TotalServiceFeesPaidByCustomer,
+                totalPaidToProvider = booking.TotalPaidToProvider,
+                totalServiceFeesPaidByProvider = booking.TotalServiceFeesPaidByProvider,
+                createdDate = booking.CreatedDate,
+                updatedDate = booking.UpdatedDate,
+                bookingStatusID = booking.BookingStatusID,
+                pricingAdjustmentApplied = booking.PricingAdjustmentApplied,
+
+                reviewedByProvider = booking.ReviewedByProvider,
+                reviewedByCustomer = booking.ReviewedByCustomer,
+                startTime = booking.StartTime,
+                endTime = booking.EndTime,
+
+                bookingRequest = new
+                {
+                    bookingRequestID = booking.BookingRequestID,
+                    bookingTypeID = booking.BookingTypeID,
+                    customerUserID = booking.CustomerUserID,
+                    providerUserID = booking.ProviderUserID,
+                    positionID = booking.PositionID,
+                    pricingEstimateID = booking.PricingEstimateID,
+                    bookingRequestStatusID = booking.BookingRequestStatusID,
+                    specialRequests = booking.SpecialRequests,
+                    createdDate = booking.RCreatedDate,
+                    updatedDate = booking.RUpdatedDate,
+                    preferredDateID = booking.PreferredDateID,
+                    alternativeDate1ID = booking.AlternativeDate1ID,
+                    alternativeDate2ID = booking.AlternativeDate2ID,
+                    addressID = booking.AddressID,
+                    cancellationPolicyID = booking.CancellationPolicyID,
+                    instantBooking = booking.InstantBooking,
+
+                    pricingEstimate = new
+                    {
+                        pricingEstimateID = booking.PricingEstimateID,
+                        pricingEstimateRevision = booking.PricingEstimateRevision,
+                        serviceDuration = booking.ServiceDuration,
+                        firstSessionDuration = booking.FirstSessionDuration,
+                        subtotalPrice = booking.SubtotalPrice,
+                        feePrice = booking.FeePrice,
+                        totalPrice = booking.TotalPrice,
+                        pFeePrice = booking.PFeePrice,
+                        createdDate = booking.PrCreatedDate,
+                        updatedDate = booking.PrUpdatedDate,
+                        subtotalRefunded = booking.SubtotalRefunded,
+                        feeRefunded = booking.FeeRefunded,
+                        totalRefunded = booking.TotalRefunded,
+                        dateRefunded = booking.DateRefunded,
+
+                        details = details
+                    }
+                }
+            };
+        }
+        public static dynamic GetRestBooking(int BookingID, int UserID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return CreateRestBookingObject(db.QuerySingle(sqlRestSelectBooking + @"
+                    WHERE B.BookingID = @0
+                        AND (R.CustomerUserID = @1 OR R.ProviderUserID = @1)
+                ", BookingID, UserID), db);
+            }
+        }
+        public static IEnumerable<dynamic> GetRestBookings(int UserID, DateTime StartTime, DateTime EndTime)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(sqlRestSelectBooking + @"
+                    WHERE 
+                        (R.CustomerUserID = @0 OR R.ProviderUserID = @0)
+                         AND
+                        E.StartTime > @1
+                         AND
+                        E.StartTime < @2
+                ", UserID, StartTime, EndTime).Select(booking => {
+                     return CreateRestBookingObject(booking, db);
+                }).ToList();
+            }
+        }
         #endregion
 
         /// <summary>
