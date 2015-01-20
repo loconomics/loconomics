@@ -98,6 +98,9 @@
                         Request["postNotesToSelf"]
                     );
                 }
+                
+                // Send communication to client (email)
+                LcMessaging.SendProviderBooking(itemID); 
             }
             catch (ConstraintException delEx)
             {

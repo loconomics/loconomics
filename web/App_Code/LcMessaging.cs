@@ -485,6 +485,55 @@ public class LcMessaging
         }
     }
 
+    /// <summary>
+    /// Booking created by the Provider, sent to the customer only
+    /// </summary>
+    /// <param name="CustomerUserID"></param>
+    /// <param name="ProviderUserID"></param>
+    /// <param name="PositionID"></param>
+    /// <param name="BookingID"></param>
+    public static void SendProviderBooking(int BookingID)
+    {
+        int CustomerUserID = 0;
+        int ProviderUserID = 0;
+        int PositionID = 0;
+        int BookingRequestID = 0;
+        dynamic customer = null, provider = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Booking info
+            var booking = LcData.Booking.GetBookingBasicInfo(BookingID);
+            CustomerUserID = booking.CustomerUserID;
+            ProviderUserID = booking.ProviderUserID;
+            PositionID = booking.PositionID;
+            BookingRequestID = booking.BookingRequestID;
+            // Get Customer information
+            customer = db.QuerySingle(sqlGetUserData, CustomerUserID);
+            // Get Provider information
+            provider = db.QuerySingle(sqlGetUserData, ProviderUserID);
+        }
+        if (customer != null && provider != null)
+        {
+            // Create message body based on detailed booking data
+            string subject = LcData.Booking.GetBookingSubject(BookingID);
+            string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
+
+            // #520: MessageTypeID:15 "Booking Provider Update"
+            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 15, message, BookingID, "Booking");
+
+            SendMail(customer.Email, LcData.Booking.GetBookingTitleFor(1, provider, LcData.UserInfo.UserType.Customer),
+                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
+                new Dictionary<string, object> {
+                { "BookingID", BookingID }
+                ,{ "BookingRequestID", BookingRequestID }
+                ,{ "SentTo", "Customer" }
+                ,{ "SentBy", "Provider" }
+                ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
+            }));
+        }
+    }
+
     public static void SendBookingRequestDenegation(int BookingRequestID, bool sentByProvider)
     {
         // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
