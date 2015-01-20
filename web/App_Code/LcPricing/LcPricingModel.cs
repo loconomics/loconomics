@@ -7,7 +7,7 @@ using System.Web.Helpers;
 using System.Text;
 
 /// <summary>
-/// Models for LcPricingView views
+/// Models for LcPricingView views. AKA 'Pricing Estimate' or 'Booking Pricing Details'
 /// </summary>
 public static partial class LcPricingModel
 {

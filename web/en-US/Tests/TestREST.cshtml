@@ -252,11 +252,55 @@
                 "providerUserID": 141,
                 "positionID": -1,
                 'api comment': 'The positionID is optional (the same as value -1).'
+            },
+            post: {
+                "pricingTypeID": 1,
+                "providerUserID": 141,
+                "positionID": 16,
+                "name": "Testing 2",
+                "description": "Testing 2",
+                "price": 0,
+                "serviceDuration": 0, // In minutes! Different than pricing-estimate (there is in hours)
+                "firstTimeClientsOnly": false,
+                "numberOfSessions": 1,
+                "priceRate": 14,
+                "priceRateUnit": "hour",
+                "isPhone": false,
+                "createdDate": "2013-08-28T21:05:59.947",
+                "updatedDate": "2013-08-28T21:08:02.113",
+                "serviceAttributes": [
+                    442,
+                    441,
+                    446
+                ],
+                "noPriceRate": false
             }
         },
         'Pricing (single package)': {
             url: '/en-US/rest/pricing/73',
-            get: { }
+            get: { },
+            put: {
+                "pricingTypeID": 1,
+                "providerUserID": 141,
+                "positionID": 16,
+                "name": "Testing 2",
+                "description": "Testing 2",
+                "price": 0,
+                "serviceDuration": 0, // In minutes! Different than pricing-estimate (there is in hours)
+                "firstTimeClientsOnly": false,
+                "numberOfSessions": 1,
+                "priceRate": 14,
+                "priceRateUnit": "hour",
+                "isPhone": false,
+                "createdDate": "2013-08-28T21:05:59.947",
+                "updatedDate": "2013-08-28T21:08:02.113",
+                "serviceAttributes": [
+                    442,
+                    441,
+                    446
+                ],
+                "noPriceRate": true
+            }
         }
     };
 

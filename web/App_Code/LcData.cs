@@ -942,7 +942,7 @@ public static partial class LcData
         public bool firstTimeClientsOnly = false;
         public int numberOfSessions = 1;
         public decimal? priceRate;
-        public string priceRateUnit;
+        public string priceRateUnit = "hour";
         public bool isPhone = false;
         public DateTime createdDate;
         public DateTime updatedDate;

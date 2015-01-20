@@ -1,6 +1,44 @@
 ﻿@*
+    TODO: Change the ID name????
+
     Pricing REST API: it allows to fetch pricing/packages by provider
     and update him (by the provider owner only).
+
+    Input and Output record scheme example:
+    {
+        "providerPackageID": 73,
+        "pricingTypeID": 1,
+        "providerUserID": 141,
+        "positionID": 16,
+        "name": "Testing 2",
+        "description": "Testing 2",
+        "price": 0,
+        "serviceDuration": 0, // In minutes! Different than pricing-estimate (there is in hours)
+        "firstTimeClientsOnly": false,
+        "numberOfSessions": 1,
+        "priceRate": 14,
+        "priceRateUnit": "hour",
+        "isPhone": false,
+        "createdDate": "2013-08-28T21:05:59.947",
+        "updatedDate": "2013-08-28T21:08:02.113",
+        "serviceAttributes": [
+            442,
+            441,
+            446
+        ]
+    }
+
+    The Input has some extra fields that act as options, changing how
+    is computed or validated the data:
+    {
+        "noPriceRate": true // by default as false, only required for pricing types that 
+                            // request a 'price rate', so explicitely the provider
+                            // decide 'not to state' the price rate. This way, with 'true',
+                            // the price rate validation will not fail if not value is provided
+                            // (that only happens on the pricing type asking for a price rate),
+                            // and if any will be discarded with this --technically, not a need
+                            // but helps to avoid mistakes and allows the special validation.
+    }
 *@
 @functions{
     public class RestPricing : RestWebPage
@@ -45,28 +83,160 @@
             throw new HttpException(404, "Pricing not found.");
         }
         
+        public dynamic SetItem(int itemID)
+        {
+            // Parameters
+            int providerUserID = WebSecurity.CurrentUserId;
+            
+            // NOTE: Using same logic and structures than in the edit form on dashboard, from the LcPricingModel classes
+            var data = new LcPricingModel.PackageBaseData {
+                ID = itemID,
+                PositionID = Request["PositionID"].AsInt(),
+                PricingTypeID = Request["PricingTypeID"].AsInt(),
+                ProviderUserID = providerUserID,
+                // some defaults
+                NumberOfSessions = 1,
+                PriceRateUnit = "hour",
+                IsPhone = false
+            };
+            var config = LcPricingModel.PackageBasePricingTypeConfigs[data.PricingTypeID];
+
+            Validation.RequireField("pricingTypeID", LcRessources.RequiredField("Pricing Type"));
+            Validation.Add("pricingTypeID", Validator.Integer(LcRessources.RequiredField("Pricing Type")));
+            Validation.RequireField("positionID", LcRessources.RequiredField("Job Title"));
+            Validation.Add("positionID", Validator.Integer(LcRessources.RequiredField("Job Title")));
+            Validation.RequireField("name", LcRessources.RequiredField("Name"));
+            Validation.Add("name", Validator.StringLength(50, 0, "Name must be fewer than 50 characters."));
+            Validation.RequireField("description", LcRessources.RequiredField("Description"));
+            Validation.Add("description", Validator.StringLength(1000, 0, "Description must be fewer than 1000 characters."));
+            
+            // Depending on config validation rules
+            if (config.PriceLabel != null) {
+                Validation.RequireField("price", LcRessources.RequiredField("Price"));
+                Validation.Add("price", Validator.Decimal("Price must be a number and not contain the $ symbol."));
+            }
+            if (config.DurationLabel != null) {
+                Validation.Add("serviceDuration", Validator.Integer("Duration must be the number of minutes without decimals"));
+            }
+            if (config.NumberOfSessionsLabel != null) {
+                Validation.RequireField("numberOfSessions", LcRessources.RequiredField("Number of appointments included"));
+                Validation.Add("numberOfSessions", Validator.Integer("Number of appointments included must be a number without decimals"));
+            }
+            
+            // Setting up data (will be used to be saved or to display form errors)
+            data.LanguageID = LcData.GetCurrentLanguageID();
+            data.CountryID = LcData.GetCurrentCountryID();
+            data.Name = config.FixedName ?? Request["name"];
+            data.Description = Request["description"];
+            data.Price = Request["price"].AsDecimal();
+            data.Duration = TimeSpan.FromMinutes(Request["serviceDuration"].AsInt());
+            data.FirstTimeClientsOnly = Request["firstTimeClientsOnly"].AsBool();
+            {
+                var nses = Request["numberOfSessions"].AsInt(1);
+                if (nses < 1) { nses = 1; }
+                data.NumberOfSessions = nses;
+            }
+            data.PriceRate = (config.PriceRateQuantityLabel == null || Request["noPriceRate"].AsBool()) ? null : (decimal?)Request["priceRate"].AsDecimal();
+            data.PriceRateUnit = ((config.PriceRateQuantityLabel == null || Request["noPriceRate"].AsBool()) ? null : Request["priceRateUnit"]) ?? data.PriceRateUnit;
+            data.IsPhone = Request["isPhone"].AsBool();
+            var checkedAtts = Request.Form.GetValues("serviceAttributes[]");
+            if (config.IncludeServiceAttributes &&
+                checkedAtts != null && 
+                checkedAtts.Length > 0) {
+                foreach (var att in checkedAtts) {
+                    int attId = att.AsInt();
+                    if (attId > 0) {
+                        data.ServiceAttributes.Add(attId);
+                    }
+                    else {
+                        ModelState.AddError("serviceAttributes[]", "Some specified attributes are wrong");
+                    }
+                }
+            }
+            // Some manual validations
+            // Require price-rate and unit if is in config and not checked 'no-price-rate'
+            if (config.PriceRateQuantityLabel != null && !Request["noPriceRate"].AsBool() && data.PriceRate <= 0) {
+                ModelState.AddError("priceRate", config.PriceRateIsRequiredValidationError);
+            }
+            if (config.PriceRateUnitLabel != null && !Request["noPriceRate"].AsBool() && String.IsNullOrWhiteSpace(data.PriceRateUnit)) {
+                ModelState.AddError("priceRateUnit", config.PriceRateUnitIsRequiredValidationError);
+            }
+		    if (config.RequireDuration && data.Duration.TotalMinutes < 1) {
+                ModelState.AddError("serviceDuration", LcRessources.RequiredField("Duration"));
+            }
+		    if (config.Mod != null) {
+			    config.Mod.ValidateProviderData(data, ModelState);
+		    }
+        
+            if (!Validation.IsValid() || !ModelState.IsValid) {
+                throw new HttpException(404, LcRessources.ValidationSummaryTitle);
+            }
+
+            // To save
+            data.Save();
+            
+            return GetItem(itemID);
+        }
+        
         public override dynamic Post()
         {
             RequiresUser(LcData.UserInfo.UserType.Provider);
-            var providerUserID = WebSecurity.CurrentUserId;
-            
-            return null;
+            if (UrlData.Count > 0)
+                throw new HttpException(405, "Method not allowed.");
+
+            return SetItem(0);
         }
         
         public override dynamic Put()
         {
             RequiresUser(LcData.UserInfo.UserType.Provider);
-            var providerUserID = WebSecurity.CurrentUserId;
+            
+            dynamic updated = null;
+            if (UrlData.Count == 1)
+                updated = SetItem(UrlData[0].AsInt(0));
 
-            return null;
+            if (updated == null) {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Pricing not found.");
+            }
+
+            return updated;
+        }
+        
+        public dynamic DelItem(int itemID)
+        {
+            var providerUserID = WebSecurity.CurrentUserId;
+            
+            var item = GetItem(itemID);
+            
+            if (item != null) {
+                
+                LcPricingModel.PackageBaseData.Delete(itemID, providerUserID, item.positionID);
+                
+                return item;
+            }
+
+            throw new HttpException(404, "Pricing not found.");
         }
         
         public override dynamic Delete()
         {
             RequiresUser(LcData.UserInfo.UserType.Provider);
-            var providerUserID = WebSecurity.CurrentUserId;
             
-            return null;
+            dynamic deleted = null;
+            if (UrlData.Count == 1)
+                deleted = DelItem(UrlData[0].AsInt(0));
+
+            if (deleted == null) {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Pricing not found.");
+            }
+          
+            return deleted;
         }
     }
 }
