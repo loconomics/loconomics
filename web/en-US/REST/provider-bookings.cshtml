@@ -1,0 +1,139 @@
+﻿@*
+    It allows providers to create and update bookings.
+    It has a different set of possibilities than a customer or the normal booking process.
+    NOTE: To query/get bookings, use the general 'bookings' API.
+
+    TODO: To implement "payment processing enabled", implemented only for "scheduling software"
+*@
+@functions{
+    public class RestProviderBookings : RestWebPage
+    { 
+        /// <summary>
+        /// It returns an item.
+        /// NOTE: Same code than the general 'bookings' API, just to enable this API to
+        /// return the created/updated booking record.
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        public dynamic GetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            if (itemID > 0)
+            {                
+                return LcData.Booking.GetRestBooking(itemID, userID);
+            }
+
+            throw new HttpException(404, "Booking not found.");
+        }
+        
+        public dynamic SetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            
+            Validation.RequireField("startTime", LcRessources.RequiredField("Start Date and Time"));
+            Validation.RequireField("customerUserID", LcRessources.RequiredField("Customer"));
+            Validation.RequireField("addressID", LcRessources.RequiredField("Location"));
+            Validation.Add("customerUserID", Validator.Integer("Choose a valid client"));
+            Validation.Add("addressID", Validator.Integer("Choose a valid location"));
+
+            if (!Request.Form.AllKeys.Contains<string>("services[]")) {
+                ModelState.AddError("services", "Choose almost one service");
+            }
+            var services = Request.Form.GetValues("services[]");
+            var servicesIds = new List<int>();
+            if (services == null || services.Length < 1) {
+                ModelState.AddError("services", "Choose almost one service");
+            }
+            else {
+                foreach(var service in services) {
+                    var sid = service.AsInt(0);
+                    if (sid == 0) {
+                        ModelState.AddError("services", "Some specified services are wrong");
+                        break;
+                    }
+                    servicesIds.Add(sid);
+                }
+            }
+            
+            var startTime = DateTimeFromISO(Request["startTime"]);
+            if (!startTime.HasValue) {
+                ModelState.AddError("startTime", "Start date/time is not valid");
+            }
+
+            if (!Validation.IsValid()) {
+                throw new HttpException(404, LcRessources.ValidationSummaryTitle);
+            }
+
+            try
+            {
+                if (itemID == 0) {
+                    itemID = LcData.Booking.InsSimplifiedProviderBooking(
+                        userID,
+                        Request["customerUserID"].AsInt(),
+                        Request["addressID"].AsInt(),
+                        startTime.Value,
+                        servicesIds,
+                        Request["preNotesToClient"],
+                        Request["preNotesToSelf"]
+                    );
+                }
+                else {
+                    LcData.Booking.UpdSimplifiedProviderBooking(
+                        itemID,
+                        userID,
+                        Request["customerUserID"].AsInt(),
+                        Request["addressID"].AsInt(),
+                        startTime.Value,
+                        servicesIds,
+                        Request["preNotesToClient"],
+                        Request["preNotesToSelf"],
+                        Request["postNotesToClient"],
+                        Request["postNotesToSelf"]
+                    );
+                }
+                
+                // Send communication to client (email)
+                LcMessaging.SendProviderBooking(itemID); 
+            }
+            catch (ConstraintException delEx)
+            {
+                // The event cannot be inserted/updated:
+                throw new HttpException(400, delEx.Message);
+            }
+            
+            // Return database copy
+            return GetItem(itemID);
+        }
+        
+        public override dynamic Post()
+        {
+            if (UrlData.Count > 0)
+                throw new HttpException(405, "Method not allowed.");
+
+            return SetItem(0);
+        }
+
+        public override dynamic Put()
+        {           
+            dynamic updated = null;
+            if (UrlData.Count == 1)
+                updated = SetItem(UrlData[0].AsInt(0));
+
+            if (updated == null) {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Booking not found.");
+            }
+
+            return updated;
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
+    new RestProviderBookings().JsonResponse(this);
+}

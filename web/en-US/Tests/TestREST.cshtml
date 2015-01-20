@@ -188,12 +188,19 @@
             },
             'delete': {}
         },
-        'Bookings and to add booking': {
+        'Bookings (read only)': {
             url: '/en-US/rest/bookings',
             get: {
                  "start": "2014-06-01T12:00:00",
                  "end": "2014-09-30T10:00:00Z",
-            },
+            }
+        },
+        'Bookings (single; read only)': {
+            url: '/en-US/rest/bookings/73',
+            get: {}
+        },
+        'Provider Bookings (post only)': {
+            url: '/en-US/rest/provider-bookings',
             post: {
                 'customerUserID': 141,
                 'addressID': 1,
@@ -204,9 +211,8 @@
                 'api comment': 'Fields of the Simplified Provider Booking, fits to the App needs. Services is a list of IDs for the provider services/packages.'
             }
         },
-        'Booking (single)': {
-            url: '/en-US/rest/bookings/73',
-            get: {},
+        'Provider Bookings (single only)': {
+            url: '/en-US/rest/provider-bookings/73',
             put: {
                 'customerUserID': 141,
                 'addressID': 19,
