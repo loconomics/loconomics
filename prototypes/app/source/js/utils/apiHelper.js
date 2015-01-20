@@ -17,7 +17,6 @@ exports.defineCrudApiForRest = function defineCrudApiForRest(settings) {
         
         return this.rest.get(modelUrl, filters)
         .then(function(rawItems) {
-
             return rawItems && rawItems.map(function(rawItem) {
                 return new Model(rawItem);
             });

@@ -9,10 +9,11 @@ function lowerFirstLetter(n) {
 }
 
 function lowerCamelizeObject(obj) {
+    //jshint maxcomplexity:8
     
     if (!obj || typeof(obj) !== 'object') return obj;
 
-    var ret = {};
+    var ret = Array.isArray(obj) ? [] : {};
     for(var k in obj) {
         if (obj.hasOwnProperty(k)) {
             var newk = lowerFirstLetter(k);
@@ -68,7 +69,9 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
         method: httpMethod,
         headers: this.extraHeaders,
         // URLENCODED input:
-        data: data,
+        // Convert to JSON and back just to ensure the values are converted/encoded
+        // properly to be sent, like Dates being converted to ISO format.
+        data: JSON.parse(JSON.stringify(data)),
         contentType: contentType || 'application/x-www-form-urlencoded'
         // Alternate: JSON as input
         //data: JSON.stringify(data),
