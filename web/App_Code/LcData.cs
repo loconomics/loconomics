@@ -826,7 +826,19 @@ public static partial class LcData
     {
         using (var db = Database.Open("sqlloco"))
         {
-            return db.QuerySingle(@"
+            return db.QuerySingle(SQLSelectFromPackage + @"
+                WHERE   p.ProviderPackageID = @0
+            ", providerPackageID);
+        }
+    }
+    public static dynamic GetProviderPackageServiceAttributes(int providerPackageID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(SQLGetPackageServiceAttributesByPackageID, providerPackageID, GetCurrentLanguageID(), GetCurrentCountryID());
+        }
+    }
+    public const string SQLSelectFromPackage = @"
                 SELECT  p.ProviderPackageID
                         ,p.PricingTypeID
                         ,p.ProviderUserID
@@ -842,19 +854,11 @@ public static partial class LcData
                         ,p.IsPhone
                         ,p.LanguageID
                         ,p.CountryID
+                        ,p.CreatedDate
+                        ,p.UpdatedDate
                         ,p.Active
                 FROM    ProviderPackage As P
-                WHERE   p.ProviderPackageID = @0
-            ", providerPackageID);
-        }
-    }
-    public static dynamic GetProviderPackageServiceAttributes(int providerPackageID)
-    {
-        using (var db = Database.Open("sqlloco"))
-        {
-            return db.Query(SQLGetPackageServiceAttributesByPackageID, providerPackageID, GetCurrentLanguageID(), GetCurrentCountryID());
-        }
-    }
+    ";
     public const string SQLGetPackageServiceAttributesByPackageID = @"
                 SELECT  PD.ServiceAttributeID
                         ,A.Name
@@ -873,24 +877,7 @@ public static partial class LcData
                         AND PD.ProviderPackageID = @0
                 ORDER BY A.Name ASC
     ";
-    public const string SQLGetPackagesByMulti = @"
-                SELECT  p.ProviderPackageID
-                        ,p.PricingTypeID
-                        ,p.ProviderUserID
-                        ,p.PositionID
-                        ,p.ProviderPackageName As Name
-                        ,p.ProviderPackageDescription As Description
-                        ,p.ProviderPackagePrice As Price
-                        ,p.ProviderPackageServiceDuration As ServiceDuration
-                        ,p.FirstTimeClientsOnly
-                        ,p.NumberOfSessions
-                        ,p.PriceRate
-                        ,p.PriceRateUnit
-                        ,p.IsPhone
-                        ,p.LanguageID
-                        ,p.CountryID
-                        ,p.Active
-                FROM    ProviderPackage As P
+    public const string SQLGetPackagesByMulti = SQLSelectFromPackage + @"
                          INNER JOIN
                         PricingType As PT
                           ON P.PricingTypeID = PT.PricingTypeID
@@ -903,7 +890,8 @@ public static partial class LcData
                             AND PPT.LanguageID = PT.LanguageID
                             AND PPT.CountryID = PT.CountryID
                             AND PPT.Active = 1
-                WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
+                WHERE   p.ProviderUserID = @0
+                         AND (@1 = -1 OR P.PositionID = @1)
                          AND 
                         p.LanguageID = @2 AND p.CountryID = @3
                          AND 
@@ -926,7 +914,8 @@ public static partial class LcData
                         ServiceAttribute As A
                           ON A.ServiceAttributeID = PD.ServiceAttributeID
                             AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
-                WHERE   P.ProviderUserID = @0 AND P.PositionID = @1
+                WHERE   P.ProviderUserID = @0
+                         AND (@1 = -1 OR P.PositionID = @1)
                          AND P.LanguageID = @2 AND P.CountryID = @3
                          AND PD.Active = 1 AND P.Active = 1
                          AND (@4 = -1 OR P.ProviderPackageID = @4)
@@ -934,6 +923,81 @@ public static partial class LcData
                          AND (@6 = -1 OR P.IsAddOn = @6)
                 ORDER BY A.Name ASC
     ";
+
+    #region REST
+    public class RestPricing
+    {
+        public RestPricing() { }
+        public int providerPackageID;
+        public int pricingTypeID;
+        public int providerUserID;
+        public int positionID;
+        public string name;
+        public string description;
+        public decimal? price;
+        /// <summary>
+        /// In minutes
+        /// </summary>
+        public int serviceDuration = 0;
+        public bool firstTimeClientsOnly = false;
+        public int numberOfSessions = 1;
+        public decimal? priceRate;
+        public string priceRateUnit;
+        public bool isPhone = false;
+        public DateTime createdDate;
+        public DateTime updatedDate;
+
+        /// <summary>
+        /// List of service attributes IDs that are part of the pricing detail
+        /// </summary>
+        public List<int> serviceAttributes;
+
+        public static RestPricing FromDatabase(dynamic record, IEnumerable<dynamic> attributes)
+        {
+            if (record == null) return null;
+
+            return new RestPricing {
+                providerPackageID = record.ProviderPackageID,
+                pricingTypeID = record.PricingTypeID,
+                providerUserID = record.ProviderUserID,
+                positionID = record.PositionID,
+                name = record.Name,
+                description = record.Description,
+                price = record.Price,
+                serviceDuration = record.ServiceDuration,
+                firstTimeClientsOnly = record.FirstTimeClientsOnly,
+                numberOfSessions = record.NumberOfSessions,
+                priceRate = record.PriceRate,
+                priceRateUnit = record.PriceRateUnit,
+                isPhone = record.IsPhone,
+                createdDate = record.CreatedDate,
+                updatedDate = record.UpdatedDate,
+                
+                // Array of IDs of serviceAttributes
+                serviceAttributes = (attributes == null ? null : attributes.Select(att => {
+                    return (int)att.ServiceAttributeID;
+                }).ToList<int>())
+            };
+        }
+    }
+
+    public static RestPricing GetRestPricingPackage(int packageID)
+    {
+        return RestPricing.FromDatabase(GetProviderPackage(packageID), GetProviderPackageServiceAttributes(packageID));
+    }
+
+    public static IEnumerable<RestPricing> GetRestPricingPackages(int providerUserID, int positionID = -1)
+    {
+        var packages = GetPricingPackagesByProviderPosition(providerUserID, positionID);
+
+        return ((IEnumerable<dynamic>)packages.Packages).Select<dynamic, RestPricing>(pak => {
+            var pakID = (int)pak.ProviderPackageID;
+            var hasAtts = packages.PackagesDetailsByPackage.ContainsKey(pakID);
+            return RestPricing.FromDatabase(pak, hasAtts ? packages.PackagesDetailsByPackage[(int)pak.ProviderPackageID] : null);
+        }).ToList();
+    }
+    #endregion
+
     public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
     {
         dynamic packages, details;

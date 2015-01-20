@@ -26,7 +26,10 @@
 
             if (itemID > 0)
             {                
-                return LcData.Booking.GetRestBooking(itemID, userID);
+                var item = LcData.Booking.GetRestBooking(itemID, userID);
+                if (item != null) {
+                    return item;
+                }
             }
 
             throw new HttpException(404, "Booking not found.");

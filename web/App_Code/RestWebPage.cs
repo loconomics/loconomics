@@ -162,6 +162,11 @@ public class RestWebPage
         ASP.LcHelpers.ReturnJson(Run(WebPage));
     }
 
+    public void RequiresUser(LcData.UserInfo.UserType userType)
+    {
+        this.WebPage.Response.RestRequiresUser(userType);
+    }
+
     #region REST utilities
     /// <summary>
     /// Date format in ISO-8601, suitable for JSON

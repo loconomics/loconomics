@@ -245,6 +245,18 @@
                     'the most optimal. ' +
                     'Optional starnt and end dates to reduce the results, accepting ISO strings.'
             }
+        },
+        'Pricing (packages)': {
+            url: '/en-US/rest/pricing',
+            get: {
+                "providerUserID": 141,
+                "positionID": -1,
+                'api comment': 'The positionID is optional (the same as value -1).'
+            }
+        },
+        'Pricing (single package)': {
+            url: '/en-US/rest/pricing/73',
+            get: { }
         }
     };
 

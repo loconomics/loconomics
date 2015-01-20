@@ -1,0 +1,77 @@
+﻿@*
+    Pricing REST API: it allows to fetch pricing/packages by provider
+    and update him (by the provider owner only).
+*@
+@functions{
+    public class RestPricing : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            // Item ID
+            if (UrlData[0].IsInt())
+            {
+                return GetItem(UrlData[0].AsInt(0));
+            }
+            
+            // Parameters
+            // Required providerUserID
+            var providerUserID = Request["providerUserID"].AsInt(0);
+            if (providerUserID <= 0) {
+                ModelState.AddError("providerUserID", LcRessources.RequiredField("Provider"));
+            }
+            if (!ModelState.IsValid) {
+                throw new HttpException(404, LcRessources.ValidationSummaryTitle);
+            }
+                
+            // Optional positionID
+            var positionID = Request["positionID"].AsInt(-1);
+
+            return LcData.GetRestPricingPackages(providerUserID, positionID);
+        }
+        
+        public dynamic GetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            if (itemID > 0)
+            {
+                var item = LcData.GetRestPricingPackage(itemID);
+                if (item != null) {
+                    return item;
+                }
+            }
+
+            throw new HttpException(404, "Pricing not found.");
+        }
+        
+        public override dynamic Post()
+        {
+            RequiresUser(LcData.UserInfo.UserType.Provider);
+            var providerUserID = WebSecurity.CurrentUserId;
+            
+            return null;
+        }
+        
+        public override dynamic Put()
+        {
+            RequiresUser(LcData.UserInfo.UserType.Provider);
+            var providerUserID = WebSecurity.CurrentUserId;
+
+            return null;
+        }
+        
+        public override dynamic Delete()
+        {
+            RequiresUser(LcData.UserInfo.UserType.Provider);
+            var providerUserID = WebSecurity.CurrentUserId;
+            
+            return null;
+        }
+    }
+}
+@{
+    // Allow anyone to access, but will be force to provider on editing capabilities
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestPricing().JsonResponse(this);
+}
