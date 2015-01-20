@@ -39,27 +39,27 @@
             
             Validation.RequireField("startTime", LcRessources.RequiredField("Start Date and Time"));
             Validation.RequireField("customerUserID", LcRessources.RequiredField("Customer"));
-            Validation.RequireField("positionID", LcRessources.RequiredField("Position"));
             Validation.RequireField("addressID", LcRessources.RequiredField("Location"));
             Validation.Add("customerUserID", Validator.Integer("Choose a valid client"));
-            Validation.Add("positionID", Validator.Integer("Choose a valid Job title"));
-            Validation.Add("addressID", Validator.DateTime("Choose a valid location"));
+            Validation.Add("addressID", Validator.Integer("Choose a valid location"));
 
             if (!Request.Form.AllKeys.Contains<string>("services[]")) {
                 ModelState.AddError("services", "Choose almost one service");
             }
             var services = Request.Form.GetValues("services[]");
-            if (services.Length < 1) {
+            var servicesIds = new List<int>();
+            if (services == null || services.Length < 1) {
                 ModelState.AddError("services", "Choose almost one service");
             }
-            var servicesIds = new List<int>();
-            foreach(var service in services) {
-                var sid = service.AsInt(0);
-                if (sid == 0) {
-                    ModelState.AddError("services", "Some specified services are wrong");
-                    break;
+            else {
+                foreach(var service in services) {
+                    var sid = service.AsInt(0);
+                    if (sid == 0) {
+                        ModelState.AddError("services", "Some specified services are wrong");
+                        break;
+                    }
+                    servicesIds.Add(sid);
                 }
-                servicesIds.Add(sid);
             }
             
             var startTime = DateTimeFromISO(Request["startTime"]);
@@ -71,14 +71,12 @@
                 throw new HttpException(404, LcRessources.ValidationSummaryTitle);
             }
 
-
             try
             {
                 if (itemID == 0) {
                     itemID = LcData.Booking.InsSimplifiedProviderBooking(
                         userID,
                         Request["customerUserID"].AsInt(),
-                        Request["positionID"].AsInt(),
                         Request["addressID"].AsInt(),
                         startTime.Value,
                         servicesIds,
@@ -87,7 +85,18 @@
                     );
                 }
                 else {
-                    throw new HttpException(400, "Not implemented");
+                    LcData.Booking.UpdSimplifiedProviderBooking(
+                        itemID,
+                        userID,
+                        Request["customerUserID"].AsInt(),
+                        Request["addressID"].AsInt(),
+                        startTime.Value,
+                        servicesIds,
+                        Request["preNotesToClient"],
+                        Request["preNotesToSelf"],
+                        Request["postNotesToClient"],
+                        Request["postNotesToSelf"]
+                    );
                 }
             }
             catch (ConstraintException delEx)
@@ -106,6 +115,26 @@
                 throw new HttpException(405, "Method not allowed.");
 
             return SetItem(0);
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData[0] == "test") {
+                return LcData.Booking.DoubleCheckEventAvailability(241, new DateTime(2015, 2, 8, 10, 45, 0), new DateTime(2015, 2, 8, 12, 45, 0));
+            }
+            
+            dynamic updated = null;
+            if (UrlData.Count == 1)
+                updated = SetItem(UrlData[0].AsInt(0));
+
+            if (updated == null) {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Booking not found.");
+            }
+
+            return updated;
         }
     }
 }

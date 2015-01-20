@@ -97,6 +97,11 @@ public class RestWebPage
                     result = Get();
                     break;
                 case "POST":
+                    // By general, if everything goes fine, a 'post' must return
+                    // the http code '201:Created'. On any error will be replaced.
+                    // And can be explicitely replaced by the specific page on the
+                    // overrided 'Post()' method
+                    WebPage.Response.StatusCode = 201;
                     result = Post();
                     break;
                 case "PUT":
@@ -135,6 +140,8 @@ public class RestWebPage
         {
             result = new Dictionary<string, dynamic>();
             result["errorMessage"] = ex.Message;
+            // Internal server error:
+            WebPage.Response.StatusCode = 500;
 
             if (ASP.LcHelpers.InDev)
                 result["exception"] = ex;

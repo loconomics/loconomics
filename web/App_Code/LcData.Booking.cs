@@ -1380,26 +1380,8 @@ public static partial class LcData
                 // affect the availability check.
                 // And get the required information from the event to do the
                 // availability check
-                var dateInfo = db.QuerySingle(@"
-                    UPDATE  CalendarEvents SET
-                            CalendarAvailabilityTypeID = 4
-                    WHERE   ID = @0
-
-                    SELECT  ID, StartTime, EndTime, UserId
-                    FROM    CalendarEvents
-                    WHERE   ID = @0
-                ", dateID);
-                var isNotAvailable = !LcCalendar.CheckUserAvailability(dateInfo.UserID, dateInfo.StartTime, dateInfo.EndTime);
-
-                if (isNotAvailable)
+                if (!DoubleCheckEventAvailability(dateID))
                 {
-                    // Is not available, restore event to its previous state (availability 'tentative':3)
-                    db.Execute(@"
-                        UPDATE  CalendarEvents SET
-                                CalendarAvailabilityTypeID = 3
-                        WHERE   ID = @0
-                    ", dateID);
-
                     return new SqlGenericResult
                     {
                         Error = -2,
@@ -1416,6 +1398,8 @@ public static partial class LcData
                 // On no errors:
                 if (result.Error == 0)
                 {
+                    var dateInfo = GetBasicEventInfo(dateID, db);
+
                     // SINCE #508, Customer is not charged on confirming the booking, else the date of the service;
                     // NOW here we authorize a transaction for lower than 7 days for service date from now, or
                     // nothing on other cases since we cannot ensure the authorization would persist more than
@@ -2635,8 +2619,9 @@ public static partial class LcData
                 @3, -- type
                 @4, -- estimate,
                 @5, -- address
-                2, -- status: completed
+                7, -- status: confirmed
                 @6, -- cancellation
+                '', -- special requests
                 getdate(), getdate(), 'sys',
                 1 -- instant
             )
@@ -2646,15 +2631,18 @@ public static partial class LcData
             INSERT INTO Booking (
                 [BookingRequestID]
                 ,[ConfirmedDateID]
-                ,BookingStatusID                
+                ,BookingStatusID
                 ,CreatedDate
                 ,UpdatedDate
                 ,ModifiedBy
+                ,PreNotesToClient
+                ,PreNotesToSelf
             ) VALUES (
                 @BookingRequestID,
                 @7, -- date
                 1, -- status: confirmed
-                getdate(), getdate(), 'sys'
+                getdate(), getdate(), 'sys',
+                @8, @9 -- notes to client and self
             )
             SET @BookingID = @@Identity
 
@@ -2665,6 +2653,36 @@ public static partial class LcData
             -- Out
             SELECT  @BookingRequestID As BookingRequestID,
                     @BookingID As BookingID
+        ";
+        private const string sqlRestUpdProviderBooking = @"
+            DECLARE @bookingRequestID int
+            DECLARE @bookingID int
+            
+            SET @bookingID = @0
+            SELECT @bookingRequestID = BookingRequestID
+            FROM Booking
+            WHERE BookingID = @bookingID
+
+            UPDATE BookingRequest SET
+                [CustomerUserID] = @1
+                ,[PositionID] = @2
+                ,[AddressID] = @3
+                ,[UpdatedDate] = getdate()
+                ,[ModifiedBy] = 'sys'
+            WHERE BookingRequestID = @bookingRequestID
+
+            UPDATE Booking SET
+                PreNotesToClient = @4
+                ,PreNotesToSelf = @5
+                ,PostNotesToClient = @6
+                ,PostNotesToSelf = @7
+                ,UpdatedDate = getdate()
+                ,ModifiedBy = 'sys'
+            WHERE BookingID = @bookingID
+
+            -- Update customer user profile to be a customer (if is not still, maybe is only provider)
+            UPDATE Users SET IsCustomer = 1
+            WHERE UserID = @0 AND IsCustomer <> 1
         ";
         #endregion
 
@@ -2755,7 +2773,7 @@ public static partial class LcData
         }
         #endregion
 
-        private static dynamic CreateRestBookingObject(dynamic booking, Database db)
+        private static RestBooking CreateRestBookingObject(dynamic booking, Database db)
         {
             if (booking == null) return null;
 
@@ -2834,7 +2852,7 @@ public static partial class LcData
                 }
             };
         }
-        public static dynamic GetRestBooking(int BookingID, int UserID)
+        public static RestBooking GetRestBooking(int BookingID, int UserID)
         {
             using (var db = Database.Open("sqlloco"))
             {
@@ -2844,7 +2862,7 @@ public static partial class LcData
                 ", BookingID, UserID), db);
             }
         }
-        public static IEnumerable<dynamic> GetRestBookings(int UserID, DateTime StartTime, DateTime EndTime)
+        public static IEnumerable<RestBooking> GetRestBookings(int UserID, DateTime StartTime, DateTime EndTime)
         {
             using (var db = Database.Open("sqlloco"))
             {
@@ -2855,7 +2873,7 @@ public static partial class LcData
                         E.StartTime > @1
                          AND
                         E.StartTime < @2
-                ", UserID, StartTime, EndTime).Select(booking => {
+                ", UserID, StartTime, EndTime).Select<dynamic, RestBooking>(booking => {
                      return CreateRestBookingObject(booking, db);
                 }).ToList();
             }
@@ -2892,7 +2910,6 @@ public static partial class LcData
         public static int InsSimplifiedProviderBooking(
             int providerUserID,
             int customerUserID,
-            int positionID,
             int addressID,
             DateTime startTime,
             IEnumerable<int> services,
@@ -2900,12 +2917,9 @@ public static partial class LcData
             string preNotesToSelf
         )
         {
-            using (var db = Database.Open("sqloco"))
+            using (var db = Database.Open("sqlloco"))
             {
-                var transaction = db.Connection.BeginTransaction();
-
                 // 0: previous data and checks
-                var position = LcData.UserInfo.GetUserPos(providerUserID, positionID);
                 var provider = LcData.UserInfo.GetUserRowWithContactData(providerUserID);
                 var customer = LcData.UserInfo.GetUserRow(customerUserID);
 
@@ -2913,38 +2927,23 @@ public static partial class LcData
                     throw new Exception("Impossible to retrieve the provider information. It exists?");
                 if (customer == null)
                     throw new Exception("Impossible to retrieve the customer information. It exists?");
+                if (services == null)
+                    throw new Exception("Create a booking require select almost one service");
+
+                // 1º: calculating pricing and timing by checing services included
+                var pricingCalculations = CalculateSimplifiedBookingPricing(services, providerUserID, db);
+                var totalPrice = pricingCalculations.totalPrice;
+                var totalDuration = pricingCalculations.totalDuration;
+                var servicesData = pricingCalculations.servicesData;
+                var positionID = pricingCalculations.positionID;
+
+                // 1-after Checks:
+                var position = LcData.UserInfo.GetUserPos(providerUserID, positionID);
                 if (position == null)
                     throw new Exception("Impossible to create a booking for that Job Title.");
 
-                // 1º: calculating pricing and timing by checing services included
-                decimal totalPrice = 0,
-                    totalDuration = 0;
-                var servicesData = new Dictionary<int, dynamic>();
-
-                if (services == null)
-                {
-                    throw new Exception("Create a booking require select almost one service");
-                }
-
-                foreach (var serviceID in services)
-                {
-                    var pricing = db.QuerySingle(@"
-                        SELECT ProviderPackagePrice As Price, ProviderPackageServiceDuration As Duration
-                        FROM ProviderPackage
-                        WHERE ProviderUserID = @0 AND PositionID = @1
-                                AND ProviderPackageID = @2
-                    ", providerUserID, positionID, serviceID);
-
-                    if (pricing == null)
-                        throw new Exception("Impossible to retrieve information for the ServiceID: " + serviceID);
-
-                    totalPrice += (pricing.Price ?? 0);
-                    totalDuration += (pricing.Duration ?? 0);
-                    servicesData[serviceID] = pricing;
-                }
-
                 // 2º: Creating event for the start date and calculated duration, checking availability
-                var endTime = startTime.AddHours((double)totalDuration);
+                var endTime = startTime.AddMinutes((double)totalDuration);
                 var isAvailable = LcCalendar.CheckUserAvailability(providerUserID, startTime, endTime);
                 if (!isAvailable)
                     throw new Exception("The choosen time is not available, it conflicts with a recent appointment!");
@@ -2952,6 +2951,9 @@ public static partial class LcData
                 // Event data
                 var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
                 string eventSummary = String.Format("{0} services for {1}", position.PositionSingular, ASP.LcHelpers.GetUserDisplayName(customer));
+
+                // Transaction begins
+                db.Execute("BEGIN TRANSACTION");
 
                 var bookingDateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent, providerUserID, 2 /* availability: busy */,
                     eventSummary, // summary
@@ -2962,71 +2964,7 @@ public static partial class LcData
                 );
 
                 // 3º: Creating the pricing estimate records (summary and details) with the provided and calculated data
-                var pricingEstimateID = (int)db.QueryValue(@"
-                    DECLARE @id int
-                    SELECT @id = MAX(PricingEstimateID) + 1 FROM PricingEstimate WITH (UPDLOCK, HOLDLOCK)
-
-                    INSERT INTO PricingEstimate (
-                        PricingEstimateID,
-                        PricingEstimateRevision,
-                        ServiceDuration,
-                        FirstSessionDuration,
-                        SubtotalPrice,
-                        FeePrice,
-                        TotalPrice,
-                        PFeePrice,
-                        CreatedDate,
-                        UpdatedDate,
-                        ModifiedBy,
-                        Active
-                    ) VALUES (
-                        @id,
-                        1, -- revision
-                        @0, -- duration
-                        @0, -- first session duration
-                        @1, -- subtotal price
-                        0, -- fee price
-                        @1, -- total price
-                        0, -- pfee price
-                        getdate(), getdate(), 'sys', 1
-                    )
-
-                    SELECT @@Identity
-                ", totalDuration, totalPrice);
-                foreach (int serviceID in services)
-                {
-                    var serviceData = servicesData[serviceID];
-                    var price = serviceData.Price ?? 0;
-                    var duration = serviceData.Duration ?? 0;
-
-                    db.Execute(@"
-INSERT INTO PricingEstimateDetail (
-    PricingEstimateID,
-    PricingEstimateRevision,
-    ProviderPackageID,
-    SubtotalPrice,
-    FeePrice,
-    TotalPrice,
-    ServiceDuration,
-    FirstSessionDuration,
-    CreatedDate,
-    UpdatedDate,
-    ModifiedBy,
-    PricingGroupID -- unused but not null
-) VALUES (
-    @0, -- ID
-    @1, -- revision
-    @2, -- packageID
-    @3, -- subtotal
-    0, -- fees
-    @3, -- price
-    @4, -- duration
-    @4, -- first duration
-    getdate(), getdate(), 'sys',
-    0 -- unused pricing group id
-)
-                    ", pricingEstimateID, 1, serviceID, price, duration);
-                }
+                var pricingEstimateID = SetPricingEstimate(0, pricingCalculations.totalDurationInHours, totalPrice, servicesData, db);
 
                 // 4º: creating booking request and booking records
                 var ids = db.QuerySingle(sqlRestInsProviderBooking,
@@ -3038,11 +2976,13 @@ INSERT INTO PricingEstimateDetail (
                     pricingEstimateID,
                     addressID,
                     LcData.Booking.GetProviderCancellationPolicyID(providerUserID, positionID, db),
-                    bookingDateID
+                    bookingDateID,
+                    preNotesToClient,
+                    preNotesToSelf
                 );
 
                 // Persisting all or nothing:
-                transaction.Commit();
+                db.Execute("COMMIT TRANSACTION");
 
                 // LAST: latest steps, optional or delayed for some reason
                 // Update the CalendarEvent to include contact data,
@@ -3063,6 +3003,311 @@ INSERT INTO PricingEstimateDetail (
                 catch { }
 
                 return ids.BookingID;
+            }
+        }
+
+        public static void UpdSimplifiedProviderBooking(
+            int bookingID,
+            int providerUserID,
+            int customerUserID,
+            int addressID,
+            DateTime startTime,
+            IEnumerable<int> services,
+            string preNotesToClient,
+            string preNotesToSelf,
+            string postNotesToClient,
+            string postNotesToSelf
+        )
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                // 0: previous data and checks
+                var provider = LcData.UserInfo.GetUserRowWithContactData(providerUserID);
+                var customer = LcData.UserInfo.GetUserRow(customerUserID);
+                var booking = GetRestBooking(bookingID, providerUserID);
+
+                if (booking.bookingRequest.providerUserID != providerUserID)
+                    throw new Exception("Forbidden. Attempt to edit the booking of another provider");
+                if (provider == null)
+                    throw new Exception("Impossible to retrieve the provider information. It exists?");
+                if (customer == null)
+                    throw new Exception("Impossible to retrieve the customer information. It exists?");
+
+                // 1º: calculating pricing and timing by checing services included
+                var pricingCalculations = CalculateSimplifiedBookingPricing(services, providerUserID, db);
+                var totalPrice = pricingCalculations.totalPrice;
+                var totalDuration = pricingCalculations.totalDuration;
+                var servicesData = pricingCalculations.servicesData;
+                var positionID = pricingCalculations.positionID;
+
+                // 1-after Checks:
+                var position = LcData.UserInfo.GetUserPos(providerUserID, positionID);
+                if (position == null)
+                    throw new Exception("Impossible to create a booking for that Job Title.");
+
+                // 2º: Dates update? Checking availability and updating event dates if changed
+                var endTime = startTime.AddMinutes((double)totalDuration);
+                // Only if dates changed:
+                var eventInfo = GetBasicEventInfo(booking.confirmedDateID.Value, db);
+                if (eventInfo.StartTime != startTime && eventInfo.EndTime != endTime)
+                {
+                    if (!DoubleCheckEventAvailability(booking.confirmedDateID.Value, startTime, endTime))
+                        throw new Exception("The choosen time is not available, it conflicts with a recent appointment!");
+
+                    // Transaction begins
+                    db.Execute("BEGIN TRANSACTION");
+
+                    // Update event
+                    db.Execute(LcCalendar.sqlUpdBookingEvent, booking.confirmedDateID, startTime, endTime, null, null, null);
+                }
+                else
+                {
+                    // Transaction begins
+                    db.Execute("BEGIN TRANSACTION");
+                }
+
+                // 3º: Updating pricing estimate records
+                SetPricingEstimate(booking.bookingRequest.pricingEstimateID, pricingCalculations.totalDurationInHours, totalPrice, servicesData, db);
+
+                // 4º: Updating booking request and booking records
+                db.Execute(sqlRestUpdProviderBooking, bookingID, customerUserID, positionID, addressID,
+                    preNotesToClient, preNotesToSelf,
+                    postNotesToClient, postNotesToSelf);
+
+                // Persist all or nothing:
+                db.Execute("COMMIT TRANSACTION");
+
+                // LAST: latest steps, optional or delayed for some reason
+                // Update the CalendarEvent to include contact data,
+                // but this is not so important as the rest because of that it goes
+                // inside a try-catch, it doesn't matter if fails, is just a commodity
+                // (customer and provider can access contact data from the booking).
+                try
+                {
+                    string eventSummary = String.Format("{0} services for {1}", position.PositionSingular, ASP.LcHelpers.GetUserDisplayName(customer));
+                    var description = LcData.Booking.GetBookingEventDescription(bookingID);
+                    var location = LcData.Booking.GetBookingLocationAsOneLineText(bookingID);
+                    db.Execute(@"
+                            UPDATE  CalendarEvents
+                            SET     Description = @1,
+                                    Location = @2,
+                                    Summary = @3
+                            WHERE   Id = @0
+                        ", booking.confirmedDateID, description, location, eventSummary);
+                }
+                catch { }
+            }
+        }
+        private static dynamic CalculateSimplifiedBookingPricing(IEnumerable<int> services, int providerUserID, Database db)
+        {
+            decimal totalPrice = 0,
+                totalDuration = 0;
+            var servicesData = new Dictionary<int, dynamic>();
+            int positionID = 0;
+
+            foreach (var serviceID in services)
+            {
+                var pricing = db.QuerySingle(@"
+                    SELECT ProviderPackagePrice As Price,
+                            ProviderPackageServiceDuration As Duration,
+                            PositionID
+                    FROM ProviderPackage
+                    WHERE ProviderUserID = @0
+                            AND ProviderPackageID = @1
+                ", providerUserID, serviceID);
+
+                if (pricing == null)
+                    throw new Exception("Impossible to retrieve information for the ServiceID: " + serviceID);
+
+                // Get and double check position
+                if (positionID == 0)
+                {
+                    positionID = pricing.PositionID;
+                }
+                else if (positionID != pricing.PositionID)
+                {
+                    // All services must be part of the same position
+                    throw new Exception("All choosen services must belong to the same Job Title");
+                }
+
+                totalPrice += (pricing.Price ?? 0);
+                // In minutes:
+                totalDuration += (pricing.Duration ?? 0);
+                servicesData[serviceID] = new
+                {
+                    Price = pricing.Price == 0,
+                    Duration = pricing.Duration ?? 0,
+                    DurationHours = Math.Round((decimal)(pricing.Duration ?? 0) / 60, 2)
+                };
+            }
+
+            return new {
+                totalPrice = totalPrice,
+                totalDuration = totalDuration,
+                totalDurationInHours = Math.Round(totalDuration / 60, 2),
+                servicesData = servicesData,
+                positionID = positionID
+            };
+        }
+
+        /// <summary>
+        /// Create or update a Pricing Estimate, generating a new revision for each update (new records but sharing
+        /// pricingEstimateID --the given one-- and increasing the revision).
+        /// If the given pricingEstimateID is zero, a new pricing is created. At any time, the returned
+        /// data is the pricingEstimateID (auto created or the same provided on updates).
+        /// </summary>
+        /// <param name="pricingEstimateID"></param>
+        /// <param name="totalDuration"></param>
+        /// <param name="totalPrice"></param>
+        /// <param name="servicesData"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        private static int SetPricingEstimate(int pricingEstimateID, decimal totalDuration, decimal totalPrice, Dictionary<int, dynamic> servicesData, Database db)
+        {
+            var pricingIDs = db.QuerySingle(@"
+                DECLARE @id int
+                DECLARE @revision int
+
+                -- estimate ID by param, 0 for new, any other to create a new pricing revision for that existing one
+                SET @id = @0
+                    
+                -- Getting the ID and Revision
+                IF @id = 0 BEGIN
+                    -- new id
+                    SELECT @id = MAX(PricingEstimateID) + 1 FROM PricingEstimate WITH (UPDLOCK, HOLDLOCK)
+                    -- first revision
+                    SET @revision = 1
+                END ELSE BEGIN
+                    -- use updated id and get new revision
+                    SELECT @revision = MAX(PricingEstimateRevision) + 1 FROM PricingEstimate WITH (UPDLOCK, HOLDLOCK)
+                    WHERE PricingEstimateID = @id
+                END
+
+                -- Creating record
+                INSERT INTO PricingEstimate (
+                    PricingEstimateID,
+                    PricingEstimateRevision,
+                    ServiceDuration,
+                    FirstSessionDuration,
+                    SubtotalPrice,
+                    FeePrice,
+                    TotalPrice,
+                    PFeePrice,
+                    CreatedDate,
+                    UpdatedDate,
+                    ModifiedBy,
+                    Active
+                ) VALUES (
+                    @id,
+                    @revision,
+                    @1, -- duration
+                    @1, -- first session duration
+                    @2, -- subtotal price
+                    0, -- fee price
+                    @2, -- total price
+                    0, -- pfee price
+                    getdate(), getdate(), 'sys', 1
+                )
+
+                SELECT @id As PricingEstimateID, @revision As PricingEstimateRevision
+            ", pricingEstimateID, totalDuration, totalPrice);
+            pricingEstimateID = pricingIDs.PricingEstimateID;
+            var pricingEstimateRevision = pricingIDs.PricingEstimateRevision;
+
+            foreach (var serviceID in servicesData.Keys)
+            {
+                var serviceData = servicesData[serviceID];
+                var price = serviceData.Price ?? 0;
+                var duration = serviceData.DurationHours ?? 0;
+
+                db.Execute(@"
+INSERT INTO PricingEstimateDetail (
+PricingEstimateID,
+PricingEstimateRevision,
+ProviderPackageID,
+SubtotalPrice,
+FeePrice,
+TotalPrice,
+ServiceDuration,
+FirstSessionDuration,
+CreatedDate,
+UpdatedDate,
+ModifiedBy,
+PricingGroupID -- unused but not null
+) VALUES (
+@0, -- ID
+@1, -- revision
+@2, -- packageID
+@3, -- subtotal
+0, -- fees
+@3, -- price
+@4, -- duration
+@4, -- first duration
+getdate(), getdate(), 'sys',
+0 -- unused pricing group id
+)
+                ", pricingEstimateID, pricingEstimateRevision, serviceID, price, duration);
+            }
+
+            return pricingEstimateID;
+        }
+
+        private static dynamic GetBasicEventInfo(int eventID, Database db)
+        {
+            return db.QuerySingle(@"
+                 SELECT ID,
+                        StartTime,
+                        EndTime,
+                        UserId,
+                        CalendarAvailabilityTypeID
+                FROM    CalendarEvents
+                WHERE   ID = @0
+            ", eventID);
+        }
+
+        /// <summary>
+        /// Checks and returns the availability (true:available, false:not-available) for an eventID
+        /// start and end time taking care to not use the event itself in the check. Optionally,
+        /// different dates than the event ones can be checked out; the event dates will not be taken into consideration
+        /// in this case too.
+        /// Usefull to check availability on 'edit' actions, like editing a booking, so the already created event doesn't
+        /// confuse the results.
+        /// </summary>
+        /// <param name="eventID"></param>
+        /// <param name="db"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public static bool DoubleCheckEventAvailability(int eventID, DateTime? startTime =  null, DateTime? endTime = null)
+        {
+            // We require an owned connection, to avoid conflict with other transactions
+            using (var db = Database.Open("sqlloco"))
+            {
+                var dateInfo = GetBasicEventInfo(eventID, db);
+
+                // Change the event to be 'transparent'(4) for a while to don't
+                // affect the availability check.
+                // And get the required information from the event to do the
+                // availability check
+                db.QuerySingle(@"
+                UPDATE  CalendarEvents SET
+                        CalendarAvailabilityTypeID = 4
+                WHERE   ID = @0
+                ", eventID);
+
+                var checkStartTime = startTime ?? dateInfo.StartTime;
+                var checkEndTime = endTime ?? dateInfo.EndTime;
+
+                var isAvailable = LcCalendar.CheckUserAvailability(dateInfo.UserId, checkStartTime, checkEndTime);
+
+                // restore event to its previous state, so gets 'untouched'
+                db.Execute(@"
+                UPDATE  CalendarEvents SET
+                        CalendarAvailabilityTypeID = @1
+                WHERE   ID = @0
+                ", eventID, dateInfo.CalendarAvailabilityTypeID);
+
+                return isAvailable;
             }
         }
         #endregion

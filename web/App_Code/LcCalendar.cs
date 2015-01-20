@@ -41,6 +41,17 @@ public static partial class LcCalendar
                     ,'sys')
         SELECT Cast(@@Identity As int) As CalendarEventID
     ";
+    public const string sqlUpdBookingEvent = @"
+        UPDATE [CalendarEvents] SET
+            [Summary] = coalesce(@4, Summary)
+            ,[Description] = coalesce(@5, Description)
+            ,[StartTime] = @1
+            ,[EndTime] = @2
+            ,[TimeZone] = coalesce(@3, TimeZone)
+            ,[UpdatedDate] = getdate()
+            ,[ModifyBy] = 'sys'
+        WHERE Id = @0
+    ";
     #endregion
 
     #region Availability
