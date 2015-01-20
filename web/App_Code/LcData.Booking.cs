@@ -3006,7 +3006,24 @@ public static partial class LcData
             }
         }
 
-        public static void UpdSimplifiedProviderBooking(
+        /// <summary>
+        /// It updates a booking created by a provider in the simplified way
+        /// for use in the REST API from an App.
+        /// It returns true if gets updated, false if the ID doesn't exists
+        /// and throw exceptions on errors.
+        /// </summary>
+        /// <param name="bookingID"></param>
+        /// <param name="providerUserID"></param>
+        /// <param name="customerUserID"></param>
+        /// <param name="addressID"></param>
+        /// <param name="startTime"></param>
+        /// <param name="services"></param>
+        /// <param name="preNotesToClient"></param>
+        /// <param name="preNotesToSelf"></param>
+        /// <param name="postNotesToClient"></param>
+        /// <param name="postNotesToSelf"></param>
+        /// <returns></returns>
+        public static bool UpdSimplifiedProviderBooking(
             int bookingID,
             int providerUserID,
             int customerUserID,
@@ -3022,9 +3039,12 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 // 0: previous data and checks
+                var booking = GetRestBooking(bookingID, providerUserID);
+                if (booking == null)
+                    return false;
+
                 var provider = LcData.UserInfo.GetUserRowWithContactData(providerUserID);
                 var customer = LcData.UserInfo.GetUserRow(customerUserID);
-                var booking = GetRestBooking(bookingID, providerUserID);
 
                 if (booking.bookingRequest.providerUserID != providerUserID)
                     throw new Exception("Forbidden. Attempt to edit the booking of another provider");
@@ -3097,6 +3117,8 @@ public static partial class LcData
                 }
                 catch { }
             }
+
+            return true;
         }
         private static dynamic CalculateSimplifiedBookingPricing(IEnumerable<int> services, int providerUserID, Database db)
         {

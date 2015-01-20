@@ -81,7 +81,7 @@
                     );
                 }
                 else {
-                    LcData.Booking.UpdSimplifiedProviderBooking(
+                    var itemExists = LcData.Booking.UpdSimplifiedProviderBooking(
                         itemID,
                         userID,
                         Request["customerUserID"].AsInt(),
@@ -93,6 +93,11 @@
                         Request["postNotesToClient"],
                         Request["postNotesToSelf"]
                     );
+                    
+                    // If doesn't exists, return null early
+                    if (!itemExists) {
+                        return null;
+                    }
                 }
                 
                 // Send communication to client (email)
@@ -100,7 +105,7 @@
             }
             catch (ConstraintException delEx)
             {
-                // The event cannot be inserted/updated:
+                // The item cannot be inserted/updated:
                 throw new HttpException(400, delEx.Message);
             }
             
