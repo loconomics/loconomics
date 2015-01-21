@@ -102,8 +102,8 @@ app.activities = {
     'onboardingComplete': require('./activities/onboardingComplete')
 };
 
-/** Page ready **/
-$(function() {
+/** App Init **/
+var appInit = function appInit() {
     
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that
@@ -155,6 +155,11 @@ $(function() {
     
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
+    
+    // Plugins setup
+    if (window && window.plugins && window.plugins.Keyboard) {
+        window.plugins.Keyboard.disableScroll(true);
+    }
 
     // App set-up
     app.shell.baseUrl = 'activities/';
@@ -168,4 +173,14 @@ $(function() {
     
     // DEBUG
     window.app = app;
-});
+};
+
+// App init on page ready and phonegap ready
+if (window.cordova) {
+    $(function() {
+        // Page is ready, device is too?
+        $(document).on('deviceready', appInit);
+    });
+} else {
+    $(appInit);
+}
