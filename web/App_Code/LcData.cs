@@ -928,7 +928,7 @@ public static partial class LcData
     public class RestPricing
     {
         public RestPricing() { }
-        public int providerPackageID;
+        public int providerPricingID;
         public int pricingTypeID;
         public int providerUserID;
         public int positionID;
@@ -957,7 +957,7 @@ public static partial class LcData
             if (record == null) return null;
 
             return new RestPricing {
-                providerPackageID = record.ProviderPackageID,
+                providerPricingID = record.ProviderPackageID,
                 pricingTypeID = record.PricingTypeID,
                 providerUserID = record.ProviderUserID,
                 positionID = record.PositionID,
@@ -981,12 +981,12 @@ public static partial class LcData
         }
     }
 
-    public static RestPricing GetRestPricingPackage(int packageID)
+    public static RestPricing GetRestProviderPricing(int providerPricingID)
     {
-        return RestPricing.FromDatabase(GetProviderPackage(packageID), GetProviderPackageServiceAttributes(packageID));
+        return RestPricing.FromDatabase(GetProviderPackage(providerPricingID), GetProviderPackageServiceAttributes(providerPricingID));
     }
 
-    public static IEnumerable<RestPricing> GetRestPricingPackages(int providerUserID, int positionID = -1)
+    public static IEnumerable<RestPricing> GetRestProviderPricing(int providerUserID, int positionID = -1)
     {
         var packages = GetPricingPackagesByProviderPosition(providerUserID, positionID);
 

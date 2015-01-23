@@ -1,12 +1,10 @@
 ﻿@*
-    TODO: Change the ID name????
-
-    Pricing REST API: it allows to fetch pricing/packages by provider
+    Provider Pricing REST API: it allows to fetch provider pricing
     and update him (by the provider owner only).
 
     Input and Output record scheme example:
     {
-        "providerPackageID": 73,
+        "providerPricingID": 73,
         "pricingTypeID": 1,
         "providerUserID": 141,
         "positionID": 16,
@@ -64,7 +62,7 @@
             // Optional positionID
             var positionID = Request["positionID"].AsInt(-1);
 
-            return LcData.GetRestPricingPackages(providerUserID, positionID);
+            return LcData.GetRestProviderPricing(providerUserID, positionID);
         }
         
         public dynamic GetItem(int itemID)
@@ -74,7 +72,7 @@
 
             if (itemID > 0)
             {
-                var item = LcData.GetRestPricingPackage(itemID);
+                var item = LcData.GetRestProviderPricing(itemID);
                 if (item != null) {
                     return item;
                 }
@@ -174,6 +172,7 @@
 
             // To save
             data.Save();
+            itemID = data.ID;
             
             return GetItem(itemID);
         }

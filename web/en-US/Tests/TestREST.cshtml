@@ -208,7 +208,7 @@
                 'services': [ 8, 35 ],
                 'preNotesToClient': '',
                 'preNotesToSelf': '',
-                'api comment': 'Fields of the Simplified Provider Booking, fits to the App needs. Services is a list of IDs for the provider services/packages.'
+                'api comment': 'Fields of the Simplified Provider Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing.'
             }
         },
         'Provider Bookings (single only)': {
@@ -222,7 +222,7 @@
                 'preNotesToSelf': '',
                 'postNotesToClient': '',
                 'postNotesToSelf': '',
-                'api comment': 'Fields of the Simplified Provider Booking, fits to the App needs. Services is a list of IDs for the provider services/packages.'
+                'api comment': 'Fields of the Simplified Provider Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing.'
             }
         },
         'Availability Types': {
@@ -246,21 +246,21 @@
                     'Optional starnt and end dates to reduce the results, accepting ISO strings.'
             }
         },
-        'Pricing (packages)': {
-            url: '/en-US/rest/pricing',
+        'Provider Pricing': {
+            url: '/en-US/rest/provider-pricing',
             get: {
                 "providerUserID": 141,
                 "positionID": -1,
                 'api comment': 'The positionID is optional (the same as value -1).'
             },
             post: {
-                "pricingTypeID": 1,
+                "pricingTypeID": 3,
                 "providerUserID": 141,
-                "positionID": 16,
+                "positionID": 106,
                 "name": "Testing 2",
                 "description": "Testing 2",
-                "price": 0,
-                "serviceDuration": 0, // In minutes! Different than pricing-estimate (there is in hours)
+                "price": 20,
+                "serviceDuration": 60, // In minutes! Different than pricing-estimate (there is in hours)
                 "firstTimeClientsOnly": false,
                 "numberOfSessions": 1,
                 "priceRate": 14,
@@ -269,24 +269,23 @@
                 "createdDate": "2013-08-28T21:05:59.947",
                 "updatedDate": "2013-08-28T21:08:02.113",
                 "serviceAttributes": [
-                    442,
-                    441,
-                    446
+                    501
                 ],
-                "noPriceRate": false
+                "noPriceRate": false,
+                'api comment': 'serviceDuration in minutes. Different validation rules apply depending on the pricing type'
             }
         },
-        'Pricing (single package)': {
-            url: '/en-US/rest/pricing/73',
+        'Provider Pricing (item)': {
+            url: '/en-US/rest/provider-pricing/73',
             get: { },
             put: {
-                "pricingTypeID": 1,
+                "pricingTypeID": 3,
                 "providerUserID": 141,
-                "positionID": 16,
+                "positionID": 106,
                 "name": "Testing 2",
                 "description": "Testing 2",
-                "price": 0,
-                "serviceDuration": 0, // In minutes! Different than pricing-estimate (there is in hours)
+                "price": 20,
+                "serviceDuration": 60, // In minutes! Different than pricing-estimate (there is in hours)
                 "firstTimeClientsOnly": false,
                 "numberOfSessions": 1,
                 "priceRate": 14,
@@ -295,12 +294,12 @@
                 "createdDate": "2013-08-28T21:05:59.947",
                 "updatedDate": "2013-08-28T21:08:02.113",
                 "serviceAttributes": [
-                    442,
-                    441,
-                    446
+                    501
                 ],
-                "noPriceRate": true
-            }
+                "noPriceRate": false,
+                'api comment': 'serviceDuration in minutes. Different validation rules apply depending on the pricing type'
+            },
+            delete: {}
         }
     };
 
