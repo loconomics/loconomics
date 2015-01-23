@@ -1,4 +1,4 @@
-INSERT INTO [loconomics].[dbo].[bookingtype]
+INSERT INTO [bookingtype]
            ([BookingTypeID]
            ,[BookingTypeName]
            ,[BookingTypeDescription]
