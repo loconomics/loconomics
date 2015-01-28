@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" type="image/vnd.microsoft.icon" href="../../assets/images/favicon.ico" />
+
+        <title>Loconomics</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Styles build following the Styleguide -->
+        <link href="../../assets/css/styleguide.css" rel="stylesheet">   
+        <script src="../../assets/javascript/styleguidelibs.js"></script>
+        <script src="../../assets/javascript/styleguide.js"></script>
+        <script>
+          
+            function parseLink(baseUrl, link) {
+
+                link = link || '';
+                
+                var rawUrl = link;
+
+                // hashbang support: remove the #! and use the rest as the link
+                link = link.replace(/^#!/, '');
+
+                // URL Query as an object, empty object if no query
+                var query = {};//DEPENDENCY getUrlQuery(link || '?')
+                
+                // remove query from the rest of URL to parse
+                link = link.replace(/\?.*$/, '');
+
+                // Remove the baseUrl to get the app base.
+                //DEPENDENCY var path = link.replace(new RegExp('^' + escapeRegExp(baseUrl), 'i'), '');
+                var path = link.replace(new RegExp('^' + baseUrl, 'i'), '');
+                
+                // Get first segment or page name (anything until a slash or extension beggining)
+                var match = /^\/?([^\/\.]+)[^\/]*(\/.*)*$/.exec(path);
+
+                var parsed = {
+                    root: true,
+                    name: null,
+                    segments: null,
+                    path: null,
+                    url: rawUrl,
+                    query: query
+                };
+
+                if (match) {
+                    parsed.root = false;
+                    if (match[1]) {
+                        parsed.name = match[1];
+
+                        if (match[2]) {
+                            parsed.path = match[2];
+                            parsed.segments = match[2].replace(/^\//, '').split('/');
+                        }
+                        else {
+                            parsed.path = '/';
+                            parsed.segments = [];
+                        }
+                    }
+                }
+
+                return parsed;
+            };
+            
+            var defaultSwitcher = function($from, $to, notifier) {                
+                notifier.willOpen($to);
+                $to.show();
+                notifier.willClose($from);
+                $from.hide();
+                // Its enough visible to perform initialization tasks:
+                notifier.ready($to);
+                // Its completely opened
+                notifier.opened($to);
+                notifier.closed($from);
+            };
+            
+            function ContainersManager(settings) {
+                
+                this.idAttributeName = settings.idAttributeName || 'id';
+                this.$root = $(settings.root || 'body');
+                this.allowDuplicates = !!settings.allowDuplicates || false;
+            };
+            
+            ContainersManager.prototype.find = function find(containerName, root) {
+                $root = $(root || this.$root);
+                // TODO escape name for CSS selector
+                return $root.children('[' + this.idAttributeName + '=' + containerName + ']');
+            };
+            
+            ContainersManager.prototype.getCurrent = function getCurrent() {
+                return this.$root.find('[' + this.idAttributeName + ']:visible');
+            };
+            
+            ContainersManager.prototype.inject = function inject(containerName, html) {
+                
+                // Creating a wrapper around the html
+                // (can be provided the innerHtml or outerHtml, doesn't matters with next approach)
+                var $html = $('<div/>', { html: html }),
+                    // We look for the container element (when the outerHtml is provided)
+                    $c = this.find(containerName, $html);
+                
+                if ($c.length === 0) {
+                    // Its innerHtml, so the wrapper becomes the container itself
+                    $c = $html.attr(this.idAttributeName, containerName);
+                }
+
+                if (!this.allowDuplicates) {
+                    // No more than one container instance can exists at the same time
+                    // We look for any existent one and its replaced with the new
+                    var $prev = this.find(containerName);
+                    $prev.replaceWith($c);
+                    $c = $prev;
+                }
+                
+                // Add to the document
+                // (on the case of duplicated found, this will do nothing, no worry)
+                $c.appendTo(this.$root);
+            };
+
+            /**
+                Shell
+            **/
+            function Shell(settings) {
+                console.log('Shell created', settings);
+
+                this.$root = $(settings.root);
+                this.baseUrl = settings.baseUrl || '';
+                this.parseLink = (settings.parseLink || parseLink).bind(this, this.baseUrl);
+                
+                this.history = settings.history || window.history;
+                
+                this.indexName = settings.indexName || 'index';
+                this.loader = settings.loader;
+                this.containersManager = settings.containersManager;
+                // The switcher function receive the elements to interchange
+                // from and to and a notifier object with callbacks to call
+                // to notify each step. It enables transitions but the default
+                // is a simple 'show the new' and 'hide the old'
+                this.switcher = settings.switcher || defaultSwitcher;
+                this.notifier = settings.notifier;
+                /* Notifier object, for like events but with callbacks {
+                    willClose: function willClose(name, $element) {}
+                    willOpen: function willOpen(name, $element) {},
+                    ready: function ready(name, $element) {},
+                    closed: function closed(name, $element) {},
+                    opened: function opened(name, $element) {}
+                }
+                */
+            }
+
+            Shell.prototype.go = function go(url, options) {
+                console.log('Shell go to', url, options);
+                this.history.pushState(options, undefined, url);
+                // pushState do NOT trigger the popstate event, so
+                this.replace(options);
+            };
+            
+            Shell.prototype.goBack = function goBack(steps) {
+                steps = 0 - (steps || 1);
+                this.history.go(steps);
+            };
+            
+            Shell.prototype.replace = function replace(state) {
+                
+                // Default state and route
+                state = state || this.history.state || {};
+                var isHashBang = /#!/.test(location.href);
+                if (!state.route) {
+                    var link = (
+                        isHashBang ?
+                        location.hash :
+                        location.pathname
+                    ) + (location.search || '');
+
+                    state.route = this.parseLink(link);
+                }
+
+                // Use the index on root calls
+                if (state.route.root === true) {
+                    state.route = this.parseLink(this.indexName);
+                }
+
+                // Locating the container
+                var act = this.containersManager.find(state.route.name);
+                var shell = this;
+                
+                if (act && act.length) {
+                    return new Promise(function(resolve, reject) {
+                        try {
+                            
+                            var oldAct = shell.containersManager.getCurrent();
+                            shell.switcher(oldAct, act, shell.notifier);
+                            
+                            resolve(); //? resolve(act);
+                        }
+                        catch (ex) {
+                            reject(ex);
+                        }
+                    });
+                }
+                else {
+                    if (this.loader) {
+                        // load and inject the content in the page
+                        // then try the replace again
+                        return this.loader.load(state.route).then(function(html) {
+                            shell.containersManager.inject(state.route.name, html);
+                            return shell.replace(state);
+                        });
+                    }
+                    else {
+                        return Promise.reject(new Error('Page not found'));
+                    }
+                }
+            };
+            
+            Shell.prototype.run = function run(options) {
+                
+                options = $.merge({
+                    linkEvent: 'click'
+                }, options);
+                //? this.runningOptions = options;
+                
+                var shell = this;
+                
+                // Catch popstate event to update shell replacing the active container
+                $(window).on('popstate', function(event) {
+                    shell.replace(event.state);
+                });
+                
+                // Catch all links and like-links
+                this.$root.on(options.linkEvent, '[href], [data-href]', function(e) {
+                    e.preventDefault();
+                    //? e.stopImmediatePropagation();
+                    
+                    var $t = $(this),
+                        href = $t.attr('href') || $t.data('href');
+
+                    shell.go(href);
+                });
+                
+                // Initiallize state
+                // All containers must be hidden at first
+                this.containersManager.getCurrent().hide();
+                // Route to the current url/state
+                this.replace();
+            };
+          
+            $(function() {
+                var shell = new Shell({
+                    root: 'body',
+                    baseUrl: '/prototypes/shell/',
+                    indexName: 'a',
+                    loader: null,
+                    history: window.history,
+                    containersManager: new ContainersManager({
+                        idAttributeName: 'data-activity'
+                    }),
+                    notifier: {
+                        willClose: function willClose($element) { console.log('willClose', $element); },
+                        willOpen: function willOpen($element) { console.log('willOpen',  $element); },
+                        ready: function ready($element) { console.log('ready', $element); },
+                        closed: function closed($element) { console.log('closed', $element); },
+                        opened: function opened($element) { console.log('opened', $element); }
+                    }
+                });
+                
+                shell.run({
+                    linkEvent: 'tap'
+                });
+            });
+      </script>
+  </head>
+  <body>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-brand">Shell</div>
+    </nav>
+
+    <div class="container-fluid" data-activity="a">
+        <h3>A</h3>
+        <a class="btn btn-default" href="b">Go to B</a>
+    </div>
+    <div class="container-fluid" data-activity="b">
+        <h3>B</h3>
+        <a class="btn btn-default" href="c">Go to C</a>
+    </div>
+    <div class="container-fluid" data-activity="c">
+        <h3>C</h3>
+        <a class="btn btn-default" href="d">Go to D</a>
+    </div>
+    <div class="container-fluid" data-activity="d">
+        <h3>D</h3>
+        <a class="btn btn-default" href="a">Go to A</a>
+        <a class="btn btn-default" href="/">Go to root/index</a>
+    </div>
+  </body>
+</html>
