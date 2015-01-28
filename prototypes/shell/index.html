@@ -65,18 +65,46 @@
                 }
 
                 return parsed;
-            };
+            }
+            
+            function sanitizeUrl(url) {
+                return url.replace(/\.{2,}/g, '').replace(/\/{2,}/g, '/');
+            }
+            
+            function absolutizeUrl(baseUrl, url) {
+
+                // sanitize before check
+                url = sanitizeUrl(url);
+    
+                // Check if use the base already
+                var matchBase = new RegExp('^' + baseUrl, 'i');
+                if (matchBase.test(url)) {
+                    return url;
+                }
+
+                // build and sanitize
+                return sanitizeUrl(baseUrl + url);
+            }
             
             var defaultSwitcher = function($from, $to, notifier) {                
-                notifier.willOpen($to);
-                $to.show();
-                notifier.willClose($from);
-                $from.hide();
-                // Its enough visible to perform initialization tasks:
-                notifier.ready($to);
-                // Its completely opened
-                notifier.opened($to);
-                notifier.closed($from);
+                if (!$to.is(':visible')) {
+                    notifier.willOpen($to);
+                    $to.show();
+                    // Its enough visible to perform initialization tasks:
+                    notifier.ready($to);
+                    // When its completely opened
+                    notifier.opened($to);
+                } else {
+                    // Its ready; maybe it was but sub-location
+                    // or state change need to be communicated
+                    notifier.ready($to);
+                }
+                
+                if ($from.is(':visible')) {
+                    notifier.willClose($from);
+                    $from.hide();
+                    notifier.closed($from);
+                }
             };
             
             function ContainersManager(settings) {
@@ -130,7 +158,9 @@
 
                 this.$root = $(settings.root);
                 this.baseUrl = settings.baseUrl || '';
+                this.linkEvent = settings.linkEvent || 'click';
                 this.parseLink = (settings.parseLink || parseLink).bind(this, this.baseUrl);
+                this.absolutizeUrl = absolutizeUrl.bind(this, this.baseUrl);
                 
                 this.history = settings.history || window.history;
                 
@@ -155,6 +185,7 @@
 
             Shell.prototype.go = function go(url, options) {
                 console.log('Shell go to', url, options);
+                url = this.absolutizeUrl(url);
                 this.history.pushState(options, undefined, url);
                 // pushState do NOT trigger the popstate event, so
                 this.replace(options);
@@ -186,15 +217,16 @@
                 }
 
                 // Locating the container
-                var act = this.containersManager.find(state.route.name);
+                var $cont = this.containersManager.find(state.route.name);
                 var shell = this;
                 
-                if (act && act.length) {
+                if ($cont && $cont.length) {
                     return new Promise(function(resolve, reject) {
                         try {
                             
-                            var oldAct = shell.containersManager.getCurrent();
-                            shell.switcher(oldAct, act, shell.notifier);
+                            var $oldCont = shell.containersManager.getCurrent();
+                            $oldCont = $oldCont.not($cont);
+                            shell.switcher($oldCont, $cont, shell.notifier);
                             
                             resolve(); //? resolve(act);
                         }
@@ -218,27 +250,27 @@
                 }
             };
             
-            Shell.prototype.run = function run(options) {
-                
-                options = $.merge({
-                    linkEvent: 'click'
-                }, options);
-                //? this.runningOptions = options;
-                
+            Shell.prototype.run = function run() {
+
                 var shell = this;
                 
                 // Catch popstate event to update shell replacing the active container
                 $(window).on('popstate', function(event) {
                     shell.replace(event.state);
                 });
-                
-                // Catch all links and like-links
-                this.$root.on(options.linkEvent, '[href], [data-href]', function(e) {
-                    e.preventDefault();
-                    //? e.stopImmediatePropagation();
-                    
+
+                // Catch all links in the page (not only $root ones) and like-links
+                $('body').on(this.linkEvent, '[href], [data-href]', function(e) {
+
                     var $t = $(this),
                         href = $t.attr('href') || $t.data('href');
+                    
+                    // Do nothing if the URL contains the protocol
+                    if (/^[a-z]+:/i.test(href))
+                        return;
+                    
+                    e.preventDefault();
+                    //? e.stopImmediatePropagation();
 
                     shell.go(href);
                 });
@@ -255,23 +287,22 @@
                     root: 'body',
                     baseUrl: '/prototypes/shell/',
                     indexName: 'a',
+                    //linkEvent: 'tap',
                     loader: null,
                     history: window.history,
                     containersManager: new ContainersManager({
                         idAttributeName: 'data-activity'
                     }),
                     notifier: {
-                        willClose: function willClose($element) { console.log('willClose', $element); },
-                        willOpen: function willOpen($element) { console.log('willOpen',  $element); },
-                        ready: function ready($element) { console.log('ready', $element); },
-                        closed: function closed($element) { console.log('closed', $element); },
-                        opened: function opened($element) { console.log('opened', $element); }
+                        willClose: function willClose($element) { },
+                        willOpen: function willOpen($element) { },
+                        ready: function ready($element) { },
+                        closed: function closed($element) { },
+                        opened: function opened($element) { }
                     }
                 });
                 
-                shell.run({
-                    linkEvent: 'tap'
-                });
+                shell.run();
             });
       </script>
   </head>
@@ -297,6 +328,7 @@
         <h3>D</h3>
         <a class="btn btn-default" href="a">Go to A</a>
         <a class="btn btn-default" href="/">Go to root/index</a>
+        <a class="btn btn-default" href="d">Go to D</a>
     </div>
   </body>
 </html>
