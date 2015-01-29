@@ -16,48 +16,49 @@ var Shell = require('./utils/Shell'),
     NavAction = require('./viewmodels/NavAction'),
     AppModel = require('./viewmodels/AppModel');
 
-/** Custom Loconomics 'locale' styles for date/times **/
-var moment = require('moment');
-moment.locale('en-US-LC', {
-    meridiemParse : /[ap]\.?\.?/i,
-    meridiem : function (hours, minutes, isLower) {
-        if (hours > 11) {
-            return isLower ? 'p' : 'P';
-        } else {
-            return isLower ? 'a' : 'A';
+// Register the special locale
+require('./locales/en-US-LC');
+
+/**
+    App static class
+**/
+var app = {
+    shell: require('./app-shell'),
+    
+    // New app model, that starts with anonymous user
+    model: new AppModel(),
+    
+    // TODO Double check it works
+    // 'out', 'login', 'onboarding', 'in'
+    status: ko.observable('out'),
+    
+    /**
+        Just redirect the better place for current user and state
+    **/
+    goDashboard: function goDashboard() {
+        var onboarding = this.model.user().onboardingStep();
+        if (onboarding) {
+            this.shell.go('onboardingHome/' + onboarding);
         }
-    },
-    calendar : {
-        lastDay : '[Yesterday]',
-        sameDay : '[Today]',
-        nextDay : '[Tomorrow]',
-        lastWeek : '[last] dddd',
-        nextWeek : 'dddd',
-        sameElse : 'M/D'
-    },
-    longDateFormat : {
-        LT: 'h:mma',
-        LTS: 'h:mm:ssa',
-        L: 'MM/DD/YYYY',
-        l: 'M/D/YYYY',
-        LL: 'MMMM Do YYYY',
-        ll: 'MMM D YYYY',
-        LLL: 'MMMM Do YYYY LT',
-        lll: 'MMM D YYYY LT',
-        LLLL: 'dddd, MMMM Do YYYY LT',
-        llll: 'ddd, MMM D YYYY LT'
+        else {
+            this.shell.go('home');
+        }
     }
-});
-// Left normal english as default:
-moment.locale('en-US');
+};
 
-/** app static class **/
-var app = new Shell();
-// TODO app must to be a plain object with shell as property, not a shell instance
-app.shell = app;
+/** Continue app creation with things that need a reference to the app **/
 
-// New app model, that starts with anonymous user
-app.model = new AppModel();
+app.getActivityControllerByRoute = function getActivityControllerByRoute(route) {
+    // From the route object, the important piece is route.name
+    // that contains the activity name except if is the root
+    var actName = route.name || app.shell.indexName;
+    
+    return (this.activities[actName] || null);
+};
+
+// accessControl setup: cannot be specified on Shell creation because
+// depends on the app instance
+app.shell.accessControl = require('./utils/accessControl')(app);
 
 // Shortcut to UserType enumeration used to set permissions
 app.UserType = app.model.user().constructor.UserType;
@@ -81,26 +82,7 @@ app.model.user().isAnonymous.subscribe(updateStatesOnUserChange);
 app.model.user().onboardingStep.subscribe(updateStatesOnUserChange);
 
 /** Load activities **/
-app.activities = {
-    'calendar': require('./activities/calendar'),
-    'datetimePicker': require('./activities/datetimePicker'),
-    'clients': require('./activities/clients'),
-    'services': require('./activities/services'),
-    'locations': require('./activities/locations'),
-    'textEditor': require('./activities/textEditor'),
-    'home': require('./activities/home'),
-    'appointment': require('./activities/appointment'),
-    'bookingConfirmation': require('./activities/bookingConfirmation'),
-    'index': require('./activities/index'),
-    'login': require('./activities/login'),
-    'learnMore': require('./activities/learnMore'),
-    'signup': require('./activities/signup'),
-    'contactInfo': require('./activities/contactInfo'),
-    'positions': require('./activities/positions'),
-    'onboardingHome': require('./activities/onboardingHome'),
-    'locationEdition': require('./activities/locationEdition'),
-    'onboardingComplete': require('./activities/onboardingComplete')
-};
+app.activities = require('./app-activities');
 
 /** App Init **/
 var appInit = function appInit() {
@@ -123,36 +105,6 @@ var appInit = function appInit() {
         });
     }
     
-    // Account log-out: this doesn't need an activity, so
-    // we add manually a route for that
-    app.shell.specialRoutes.logout = function(route) {
-        
-        app.model.logout().then(function() {
-            // Anonymous user again
-            app.model.user().model.updateWith(
-                app.model.user().constructor.newAnonymous()
-            );
-            
-            // Go index
-            app.shell.go('#!');
-        });
-    };
-    
-    // New app method: goDashboard, just redirect the better
-    // place for current user and state
-    app.goDashboard = function goDashboard() {
-        var onboarding = this.model.user().onboardingStep();
-        if (onboarding) {
-            this.shell.go('onboardingHome/' + onboarding);
-        }
-        else {
-            this.shell.go('home');
-        }
-    };
-    
-    // Set-up access control for the shell
-    app.shell.accessControl = require('./utils/accessControl')(app);
-    
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
     
@@ -162,6 +114,7 @@ var appInit = function appInit() {
     }
     
     // Easy links to shell actions, like goBack, in html elements
+    // Example: <button data-shell="goBack 2">Go 2 times back</button>
     $(document).on('tap', '[data-shell]', function(e) {
         var cmdline = $(this).data('shell') || '',
             args = cmdline.split(' '),
@@ -174,8 +127,6 @@ var appInit = function appInit() {
     
     // TODO COMING: things to do on app.js that new Shell doesn't now:
     // - Manage the 'activities' controllers (js modules), running 'show' on shell event 'ready'
-    // - Re-implement the 'accessControl' function, must return null on success and state object
-    //   on error, provided to the error activity
     // - navAction changes for the 'go-back' button must be done manually on each activity; since
     //   this will depend on the activity location on the hierarchy, and maybe manual URL rather
     //   than go-back, has no sense here
@@ -185,24 +136,25 @@ var appInit = function appInit() {
     // - updateMenu is out.
     // - ko-binding is out: need it for .AppNav with status, navAction
     
-    
-    
-    // TODO complete task:
-    // - app.status is out shell
-    // 'out', 'login', 'onboarding', 'in'
-    app.status = ko.observable('out');
+    // Execute the 'activities' controllers when ready
+    app.shell.on(app.shell.events.itemReady, function($act) {
+        
+        // TODO implement
+        var activity = app.activities['an-actual-name'];
+        // TODO Init required before the accessControl??
+        var act = activity.init();
+        act.show();
+    });
 
 
-    // App set-up
-    app.shell.baseUrl = 'activities/';
-    app.shell.defaultNavAction = NavAction.goHome;
+    // App init:
     app.model.init().then(
         app.shell.init.bind(app.shell)
     ).then(function() {
         // Mark the page as ready
         $('html').addClass('is-ready');
     });
-    
+
     // DEBUG
     window.app = app;
 };

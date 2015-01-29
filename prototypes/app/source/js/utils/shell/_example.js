@@ -31,11 +31,12 @@ Shell.deps.$(function() {
         // for better mobile experience, if the event is installed:
         linkEvent: 'tap',
 
-        // Set a different loader than the default one
+        // Set a different loader than the default one, an object like
+        //   loader: { load: function(name) { return Promise(..); } }
         // Loading can be disabled by setting a null loader, on that
         // cases a non preloaded item returns a 'page not found' error
         // instantly.
-        //loader: { load: null },
+        //loader: null,
 
         // Providing a different history management? By default, the
         // browser history is used without to type this :-)

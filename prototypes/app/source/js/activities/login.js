@@ -1,5 +1,5 @@
 /**
-    Index activity
+    Login activity
 **/
 'use strict';
 

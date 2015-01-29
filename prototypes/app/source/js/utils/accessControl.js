@@ -19,18 +19,27 @@ var UserType = require('../models/User').UserType;
 
 module.exports = function createAccessControl(app) {
     
-    return function accessControl(activity) {
+    return function accessControl(route) {
+
+        var activity = app.getActivityControllerByRoute(route);
 
         var user = app.model.user();
         var currentType = user && user.userType();
 
         if (activity && activity.accessLevel) {
 
-            return !!(activity.accessLevel & currentType);
+            var can = activity.accessLevel & currentType;
+            
+            if (!can) {
+                // Notify error, why cannot access
+                return {
+                    requiredLevel: activity.accessLevel,
+                    currentType: currentType
+                };
+            }
         }
-        else {
-            // On nothing, just allow
-            return true;
-        }
+
+        // Allow
+        return null;
     };
 };
