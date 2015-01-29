@@ -32,6 +32,9 @@ var app = {
     // 'out', 'login', 'onboarding', 'in'
     status: ko.observable('out'),
     
+    /** Load activities controllers (not initialized) **/
+    activities: require('./app-activities'),
+    
     /**
         Just redirect the better place for current user and state
     **/
@@ -48,12 +51,22 @@ var app = {
 
 /** Continue app creation with things that need a reference to the app **/
 
+app.getActivity = function getActivity(name) {
+    var activity = this.activities[name];
+    if (activity) {
+        var $act = this.shell.items.find(name);
+        if ($act && $act.length)
+            return activity.init($act, this);
+    }
+    return null;
+};
+
 app.getActivityControllerByRoute = function getActivityControllerByRoute(route) {
     // From the route object, the important piece is route.name
     // that contains the activity name except if is the root
-    var actName = route.name || app.shell.indexName;
+    var actName = route.name || this.shell.indexName;
     
-    return (this.activities[actName] || null);
+    return this.getActivity(actName);
 };
 
 // accessControl setup: cannot be specified on Shell creation because
@@ -81,8 +94,6 @@ function updateStatesOnUserChange() {
 app.model.user().isAnonymous.subscribe(updateStatesOnUserChange);
 app.model.user().onboardingStep.subscribe(updateStatesOnUserChange);
 
-/** Load activities **/
-app.activities = require('./app-activities');
 
 /** App Init **/
 var appInit = function appInit() {
@@ -126,7 +137,6 @@ var appInit = function appInit() {
     });
     
     // TODO COMING: things to do on app.js that new Shell doesn't now:
-    // - Manage the 'activities' controllers (js modules), running 'show' on shell event 'ready'
     // - navAction changes for the 'go-back' button must be done manually on each activity; since
     //   this will depend on the activity location on the hierarchy, and maybe manual URL rather
     //   than go-back, has no sense here
@@ -135,17 +145,16 @@ var appInit = function appInit() {
     // - updateAppNav is out.
     // - updateMenu is out.
     // - ko-binding is out: need it for .AppNav with status, navAction
+    // - use 'unfocus' on the domItemsManager automatically for the hidden element
     
     // Execute the 'activities' controllers when ready
     app.shell.on(app.shell.events.itemReady, function($act) {
-        
-        // TODO implement
-        var activity = app.activities['an-actual-name'];
-        // TODO Init required before the accessControl??
-        var act = activity.init();
-        act.show();
-    });
 
+        // Get initialized activity for the DOM element
+        var activity = app.getActivity($act.data('activity'));
+        // Trigger the 'show' logic of the activity controller:
+        activity.show();
+    });
 
     // App init:
     app.model.init().then(
