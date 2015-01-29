@@ -282,6 +282,7 @@
                 this.replace();
             };
           
+            // App
             $(function() {
                 var shell = new Shell({
                     root: 'body',
@@ -314,7 +315,7 @@
 
     <div class="container-fluid" data-activity="a">
         <h3>A</h3>
-        <a class="btn btn-default" href="b">Go to B</a>
+        <a class="btn btn-default" href="#!b">Go to B</a>
     </div>
     <div class="container-fluid" data-activity="b">
         <h3>B</h3>
@@ -322,13 +323,13 @@
     </div>
     <div class="container-fluid" data-activity="c">
         <h3>C</h3>
-        <a class="btn btn-default" href="d">Go to D</a>
+        <a class="btn btn-default" href="#!d">Go to D</a>
     </div>
     <div class="container-fluid" data-activity="d">
         <h3>D</h3>
-        <a class="btn btn-default" href="a">Go to A</a>
-        <a class="btn btn-default" href="/">Go to root/index</a>
-        <a class="btn btn-default" href="d">Go to D</a>
+        <a class="btn btn-default" href="#!a">Go to A</a>
+        <a class="btn btn-default" href="#!/">Go to root/index</a>
+        <a class="btn btn-default" href="#!d">Go to D</a>
     </div>
   </body>
 </html>
