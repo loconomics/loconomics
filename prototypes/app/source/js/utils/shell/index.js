@@ -11,16 +11,16 @@ var Shell = require('./Shell'),
     DomItemsManager = require('./DomItemsManager'),
     parseUrl = require('./parseUrl'),
     absolutizeUrl = require('./absolutizeUrl'),
-    itemsSwitcher = require('./itemsSwitcher'),
     $ = require('jquery'),
-    loader = require('./loader');
+    loader = require('./loader'),
+    EventEmitter = require('events').EventEmitter;
 
 $.merge(Shell.deps, {
     parseUrl: parseUrl,
     absolutizeUrl: absolutizeUrl,
-    itemsSwitcher: itemsSwitcher,
     jquery: $,
-    loader: loader
+    loader: loader,
+    EventEmitter: EventEmitter
 });
 
 exports.Shell = Shell;

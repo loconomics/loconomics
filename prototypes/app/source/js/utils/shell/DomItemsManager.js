@@ -25,7 +25,7 @@ DomItemsManager.prototype.find = function find(containerName, root) {
     return $root.children('[' + this.idAttributeName + '=' + containerName + ']');
 };
 
-DomItemsManager.prototype.getCurrent = function getCurrent() {
+DomItemsManager.prototype.getActive = function getActive() {
     return this.$root.find('[' + this.idAttributeName + ']:visible');
 };
 
@@ -53,4 +53,46 @@ DomItemsManager.prototype.inject = function inject(containerName, html) {
     // Add to the document
     // (on the case of duplicated found, this will do nothing, no worry)
     $c.appendTo(this.$root);
+};
+
+/** 
+    The switch method receive the items to interchange as active or current,
+    the 'from' and 'to', and the shell instance that MUST be used
+    to notify each event that involves the item:
+    willClose, willOpen, ready, opened, closed.
+    
+    It's designed to be able to manage transitions, but this default
+    implementation is as simple as 'show the new and hide the old'.
+**/
+DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell) {
+
+    if (!$to.is(':visible')) {
+        shell.emit(shell.events.willOpen, $to);
+        $to.show();
+        // Its enough visible and in DOM to perform initialization tasks
+        // that may involve layout information
+        shell.emit(shell.events.itemReady, $to);
+        // When its completely opened
+        shell.emit(shell.events.opened, $to);
+    } else {
+        // Its ready; maybe it was but sub-location
+        // or state change need to be communicated
+        shell.emit(shell.events.ready, $to);
+    }
+
+    if ($from.is(':visible')) {
+        shell.emit(shell.events.willClose, $from);
+        $from.hide();
+        shell.emit(shell.events.closed, $from);
+    }
+};
+
+/**
+    Initializes the list of items. No more than one
+    must be opened/visible at the same time, so at the 
+    init all the elements are closed waiting to set
+    one as the active or the current one.
+**/
+DomItemsManager.prototype.init = function init() {
+    this.getActive().hide();
 };

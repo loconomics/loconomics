@@ -8,7 +8,7 @@ var shell = require('./index'),
     Shell = shell.Shell,
     DomItemsManager = shell.DomItemsManager;
 
-// App
+// On ready
 Shell.deps.$(function() {
 
     // Its called 'shell items' the DOM elements under the root or container
@@ -45,15 +45,13 @@ Shell.deps.$(function() {
         // be provided:
         domItemsManager: new DomItemsManager({
             idAttributeName: 'data-activity'
-        }),
-        
-        notifier: {
-            willClose: function willClose($element) { },
-            willOpen: function willOpen($element) { },
-            ready: function ready($element) { },
-            closed: function closed($element) { },
-            opened: function opened($element) { }
-        }
+        })
+    });
+    
+    // Catch errors on item/page loading, showing..
+    shell.on('error', function(err) {
+        var str = typeof(err) === 'string' ? err : JSON.stringify(err);
+        window.alert(str);
     });
 
     // Executing the shell, event handlers starts,

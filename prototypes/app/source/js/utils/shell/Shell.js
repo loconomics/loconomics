@@ -4,33 +4,27 @@
 //global history
 'use strict';
 
-/* TODO:
-    - domItemsManager class must implement an initialize (there belongs the line ".getCurrent().hide()")
-    - domItemsManager class must implement the itemsSwitcher, and provide properly tools for transitions
-*/
-
 /** DI entry points for default builds. Most dependencies can be
     specified in the constructor settings.
 **/
 var deps = {
     parseUrl: null,
     absolutizeUrl: null,
-    itemsSwitcher: null,
     jquery: null,
     loader: null,
     accessControl: function allowAll(name) {
         // allow access by default
         return null;
-    }
+    },
+    EventEmitter: null
 };
-
-// TODO
-// implement unexpected error on loaders/go
 
 /** Constructor **/
 
 function Shell(settings) {
     //jshint maxcomplexity:14
+    
+    deps.EventEmitter.call(this);
 
     this.$ = settings.jquery || deps.jquery;
     this.$root = this.$(settings.root);
@@ -43,26 +37,24 @@ function Shell(settings) {
 
     this.indexName = settings.indexName || 'index';
     
-    this.domItemsManager = settings.domItemsManager;
-    
+    this.items = settings.domItemsManager;
+
     this.loader = settings.loader || deps.loader;
     // loader setup
     this.loader.baseUrl = this.baseUrl;
-    
-    // The itemsSwitcher function receive the elements to interchange
-    // from and to and a notifier object with callbacks to call
-    // to notify each step. It enables transitions but the default
-    // is a simple 'show the new' and 'hide the old'
-    this.itemsSwitcher = settings.itemsSwitcher || deps.itemsSwitcher;
-    this.notifier = settings.notifier;
-    /* Notifier object, for like events but with callbacks {
-        willClose: function willClose(name, $element) {}
-        willOpen: function willOpen(name, $element) {},
-        ready: function ready(name, $element) {},
-        closed: function closed(name, $element) {},
-        opened: function opened(name, $element) {}
-    }
-    */
+
+    // Definition of events that this object can trigger,
+    // its value can be customized but any listener needs
+    // to keep updated to the correct event string-name used.
+    // The items manipulation events MUST be triggered
+    // by the 'items.switch' function
+    this.events = {
+        willOpen: 'shell-will-open',
+        willClose: 'shell-will-close',
+        itemReady: 'shell-item-ready',
+        closed: 'shell-closed',
+        opened: 'shell-opened'
+    };
     
     /**
         A function to decide if the
@@ -83,8 +75,18 @@ function Shell(settings) {
     this.nonAccessName = settings.nonAccessName || 'index';
 }
 
-module.exports = Shell;
+// Shell inherits from EventEmitter
+Shell.prototype = Object.create(deps.EventEmitter.prototype, {
+    constructor: {
+        value: Shell,
+        enumerable: false,
+        writable: true,
+        configurable: true
+    }
+});
 Shell.deps = deps;
+module.exports = Shell;
+
 
 /** API definition **/
 
@@ -93,7 +95,7 @@ Shell.prototype.go = function go(url, options) {
     url = this.absolutizeUrl(url);
     this.history.pushState(options, undefined, url);
     // pushState do NOT trigger the popstate event, so
-    this.replace(options);
+    return this.replace(options);
 };
 
 Shell.prototype.goBack = function goBack(steps) {
@@ -129,16 +131,17 @@ Shell.prototype.replace = function replace(state) {
     }
 
     // Locating the container
-    var $cont = this.domItemsManager.find(state.route.name);
+    var $cont = this.items.find(state.route.name);
     var shell = this;
+    var promise = null;
 
     if ($cont && $cont.length) {
-        return new Promise(function(resolve, reject) {
+        promise = new Promise(function(resolve, reject) {
             try {
 
-                var $oldCont = shell.domItemsManager.getCurrent();
+                var $oldCont = shell.items.getActive();
                 $oldCont = $oldCont.not($cont);
-                shell.itemsSwitcher($oldCont, $cont, shell.notifier);
+                shell.items.switch($oldCont, $cont, shell);
 
                 resolve(); //? resolve(act);
             }
@@ -151,8 +154,8 @@ Shell.prototype.replace = function replace(state) {
         if (this.loader) {
             // load and inject the content in the page
             // then try the replace again
-            return this.loader.load(state.route).then(function(html) {
-                shell.domItemsManager.inject(state.route.name, html);
+            promise = this.loader.load(state.route).then(function(html) {
+                shell.items.inject(state.route.name, html);
                 return shell.replace(state);
             });
         }
@@ -160,9 +163,24 @@ Shell.prototype.replace = function replace(state) {
             var err = new Error('Page not found (' + state.route.name + ')');
             console.error(err);
             console.error('Shell Page not found, state:', state);
-            return Promise.reject(err);
+            promise = Promise.reject(err);
         }
     }
+    
+    var thisShell = this;
+    promise.catch(function(err) {
+        if (!(err instanceof Error))
+            err = new Error(err);
+
+        // Log error, 
+        console.error('Shell, unexpected error.', err);
+        // notify as an event
+        thisShell.emit('error', err);
+        // and continue propagating the error
+        return err;
+    });
+
+    return promise;
 };
 
 Shell.prototype.run = function run() {
@@ -191,8 +209,7 @@ Shell.prototype.run = function run() {
     });
 
     // Initiallize state
-    // All containers must be hidden at first
-    this.domItemsManager.getCurrent().hide();
+    this.items.init();
     // Route to the current url/state
     this.replace();
 };
