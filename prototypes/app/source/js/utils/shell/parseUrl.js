@@ -5,6 +5,9 @@
 **/
 'use strict';
 
+var getUrlQuery = require('../getUrlQuery'),
+    escapeRegExp = require('../escapeRegExp');
+
 function parseUrl(baseUrl, link) {
 
     link = link || '';
@@ -15,14 +18,13 @@ function parseUrl(baseUrl, link) {
     link = link.replace(/^#!/, '');
 
     // URL Query as an object, empty object if no query
-    var query = {};//DEPENDENCY getUrlQuery(link || '?')
+    var query = getUrlQuery(link || '?');
 
     // remove query from the rest of URL to parse
     link = link.replace(/\?.*$/, '');
 
     // Remove the baseUrl to get the app base.
-    //DEPENDENCY var path = link.replace(new RegExp('^' + escapeRegExp(baseUrl), 'i'), '');
-    var path = link.replace(new RegExp('^' + baseUrl, 'i'), '');
+    var path = link.replace(new RegExp('^' + escapeRegExp(baseUrl), 'i'), '');
 
     // Get first segment or page name (anything until a slash or extension beggining)
     var match = /^\/?([^\/\.]+)[^\/]*(\/.*)*$/.exec(path);

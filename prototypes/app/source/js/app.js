@@ -160,6 +160,38 @@ var appInit = function appInit() {
     if (window && window.plugins && window.plugins.Keyboard) {
         window.plugins.Keyboard.disableScroll(true);
     }
+    
+    // Easy links to shell actions, like goBack, in html elements
+    $(document).on('tap', '[data-shell]', function(e) {
+        var cmdline = $(this).data('shell') || '',
+            args = cmdline.split(' '),
+            cmd = args[0];
+
+        if (cmd && typeof(app.shell[cmd]) === 'function') {
+            app.shell[cmd].apply(cmd, args.slice(1));
+        }
+    });
+    
+    // TODO COMING: things to do on app.js that new Shell doesn't now:
+    // - Manage the 'activities' controllers (js modules), running 'show' on shell event 'ready'
+    // - Re-implement the 'accessControl' function, must return null on success and state object
+    //   on error, provided to the error activity
+    // - navAction changes for the 'go-back' button must be done manually on each activity; since
+    //   this will depend on the activity location on the hierarchy, and maybe manual URL rather
+    //   than go-back, has no sense here
+    // - popActivity does not exists, must be replaced by 'go'
+    // - showActivity changes to 'go'
+    // - updateAppNav is out.
+    // - updateMenu is out.
+    // - ko-binding is out: need it for .AppNav with status, navAction
+    
+    
+    
+    // TODO complete task:
+    // - app.status is out shell
+    // 'out', 'login', 'onboarding', 'in'
+    app.status = ko.observable('out');
+
 
     // App set-up
     app.shell.baseUrl = 'activities/';

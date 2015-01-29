@@ -16,13 +16,21 @@ var deps = {
     parseUrl: null,
     absolutizeUrl: null,
     itemsSwitcher: null,
-    jquery: null
+    jquery: null,
+    loader: null,
+    accessControl: function allowAll(name) {
+        // allow access by default
+        return null;
+    }
 };
+
+// TODO
+// implement unexpected error on loaders/go
 
 /** Constructor **/
 
 function Shell(settings) {
-    //jshint maxcomplexity:10
+    //jshint maxcomplexity:14
 
     this.$ = settings.jquery || deps.jquery;
     this.$root = this.$(settings.root);
@@ -34,8 +42,13 @@ function Shell(settings) {
     this.history = settings.history || window.history;
 
     this.indexName = settings.indexName || 'index';
-    this.loader = settings.loader;
+    
     this.domItemsManager = settings.domItemsManager;
+    
+    this.loader = settings.loader || deps.loader;
+    // loader setup
+    this.loader.baseUrl = this.baseUrl;
+    
     // The itemsSwitcher function receive the elements to interchange
     // from and to and a notifier object with callbacks to call
     // to notify each step. It enables transitions but the default
@@ -50,6 +63,24 @@ function Shell(settings) {
         opened: function opened(name, $element) {}
     }
     */
+    
+    /**
+        A function to decide if the
+        access is allowed (returns 'null')
+        or not (return a state object with information
+        that will be passed to the 'nonAccessName' item;
+        the 'route' property on the state is automatically filled).
+        
+        The default buit-in just allow everything 
+        by just returning 'null' all the time.
+        
+        It receives as parameter the state object,
+        that almost contains the 'route' property with
+        information about the URL.
+    **/
+    this.accessControl = settings.accessControl || deps.accessControl;
+    // What item load on non access
+    this.nonAccessName = settings.nonAccessName || 'index';
 }
 
 module.exports = Shell;
@@ -58,7 +89,7 @@ Shell.deps = deps;
 /** API definition **/
 
 Shell.prototype.go = function go(url, options) {
-    console.log('Shell go to', url, options);
+
     url = this.absolutizeUrl(url);
     this.history.pushState(options, undefined, url);
     // pushState do NOT trigger the popstate event, so
@@ -89,6 +120,12 @@ Shell.prototype.replace = function replace(state) {
     // Use the index on root calls
     if (state.route.root === true) {
         state.route = this.parseUrl(this.indexName);
+    }
+    
+    // Access control
+    var accessError = this.accessControl(state);
+    if (accessError) {
+        return this.go(this.nonAccessName, accessError);
     }
 
     // Locating the container

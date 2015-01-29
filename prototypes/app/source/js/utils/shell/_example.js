@@ -16,25 +16,37 @@ Shell.deps.$(function() {
 
     // Creating the shell:
     var shell = new Shell({
+        
         // Selector, DOM element or jQuery object pointing
         // the root or container for the shell items
         root: 'body',
+        
         // If is not in the site root, the base URL is required:
         baseUrl: '/testing-the-shell/',
+        
         // Name of the item that acts like the index
         // when requesting the root URL
         indexName: 'index', // index is the default value if not specified
+        
         // for better mobile experience, if the event is installed:
         linkEvent: 'tap',
-        loader: null,
+
+        // Set a different loader than the default one
+        // Loading can be disabled by setting a null loader, on that
+        // cases a non preloaded item returns a 'page not found' error
+        // instantly.
+        //loader: { load: null },
+
         // Providing a different history management? By default, the
         // browser history is used without to type this :-)
         history: window.history,
+        
         // A DomItemsManager or equivalent object instance needs to
         // be provided:
         domItemsManager: new DomItemsManager({
             idAttributeName: 'data-activity'
         }),
+        
         notifier: {
             willClose: function willClose($element) { },
             willOpen: function willOpen($element) { },
