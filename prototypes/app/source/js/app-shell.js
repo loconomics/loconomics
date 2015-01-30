@@ -5,7 +5,7 @@
 //global window
 
 // History API polyfill
-require('../vendor/history/jquery.history');
+require('../../vendor/history/jquery.history');
 var History = window.History;
 // used only in 'hash mode'
 History.options.html4Mode = true;
@@ -19,7 +19,7 @@ if (!('state' in History) && History.getState) {
 }
 
 // Shell dependencies
-var shell = require('./utils/shell'),
+var shell = require('./utils/shell/index'),
     Shell = shell.Shell,
     DomItemsManager = shell.DomItemsManager;
 
@@ -31,7 +31,7 @@ var shell = new Shell({
     root: 'body',
 
     // If is not in the site root, the base URL is required:
-    baseUrl: '/prototypes/app/build/appDebug.html#',
+    baseUrl: '/prototypes/app/build/appDebug.html',
 
     indexName: 'index',
 

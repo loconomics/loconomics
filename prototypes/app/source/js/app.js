@@ -12,8 +12,7 @@ require('./utils/Function.prototype._delayed');
 require('es6-promise').polyfill();
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
-var Shell = require('./utils/Shell'),
-    NavAction = require('./viewmodels/NavAction'),
+var NavAction = require('./viewmodels/NavAction'),
     AppModel = require('./viewmodels/AppModel');
 
 // Register the special locale
@@ -211,7 +210,7 @@ var appInit = function appInit() {
 
     // App init:
     app.model.init().then(
-        app.shell.init.bind(app.shell)
+        app.shell.run.bind(app.shell)
     ).then(function() {
         // Mark the page as ready
         $('html').addClass('is-ready');

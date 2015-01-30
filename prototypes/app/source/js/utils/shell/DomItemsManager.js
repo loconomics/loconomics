@@ -9,45 +9,61 @@
 'use strict';
 
 var $ = require('jquery');
+var escapeSelector = require('../escapeSelector');
 
 function DomItemsManager(settings) {
 
     this.idAttributeName = settings.idAttributeName || 'id';
-    this.$root = $(settings.root || 'body');
     this.allowDuplicates = !!settings.allowDuplicates || false;
+    this.$root = null;
+    // On page ready, get the root element:
+    $(function() {
+        this.$root = $(settings.root || 'body');
+    }.bind(this));
 }
 
 module.exports = DomItemsManager;
 
 DomItemsManager.prototype.find = function find(containerName, root) {
+    console.log('root', root, this.$root);
     var $root = $(root || this.$root);
-    // TODO escape name for CSS selector
-    return $root.children('[' + this.idAttributeName + '=' + containerName + ']');
+    return $root.find('[' + this.idAttributeName + '="' + escapeSelector(containerName) + '"]');
 };
 
 DomItemsManager.prototype.getActive = function getActive() {
     return this.$root.find('[' + this.idAttributeName + ']:visible');
 };
 
-DomItemsManager.prototype.inject = function inject(containerName, html) {
+/**
+    It adds the item in the html provided (can be only the element or 
+    contained in another or a full html page).
+    Replaces any existant if duplicates are not allowed.
+**/
+DomItemsManager.prototype.inject = function inject(name, html) {
+
+    // Filtering input html (can be partial or full pages)
+    // http://stackoverflow.com/a/12848798
+    html = html.replace(/^[\s\S]*<body.*?>|<\/body>[\s\S]*$/g, '');
 
     // Creating a wrapper around the html
     // (can be provided the innerHtml or outerHtml, doesn't matters with next approach)
     var $html = $('<div/>', { html: html }),
         // We look for the container element (when the outerHtml is provided)
-        $c = this.find(containerName, $html);
+        $c = this.find(name, $html);
 
     if ($c.length === 0) {
         // Its innerHtml, so the wrapper becomes the container itself
-        $c = $html.attr(this.idAttributeName, containerName);
+        $c = $html.attr(this.idAttributeName, name);
     }
 
     if (!this.allowDuplicates) {
         // No more than one container instance can exists at the same time
         // We look for any existent one and its replaced with the new
-        var $prev = this.find(containerName);
-        $prev.replaceWith($c);
-        $c = $prev;
+        var $prev = this.find(name);
+        if ($prev.length > 0) {
+            $prev.replaceWith($c);
+            $c = $prev;
+        }
     }
 
     // Add to the document

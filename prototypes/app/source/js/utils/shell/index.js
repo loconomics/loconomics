@@ -7,7 +7,7 @@
 **/
 'use strict';
 
-var Shell = require('./Shell'),
+var deps = require('./dependencies'),
     DomItemsManager = require('./DomItemsManager'),
     parseUrl = require('./parseUrl'),
     absolutizeUrl = require('./absolutizeUrl'),
@@ -15,13 +15,16 @@ var Shell = require('./Shell'),
     loader = require('./loader'),
     EventEmitter = require('events').EventEmitter;
 
-$.merge(Shell.deps, {
+$.extend(deps, {
     parseUrl: parseUrl,
     absolutizeUrl: absolutizeUrl,
     jquery: $,
     loader: loader,
     EventEmitter: EventEmitter
 });
+
+// Dependencies are ready, we can load the class:
+var Shell = require('./Shell');
 
 exports.Shell = Shell;
 exports.DomItemsManager = DomItemsManager;

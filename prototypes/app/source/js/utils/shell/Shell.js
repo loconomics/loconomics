@@ -5,19 +5,9 @@
 'use strict';
 
 /** DI entry points for default builds. Most dependencies can be
-    specified in the constructor settings.
+    specified in the constructor settings for per-instance setup.
 **/
-var deps = {
-    parseUrl: null,
-    absolutizeUrl: null,
-    jquery: null,
-    loader: null,
-    accessControl: function allowAll(name) {
-        // allow access by default
-        return null;
-    },
-    EventEmitter: null
-};
+var deps = require('./dependencies');
 
 /** Constructor **/
 
@@ -39,9 +29,12 @@ function Shell(settings) {
     
     this.items = settings.domItemsManager;
 
-    this.loader = settings.loader || deps.loader;
+    // loader can be disabled passing 'null', so we must
+    // ensure to not use the default on that cases:
+    this.loader = typeof(settings.loader) === 'undefined' ? deps.loader : settings.loader;
     // loader setup
-    this.loader.baseUrl = this.baseUrl;
+    if (this.loader)
+        this.loader.baseUrl = this.baseUrl;
 
     // Definition of events that this object can trigger,
     // its value can be customized but any listener needs
@@ -84,7 +77,7 @@ Shell.prototype = Object.create(deps.EventEmitter.prototype, {
         configurable: true
     }
 });
-Shell.deps = deps;
+
 module.exports = Shell;
 
 
@@ -155,8 +148,15 @@ Shell.prototype.replace = function replace(state) {
             // load and inject the content in the page
             // then try the replace again
             promise = this.loader.load(state.route).then(function(html) {
+                // Add to the items (the manager takes care you
+                // add only the item, if there is one)
+                console.log('LOADER, page', state.route.name);
                 shell.items.inject(state.route.name, html);
-                return shell.replace(state);
+                // Double check that the item was added and is ready
+                // to avoid an infinite loop because a request not returning
+                // the item and the 'replace' trying to load it again, and again, and..
+                if (shell.items.find(state.route.name).length)
+                    return shell.replace(state);
             });
         }
         else {
