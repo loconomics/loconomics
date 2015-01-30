@@ -46,6 +46,49 @@ var app = {
         else {
             this.shell.go('home');
         }
+    },
+    
+    /**
+        Update the app menu to highlight the
+        given link name
+    **/
+    updateMenu: function updateMenu(name) {
+        
+        this.$menu = this.$menu || $('#navbar');
+        
+        // Remove any active
+        this.$menu
+        .find('li')
+        .removeClass('active');
+        // Add active
+        this.$menu
+        .find('.go-' + name)
+        .closest('li')
+        .addClass('active');
+        // Hide menu
+        this.$menu
+        .filter(':visible')
+        .collapse('hide');
+    },
+    
+    /**
+        Observables and methods to manage the shared
+        app navigation bar.
+        
+        TODO: complete for the new design
+    **/
+    navAction: ko.observable(null),
+    defaultNavAction: null,
+    updateAppNav: function updateAppNav(activity) {
+        // navAction, if the activity has its own
+        if ('navAction' in activity) {
+            // Use specializied activity action
+            this.navAction(activity.navAction);
+        }
+        else {
+            // Use default action
+            this.navAction(this.defaultNavAction);
+        }
     }
 };
 
@@ -136,25 +179,35 @@ var appInit = function appInit() {
         }
     });
     
-    // TODO COMING: things to do on app.js that new Shell doesn't now:
+    // TODO COMING: things to do on activities:
     // - navAction changes for the 'go-back' button must be done manually on each activity; since
     //   this will depend on the activity location on the hierarchy, and maybe manual URL rather
     //   than go-back, has no sense here
     // - popActivity does not exists, must be replaced by 'go'
     // - showActivity changes to 'go'
-    // - updateAppNav is out.
-    // - updateMenu is out.
-    // - ko-binding is out: need it for .AppNav with status, navAction
-    // - use 'unfocus' on the domItemsManager automatically for the hidden element
     
-    // Execute the 'activities' controllers when ready
+    // When an activity is ready in the Shell:
     app.shell.on(app.shell.events.itemReady, function($act) {
-
+        
+        // Connect the 'activities' controllers to their views
         // Get initialized activity for the DOM element
-        var activity = app.getActivity($act.data('activity'));
+        var actName = $act.data('activity');
+        var activity = app.getActivity(actName);
         // Trigger the 'show' logic of the activity controller:
         activity.show();
+
+        // Update menu
+        app.updateMenu(actName);
+        
+        // Update app navigation
+        app.updateAppNav(activity);
     });
+    
+    // Set model for the AppNav
+    ko.applyBindings({
+        navAction: app.navAction,
+        status: app.status
+    }, $('.AppNav').get(0));
 
     // App init:
     app.model.init().then(

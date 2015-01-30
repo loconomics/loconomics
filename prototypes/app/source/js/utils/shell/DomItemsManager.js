@@ -82,6 +82,12 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell) 
 
     if ($from.is(':visible')) {
         shell.emit(shell.events.willClose, $from);
+        // Do 'unfocus' on the hidden element after notify 'willClose'
+        // for better UX: hidden elements are not reachable and has good
+        // side effects like hidding the on-screen keyboard if an input was
+        // focused
+        $from.find(':focus').blur();
+        // hide and notify it ended
         $from.hide();
         shell.emit(shell.events.closed, $from);
     }

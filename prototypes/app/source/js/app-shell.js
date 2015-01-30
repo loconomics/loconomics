@@ -10,6 +10,14 @@ var History = window.History;
 // used only in 'hash mode'
 History.options.html4Mode = true;
 
+// This polyfill uses the function getState rather than
+// the standard 'state' property, but can be created
+// as a getter if the polyfill is in use
+var propsTools = require('./utils/jsPropertiesTools');
+if (!('state' in History) && History.getState) {
+    propsTools.defineGetter(History, 'state', History.getState.bind(History));
+}
+
 // Shell dependencies
 var shell = require('./utils/shell'),
     Shell = shell.Shell,
