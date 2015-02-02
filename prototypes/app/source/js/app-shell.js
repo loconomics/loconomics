@@ -45,10 +45,20 @@ var shell = new Shell({
 
 // Catch errors on item/page loading, showing..
 shell.on('error', function(err) {
-    var str = err ?
-        typeof(err) === 'string' ? err : JSON.stringify(err) :
-        'Unknow error'
-    ;
+    
+    var str = 'Unknow error';
+    if (err) {
+        if (typeof(err) === 'string') {
+            str = err;
+        }
+        else if (err.message) {
+            str = err.message;
+        }
+        else {
+            str = JSON.stringify(err);
+        }
+    }
+
     // TODO change with a dialog or something
     window.alert(str);
 });
