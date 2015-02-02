@@ -4,6 +4,7 @@ The result is used directly by the styleguide site to provide the custom
 components built on top of Bootstrap or side by side.
 **/
 var jQuery = require('jquery');
+require('bootstrap');
 
 jQuery(function ($) {
 
