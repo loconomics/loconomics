@@ -1,43 +1,198 @@
 /**
-    INCOMPLETE, UNUSED, code base for
+    Simple implementation of the History API using only hashbangs URLs,
+    doesn't matters the browser support.
+    Used to avoid from setting URLs that has not an end-point,
+    like in local environments without a server doing url-rewriting,
+    in phonegap apps, or to completely by-pass browser support because
+    is buggy (like Android <= 4.1).
     
-    Implementation of the History API for use with Shell.js
-    to manage every entry as Hashbang, avoiding the problem in
-    environments where the request of the wide number of URLs 
-    managed by usual History API is not supported (only one html file as entry
-    point).
-    
-    And too for bad Android <=4.1 compatibility with HistoryAPI.
+    NOTES:
+    - Browser must support 'hashchange' event.
+    - Browser must has support for standard JSON class.
+    - Relies on sessionstorage for persistance, supported by all browsers and webviews 
+      for a enough long time now.
+    - Similar approach as History.js polyfill, but simplified, appending a fake query
+      parameter '_suid=0' to the hash value (actual query goes before the hash, but
+      we need it inside).
+    - For simplification, only the state is persisted, the 'title' parameter is not
+      used at all (the same as major browsers do, so is not a problem); in this line,
+      only history entries with state are persisted.
 **/
+//global location
 'use strict';
-var $ = require('jquery');
+var $ = require('jquery'),
+    sanitizeUrl = require('./sanitizeUrl'),
+    getUrlQuery = require('../getUrlQuery');
 
-// TODO Init: Load saved copy from localforage
+// Init: Load saved copy from sessionStorage
+var session = sessionStorage.getItem('hashbangHistory.store');
 // Or create a new one
-var session = [{
-    state: null,
-    title: null, // Current page title. Browsers didn't implement this so who cares
-    // A browses needs full URL (window.location.href),
-    // but we only want the hashbang here if any
-    url: window.location.hash || ''
-}];
-// ?_suid=1
+if (!session) {
+    session = {
+        // States array where each index is the SUID code and the
+        // value is just the value passed as state on pushState/replaceState
+        states: []
+    };
+}
+else {
+    session = JSON.parse(session);
+}
 
+
+/**
+    Get the SUID number
+    from a hash string
+**/
+function getSuid(hash) {
+    
+    var suid = +getUrlQuery(hash)._suid;
+    if (isNaN(suid))
+        return null;
+    else
+        return suid;
+}
+
+function setSuid(hash, suid) {
+    
+    // We need the query, since we need 
+    // to replace the _suid (may exist)
+    // and recreate the query in the
+    // returned hash-url
+    var qs = getUrlQuery(hash);
+    qs._suid = suid;
+    
+    var query = [];
+    for(var i = 0; i < qs.length; i++) {
+        query.push(qs[i] + '=' + encodeURIComponent(qs[qs[i]]));
+    }
+    query = query.join('&');
+    
+    if (query) {
+        var index = hash.indexOf('?');
+        hash = hash.substr(0, index) + '?' + query;
+    }
+
+    return query;
+}
+
+/**
+    Ask to persist the session data.
+    It is done with a timeout in order to avoid
+    delay in the current task mainly any handler
+    that acts after a History change.
+**/
+function persist() {
+    // Enough time to allow routing tasks,
+    // most animations from finish and the UI
+    // being responsive.
+    // Because sessionStorage is synchronous.
+    setTimeout(function() {
+        sessionStorage.setItem('hashbangHistory.store', JSON.stringify(session));
+    }, 1500);
+}
+
+/**
+    Returns the given state or null
+    if is an empty object.
+**/
+function checkState(state) {
+    
+    if (state) {
+        // is empty?
+        for(var i in state) {
+            // No
+            return state;
+        }
+        // its empty
+        return null;
+    }
+    // Anything else
+    return state;
+}
+
+/**
+    Tracks the latest URL
+    being pushed or replaced by
+    the API.
+    This allows later to avoid
+    trigger the popstate event,
+    since must NOT be triggered
+    as a result of that API methods
+**/
+var latestPushedReplacedUrl = null;
+
+/**
+    History Polyfill
+**/
 var hashbangHistory = {
     pushState: function pushState(state, title, url) {
-        // TODO
+
         // cleanup url
+        url = sanitizeUrl(url || '');
+        url = url.replace(/^#!/, '');
+        
         // save new state for url
+        state = checkState(state) || null;
+        if (state !== null) {
+            // save state
+            session.states.push(state);
+            var suid = session.states.length - 1;
+            // update URL with the suid
+            url = setSuid(url, suid);
+            // call to persist the updated session
+            persist();
+        }
+        
+        latestPushedReplacedUrl = url;
+        
+        // update location to track history:
         location.hash = '#!' + url;
     },
     replaceState: function replaceState(state, title, url) {
-        // TODO
+        
         // cleanup url
-        // replace state and current url
+        url = sanitizeUrl(url || '');
+        url = url.replace(/^#!/, '');
+        
+        // it has saved state?
+        var suid = getSuid(url),
+            hasOldState = suid !== null;
+
+        // save new state for url
+        state = checkState(state) || null;
+        // its saved if there is something to save
+        // or something to destroy
+        if (state !== null || hasOldState) {
+            // save state
+            if (hasOldState) {
+                // replace existing state
+                session.states[suid] = state;
+                // the url remains the same
+            }
+            else {
+                // create state
+                session.states.push(state);
+                suid = session.states.length - 1;
+                // update URL with the suid
+                url = setSuid(url, suid);
+            }
+            // call to persist the updated session
+            persist();
+        }
+        
+        latestPushedReplacedUrl = url;
+
+        // update location to track history:
         location.hash = '#!' + url;
     },
     get state() {
-        // TODO
+    
+        // Get latest saved state, thats the current one
+        var last = session.states.length;
+        if (last === 0)
+            return null;
+        else
+            return session.states[last - 1];
     },
     get length() {
         return window.history.length;
@@ -53,11 +208,27 @@ var hashbangHistory = {
     }
 };
 
+// Attach event
 var $w = $(window);
 $w.on('hashchange', function(e) {
-    e.oldURL;
-    e.newURL;
-    var state; // get state from history entry
+    
+    var url = e.newURL;
+    
+    // An URL being pushed or replaced
+    // must NOT trigger popstate
+    if (url === latestPushedReplacedUrl)
+        return;
+    
+    // get state from history entry
+    // for the updated URL, if any
+    // (can have value when traversing
+    // history).
+    var suid = getSuid(url),
+        state = null;
+    
+    if (suid !== null)
+        state = session.states[suid];
+
     $w.trigger(new $.Event('popstate', {
         state: state
     }));

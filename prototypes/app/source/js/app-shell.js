@@ -5,7 +5,8 @@
 
 var baseUrl = window.location.pathname;
 
-var History = require('./app-shell-history').create(baseUrl);
+//var History = require('./app-shell-history').create(baseUrl);
+var History = require('./utils/shell/hashbangHistory');
 
 // Shell dependencies
 var shell = require('./utils/shell/index'),
@@ -22,7 +23,7 @@ var shell = new Shell({
     // If is not in the site root, the base URL is required:
     baseUrl: baseUrl,
     
-    forceHashbang: false,
+    forceHashbang: true,
 
     indexName: 'index',
 
