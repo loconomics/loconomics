@@ -212,10 +212,12 @@ Shell.prototype.run = function run() {
     // Catch popstate event to update shell replacing the active container.
     // Allows polyfills to provide a different but equivalent event name
     this.$(window).on(this.history.popstateEvent || 'popstate', function(event) {
-        console.log('onpopstate state', event.state || shell.history.state);
+        
+        var state = event.state || event.originalEvent.state || shell.history.state;
+        console.log('onpopstate state', state);
         // get state for current. To support polyfills, we use the general getter
         // history.state as fallback (they must be the same on browsers supporting History API)
-        shell.replace(event.state || shell.history.state);
+        shell.replace(state);
     });
 
     // Catch all links in the page (not only $root ones) and like-links

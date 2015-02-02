@@ -111,6 +111,28 @@ function checkState(state) {
 }
 
 /**
+    Get a canonical representation
+    of the URL so can be compared
+    with success.
+**/
+function cannonicalUrl(url) {
+    
+    // Avoid some bad or problematic syntax
+    url = sanitizeUrl(url || '');
+    
+    // Get the hash part
+    var ihash = url.indexOf('#');
+    if (ihash > -1) {
+        url = url.substr(ihash + 1);
+    }
+    // Maybe a hashbang URL, remove the
+    // 'bang' (the hash was removed already)
+    url = url.replace(/^!/, '');
+
+    return url;
+}
+
+/**
     Tracks the latest URL
     being pushed or replaced by
     the API.
@@ -128,8 +150,7 @@ var hashbangHistory = {
     pushState: function pushState(state, title, url) {
 
         // cleanup url
-        url = sanitizeUrl(url || '');
-        url = url.replace(/^#!/, '');
+        url = cannonicalUrl(url);
         
         // save new state for url
         state = checkState(state) || null;
@@ -151,8 +172,7 @@ var hashbangHistory = {
     replaceState: function replaceState(state, title, url) {
         
         // cleanup url
-        url = sanitizeUrl(url || '');
-        url = url.replace(/^#!/, '');
+        url = cannonicalUrl(url);
         
         // it has saved state?
         var suid = getSuid(url),
@@ -208,11 +228,12 @@ var hashbangHistory = {
     }
 };
 
-// Attach event
+// Attach hashcange event to trigger History API event 'popstate'
 var $w = $(window);
 $w.on('hashchange', function(e) {
     
-    var url = e.newURL;
+    var url = e.originalEvent.newURL;
+    url = cannonicalUrl(url);
     
     // An URL being pushed or replaced
     // must NOT trigger popstate
@@ -231,7 +252,35 @@ $w.on('hashchange', function(e) {
 
     $w.trigger(new $.Event('popstate', {
         state: state
-    }));
+    }), 'hashbangHistory');
 });
 
+// For HistoryAPI capable browsers, we need
+// to capture the native 'popstate' event that
+// gets triggered on our push/replaceState because
+// of the location change, but too on traversing
+// the history (back/forward).
+// We will lock the event except when is
+// the one we trigger.
+//
+// NOTE: to this trick to work, this must
+// be the first handler attached for this
+// event, so can block all others.
+// ALTERNATIVE: instead of this, on the
+// push/replaceState methods detect if
+// HistoryAPI is native supported and
+// use replaceState there rather than
+// a hash change.
+$w.on('popstate', function(e, source) {
+    
+    // Ensuring is the one we trigger
+    if (source === 'hashbangHistory')
+        return;
+    
+    // In other case, block:
+    e.preventDefault();
+    e.stopImmediatePropagation();
+});
+
+// Expose API
 module.exports = hashbangHistory;
