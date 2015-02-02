@@ -25,7 +25,6 @@ function DomItemsManager(settings) {
 module.exports = DomItemsManager;
 
 DomItemsManager.prototype.find = function find(containerName, root) {
-    console.log('root', root, this.$root);
     var $root = $(root || this.$root);
     return $root.find('[' + this.idAttributeName + '="' + escapeSelector(containerName) + '"]');
 };

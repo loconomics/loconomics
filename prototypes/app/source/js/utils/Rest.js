@@ -71,7 +71,7 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
         // URLENCODED input:
         // Convert to JSON and back just to ensure the values are converted/encoded
         // properly to be sent, like Dates being converted to ISO format.
-        data: JSON.parse(JSON.stringify(data)),
+        data: data && JSON.parse(JSON.stringify(data)),
         contentType: contentType || 'application/x-www-form-urlencoded'
         // Alternate: JSON as input
         //data: JSON.stringify(data),

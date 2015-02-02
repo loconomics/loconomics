@@ -1,7 +1,7 @@
 /**
     Javascritp Shell for SPAs.
 **/
-//global history
+/*global history, History */
 'use strict';
 
 /** DI entry points for default builds. Most dependencies can be
@@ -150,7 +150,6 @@ Shell.prototype.replace = function replace(state) {
             promise = this.loader.load(state.route).then(function(html) {
                 // Add to the items (the manager takes care you
                 // add only the item, if there is one)
-                console.log('LOADER, page', state.route.name);
                 shell.items.inject(state.route.name, html);
                 // Double check that the item was added and is ready
                 // to avoid an infinite loop because a request not returning
@@ -161,8 +160,7 @@ Shell.prototype.replace = function replace(state) {
         }
         else {
             var err = new Error('Page not found (' + state.route.name + ')');
-            console.error(err);
-            console.error('Shell Page not found, state:', state);
+            console.warn('Shell Page not found, state:', state);
             promise = Promise.reject(err);
         }
     }
@@ -187,9 +185,13 @@ Shell.prototype.run = function run() {
 
     var shell = this;
 
-    // Catch popstate event to update shell replacing the active container
-    this.$(window).on('popstate', function(event) {
-        shell.replace(event.state);
+    // Catch popstate event to update shell replacing the active container.
+    // Allows polyfills to provide a different but equivalent event name
+    this.$(window).on(this.history.popstateEvent || 'popstate', function(event) {
+        console.log('onpopstate state', event.state || shell.history.state);
+        // get state for current. To support polyfills, we use the general getter
+        // history.state as fallback (they must be the same on browsers supporting History API)
+        shell.replace(event.state || shell.history.state);
     });
 
     // Catch all links in the page (not only $root ones) and like-links
