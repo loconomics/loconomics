@@ -14,8 +14,8 @@ function parseUrl(baseUrl, link) {
 
     var rawUrl = link;
 
-    // hashbang support: remove the #! and use the rest as the link
-    link = link.replace(/^#!?/, '');
+    // hashbang support: remove the #! or single # and use the rest as the link
+    link = link.replace(/^#!/, '').replace(/^#/, '');
 
     // URL Query as an object, empty object if no query
     var query = getUrlQuery(link || '?');

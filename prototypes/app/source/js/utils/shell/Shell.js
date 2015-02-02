@@ -19,6 +19,16 @@ function Shell(settings) {
     this.$ = settings.jquery || deps.jquery;
     this.$root = this.$(settings.root);
     this.baseUrl = settings.baseUrl || '';
+    // With forceHashbang=true:
+    // - fragments URLs cannot be used to scroll to an element (default browser behavior),
+    //   they are defaultPrevented to avoid confuse the routing mechanism and current URL.
+    // - pressed links to fragments URLs are not routed, they are skipped silently
+    //   except when they are a hashbang (#!). This way, special links
+    //   that performn js actions doesn't conflits.
+    // - all URLs routed through the shell includes a hashbang (#!), the shell ensures
+    //   that happens by appending the hashbang to any URL passed in (except the standard hash
+    //   that are skipt).
+    this.forceHashbang = settings.forceHashbang || false;
     this.linkEvent = settings.linkEvent || 'click';
     this.parseUrl = (settings.parseUrl || deps.parseUrl).bind(this, this.baseUrl);
     this.absolutizeUrl = (settings.absolutizeUrl || deps.absolutizeUrl).bind(this, this.baseUrl);
@@ -85,7 +95,12 @@ module.exports = Shell;
 
 Shell.prototype.go = function go(url, options) {
 
+    if (this.forceHashbang &&
+       !/^#!/.test(url)) {
+        url = '#!' + url;
+    }
     url = this.absolutizeUrl(url);
+    
     this.history.pushState(options, undefined, url);
     // pushState do NOT trigger the popstate event, so
     return this.replace(options);
@@ -93,7 +108,14 @@ Shell.prototype.go = function go(url, options) {
 
 Shell.prototype.goBack = function goBack(steps) {
     steps = 0 - (steps || 1);
-    this.history.go(steps);
+    // If there is nothing to go-back or not enought
+    // 'back' steps, go to the index
+    if (steps < 0 && Math.abs(steps) >= this.history.length) {
+        this.go(this.indexName);
+    }
+    else {
+        this.history.go(steps);
+    }
 };
 
 Shell.prototype.replace = function replace(state) {
@@ -196,13 +218,19 @@ Shell.prototype.run = function run() {
 
     // Catch all links in the page (not only $root ones) and like-links
     this.$('body').on(this.linkEvent, '[href], [data-href]', function(e) {
-
+        
         var $t = shell.$(this),
             href = $t.attr('href') || $t.data('href');
 
         // Do nothing if the URL contains the protocol
-        if (/^[a-z]+:/i.test(href))
+        if (/^[a-z]+:/i.test(href)) {
             return;
+        }
+        else if (shell.forceHashbang && /^#([^!]|$)/.test(href)) {
+            // Standard hash, but not hashbang: avoid routing and default behavior
+            e.preventDefault();
+            return;
+        }
 
         e.preventDefault();
         //? e.stopImmediatePropagation();

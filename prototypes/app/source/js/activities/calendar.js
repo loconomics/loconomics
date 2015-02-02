@@ -150,7 +150,7 @@ CalendarActivity.prototype.show = function show(options) {
 CalendarActivity.prototype.showAppointment = function showAppointment(apt) {
     
     // TODO: implement showing the given 'apt'
-    this.app.showActivity('appointment', {
+    this.app.shell.go('appointment', {
         date: this.dataView.currentDate(),
         appointmentId: apt
     });

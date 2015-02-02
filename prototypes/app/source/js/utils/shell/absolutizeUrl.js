@@ -5,7 +5,8 @@
 **/
 'use strict';
 
-var sanitizeUrl = require('./sanitizeUrl');
+var sanitizeUrl = require('./sanitizeUrl'),
+    escapeRegExp = require('../escapeRegExp');
 
 function absolutizeUrl(baseUrl, url) {
 
@@ -13,7 +14,7 @@ function absolutizeUrl(baseUrl, url) {
     url = sanitizeUrl(url);
 
     // Check if use the base already
-    var matchBase = new RegExp('^' + baseUrl, 'i');
+    var matchBase = new RegExp('^' + escapeRegExp(baseUrl), 'i');
     if (matchBase.test(url)) {
         return url;
     }

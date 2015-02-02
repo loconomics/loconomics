@@ -54,7 +54,7 @@ function ClientsActivity($activity, app) {
             // Pass the selected client in the info
             this.requestInfo.selectedClient = this.dataView.selectedClient();
             // And go back
-            this.app.goBack(this.requestInfo);
+            this.app.shell.goBack(this.requestInfo);
             // Last, clear requestInfo
             this.requestInfo = null;
         }

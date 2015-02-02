@@ -53,7 +53,7 @@ function LocationsActivity($activity, app) {
             // Pass the selected client in the info
             this.requestInfo.selectedLocation = this.dataView.selectedLocation();
             // And go back
-            this.app.goBack(this.requestInfo);
+            this.app.shell.goBack(this.requestInfo);
             // Last, clear requestInfo
             this.requestInfo = null;
         }
@@ -74,12 +74,12 @@ LocationsActivity.prototype.show = function show(options) {
         var id = options.route.segments[0];
         if (id) {
             if (id === 'new') {
-                this.app.shell.showActivity('locationEdition', {
+                this.app.shell.go('locationEdition', {
                     create: options.route.segments[1] // 'serviceRadius', 'serviceLocation'
                 });
             }
             else {
-                this.app.shell.showActivity('locationEdition', {
+                this.app.shell.go('locationEdition', {
                     locationID: id
                 });
             }

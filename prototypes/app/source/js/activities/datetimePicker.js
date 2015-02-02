@@ -63,7 +63,7 @@ function DatetimePickerActivity($activity, app) {
             // Pass the selected datetime in the info
             this.requestInfo.selectedDatetime = this.dataView.selectedDatetime();
             // And go back
-            this.app.goBack(this.requestInfo);
+            this.app.shell.goBack(this.requestInfo);
             // Last, clear requestInfo
             this.requestInfo = null;
         }

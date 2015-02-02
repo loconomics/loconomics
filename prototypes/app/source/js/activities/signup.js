@@ -43,10 +43,10 @@ function SignupActivity($activity, app) {
             // NOTE: onboarding or not?
             var onboarding = false;
             if (onboarding) {
-                this.app.go('onboardingHome');
+                this.app.shell.go('onboardingHome');
             }
             else {
-                this.app.go('home');
+                this.app.shell.go('home');
             }
         }, 1000);
 

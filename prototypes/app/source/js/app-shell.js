@@ -5,8 +5,7 @@
 //global window
 
 // History API polyfill
-require('../../vendor/history/jquery.history');
-var History = window.History;
+var History = require('history');
 // used only in 'hash mode'
 History.options.html4Mode = true;
 History.options.debug = true;
@@ -18,6 +17,12 @@ var propsTools = require('./utils/jsPropertiesTools');
 if (!('state' in History) && History.getState) {
     propsTools.defineGetter(History, 'state', function() {
         return History.getState().data;
+    });
+}
+// The same for the 'length' property
+if (!('length' in History)) {
+    propsTools.defineGetter(History, 'length', function() {
+        return window.history.length;
     });
 }
 // Uses the special statechange rather than standard popstate
@@ -38,6 +43,8 @@ var shell = new Shell({
 
     // If is not in the site root, the base URL is required:
     baseUrl: '/prototypes/app/build/appDebug.html',
+    
+    forceHashbang: true,
 
     indexName: 'index',
 
@@ -59,7 +66,10 @@ var shell = new Shell({
 
 // Catch errors on item/page loading, showing..
 shell.on('error', function(err) {
-    var str = typeof(err) === 'string' ? err : JSON.stringify(err);
+    var str = err ?
+        typeof(err) === 'string' ? err : JSON.stringify(err) :
+        'Unknow error'
+    ;
     // TODO change with a dialog or something
     window.alert(str);
 });

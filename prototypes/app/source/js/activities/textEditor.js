@@ -44,13 +44,13 @@ function TextEditorActivity($activity, app) {
         }
 
         // and pass it back
-        this.app.goBack(this.requestInfo);
+        this.app.shell.goBack(this.requestInfo);
     }.bind(this));
  
     // Handler the cancel event
     this.dataView.on('cancel', function() {
         // return, nothing changed
-        app.goBack();
+        app.shell.goBack();
     }.bind(this));
 }
 

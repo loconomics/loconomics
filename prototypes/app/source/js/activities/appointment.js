@@ -186,7 +186,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
                 this.currentIndex(this.appointments().length - 1);
                 
                 // On adding a new one, the confirmation page must be showed
-                app.showActivity('bookingConfirmation', {
+                app.shell.go('bookingConfirmation', {
                     booking: newApt
                 });
             }
@@ -201,7 +201,8 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
             
             if (isEdit) {
                 // Create a copy of the appointment so we revert on 'cancel'
-                appointmentsDataView.originalEditedAppointment = ko.toJS(appointmentsDataView.currentAppointment());
+                appointmentsDataView.originalEditedAppointment = 
+                    ko.toJS(appointmentsDataView.currentAppointment());
                 
                 // Remove the navAction
                 app.navAction(null);
@@ -215,14 +216,14 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         
         appointmentsDataView.pickDateTime = function pickDateTime() {
 
-            app.popActivity('datetimePicker', {
+            app.shell.go('datetimePicker', {
                 selectedDatetime: null
             });
         };
         
         appointmentsDataView.pickClient = function pickClient() {
 
-            app.popActivity('clients', {
+            app.shell.go('clients', {
                 selectClient: true,
                 selectedClient: null
             });
@@ -230,7 +231,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
 
         appointmentsDataView.pickService = function pickService() {
 
-            app.popActivity('services', {
+            app.shell.go('services', {
                 selectServices: true,
                 selectedServices: appointmentsDataView.currentAppointment().services()
             });
@@ -242,7 +243,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         
         appointmentsDataView.pickLocation = function pickLocation() {
 
-            app.popActivity('locations', {
+            app.shell.go('locations', {
                 selectLocation: true,
                 selectedLocation: appointmentsDataView.currentAppointment().location()
             });
@@ -257,7 +258,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         
         appointmentsDataView.editTextField = function editTextField(field) {
 
-            app.popActivity('textEditor', {
+            app.shell.go('textEditor', {
                 request: 'textEditor',
                 field: field,
                 header: textFieldsHeaders[field],
@@ -274,7 +275,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
                 if (date)
                     this.requestInfo.date = date;
                 // And go back
-                this.app.goBack(this.requestInfo);
+                this.app.shell.goBack(this.requestInfo);
                 // Last, clear requestInfo
                 this.requestInfo = null;
             }

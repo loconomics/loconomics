@@ -39,6 +39,10 @@ module.exports = function(grunt) {
                     'path': './vendor/jquerymobile/jquery.mobile.custom.js',
                     'exports': null,
                     'depends': { 'jquery': null }
+                },
+                'history': {
+                    'path': './vendor/history/jquery.history.js',
+                    'exports': 'History'
                 }
             }
         }
