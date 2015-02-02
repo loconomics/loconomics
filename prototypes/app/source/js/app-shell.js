@@ -2,32 +2,10 @@
     Setup of the shell object used by the app
 **/
 'use strict';
-//global window
 
-// History API polyfill
-var History = require('history');
-// used only in 'hash mode'
-History.options.html4Mode = true;
-History.options.debug = true;
+var baseUrl = window.location.pathname;
 
-// This polyfill uses the function getState rather than
-// the standard 'state' property, but can be created
-// as a getter if the polyfill is in use
-var propsTools = require('./utils/jsPropertiesTools');
-if (!('state' in History) && History.getState) {
-    propsTools.defineGetter(History, 'state', function() {
-        return History.getState().data;
-    });
-}
-// The same for the 'length' property
-if (!('length' in History)) {
-    propsTools.defineGetter(History, 'length', function() {
-        return window.history.length;
-    });
-}
-// Uses the special statechange rather than standard popstate
-// to manage hash urls properly
-History.popstateEvent = 'statechange';
+var History = require('./app-shell-history').create(baseUrl);
 
 // Shell dependencies
 var shell = require('./utils/shell/index'),
@@ -42,9 +20,9 @@ var shell = new Shell({
     root: 'body',
 
     // If is not in the site root, the base URL is required:
-    baseUrl: '/prototypes/app/build/appDebug.html',
+    baseUrl: baseUrl,
     
-    forceHashbang: true,
+    forceHashbang: false,
 
     indexName: 'index',
 

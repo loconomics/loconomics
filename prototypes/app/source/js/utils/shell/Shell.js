@@ -95,12 +95,14 @@ module.exports = Shell;
 
 Shell.prototype.go = function go(url, options) {
 
-    if (this.forceHashbang &&
-       !/^#!/.test(url)) {
-        url = '#!' + url;
+    if (this.forceHashbang) {
+        if (!/^#!/.test(url)) {
+            url = '#!' + url;
+        }
     }
-    url = this.absolutizeUrl(url);
-    
+    else {
+        url = this.absolutizeUrl(url);
+    }
     this.history.pushState(options, undefined, url);
     // pushState do NOT trigger the popstate event, so
     return this.replace(options);
