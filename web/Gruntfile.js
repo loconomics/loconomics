@@ -215,7 +215,7 @@ module.exports = function (grunt) {
                         // it attachs itself to the global namespace (window) what let
                         // the plugins works fine.
                         jquery: {
-                            path: './Scripts/jquery/jquery-2.1.1_min.js',
+                            path: './Scripts/jquery/jquery-2.1.3.min.js',
                             exports: 'jQuery'
                         },
                         'bootstrap': {
