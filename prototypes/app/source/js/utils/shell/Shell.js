@@ -93,7 +93,7 @@ module.exports = Shell;
 
 /** API definition **/
 
-Shell.prototype.go = function go(url, options) {
+Shell.prototype.go = function go(url, state) {
 
     if (this.forceHashbang) {
         if (!/^#!/.test(url)) {
@@ -103,12 +103,12 @@ Shell.prototype.go = function go(url, options) {
     else {
         url = this.absolutizeUrl(url);
     }
-    this.history.pushState(options, undefined, url);
+    this.history.pushState(state, undefined, url);
     // pushState do NOT trigger the popstate event, so
-    return this.replace(options);
+    return this.replace(state);
 };
 
-Shell.prototype.goBack = function goBack(steps) {
+Shell.prototype.goBack = function goBack(state, steps) {
     steps = 0 - (steps || 1);
     // If there is nothing to go-back or not enought
     // 'back' steps, go to the index
@@ -116,15 +116,40 @@ Shell.prototype.goBack = function goBack(steps) {
         this.go(this.indexName);
     }
     else {
+        // On replace, the passed state is merged with
+        // the one that comes from the saved history
+        // entry (it 'pops' when doing the history.go())
+        this._pendingStateUpdate = state;
         this.history.go(steps);
     }
 };
 
-Shell.prototype.replace = function replace(state) {
-    //jshint maxcomplexity:10
+/**
+    Process the given state in order to get the current state
+    based on that or the saved in history, merge it with
+    any updated state pending and adds the route information,
+    returning an state object suitable to use.
+**/
+Shell.prototype.getUpdatedState = function getUpdatedState(state) {
     
-    // Default state and route
+    // For current uses, any pendingStateUpdate is used as
+    // the state, rather than the provided one
+    state = this._pendingStateUpdate || state || this.history.state;
+    
+    // TODO: more advanced uses must be to use the 'state' to
+    // recover the UI state, with any message from other UI
+    // passing in a way that allow update the state, not
+    // replace it (from pendingStateUpdate).
+    /*
+    // State or default state
     state = state || this.history.state || {};
+    // merge pending updated state
+    this.$.extend(state, this._pendingStateUpdate);
+    // discard the update
+    */
+    this._pendingStateUpdate = null;
+    
+    
     var isHashBang = /#!/.test(location.href);
     // Doesn't matters if state includes already 
     // 'route' information, need to be overwritten
@@ -138,8 +163,16 @@ Shell.prototype.replace = function replace(state) {
         location.hash :
         location.pathname
     ) + (location.search || '');
-
+    
+    // Set the route
     state.route = this.parseUrl(link);
+    
+    return state;
+};
+
+Shell.prototype.replace = function replace(state) {
+    
+    state = this.getUpdatedState(state);
 
     // Use the index on root calls
     if (state.route.root === true) {
