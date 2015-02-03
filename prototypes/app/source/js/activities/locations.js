@@ -24,7 +24,7 @@ function LocationsActivity($activity, app) {
     this.$activity = $activity;
     this.$listView = $activity.find('#locationsListView');
 
-    var dataView = this.dataView = new ViewModel();
+    var dataView = this.dataView = new ViewModel(app);
     ko.applyBindings(dataView, $activity.get(0));
 
     // TestingData
@@ -87,7 +87,7 @@ LocationsActivity.prototype.show = function show(options) {
     }
 };
 
-function ViewModel() {
+function ViewModel(app) {
 
     this.headerText = ko.observable('Locations');
 
@@ -102,8 +102,15 @@ function ViewModel() {
     
     this.selectLocation = function(selectedLocation) {
         
-        this.selectedLocation(selectedLocation);
-        this.isSelectionMode(false);
+        if (this.isSelectionMode() === true) {
+            this.selectedLocation(selectedLocation);
+            this.isSelectionMode(false);
+        }
+        else {
+            app.shell.go('locationEdition', {
+                locationID: selectedLocation.locationID()
+            });
+        }
 
     }.bind(this);
 }

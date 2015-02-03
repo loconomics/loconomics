@@ -7,10 +7,10 @@
     <div class="ListView ListView--twolines" data-bind="foreach: locations">
       <div class="ListView-item">
         <div class="ListView-item-marker"></div>
-        <a href="#" data-shell="pop" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.selectLocation }, attr: { href: '#!locations/' + locationID() }">
+        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.selectLocation }">
           <div><strong data-bind="text: name"></strong></div><div data-bind="text: singleLine"></div>
         </a>
-        <a href="#" data-shell="pop" class="ListView-item-action" data-bind="event: { tap: $root.selectLocation }, attr: { href: '#!locations/' + locationID() }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
+        <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.selectLocation }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
       </div>
     </div>
   </div>

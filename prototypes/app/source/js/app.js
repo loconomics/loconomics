@@ -178,13 +178,6 @@ var appInit = function appInit() {
         }
     });
     
-    // TODO COMING: things to do on activities:
-    // - navAction changes for the 'go-back' button must be done manually on each activity; since
-    //   this will depend on the activity location on the hierarchy, and maybe manual URL rather
-    //   than go-back, has no sense here
-    // - popActivity does not exists, must be replaced by 'go'
-    // - showActivity changes to 'go'
-    
     // When an activity is ready in the Shell:
     app.shell.on(app.shell.events.itemReady, function($act, state) {
         

@@ -254,7 +254,7 @@ Shell.prototype.run = function run() {
         var state = event.state || 
             (event.originalEvent && event.originalEvent.state) || 
             shell.history.state;
-        console.log('onpopstate state', state);
+
         // get state for current. To support polyfills, we use the general getter
         // history.state as fallback (they must be the same on browsers supporting History API)
         shell.replace(state);
