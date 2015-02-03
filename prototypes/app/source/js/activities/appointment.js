@@ -275,7 +275,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
                 if (date)
                     this.requestInfo.date = date;
                 // And go back
-                this.app.shell.goBack(this.requestInfo);
+                this.app.shell.go('calendar', this.requestInfo);
                 // Last, clear requestInfo
                 this.requestInfo = null;
             }

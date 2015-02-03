@@ -149,8 +149,6 @@ Shell.prototype.getUpdatedState = function getUpdatedState(state) {
     */
     this._pendingStateUpdate = null;
     
-    
-    var isHashBang = /#!/.test(location.href);
     // Doesn't matters if state includes already 
     // 'route' information, need to be overwritten
     // to match the current one.
@@ -158,6 +156,11 @@ Shell.prototype.getUpdatedState = function getUpdatedState(state) {
     // route property exists, creating infinite loops
     // on redirections from activity.show since 'route' doesn't
     // match the new desired location
+    
+    // Detect if is a hashbang URL or an standard one.
+    // Except if the app is forced to use hashbang.
+    var isHashBang = /#!/.test(location.href) || this.forceHashbang;
+    
     var link = (
         isHashBang ?
         location.hash :
