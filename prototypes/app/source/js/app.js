@@ -186,14 +186,14 @@ var appInit = function appInit() {
     // - showActivity changes to 'go'
     
     // When an activity is ready in the Shell:
-    app.shell.on(app.shell.events.itemReady, function($act) {
+    app.shell.on(app.shell.events.itemReady, function($act, state) {
         
         // Connect the 'activities' controllers to their views
         // Get initialized activity for the DOM element
         var actName = $act.data('activity');
         var activity = app.getActivity(actName);
         // Trigger the 'show' logic of the activity controller:
-        activity.show();
+        activity.show(state);
 
         // Update menu
         app.updateMenu(actName);

@@ -126,15 +126,20 @@ Shell.prototype.replace = function replace(state) {
     // Default state and route
     state = state || this.history.state || {};
     var isHashBang = /#!/.test(location.href);
-    if (!state.route) {
-        var link = (
-            isHashBang ?
-            location.hash :
-            location.pathname
-        ) + (location.search || '');
+    // Doesn't matters if state includes already 
+    // 'route' information, need to be overwritten
+    // to match the current one.
+    // NOTE: previously, a check prevented this if
+    // route property exists, creating infinite loops
+    // on redirections from activity.show since 'route' doesn't
+    // match the new desired location
+    var link = (
+        isHashBang ?
+        location.hash :
+        location.pathname
+    ) + (location.search || '');
 
-        state.route = this.parseUrl(link);
-    }
+    state.route = this.parseUrl(link);
 
     // Use the index on root calls
     if (state.route.root === true) {
@@ -158,7 +163,7 @@ Shell.prototype.replace = function replace(state) {
 
                 var $oldCont = shell.items.getActive();
                 $oldCont = $oldCont.not($cont);
-                shell.items.switch($oldCont, $cont, shell);
+                shell.items.switch($oldCont, $cont, shell, state);
 
                 resolve(); //? resolve(act);
             }
@@ -213,7 +218,9 @@ Shell.prototype.run = function run() {
     // Allows polyfills to provide a different but equivalent event name
     this.$(window).on(this.history.popstateEvent || 'popstate', function(event) {
         
-        var state = event.state || event.originalEvent.state || shell.history.state;
+        var state = event.state || 
+            (event.originalEvent && event.originalEvent.state) || 
+            shell.history.state;
         console.log('onpopstate state', state);
         // get state for current. To support polyfills, we use the general getter
         // history.state as fallback (they must be the same on browsers supporting History API)

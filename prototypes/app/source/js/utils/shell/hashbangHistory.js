@@ -59,8 +59,9 @@ function setSuid(hash, suid) {
     // and recreate the query in the
     // returned hash-url
     var qs = getUrlQuery(hash);
+    qs.push('_suid');
     qs._suid = suid;
-    
+
     var query = [];
     for(var i = 0; i < qs.length; i++) {
         query.push(qs[i] + '=' + encodeURIComponent(qs[qs[i]]));
@@ -69,10 +70,12 @@ function setSuid(hash, suid) {
     
     if (query) {
         var index = hash.indexOf('?');
-        hash = hash.substr(0, index) + '?' + query;
+        if (index > -1)
+            hash = hash.substr(0, index);
+        hash += '?' + query;
     }
 
-    return query;
+    return hash;
 }
 
 /**

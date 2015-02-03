@@ -75,28 +75,30 @@ DomItemsManager.prototype.inject = function inject(name, html) {
     the 'from' and 'to', and the shell instance that MUST be used
     to notify each event that involves the item:
     willClose, willOpen, ready, opened, closed.
+    It receives as latest parameter the 'notification' object that must be
+    passed with the event so handlers has context state information.
     
     It's designed to be able to manage transitions, but this default
     implementation is as simple as 'show the new and hide the old'.
 **/
-DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell) {
+DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, notification) {
 
     if (!$to.is(':visible')) {
-        shell.emit(shell.events.willOpen, $to);
+        shell.emit(shell.events.willOpen, $to, notification);
         $to.show();
         // Its enough visible and in DOM to perform initialization tasks
         // that may involve layout information
-        shell.emit(shell.events.itemReady, $to);
+        shell.emit(shell.events.itemReady, $to, notification);
         // When its completely opened
-        shell.emit(shell.events.opened, $to);
+        shell.emit(shell.events.opened, $to, notification);
     } else {
         // Its ready; maybe it was but sub-location
         // or state change need to be communicated
-        shell.emit(shell.events.ready, $to);
+        shell.emit(shell.events.itemReady, $to, notification);
     }
 
     if ($from.is(':visible')) {
-        shell.emit(shell.events.willClose, $from);
+        shell.emit(shell.events.willClose, $from, notification);
         // Do 'unfocus' on the hidden element after notify 'willClose'
         // for better UX: hidden elements are not reachable and has good
         // side effects like hidding the on-screen keyboard if an input was
@@ -104,7 +106,7 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell) 
         $from.find(':focus').blur();
         // hide and notify it ended
         $from.hide();
-        shell.emit(shell.events.closed, $from);
+        shell.emit(shell.events.closed, $from, notification);
     }
 };
 
