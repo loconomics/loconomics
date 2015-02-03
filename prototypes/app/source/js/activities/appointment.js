@@ -34,6 +34,19 @@ function AppointmentActivity($activity, app) {
     this.navAction = NavAction.newCalendarItem;
     
     this.initAppointment();
+    
+    this.appointmentsDataView.currentAppointment.subscribe(function (apt) {
+        // Update URL to match the appointment ID and
+        // track it state
+        // Get ID from URL, to avoid do anything if the same.
+        var aptId = apt.id();
+        var urlId = /appointment\/(\d+)/i.test(window.location);
+        urlId = urlId && urlId[1] || '';
+        if (urlId !== aptId.toString()) {
+            // TODO: save a useful state
+            app.shell.history.pushState(null, null, 'appointment/' + aptId.toString());
+        }
+    });
 }
 
 AppointmentActivity.prototype.show = function show(options) {
@@ -78,7 +91,13 @@ AppointmentActivity.prototype.show = function show(options) {
         }
     }
     
-    this.showAppointment(options && options.appointmentId);
+    var aptId = options && options.appointmentId;
+    if (aptId && options.route.segments[0] !== aptId.toString()) {
+        // Update URL to match ID
+        delete options.appointmentId;
+        this.app.shell.history.replaceState(options, null, 'appointment/' + aptId.toString());
+    }
+    this.showAppointment(aptId);
 };
 
 var Appointment = require('../models/Appointment');
@@ -88,6 +107,7 @@ AppointmentActivity.prototype.showAppointment = function showAppointment(aptId) 
     
     if (aptId) {
         // TODO: select appointment 'aptId'
+        
 
     } else if (aptId === 0) {
         this.appointmentsDataView.newAppointment(new Appointment());
