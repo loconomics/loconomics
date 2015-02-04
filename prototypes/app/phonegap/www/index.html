@@ -12,11 +12,8 @@
     <title>Loconomics App</title>
     <script type="text/javascript" src="cordova.js"></script>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/styleguide.css" rel="stylesheet">
     <link href="assets/css/app.min.css" rel="stylesheet">
-    <!--TODO create minified files for styleguide js and css -->
-    <script src="assets/js/styleguidelibs.js"></script>
-    <script src="assets/js/styleguide.js"></script>
+    <script src="assets/js/styleguidelibs.min.js"></script>
     <script src="assets/js/libs.min.js"></script>
     <script src="assets/js/app.min.js"></script>
   </head>
@@ -50,21 +47,21 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="go-home"><a href="#!home">Dashboard</a>
+            <li class="go-home"><a href="/home">Dashboard</a>
             </li>
-            <li class="go-calendar"><a href="#!calendar">Calendar</a>
+            <li class="go-calendar"><a href="/calendar">Calendar</a>
             </li>
-            <li class="go-inbox"><a href="#!inbox">Inbox</a>
+            <li class="go-inbox"><a href="/inbox">Inbox</a>
             </li>
-            <li class="go-clients"><a href="#!clients">Clients</a>
+            <li class="go-clients"><a href="/clients">Clients</a>
             </li>
-            <li class="go-payments"><a href="#!payments">Payments</a>
+            <li class="go-payments"><a href="/payments">Payments</a>
             </li>
-            <li class="go-services"><a href="#!services">Services</a>
+            <li class="go-services"><a href="/services">Services</a>
             </li>
-            <li class="go-account"><a href="#!account">Account</a>
+            <li class="go-account"><a href="/account">Account</a>
             </li>
-            <li class="go-logout"><a href="#!logout">Logout</a>
+            <li class="go-logout"><a href="/logout">Logout</a>
             </li>
           </ul>
         </div>
@@ -554,12 +551,11 @@
       <div id="locationsListView">
         <div class="ListView ListView--twolines" data-bind="foreach: locations">
           <div class="ListView-item">
-            <div class="ListView-item-marker"></div> <a href="#" data-shell="pop" class="btn btn-link btn-block ListView-item-content"
-            data-bind="event: { tap: $root.selectLocation }, attr: { href: '#!locations/' + locationID() }">
+            <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
+            data-bind="event: { tap: $root.selectLocation }">
           <div><strong data-bind="text: name"></strong></div><div data-bind="text: singleLine"></div>
         </a>
- <a href="#" data-shell="pop" class="ListView-item-action"
-            data-bind="event: { tap: $root.selectLocation }, attr: { href: '#!locations/' + locationID() }"
+ <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.selectLocation }"
             role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
 
           </div>

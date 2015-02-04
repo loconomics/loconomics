@@ -2,6 +2,7 @@
 
 /** Global dependencies **/
 var $ = require('jquery');
+require('bootstrap');
 require('jquery-mobile');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;

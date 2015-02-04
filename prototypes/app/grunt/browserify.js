@@ -10,6 +10,37 @@ module.exports = function(grunt) {
 	var bconfig = {};
     
     /**
+        Styleguide Libs
+    **/
+    bconfig.styleguidelibs = {
+        'src': [],
+        'dest': './build/assets/js/styleguidelibs.js',
+        'options': {
+            // Despite that plugins and some other modules doesn't return itselfs,
+            // we still need the alias to be localizable by the 'require' calls
+            // in other bundles (must replicate alias in its 'external' option)
+            // Shim generates already alias for each key.
+            shim: {
+                // Using a shim we avoid jquery to detect the CommonJS loader and 
+                // it attachs itself to the global namespace (window) what let
+                // the plugins works fine.
+                jquery: {
+                    path: './vendor/jquery/jquery-2.1.3.min.js',
+                    exports: 'jQuery'
+                },
+                'bootstrap': {
+                    // Using latest Bootstrap version:
+                    path: './vendor/bootstrap/js/bootstrap.min.js',
+                    exports: null,
+                    depends: { 'jquery': 'jquery' }
+                }
+            }
+        }
+    };
+    
+    var styleguidelibsModules = getPublicModulesFrom(bconfig.styleguidelibs);
+    
+    /**
         Libs bundle
     **/
     bconfig.libs = {
@@ -17,9 +48,7 @@ module.exports = function(grunt) {
         'dest': './build/assets/js/libs.js',
         'options': {
             'debug': false,
-            'external': [
-                'jquery'
-            ],
+            'external': styleguidelibsModules,
             'alias': [
                 'moment',
                 'knockout',
@@ -47,6 +76,8 @@ module.exports = function(grunt) {
             }
         }
     };
+    
+    var libsModules = getPublicModulesFrom(bconfig.libs);
 
     /**
         App bundle
@@ -61,9 +92,8 @@ module.exports = function(grunt) {
             'debug': true,
             // Modules from other bundles
             'external': Array.prototype.concat(
-                // From libs bundle
-                getPublicModulesFrom(bconfig.libs),
-                [ 'jquery' ]
+                styleguidelibsModules,
+                libsModules
             )
         }
     };
