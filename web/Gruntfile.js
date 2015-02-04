@@ -202,36 +202,11 @@ module.exports = function (grunt) {
                 }
             },
 
-            'styleguidelibs': {
-                'src': [],
-                'dest': './Scripts/styleguidelibs.js',
-                'options': {
-                    // Despite that plugins and some other modules doesn't return itselfs,
-                    // we still need the alias to be localizable by the 'require' calls
-                    // in other bundles (must replicate alias in its 'external' option)
-                    // Shim generates already alias for each key.
-                    shim: {
-                        // Using a shim we avoid jquery to detect the CommonJS loader and 
-                        // it attachs itself to the global namespace (window) what let
-                        // the plugins works fine.
-                        jquery: {
-                            path: './Scripts/jquery/jquery-2.1.3.min.js',
-                            exports: 'jQuery'
-                        },
-                        'bootstrap': {
-                            // Using latest Bootstrap version:
-                            path: './Scripts/libs/bootstrap/js/bootstrap.min.js',
-                            exports: null,
-                            depends: { 'jquery': 'jquery' }
-                        }
-                    }
-                }
-            },
-            'styleguide': {
+            'styleguide-desktop': {
                 'src': [
-                  './Scripts/app/styleguide.js'
+                  './Scripts/app/styleguide-desktop.js'
                 ],
-                'dest': './Scripts/styleguide.js',
+                'dest': './Scripts/styleguide-desktop.js',
                 'options': {
                     // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
                     'debug': true,
@@ -315,11 +290,6 @@ module.exports = function (grunt) {
             'provider-welcome': {
                 files: {
                     'Styles/provider-welcome.css': ['Styles/app/provider-welcome.styl']
-                }
-            },
-            'styleguide': {
-                files: {
-                    'Styles/styleguide.css': ['Styles/app/styleguide.styl']
                 }
             },
             'styleguide-desktop': {

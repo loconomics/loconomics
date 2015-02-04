@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-12-26
+/*! Loconomics.com 2015-02-04
    Author: Loconomics Inc. */
 [draggable=true] {
   -khtml-user-drag: element;
@@ -3004,12 +3004,12 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-12-26
+/*! Loconomics.com 2015-02-04
    Author: Loconomics Inc. */
 
-/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.
@@ -3020,7 +3020,7 @@ label.visuallyhidden-with-placeholder{
   Including styl files generally need for the app.
 **/
 
-/* line 264 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\typographyDefinitions.styl */
+/* line 264 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\typographyDefinitions.styl */
 @font-face {
   font-family: 'Hand Of Sean';
   src: url("fonts/handsean.otf");
@@ -3044,101 +3044,101 @@ label.visuallyhidden-with-placeholder{
   font-style: normal;
 }
 
-/* line 25 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 11 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 574 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 574 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
 
-/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
-/* line 32 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 11 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 574 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 574 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
 
-/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 65 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 65 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action,
 .next-action,
 .finish-action {
@@ -3164,7 +3164,7 @@ label.visuallyhidden-with-placeholder{
   font-size: 1.2em;
 }
 
-/* line 25 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action:hover,
 .next-action:hover,
 .finish-action:hover {
@@ -3173,7 +3173,7 @@ label.visuallyhidden-with-placeholder{
   background-color: #e95d0f;
 }
 
-/* line 50 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 50 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action:after,
 .next-action:after,
 .finish-action:after {
@@ -3191,7 +3191,7 @@ label.visuallyhidden-with-placeholder{
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
   .begin-action:after,
   .next-action:after,
   .finish-action:after {
@@ -3202,26 +3202,26 @@ label.visuallyhidden-with-placeholder{
   }
 }
 
-/* line 74 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 74 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .Actions {
   zoom: 1;
   display: block;
   clear: both;
 }
 
-/* line 23 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 .Actions:before,
 .Actions:after {
   content: "";
   display: table;
 }
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 .Actions:after {
   clear: both;
 }
 
-/* line 46 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar {
   position: relative;
 /* Weekly, Workhours and Monthly share a common layout
@@ -3232,9 +3232,9 @@ label.visuallyhidden-with-placeholder{
 /* Monthly specific stuff */
 }
 
-/* line 49 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 49 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 15 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 15 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.is-disabled:after {
   content: '';
   position: absolute;
@@ -3249,18 +3249,18 @@ label.visuallyhidden-with-placeholder{
   filter: alpha(opacity=50);
 }
 
-/* line 53 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 53 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 54 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 54 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.is-loading .AvailabilityCalendar-status {
   background: url("../img/theme/loading.gif") no-repeat 0 0;
   width: 48px;
   height: 48px;
 }
 
-/* line 59 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 59 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 15 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 15 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.is-loading .AvailabilityCalendar-actions:after {
   content: '';
   position: absolute;
@@ -3275,15 +3275,15 @@ label.visuallyhidden-with-placeholder{
   filter: alpha(opacity=50);
 }
 
-/* line 64 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 64 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 66 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 66 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.is-currentWeek .Actions-prev,
 .AvailabilityCalendar.is-currentMonth .Actions-prev {
   position: relative;
 }
 
-/* line 15 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 15 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.is-currentWeek .Actions-prev:after,
 .AvailabilityCalendar.is-currentMonth .Actions-prev:after {
   content: '';
@@ -3299,13 +3299,13 @@ label.visuallyhidden-with-placeholder{
   filter: alpha(opacity=50);
 }
 
-/* line 71 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 71 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.is-currentWeek .Actions-today,
 .AvailabilityCalendar.is-currentMonth .Actions-today {
   position: relative;
 }
 
-/* line 15 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 15 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.is-currentWeek .Actions-today:after,
 .AvailabilityCalendar.is-currentMonth .Actions-today:after {
   content: '';
@@ -3321,38 +3321,38 @@ label.visuallyhidden-with-placeholder{
   filter: alpha(opacity=50);
 }
 
-/* line 77 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 77 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 79 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 79 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.is-preloading .Actions-next {
   border-bottom-color: #b5e1e2 !important;
 }
 
-/* line 84 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 84 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-errorMessage {
   color: #fc0404;
   display: none;
 }
 
-/* line 89 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 89 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 90 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 90 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.has-dataError .AvailabilityCalendar-errorMessage {
   display: inline-block;
 }
 
-/* line 95 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 95 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend {
   margin: 1.5em 8em;
 }
 
-/* line 99 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 99 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend ul li {
   display: inline-block;
   margin-right: 5em;
 }
 
-/* line 104 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 104 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend .AvailabilityCalendar-legend-example {
   border: 1px solid #c3c3c3;
   display: inline-block;
@@ -3362,17 +3362,17 @@ label.visuallyhidden-with-placeholder{
   margin-right: 1em;
 }
 
-/* line 113 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 113 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend .AvailabilityCalendar-legend-available .AvailabilityCalendar-legend-example {
   background: #ddeab8;
 }
 
-/* line 117 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 117 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-legend .AvailabilityCalendar-legend-unavailable .AvailabilityCalendar-legend-example {
   background: White;
 }
 
-/* line 122 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 122 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions {
   position: relative;
   margin: 1em 0;
@@ -3380,20 +3380,20 @@ label.visuallyhidden-with-placeholder{
   min-height: 50px;
 }
 
-/* line 128 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 128 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions * {
   letter-spacing: 0;
   vertical-align: middle;
 }
 
-/* line 137 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 137 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .AvailabilityCalendar-status {
   margin-left: 1em;
   display: inline-block;
   position: absolute;
 }
 
-/* line 143 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 143 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move {
   padding: 1.2em 1.6em;
   -webkit-border-radius: 5px;
@@ -3413,7 +3413,7 @@ label.visuallyhidden-with-placeholder{
   box-sizing: content-box;
 }
 
-/* line 159 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 159 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move:before {
   content: '';
   position: absolute;
@@ -3425,7 +3425,7 @@ label.visuallyhidden-with-placeholder{
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
   .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move:before {
     background-image: url("../img/theme/Actions-move@2x.png");
     -webkit-background-size: 26px 12px;
@@ -3434,29 +3434,29 @@ label.visuallyhidden-with-placeholder{
   }
 }
 
-/* line 171 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 171 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move:hover {
   background: White;
 }
 
-/* line 175 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 175 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move.Actions-prev {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
 
-/* line 180 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 180 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move.Actions-next {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
 }
 
-/* line 184 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 184 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-move.Actions-next:before {
   background-position: -14px 0;
 }
 
-/* line 190 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 190 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-today {
   padding: 1.2em 1.6em;
   -webkit-border-radius: 5px;
@@ -3473,20 +3473,20 @@ label.visuallyhidden-with-placeholder{
   margin-left: 1em;
 }
 
-/* line 204 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 204 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-actions .Actions-today:hover {
   background: White;
 }
 
-/* line 210 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 210 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .AvailabilityCalendar-bookingsNotification {
 /* By default is hidden, enabled via js if need (with this rule we avoid flickering) */
   display: none;
 }
 
-/* line 218 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 218 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 219 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 219 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table {
@@ -3495,14 +3495,14 @@ label.visuallyhidden-with-placeholder{
 /* Default cells color: unavailable */
 }
 
-/* line 223 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 223 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table th,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table th,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table th {
   font-weight: normal;
 }
 
-/* line 227 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 227 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table th,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table th,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table th,
@@ -3513,7 +3513,7 @@ label.visuallyhidden-with-placeholder{
   width: 14%;
 }
 
-/* line 231 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 231 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table th:first-child,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table th:first-child,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table th:first-child,
@@ -3524,7 +3524,7 @@ label.visuallyhidden-with-placeholder{
   white-space: nowrap;
 }
 
-/* line 238 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 238 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table td,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table td,
@@ -3534,14 +3534,14 @@ label.visuallyhidden-with-placeholder{
   background-color: White;
 }
 
-/* line 274 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 274 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table td.is-available,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table td.is-available,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table td.is-available {
   background-color: #ddeab8;
 }
 
-/* line 277 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 277 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly table .AvailabilityCalendar-days,
 .AvailabilityCalendar.AvailabilityCalendar--workHours table .AvailabilityCalendar-days,
 .AvailabilityCalendar.AvailabilityCalendar--monthly table .AvailabilityCalendar-days {
@@ -3549,17 +3549,17 @@ label.visuallyhidden-with-placeholder{
   text-transform: uppercase;
 }
 
-/* line 284 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 284 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 285 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 285 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-actions,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-actions {
   margin-left: 74px;
 }
 
-/* line 288 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 288 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 289 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 289 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots th,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots th,
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots td,
@@ -3567,15 +3567,15 @@ label.visuallyhidden-with-placeholder{
   border-right: 1px solid #eee;
 }
 
-/* line 292 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 292 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots td {
   height: 4px;
 }
 
-/* line 295 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 295 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 296 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 296 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots .AvailabilityCalendar-hour th,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots .AvailabilityCalendar-hour th {
   text-align: right;
@@ -3583,51 +3583,51 @@ label.visuallyhidden-with-placeholder{
   min-width: 45px;
 }
 
-/* line 302 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 302 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots .AvailabilityCalendar-hour td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots .AvailabilityCalendar-hour td {
   border-top: 1px solid #eee;
 }
 
-/* line 305 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 305 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots .AvailabilityCalendar-hour.AvailabilityCalendar-hour--noon td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots .AvailabilityCalendar-hour.AvailabilityCalendar-hour--noon td {
   border-top-color: #c3c3c3;
 }
 
-/* line 309 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 309 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots td:last-child,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots td:last-child {
   border-right: 1px solid #c3c3c3;
 }
 
-/* line 312 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 312 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots tr:first-child td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots tr:first-child td {
   border-top: 1px solid #c3c3c3;
 }
 
-/* line 315 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 315 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--weekly .AvailabilityCalendar-slots tr:last-child td,
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots tr:last-child td {
   border-bottom: 1px solid #c3c3c3;
 }
 
-/* line 321 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 321 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--workHours {
   padding-top: 2em;
 }
 
-/* line 323 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 323 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--workHours .AvailabilityCalendar-slots td {
   cursor: pointer;
 }
 
-/* line 328 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 328 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 329 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 329 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 330 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 330 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-actions .AvailabilityCalendar-monthLabel {
   position: absolute;
   right: 0;
@@ -3641,19 +3641,19 @@ label.visuallyhidden-with-placeholder{
   font-size: 1.1em;
 }
 
-/* line 342 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 342 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-days th:first-child {
   display: none;
 }
 
-/* line 345 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 345 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 347 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 347 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots th {
   display: none;
 }
 
-/* line 350 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 350 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td {
   border: 1px solid #c3c3c3;
   height: 3em;
@@ -3661,31 +3661,31 @@ label.visuallyhidden-with-placeholder{
   text-align: left;
 }
 
-/* line 355 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 355 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td .AvailabilityCalendar-slotDateLabel {
   font-size: 1em;
 }
 
-/* line 358 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 358 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td.AvailabilityCalendar-offMonthDate {
   color: #ccc;
 }
 
-/* line 361 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 361 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td.AvailabilityCalendar-currentDate {
   border: 1px solid Black;
 }
 
-/* line 363 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 363 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly .AvailabilityCalendar-slots td.AvailabilityCalendar-currentDate .AvailabilityCalendar-slotDateLabel {
   font-weight: bold;
 }
 
-/* line 369 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 369 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 370 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 370 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 
-/* line 371 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 371 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar.AvailabilityCalendar--monthly.is-editable .AvailabilityCalendar-slots td:hover {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
@@ -3693,7 +3693,7 @@ label.visuallyhidden-with-placeholder{
   cursor: pointer;
 }
 
-/* line 378 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+/* line 378 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
 .AvailabilityCalendar .SelectionLayer {
   position: absolute;
   background: #006a8d;
@@ -3703,53 +3703,53 @@ label.visuallyhidden-with-placeholder{
   pointer-events: none;
 }
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 11 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 574 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 574 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
 
-/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 8 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+/* line 8 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
 .WelcomeHeader {
   position: absolute;
   right: 0px;
@@ -3762,7 +3762,7 @@ label.visuallyhidden-with-placeholder{
   border-bottom: 1px solid #00989a;
 }
 
-/* line 20 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+/* line 20 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
 .WelcomeHeader .wrap {
   padding: 17px 0 12px 225px;
   -webkit-box-sizing: border-box;
@@ -3770,7 +3770,7 @@ label.visuallyhidden-with-placeholder{
   box-sizing: border-box;
 }
 
-/* line 25 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
 .WelcomeHeader h1 {
   font-family: Hand Of Sean;
   font-size: 2.2em;
@@ -3780,16 +3780,16 @@ label.visuallyhidden-with-placeholder{
   line-height: 78px;
 }
 
-/* line 34 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
+/* line 34 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomeHeader.styl */
 .WelcomeHeader span {
   font-size: 1.5em;
   color: #00989a;
   margin-left: 1em;
 }
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 
-/* line 22 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 22 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover {
   position: absolute;
   top: 0;
@@ -3812,27 +3812,27 @@ label.visuallyhidden-with-placeholder{
   white-space: normal;
 }
 
-/* line 39 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 39 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.top {
   margin-top: -10px;
 }
 
-/* line 42 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 42 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.right {
   margin-left: 10px;
 }
 
-/* line 45 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 45 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.bottom {
   margin-top: 10px;
 }
 
-/* line 48 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 48 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.left {
   margin-left: -10px;
 }
 
-/* line 51 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 51 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover-title {
   margin: 0;
   padding: 8px 14px;
@@ -3845,12 +3845,12 @@ label.visuallyhidden-with-placeholder{
   border-radius: 5px 5px 0 0;
 }
 
-/* line 61 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover-content {
   padding: 9px 14px;
 }
 
-/* line 64 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 64 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover > .arrow,
 .popover > .arrow:after {
   position: absolute;
@@ -3861,18 +3861,18 @@ label.visuallyhidden-with-placeholder{
   border-style: solid;
 }
 
-/* line 72 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 72 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover > .arrow {
   border-width: 11px;
 }
 
-/* line 75 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 75 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover > .arrow:after {
   border-width: 10px;
   content: "";
 }
 
-/* line 79 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 79 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.top > .arrow {
   left: 50%;
   margin-left: -11px;
@@ -3882,7 +3882,7 @@ label.visuallyhidden-with-placeholder{
   bottom: -11px;
 }
 
-/* line 87 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 87 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.top > .arrow:after {
   content: " ";
   bottom: 1px;
@@ -3891,7 +3891,7 @@ label.visuallyhidden-with-placeholder{
   border-top-color: #fff;
 }
 
-/* line 94 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 94 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.right > .arrow {
   top: 50%;
   left: -11px;
@@ -3901,7 +3901,7 @@ label.visuallyhidden-with-placeholder{
   border-right-color: rgba(0,0,0,0.25);
 }
 
-/* line 102 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 102 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.right > .arrow:after {
   content: " ";
   left: 1px;
@@ -3910,7 +3910,7 @@ label.visuallyhidden-with-placeholder{
   border-right-color: #fff;
 }
 
-/* line 109 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 109 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.bottom > .arrow {
   left: 50%;
   margin-left: -11px;
@@ -3920,7 +3920,7 @@ label.visuallyhidden-with-placeholder{
   top: -11px;
 }
 
-/* line 117 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 117 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.bottom > .arrow:after {
   content: " ";
   top: 1px;
@@ -3929,7 +3929,7 @@ label.visuallyhidden-with-placeholder{
   border-bottom-color: #fff;
 }
 
-/* line 124 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 124 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.left > .arrow {
   top: 50%;
   right: -11px;
@@ -3939,7 +3939,7 @@ label.visuallyhidden-with-placeholder{
   border-left-color: rgba(0,0,0,0.25);
 }
 
-/* line 132 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+/* line 132 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
 .popover.left > .arrow:after {
   content: " ";
   right: 1px;
@@ -3948,55 +3948,55 @@ label.visuallyhidden-with-placeholder{
   bottom: -10px;
 }
 
-/* line 139 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 139 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 11 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 574 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 574 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
 
-/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcome-popup-container {
   padding: 0;
   width: 400px;
@@ -4008,7 +4008,7 @@ label.visuallyhidden-with-placeholder{
 }
 @media only screen and (max-width: 640px) {
 
-/* line 22 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 22 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcome-popup-container {
     width: 100%;
     margin: 0;
@@ -4021,7 +4021,7 @@ label.visuallyhidden-with-placeholder{
   }
 }
 
-/* line 30 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 30 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcome-popup-overlay {
   display: none;
 /* fixed needs overflow and height:100% to get scrollbar */
@@ -4035,15 +4035,15 @@ label.visuallyhidden-with-placeholder{
 }
 @media only screen and (max-width: 640px) {
 
-/* line 43 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 43 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcome-popup-overlay {
     background: none !important;
   }
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 47 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 
-/* line 48 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 48 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 .RegisterPage #welcome-popup-overlay {
   background: none !important;
   display: block;
@@ -4052,9 +4052,9 @@ label.visuallyhidden-with-placeholder{
 }
 @media only screen and (max-width: 640px) {
 
-/* line 58 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 58 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 
-/* line 59 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 59 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   body.strict-welcome-popup #container,
   body.strict-welcome-popup #site-header,
   body.strict-welcome-popup #site-footer,
@@ -4063,16 +4063,16 @@ label.visuallyhidden-with-placeholder{
   }
 }
 
-/* line 66 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 66 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 
-/* line 68 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 68 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .actions .main-action,
 #welcomepopup .actions .next-action {
   width: 100%;
   font-weight: bold;
 }
 
-/* line 72 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 72 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .register {
   padding: 20px 25px;
   text-align: center;
@@ -4084,7 +4084,7 @@ label.visuallyhidden-with-placeholder{
 }
 @media only screen and (max-width: 640px) {
 
-/* line 81 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 81 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup .register {
     padding: 10px 0;
     background: none;
@@ -4093,12 +4093,12 @@ label.visuallyhidden-with-placeholder{
   }
 }
 
-/* line 87 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 87 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .register form {
   margin: 0 1em;
 }
 
-/* line 90 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 90 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .register .back-action {
   display: none;
   position: absolute;
@@ -4107,45 +4107,45 @@ label.visuallyhidden-with-placeholder{
 }
 @media only screen and (max-width: 640px) {
 
-/* line 95 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 95 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup .register .back-action {
     top: 0;
     left: 14px;
   }
 }
 
-/* line 99 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 99 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 
-/* line 100 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 100 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .register .profile-choice h2 {
   margin-bottom: 1em;
 }
 
-/* line 103 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 103 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .register .profile-choice .profile-choice-list {
   text-align: left;
   display: inline-block;
 }
 
-/* line 107 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 107 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .register .profile-choice .profile-choice-list label {
   display: block;
 }
 
-/* line 111 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 111 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup header {
   padding: 20px 25px;
   text-align: center;
 }
 @media only screen and (max-width: 640px) {
 
-/* line 115 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 115 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup header {
     padding: 10px;
   }
 }
 
-/* line 118 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 118 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup header h1 {
   line-height: 39px;
   font-size: 1.3em;
@@ -4153,7 +4153,7 @@ label.visuallyhidden-with-placeholder{
   text-align: center;
 }
 
-/* line 124 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 124 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup header h1.has-icon {
   padding-left: 110px;
   background: url("../img/theme/logo-loconomics-header-mini.png") no-repeat left center transparent;
@@ -4161,21 +4161,21 @@ label.visuallyhidden-with-placeholder{
 }
 @media only screen and (max-width: 640px) {
 
-/* line 128 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 128 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup header h1 {
     font-size: 1em;
   }
 }
 @media only screen and (max-width: 350px) {
 
-/* line 133 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 133 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup header h1 {
     font-size: 0.84em;
   }
 }
 @media only screen and (max-width: 270px) {
 
-/* line 135 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 135 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup header h1 {
     font-size: 1em;
     line-height: 1.2em;
@@ -4183,7 +4183,7 @@ label.visuallyhidden-with-placeholder{
   }
 }
 
-/* line 140 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 140 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup header .presentation {
   text-align: justify;
   font-size: 1em;
@@ -4193,96 +4193,96 @@ label.visuallyhidden-with-placeholder{
 }
 @media only screen and (max-width: 640px) {
 
-/* line 147 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 147 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup header .presentation {
     margin-top: 10px;
   }
 }
 
-/* line 150 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 150 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup footer {
   padding: 20px 25px;
   text-align: center;
 }
 @media only screen and (max-width: 640px) {
 
-/* line 154 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 154 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup footer {
     padding: 10px;
   }
 }
 
-/* line 176 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 176 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 @media only screen and (max-width: 640px) {
 
-/* line 177 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 177 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup footer div.login {
     margin: 10px 0;
   }
 }
 
-/* line 180 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 180 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .profile-data,
 #welcomepopup .terms,
 #welcomepopup .position-description {
   display: none;
 }
 
-/* line 183 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 183 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup.select-position .profile-data {
   display: block;
 }
 
-/* line 187 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 187 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup h1,
 #welcomepopup h2 {
   font-family: Hand Of Sean, Arial, sans-serif;
   margin: 0;
 }
 
-/* line 192 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 192 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup h2 {
   font-size: 1.05em;
 }
 
-/* line 195 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 195 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup h3 {
 /*.popover-title {*/
   color: Black;
   font-weight: bold;
 }
 
-/* line 199 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 199 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup.select-position .profile-data h2 {
   color: Black;
   text-align: left;
   margin-bottom: 0.5em;
 }
 
-/* line 204 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 204 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup.select-position .presentation {
   display: none;
 }
 
-/* line 208 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 208 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup strong {
   text-transform: uppercase;
   color: #e95d0f;
 }
 
-/* line 213 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 213 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .actions {
   text-align: center !important;
   margin-top: 1em;
 }
 
-/* line 218 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 218 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .choice-or {
   font-family: Hand Of Sean, Arial, sans-serif;
   color: Black;
 }
 
-/* line 222 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 222 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .terms {
   font-size: 0.9em;
   line-height: normal;
@@ -4290,17 +4290,17 @@ label.visuallyhidden-with-placeholder{
   text-align: justify;
 }
 
-/* line 228 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 228 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .profile-data {
   margin: 1em 0;
 }
 
-/* line 231 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 231 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .profile-data li {
   padding: 3px 0;
 }
 
-/* line 234 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 234 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .profile-data input,
 #welcomepopup .profile-data textarea {
   -webkit-box-sizing: border-box;
@@ -4312,12 +4312,12 @@ label.visuallyhidden-with-placeholder{
   width: 100%;
 }
 
-/* line 241 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 241 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup .profile-data label {
   display: none;
 }
 
-/* line 244 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 244 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup a.login {
   background-color: #f5f5f5;
   color: #333 !important;
@@ -4325,23 +4325,23 @@ label.visuallyhidden-with-placeholder{
   margin: 0 1em;
 }
 
-/* line 250 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 250 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopup a.login:hover {
   -webkit-box-shadow: 0 0 5px 2px #ababab;
   box-shadow: 0 0 5px 2px #ababab;
 }
 
-/* line 253 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 253 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #terms-tooltip {
   text-align: justify;
 }
 
-/* line 256 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 256 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #terms-tooltip li {
   list-style: disc inside;
 }
 
-/* line 259 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 259 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 #welcomepopupLoading {
   position: absolute;
   top: 0;
@@ -4353,7 +4353,7 @@ label.visuallyhidden-with-placeholder{
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 270 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 270 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #welcomepopup h1.has-icon {
     background-image: url("../img/theme/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
@@ -4363,19 +4363,19 @@ label.visuallyhidden-with-placeholder{
 }
 @media only screen and (max-width: 640px) {
 
-/* line 282 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 282 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
 
-/* line 283 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 283 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #loginBox h1 {
     font-size: 1.4em;
   }
 
-/* line 287 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 287 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #loginBox fieldset li {
     font-size: 0.9em;
   }
 
-/* line 290 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 290 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #loginBox fieldset li input,
   #loginBox fieldset li label {
     display: block;
@@ -4387,38 +4387,38 @@ label.visuallyhidden-with-placeholder{
     float: none !important;
   }
 
-/* line 297 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 297 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #loginBox fieldset li label {
     margin: 1em 0 0.5em;
   }
 
-/* line 300 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 300 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #loginBox fieldset li.remember-me {
     display: block;
     float: none;
     text-align: center;
   }
 
-/* line 305 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 305 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #loginBox fieldset li.remember-me input,
   #loginBox fieldset li.remember-me label {
     display: inline !important;
     width: auto !important;
   }
 
-/* line 309 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 309 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #loginBox fieldset li.actions {
     text-align: center;
     float: none;
   }
 
-/* line 313 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 313 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #loginBox fieldset li.actions .main-action {
     font-weight: bold !important;
     font-size: 1.2em !important;
   }
 
-/* line 317 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 317 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   #loginBox .account-tools a {
     display: block;
     float: none !important;
@@ -4426,7 +4426,7 @@ label.visuallyhidden-with-placeholder{
     line-height: 1.8em;
   }
 
-/* line 323 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
+/* line 323 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\WelcomePopup.styl */
   .blockMsg {
     position: fixed;
     height: 100% !important;
@@ -4444,51 +4444,51 @@ label.visuallyhidden-with-placeholder{
   }
 }
 
-/* line 32 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 11 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 574 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 574 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
 form input.personal-data,
 form .has-personal-data input,
 form input.secure-data,
@@ -4499,14 +4499,14 @@ form .has-search-data input {
   background-repeat: no-repeat;
 }
 
-/* line 16 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+/* line 16 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
 input.personal-data,
 .has-personal-data input {
   background-image: url("../img/theme/icon-form-personal.png");
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 18 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
   input.personal-data,
   .has-personal-data input {
     background-image: url("../img/theme/icon-form-personal@2x.png");
@@ -4516,14 +4516,14 @@ input.personal-data,
   }
 }
 
-/* line 21 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+/* line 21 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
 input.secure-data,
 .has-secure-data input {
   background-image: url("../img/theme/icon-form-secure.png");
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 23 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
   input.secure-data,
   .has-secure-data input {
     background-image: url("../img/theme/icon-form-secure@2x.png");
@@ -4533,14 +4533,14 @@ input.secure-data,
   }
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
 input.search-data,
 .has-search-data input {
   background-image: url("../img/theme/icon-form-search.png");
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 28 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\formIcons.styl */
   input.search-data,
   .has-search-data input {
     background-image: url("../img/theme/icon-form-search@2x.png");
@@ -4550,106 +4550,106 @@ input.search-data,
   }
 }
 
-/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-small.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-small.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 11 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 574 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 574 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
 
-/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
-/* line 11 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-small.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-small.styl */
 .DashboardSection-sidebarToggle {
   display: none;
 }
 
-/* line 32 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 139 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 139 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 11 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 574 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 574 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
 
-/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 65 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 65 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action,
 .next-action,
 .finish-action {
@@ -4675,7 +4675,7 @@ input.search-data,
   font-size: 1.2em;
 }
 
-/* line 25 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action:hover,
 .next-action:hover,
 .finish-action:hover {
@@ -4684,7 +4684,7 @@ input.search-data,
   background-color: #e95d0f;
 }
 
-/* line 50 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 50 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action:after,
 .next-action:after,
 .finish-action:after {
@@ -4702,7 +4702,7 @@ input.search-data,
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
   .begin-action:after,
   .next-action:after,
   .finish-action:after {
@@ -4713,32 +4713,32 @@ input.search-data,
   }
 }
 
-/* line 74 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 74 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .Actions {
   zoom: 1;
   display: block;
   clear: both;
 }
 
-/* line 23 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 .Actions:before,
 .Actions:after {
   content: "";
   display: table;
 }
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 .Actions:after {
   clear: both;
 }
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 16 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 16 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 17 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 17 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader.FileUploader--hideSuccess .qq-upload-success {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -4752,20 +4752,20 @@ input.search-data,
   margin: 0 !important;
 }
 
-/* line 25 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader.FileUploader--asSecondary {
   text-align: right;
 }
 
-/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 30 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 30 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-uploader {
   position: relative;
   width: 100%;
 }
 
-/* line 35 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-button {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -4790,18 +4790,18 @@ input.search-data,
   box-sizing: border-box;
 }
 
-/* line 25 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .FileUploader .FileUploader-uploader .qq-upload-button:hover {
   -webkit-box-shadow: 0 0 5px 2px #99c027;
   box-shadow: 0 0 5px 2px #99c027;
   background-color: #99c027;
 }
 
-/* line 43 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 43 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 44 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 44 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 46 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-drop-area {
   position: absolute;
   top: 0;
@@ -4814,7 +4814,7 @@ input.search-data,
   text-align: center;
 }
 
-/* line 56 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 56 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-drop-area span {
   display: block;
   position: absolute;
@@ -4824,12 +4824,12 @@ input.search-data,
   font-size: 16px;
 }
 
-/* line 65 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 65 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-drop-area-active {
   background: #ff7171;
 }
 
-/* line 69 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 69 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-list {
   padding: 0;
   list-style: disc;
@@ -4837,7 +4837,7 @@ input.search-data,
   overflow: auto;
 }
 
-/* line 75 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 75 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-list li {
   margin: 0;
   padding: 0;
@@ -4845,17 +4845,17 @@ input.search-data,
   font-size: 12px;
 }
 
-/* line 81 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 81 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-list li:first-child {
   margin-top: 10px;
 }
 
-/* line 85 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 85 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-list li:last-child {
   margin-bottom: 10px;
 }
 
-/* line 90 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 90 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-file,
 .FileUploader .FileUploader-uploader .qq-upload-spinner,
 .FileUploader .FileUploader-uploader .qq-upload-size,
@@ -4864,9 +4864,9 @@ input.search-data,
   margin-right: 7px;
 }
 
-/* line 94 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 94 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 95 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 95 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-spinner {
   display: inline-block;
   background: url("../img/theme/loading-mini.gif");
@@ -4875,36 +4875,36 @@ input.search-data,
   vertical-align: text-bottom;
 }
 
-/* line 102 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 102 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-size,
 .FileUploader .FileUploader-uploader .qq-upload-cancel {
   font-size: 11px;
 }
 
-/* line 106 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 106 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-failed-text {
   display: none;
 }
 
-/* line 109 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 109 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-uploader .qq-upload-fail .qq-upload-failed-text {
   display: inline;
 }
 
-/* line 114 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 114 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 
-/* line 115 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 115 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-editor .jcrop-holder {
   margin: 0 auto 1em;
 }
 
-/* line 119 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 119 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-editor > p {
   text-align: center;
   margin: 1em 0 0.5em;
 }
 
-/* line 124 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 124 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-editor .save-photo-action {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -4930,19 +4930,19 @@ input.search-data,
   text-align: center;
 }
 
-/* line 25 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .FileUploader .FileUploader-editor .save-photo-action:hover {
   -webkit-box-shadow: 0 0 5px 2px #e95d0f;
   box-shadow: 0 0 5px 2px #e95d0f;
   background-color: #e95d0f;
 }
 
-/* line 130 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 130 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-removal {
   margin-top: 1em;
 }
 
-/* line 134 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
+/* line 134 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\FileUploader.styl */
 .FileUploader .FileUploader-removal .remove-photo-action {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -4968,60 +4968,60 @@ input.search-data,
   text-align: center;
 }
 
-/* line 25 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .FileUploader .FileUploader-removal .remove-photo-action:hover {
   -webkit-box-shadow: 0 0 5px 2px #fc0404;
   box-shadow: 0 0 5px 2px #fc0404;
   background-color: #fc0404;
 }
 
-/* line 19 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
 
-/* line 14 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\border.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\clearfix.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\color-image.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\flex.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\gradients.styl */
 
-/* line 92 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\iconic.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\image.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\overflow.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\positions.styl */
 
-/* line 3 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\reset.styl */
 
-/* line 6 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\index.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\aliases.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
+/* line 2 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\ellipsis.styl */
 
-/* line 11 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\hide-text.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\replace-text.styl */
 
-/* line 1 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\text\shadow-stroke.styl */
 
-/* line undefined : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 574 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
+/* line 574 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\config.styl */
 
-/* line 12 : D:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\source\web\node_modules\nib\lib\nib\size.styl */
 
-/* line 29 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 8 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+/* line 8 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
 .HelpPoint {
   -webkit-border-radius: 100%;
   border-radius: 100%;
@@ -5038,17 +5038,17 @@ input.search-data,
   width: 1.3em;
 }
 
-/* line 23 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
 .HelpPoint.size-xl {
   font-size: 1.7em;
 }
 
-/* line 27 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
 .HelpPoint.size-lg {
   font-size: 1.3em;
 }
 
-/* line 31 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
 .HelpPoint.size-sm {
   font-size: 0.8em;
   line-height: 1.2em;
@@ -5056,7 +5056,7 @@ input.search-data,
   width: 1.2em;
 }
 
-/* line 38 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+/* line 38 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
 .HelpPoint.size-xs {
   font-size: 0.67em;
   line-height: 1.2em;
@@ -5064,12 +5064,12 @@ input.search-data,
   width: 1.2em;
 }
 
-/* line 48 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+/* line 48 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
 .has-HelpPoint {
   position: relative;
 }
 
-/* line 51 : D:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
+/* line 51 : d:\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\HelpPoint.styl */
 .has-HelpPoint > .HelpPoint {
   top: 50%;
   right: 0;

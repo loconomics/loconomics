@@ -1,3 +1,16 @@
-﻿@{
-    
+﻿@*
+    Pricing Types definition, with filtering per position
+*@
+@functions{
+    public class RestPricingTypes : RestWebPage
+    {
+        public override dynamic Post()
+        {
+ 	        LcAuthHelper.Logout();
+            return null;
+        }
+    }
+}
+@{   
+    new RestPricingTypes().JsonResponse(this);
 }
