@@ -28,7 +28,7 @@ $contentVGap = 6px;
     .ListView-item {
         position: relative;
         max-width: 100%;
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: 1px solid $gray-background;
         
         .ListView-item-marker,
         .ListView-item-content,
@@ -242,12 +242,12 @@ $markerWidthLarge = 64px;
             &.ListView-item--tag-{$color} {
                 &:before,
                 .ListView-item-tagged:before {
-                    border-right-color: $fg-colors[$color];
+                    border-right-color: $brand-colors[$color];
                 }
 
                 /* Labels affect to the action icon too */
                 .ListView-item-action {
-                    color: $fg-colors[$color];
+                    color: $brand-colors[$color];
                 }
             }
         }

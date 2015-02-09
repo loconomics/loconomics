@@ -1,48 +1,71 @@
 /**
     Variables from the styleguide, in Stylus format.
 
-    TODO: imcomplete manual list, must be automatic
+    TODO: imcomplete manual list, most of them must be automatic from Bootstrap,
+    some elements are manual (collection of colors, new 'secondary' semantic, ...).
 **/
 /* Grayscale colors */
 $gray-darker = #222;
 $gray-dark = #333;
 $gray = #555;
 $gray-light = #777;
-$gray-lighter = #EEE;
+$gray-lighter = #ccc;
+$gray-background = #EEE;
 $gray-colors = {
     darker: $gray-darker,
     dark: $gray-dark,
     gray: $gray,
     light: $gray-light,
-    lighter: $gray-lighter
+    lighter: $gray-lighter,
+    background: $gray-background
 };
 
 /* Semantic colors */
-$fg-primary = #00989A;
-$fg-success = #99C027;
-$fg-info = #B5E1E2;
-$fg-warning = #E95D0F;
-$fg-danger = #FC0404;
-$fg-colors = {
-    primary: $fg-primary,
-    success: $fg-success,
-    info: $fg-info,
-    warning: $fg-warning,
-    danger: $fg-danger
+$brand-primary = #00989A;
+$brand-secondary = #e0004f;
+$brand-success = #47b347;
+$brand-info = #5bc0de;
+$brand-warning = #f0ad4e;
+$brand-danger = #d9534f;
+$brand-colors = {
+    primary: $brand-primary,
+    secondary: $brand-secondary,
+    success: $brand-success,
+    info: $brand-info,
+    warning: $brand-warning,
+    danger: $brand-danger
 };
 
-/* Semantic colors used as background */
-$bg-primary = #00989A;
-$bg-success = #FFF;
-$bg-info = #FFF;
-$bg-warning = #FFF;
-$bg-danger = #FFF;
-$bg-colors = {
-    primary: $bg-primary,
-    success: $bg-success,
-    info: $bg-info,
-    warning: $bg-warning,
-    danger: $bg-danger
+/* Semantic colors used as background (lighter than the base) */
+$brand-primary-background = #e5f4f5;
+$brand-secondary-background = #fce5ed;
+$brand-success-background = #ecf7ec;
+$brand-info-background = #eef9fc;
+$brand-warning-background = #fdf7ed;
+$brand-danger-background = #fbeded;
+$brand-colors-background = {
+    primary: $brand-primary-background,
+    secondary: $brand-secondary-background,
+    success: $brand-success-background,
+    info: $brand-success-background,
+    warning: $brand-success-background,
+    danger: $brand-success-background
+};
+
+/* Semantic dark colors (darker than base) */
+$brand-primary-dark = #006c6c;
+$brand-secondary-dark = #9e0038;
+$brand-success-dark = #47b347;
+$brand-info-dark = #5bc0de;
+$brand-warning-dark = #c09853;
+$brand-danger-dark = #b94a48;
+$brand-colors-dark = {
+    primary: $brand-primary-dark,
+    secondary: $brand-secondary-dark,
+    success: $brand-success-dark,
+    info: $brand-success-dark,
+    warning: $brand-success-dark,
+    danger: $brand-success-dark
 };
 
 /** Typo **/
