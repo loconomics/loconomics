@@ -38,8 +38,8 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="AppNav container-fluid">
         <div class="row">
-          <div class="col-xs-3 text-left navbar-action">
-            <a class="btn btn-default" href="#" data-bind="visible: navAction(), attr: { href: navAction() && navAction().link }"><span data-bind="attr: { 'class': navAction() && navAction().icon }" class="glyphicon"></span></a>
+          <div class="col-xs-3 text-left navbar-action" data-bind="with: navAction">
+            <a class="btn btn-default" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }"><span data-bind="attr: { 'class': icon }" class="glyphicon"></span></a>
           </div>
           <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
           <div class="col-xs-3 text-right" data-bind="css: { 'navbar-action': status() !== 'in' }">

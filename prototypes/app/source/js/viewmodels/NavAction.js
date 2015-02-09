@@ -10,11 +10,41 @@ function NavAction(values) {
     
     this.model.defProperties({
         link: '',
-        icon: ''
+        icon: '',
+        // 'Link' is the element ID of a modal (starts with a #)
+        isModal: false,
+        // 'Link' is a Shell command, like 'goBack 2'
+        isShell: false
     }, values);
 }
 
 module.exports = NavAction;
+
+// Set of view utilities to get the link for the expected html attributes
+
+NavAction.prototype.getHref = function getHref() {
+    return (
+        (this.isModal() || this.isShell()) ?
+        '#' :
+        this.link()
+    );
+};
+
+NavAction.prototype.getModalTarget = function getModalTarget() {
+    return (
+        (!this.isModal() || this.isShell()) ?
+        '' :
+        this.link()
+    );
+};
+
+NavAction.prototype.getShellCommand = function getShellCommand() {
+    return (
+        (!this.isShell()) ?
+        '' :
+        this.link()
+    );
+};
 
 /** Static, shared actions **/
 NavAction.goHome = new NavAction({
@@ -23,16 +53,19 @@ NavAction.goHome = new NavAction({
 });
 
 NavAction.goBack = new NavAction({
-    link: '#!go-back',
-    icon: 'glyphicon glyphicon-arrow-left'
+    link: 'goBack',
+    icon: 'glyphicon glyphicon-arrow-left',
+    isShell: true
 });
 
 NavAction.newItem = new NavAction({
-    link: '#!new',
-    icon: 'glyphicon glyphicon-plus'
+    link: '#newItem',
+    icon: 'glyphicon glyphicon-plus',
+    isModal: true
 });
 
 NavAction.newCalendarItem = new NavAction({
-    link: '#!calendar/new',
-    icon: 'glyphicon glyphicon-plus'
+    link: '#calendarChooseNew',
+    icon: 'glyphicon glyphicon-plus',
+    isModal: true
 });

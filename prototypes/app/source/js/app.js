@@ -175,7 +175,7 @@ var appInit = function appInit() {
             cmd = args[0];
 
         if (cmd && typeof(app.shell[cmd]) === 'function') {
-            app.shell[cmd].apply(cmd, args.slice(1));
+            app.shell[cmd].apply(app.shell, args.slice(1));
         }
     });
     

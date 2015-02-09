@@ -23,7 +23,7 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="AppNav container-fluid">
         <div class="row">
-          <div class="col-xs-3 text-left navbar-action"> <a class="btn btn-default" href="#" data-bind="visible: navAction(), attr: { href: navAction() && navAction().link }"><span data-bind="attr: { 'class': navAction() && navAction().icon }" class="glyphicon"></span></a>
+          <div class="col-xs-3 text-left navbar-action" data-bind="with: navAction"> <a class="btn btn-default" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }"><span data-bind="attr: { 'class': icon }" class="glyphicon"></span></a>
 
           </div>
           <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a>
@@ -84,6 +84,30 @@
             class="btn btn-block btn-default" href="#!calendar/new/event">Calendar Event</a>
               <button type="button" class="btn btn-block btn-danger"
               data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal newItem -->
+    <div id="newItem" class="modal" tabindex="-1" role="dialog" aria-labelledby="newItemLabel"
+    aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+             <h4 class="modal-title" id="newItemLabel">Create a new...</h4>
+
+          </div>
+          <div class="modal-body"> <a class="btn btn-block btn-default" href="#!calendar/new/booking">Booking</a>
+
+            <a
+            class="btn btn-block btn-default" href="#!calendar/new/event">Calendar Event</a> <a class="btn btn-block btn-default" href="#!calendar/new/event">Another not implemented thing</a>
+
+              <a
+              class="btn btn-block btn-default" href="#!calendar/new/event">This will be a dropdown not a modal per styleguide</a>
+                <button type="button"
+                class="btn btn-block btn-danger" data-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
@@ -375,7 +399,7 @@
 
         </div>
       </div>
-       <h1 class="SectionTitle has-HelpPoint">Inbox <a href="#" class="HelpPoint size-lg" data-bind="attr: { 'data-content': 'Showing your latest ' + inbox.topNumber() + ' messages.' }" data-placement="left">?</a></h1>
+       <h1 class="SectionTitle has-HelpPoint">Inbox</h1>
 
       <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
       data-bind="foreach: inbox.top()">
@@ -392,7 +416,7 @@
             </a>
         </div>
       </div>
-       <h1 class="SectionTitle has-HelpPoint">Performance <a href="#" class="HelpPoint size-lg" data-content="Some help text." data-placement="left">?</a></h1>
+       <h1 class="SectionTitle has-HelpPoint">Performance</h1>
 
       <div id="homePerformance" class="ListView ListView--twolines ListView--textualmarker ListView--largemarker"
       data-bind="foreach: performance.items">
