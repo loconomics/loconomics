@@ -66,6 +66,10 @@ function LoginActivity($activity, app) {
                 this.dataView.loginError('');
                 ended();
                 
+                // Remove form data
+                this.dataView.username('');
+                this.dataView.password('');
+                
                 this.app.goDashboard();
 
             }.bind(this)).catch(function() {

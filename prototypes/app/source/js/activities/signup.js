@@ -65,12 +65,7 @@ SignupActivity.prototype.show = function show(options) {
 
 // TODO: remove after implement real login
 function fakeSignup(app) {
-    app.model.user({ // new User({}
-        email: ko.observable('test@loconomics.com'),
-        firstName: ko.observable('Username'),
-        onboardingStep: ko.observable(null),
-        userType: ko.observable('p')
-    });
+    app.model.user.model().updateWith(app.model.user().constructor.newAnonymous());
 }
 
 function ViewModel() {

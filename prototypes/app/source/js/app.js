@@ -203,12 +203,16 @@ var appInit = function appInit() {
     }, $('.AppNav').get(0));
 
     // App init:
-    app.model.init().then(
-        app.shell.run.bind(app.shell)
-    ).then(function() {
+    var alertError = function(err) {
+        window.alert('There was an error loading: ' + err && err.message || err);
+    };
+
+    app.model.init()
+    .then(app.shell.run.bind(app.shell), alertError)
+    .then(function() {
         // Mark the page as ready
         $('html').addClass('is-ready');
-    });
+    }, alertError);
 
     // DEBUG
     window.app = app;

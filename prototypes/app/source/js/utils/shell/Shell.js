@@ -183,7 +183,7 @@ Shell.prototype.replace = function replace(state) {
     }
     
     // Access control
-    var accessError = this.accessControl(state);
+    var accessError = this.accessControl(state.route);
     if (accessError) {
         return this.go(this.nonAccessName, accessError);
     }

@@ -45,26 +45,60 @@ AppModel.prototype.init = function init() {
         description : 'Loconomics App',
         driver: localforage.LOCALSTORAGE
     });
-    
-    // Get user data from the cached profile if any
-    // (will be updated later
-    // with a new login attempt)
-    localforage.getItem('profile').then(function(profile) {
-        if (profile) {
-            // Set user data
-            this.user().model.updateWith(profile);
-        }
-    }.bind(this));
 
-    // First attempt to login from saved credentials
+    // Initialize: check the user has login data and needed
+    // cached data
     return new Promise(function(resolve, reject) {
-        // We just want to check if can get logged.
-        // Any result, just return success:
-        this.tryLogin().then(resolve, function(doesnMatter){
-            // just resolve without error (passing in the error
-            // will make the process to fail)
+
+        // Callback to just resolve without error (passing in the error
+        // to the 'resolve' will make the process to fail),
+        // since we don't need to create an error for the
+        // app init, if there is not enough saved information
+        // the app has code to request a login.
+        var resolveAnyway = function(doesnMatter){        
+            console.warning('App Model Init err', doesnMatter);
             resolve();
-        });
+        };
+        
+        // If there are credentials saved
+        localforage.getItem('credentials').then(function(credentials) {
+
+            if (credentials &&
+                credentials.userID &&
+                credentials.username &&
+                credentials.authKey) {
+
+                // use authorization key for each
+                // new Rest request
+                this.rest.extraHeaders = {
+                    alu: credentials.userID,
+                    alk: credentials.authKey
+                };
+                
+                // It has credentials! Has basic profile data?
+                localforage.getItem('profile').then(function(profile) {
+                    if (profile) {
+                        // Set user data
+                        this.user().model.updateWith(profile);
+                        // End succesfully
+                        resolve();
+                    }
+                    else {
+                        // No profile, we need to request it to be able
+                        // to work correctly, so we
+                        // attempt a login (the tryLogin process performs
+                        // a login with the saved credentials and fetch
+                        // the profile to save it in the local copy)
+                        this.tryLogin().then(resolve, resolveAnyway);
+                    }
+                }.bind(this), resolveAnyway);
+            }
+            else {
+                // End successfully. Not loggin is not an error,
+                // is just the first app start-up
+                resolve();
+            }
+        }.bind(this), resolveAnyway);
     }.bind(this));
 };
 
@@ -89,7 +123,10 @@ AppModel.prototype.tryLogin = function tryLogin() {
 };
 
 AppModel.prototype.login = function login(username, password) {
-        
+
+    // Reset the extra headers to attempt the login
+    this.rest.extraHeaders = null;
+
     return this.rest.post('login', {
         username: username,
         password: password,
@@ -107,7 +144,8 @@ AppModel.prototype.login = function login(username, password) {
         localforage.setItem('credentials', {
             userID: logged.userId,
             username: username,
-            password: password
+            password: password,
+            authKey: logged.authKey
         });
         localforage.setItem('profile', logged.profile);
 
@@ -119,12 +157,16 @@ AppModel.prototype.login = function login(username, password) {
 };
 
 AppModel.prototype.logout = function logout() {
-        
-    return this.rest.post('logout').then(function() {
 
-        this.rest.extraHeaders = null;
-        localforage.removeItem('credentials');
-    }.bind(this));
+    // Local app close session
+    this.rest.extraHeaders = null;
+    localforage.removeItem('credentials');
+    localforage.removeItem('profile');
+    
+    // Don't need to wait the result of the REST operation
+    this.rest.post('logout');
+    
+    return Promise.resolve();
 };
 
 AppModel.prototype.getUpcomingBookings = function getUpcomingBookings() {
