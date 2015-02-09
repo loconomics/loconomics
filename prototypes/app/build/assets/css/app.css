@@ -3,6 +3,9 @@
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* core */
+
 /* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
 
 /* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\border.styl */
@@ -49,7 +52,73 @@
 
 /* line 16 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
-/* line 76 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\appVars.styl */
+/* line 76 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
+
+/* line 15 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+.btn-secondary {
+  color: #fff;
+  background-color: #e0004f;
+  border-color: #d5004b;
+}
+
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary.focus,
+.btn-secondary:active,
+.btn-secondary.active,
+.open > .dropdown-toggle.btn-secondary {
+  color: #fff;
+  background-color: #ca0047;
+  border-color: #bb0042;
+}
+
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
+.btn-secondary:active,
+.btn-secondary.active,
+.open > .dropdown-toggle.btn-secondary {
+  background-image: none;
+}
+
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
+
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
+.btn-secondary.disabled,
+.btn-secondary[disabled],
+fieldset[disabled] .btn-secondary,
+.btn-secondary.disabled:hover,
+.btn-secondary[disabled]:hover,
+fieldset[disabled] .btn-secondary:hover,
+.btn-secondary.disabled:focus,
+.btn-secondary[disabled]:focus,
+fieldset[disabled] .btn-secondary:focus,
+.btn-secondary.disabled.focus,
+.btn-secondary[disabled].focus,
+fieldset[disabled] .btn-secondary.focus,
+.btn-secondary.disabled:active,
+.btn-secondary[disabled]:active,
+fieldset[disabled] .btn-secondary:active,
+.btn-secondary.disabled.active,
+.btn-secondary[disabled].active,
+fieldset[disabled] .btn-secondary.active {
+  background-color: #e0004f;
+  border-color: #d5004b;
+}
+
+/* line 15 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
+.btn-secondary .badge {
+  color: #e0004f;
+  background-color: #fff;
+}
+
+/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* app */
+
+/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\appVars.styl */
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
@@ -176,7 +245,7 @@
   background: rgba(0,0,0,0.4);
 }
 
-/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Utilities styles **/
 
 /* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
@@ -188,7 +257,7 @@
   display: block;
 }
 
-/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
@@ -1297,7 +1366,7 @@
   margin: 0 -10px 0 -10px;
 }
 
-/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */

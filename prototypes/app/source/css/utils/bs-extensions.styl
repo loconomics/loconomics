@@ -1,0 +1,17 @@
+/**
+    Styles, classes and mixims that
+    extends the Bootstrap core or replace some
+    not 'customizable' pieces.
+**/
+
+@import 'styleguideVars.styl'
+
+// Added a new semantic color, 'secondary', 
+// create the button for that
+@import '../../../vendor/bootstrap/styl/mixins/buttons.styl'
+$btn-secondary-color = #fff
+$btn-secondary-bg = $brand-secondary
+$btn-secondary-border = darken($btn-secondary-bg, 5%)
+.btn-secondary {
+    button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
+}
