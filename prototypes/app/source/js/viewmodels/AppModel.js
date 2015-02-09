@@ -141,4 +141,4 @@ module.exports = AppModel;
 // but keeping access to the common set of methods and objects easy with
 // the same class.
 // Loading extensions/partials:
-require('./AppModel-events')(AppModel);
+require('./AppModel-events').extends(AppModel);

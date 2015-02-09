@@ -216,10 +216,16 @@ var appInit = function appInit() {
 
 // App init on page ready and phonegap ready
 if (window.cordova) {
+    // On DOM-Ready first
     $(function() {
         // Page is ready, device is too?
+        // Note: Cordova ensures to call the handler even if the
+        // event was already fired, so is good to do it inside
+        // the dom-ready and we are ensuring that everything is
+        // ready.
         $(document).on('deviceready', appInit);
     });
 } else {
+    // Only on DOM-Ready, for in browser development
     $(appInit);
 }

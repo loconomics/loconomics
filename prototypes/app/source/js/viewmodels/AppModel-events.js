@@ -5,7 +5,7 @@
 var CalendarEvent = require('../models/CalendarEvent'),
     apiHelper = require('../utils/apiHelper');
 
-module.exports = function (AppModel) {
+exports.extends = function (AppModel) {
     
     apiHelper.defineCrudApiForRest({
         extendedObject: AppModel.prototype,
