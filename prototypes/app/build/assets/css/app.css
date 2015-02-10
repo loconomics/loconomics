@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2015-02-09
+/*! LoconomicsAppProto 2015-02-10
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -52,7 +52,7 @@
 
 /* line 16 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
-/* line 76 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 79 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
 /* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
@@ -1366,10 +1366,163 @@ fieldset[disabled] .btn-secondary.active {
   margin: 0 -10px 0 -10px;
 }
 
-/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
+
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\border.styl */
+
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\flex.styl */
+
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\image.styl */
+
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 578 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
+
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar {
+  position: absolute;
+  top: 0;
+  height: 44px;
+  line-height: 44px;
+  width: 100%;
+  padding-top: 0;
+  background-color: White;
+  background-image: -webkit-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+  background-image: -moz-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+  background-image: -o-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+  background-image: -ms-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+  background-image: linear-gradient(0deg, #eee, #eee 50%, transparent 50%);
+  -webkit-background-size: 100% 1px;
+  -moz-background-size: 100% 1px;
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  z-index: 10;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar button {
+/* Fix for Chrome and Firefox OS on button element */
+  background: transparent;
+  position: absolute;
+  top: 0;
+  display: inline-block;
+  color: #e0004f;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  font-weight: 300;
+  height: 44px;
+  line-height: 44px;
+  -o-text-overflow: ellipsis !important;
+  text-overflow: ellipsis !important;
+/* why so !important ? */
+  max-width: 140px;
+  font-size: 15px;
+}
+
+/* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar button:focus {
+  outline: 0;
+}
+
+/* line 69 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar button:active {
+  opacity: 0.3;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=30);
+}
+
+/* line 73 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar button.bold {
+  font-weight: 500;
+}
+
+/* line 77 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar button.disabled {
+  color: #777;
+}
+
+/* line 81 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar button.left {
+  left: 0;
+  padding-left: 10px;
+}
+
+/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar button.right {
+  right: 0;
+  text-align: right;
+  padding-right: 10px;
+}
+
+/* line 95 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar button h1 {
+  color: #333;
+  font-size: 15px;
+  display: inline;
+  margin: 0 0.6em;
+}
+
+/* line 106 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar h1 {
+  color: #333;
+  display: block;
+  padding: 0;
+  font-size: 17px;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  text-align: center;
+  overflow: hidden;
+  box-flex: 1;
+  margin: 0 65px;
+  font-weight: 500;
+  line-height: 44px;
+}
+
+/* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 54 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

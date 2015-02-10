@@ -1,0 +1,447 @@
+/**
+    SmartNavView component, and subcomponents.
+    SmartNavView acts as container for  SmartNavBar
+    and SmartNavContent.
+
+    A navigation view and bar following the Styleguide and
+    the design lines of iOS-7.
+
+    Three areas, two buttons on both sides and a centered title
+    with state to link views.
+    Smooth transitions.
+
+    Adapted to Stylus syntax and class names.
+
+    IMPORTANT: Buggy, transitions not working and state change executes with delay.
+    
+    Forked from the project:
+    
+    Project-Tyson
+    Website: https://github.com/c2prods/Project-Tyson
+    Author: c2prods
+    License:
+    The MIT License (MIT)
+    Copyright (c) 2013 c2prods
+    Permission is hereby granted, free of charge, to any person obtaining a copy of
+    this software and associated documentation files (the "Software"), to deal in
+    the Software without restriction, including without limitation the rights to
+    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+    the Software, and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+**/
+
+@import 'nib';
+
+$SmartNavBar-height = 44px;
+
+/* Animations */
+// SL
+@keyframes slin-scroll {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+@keyframes slin-scrollMask {
+    from { transform: translateX(100%); box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.2); }
+    to { transform: translateX(0); box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.02); }
+}
+@keyframes slin-textbox {
+    from { transform: translateX(60%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slin-left-nav-btn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+@keyframes slout-left-nav-btn {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
+@keyframes slout-textbox {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-40%); opacity: 0; }
+}
+@keyframes slout-scroll {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-25%); opacity: 0.9; }
+}
+// Fades
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes fadeout {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+// SR
+@keyframes srout-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+}
+@keyframes srout-scrollMask {
+    from { transform: translateX(0); -webkit-box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.02); }
+    to { transform: translateX(100%); -webkit-box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.2); }
+}
+@keyframes srout-textbox {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(60%); opacity: 0; }
+}
+@keyframes srout-left-nav-btn {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+@keyframes srin-left-nav-btn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+@keyframes srin-textbox {
+    from { transform: translateX(-50%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+@keyframes srin-scroll {
+    from { transform: translateX(-25%); opacity: 0.9; }
+    to { transform: translateX(0); opacity: 1; }
+}
+// Popin
+@keyframes popin {
+    from { transform: translateY(100%); /* opacity: 1; */ }
+    to { transform: translateY(0); /* opacity: 0; */ }
+}
+// Popout
+@keyframes popout {
+    from { transform: translateY(0); /* opacity: 1; */ }
+    to { transform: translateY(100%); /* opacity: 0; */ }
+}
+// Noanim
+@keyframes noanim {
+    from { opacity: 1; }
+    to { opacity: 1; }
+}
+
+SmartNavBar-reset() {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+
+    /* Fix for Chrome and Firefox OS on button element */
+    background: transparent; 
+    
+    &:focus {
+        outline: 0;
+    }
+}
+
+.SmartNavBar {
+
+    position: absolute;
+    top:0;
+    height: $SmartNavBar-height;
+    line-height: $SmartNavBar-height;
+    width: 100%;
+    padding-top: 0;
+    background-color: rgba(248, 248, 248, 0.9);
+    background-image: linear-gradient(0deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    z-index: 10;
+    user-select: none;
+    -webkit-touch-callout: none;
+
+    button {
+        SmartNavBar-reset();
+        
+        position: absolute;
+        top: 0;
+        display: inline-block;
+        font-size: 17px;
+        color: rgb(21, 125, 251);
+        padding: 0;
+        font-weight: 300;
+        height: $SmartNavBar-height;
+        line-height: $SmartNavBar-height;
+        text-overflow: ellipsis !important; /* why so !important ? */
+        max-width: 140px;
+        
+        > .label {
+            color: inherit;
+        }
+    }
+    button:active {
+        opacity: 0.3;
+    }
+    
+    button.bold {
+        font-weight: 500;
+    }
+    
+    button.disabled {
+        color:rgb(200, 199, 204);
+    }
+    
+    button.arrow {
+        background-size: 24px $SmartNavBar-height;
+        background-repeat: no-repeat;
+    }
+    button.left {
+        left:0;
+        padding-left: 9px;
+    }
+    
+    button.left.arrow {
+        padding-left: 23px;
+        // change image
+        background-image: url(../img/backBtn.svg);
+        background-position: left bottom;
+    }
+    
+    button.right {
+        right:0;
+        text-align: right;
+        padding-right: 9px;
+    }
+    button.right.arrow {
+        padding-right: 23px;
+        // change image
+        background-image: url(../img/nextBtn.svg);
+        background-position: right bottom;
+    }
+    
+    h1 {
+        display: block;
+        padding: 0;
+        font-size: 17px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-align: center;
+        overflow: hidden;
+        box-flex: 1;
+        margin: 0 65px;
+        font-weight: 500;
+        line-height: $SmartNavBar-height;
+    }
+}
+
+.SmartNavView {
+    
+    /** Animations **/
+    
+    &.slin,
+    &.srin,
+    &.slout,
+    &.srout,
+    &.popin,
+    &.popout,
+    &.noanim {
+        pointer-events: none;
+    }
+    
+    &.noanim {
+        animation-name: noanim;
+    }
+    
+    &, 
+    .scroll,
+    .scrollMask,
+    .SmartNavBar button,
+    h1,
+    .SmartNavBar button .label {
+        animation-fill-mode: forwards;
+        animation-duration: 400ms;
+    }
+    
+    &,
+    .scroll,
+    .scrollMask,
+    h1,
+    .SmartNavBar button .label {
+        animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+    }
+    
+    &.slin .SmartNavBar button,
+    &.srin .SmartNavBar button {
+        animation-timing-function: cubic-bezier(.6, .1, .3, 1);
+    }
+    
+    &.slout .SmartNavBar button,
+    &.srout .SmartNavBar button {
+        animation-timing-function: cubic-bezier(.1, 1, .1, 1);
+    }
+    &.slin .scroll {
+        animation-name: slin-scroll;
+    }
+    
+    &.slin .scrollMask {
+        animation-name: slin-scrollMask;
+    }
+    &.slin h1 {
+        animation-name: slin-textbox;
+    }
+    &.slin .SmartNavBar button {
+        animation-name: fadein;
+    }
+    &.slin .SmartNavBar button.left.arrow .label {
+        animation-name: slin-left-nav-btn;
+    }
+    &.slin .SmartNavBar,
+    &.slin .scroll {
+        background-color: transparent;
+    }
+    &.slout .SmartNavBar button {
+        animation-name: fadeout;
+    }
+    &.slout .SmartNavBar button.left.arrow .label {
+        animation-name: slout-left-nav-btn;
+    }
+    &.slout h1 {
+        animation-name: slout-textbox;
+    }
+    &.slout .scroll,
+    &.slout .scrollMask {
+        animation-name: slout-scroll;
+    }
+
+    &.srout .scroll {
+        animation-name: srout-scroll;
+    }
+    &.srout .scrollMask {
+        animation-name: srout-scrollMask;
+    }
+    &.srout h1 {
+        animation-name: srout-textbox;
+    }
+    &.srout .SmartNavBar button {
+        animation-name: fadeout;
+    }
+    &.srout .SmartNavBar button.left.arrow .label {
+        animation-name: srout-left-nav-btn;
+    }
+    &.srout .SmartNavBar, .srout .scroll {
+        background-color: transparent;
+    }
+    &.srin .SmartNavBar button {
+        animation-name: fadein;
+    }
+    &.srin .SmartNavBar button.left.arrow .label {
+        animation-name: srin-left-nav-btn;
+    }
+    &.srin h1 {
+        animation-name: srin-textbox;
+    }
+    &.srin .scroll,
+    &.srin .scrollMask {
+        animation-name: srin-scroll;
+    }
+    
+    &.popin {
+        animation-name: popin;
+    }
+    &.popout {
+        animation-name: popout;
+    }
+    
+    &.slin .scrollMask,
+    &.srout .scrollMask {
+        z-index: 5;
+    }
+    &.slin .scrollWrap,
+    &.srout .scrollWrap {
+        z-index: 6;
+    }
+    
+    &.slout .scrollMask,
+    &.srin .scrollMask {
+        background-color: #000;
+    }
+    
+    /** Scroll layers **/
+    .scrollWrap {
+        position: absolute;
+        top: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+    .scroll {
+        width: 100%;
+        padding-right: 20px;
+        height: 100%;
+        background-color: rgb(255, 255, 255);
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+        z-index: 1;
+        opacity: 1;
+    }
+    .scrollMask {
+        width: 100%;
+        position: absolute;
+        top: $SmartNavBar-height;
+        bottom: 0;
+        background-color: rgb(255, 255, 255);
+        box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.SmartNavContent {
+	position: fixed;
+    width: 100%;
+    height: 100%;
+
+    // Left space for the SmartNavBar
+    margin-top: $SmartNavBar-height;
+}
+
+/* Tabbar */
+.SmartNavTabs {
+
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 49px;
+    text-align: center;
+    background-color: rgba(248, 248, 248, 0.9);
+    background-image: linear-gradient(180deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: top center;
+    z-index: 100;
+    
+    button {
+        display: inline-block;
+        width: 64px;
+        text-align: center;
+        font-size: 10px;
+        line-height: 1em;
+        padding: 6px 0 0 0;
+        margin: 0;
+        color: rgb(111, 111, 116);
+    }
+    button.active {
+        color:rgb(21, 125, 251);
+    }
+    button .btn-icon {
+        display: inline-block;
+        background-color: rgb(111, 111, 116);
+        height: 24px;
+        width: 24px;
+        margin-bottom: 2px;
+    }
+    button.active .btn-icon {
+        background-color:rgb(21, 125, 251);
+    }
+}

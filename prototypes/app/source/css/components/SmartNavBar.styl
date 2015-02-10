@@ -1,0 +1,120 @@
+/**
+    SmartNavBar component.
+
+    A navigation bar following
+    the design lines of iOS-7 adapted for 
+    Loconomics App Styleguide.
+
+    Three areas: two buttons on both sides with optional labels
+    and a centered title.
+
+    Based on code from the project: https://github.com/c2prods/Project-Tyson
+**/
+
+@import 'nib';
+
+$SmartNavBar-height = 44px;
+$SmartNavBar-lateralGap = $container-padding-left; //9px;
+$SmartNavBar-headerFontSize = 17px;
+$SmartNavBar-buttonFontSize = 15px;
+$SmartNavBar-buttonHeaderFontSize = 15px;
+$SmartNavBar-bgColor = White; //rgba(248, 248, 248, 0.9);
+$SmartNavBar-borderColor = $gray-lighter; //rgb(200, 199, 204);
+$SmartNavBar-buttonColor = $brand-secondary; // rgb(21, 125, 251);
+$SmartNavBar-headerColor = $gray-dark; //Black;
+$SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
+
+.SmartNavBar {
+
+    position: absolute;
+    top: 0;
+    height: $SmartNavBar-height;
+    line-height: $SmartNavBar-height;
+    width: 100%;
+    padding-top: 0;
+    background-color: $SmartNavBar-bgColor;
+    // Creating the bottom-border with a gradient to avoid
+    // problem with Retina screens doubling the 1px border.
+    background-image: linear-gradient(0deg, $SmartNavBar-borderColor, $SmartNavBar-borderColor 50%, transparent 50%);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    z-index: 10;
+    user-select: none;
+    -webkit-touch-callout: none;
+
+    button {
+        /* Fix for Chrome and Firefox OS on button element */
+        background: transparent; 
+
+        &:focus {
+            outline: 0;
+        }
+        
+        position: absolute;
+        top: 0;
+        display: inline-block;
+        color: $SmartNavBar-buttonColor;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        outline: 0;
+        font-weight: 300;
+        height: $SmartNavBar-height;
+        line-height: $SmartNavBar-height;
+        text-overflow: ellipsis !important; /* why so !important ? */
+        max-width: 140px;
+        font-size: $SmartNavBar-buttonFontSize;
+
+        &:active {
+            opacity: 0.3;
+        }
+    
+        &.bold {
+            font-weight: 500;
+        }
+
+        &.disabled {
+            color: $SmartNavBar-disabledButtonColor;
+        }
+    
+        &.left {
+            left: 0;
+            padding-left: $SmartNavBar-lateralGap;
+        }
+    
+        &.right {
+            right: 0;
+            text-align: right;
+            padding-right: $SmartNavBar-lateralGap;
+        }
+        
+        // the button can contain a title, used normally when
+        // the button label content replace the centered title
+        // so the style must show different on that cases
+        h1 {
+            color: $SmartNavBar-headerColor;
+            font-size: $SmartNavBar-buttonHeaderFontSize;
+            display: inline;
+            // Headers here are expected to go along
+            // an icon, so give some space to avoid collision
+            margin: 0 .6em;
+        }
+
+    }
+        
+    h1 {
+        color: $SmartNavBar-headerColor;
+        display: block;
+        padding: 0;
+        font-size: $SmartNavBar-headerFontSize;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-align: center;
+        overflow: hidden;
+        box-flex: 1;
+        margin: 0 65px;
+        font-weight: 500;
+        line-height: $SmartNavBar-height;
+    }
+}

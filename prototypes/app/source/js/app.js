@@ -206,6 +206,18 @@ var appInit = function appInit() {
     var alertError = function(err) {
         window.alert('There was an error loading: ' + err && err.message || err);
     };
+    
+    var SmartNavBar = require('./components/SmartNavBar');
+    var navBars = SmartNavBar.getAll();
+    // Creates an event by listening to it, so other scripts can trigger
+    // a 'contentChange' event to force a refresh of the navbar (to 
+    // calculate and apply a new size); expected from dynamic navbars
+    // that change it content based on observables.
+    navBars.forEach(function(navbar) {
+        navbar.el.on('contentChange', function() {
+            navbar.refresh();
+        });
+    });
 
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)
