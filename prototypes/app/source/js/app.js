@@ -214,7 +214,7 @@ var appInit = function appInit() {
     // calculate and apply a new size); expected from dynamic navbars
     // that change it content based on observables.
     navBars.forEach(function(navbar) {
-        navbar.el.on('contentChange', function() {
+        $(navbar.el).on('contentChange', function() {
             navbar.refresh();
         });
     });

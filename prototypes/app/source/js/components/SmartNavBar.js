@@ -25,8 +25,7 @@
     IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-var $ = function (query) { return document.querySelector(query); };
-var $$ = function (query) { return document.querySelectorAll(query); };
+var $ = require('jquery');
 
 /**
     Internal utility.
@@ -99,10 +98,10 @@ var SmartNavBar = function SmartNavBar(el) {
     this.el = el;
     
     this.refresh = function refresh() {
-        textboxResize(el.querySelector('>h1'));
+        textboxResize($(el).children('h1').get(0));
     };
 
-    this.refresh();
+    this.refresh(); 
 };
 
 exports.SmartNavBar = SmartNavBar;
@@ -111,14 +110,13 @@ exports.SmartNavBar = SmartNavBar;
     Get instances for all the SmartNavBar elements in the DOM
 **/
 exports.getAll = function getAll() {
-    var all = Array.prototype.slice.call($$('.SmartNavBar'));
-    return all.map(function(item) { return new SmartNavBar(item); });
+    var all = $('.SmartNavBar');
+    return $.map(all, function(item) { return new SmartNavBar(item); });
 };
 
 /**
     Refresh all SmartNavBar found in the document.
 **/
 exports.refreshAll = function refreshAll() {
-    var textboxes = $$('.SmartNavBar > h1');
-    for (var i = 0, l = textboxes.length; i < l; i++) textboxResize(textboxes[i]);
+    $('.SmartNavBar > h1').each(function() { textboxResize(this); });
 };

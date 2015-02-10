@@ -21,6 +21,10 @@
                 margin: 10px 0;
                 height: 45px;
             }
+            
+            .menus {
+                background: White;
+            }
         </style>
         
         <script src="../build/assets/js/styleguidelibs.js"></script>
@@ -71,6 +75,35 @@
             </button>
         </header>
       </div>
+      <div class="context">
+        <header class="SmartNavBar">
+            <button class="left btn btn-link">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            <h1></h1>
+            <button type="button" class="navbar-toggle collapsed right" data-toggle="collapse" data-target="#menuIn" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+        </header>
+      </div>
+      
+    <div class="menus">
+        <div id="menuIn" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="go-home"><a href="/home">Dashboard</a></li>
+            <li class="go-calendar"><a href="/calendar">Calendar</a></li>
+            <li class="go-inbox"><a href="/inbox">Inbox</a></li>
+            <li class="go-clients"><a href="/clients">Clients</a></li>
+            <li class="go-payments"><a href="/payments">Payments</a></li>
+            <li class="go-services"><a href="/services">Services</a></li>
+            <li class="go-account"><a href="/account">Account</a></li>
+            <li class="go-logout"><a href="/logout">Logout</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+    </div>
  
     <div class="container-fluid" data-activity="index">
         <h3>A</h3>

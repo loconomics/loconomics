@@ -80,13 +80,19 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     
         &.left {
             left: 0;
-            padding-left: $SmartNavBar-lateralGap;
+            // Padding on both sides, not just the left,
+            // so the button is easier to press and there is
+            // a gap with the header/title in case is too big
+            padding: 0 $SmartNavBar-lateralGap;
         }
     
         &.right {
             right: 0;
             text-align: right;
-            padding-right: $SmartNavBar-lateralGap;
+            // Padding on both sides, not just the right,
+            // so the button is easier to press and there is
+            // a gap with the header/title in case is too big
+            padding: 0 $SmartNavBar-lateralGap;
         }
         
         // the button can contain a title, used normally when
@@ -116,5 +122,10 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
         margin: 0 65px;
         font-weight: 500;
         line-height: $SmartNavBar-height;
+    }
+    
+    // Support for Bootstrap menu button
+    .navbar-toggle .icon-bar {
+        background-color: $SmartNavBar-buttonColor;
     }
 }
