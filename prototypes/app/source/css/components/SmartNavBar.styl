@@ -13,7 +13,7 @@
 
 @import 'nib';
 
-$SmartNavBar-height = 44px;
+$SmartNavBar-height = $app-navbar-height;
 $SmartNavBar-lateralGap = $container-padding-left; //9px;
 $SmartNavBar-headerFontSize = 17px;
 $SmartNavBar-buttonFontSize = 15px;
@@ -39,18 +39,18 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     background-size: 100% 1px;
     background-repeat: no-repeat;
     background-position: bottom;
-    z-index: 10;
+    z-index: 200;
     user-select: none;
     -webkit-touch-callout: none;
 
-    button {
+    .SmartNavBar-btn {
         /* Fix for Chrome and Firefox OS on button element */
-        background: transparent; 
+        background: transparent;
 
         &:focus {
             outline: 0;
         }
-        
+
         position: absolute;
         top: 0;
         display: inline-block;

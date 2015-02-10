@@ -127,22 +127,26 @@ fieldset[disabled] .btn-secondary.active {
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
 /* line 4 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav {
-  position: relative;
+
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .App-menus {
+  background: #fff;
 }
 
-/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-brand {
   float: none;
   display: inline-block;
+  line-height: 13px;
   text-indent: -99999px;
   background: url("../images/logo-loconomics-header-mini.png") no-repeat center;
   min-width: 100px;
   min-height: 39px;
+  height: 44px;
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
   .AppNav .navbar-brand {
     background-image: url("../images/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
@@ -151,13 +155,13 @@ fieldset[disabled] .btn-secondary.active {
   }
 }
 
-/* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 24 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-action {
   margin: 8px 0;
 }
@@ -207,7 +211,7 @@ fieldset[disabled] .btn-secondary.active {
 .App > body {
   height: 100%;
 /* Space for app-nav on top */
-  padding-top: 51px;
+  padding-top: 44px;
 }
 
 /* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
@@ -237,7 +241,7 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 72 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal .modal-dialog {
-  padding-top: 51px;
+  padding-top: 44px;
 }
 
 /* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
@@ -248,7 +252,7 @@ fieldset[disabled] .btn-secondary.active {
 /* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Utilities styles **/
 
-/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
 
 /* line 2 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
 .isolated {
@@ -799,7 +803,7 @@ fieldset[disabled] .btn-secondary.active {
   z-index: 100;
   left: 0;
   right: 0;
-  top: 51px;
+  top: 44px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -1429,7 +1433,7 @@ fieldset[disabled] .btn-secondary.active {
   background-size: 100% 1px;
   background-repeat: no-repeat;
   background-position: bottom;
-  z-index: 10;
+  z-index: 200;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1438,7 +1442,7 @@ fieldset[disabled] .btn-secondary.active {
 }
 
 /* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar button {
+.SmartNavBar .SmartNavBar-btn {
 /* Fix for Chrome and Firefox OS on button element */
   background: transparent;
   position: absolute;
@@ -1460,42 +1464,42 @@ fieldset[disabled] .btn-secondary.active {
 }
 
 /* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar button:focus {
+.SmartNavBar .SmartNavBar-btn:focus {
   outline: 0;
 }
 
 /* line 69 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar button:active {
+.SmartNavBar .SmartNavBar-btn:active {
   opacity: 0.3;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
   filter: alpha(opacity=30);
 }
 
 /* line 73 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar button.bold {
+.SmartNavBar .SmartNavBar-btn.bold {
   font-weight: 500;
 }
 
 /* line 77 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar button.disabled {
+.SmartNavBar .SmartNavBar-btn.disabled {
   color: #777;
 }
 
 /* line 81 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar button.left {
+.SmartNavBar .SmartNavBar-btn.left {
   left: 0;
   padding: 0 10px;
 }
 
 /* line 89 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar button.right {
+.SmartNavBar .SmartNavBar-btn.right {
   right: 0;
   text-align: right;
   padding: 0 10px;
 }
 
 /* line 101 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar button h1 {
+.SmartNavBar .SmartNavBar-btn h1 {
   color: #333;
   font-size: 15px;
   display: inline;

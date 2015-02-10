@@ -34,38 +34,43 @@
   </head>
   <body>
       <div class="SplashScreen">Loading...</div>
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="AppNav container-fluid">
-        <div class="row">
-          <div class="col-xs-3 text-left navbar-action" data-bind="with: navAction">
-            <a class="btn btn-default" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }"><span data-bind="attr: { 'class': icon }" class="glyphicon"></span></a>
-          </div>
-          <div class="col-xs-6 text-center"><a class="navbar-brand" href="#">Loconomics</a></div>
-          <div class="col-xs-3 text-right" data-bind="css: { 'navbar-action': status() !== 'in' }">
-            <button data-bind="visible: status() === 'in'" type="button" class="navbar-toggle collapsed btn btn-default" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+
+        <nav role="navigation" class="AppNav SmartNavBar">
+
+            <span data-bind="with: navAction">
+                <a class="left SmartNavBar-btn" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
+                    <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
+                    <span data-bind="if: isTitle"><h1 data-bind="text: text" class="glyphicon"></h1></span>
+                </a>
+            </span>
+
+            @* <h1><span data-bind="text: navAction().text()"></span><a data-bind="if: !navAction().text()" class="navbar-brand" href="#">Loconomics</a></h1> *@
+            <h1><span></span><a class="navbar-brand" href="#">Loconomics</a></h1>
+
+            <button type="button" class="navbar-toggle collapsed right SmartNavBar-btn" data-bind="visible: status() === 'in'" data-toggle="collapse" data-target="#menuIn" aria-expanded="false" aria-controls="menuIn">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a data-bind="visible: status() === 'out'" class="btn btn-default" href="#!login"><span class="glyphicon glyphicon-log-in"></span></a>
-            <a data-bind="visible: status() === 'onboarding'" class="btn btn-default" href="#!logout" title="Log out"><span class="glyphicon glyphicon-log-out"></span></a>
-          </div>
-        </div> 
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="go-home"><a href="/home">Dashboard</a></li>
-            <li class="go-calendar"><a href="/calendar">Calendar</a></li>
-            <li class="go-inbox"><a href="/inbox">Inbox</a></li>
-            <li class="go-clients"><a href="/clients">Clients</a></li>
-            <li class="go-payments"><a href="/payments">Payments</a></li>
-            <li class="go-services"><a href="/services">Services</a></li>
-            <li class="go-account"><a href="/account">Account</a></li>
-            <li class="go-logout"><a href="/logout">Logout</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
+            <a data-bind="visible: status() === 'out'" class="right SmartNavBar-btn" href="#!login" title="Log in"><span class="glyphicon glyphicon-log-in"></span></a>
+            <a data-bind="visible: status() === 'onboarding'" class="right SmartNavBar-btn" href="#!logout" title="Log out"><span class="glyphicon glyphicon-log-out"></span></a>
+
+            <div class="App-menus">
+                <div id="menuIn" class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                    <li class="go-home"><a href="/home">Dashboard</a></li>
+                    <li class="go-calendar"><a href="/calendar">Calendar</a></li>
+                    <li class="go-inbox"><a href="/inbox">Inbox</a></li>
+                    <li class="go-clients"><a href="/clients">Clients</a></li>
+                    <li class="go-payments"><a href="/payments">Payments</a></li>
+                    <li class="go-services"><a href="/services">Services</a></li>
+                    <li class="go-account"><a href="/account">Account</a></li>
+                    <li class="go-logout"><a href="/logout">Logout</a></li>
+                  </ul>
+                </div>
+            </div>
+        </div>
     </nav>
     @for(var f=0; f < includedFiles.length; f++) {
       @render(includedFiles[f])

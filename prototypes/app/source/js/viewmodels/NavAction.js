@@ -11,6 +11,9 @@ function NavAction(values) {
     this.model.defProperties({
         link: '',
         icon: '',
+        text: '',
+        // 'Test' is the header title but placed in the button/action
+        isTitle: false,
         // 'Link' is the element ID of a modal (starts with a #)
         isModal: false,
         // 'Link' is a Shell command, like 'goBack 2'

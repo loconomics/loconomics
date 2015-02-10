@@ -2,18 +2,25 @@
     AppNav Component (extends .navbar)
 **/
 .AppNav {
-    
-    position: relative;
 
+    .App-menus {
+        background: white;
+    }
+    
     .navbar-brand {
       float: none;
       display: inline-block;
+    
+      // magic number! For some reason, the only line-height
+      // that limits the full height to the navbar-height (44px now)
+      line-height: 13px;
 
       text-indent: -99999px;
       background: url("../images/logo-loconomics-header-mini.png") no-repeat center;
       hr-image("../images/logo-loconomics-header-mini@2x.png", 100px, 39px);
       min-width: 100px;
       min-height: 39px;
+      height: $app-navbar-height;
     }
     
     .navbar-toggle {
