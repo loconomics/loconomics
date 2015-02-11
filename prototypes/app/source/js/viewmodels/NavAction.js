@@ -17,7 +17,12 @@ function NavAction(values) {
         // 'Link' is the element ID of a modal (starts with a #)
         isModal: false,
         // 'Link' is a Shell command, like 'goBack 2'
-        isShell: false
+        isShell: false,
+        // Set if the element is a menu button, in that case 'link'
+        // will be the ID of the menu (contained in the page; without the hash), using
+        // the text and icon but special meaning for the text value 'menu'
+        // on icon property that will use the standard menu icon.
+        isMenu: false
     }, values);
 }
 
@@ -27,7 +32,7 @@ module.exports = NavAction;
 
 NavAction.prototype.getHref = function getHref() {
     return (
-        (this.isModal() || this.isShell()) ?
+        (this.isMenu() || this.isModal() || this.isShell()) ?
         '#' :
         this.link()
     );
@@ -35,7 +40,7 @@ NavAction.prototype.getHref = function getHref() {
 
 NavAction.prototype.getModalTarget = function getModalTarget() {
     return (
-        (!this.isModal() || this.isShell()) ?
+        (this.isMenu() || !this.isModal() || this.isShell()) ?
         '' :
         this.link()
     );
@@ -43,9 +48,25 @@ NavAction.prototype.getModalTarget = function getModalTarget() {
 
 NavAction.prototype.getShellCommand = function getShellCommand() {
     return (
-        (!this.isShell()) ?
+        (this.isMenu() || !this.isShell()) ?
         '' :
         this.link()
+    );
+};
+
+NavAction.prototype.getMenuID = function getMenuID() {
+    return (
+        (!this.isMenu()) ?
+        '' :
+        this.link()
+    );
+};
+
+NavAction.prototype.getMenuLink = function getMenuLink() {
+    return (
+        (!this.isMenu()) ?
+        '' :
+        '#' + this.link()
     );
 };
 
@@ -71,4 +92,37 @@ NavAction.newCalendarItem = new NavAction({
     link: '#calendarChooseNew',
     icon: 'glyphicon glyphicon-plus',
     isModal: true
+});
+
+NavAction.menuIn = new NavAction({
+    link: 'menuIn',
+    icon: 'menu',
+    isMenu: true
+});
+
+NavAction.menuOut = new NavAction({
+    link: 'menuOut',
+    icon: 'menu',
+    isMenu: true
+});
+
+NavAction.goHelpIndex = new NavAction({
+    link: '#helpIndex',
+    text: 'help',
+    isModal: true
+});
+
+NavAction.goLogin = new NavAction({
+    link: 'login',
+    text: 'log-in'
+});
+
+NavAction.goLogout = new NavAction({
+    link: 'logout',
+    text: 'log-out'
+});
+
+NavAction.goSignup = new NavAction({
+    link: 'signup',
+    text: 'sign-up'
 });
