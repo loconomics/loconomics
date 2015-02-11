@@ -35,6 +35,19 @@ exports.extends = function (app) {
     
     app.navBar = ko.observable(null);
     
+    var refreshNav = function refreshNav() {
+        // Trigger event to force a component update
+        $('.AppNav').trigger('contentChange');
+    };
+    var autoRefreshNav = function autoRefreshNav(action) {
+        if (action) {
+            action.text.subscribe(refreshNav);
+            action.isTitle.subscribe(refreshNav);
+            action.icon.subscribe(refreshNav);
+            action.isMenu.subscribe(refreshNav);
+        }
+    };
+    
     /**
         Update the nav model using the Activity defaults
     **/
@@ -53,8 +66,9 @@ exports.extends = function (app) {
         // Latest changes, if needed
         adjustUserBar();
         
-        // Trigger event to force a component update
-        $('.AppNav').trigger('contentChange');
+        refreshNav();
+        autoRefreshNav(app.navBar().leftAction());
+        autoRefreshNav(app.navBar().rightAction());
     };
     
     

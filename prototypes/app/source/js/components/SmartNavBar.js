@@ -45,8 +45,8 @@ var clearNode = function (node) {
 var textboxResize = function textboxResize(el) {
     /* jshint maxstatements: 28, maxcomplexity:11 */
     
-    var leftbtn = el.parentNode.querySelectorAll('button.left')[0];
-    var rightbtn = el.parentNode.querySelectorAll('button.right')[0];
+    var leftbtn = el.parentNode.querySelectorAll('.SmartNavBar-edge.left')[0];
+    var rightbtn = el.parentNode.querySelectorAll('.SmartNavBar-edge.right')[0];
     if (typeof leftbtn === 'undefined') {
         leftbtn = {
             offsetWidth: 0,
@@ -59,6 +59,7 @@ var textboxResize = function textboxResize(el) {
             className: ''
         };
     }
+    
     var margin = Math.max(leftbtn.offsetWidth, rightbtn.offsetWidth);
     el.style.marginLeft = margin + 'px';
     el.style.marginRight = margin + 'px';

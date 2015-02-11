@@ -19,17 +19,17 @@
   
   <body>
     <div class="SplashScreen">Loading...</div>
-    <nav role="navigation" class="AppNav SmartNavBar" data-bind="with: navBar"> <span data-bind="with: leftAction">
-                <a class="left SmartNavBar-btn" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
+    <nav role="navigation" class="AppNav SmartNavBar" data-bind="with: navBar"> <span data-bind="with: leftAction" class="SmartNavBar-edge left">
+                <a class="SmartNavBar-btn" href="#" data-bind="visible: !isMenu(), attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
                     <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
 
       <span
       data-bind="if: isTitle">
-        <h1 data-bind="text: text" class="glyphicon"></h1>
+        <h1 data-bind="text: text"></h1>
         </span>
         </a>
-        <button type="button" class="left SmartNavBar-btn navbar-toggle collapsed"
-        data-bind="if: isMenu, attr: { 'data-target': getMenuLink, 'aria-controls': getMenuID }"
+        <button type="button" class="SmartNavBar-btn navbar-toggle collapsed"
+        data-bind="visible: isMenu, attr: { 'data-target': getMenuLink(), 'aria-controls': getMenuID() }"
         data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut"> <span class="sr-only">Toggle navigation</span>
  <span class="icon-bar"></span>
 
@@ -38,18 +38,18 @@
 
         </button>
         </span>
-         <h1><span data-bind="text: title()"></span><a data-bind="if: !title()" class="navbar-brand" href="#">Loconomics</a></h1>
- <span data-bind="with: rightAction">
-                <a class="right SmartNavBar-btn" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
+         <h1>&nbsp;<span data-bind="text: title()"></span><a data-bind="visible: title() === null" class="navbar-brand" href="#">Loconomics</a>&nbsp;</h1>
+ <span data-bind="with: rightAction" class="SmartNavBar-edge right">
+                <a class="SmartNavBar-btn" href="#" data-bind="visible: !isMenu(), attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
                     <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
 
         <span
         data-bind="if: isTitle">
-          <h1 data-bind="text: text" class="glyphicon"></h1>
+          <h1 data-bind="text: text"></h1>
           </span>
           </a>
-          <button type="button" class="right SmartNavBar-btn navbar-toggle collapsed"
-          data-bind="if: isMenu, attr: { 'data-target': getMenuLink, 'aria-controls': getMenuID }"
+          <button type="button" class="SmartNavBar-btn navbar-toggle collapsed"
+          data-bind="visible: isMenu, attr: { 'data-target': getMenuLink(), 'aria-controls': getMenuID() }"
           data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut"> <span class="sr-only">Toggle navigation</span>
  <span class="icon-bar"></span>
 
@@ -172,9 +172,7 @@
       </div>
     </div>
     <!-- Activity appointment -->
-    <div class="container-fluid has-frozenTitle" data-activity="appointment">
-       <h1 class="ActivityTitle"><span class="glyphicon glyphicon-calendar" data-bind="visible: !isNew()"></span><span data-bind="text: currentDate(), format: { type: 'datetime', format: 'dddd [(]M/D[)]' }"></span><span class="ActivityTitle-action "><button type="button" class="btn btn-primary" data-bind="event: { tap: returnToCalendar }">back</button></span></h1>
-
+    <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
       <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">

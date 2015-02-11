@@ -21,7 +21,7 @@ $SmartNavBar-buttonHeaderFontSize = 15px;
 $SmartNavBar-bgColor = White; //rgba(248, 248, 248, 0.9);
 $SmartNavBar-borderColor = $gray-lighter; //rgb(200, 199, 204);
 $SmartNavBar-buttonColor = $brand-secondary; // rgb(21, 125, 251);
-$SmartNavBar-headerColor = $gray-dark; //Black;
+$SmartNavBar-headerColor = $gray; //Black;
 $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
 
 .SmartNavBar {
@@ -43,56 +43,94 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     user-select: none;
     -webkit-touch-callout: none;
 
+    /**
+        Scheme: a bar contains 2 edges (SmartNavBar-edge, .left and -right)
+        and a title (h1).
+        At the edges there are buttons (.SmartNavBar-btn).
+        An edge can contain only buttons or be the button itself at the same time.
+        Buttons can contain other elements or just text, but ensure are in-line.
+        A button can contain a title text inside a H1 element, used to replace
+        the title on the middle of the bar for some uses (like arrows).
+    **/
+
+    commonEdgeBtn() {
+        display: inline-block;
+        vertical-align: top;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        outline: 0;
+        box-sizing: border-box;
+        height: $SmartNavBar-height;
+        line-height: $SmartNavBar-height;
+        text-overflow: ellipsis !important; /* why so !important ? */
+        white-space: nowrap;
+
+        max-width: 140px;
+    }
+    
+    .SmartNavBar-edge {
+        commonEdgeBtn();
+        
+        position: absolute;
+        top: 0;
+    
+        &.left {
+            left: 0;
+
+            &.SmartNavBar-btn,
+            .SmartNavBar-btn {
+                // Padding on both sides, not just the left,
+                // so the button is easier to press and there is
+                // a gap with the header/title in case is too big
+                padding: 0 $SmartNavBar-lateralGap;
+            }
+        }
+    
+        &.right {
+            right: 0;
+        
+            &.SmartNavBar-btn,
+            .SmartNavBar-btn {
+                text-align: right;
+                // Padding on both sides, not just the right,
+                // so the button is easier to press and there is
+                // a gap with the header/title in case is too big
+                padding: 0 $SmartNavBar-lateralGap;
+            }
+        }
+    }
+
     .SmartNavBar-btn {
+        commonEdgeBtn();
+
         /* Fix for Chrome and Firefox OS on button element */
         background: transparent;
 
         &:focus {
             outline: 0;
         }
-
-        position: absolute;
-        top: 0;
-        display: inline-block;
+        
         color: $SmartNavBar-buttonColor;
-        padding: 0;
-        margin: 0;
-        border: 0;
-        outline: 0;
         font-weight: 300;
-        height: $SmartNavBar-height;
-        line-height: $SmartNavBar-height;
-        text-overflow: ellipsis !important; /* why so !important ? */
-        max-width: 140px;
         font-size: $SmartNavBar-buttonFontSize;
 
         &:active {
             opacity: 0.3;
         }
-    
+
         &.bold {
             font-weight: 500;
         }
 
-        &.disabled {
+        &.disabled,
+        [disabled] {
             color: $SmartNavBar-disabledButtonColor;
         }
-    
-        &.left {
-            left: 0;
-            // Padding on both sides, not just the left,
-            // so the button is easier to press and there is
-            // a gap with the header/title in case is too big
-            padding: 0 $SmartNavBar-lateralGap;
-        }
-    
-        &.right {
-            right: 0;
-            text-align: right;
-            // Padding on both sides, not just the right,
-            // so the button is easier to press and there is
-            // a gap with the header/title in case is too big
-            padding: 0 $SmartNavBar-lateralGap;
+        
+        &:hover,
+        &:active {
+            text-decoration: none;
         }
         
         // the button can contain a title, used normally when

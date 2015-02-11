@@ -11,7 +11,8 @@ function NavBar(values) {
     
     this.model.defProperties({
         // Title showed in the center
-        // When there is no title, the app logo is showed in place
+        // When the title is 'null', the app logo is showed in place,
+        // on empty text, the empty text is showed and no logo.
         title: '',
         // NavAction instance:
         leftAction: null,

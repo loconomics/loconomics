@@ -4,7 +4,8 @@
 var $ = require('jquery'),
     moment = require('moment'),
     ko = require('knockout'),
-    NavAction = require('../viewmodels/NavAction');
+    NavAction = require('../viewmodels/NavAction'),
+    NavBar = require('../viewmodels/NavBar');
 require('../components/DatePicker');
 
 var singleton = null;
@@ -31,9 +32,49 @@ function AppointmentActivity($activity, app) {
     // of a request from another activity
     this.requestInfo = null;
     
-    this.navAction = NavAction.newCalendarItem;
+    // Create a specific backAction that shows current date
+    // and return to calendar in current date.
+    // Later some more changes are applied, with viewmodel ready
+    var backAction = new NavAction({
+        link: 'calendar/', // Preserve last slash, for later use
+        icon: NavAction.goBack.icon(),
+        isTitle: true,
+        text: 'Calendar'
+    });
+    this.navBar = new NavBar({
+        title: '',
+        leftAction: backAction,
+        rightAction: NavAction.menuIn
+    });
     
     this.initAppointment();
+    
+    // This title text is dynamic, we need to replace it by a computed observable
+    // showing the current date
+    var defBackText = backAction.text._defaultValue;
+    backAction.text = ko.computed(function() {
+
+        var d = this.appointmentsDataView.currentDate();
+        if (!d)
+            // Fallback to the default title
+            return defBackText;
+
+        var m = moment(d);
+        var t = m.format('dddd [(]M/D[)]');
+        return t;
+    }, this);
+    // And the link is dynamic too, to allow return to the date
+    // that matches current appointment
+    var defLink = backAction.link._defaultValue;
+    backAction.link = ko.computed(function() {
+
+        var d = this.appointmentsDataView.currentDate();
+        if (!d)
+            // Fallback to the default link
+            return defLink;
+
+        return defLink + d.toISOString();
+    }, this);
     
     this.appointmentsDataView.currentAppointment.subscribe(function (apt) {
         // Update URL to match the appointment ID and
@@ -223,13 +264,6 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
                 // Create a copy of the appointment so we revert on 'cancel'
                 appointmentsDataView.originalEditedAppointment = 
                     ko.toJS(appointmentsDataView.currentAppointment());
-                
-                // Remove the navAction
-                app.navAction(null);
-            }
-            else {
-                // Restore the navAction
-                app.navAction(this.navAction);
             }
             
         }.bind(this));
@@ -284,21 +318,6 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
                 header: textFieldsHeaders[field],
                 text: appointmentsDataView.currentAppointment()[field]()
             });
-        }.bind(this);
-        
-        appointmentsDataView.returnToCalendar = function returnToCalendar() {
-            // We have a request
-            if (this.requestInfo) {
-
-                // Pass the current date
-                var date = this.appointmentsDataView.currentDate();
-                if (date)
-                    this.requestInfo.date = date;
-                // And go back
-                this.app.shell.go('calendar', this.requestInfo);
-                // Last, clear requestInfo
-                this.requestInfo = null;
-            }
         }.bind(this);
         
         appointmentsDataView.currentDate = ko.computed(function() {
