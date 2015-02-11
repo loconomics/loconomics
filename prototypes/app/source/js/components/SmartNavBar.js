@@ -98,7 +98,9 @@ var SmartNavBar = function SmartNavBar(el) {
     this.el = el;
     
     this.refresh = function refresh() {
-        textboxResize($(el).children('h1').get(0));
+        var h = $(el).children('h1').get(0);
+        if (h)
+            textboxResize(h);
     };
 
     this.refresh(); 

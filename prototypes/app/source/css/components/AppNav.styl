@@ -31,4 +31,14 @@
     .navbar-action {
       margin: 8px 0;
     }
+
+    // Per Styleguide, text must be lowercase
+    .navbar-nav {
+        text-transform: lowercase;
+    
+        > li + li,
+        > li > ul {
+            border-top: 1px solid $gray-light;
+        }
+    }
 }

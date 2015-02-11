@@ -13,7 +13,8 @@ require('./utils/Function.prototype._delayed');
 require('es6-promise').polyfill();
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
-var NavAction = require('./viewmodels/NavAction'),
+var NavBar = require('./viewmodels/NavBar'),
+    NavAction = require('./viewmodels/NavAction'),
     AppModel = require('./viewmodels/AppModel');
 
 // Register the special locale
@@ -27,10 +28,6 @@ var app = {
     
     // New app model, that starts with anonymous user
     model: new AppModel(),
-    
-    // TODO Double check it works
-    // 'out', 'login', 'onboarding', 'in'
-    status: ko.observable('out'),
     
     /** Load activities controllers (not initialized) **/
     activities: require('./app-activities'),
@@ -46,53 +43,12 @@ var app = {
         else {
             this.shell.go('home');
         }
-    },
-    
-    /**
-        Update the app menu to highlight the
-        given link name
-    **/
-    updateMenu: function updateMenu(name) {
-        
-        this.$menu = this.$menu || $('#navbar');
-        
-        // Remove any active
-        this.$menu
-        .find('li')
-        .removeClass('active');
-        // Add active
-        this.$menu
-        .find('.go-' + name)
-        .closest('li')
-        .addClass('active');
-        // Hide menu
-        this.$menu
-        .filter(':visible')
-        .collapse('hide');
-    },
-    
-    /**
-        Observables and methods to manage the shared
-        app navigation bar.
-        
-        TODO: complete for the new design
-    **/
-    navAction: ko.observable(null),
-    defaultNavAction: null,
-    updateAppNav: function updateAppNav(activity) {
-        // navAction, if the activity has its own
-        if ('navAction' in activity) {
-            // Use specializied activity action
-            this.navAction(activity.navAction);
-        }
-        else {
-            // Use default action
-            this.navAction(this.defaultNavAction);
-        }
     }
 };
 
 /** Continue app creation with things that need a reference to the app **/
+
+require('./app-navbar').extends(app);
 
 app.getActivity = function getActivity(name) {
     var activity = this.activities[name];
@@ -118,24 +74,6 @@ app.shell.accessControl = require('./utils/accessControl')(app);
 
 // Shortcut to UserType enumeration used to set permissions
 app.UserType = app.model.user().constructor.UserType;
-
-// Updating app status on user changes
-function updateStatesOnUserChange() {
-
-    var user = app.model.user();
-
-    if (user.onboardingStep()) {
-        app.status('onboarding');
-    }
-    else if (user.isAnonymous()) {
-        app.status('out');
-    }
-    else {
-        app.status('in');
-    }
-}
-app.model.user().isAnonymous.subscribe(updateStatesOnUserChange);
-app.model.user().onboardingStep.subscribe(updateStatesOnUserChange);
 
 
 /** App Init **/
@@ -198,14 +136,8 @@ var appInit = function appInit() {
     
     // Set model for the AppNav
     ko.applyBindings({
-        navAction: app.navAction,
-        status: app.status
+        navBar: app.navBar
     }, $('.AppNav').get(0));
-
-    // App init:
-    var alertError = function(err) {
-        window.alert('There was an error loading: ' + err && err.message || err);
-    };
     
     var SmartNavBar = require('./components/SmartNavBar');
     var navBars = SmartNavBar.getAll();
@@ -218,6 +150,11 @@ var appInit = function appInit() {
             navbar.refresh();
         });
     });
+
+    // App init:
+    var alertError = function(err) {
+        window.alert('There was an error loading: ' + err && err.message || err);
+    };
 
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)

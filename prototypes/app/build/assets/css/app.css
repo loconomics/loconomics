@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2015-02-10
+/*! LoconomicsAppProto 2015-02-11
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -146,7 +146,7 @@ fieldset[disabled] .btn-secondary.active {
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 44 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
   .AppNav .navbar-brand {
     background-image: url("../images/logo-loconomics-header-mini@2x.png");
     -webkit-background-size: 100px 39px;
@@ -164,6 +164,17 @@ fieldset[disabled] .btn-secondary.active {
 /* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-action {
   margin: 8px 0;
+}
+
+/* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-nav {
+  text-transform: lowercase;
+}
+
+/* line 39 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-nav > li + li,
+.AppNav .navbar-nav > li > ul {
+  border-top: 1px solid #777;
 }
 
 /* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
@@ -252,7 +263,7 @@ fieldset[disabled] .btn-secondary.active {
 /* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Utilities styles **/
 
-/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
+/* line 44 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
 
 /* line 2 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
 .isolated {

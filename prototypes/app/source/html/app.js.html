@@ -35,38 +35,76 @@
   <body>
       <div class="SplashScreen">Loading...</div>
 
-        <nav role="navigation" class="AppNav SmartNavBar">
+        <nav role="navigation" class="AppNav SmartNavBar" data-bind="with: navBar">
 
-            <span data-bind="with: navAction">
+            <span data-bind="with: leftAction">
                 <a class="left SmartNavBar-btn" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
                     <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
                     <span data-bind="if: isTitle"><h1 data-bind="text: text" class="glyphicon"></h1></span>
                 </a>
+                <button type="button" class="left SmartNavBar-btn navbar-toggle collapsed" data-bind="if: isMenu, attr: { 'data-target': getMenuLink, 'aria-controls': getMenuID }" data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
             </span>
 
-            @* <h1><span data-bind="text: navAction().text()"></span><a data-bind="if: !navAction().text()" class="navbar-brand" href="#">Loconomics</a></h1> *@
-            <h1><span></span><a class="navbar-brand" href="#">Loconomics</a></h1>
+            <h1><span data-bind="text: title()"></span><a data-bind="if: !title()" class="navbar-brand" href="#">Loconomics</a></h1>
 
-            <button type="button" class="navbar-toggle collapsed right SmartNavBar-btn" data-bind="visible: status() === 'in'" data-toggle="collapse" data-target="#menuIn" aria-expanded="false" aria-controls="menuIn">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a data-bind="visible: status() === 'out'" class="right SmartNavBar-btn" href="#!login" title="Log in"><span class="glyphicon glyphicon-log-in"></span></a>
-            <a data-bind="visible: status() === 'onboarding'" class="right SmartNavBar-btn" href="#!logout" title="Log out"><span class="glyphicon glyphicon-log-out"></span></a>
+            <span data-bind="with: rightAction">
+                <a class="right SmartNavBar-btn" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
+                    <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
+                    <span data-bind="if: isTitle"><h1 data-bind="text: text" class="glyphicon"></h1></span>
+                </a>
+                <button type="button" class="right SmartNavBar-btn navbar-toggle collapsed" data-bind="if: isMenu, attr: { 'data-target': getMenuLink, 'aria-controls': getMenuID }" data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+            </span>
 
             <div class="App-menus">
                 <div id="menuIn" class="navbar-collapse collapse">
                   <ul class="nav navbar-nav">
-                    <li class="go-home"><a href="/home">Dashboard</a></li>
-                    <li class="go-calendar"><a href="/calendar">Calendar</a></li>
-                    <li class="go-inbox"><a href="/inbox">Inbox</a></li>
-                    <li class="go-clients"><a href="/clients">Clients</a></li>
-                    <li class="go-payments"><a href="/payments">Payments</a></li>
-                    <li class="go-services"><a href="/services">Services</a></li>
+                    <li><span>tools</span>
+                        <ul>
+                            <li class="go-home"><a href="/home">Dashboard</a></li>
+                            <li class="go-calendar"><a href="/calendar">Calendar</a></li>
+                            <li class="go-inbox"><a href="/inbox">Inbox</a></li>
+                            <li class="go-scheduling"><a href="/scheduling">Scheduling</a></li>
+                            <li class="go-clients"><a href="/clients">Client management</a></li>
+                            <li class="go-payments"><a href="/payments">Payment processing</a></li>
+                            <li class="go-performance"><a href="/performance">Performance</a></li>
+                            <li class="go-insurance"><a href="/insurance">Insurance</a></li>
+                            <li class="go-marketplace"><a href="/marketplace">Marketplace</a></li>
+                        </ul>
+                    </li>
+                    <li class="go-marketplace-profile"><a href="/marketplace-profile">Marketplace profile</a></li>
                     <li class="go-account"><a href="/account">Account</a></li>
-                    <li class="go-logout"><a href="/logout">Logout</a></li>
+                    <li class="go-talk-to-us"><a href="/talk-to-us">Talk to us</a></li>
+                    <li class="go-logout"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                  </ul>
+                </div>
+                <div id="menuOut" class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                    <li class="go-index"><a href="/">Home</a></li>
+                    <li class="go-login"><a href="/login">Login</a></li>
+                    <li class="go-signup"><a href="/signup">Signup</a></li>  
+                  </ul>
+                </div>
+                <div id="menuNewItem" class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                    <li><span>Add new</span>
+                        <ul>
+                            <li class="go-booking-new"><a href="/booking/new">Booking</a></li>
+                            <li class="go-client-new"><a href="/client/new">Client</a></li>
+                            <li class="go-calendar-new"><a href="/calendar/new">Calendar block</a></li>
+                            <li class="go-pricing-new"><a href="/pricing/new">Pricing</a></li>
+                            <li class="go-jobtitle-new"><a href="/jobtitle/new">Job title</a></li>
+                        </ul>
+                    </li>
                   </ul>
                 </div>
             </div>
