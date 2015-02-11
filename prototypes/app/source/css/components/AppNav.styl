@@ -36,10 +36,32 @@
     }
 
     .navbar-nav {
-    
+        
+        a {
+            color: $gray;
+        
+            &:hover,
+            &:active {
+                color: White;
+                background: $brand-primary;
+                outline: none;
+            }
+        }
+        li.active > a {
+            color: White;
+            background: $brand-secondary;
+        }
+
         > li + li,
         > li > ul {
             border-top: 1px solid $gray-light;
+        }
+    
+        > li > ul.nav {
+            > li {
+                text-indent: 1em;
+                line-height: 1em;
+            }
         }
     }
 }

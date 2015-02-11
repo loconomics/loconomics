@@ -128,7 +128,8 @@ var appInit = function appInit() {
         activity.show(state);
 
         // Update menu
-        app.updateMenu(actName);
+        var menuItem = activity.menuItem || actName;
+        app.updateMenu(menuItem);
         
         // Update app navigation
         app.updateAppNav(activity);

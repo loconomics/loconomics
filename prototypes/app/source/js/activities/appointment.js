@@ -21,6 +21,7 @@ exports.init = function initAppointment($activity, app) {
 function AppointmentActivity($activity, app) {
 
     this.accessLevel = app.UserType.Provider;
+    this.menuItem = 'calendar';
     
     /* Getting elements */
     this.$activity = $activity;
