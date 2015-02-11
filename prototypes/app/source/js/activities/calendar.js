@@ -6,6 +6,7 @@ var $ = require('jquery'),
 require('../components/DatePicker');
 var ko = require('knockout');
 var CalendarSlot = require('../models/CalendarSlot'),
+    NavBar = require('../viewmodels/NavBar'),
     NavAction = require('../viewmodels/NavAction');
 
 var singleton = null;
@@ -107,7 +108,11 @@ function CalendarActivity($activity, app) {
     // Set date to match datepicker for first update
     this.dataView.currentDate(this.$datepicker.datepicker('getValue'));
     
-    this.navAction = NavAction.newCalendarItem;
+    this.navBar = new NavBar({
+        title: 'Calendar',
+        leftAction: NavAction.menuNewItem,
+        rightAction: NavAction.menuIn
+    });
 }
 
 CalendarActivity.prototype.show = function show(options) {

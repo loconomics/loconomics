@@ -83,6 +83,8 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
             ko.observable(defVal);
         // Remember default
         modelObject[key]._defaultValue = defVal;
+        // remember initial
+        modelObject[key]._initialValue = initialValues[key];
         
         // If there is an initialValue, set it:
         if (typeof(initialValues[key]) !== 'undefined') {

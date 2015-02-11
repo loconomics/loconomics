@@ -82,14 +82,9 @@ NavAction.goBack = new NavAction({
     isShell: true
 });
 
+// TODO TO REMOVE, Example of modal
 NavAction.newItem = new NavAction({
     link: '#newItem',
-    icon: 'glyphicon glyphicon-plus',
-    isModal: true
-});
-
-NavAction.newCalendarItem = new NavAction({
-    link: '#calendarChooseNew',
     icon: 'glyphicon glyphicon-plus',
     isModal: true
 });
@@ -103,6 +98,12 @@ NavAction.menuIn = new NavAction({
 NavAction.menuOut = new NavAction({
     link: 'menuOut',
     icon: 'menu',
+    isMenu: true
+});
+
+NavAction.menuNewItem = new NavAction({
+    link: 'menuNewItem',
+    icon: 'glyphicon glyphicon-plus',
     isMenu: true
 });
 

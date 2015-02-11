@@ -51,7 +51,7 @@ function AppointmentActivity($activity, app) {
     
     // This title text is dynamic, we need to replace it by a computed observable
     // showing the current date
-    var defBackText = backAction.text._defaultValue;
+    var defBackText = backAction.text._initialValue;
     backAction.text = ko.computed(function() {
 
         var d = this.appointmentsDataView.currentDate();
@@ -65,7 +65,7 @@ function AppointmentActivity($activity, app) {
     }, this);
     // And the link is dynamic too, to allow return to the date
     // that matches current appointment
-    var defLink = backAction.link._defaultValue;
+    var defLink = backAction.link._initialValue;
     backAction.link = ko.computed(function() {
 
         var d = this.appointmentsDataView.currentDate();
