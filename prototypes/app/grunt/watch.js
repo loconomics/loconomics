@@ -14,7 +14,12 @@ module.exports = {
     
     js: {
         files: ['<%= jshint.app.src %>'],
-        tasks: ['build-js']
+        tasks: [
+            'jshint:app',//'newer:jshint',
+            'browserify:app',
+            'notify:browserify',
+            'uglify:app' //'newer:uglify'
+        ]
     },
     
     css: {
