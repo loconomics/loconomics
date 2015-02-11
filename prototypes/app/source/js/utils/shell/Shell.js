@@ -131,10 +131,11 @@ Shell.prototype.goBack = function goBack(state, steps) {
     returning an state object suitable to use.
 **/
 Shell.prototype.getUpdatedState = function getUpdatedState(state) {
+    /*jshint maxcomplexity: 8 */
     
     // For current uses, any pendingStateUpdate is used as
     // the state, rather than the provided one
-    state = this._pendingStateUpdate || state || this.history.state;
+    state = this._pendingStateUpdate || state || this.history.state || {};
     
     // TODO: more advanced uses must be to use the 'state' to
     // recover the UI state, with any message from other UI
