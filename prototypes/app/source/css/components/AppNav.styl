@@ -92,6 +92,10 @@
     .navbar-toggle {
         transitionNavSetup();
     
+        // To avoid the rotation from create a larger
+        // box, overflow:hidden is required:
+        overflow: hidden;
+    
         > * {
             transitionNavSetup();
             opacity: 1;
