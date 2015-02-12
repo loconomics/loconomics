@@ -154,7 +154,7 @@ var appInit = function appInit() {
     // Listen for menu events (collapse in SmartNavBar)
     // to apply the backdrop
     var togglingBackdrop = false;
-    $(document).on('show.bs.collapse hide.bs.collapse', '.SmartNavBar .navbar-collapse', function(e) {
+    $(document).on('show.bs.collapse hide.bs.collapse', '.AppNav .navbar-collapse', function(e) {
         if (!togglingBackdrop) {
             togglingBackdrop = true;
             var enabled = e.type === 'show';
