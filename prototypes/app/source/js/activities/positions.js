@@ -5,6 +5,7 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
+    NavBar = require('../viewmodels/NavBar'),
     NavAction = require('../viewmodels/NavAction');
 
 var singleton = null;
@@ -33,7 +34,11 @@ function PositionsActivity($activity, app) {
     // of a request from another activity
     this.requestInfo = null;
     
-    this.navAction = NavAction.newItem;
+    this.navBar = new NavBar({
+        title: 'Job Titles',
+        leftAction: NavAction.menuNewItem,
+        rightAction: NavAction.menuIn
+    });
 }
 
 PositionsActivity.prototype.show = function show(options) {

@@ -6,7 +6,9 @@
 var $ = require('jquery'),
     moment = require('moment'),
     ko = require('knockout'),
-    Time = require('../utils/Time');
+    Time = require('../utils/Time'),
+    NavBar = require('../viewmodels/NavBar'),
+    NavAction = require('../viewmodels/NavAction');
 require('../components/DatePicker');
     
 var singleton = null;
@@ -22,6 +24,11 @@ exports.init = function initDatetimePicker($activity, app) {
 function DatetimePickerActivity($activity, app) {
 
     this.accessLevel = app.UserType.LoggedUser;
+    this.navBar = new NavBar({
+        title: '',
+        leftAction: NavAction.goBack,
+        rightAction: NavAction.goHelpIndex
+    });
     
     this.app = app;
     this.$activity = $activity;

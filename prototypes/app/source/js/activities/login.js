@@ -5,8 +5,9 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
-    NavAction = require('../viewmodels/NavAction'),
-    User = require('../models/User');
+  User = require('../models/User'),
+    NavBar = require('../viewmodels/NavBar'),
+    NavAction = require('../viewmodels/NavAction');
 
 var singleton = null;
 
@@ -21,15 +22,16 @@ exports.init = function initLogin($activity, app) {
 function LoginActivity($activity, app) {
     
     this.accessLevel = app.UserType.Anonymous;
-    
-    // TODO consider 'login' state in navbar
+    this.navBar = new NavBar({
+        title: 'Log in',
+        leftAction: NavAction.goBack,
+        rightAction: NavAction.menuOut
+    });
 
     this.$activity = $activity;
     this.app = app;
     this.dataView = new ViewModel();
     ko.applyBindings(this.dataView, $activity.get(0));
-    
-    this.navAction = NavAction.goBack;
     
     // Perform log-in request when is requested by the form:
     this.dataView.isLogingIn.subscribe(function(v) {

@@ -22,6 +22,11 @@ exports.init = function initCalendar($activity, app) {
 function CalendarActivity($activity, app) {
 
     this.accessLevel = app.UserType.LoggedUser;
+    this.navBar = new NavBar({
+        title: 'Calendar',
+        leftAction: NavAction.menuNewItem,
+        rightAction: NavAction.menuIn
+    });
     
     /* Getting elements */
     this.$activity = $activity;
@@ -107,12 +112,6 @@ function CalendarActivity($activity, app) {
     
     // Set date to match datepicker for first update
     this.dataView.currentDate(this.$datepicker.datepicker('getValue'));
-    
-    this.navBar = new NavBar({
-        title: 'Calendar',
-        leftAction: NavAction.menuNewItem,
-        rightAction: NavAction.menuIn
-    });
 }
 
 CalendarActivity.prototype.show = function show(options) {

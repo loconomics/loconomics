@@ -5,7 +5,9 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
-    EventEmitter = require('events').EventEmitter;
+    EventEmitter = require('events').EventEmitter,
+    NavBar = require('../viewmodels/NavBar'),
+    NavAction = require('../viewmodels/NavAction');
     
 var singleton = null;
 
@@ -19,6 +21,15 @@ exports.init = function initTextEditor($activity, app) {
 
 function TextEditorActivity($activity, app) {
 
+    this.navBar = new NavBar({
+        // Title is ever empty..
+        title: '',
+        // but leftAction.text is updated on 'show' with passed value,
+        // so we need a clone to not modify the shared static instance
+        leftAction: NavAction.goBack.model.clone(),
+        rightAction: NavAction.goHelpIndex
+    });
+    
     // Fields
     this.$activity = $activity;
     this.app = app;
@@ -59,6 +70,11 @@ TextEditorActivity.prototype.show = function show(options) {
     options = options || {};
     this.requestInfo = options;
 
+    // TODO Implement on related activities to pass in a title
+    // Set navigation title or nothing
+    this.navBar.title(options.title || '');
+    
+    // Field header
     this.dataView.headerText(options.header);
     this.dataView.text(options.text);
     if (options.rowsNumber)

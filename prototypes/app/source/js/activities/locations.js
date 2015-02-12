@@ -4,7 +4,9 @@
 'use strict';
 
 var $ = require('jquery'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    NavBar = require('../viewmodels/NavBar'),
+    NavAction = require('../viewmodels/NavAction');
     
 var singleton = null;
 
@@ -19,6 +21,11 @@ exports.init = function initLocations($activity, app) {
 function LocationsActivity($activity, app) {
     
     this.accessLevel = app.UserType.Provider;
+    this.navBar = new NavBar({
+        title: 'Locations',
+        leftAction: NavAction.menuNewItem,
+        rightAction: NavAction.menuIn
+    });
 
     this.app = app;
     this.$activity = $activity;

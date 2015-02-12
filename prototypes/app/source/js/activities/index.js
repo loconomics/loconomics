@@ -3,7 +3,9 @@
 **/
 'use strict';
 
-var singleton = null;
+var singleton = null,
+    NavBar = require('../viewmodels/NavBar'),
+    NavAction = require('../viewmodels/NavAction');
 
 exports.init = function initIndex($activity, app) {
 
@@ -18,7 +20,11 @@ function IndexActivity($activity, app) {
     this.$activity = $activity;
     this.app = app;
     
-    this.navAction = null;
+    this.navBar = new NavBar({
+        title: null, // null for logo
+        leftAction: NavAction.goLogin,
+        rightAction: NavAction.menuOut
+    });
     
     // Any user can access this
     this.accessLevel = null;

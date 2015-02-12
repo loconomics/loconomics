@@ -22,12 +22,20 @@ function ClientsActivity($activity, app) {
 
     this.accessLevel = app.UserType.Provider;
     this.navBar = new NavBar({
+        title: 'Clients',
+        leftAction: NavAction.menuNewItem,
+        rightAction: NavAction.menuIn
+    });
+    // NOTE: For client-edit activity, use this:
+    /*
+    this.navBar = new NavBar({
         title: '',
         leftAction: NavAction.goBack.model.clone({
             text: 'Clients'
         }),
         rightAction: NavAction.goHelpIndex
     });
+    */
     
     this.$activity = $activity;
     this.app = app;

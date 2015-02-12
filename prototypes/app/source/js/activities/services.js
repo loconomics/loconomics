@@ -4,7 +4,9 @@
 'use strict';
 
 var $ = require('jquery'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    NavBar = require('../viewmodels/NavBar'),
+    NavAction = require('../viewmodels/NavAction');
     
 var singleton = null;
 
@@ -19,6 +21,12 @@ exports.init = function initServices($activity, app) {
 function ServicesActivity($activity, app) {
 
     this.accessLevel = app.UserType.Provider;
+    this.navBar = new NavBar({
+        // TODO: on show, need to be updated with the JobTitle name
+        title: 'Pricing and Services',
+        leftAction: NavAction.goBack, // To JobTitles list inside scheduling
+        rightAction: NavAction.goHelpIndex
+    });
     
     this.app = app;
     this.$activity = $activity;

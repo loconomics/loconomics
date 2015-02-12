@@ -19,8 +19,6 @@ function OnboardingCompleteActivity($activity, app) {
     
     this.$activity = $activity;
     this.app = app;
-    
-    this.navAction = null;
 }
 
 OnboardingCompleteActivity.prototype.show = function show(options) {

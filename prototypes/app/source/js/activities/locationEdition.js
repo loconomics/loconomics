@@ -3,7 +3,9 @@
 **/
 'use strict';
 var ko = require('knockout'),
-    Location = require('../models/Location');
+    Location = require('../models/Location'),
+    NavBar = require('../viewmodels/NavBar'),
+    NavAction = require('../viewmodels/NavAction');
 
 var singleton = null;
 
@@ -24,7 +26,13 @@ function LocationEditionActivity($activity, app) {
     this.dataView = new ViewModel();
     ko.applyBindings(this.dataView, $activity.get(0));
     
-    this.navAction = null;
+    this.navBar = new NavBar({
+        title: '',
+        leftAction: NavAction.goBack.model.clone({
+            text: 'Locations'
+        }),
+        rightAction: NavAction.goHelpIndex
+    });
 }
 
 LocationEditionActivity.prototype.show = function show(options) {

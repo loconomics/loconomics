@@ -5,6 +5,7 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
+    NavBar = require('../viewmodels/NavBar'),
     NavAction = require('../viewmodels/NavAction');
 
 var singleton = null;
@@ -20,6 +21,11 @@ exports.init = function initHome($activity, app) {
 function HomeActivity($activity, app) {
     
     this.accessLevel = app.UserType.Provider;
+    this.navBar = new NavBar({
+        title: null, // null for logo
+        leftAction: NavAction.menuNewItem,
+        rightAction: NavAction.menuIn
+    });
 
     this.$activity = $activity;
     this.app = app;
@@ -38,8 +44,6 @@ function HomeActivity($activity, app) {
     // Object to hold the options passed on 'show' as a result
     // of a request from another activity
     this.requestInfo = null;
-    
-    this.navAction = NavAction.newItem;
 }
 
 HomeActivity.prototype.show = function show(options) {

@@ -5,6 +5,7 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
+    NavBar = require('../viewmodels/NavBar'),
     NavAction = require('../viewmodels/NavAction');
 
 var singleton = null;
@@ -26,7 +27,11 @@ function SignupActivity($activity, app) {
     this.dataView = new ViewModel();
     ko.applyBindings(this.dataView, $activity.get(0));
     
-    this.navAction = NavAction.goBack;
+    this.navBar = new NavBar({
+        title: null, // null for Logo
+        leftAction: null,
+        rightAction: NavAction.menuOut
+    });
     
     // TODO: implement real login
     // TESTING: the button state with a fake delay
