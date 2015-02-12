@@ -5,6 +5,10 @@
     tricky code to make it works for the Shell
     and forcing hashtags to avoid rewrite URL
     to non-existant files.
+    
+    NOTE: NOT USED RIGHT NOW, IS BUGGY, the 
+    HashBangHistory implementation under utils/shell/
+    is being used.
 **/
 //global window
 

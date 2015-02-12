@@ -24,13 +24,13 @@ require('./locales/en-US-LC');
     App static class
 **/
 var app = {
-    shell: require('./app-shell'),
+    shell: require('./app.shell'),
     
     // New app model, that starts with anonymous user
     model: new AppModel(),
     
     /** Load activities controllers (not initialized) **/
-    activities: require('./app-activities'),
+    activities: require('./app.activities'),
     
     /**
         Just redirect the better place for current user and state
