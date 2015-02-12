@@ -151,3 +151,17 @@ Model.prototype.updateWith = function updateWith(data) {
 
     ko.mapping.fromJS(data, this.mappingOptions, this.modelObject);
 };
+
+Model.prototype.clone = function clone(data) {
+    // Get a plain object with the object data
+    var plain = ko.mapping.toJS(this.modelObject);
+    // Create a new model instance, using the source plain object
+    // as initial values
+    var cloned = new this.modelObject.constructor(plain);
+    // Update the cloned with the provided plain data used
+    // to replace values on the cloned one, for quick one-step creation
+    // of derived objects.
+    cloned.model.updateWith(data);
+    // Cloned model ready:
+    return cloned;
+};

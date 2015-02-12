@@ -4,7 +4,9 @@
 'use strict';
 
 var $ = require('jquery'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    NavBar = require('../viewmodels/NavBar'),
+    NavAction = require('../viewmodels/NavAction');
     
 var singleton = null;
 
@@ -19,6 +21,13 @@ exports.init = function initClients($activity, app) {
 function ClientsActivity($activity, app) {
 
     this.accessLevel = app.UserType.Provider;
+    this.navBar = new NavBar({
+        title: '',
+        leftAction: NavAction.goBack.model.clone({
+            text: 'Clients'
+        }),
+        rightAction: NavAction.goHelpIndex
+    });
     
     this.$activity = $activity;
     this.app = app;
