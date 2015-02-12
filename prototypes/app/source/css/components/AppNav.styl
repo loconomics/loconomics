@@ -8,6 +8,11 @@
     // Per Styleguide, text must be lowercase
     text-transform: lowercase;
     
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    position: absolute;
+    
     // Logo
     .navbar-brand {
       float: none;
@@ -34,6 +39,8 @@
     .App-menus {
         // General menus container
         background: white;
+        position: relative;
+        top: $app-navbar-height;
         
         // Customization of Bootstrap navigation bar for use as menus
         .nav {

@@ -19,49 +19,51 @@
   
   <body>
     <div class="SplashScreen">Loading...</div>
-    <nav role="navigation" class="AppNav SmartNavBar" data-bind="with: navBar"> <span data-bind="with: leftAction" class="SmartNavBar-edge left">
-                <a class="SmartNavBar-btn" href="#" data-bind="visible: !isMenu(), attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
-                    <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
+    <nav role="navigation" class="AppNav">
+      <div class="SmartNavBar" data-bind="with: navBar"> <span data-bind="with: leftAction" class="SmartNavBar-edge left">
+                    <a class="SmartNavBar-btn" href="#" data-bind="visible: !isMenu(), attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
+                        <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
  <span><h1 data-bind="visible: isTitle, text: text"></h1><span data-bind="visible: !isTitle(), text: text"></span></span>
-      </a>
-      <button type="button" class="SmartNavBar-btn navbar-toggle collapsed"
-      data-bind="visible: isMenu, attr: { 'data-target': getMenuLink(), 'aria-controls': getMenuID() }"
-      data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut"> <span data-bind="visible: icon() === 'menu'">
-                      <span class="icon-bar"></span>
+        </a>
+        <button type="button" class="SmartNavBar-btn navbar-toggle collapsed"
+        data-bind="visible: isMenu, attr: { 'data-target': getMenuLink(), 'aria-controls': getMenuID() }"
+        data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut"> <span data-bind="visible: icon() === 'menu'">
+                            <span class="icon-bar"></span>
  <span class="icon-bar"></span>
 
-        <span
-        class="icon-bar"></span>
-          </span> <span data-bind="visible: icon() !== 'menu'">
-                      <span data-bind="attr: { 'class': icon }"></span>
+          <span
+          class="icon-bar"></span>
+            </span> <span data-bind="visible: icon() !== 'menu'">
+                            <span data-bind="attr: { 'class': icon }"></span>
  <span><h1 data-bind="visible: isTitle, text: text"></h1><span data-bind="visible: !isTitle(), text: text"></span></span>
-          </span>
-      </button>
-      </span>
-       <h1>&nbsp;
-                <span data-bind="text: title()"></span>
-                <a data-bind="visible: title() === null" class="navbar-brand" href="#">Loconomics</a>
-            &nbsp;</h1>
+            </span>
+        </button>
+        </span>
+         <h1>&nbsp;
+                    <span data-bind="text: title()"></span>
+                    <a data-bind="visible: title() === null" class="navbar-brand" href="#">Loconomics</a>
+                &nbsp;</h1>
  <span data-bind="with: rightAction" class="SmartNavBar-edge right">
-                <a class="SmartNavBar-btn" href="#" data-bind="visible: !isMenu(), attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
-                    <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
+                    <a class="SmartNavBar-btn" href="#" data-bind="visible: !isMenu(), attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
+                        <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
  <span><h1 data-bind="visible: isTitle, text: text"></h1><span data-bind="visible: !isTitle(), text: text"></span></span>
-      </a>
-      <button type="button" class="SmartNavBar-btn navbar-toggle collapsed"
-      data-bind="visible: isMenu, attr: { 'data-target': getMenuLink(), 'aria-controls': getMenuID() }"
-      data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut"> <span class="sr-only">Toggle navigation</span>
+        </a>
+        <button type="button" class="SmartNavBar-btn navbar-toggle collapsed"
+        data-bind="visible: isMenu, attr: { 'data-target': getMenuLink(), 'aria-controls': getMenuID() }"
+        data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut"> <span class="sr-only">Toggle navigation</span>
  <span data-bind="visible: icon() === 'menu'">
-                      <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
  <span class="icon-bar"></span>
 
-        <span
-        class="icon-bar"></span>
-          </span> <span data-bind="visible: icon() !== 'menu'">
-                      <span data-bind="attr: { 'class': icon }"></span>
+          <span
+          class="icon-bar"></span>
+            </span> <span data-bind="visible: icon() !== 'menu'">
+                            <span data-bind="attr: { 'class': icon }"></span>
  <span><h1 data-bind="visible: isTitle, text: text"></h1><span data-bind="visible: !isTitle(), text: text"></span></span>
-          </span>
-      </button>
-      </span>
+            </span>
+        </button>
+        </span>
+      </div>
       <div class="App-menus">
         <div id="menuIn" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -127,7 +129,6 @@
             </li>
           </ul>
         </div>
-      </div>
       </div>
     </nav>
     <!-- Modal newItem .. TO REMOVE, IS REPLACED BY A MENU -->
@@ -660,7 +661,7 @@
     </div>
     <!-- Activity logout -->
     <div class="container-fluid" data-activity="logout"></div>
-    <!- Activity onboardingComplete -->
+    <!-- Activity onboardingComplete -->
     <div class="container-fluid" data-activity="onboardingComplete">
       <div class="LeadContent LeadContent--success"> <span class="glyphicon glyphicon-ok text-success success-icon" aria-hidden="true"></span>
 

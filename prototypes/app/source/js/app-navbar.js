@@ -25,7 +25,7 @@ exports.extends = function (app) {
 
         if (user.isAnonymous()) {
             // Show login butto
-            app.navBar().rightAction(NavAction.goLogin);
+            app.navBar().rightAction(NavAction.menuOut);
         }
     }
     // Commented lines, used previously but unused now, it must be enough with the update
@@ -47,12 +47,12 @@ exports.extends = function (app) {
             action.isMenu.subscribe(refreshNav);
         }
     };
-    
+
     /**
         Update the nav model using the Activity defaults
     **/
     app.updateAppNav = function updateAppNav(activity) {
-        
+
         // if the activity has its own
         if ('navBar' in activity) {
             // Use specializied activity bar data
@@ -63,7 +63,8 @@ exports.extends = function (app) {
             app.navBar(new NavBar());
         }
 
-        // Latest changes, if needed
+        // TODO Double check if needed.
+        // Latest changes, when needed
         adjustUserBar();
         
         refreshNav();
@@ -78,19 +79,19 @@ exports.extends = function (app) {
     **/
     app.updateMenu = function updateMenu(name) {
         
-        this.$menu = this.$menu || $('.navbar-toggle');
+        var $menu = $('.App-menus .navbar-collapse');
         
         // Remove any active
-        this.$menu
+        $menu
         .find('li')
         .removeClass('active');
         // Add active
-        this.$menu
+        $menu
         .find('.go-' + name)
         .closest('li')
         .addClass('active');
         // Hide menu
-        this.$menu
+        $menu
         .filter(':visible')
         .collapse('hide');
     };
