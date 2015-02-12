@@ -7,21 +7,8 @@
     
     // Per Styleguide, text must be lowercase
     text-transform: lowercase;
-
-    .App-menus {
-        background: white;
-        
-        .navbar-collapse {
-            .nav {
-                background: White;
-                margin-top: 0;
-                margin-bottom: 0;
-                position: relative;
-                z-index: 200;
-            }
-        }
-    }
     
+    // Logo
     .navbar-brand {
       float: none;
       display: inline-block;
@@ -42,37 +29,94 @@
       float: none;
       margin-right: 0;
     }
-    
-    .navbar-action {
-      margin: 8px 0;
-    }
 
-    .navbar-nav {
+    // Menus
+    .App-menus {
+        // General menus container
+        background: white;
         
-        a {
-            color: $gray;
-        
-            &:hover,
-            &:active {
+        // Customization of Bootstrap navigation bar for use as menus
+        .nav {
+            background: White;
+            margin-top: 0;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 200;
+        }
+
+        // Main nav and its content
+        .navbar-nav {
+
+            a {
+                color: $gray;
+
+                &:hover,
+                &:active {
+                    color: White;
+                    background: $brand-primary;
+                    outline: none;
+                }
+            }
+            li.active > a {
                 color: White;
-                background: $brand-primary;
-                outline: none;
+                background: $brand-secondary;
+            }
+
+            > li + li,
+            > li > ul {
+                border-top: 1px solid $gray-light;
+            }
+
+            > li > ul.nav {
+                > li {
+                    text-indent: 1em;
+                    line-height: 1em;
+                }
             }
         }
-        li.active > a {
-            color: White;
-            background: $brand-secondary;
+    }
+
+    // Changing icon of menu togglers when opened
+    transitionNavSetup() {
+        transition-property: transform, opacity;
+        transition-duration: 300ms;
+        transition-timing-function: ease-in-out;
+    }
+    .navbar-toggle {
+        transitionNavSetup();
+    
+        > * {
+            transitionNavSetup();
+            opacity: 1;
+        }
+        transform: rotate(0deg);
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+
+            font-family: "Glyphicons Halflings";
+            line-height: $app-navbar-height;
+            text-align: center;
+
+            pointer-events: none;
+            opacity: 0;
+            transitionNavSetup();
         }
 
-        > li + li,
-        > li > ul {
-            border-top: 1px solid $gray-light;
-        }
-    
-        > li > ul.nav {
-            > li {
-                text-indent: 1em;
-                line-height: 1em;
+        &[aria-expanded="true"] {
+
+            > * {
+                opacity: 0;
+            }
+            transform: rotate(180deg);
+
+            &:before {
+                opacity: 1;
             }
         }
     }

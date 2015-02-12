@@ -173,23 +173,7 @@ fieldset[disabled] .btn-secondary.active {
   text-transform: lowercase;
 }
 
-/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .App-menus {
-  background: #fff;
-}
-
-/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-
-/* line 15 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .App-menus .navbar-collapse .nav {
-  background: White;
-  margin-top: 0;
-  margin-bottom: 0;
-  position: relative;
-  z-index: 200;
-}
-
-/* line 25 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-brand {
   float: none;
   display: inline-block;
@@ -211,50 +195,160 @@ fieldset[disabled] .btn-secondary.active {
   }
 }
 
-/* line 41 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .navbar-action {
-  margin: 8px 0;
+/* line 34 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .App-menus {
+  background: #fff;
 }
 
-/* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 39 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .nav {
+  background: White;
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 200;
+}
 
-/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .navbar-nav a {
+/* line 48 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+
+/* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav a {
   color: #555;
 }
 
-/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .navbar-nav a:hover,
-.AppNav .navbar-nav a:active {
+/* line 53 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav a:hover,
+.AppNav .App-menus .navbar-nav a:active {
   color: White;
   background: #00989a;
   outline: none;
 }
 
-/* line 63 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .navbar-nav li.active > a {
+/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav li.active > a {
   color: White;
   background: #e0004f;
 }
 
-/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .navbar-nav > li + li,
-.AppNav .navbar-nav > li > ul {
+/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav > li + li,
+.AppNav .App-menus .navbar-nav > li > ul {
   border-top: 1px solid #777;
 }
 
-/* line 70 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 74 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .navbar-nav > li > ul.nav > li {
+/* line 75 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav > li > ul.nav > li {
   text-indent: 1em;
   line-height: 1em;
+}
+
+/* line 88 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle {
+  -webkit-transition-property: -webkit-transform, opacity;
+  -moz-transition-property: -moz-transform, opacity;
+  -o-transition-property: -o-transform, opacity;
+  -ms-transition-property: -ms-transform, opacity;
+  transition-property: transform, opacity;
+  -webkit-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+/* line 90 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle > * {
+  -webkit-transition-property: -webkit-transform, opacity;
+  -moz-transition-property: -moz-transform, opacity;
+  -o-transition-property: -o-transform, opacity;
+  -ms-transition-property: -ms-transform, opacity;
+  transition-property: transform, opacity;
+  -webkit-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+
+/* line 95 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  font-family: "Glyphicons Halflings";
+  line-height: 44px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transition-property: -webkit-transform, opacity;
+  -moz-transition-property: -moz-transform, opacity;
+  -o-transition-property: -o-transform, opacity;
+  -ms-transition-property: -ms-transform, opacity;
+  transition-property: transform, opacity;
+  -webkit-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+}
+
+/* line 109 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle[aria-expanded="true"] {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+/* line 111 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle[aria-expanded="true"] > * {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+
+/* line 116 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle[aria-expanded="true"]:before {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }
 
 /* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
