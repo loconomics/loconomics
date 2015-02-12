@@ -21,6 +21,8 @@ exports.init = function initLogin($activity, app) {
 function LoginActivity($activity, app) {
     
     this.accessLevel = app.UserType.Anonymous;
+    
+    // TODO consider 'login' state in navbar
 
     this.$activity = $activity;
     this.app = app;
@@ -93,9 +95,6 @@ function LoginActivity($activity, app) {
 }
 
 LoginActivity.prototype.show = function show(options) {
-    
-    // NOTE: direclty editing the app status.
-    this.app.status('login');
 };
 
 function ViewModel() {

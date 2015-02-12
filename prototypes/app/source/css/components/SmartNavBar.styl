@@ -13,7 +13,8 @@
 
 @import 'nib';
 
-$SmartNavBar-height = $app-navbar-height;
+$SmartNavBar-borderSize = 1px
+$SmartNavBar-height = $app-navbar-height - $SmartNavBar-borderSize;
 $SmartNavBar-lateralGap = $container-padding-left; //9px;
 $SmartNavBar-headerFontSize = 17px;
 $SmartNavBar-buttonFontSize = 15px;
@@ -33,12 +34,17 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     width: 100%;
     padding-top: 0;
     background-color: $SmartNavBar-bgColor;
+    
+    /* Problematic, for now, before confirm any problemm, go with simple border
     // Creating the bottom-border with a gradient to avoid
     // problem with Retina screens doubling the 1px border.
     background-image: linear-gradient(0deg, $SmartNavBar-borderColor, $SmartNavBar-borderColor 50%, transparent 50%);
     background-size: 100% 1px;
     background-repeat: no-repeat;
     background-position: bottom;
+    */
+    border-bottom: 1px solid $SmartNavBar-borderColor;
+    
     z-index: 200;
     user-select: none;
     -webkit-touch-callout: none;
