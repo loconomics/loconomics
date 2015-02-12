@@ -105,6 +105,11 @@
 
             pointer-events: none;
             opacity: 0;
+            // The whole button is being rotate so this
+            // icon rotation is not required, BUT we
+            // simulate better a plus icon becoming
+            // a cross using this:
+            transform: rotate(45deg);
             transitionNavSetup();
         }
 
@@ -117,6 +122,7 @@
 
             &:before {
                 opacity: 1;
+                transform: rotate(0deg);
             }
         }
     }
