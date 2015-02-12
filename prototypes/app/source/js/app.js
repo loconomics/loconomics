@@ -153,9 +153,16 @@ var appInit = function appInit() {
     
     // Listen for menu events (collapse in SmartNavBar)
     // to apply the backdrop
+    var togglingBackdrop = false;
     $(document).on('show.bs.collapse hide.bs.collapse', '.SmartNavBar .navbar-collapse', function(e) {
-        var enabled = e.type === 'show';
-        $('body').toggleClass('use-backdrop', enabled);
+        if (!togglingBackdrop) {
+            togglingBackdrop = true;
+            var enabled = e.type === 'show';
+            $('body').toggleClass('use-backdrop', enabled);
+            // Hide any other opened collapse
+            $('.collapsing, .collapse.in').collapse('hide');
+            togglingBackdrop = false;
+        }
     });
 
     // App init:
