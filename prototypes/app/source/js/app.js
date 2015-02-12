@@ -75,7 +75,6 @@ app.shell.accessControl = require('./utils/accessControl')(app);
 // Shortcut to UserType enumeration used to set permissions
 app.UserType = app.model.user().constructor.UserType;
 
-
 /** App Init **/
 var appInit = function appInit() {
     
@@ -150,6 +149,13 @@ var appInit = function appInit() {
         $(navbar.el).on('contentChange', function() {
             navbar.refresh();
         });
+    });
+    
+    // Listen for menu events (collapse in SmartNavBar)
+    // to apply the backdrop
+    $(document).on('show.bs.collapse hide.bs.collapse', '.SmartNavBar .navbar-collapse', function(e) {
+        var enabled = e.type === 'show';
+        $('body').toggleClass('use-backdrop', enabled);
     });
 
     // App init:

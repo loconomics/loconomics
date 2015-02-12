@@ -168,19 +168,19 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
 
-/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav {
   text-transform: lowercase;
 }
 
-/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 11 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus {
   background: #fff;
 }
 
-/* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 41 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 15 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-collapse .nav {
   background: White;
   margin-top: 0;
@@ -189,7 +189,7 @@ fieldset[disabled] .btn-secondary.active {
   z-index: 200;
 }
 
-/* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-brand {
   float: none;
   display: inline-block;
@@ -211,25 +211,25 @@ fieldset[disabled] .btn-secondary.active {
   }
 }
 
-/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 41 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 72 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-action {
   margin: 8px 0;
 }
 
-/* line 76 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-nav a {
   color: #555;
 }
 
-/* line 81 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-nav a:hover,
 .AppNav .navbar-nav a:active {
   color: White;
@@ -237,21 +237,21 @@ fieldset[disabled] .btn-secondary.active {
   outline: none;
 }
 
-/* line 89 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 63 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-nav li.active > a {
   color: White;
   background: #e0004f;
 }
 
-/* line 93 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-nav > li + li,
 .AppNav .navbar-nav > li > ul {
   border-top: 1px solid #777;
 }
 
-/* line 96 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 70 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 97 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-nav > li > ul.nav > li {
   text-indent: 1em;
   line-height: 1em;
@@ -352,10 +352,63 @@ fieldset[disabled] .btn-secondary.active {
   display: block;
 }
 
+/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+
 /* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+
+/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+body:before {
+  content: '';
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  position: fixed;
+  top: 44px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: Black;
+  visibility: visible;
+  display: block;
+  overflow: hidden;
+  display: block;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  z-index: 150;
+  pointer-events: none;
+  -webkit-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-property: opacity;
+  -moz-transition-property: opacity;
+  -o-transition-property: opacity;
+  -ms-transition-property: opacity;
+  transition-property: opacity;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+}
+
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+body.use-backdrop:before {
+  pointer-events: all;
+  opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+}
+
+/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {
@@ -1214,56 +1267,24 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 
-/* line 100 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\lcGradientBackground.styl */
-
-/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
-
-/* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\lcGradientBackground.styl */
-.CardsDeck:before {
-  position: fixed;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  content: '';
-  min-height: 1402px;
-/* literal css piece, convenient prepared, for the background */
-/* IE9 SVG, needs conditional override of 'filter' to 'none' */
-            background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjOWU2ZTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) no-repeat #c9e6e6;
-            background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(144,216,220,1) 100%) no-repeat #c9e6e6; /* FF3.6+ */
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%, #c9e6e6) no-repeat #c9e6e6); /* Chrome,Safari4+ */
-            background: -webkit-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Chrome10+,Safari5.1+ */
-            background: -o-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Opera 11.10+ */
-            background: -ms-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* IE10+ */
-            background: linear-gradient(to bottom, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* W3C */
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c9e6e6',GradientType=0 ); /* IE6-8 */
+/* line 8 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+.CardsDeck {
+  background-color: #777;
 }
-/* IE9 SVG, needs conditional override of 'filter' to 'none' */
-            background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjOWU2ZTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) no-repeat #c9e6e6;
-            background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(144,216,220,1) 100%) no-repeat #c9e6e6; /* FF3.6+ */
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%, #c9e6e6) no-repeat #c9e6e6); /* Chrome,Safari4+ */
-            background: -webkit-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Chrome10+,Safari5.1+ */
-            background: -o-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* Opera 11.10+ */
-            background: -ms-linear-gradient(top, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* IE10+ */
-            background: linear-gradient(to bottom, #ffffff 0%, #c9e6e6 100%) no-repeat #c9e6e6; /* W3C */
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c9e6e6',GradientType=0 ); /* IE6-8 */
 
-/* line 15 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck .Card {
   margin: 14px 0;
 }
 
-/* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 17 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider {
   padding: 4px 40px;
   position: relative;
   height: 100%;
 }
 
-/* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch {
   max-width: 40px;
   position: absolute;
@@ -1273,36 +1294,36 @@ fieldset[disabled] .btn-secondary.active {
   height: 100%;
 }
 
-/* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 34 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch > * {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 41 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 39 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch,
 .CardsDeck.CardsDeck--slider .CardsDeck-switch a {
   color: White;
 }
 
-/* line 45 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 43 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch.CardsDeck-switch--previous {
   left: 0;
 }
 
-/* line 48 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--slider .CardsDeck-switch.CardsDeck-switch--next {
   right: 0;
 }
 
-/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 53 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider {
   padding: 4px 16px 40px 16px;
   position: relative;
   min-height: 100%;
 }
 
-/* line 65 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 63 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots {
   position: absolute;
   left: 0;
@@ -1311,7 +1332,7 @@ fieldset[disabled] .btn-secondary.active {
   text-align: center;
 }
 
-/* line 72 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 70 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > * {
   display: inline-block;
   width: 10px;
@@ -1325,7 +1346,7 @@ fieldset[disabled] .btn-secondary.active {
   background-color: transparent;
 }
 
-/* line 83 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 81 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck.CardsDeck--dotsSlider .CardsDeck-dots > *.is-active {
   margin: 0px;
   background-color: #555;
@@ -1333,12 +1354,12 @@ fieldset[disabled] .btn-secondary.active {
   width: 12px;
 }
 
-/* line 97 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 95 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .ActivityTitle + .CardsDeck {
   margin-top: -10px;
 }
 
-/* line 25 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 98 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Card.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card {
@@ -1669,7 +1690,7 @@ fieldset[disabled] .btn-secondary.active {
   background-color: #e0004f;
 }
 
-/* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
