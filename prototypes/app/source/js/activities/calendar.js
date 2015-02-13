@@ -115,10 +115,19 @@ function CalendarActivity($activity, app) {
 }
 
 CalendarActivity.prototype.show = function show(options) {
-    /* jshint maxcomplexity:8 */
+    /* jshint maxcomplexity:10 */
     
-    if (options && (options.date instanceof Date))
-        this.dataView.currentDate(options.date);
+    // TODO On change date, update URL with the new date as first segment
+    // DOUBT: replace or push state?
+    
+    if (options && options.route && options.route.segments) {
+        var sdate = options.route.segments[0],
+            mdate = moment(sdate),
+            date = mdate.isValid() ? mdate.toDate() : null;
+
+        if (date)
+            this.dataView.currentDate(date);
+    }
     
     if (options && options.route) {
         switch (options.route.segments[0]) {
