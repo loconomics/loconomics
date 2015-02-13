@@ -2,7 +2,6 @@
 
 /** Global dependencies **/
 var $ = require('jquery');
-require('bootstrap');
 require('jquery-mobile');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
@@ -19,6 +18,45 @@ var NavBar = require('./viewmodels/NavBar'),
 
 // Register the special locale
 require('./locales/en-US-LC');
+
+/**
+    A set of fixes/workarounds for Bootstrap behavior/plugins
+    to be executed before Bootstrap is included/executed.
+    For example, because of data-binding removing/creating elements,
+    some old references to removed items may get alive and need update,
+    or re-enabling some behaviors.
+**/
+function preBootstrapWorkarounds() {
+    // Internal Bootstrap source utility
+    function getTargetFromTrigger($trigger) {
+        var href,
+            target = $trigger.attr('data-target') ||
+            (href = $trigger.attr('href')) && 
+            href.replace(/.*(?=#[^\s]+$)/, ''); // strip for ie7
+
+        return $(target);
+    }
+    
+    // Bug: navbar-collapse elements hold a reference to their original
+    // $trigger, but that trigger can change on different 'clicks' or
+    // get removed the original, so it must reference the new one
+    // (the latests clicked, and not the cached one under the 'data' API).    
+    // NOTE: handler must execute before the Bootstrap handler for the same
+    // event in order to work.
+    $(document).on('click.bs.collapse.data-api.workaround', '[data-toggle="collapse"]', function(e) {
+        var $t = $(this),
+            $target = getTargetFromTrigger($t),
+            data = $target && $target.data('bs.collapse');
+        
+        // If any
+        if (data) {
+            // Replace the trigger in the data reference:
+            data.$trigger = $t;
+        }
+        // On else, nothing to do, a new Collapse instance will be created
+        // with the correct target, the first time
+    });
+}
 
 /**
     App static class
@@ -95,6 +133,10 @@ var appInit = function appInit() {
             $('html').height(window.innerHeight + 'px');
         });
     }
+    
+    // Bootstrap
+    preBootstrapWorkarounds();
+    require('bootstrap');
     
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
