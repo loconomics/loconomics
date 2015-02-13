@@ -54,7 +54,7 @@
 
 /* line 79 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
-/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
 
@@ -113,6 +113,11 @@ fieldset[disabled] .btn-secondary.active {
 .btn-secondary .badge {
   color: #e0004f;
   background-color: #fff;
+}
+
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+.form-control-static {
+  padding: 7px 13px;
 }
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */

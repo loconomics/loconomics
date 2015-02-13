@@ -1,38 +1,53 @@
 <!-- Activity contactInfo -->
-<div class="container-fluid has-navbar" data-activity="contactInfo">
+<div class="container-fluid" data-activity="contactInfo">
   <form role="form">
     <div>
-        <h1 class="ActivityTitle">
-            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
-            <span>Add contact info</span>
-        </h1>
+        <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
 
-      <fieldset>
-        <div class="form-group">
-          <label for="contactInfoFirstName">First name</label>
-          <input type="text" class="form-control" id="contactInfoFirstName" required>
-        </div>
-        <div class="form-group">
-          <label for="contactInfoLastName">Last name</label>
-          <input type="text" class="form-control" id="contactInfoLastName" required>
-        </div>
-        <div class="form-group">
-          <label for="contactInfoMobilePhone">Mobile phone</label>
-          <input type="tel" class="form-control" id="contactInfoMobilePhone" required>
-        </div>
-        <div class="form-group">
-          <label for="contactInfoBusinessName">Business name (optional)</label>
-          <input type="text" class="form-control" id="contactInfoBusinessName">
-        </div>
-      </fieldset>
+        <fieldset class="isolated">
+            <div class="form-group">
+              <input type="text" class="form-control" required placeholder="First name" aria-label="First name">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" required placeholder="Last name" aria-label="Last name">
+            </div>
+            <div class="form-group">
+              <input type="tel" class="form-control" required placeholder="Mobile phone" aria-label="Mobile phone">
+            </div>
+
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Street address line 1" aria-label="Street address line 1">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Street address line 2" aria-label="Street address line 2">
+            </div>
+
+            <div class="form-group">
+                <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bindZZZ="value: postalCode">
+            </div>
+            <div class="form-group">
+                <p class="form-control-static">
+                    <span data-bindZZ="text: city">San Francisco</span>, 
+                    <span data-bindZZ="text: stateProvinceCode">CA</span>
+                </p>
+            </div>
+            
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Business name (optional)" aria-label="Business name (optional)">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Website name (optional)" aria-label="Website name (optional)">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Alternative e-mail address (optional)" aria-label="Alternative e-mail address (optional)">
+            </div>
+        </fieldset>
     </div>
 
     <div class="navbar navbar-default ActivityNavbar">
-      <div class="container">
-        <button type="submit" class="btn btn-primary btn-block">
-          Save and continue
-        </button>
-      </div>
+        <div class="container">
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText"></button>
+        </div>
     </div>
   </form>
 

@@ -15,3 +15,13 @@ $btn-secondary-border = darken($btn-secondary-bg, 5%)
 .btn-secondary {
     button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
 }
+
+/**
+    The form control static has by default a different padding
+    than the real form controls. Must be the same, taking care
+    of the border size.
+    TODO: Use variables from Bootstrap rather than static values
+**/
+.form-control-static {
+    padding: 7px 13px;
+}
