@@ -1,5 +1,5 @@
 /**
-    Positions activity
+    Onboarding Positions activity
 **/
 'use strict';
 
@@ -10,15 +10,15 @@ var $ = require('jquery'),
 
 var singleton = null;
 
-exports.init = function initPositions($activity, app) {
+exports.init = function initOnboardingPositions($activity, app) {
 
     if (singleton === null)
-        singleton = new PositionsActivity($activity, app);
+        singleton = new OnboardingPositionsActivity($activity, app);
     
     return singleton;
 };
 
-function PositionsActivity($activity, app) {
+function OnboardingPositionsActivity($activity, app) {
 
     this.accessLevel = app.UserType.Provider;
     
@@ -41,7 +41,7 @@ function PositionsActivity($activity, app) {
     });
 }
 
-PositionsActivity.prototype.show = function show(options) {
+OnboardingPositionsActivity.prototype.show = function show(options) {
  
     options = options || {};
     this.requestInfo = options;

@@ -715,24 +715,23 @@
         </div>
       </div>
     </div>
-    <!-- Activity positions -->
-    <div class="container-fluid has-navbar" data-activity="positions">
-      <div class="">
-         <h1 class="ActivityTitle">
-        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-        <span>Add one or more job title(s)</span>
-    </h1>
+    <!-- Activity onboardingPositions -->
+    <div class="container-fluid has-navbar" data-activity="onboardingPositions">
+      <div>
+         <h2 class="SectionTitle">Add one or more job title(s)</h2>
 
-        <form role="form">
-          <div class="input-group">
-            <label for="addPositionSearch" class="sr-only">Search</label>
-            <input type="text" class="form-control" id="addPositionSearch"
-            placeholder="search"> <span class="input-group-btn">
-          <button type="button" class="btn btn-primary">
-            Add <span class="glyphicon glyphicon-chevron-right"></span>
+        <form role="form" class="isolated">
+          <div class="input-group"> <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-search"></span>
+            <span
+            class="sr-only">Search</span>
+              </span>
+              <label for="addPositionSearch" class="sr-only">Search</label>
+              <input type="text" class="form-control" id="addPositionSearch"
+              placeholder="search"> <span class="input-group-btn">
+                  <button type="button" class="btn btn-primary">Add</button>
+              </span>
 
-            </button>
-            </span>
           </div>
         </form>
       </div>
@@ -740,7 +739,7 @@
         <div class="ListView-item">
           <div class="ListView-item-marker"><span data-bind="text: ($index() + 1)">1</span>.</div> <a href="#" class="btn btn-link btn-block ListView-item-content"
           data-bind="text: positionSingular"></a>
- <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-trash"></span></a>
+ <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-trash text-danger"></span></a>
 
         </div>
       </div>
