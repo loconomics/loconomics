@@ -1,7 +1,7 @@
 <!-- Activity clients -->
-<div class="container-fluid has-frozenTitle" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
+<div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
 
-  <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tags"></span><span data-bind="text: headerText">Clients</span><span class="ActivityTitle-action "><!-- TODO: conditionally showed when in select mode since the app-action must be a back button rather than add-nmew --><button type="button" class="btn btn-primary">Add new</button></span></h1>
+  <h2 class="SectionTitle" data-bind="visible: headerText"><span data-bind="text: headerText">Clients</span></h2>
 
   <div class="isolated">
     <div class="input-group">
@@ -9,6 +9,9 @@
         <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
       </span>
       <input type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-secondary">Add</button>
+        </span>
     </div><!-- /input-group -->
   </div>
 

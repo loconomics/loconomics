@@ -22,11 +22,11 @@ exports.init = function initTextEditor($activity, app) {
 function TextEditorActivity($activity, app) {
 
     this.navBar = new NavBar({
-        // Title is ever empty..
+        // Title is empty ever, since we are in 'go back' mode all the time here
         title: '',
         // but leftAction.text is updated on 'show' with passed value,
         // so we need a clone to not modify the shared static instance
-        leftAction: NavAction.goBack.model.clone(),
+        leftAction: NavAction.goBack.model.clone({ isTitle: true }),
         rightAction: NavAction.goHelpIndex
     });
     
@@ -70,9 +70,8 @@ TextEditorActivity.prototype.show = function show(options) {
     options = options || {};
     this.requestInfo = options;
 
-    // TODO Implement on related activities to pass in a title
     // Set navigation title or nothing
-    this.navBar.title(options.title || '');
+    this.navBar.leftAction().text(options.title || '');
     
     // Field header
     this.dataView.headerText(options.header);

@@ -1,7 +1,7 @@
 <!-- Activity locations -->
-<div class="container-fluid has-frozenTitle" data-activity="locations">
+<div class="container-fluid" data-activity="locations">
 
-  <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-globe"></span><span data-bind="text: headerText">Locations</span></h1>
+  <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Locations</h2>
 
   <div id="locationsListView">
     <div class="ListView ListView--twolines" data-bind="foreach: locations">
@@ -16,8 +16,7 @@
   </div>
 
   <div id="locationsAddNewButtons" class="isolated">
-    <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add client location</button>
-    <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add new location</button>
+    <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add new client location</button>
   </div>
 
 </div>

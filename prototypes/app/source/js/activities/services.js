@@ -37,11 +37,6 @@ function ServicesActivity($activity, app) {
 
     // TestingData
     dataView.services(require('../testdata/services').services.map(Selectable));
-    
-    // Handler to update header based on a mode change:
-    this.dataView.isSelectionMode.subscribe(function (itIs) {
-        this.dataView.headerText(itIs ? 'Select service(s)' : 'Services');
-    }.bind(this));
 
     // Object to hold the options passed on 'show' as a result
     // of a request from another activity
@@ -102,8 +97,6 @@ function Selectable(obj) {
 
 function ViewModel() {
 
-    this.headerText = ko.observable('Services');
-
     // Full list of services
     this.services = ko.observableArray([]);
 
@@ -116,13 +109,14 @@ function ViewModel() {
     this.groupedServices = ko.computed(function(){
 
         var services = this.services();
+        var isSelection = this.isSelectionMode();
 
         var servicesGroup = {
-                group: 'Services',
+                group: isSelection ? 'Select standalone services' : 'Standalone services',
                 services: []
             },
             addonsGroup = {
-                group: 'Add-on services',
+                group: isSelection ? 'Select add-on services' : 'Add-on services',
                 services: []
             },
             groups = [servicesGroup, addonsGroup];

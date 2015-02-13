@@ -45,7 +45,7 @@ function AppointmentActivity($activity, app) {
     this.navBar = new NavBar({
         title: '',
         leftAction: backAction,
-        rightAction: NavAction.menuIn
+        rightAction: NavAction.goHelpIndex
     });
     
     this.initAppointment();
@@ -316,6 +316,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
             app.shell.go('textEditor', {
                 request: 'textEditor',
                 field: field,
+                title: appointmentsDataView.isNew() ? 'New booking' : 'Booking',
                 header: textFieldsHeaders[field],
                 text: appointmentsDataView.currentAppointment()[field]()
             });

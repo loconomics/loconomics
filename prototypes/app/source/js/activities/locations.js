@@ -39,7 +39,17 @@ function LocationsActivity($activity, app) {
 
     // Handler to update header based on a mode change:
     this.dataView.isSelectionMode.subscribe(function (itIs) {
-        this.dataView.headerText(itIs ? 'Select/Add location' : 'Locations');
+        this.dataView.headerText(itIs ? 'Select or add a service location' : 'Locations');
+        
+        // Update navbar too
+        this.navBar.leftAction(NavAction.goBack.model.clone());
+        this.navBar.rightAction(NavAction.goHelpIndex);
+        // Title must be empty
+        this.navBar.title('');
+        // TODO Replaced by a progress bar on booking creation
+        // TODO Or leftAction().text(..) on booking edition (return to booking)
+        // or coming from Jobtitle/schedule (return to schedule/job title)?
+        
     }.bind(this));
 
     // Object to hold the options passed on 'show' as a result

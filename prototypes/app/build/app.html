@@ -282,15 +282,18 @@
       </div>
     </div>
     <!-- Activity clients -->
-    <div class="container-fluid has-frozenTitle" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
-       <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tags"></span><span data-bind="text: headerText">Clients</span><span class="ActivityTitle-action "><!-- TODO: conditionally showed when in select mode since the app-action must be a back button rather than add-nmew --><button type="button" class="btn btn-primary">Add new</button></span></h1>
+    <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
+       <h2 class="SectionTitle" data-bind="visible: headerText"><span data-bind="text: headerText">Clients</span></h2>
 
       <div class="isolated">
         <div class="input-group"> <span class="input-group-addon">
         <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
 </span>
           <input
-          type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+          type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'"> <span class="input-group-btn">
+            <button type="button" class="btn btn-secondary">Add</button>
+        </span>
+
         </div>
         <!-- /input-group -->
       </div>
@@ -355,8 +358,8 @@
       </form>
     </div>
     <!-- Activity datetimePicker -->
-    <div class="container-fluid has-frozenTitle" data-activity="datetimePicker">
-       <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-time"></span><span data-bind="text: headerText">Select a start time</span></h1>
+    <div class="container-fluid" data-activity="datetimePicker">
+       <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Select a start time</h2>
 
       <div id="datetimePickerDatePicker" class="calendar-placeholder" data-date="today"></div>
       <!-- Daily View (appointments list) -->
@@ -576,8 +579,8 @@
       </div>
     </div>
     <!-- Activity locations -->
-    <div class="container-fluid has-frozenTitle" data-activity="locations">
-       <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-globe"></span><span data-bind="text: headerText">Locations</span></h1>
+    <div class="container-fluid" data-activity="locations">
+       <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Locations</h2>
 
       <div id="locationsListView">
         <div class="ListView ListView--twolines" data-bind="foreach: locations">
@@ -593,9 +596,7 @@
         </div>
       </div>
       <div id="locationsAddNewButtons" class="isolated">
-        <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add client location</button>
-        <button type="button" class="btn btn-primary btn-block"
-        data-href="#!locations/new/serviceLocation">Add new location</button>
+        <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add new client location</button>
       </div>
     </div>
     <!-- Activity login -->
@@ -734,9 +735,7 @@
       </div>
     </div>
     <!-- Activity services -->
-    <div class="container-fluid has-frozenTitle" data-activity="services">
-       <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tags"></span><span data-bind="text: headerText">Services</span><span class="ActivityTitle-action "><button type="button" class="btn btn-primary" data-bind="event: { tap: endSelection }">Done</button></span></h1>
-
+    <div class="container-fluid" data-activity="services">
       <div id="servicesListView">
         <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedServices">
           <div class="ListView-divider SectionTitle"> <strong data-bind="text: group"></strong>
@@ -757,8 +756,8 @@
           <!-- /ko -->
         </div>
       </div>
-      <div id="servicesAddNewButton" class="isolated">
-        <button type="button" class="btn btn-primary btn-block">Add new service</button>
+      <div class="isolated">
+        <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }">Save and continue</button>
       </div>
     </div>
     <!-- Activity Signup -->
@@ -794,16 +793,16 @@
       </div>
     </div>
     <!-- Activity textEditor -->
-    <div class="container-fluid has-frozenTitle" data-activity="textEditor">
-       <h1 class="ActivityTitle" id="textEditorTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-edit"></span><span data-bind="text: headerText">Text</span></h1>
+    <div class="container-fluid" data-activity="textEditor">
+       <h2 class="SectionTitle" id="textEditorTitle" data-bind="visible: headerText, text: headerText">Text</h2>
 
-      <div>
+      <div class="isolated">
         <textarea id="textEditorText" data-bind="value: text, valueUpdate: 'afterkeydown', attr: { rows: rowsNumber }"
         aria-labelledby="textEditorTitle" class="form-control" rows="2"></textarea>
       </div>
       <div class="row isolated">
         <div class="col-xs-6">
-          <button type="button" class="btn btn-danger btn-block" data-bind="event: { tap: cancel }">Cancel</button>
+          <button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: cancel }">Cancel</button>
         </div>
         <div class="col-xs-6">
           <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }">Save</button>

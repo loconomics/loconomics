@@ -1,7 +1,5 @@
 <!-- Activity services -->
-<div class="container-fluid has-frozenTitle" data-activity="services">
-
-  <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tags"></span><span data-bind="text: headerText">Services</span><span class="ActivityTitle-action "><button type="button" class="btn btn-primary" data-bind="event: { tap: endSelection }">Done</button></span></h1>
+<div class="container-fluid" data-activity="services">
 
   <div id="servicesListView">
     <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedServices">
@@ -21,8 +19,8 @@
     </div>
   </div>
 
-  <div id="servicesAddNewButton" class="isolated">
-    <button type="button" class="btn btn-primary btn-block">Add new service</button>
+  <div class="isolated">
+      <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }">Save and continue</button>
   </div>
 
 </div>
