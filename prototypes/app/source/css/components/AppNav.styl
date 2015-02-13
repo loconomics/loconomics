@@ -89,12 +89,17 @@
         transition-duration: 300ms;
         transition-timing-function: ease-in-out;
     }
-    .navbar-toggle {
-        transitionNavSetup();
     
+    .navbar-toggle,
+    > .SmartNavBar > .SmartNavBar-edge {
         // To avoid the rotation from create a larger
         // box, overflow:hidden is required:
         overflow: hidden;
+        text-overflow: clip !important;
+    }
+
+    .navbar-toggle {
+        transitionNavSetup();
     
         > * {
             transitionNavSetup();

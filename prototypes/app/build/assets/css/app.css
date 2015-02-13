@@ -241,27 +241,35 @@ fieldset[disabled] .btn-secondary.active {
   outline: none;
 }
 
-/* line 75 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 76 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav li.active > a {
   color: White;
   background: #e0004f;
 }
 
-/* line 79 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 80 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav > li + li,
 .AppNav .App-menus .navbar-nav > li > ul {
   border-top: 1px solid #777;
 }
 
-/* line 82 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-
 /* line 83 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+
+/* line 84 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav > li > ul.nav > li {
   text-indent: 1em;
   line-height: 1em;
 }
 
-/* line 96 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 97 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle,
+.AppNav > .SmartNavBar > .SmartNavBar-edge {
+  overflow: hidden;
+  -o-text-overflow: clip !important;
+  text-overflow: clip !important;
+}
+
+/* line 103 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle {
   -webkit-transition-property: -webkit-transform, opacity;
   -moz-transition-property: -moz-transform, opacity;
@@ -278,7 +286,6 @@ fieldset[disabled] .btn-secondary.active {
   -o-transition-timing-function: ease-in-out;
   -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
-  overflow: hidden;
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
   -o-transform: rotate(0deg);
@@ -286,7 +293,7 @@ fieldset[disabled] .btn-secondary.active {
   transform: rotate(0deg);
 }
 
-/* line 101 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 105 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle > * {
   -webkit-transition-property: -webkit-transform, opacity;
   -moz-transition-property: -moz-transform, opacity;
@@ -308,7 +315,7 @@ fieldset[disabled] .btn-secondary.active {
   filter: none;
 }
 
-/* line 106 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 110 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle:before {
   content: "";
   position: absolute;
@@ -345,7 +352,7 @@ fieldset[disabled] .btn-secondary.active {
   transition-timing-function: ease-in-out;
 }
 
-/* line 125 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 129 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"] {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -354,14 +361,14 @@ fieldset[disabled] .btn-secondary.active {
   transform: rotate(180deg);
 }
 
-/* line 127 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 131 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"] > * {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
 }
 
-/* line 132 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 136 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"]:before {
   opacity: 1;
   -ms-filter: none;
