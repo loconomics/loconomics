@@ -37,50 +37,15 @@
 
         <nav role="navigation" class="AppNav">
             
-            <div class="SmartNavBar" data-bind="with: navBar">
-
-                <span data-bind="with: leftAction" class="SmartNavBar-edge left">
-                    <a class="SmartNavBar-btn" href="#" data-bind="visible: !isMenu(), attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
-                        <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
-                        <span><h1 data-bind="visible: isTitle, text: text"></h1><span data-bind="visible: !isTitle(), text: text"></span></span>
-                    </a>
-                    <button type="button" class="SmartNavBar-btn navbar-toggle collapsed" data-bind="visible: isMenu, attr: { 'data-target': getMenuLink(), 'aria-controls': getMenuID() }" data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut">
-                        <span data-bind="visible: icon() === 'menu'">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </span>
-                        <span data-bind="visible: icon() !== 'menu'">
-                            <span data-bind="attr: { 'class': icon }"></span>
-                            <span><h1 data-bind="visible: isTitle, text: text"></h1><span data-bind="visible: !isTitle(), text: text"></span></span>
-                        </span>
-                    </button>
-                </span>
+            <div class="SmartNavBar">
+                <span data-bind="component: { name: 'navbar-action', params: { action: 'leftAction', navBar: navBar } }" class="SmartNavBar-edge left"></span>
 
                 <h1>&nbsp;
-                    <span data-bind="text: title()"></span>
-                    <a data-bind="visible: title() === null" class="navbar-brand" href="#">Loconomics</a>
+                    <span data-bind="text: navBar() && navBar().title()"></span>
+                    <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="#">Loconomics</a>
                 &nbsp;</h1>
-
-                <span data-bind="with: rightAction" class="SmartNavBar-edge right">
-                    <a class="SmartNavBar-btn" href="#" data-bind="visible: !isMenu(), attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
-                        <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
-                        <span><h1 data-bind="visible: isTitle, text: text"></h1><span data-bind="visible: !isTitle(), text: text"></span></span>
-                    </a>
-                    <button type="button" class="SmartNavBar-btn navbar-toggle collapsed" data-bind="visible: isMenu, attr: { 'data-target': getMenuLink(), 'aria-controls': getMenuID() }" data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span data-bind="visible: icon() === 'menu'">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </span>
-                        <span data-bind="visible: icon() !== 'menu'">
-                            <span data-bind="attr: { 'class': icon }"></span>
-                            <span><h1 data-bind="visible: isTitle, text: text"></h1><span data-bind="visible: !isTitle(), text: text"></span></span>
-                        </span>
-                    </button>
-                </span>
-
+                
+                <span data-bind="component: { name: 'navbar-action', params: { action: 'rightAction', navBar: navBar } }" class="SmartNavBar-edge right"></span>
             </div>
                 
             <div class="App-menus">

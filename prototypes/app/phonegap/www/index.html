@@ -20,135 +20,86 @@
   
   <body>
     <div class="SplashScreen">Loading...</div>
-    <nav role="navigation" class="AppNav SmartNavBar" data-bind="with: navBar"> <span data-bind="with: leftAction">
-                <a class="left SmartNavBar-btn" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
-                    <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
+    <nav role="navigation" class="AppNav">
+      <div class="SmartNavBar"> <span data-bind="component: { name: 'navbar-action', params: { action: 'leftAction', navBar: navBar } }"
+        class="SmartNavBar-edge left"></span>
 
-      <span
-      data-bind="if: isTitle">
-        <h1 data-bind="text: text" class="glyphicon"></h1>
-        </span>
-        </a>
-        <button type="button" class="left SmartNavBar-btn navbar-toggle collapsed"
-        data-bind="if: isMenu, attr: { 'data-target': getMenuLink, 'aria-controls': getMenuID }"
-        data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut"> <span class="sr-only">Toggle navigation</span>
- <span class="icon-bar"></span>
+         <h1>&nbsp;
+                    <span data-bind="text: navBar() && navBar().title()"></span>
+                    <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="#">Loconomics</a>
+                &nbsp;</h1>
+ <span data-bind="component: { name: 'navbar-action', params: { action: 'rightAction', navBar: navBar } }"
+        class="SmartNavBar-edge right"></span>
 
-          <span
-          class="icon-bar"></span> <span class="icon-bar"></span>
+      </div>
+      <div class="App-menus">
+        <div id="menuIn" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a>tools</a>
 
-        </button>
-        </span>
-         <h1><span data-bind="text: title()"></span><a data-bind="if: !title()" class="navbar-brand" href="#">Loconomics</a></h1>
- <span data-bind="with: rightAction">
-                <a class="right SmartNavBar-btn" href="#" data-bind="attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }">
-                    <span data-bind="attr: { 'class': icon }" class="glyphicon"></span>
-
-        <span
-        data-bind="if: isTitle">
-          <h1 data-bind="text: text" class="glyphicon"></h1>
-          </span>
-          </a>
-          <button type="button" class="right SmartNavBar-btn navbar-toggle collapsed"
-          data-bind="if: isMenu, attr: { 'data-target': getMenuLink, 'aria-controls': getMenuID }"
-          data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut"> <span class="sr-only">Toggle navigation</span>
- <span class="icon-bar"></span>
-
-            <span
-            class="icon-bar"></span> <span class="icon-bar"></span>
-
-          </button>
-          </span>
-          <div class="App-menus">
-            <div id="menuIn" class="navbar-collapse collapse">
-              <ul class="nav navbar-nav">
-                <li><span>tools</span>
-
-                  <ul>
-                    <li class="go-home"><a href="/home">Dashboard</a>
-                    </li>
-                    <li class="go-calendar"><a href="/calendar">Calendar</a>
-                    </li>
-                    <li class="go-inbox"><a href="/inbox">Inbox</a>
-                    </li>
-                    <li class="go-scheduling"><a href="/scheduling">Scheduling</a>
-                    </li>
-                    <li class="go-clients"><a href="/clients">Client management</a>
-                    </li>
-                    <li class="go-payments"><a href="/payments">Payment processing</a>
-                    </li>
-                    <li class="go-performance"><a href="/performance">Performance</a>
-                    </li>
-                    <li class="go-insurance"><a href="/insurance">Insurance</a>
-                    </li>
-                    <li class="go-marketplace"><a href="/marketplace">Marketplace</a>
-                    </li>
-                  </ul>
+              <ul class="nav">
+                <li class="go-home"><a href="/home">Dashboard</a>
                 </li>
-                <li class="go-marketplace-profile"><a href="/marketplace-profile">Marketplace profile</a>
+                <li class="go-calendar"><a href="/calendar">Calendar</a>
                 </li>
-                <li class="go-account"><a href="/account">Account</a>
+                <li class="go-inbox"><a href="/inbox">Inbox</a>
                 </li>
-                <li class="go-talk-to-us"><a href="/talk-to-us">Talk to us</a>
+                <li class="go-scheduling"><a href="/scheduling">Scheduling</a>
                 </li>
-                <li class="go-logout"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                <li class="go-clients"><a href="/clients">Client management</a>
+                </li>
+                <li class="go-payments"><a href="/payments">Payment processing</a>
+                </li>
+                <li class="go-performance"><a href="/performance">Performance</a>
+                </li>
+                <li class="go-insurance"><a href="/insurance">Insurance</a>
+                </li>
+                <li class="go-marketplace"><a href="/marketplace">Marketplace</a>
                 </li>
               </ul>
-            </div>
-            <div id="menuOut" class="navbar-collapse collapse">
-              <ul class="nav navbar-nav">
-                <li class="go-index"><a href="/">Home</a>
+            </li>
+            <li class="go-marketplace-profile"><a href="/marketplace-profile">Marketplace profile</a>
+            </li>
+            <li class="go-account"><a href="/account">Account</a>
+            </li>
+            <li class="go-talk-to-us"><a href="/talk-to-us">Talk to us</a>
+            </li>
+            <li class="go-logout"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+            </li>
+          </ul>
+        </div>
+        <div id="menuOut" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="go-index"><a href="/">Home</a>
+            </li>
+            <li class="go-login"><a href="/login">Login</a>
+            </li>
+            <li class="go-signup"><a href="/signup">Signup</a>
+            </li>
+          </ul>
+        </div>
+        <div id="menuNewItem" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a>Add new</a>
+
+              <ul class="nav">
+                <li class="go-booking-new"><a href="/booking/new">Booking</a>
                 </li>
-                <li class="go-login"><a href="/login">Login</a>
+                <li class="go-client-new"><a href="/client/new">Client</a>
                 </li>
-                <li class="go-signup"><a href="/signup">Signup</a>
+                <li class="go-calendar-new"><a href="/calendar/new">Calendar block</a>
+                </li>
+                <li class="go-pricing-new"><a href="/pricing/new">Pricing</a>
+                </li>
+                <li class="go-jobtitle-new"><a href="/jobtitle/new">Job title</a>
                 </li>
               </ul>
-            </div>
-            <div id="menuNewItem" class="navbar-collapse collapse">
-              <ul class="nav navbar-nav">
-                <li><span>Add new</span>
-
-                  <ul>
-                    <li class="go-booking-new"><a href="/booking/new">Booking</a>
-                    </li>
-                    <li class="go-client-new"><a href="/client/new">Client</a>
-                    </li>
-                    <li class="go-calendar-new"><a href="/calendar/new">Calendar block</a>
-                    </li>
-                    <li class="go-pricing-new"><a href="/pricing/new">Pricing</a>
-                    </li>
-                    <li class="go-jobtitle-new"><a href="/jobtitle/new">Job title</a>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </div>
-          </div>
-    </nav>
-    <!-- Modal calendarChooseNew -->
-    <div id="calendarChooseNew" class="modal" tabindex="-1" role="dialog"
-    aria-labelledby="calendarChooseNewLabel" aria-hidden="true" data-backdrop="static">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-            </button>
-             <h4 class="modal-title" id="calendarChooseNewLabel">Create a new...</h4>
-
-          </div>
-          <div class="modal-body"> <a class="btn btn-block btn-default" href="#!calendar/new/booking">Booking</a>
-
-            <a
-            class="btn btn-block btn-default" href="#!calendar/new/event">Calendar Event</a>
-              <button type="button" class="btn btn-block btn-danger"
-              data-dismiss="modal">Cancel</button>
-          </div>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
-    <!-- Modal newItem -->
+    </nav>
+    <!-- Modal newItem .. TO REMOVE, IS REPLACED BY A MENU -->
     <div id="newItem" class="modal" tabindex="-1" role="dialog" aria-labelledby="newItemLabel"
     aria-hidden="true" data-backdrop="static">
       <div class="modal-dialog">
@@ -173,9 +124,7 @@
       </div>
     </div>
     <!-- Activity appointment -->
-    <div class="container-fluid has-frozenTitle" data-activity="appointment">
-       <h1 class="ActivityTitle"><span class="glyphicon glyphicon-calendar" data-bind="visible: !isNew()"></span><span data-bind="text: currentDate(), format: { type: 'datetime', format: 'dddd [(]M/D[)]' }"></span><span class="ActivityTitle-action "><button type="button" class="btn btn-primary" data-bind="event: { tap: returnToCalendar }">back</button></span></h1>
-
+    <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
       <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">
@@ -680,7 +629,7 @@
     </div>
     <!-- Activity logout -->
     <div class="container-fluid" data-activity="logout"></div>
-    <!- Activity onboardingComplete -->
+    <!-- Activity onboardingComplete -->
     <div class="container-fluid" data-activity="onboardingComplete">
       <div class="LeadContent LeadContent--success"> <span class="glyphicon glyphicon-ok text-success success-icon" aria-hidden="true"></span>
 
@@ -862,6 +811,24 @@
         </div>
       </div>
     </div>
+    <!-- Component Template navbar-action -->
+    <script type="text/html" id="navbar-action-template">
+      <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }">
+          <span data-bind="attr: { 'class': action && action.icon() }" class="glyphicon"></span>
+          <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
+      </a>
+      <button type="button" class="SmartNavBar-btn navbar-toggle collapsed" data-bind="visible: action && action.isMenu(), attr: { 'data-target': action && action.getMenuLink(), 'aria-controls': action && action.getMenuID() }" data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut">
+          <span data-bind="visible: action && action.icon() === 'menu'">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+          </span>
+          <span data-bind="visible: (action && action.icon()) !== 'menu'">
+              <span data-bind="attr: { 'class': action && action.icon() }"></span>
+              <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
+          </span>
+      </button>
+    </script>
   </body>
 
 </html>

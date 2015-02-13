@@ -88,6 +88,8 @@ var app = {
 
 require('./app-navbar').extends(app);
 
+require('./app-components').registerAll();
+
 app.getActivity = function getActivity(name) {
     var activity = this.activities[name];
     if (activity) {

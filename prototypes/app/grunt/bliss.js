@@ -2,7 +2,7 @@
 
 module.exports = function(grunt) {
 
-    var includedPatterns = ['modals/**/*.html', 'activities/**/*.html'];
+    var includedPatterns = ['modals/**/*.html', 'activities/**/*.html', 'templates/**/*.html'];
     var includedDir = 'source/html/';
     var includedFiles = grunt.file.expand({
         cwd: includedDir,
