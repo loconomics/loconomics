@@ -10,16 +10,16 @@ $gray = lighten(#000, 33.5%);
 $aligned-to-action-buttons-right = 7px; /* padding-right plus border */
 
 .SectionTitle {
-    font-size: 1em;
-    padding: .5em 1em;
+    font-size: 17px;
+    padding: 7px 14px;
     margin: 0;
     text-align: center;
-    font-weight: bold;
-    background: $gray-lighter;
-    border: 1px solid $gray;
-    border-right-width: 0;
-    border-left-width: 0;
+    font-weight: normal;
+    background: $gray-background;
+    border: none;
+    color: $gray-dark;
     
+    // TOREVIEW: HelpPoint was deprecated on mobile, but under review for desktop
     .HelpPoint {
         right: $aligned-to-action-buttons-right;
     }
@@ -29,6 +29,7 @@ $aligned-to-action-buttons-right = 7px; /* padding-right plus border */
 .container-fluid .SectionTitle {
     margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-right);
     
+    // TOREVIEW: HelpPoint was deprecated on mobile, but under review for desktop
     .HelpPoint {
         right: $container-padding-right + $aligned-to-action-buttons-right;
     }

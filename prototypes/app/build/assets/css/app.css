@@ -888,15 +888,14 @@ body.use-backdrop:before {
 
 /* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .SectionTitle {
-  font-size: 1em;
-  padding: 0.5em 1em;
+  font-size: 17px;
+  padding: 7px 14px;
   margin: 0;
   text-align: center;
-  font-weight: bold;
+  font-weight: normal;
   background: #eee;
-  border: 1px solid #555;
-  border-right-width: 0;
-  border-left-width: 0;
+  border: none;
+  color: #333;
 }
 
 /* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
@@ -910,17 +909,17 @@ body.use-backdrop:before {
   margin: 0 -10px 0 -10px;
 }
 
-/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .container .SectionTitle .HelpPoint,
 .container-fluid .SectionTitle .HelpPoint {
   right: 17px;
 }
 
-/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 
 /* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 
-/* line 33 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle {
   font-size: 20px;
   margin: 0 0 10px;
@@ -951,7 +950,7 @@ body.use-backdrop:before {
 /* Optional element: action button at the end */
 }
 
-/* line 63 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 68 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle > span {
   padding: 14px 0 8px 0;
   line-height: 1.3em;
@@ -959,7 +958,7 @@ body.use-backdrop:before {
   vertical-align: middle;
 }
 
-/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 76 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle > a.btn {
   padding: 14px 0 8px 0;
   font-size: 20px;
@@ -968,7 +967,7 @@ body.use-backdrop:before {
   line-height: 1.3em;
 }
 
-/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 83 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle > a.btn:active,
 .ActivityTitle > a.btn:focus,
 .ActivityTitle > a.btn:hover {
@@ -976,7 +975,7 @@ body.use-backdrop:before {
   text-decoration: none;
 }
 
-/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle > .ActivityTitle-action,
 .ActivityTitle > .glyphicon {
 /* fit minimum space */
@@ -984,7 +983,7 @@ body.use-backdrop:before {
   white-space: nowrap;
 }
 
-/* line 93 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 98 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle > .glyphicon {
   font-size: 1.4em;
   line-height: 1em;
@@ -993,14 +992,14 @@ body.use-backdrop:before {
   padding-left: 6px;
 }
 
-/* line 102 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 107 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle > .ActivityTitle-action > * {
 /* adjusting button/link padding to avoid increase the default line height */
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
-/* line 110 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
+/* line 115 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
 
 /* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
 .ActivityNavbar {
@@ -1646,8 +1645,8 @@ body.use-backdrop:before {
 .SmartNavBar {
   position: absolute;
   top: 0;
-  height: 43px;
-  line-height: 43px;
+  height: 44px;
+  line-height: 44px;
   width: 100%;
   padding-top: 0;
   background-color: White;
@@ -1688,8 +1687,8 @@ body.use-backdrop:before {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  height: 43px;
-  line-height: 43px;
+  height: 44px;
+  line-height: 44px;
   -o-text-overflow: ellipsis !important;
   text-overflow: ellipsis !important;
 /* why so !important ? */
@@ -1733,8 +1732,8 @@ body.use-backdrop:before {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  height: 43px;
-  line-height: 43px;
+  height: 44px;
+  line-height: 44px;
   -o-text-overflow: ellipsis !important;
   text-overflow: ellipsis !important;
 /* why so !important ? */
@@ -1798,7 +1797,7 @@ body.use-backdrop:before {
   box-flex: 1;
   margin: 0 65px;
   font-weight: 500;
-  line-height: 43px;
+  line-height: 44px;
 }
 
 /* line 168 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
