@@ -71,7 +71,15 @@ var app = {
     activities: require('./app.activities'),
     
     /**
-        Just redirect the better place for current user and state
+        Just redirect the better place for current user and state.
+        NOTE: Its a delayed function, since on many contexts need to
+        wait for the current 'routing' from end before do the new
+        history change.
+        TODO: Maybe, rather than delay it, can stop current routing
+        (changes on Shell required) and perform the new.
+        TODO: Maybe alternative to previous, to provide a 'replace'
+        in shell rather than a go, to avoid append redirect entries
+        in the history, that create the problem of 'broken back button'
     **/
     goDashboard: function goDashboard() {
         var onboarding = this.model.user().onboardingStep();
@@ -81,7 +89,7 @@ var app = {
         else {
             this.shell.go('home');
         }
-    }
+    }._delayed(1)
 };
 
 /** Continue app creation with things that need a reference to the app **/

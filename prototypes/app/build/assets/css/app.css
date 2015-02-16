@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2015-02-13
+/*! LoconomicsAppProto 2015-02-16
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -127,7 +127,7 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 82 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\appVars.styl */
+/* line 84 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\appVars.styl */
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
@@ -432,17 +432,19 @@ fieldset[disabled] .btn-secondary.active {
 .App .btn-google {
   background-color: #c00;
   color: #fff;
+  border: none;
 }
 
-/* line 44 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 45 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .btn-facebook {
   background-color: #085394;
   color: #fff;
+  border: none;
 }
 
-/* line 57 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 59 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal.bottom .modal-dialog {
   position: absolute;
   padding: 10px;
@@ -451,14 +453,14 @@ fieldset[disabled] .btn-secondary.active {
   bottom: 0;
 }
 
-/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 73 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 72 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 74 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal .modal-dialog {
   padding-top: 44px;
 }
 
-/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 80 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal {
   background: rgba(0,0,0,0.4);
 }
