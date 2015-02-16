@@ -101,6 +101,14 @@
         System.Threading.Thread.CurrentThread.CurrentUICulture = 
         System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
         
+        // REST OPTIONS preflight request. Be fast and response OK
+        // Asp.net will always includes the custom headers from web.config
+        if (Request.HttpMethod == "OPTIONS")
+        {
+            Response.End();
+            return;
+        }
+        
         // Autologin
         LcAuth.RequestAutologin(Request);
     }

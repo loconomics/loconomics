@@ -110,6 +110,10 @@ public class RestWebPage
                 case "DELETE":
                     result = Delete();
                     break;
+                case "OPTIONS":
+                    // Just let asp.net to response empty with the
+                    // custom headers for CORS that were set in the web.config
+                    break;
                 default:
                     throw new HttpException(405, String.Format("{0} is not allowed", Request.HttpMethod));
             }
