@@ -52,16 +52,36 @@ function CalendarActivity($activity, app) {
     this.requestInfo = null;
 
     /* Event handlers */
-    // Update datepicker selected date on date change (from 
-    // a different source than the datepicker itself
+    // Changes on currentDate
     this.dataView.currentDate.subscribe(function(date) {
         
-        var mdate = moment(date);
+        if (date) {
+            var mdate = moment(date);
 
-        this.$datepicker.removeClass('is-visible');
-        // Change not from the widget?
-        if (this.$datepicker.datepicker('getValue').toISOString() !== mdate.toISOString())
-            this.$datepicker.datepicker('setValue', date, true);
+            if (mdate.isValid()) {
+                
+                var isoDate = mdate.toISOString();
+                
+                // Update datepicker selected date on date change (from 
+                // a different source than the datepicker itself
+                this.$datepicker.removeClass('is-visible');
+                // Change not from the widget?
+                if (this.$datepicker.datepicker('getValue').toISOString() !== isoDate)
+                    this.$datepicker.datepicker('setValue', date, true);
+
+                // On currentDate changes, update the URL
+                // TODO: save a useful state
+                // DOUBT: push or replace state? (more history entries or the same?)
+                app.shell.history.pushState(null, null, 'calendar/' + isoDate);
+                
+                // DONE
+                return;
+            }
+        }
+        
+        // Something fail, bad date or not date at all
+        // Set the current one
+        this.dataView.currentDate(new Date());
 
     }.bind(this));
 
@@ -109,16 +129,13 @@ function CalendarActivity($activity, app) {
             this.dataView.currentDate(e.date);
         }
     }.bind(this));
-    
+
     // Set date to match datepicker for first update
     this.dataView.currentDate(this.$datepicker.datepicker('getValue'));
 }
 
 CalendarActivity.prototype.show = function show(options) {
     /* jshint maxcomplexity:10 */
-    
-    // TODO On change date, update URL with the new date as first segment
-    // DOUBT: replace or push state?
     
     if (options && options.route && options.route.segments) {
         var sdate = options.route.segments[0],
