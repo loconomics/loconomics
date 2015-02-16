@@ -84,9 +84,9 @@ function AppointmentActivity($activity, app) {
         var aptId = apt.id();
         var urlId = /appointment\/(\d+)/i.test(window.location);
         urlId = urlId && urlId[1] || '';
-        if (urlId !== aptId.toString()) {
+        if (urlId !== '0' && aptId !== null && urlId !== aptId.toString()) {
             // TODO: save a useful state
-            app.shell.history.pushState(null, null, 'appointment/' + aptId.toString());
+            app.shell.history.pushState(null, null, 'appointment/' + aptId);
         }
     });
 }
@@ -133,12 +133,9 @@ AppointmentActivity.prototype.show = function show(options) {
         }
     }
     
-    var aptId = options && options.appointmentId;
-    if (aptId && options.route.segments[0] !== aptId.toString()) {
-        // Update URL to match ID
-        delete options.appointmentId;
-        this.app.shell.history.replaceState(options, null, 'appointment/' + aptId.toString());
-    }
+    var aptId = options && options.route && options.route.segments[0];
+    aptId = parseInt(aptId, 10);
+    aptId = aptId || 0;
     this.showAppointment(aptId);
 };
 
@@ -146,7 +143,7 @@ var Appointment = require('../models/Appointment');
 
 AppointmentActivity.prototype.showAppointment = function showAppointment(aptId) {
     /*jshint maxstatements:36*/
-    
+
     if (aptId) {
         // TODO: select appointment 'aptId'
         

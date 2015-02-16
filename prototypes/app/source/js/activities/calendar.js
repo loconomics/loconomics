@@ -128,45 +128,6 @@ CalendarActivity.prototype.show = function show(options) {
         if (date)
             this.dataView.currentDate(date);
     }
-    
-    if (options && options.route) {
-        switch (options.route.segments[0]) {
-            
-            case 'appointment':
-                this.$chooseNew.modal('hide');
-                // Pass Appointment ID
-                var aptId = options.route.segments[1];
-                this.showAppointment(aptId || 0);
-                break;
-
-            case 'new':
-                switch (options.route.segments[1]) {
-                
-                    case 'booking':
-                        this.$chooseNew.modal('hide');
-                        this.showAppointment(0);
-                        break;
-
-                    case 'event':
-                        // TODO Implement new-event form opening
-                        break;
-                        
-                    default:
-                        this.$chooseNew.modal('show');
-                        break;
-                }
-                break;
-        }
-    }
-};
-
-CalendarActivity.prototype.showAppointment = function showAppointment(apt) {
-    
-    // TODO: implement showing the given 'apt'
-    this.app.shell.go('appointment', {
-        date: this.dataView.currentDate(),
-        appointmentId: apt
-    });
 };
 
 function ViewModel() {

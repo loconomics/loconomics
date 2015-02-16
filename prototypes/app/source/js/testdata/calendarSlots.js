@@ -18,7 +18,7 @@ var testData1 = [
         
         subject: 'Free',
         description: null,
-        link: '#!calendar/new',
+        link: '#!appointment/0',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
@@ -31,7 +31,7 @@ var testData1 = [
         
         subject: 'Josh Danielson',
         description: 'Deep Tissue Massage',
-        link: '#!calendar/appointment/3',
+        link: '#!appointment/3',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
@@ -44,7 +44,7 @@ var testData1 = [
 
         subject: 'Do that important thing',
         description: null,
-        link: '#!calendar/event/8',
+        link: '#!event/8',
 
         actionIcon: 'glyphicon glyphicon-new-window',
         actionText: null,
@@ -57,7 +57,7 @@ var testData1 = [
         
         subject: 'Iago Lorenzo',
         description: 'Deep Tissue Massage Long Name',
-        link: '#!calendar/appointment/5',
+        link: '#!appointment/5',
 
         actionIcon: null,
         actionText: '$159.90',
@@ -70,7 +70,7 @@ var testData1 = [
         
         subject: 'Free',
         description: null,
-        link: '#!calendar/new',
+        link: '#!appointment/0',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
@@ -85,7 +85,7 @@ var testData2 = [
         
         subject: 'Free',
         description: null,
-        link: '#!calendar/new',
+        link: '#!appointment/0',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
@@ -111,7 +111,7 @@ var testData2 = [
         
         subject: 'Free',
         description: null,
-        link: '#!calendar/new',
+        link: '#!appointment/0',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
@@ -124,7 +124,7 @@ var testData2 = [
         
         subject: 'CONFIRM-Susan Dee',
         description: 'Deep Tissue Massage',
-        link: '#!calendar/appointment/2',
+        link: '#!appointment/2',
 
         actionIcon: null,
         actionText: '$70',
@@ -137,7 +137,7 @@ var testData2 = [
         
         subject: 'Free',
         description: null,
-        link: '#!calendar/new',
+        link: '#!appointment/0',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
@@ -150,7 +150,7 @@ var testData2 = [
         
         subject: 'Susan Dee',
         description: 'Deep Tissue Massage',
-        link: '#!calendar/appointment/3',
+        link: '#!appointment/3',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
@@ -163,7 +163,7 @@ var testData2 = [
         
         subject: 'Dentist appointment',
         description: null,
-        link: '#!calendar/event/4',
+        link: '#!event/4',
 
         actionIcon: 'glyphicon glyphicon-new-window',
         actionText: null,
@@ -176,7 +176,7 @@ var testData2 = [
         
         subject: 'Susan Dee',
         description: 'Deep Tissue Massage Long Name',
-        link: '#!calendar/appointment/5',
+        link: '#!appointment/5',
 
         actionIcon: null,
         actionText: '$159.90',
@@ -189,7 +189,7 @@ var testData2 = [
         
         subject: 'Free',
         description: null,
-        link: '#!calendar/new',
+        link: '#!appointment/0',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
@@ -202,7 +202,7 @@ var testData2 = [
 
         subject: 'Jaren Freely',
         description: 'Deep Tissue Massage',
-        link: '#!calendar/appointment/6',
+        link: '#!appointment/6',
 
         actionIcon: null,
         actionText: '$80',
@@ -217,7 +217,7 @@ var testDataFree = [
 
         subject: 'Free',
         description: null,
-        link: '#!calendar/new',
+        link: '#!appointment/0',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
