@@ -1,7 +1,7 @@
 /**
     Javascritp Shell for SPAs.
 **/
-/*global history, History */
+/*global window, document */
 'use strict';
 
 /** DI entry points for default builds. Most dependencies can be
@@ -265,7 +265,7 @@ Shell.prototype.run = function run() {
     });
 
     // Catch all links in the page (not only $root ones) and like-links
-    this.$('body').on(this.linkEvent, '[href], [data-href]', function(e) {
+    this.$(document).on(this.linkEvent, '[href], [data-href]', function(e) {
         
         var $t = shell.$(this),
             href = $t.attr('href') || $t.data('href');

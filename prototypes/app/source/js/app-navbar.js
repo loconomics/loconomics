@@ -24,7 +24,6 @@ exports.extends = function (app) {
         var user = app.model.user();
 
         if (user.isAnonymous()) {
-            // Show login butto
             app.navBar().rightAction(NavAction.menuOut);
         }
     }

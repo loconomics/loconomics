@@ -114,16 +114,16 @@ NavAction.goHelpIndex = new NavAction({
 });
 
 NavAction.goLogin = new NavAction({
-    link: 'login',
+    link: '/login',
     text: 'log-in'
 });
 
 NavAction.goLogout = new NavAction({
-    link: 'logout',
+    link: '/logout',
     text: 'log-out'
 });
 
 NavAction.goSignup = new NavAction({
-    link: 'signup',
+    link: '/signup',
     text: 'sign-up'
 });

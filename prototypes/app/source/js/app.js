@@ -150,13 +150,21 @@ var appInit = function appInit() {
     
     // Easy links to shell actions, like goBack, in html elements
     // Example: <button data-shell="goBack 2">Go 2 times back</button>
+    // NOTE: Important, registered before the shell.run to be executed
+    // before its 'catch all links' handler
     $(document).on('tap', '[data-shell]', function(e) {
-        var cmdline = $(this).data('shell') || '',
+        // Using attr rather than the 'data' API to get updated
+        // DOM values
+        var cmdline = $(this).attr('data-shell') || '',
             args = cmdline.split(' '),
             cmd = args[0];
 
         if (cmd && typeof(app.shell[cmd]) === 'function') {
             app.shell[cmd].apply(app.shell, args.slice(1));
+            
+            // Cancel any other action on the link, to avoid double linking results
+            e.stopImmediatePropagation();
+            e.preventDefault();
         }
     });
     
