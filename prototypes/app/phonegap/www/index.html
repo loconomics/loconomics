@@ -83,7 +83,7 @@
             <li><a>Add new</a>
 
               <ul class="nav">
-                <li class="go-booking-new"><a href="/booking/new">Booking</a>
+                <li class="go-booking-new"><a href="/appointment/0">Booking</a>
                 </li>
                 <li class="go-client-new"><a href="/client/new">Client</a>
                 </li>
@@ -283,15 +283,18 @@
       </div>
     </div>
     <!-- Activity clients -->
-    <div class="container-fluid has-frozenTitle" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
-       <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tags"></span><span data-bind="text: headerText">Clients</span><span class="ActivityTitle-action "><!-- TODO: conditionally showed when in select mode since the app-action must be a back button rather than add-nmew --><button type="button" class="btn btn-primary">Add new</button></span></h1>
+    <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
+       <h2 class="SectionTitle" data-bind="visible: headerText"><span data-bind="text: headerText">Clients</span></h2>
 
       <div class="isolated">
         <div class="input-group"> <span class="input-group-addon">
         <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
 </span>
           <input
-          type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+          type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'"> <span class="input-group-btn">
+            <button type="button" class="btn btn-secondary">Add</button>
+        </span>
+
         </div>
         <!-- /input-group -->
       </div>
@@ -317,47 +320,65 @@
       </div>
     </div>
     <!-- Activity contactInfo -->
-    <div class="container-fluid has-navbar" data-activity="contactInfo">
+    <div class="container-fluid" data-activity="contactInfo">
       <form role="form">
         <div>
-           <h1 class="ActivityTitle">
-            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
-            <span>Add contact info</span>
-        </h1>
+           <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
 
-          <fieldset>
+          <fieldset class="isolated">
             <div class="form-group">
-              <label for="contactInfoFirstName">First name</label>
-              <input type="text" class="form-control" id="contactInfoFirstName"
-              required>
+              <input type="text" class="form-control" required placeholder="First name"
+              aria-label="First name">
             </div>
             <div class="form-group">
-              <label for="contactInfoLastName">Last name</label>
-              <input type="text" class="form-control" id="contactInfoLastName"
-              required>
+              <input type="text" class="form-control" required placeholder="Last name"
+              aria-label="Last name">
             </div>
             <div class="form-group">
-              <label for="contactInfoMobilePhone">Mobile phone</label>
-              <input type="tel" class="form-control" id="contactInfoMobilePhone"
-              required>
+              <input type="tel" class="form-control" required placeholder="Mobile phone"
+              aria-label="Mobile phone">
             </div>
             <div class="form-group">
-              <label for="contactInfoBusinessName">Business name (optional)</label>
-              <input type="text" class="form-control"
-              id="contactInfoBusinessName">
+              <input type="text" class="form-control" placeholder="Street address line 1"
+              aria-label="Street address line 1">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Street address line 2"
+              aria-label="Street address line 2">
+            </div>
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code"
+              data-bindZZZ="value: postalCode">
+            </div>
+            <div class="form-group">
+              <p class="form-control-static"> <span data-bindZZ="text: city">San Francisco</span>, <span data-bindZZ="text: stateProvinceCode">CA</span>
+
+              </p>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Business name (optional)"
+              aria-label="Business name (optional)">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Website name (optional)"
+              aria-label="Website name (optional)">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Alternative e-mail address (optional)"
+              aria-label="Alternative e-mail address (optional)">
             </div>
           </fieldset>
         </div>
         <div class="navbar navbar-default ActivityNavbar">
           <div class="container">
-            <button type="submit" class="btn btn-primary btn-block">Save and continue</button>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText"></button>
           </div>
         </div>
       </form>
     </div>
     <!-- Activity datetimePicker -->
-    <div class="container-fluid has-frozenTitle" data-activity="datetimePicker">
-       <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-time"></span><span data-bind="text: headerText">Select a start time</span></h1>
+    <div class="container-fluid" data-activity="datetimePicker">
+       <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Select a start time</h2>
 
       <div id="datetimePickerDatePicker" class="calendar-placeholder" data-date="today"></div>
       <!-- Daily View (appointments list) -->
@@ -465,7 +486,7 @@
       </div>
     </div>
     <!-- Activity index -->
-    <div class="container-fluid" data-activity="index">
+    <div class="container" data-activity="index">
       <div class="LeadContent">
         <div class="embed-responsive embed-responsive-16by9">
           <video>No video for now</video>
@@ -503,13 +524,10 @@
     </div>
     <!-- Activity locationEdition -->
     <div class="container-fluid has-navbar" data-activity="locationEdition">
-      <div>
-         <h1 class="ActivityTitle">
-        <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
-        <span data-bind="text: header">Location</span>
-    </h1>
+      <form role="form">
+         <h2 class="SectionTitle" data-bind="visible: header, text: header"></h2>
 
-        <form role="form" data-bind="with: location()">
+        <fieldset class="isolated" data-bind="with: location()">
           <div class="form-group">
             <label for="locationEditionPostalCode">Zip code</label>
             <input type="number" class="form-control" id="locationEditionPostalCode"
@@ -568,8 +586,8 @@
               data-bind="value: specialInstructions"></textarea>
             </div>
           </div>
-        </form>
-      </div>
+        </fieldset>
+      </form>
       <div class="navbar navbar-default ActivityNavbar">
         <div class="container">
           <button type="button" class="btn btn-primary btn-block">Save and continue</button>
@@ -577,8 +595,8 @@
       </div>
     </div>
     <!-- Activity locations -->
-    <div class="container-fluid has-frozenTitle" data-activity="locations">
-       <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-globe"></span><span data-bind="text: headerText">Locations</span></h1>
+    <div class="container-fluid" data-activity="locations">
+       <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Locations</h2>
 
       <div id="locationsListView">
         <div class="ListView ListView--twolines" data-bind="foreach: locations">
@@ -594,9 +612,7 @@
         </div>
       </div>
       <div id="locationsAddNewButtons" class="isolated">
-        <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add client location</button>
-        <button type="button" class="btn btn-primary btn-block"
-        data-href="#!locations/new/serviceLocation">Add new location</button>
+        <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add new client location</button>
       </div>
     </div>
     <!-- Activity login -->
@@ -699,24 +715,23 @@
         </div>
       </div>
     </div>
-    <!-- Activity positions -->
-    <div class="container-fluid has-navbar" data-activity="positions">
-      <div class="">
-         <h1 class="ActivityTitle">
-        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-        <span>Add one or more job title(s)</span>
-    </h1>
+    <!-- Activity onboardingPositions -->
+    <div class="container-fluid has-navbar" data-activity="onboardingPositions">
+      <div>
+         <h2 class="SectionTitle">Add one or more job title(s)</h2>
 
-        <form role="form">
-          <div class="input-group">
-            <label for="addPositionSearch" class="sr-only">Search</label>
-            <input type="text" class="form-control" id="addPositionSearch"
-            placeholder="search"> <span class="input-group-btn">
-          <button type="button" class="btn btn-primary">
-            Add <span class="glyphicon glyphicon-chevron-right"></span>
+        <form role="form" class="isolated">
+          <div class="input-group"> <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-search"></span>
+            <span
+            class="sr-only">Search</span>
+              </span>
+              <label for="addPositionSearch" class="sr-only">Search</label>
+              <input type="text" class="form-control" id="addPositionSearch"
+              placeholder="search"> <span class="input-group-btn">
+                  <button type="button" class="btn btn-primary">Add</button>
+              </span>
 
-            </button>
-            </span>
           </div>
         </form>
       </div>
@@ -724,7 +739,7 @@
         <div class="ListView-item">
           <div class="ListView-item-marker"><span data-bind="text: ($index() + 1)">1</span>.</div> <a href="#" class="btn btn-link btn-block ListView-item-content"
           data-bind="text: positionSingular"></a>
- <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-trash"></span></a>
+ <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-trash text-danger"></span></a>
 
         </div>
       </div>
@@ -735,9 +750,7 @@
       </div>
     </div>
     <!-- Activity services -->
-    <div class="container-fluid has-frozenTitle" data-activity="services">
-       <h1 class="ActivityTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-tags"></span><span data-bind="text: headerText">Services</span><span class="ActivityTitle-action "><button type="button" class="btn btn-primary" data-bind="event: { tap: endSelection }">Done</button></span></h1>
-
+    <div class="container-fluid" data-activity="services">
       <div id="servicesListView">
         <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedServices">
           <div class="ListView-divider SectionTitle"> <strong data-bind="text: group"></strong>
@@ -758,8 +771,8 @@
           <!-- /ko -->
         </div>
       </div>
-      <div id="servicesAddNewButton" class="isolated">
-        <button type="button" class="btn btn-primary btn-block">Add new service</button>
+      <div class="isolated">
+        <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }">Save and continue</button>
       </div>
     </div>
     <!-- Activity Signup -->
@@ -795,16 +808,16 @@
       </div>
     </div>
     <!-- Activity textEditor -->
-    <div class="container-fluid has-frozenTitle" data-activity="textEditor">
-       <h1 class="ActivityTitle" id="textEditorTitle" data-bind="visible: headerText"><span class="glyphicon glyphicon-edit"></span><span data-bind="text: headerText">Text</span></h1>
+    <div class="container-fluid" data-activity="textEditor">
+       <h2 class="SectionTitle" id="textEditorTitle" data-bind="visible: headerText, text: headerText">Text</h2>
 
-      <div>
+      <div class="isolated">
         <textarea id="textEditorText" data-bind="value: text, valueUpdate: 'afterkeydown', attr: { rows: rowsNumber }"
         aria-labelledby="textEditorTitle" class="form-control" rows="2"></textarea>
       </div>
       <div class="row isolated">
         <div class="col-xs-6">
-          <button type="button" class="btn btn-danger btn-block" data-bind="event: { tap: cancel }">Cancel</button>
+          <button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: cancel }">Cancel</button>
         </div>
         <div class="col-xs-6">
           <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }">Save</button>

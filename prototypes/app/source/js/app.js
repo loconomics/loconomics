@@ -144,6 +144,15 @@ var appInit = function appInit() {
         });
     }
     
+    // iOS-7+ status bar fix. Apply on plugin loaded (cordova/phonegap environment)
+    // and in any system, so any other systems fix its solved too if needed 
+    // just updating the plugin (future proof) and ensure homogeneous cross plaftform behavior.
+    if (window.StatusBar) {
+        // Fix iOS-7+ overlay problem
+        // Is in config.xml too, but seems not to work there.
+        window.StatusBar.overlaysWebView(false);
+    }
+    
     // Bootstrap
     preBootstrapWorkarounds();
     require('bootstrap');

@@ -30,9 +30,10 @@ module.exports = {
         'bliss:appDebug',
         'notify:html'
     ],
-    'build-phonegap': [
+    'prepare-phonegap': [
         'bliss:phonegap',
         'copyto:phonegap',
+        'copyto:platform_merges',
         'notify:phonegap'
     ],
 
