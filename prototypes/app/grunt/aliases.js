@@ -47,7 +47,7 @@ module.exports = {
         'build-js',
 		'build-css',
         'build-html',
-        'build-phonegap',
+        'prepare-phonegap',
         'notify:build'
 	]
 };

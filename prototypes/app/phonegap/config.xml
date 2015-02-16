@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
+<widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id="com.loconomics.app"
         version="0.1.1"
@@ -68,11 +68,11 @@
     
     <!-- PhoneGap Build plugins -->
     <!-- fix problem with transparent overlay statusbar iOS 7 -->
-    <gap:plugin name="org.apache.cordova.statusbar" version="0.1.9" source="plugins.cordova.io" /> 
+    <gap:plugin name="org.apache.cordova.statusbar" version="0.1.10" source="plugins.cordova.io" /> 
     <!-- Control keyboard to fix some buggy default behaviors -->
-    <gap:plugin name="com.ionic.keyboard" />
+    <gap:plugin name="com.ionic.keyboard" version="1.0.3" />
     <!-- Control the splash screen -->
-    <gap:plugin name="org.apache.cordova.splashscreen" />
+    <!--<gap:plugin name="org.apache.cordova.splashscreen" version="1.0.0 " source="plugins.cordova.io" />-->
     <!-- Some official plugins examples -->
     <!--
     <gap:plugin name="org.apache.cordova.battery-status" />
