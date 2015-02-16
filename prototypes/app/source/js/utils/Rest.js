@@ -65,6 +65,7 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
     
     return Promise.resolve($.ajax({
         url: this.baseUrl + apiUrl,
+        cache: false,
         dataType: 'json',
         method: httpMethod,
         headers: this.extraHeaders,
