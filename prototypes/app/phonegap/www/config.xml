@@ -2,7 +2,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id="com.loconomics.app"
-        version="0.1.11"
+        version="0.1.13"
         >
     <name>Loconomics</name>
     <description>
@@ -62,9 +62,8 @@
     <!-- Documentation states two names, using both :-) -->
     <preference name="AutoHideSplashScreen" value="false" />
     <!-- Android quirks (http://plugins.cordova.io/#/package/org.apache.cordova.splashscreen) -->
-    <preference name="SplashScreen" value="res/screen/android/splash-port-hdpi.png" />
-    <!-- Plugin preferences:
-    <preference name="SplashScreen" value="Android9patchfilePreferred" />
+    <!--
+    <preference name="SplashScreen" value="Android9patchfilePreferred.9.png" />
     <preference name="SplashScreenDelay" value="3000" />
     -->
     
@@ -165,17 +164,23 @@
     </platform>
     
     <!-- Define app splash screen for each platform. -->
+    <gap:splash src="res/screen/android/splash-port-hdpi.png" />
     <platform name="android">
         <!-- you can use any density that exists in the Android project -->
-        <splash src="res/screen/android/splash-land-hdpi.png" density="land-hdpi"/>
-        <splash src="res/screen/android/splash-land-ldpi.png" density="land-ldpi"/>
-        <splash src="res/screen/android/splash-land-mdpi.png" density="land-mdpi"/>
-        <splash src="res/screen/android/splash-land-xhdpi.png" density="land-xhdpi"/>
+        <splash src="res/screen/android/splash-land-hdpi.png" qualifier="land-hdpi"/>
+        <splash src="res/screen/android/splash-land-ldpi.png" qualifier="land-ldpi"/>
+        <splash src="res/screen/android/splash-land-mdpi.png" qualifier="land-mdpi"/>
+        <splash src="res/screen/android/splash-land-xhdpi.png" qualifier="land-xhdpi"/>
+        <splash src="res/screen/android/splash-land-xhdpi.png" qualifier="land-xhdpi"/>
+        <splash src="res/screen/android/splash-land-xhdpi.png" qualifier="land-xxhdpi"/>
+        <splash src="res/screen/android/splash-land-xhdpi.png" qualifier="land-xxxhdpi"/>
 
-        <splash src="res/screen/android/splash-port-hdpi.png" density="port-hdpi"/>
-        <splash src="res/screen/android/splash-port-ldpi.png" density="port-ldpi"/>
-        <splash src="res/screen/android/splash-port-mdpi.png" density="port-mdpi"/>
-        <splash src="res/screen/android/splash-port-xhdpi.png" density="port-xhdpi"/>
+        <splash src="res/screen/android/splash-port-hdpi.png" qualifier="port-hdpi"/>
+        <splash src="res/screen/android/splash-port-ldpi.png" qualifier="port-ldpi"/>
+        <splash src="res/screen/android/splash-port-mdpi.png" qualifier="port-mdpi"/>
+        <splash src="res/screen/android/splash-port-xhdpi.png" qualifier="port-xhdpi"/>
+        <splash src="res/screen/android/splash-port-xhdpi.png" qualifier="port-xxhdpi"/>
+        <splash src="res/screen/android/splash-port-xhdpi.png" qualifier="port-xxxhdpi"/>
     </platform>
     <platform name="ios">
         <!-- images are determined by width and height. The following are supported -->
