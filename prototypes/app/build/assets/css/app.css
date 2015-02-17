@@ -942,7 +942,7 @@ body.use-backdrop:before {
 
 /* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 
-/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 62 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 
 /* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle {
@@ -1043,7 +1043,7 @@ body.use-backdrop:before {
   border-color: transparent;
 }
 
-/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 59 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity,
 [data-activity] {
 /* settings specially important for the use of navbar
@@ -1071,22 +1071,23 @@ body.use-backdrop:before {
 .Activity.full-height,
 [data-activity].full-height {
   height: 100%;
+  overflow: auto;
 }
 
-/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-navbar,
 [data-activity].has-navbar {
   padding-bottom: 50px;
   height: auto;
 }
 
-/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-frozenTitle,
 [data-activity].has-frozenTitle {
   padding-top: 60px;
 }
 
-/* line 41 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-frozenTitle .ActivityTitle,
 [data-activity].has-frozenTitle .ActivityTitle {
   position: fixed;
@@ -1105,7 +1106,7 @@ body.use-backdrop:before {
   overflow: hidden;
 }
 
-/* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.is-active,
 [data-activity].is-active {
   display: block;

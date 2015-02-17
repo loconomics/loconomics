@@ -172,8 +172,8 @@ var appInit = function appInit() {
     bootknock.plugIn(ko);
     
     // Plugins setup
-    if (window && window.plugins && window.plugins.Keyboard) {
-        window.plugins.Keyboard.disableScroll(true);
+    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+        window.cordova.plugins.Keyboard.disableScroll(true);
     }
     
     // Easy links to shell actions, like goBack, in html elements

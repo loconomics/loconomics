@@ -79,7 +79,7 @@
     <!-- fix problem with transparent overlay statusbar iOS 7 -->
     <gap:plugin name="org.apache.cordova.statusbar" version="0.1.10" source="plugins.cordova.io" /> 
     <!-- Control keyboard to fix some buggy default behaviors -->
-    <gap:plugin name="com.ionic.keyboard" version="1.0.3" />
+    <gap:plugin name="com.ionic.keyboard" version="1.0.4" source="plugins.cordova.io" />
     <!-- Control the splash screen -->
     <gap:plugin name="org.apache.cordova.splashscreen" version="1.0.0 " source="plugins.cordova.io" />
     
