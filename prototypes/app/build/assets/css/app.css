@@ -1847,11 +1847,11 @@ body.use-backdrop:before {
 /* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker {
 /* positioning */
-  position: absolute;
+  position: fixed;
   left: 10px;
   right: 10px;
   z-index: 100;
-  top: 50px;
+  top: 94px;
 /* pop-up decoration */
   background: #fff;
   -webkit-box-shadow: 0 0 6px 1px #000;
