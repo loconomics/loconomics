@@ -2,7 +2,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id="com.loconomics.app"
-        version="0.1.9"
+        version="0.1.11"
         >
     <name>Loconomics</name>
     <description>
@@ -47,16 +47,26 @@
     <preference name="detect-data-types" value="false" />
     <!-- ios: if set to true, app will terminate when home button is pressed -->
     <preference name="exit-on-suspend" value="false" />
-    <!-- ios: if set to false, the spinner won't appear on the splash screen during app loading -->
-    <preference name="show-splash-screen-spinner" value="true" />
-    <!-- ios: if set to false, the splash screen must be hidden using a JavaScript API -->
-    <preference name="auto-hide-splash-screen" value="true" />
     <!-- blackberry: prevents a mouse-icon/cursor from being displayed on the app -->
     <preference name="disable-cursor" value="false" />
     <!-- android: MIN SDK version supported on the target device. MAX version is blank by default. -->
     <preference name="android-minSdkVersion" value="7" />
     <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
     <preference name="android-installLocation" value="auto" />
+    
+    <!-- Splash screen -->
+    <!-- ios: if set to false, the spinner won't appear on the splash screen during app loading -->
+    <preference name="show-splash-screen-spinner" value="true" />
+    <!-- ios: if set to false, the splash screen must be hidden using a JavaScript API -->
+    <preference name="auto-hide-splash-screen" value="false" />
+    <!-- Documentation states two names, using both :-) -->
+    <preference name="AutoHideSplashScreen" value="false" />
+    <!-- Android quirks (http://plugins.cordova.io/#/package/org.apache.cordova.splashscreen) -->
+    <preference name="SplashScreen" value="res/screen/android/splash-port-hdpi.png" />
+    <!-- Plugin preferences:
+    <preference name="SplashScreen" value="Android9patchfilePreferred" />
+    <preference name="SplashScreenDelay" value="3000" />
+    -->
     
     <!-- Plugin StatusBar settings; needs the Javascript calls to 'disable overlay' to work -->
     <preference name="StatusBarOverlaysWebView"   value="false" />
@@ -72,8 +82,9 @@
     <!-- Control keyboard to fix some buggy default behaviors -->
     <gap:plugin name="com.ionic.keyboard" version="1.0.3" />
     <!-- Control the splash screen -->
-    <!--<gap:plugin name="org.apache.cordova.splashscreen" version="1.0.0 " source="plugins.cordova.io" />-->
-    <!-- Some official plugins examples -->
+    <gap:plugin name="org.apache.cordova.splashscreen" version="1.0.0 " source="plugins.cordova.io" />
+    
+    <!-- More official plugins examples -->
     <!--
     <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
@@ -120,24 +131,67 @@
     -->
     
     <!-- Define app icon for each platform. -->
-    <icon src="icon.png" />
-    <icon gap:platform="android" gap:qualifier="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />
-    <icon gap:platform="android" gap:qualifier="mdpi" src="www/res/icon/android/icon-48-mdpi.png" />
-    <icon gap:platform="android" gap:qualifier="hdpi" src="www/res/icon/android/icon-72-hdpi.png" />
-    <icon gap:platform="android" gap:qualifier="xhdpi" src="www/res/icon/android/icon-96-xhdpi.png" />
-    <icon gap:platform="ios" height="57" src="www/res/icon/ios/icon-57.png" width="57" />
-    <icon gap:platform="ios" height="72" src="www/res/icon/ios/icon-72.png" width="72" />
-    <icon gap:platform="ios" height="114" src="www/res/icon/ios/icon-57-2x.png" width="114" />
-    <icon gap:platform="ios" height="144" src="www/res/icon/ios/icon-72-2x.png" width="144" />
+    <icon src="res/icon/icon.png" />
+    <platform name="android">
+        <icon src="res/icon/android/icon-36-ldpi.png" density="ldpi" />
+        <icon src="res/icon/android/icon-48-mdpi.png" density="mdpi" />
+        <icon src="res/icon/android/icon-72-hdpi.png" density="hdpi" />
+        <icon src="res/icon/android/icon-96-xhdpi.png" density="xhdpi" />
+    </platform>
+    <platform name="ios">
+        <!-- iOS 7.0+ -->
+        <!-- iPhone / iPod Touch  --><!--
+        <icon src="res/icon/ios/icon-60.png" width="60" height="60" />
+        <icon src="res/icon/ios/icon-60@2x.png" width="120" height="120" />-->
+        <!-- iPad --><!--
+        <icon src="res/icon/ios/icon-76.png" width="76" height="76" />
+        <icon src="res/icon/ios/icon-76@2x.png" width="152" height="152" />-->
+        <!-- iOS 6.1 -->
+        <!-- Spotlight Icon --><!--
+        <icon src="res/icon/ios/icon-40.png" width="40" height="40" />
+        <icon src="res/icon/ios/icon-40@2x.png" width="80" height="80" />-->
+        <!-- iPhone / iPod Touch -->
+        <icon src="res/icon/ios/icon-57.png" width="57" height="57" />
+        <icon src="res/icon/ios/icon-57@2x.png" width="114" height="114" />
+        <!-- iPad -->
+        <icon src="res/icon/ios/icon-72.png" width="72" height="72" />
+        <icon src="res/icon/ios/icon-72@2x.png" width="144" height="144" />
+        <!-- iPhone Spotlight and Settings Icon --><!--
+        <icon src="res/ios/icon-small.png" width="29" height="29" />
+        <icon src="res/ios/icon-small@2x.png" width="58" height="58" />-->
+        <!-- iPad Spotlight and Settings Icon --><!--
+        <icon src="res/ios/icon-50.png" width="50" height="50" />
+        <icon src="res/ios/icon-50@2x.png" width="100" height="100" />-->
+    </platform>
     
     <!-- Define app splash screen for each platform. -->
-    <gap:splash gap:platform="android" gap:qualifier="port-ldpi" src="www/res/screen/android/screen-ldpi-portrait.png" />
-    <gap:splash gap:platform="android" gap:qualifier="port-mdpi" src="www/res/screen/android/screen-mdpi-portrait.png" />
-    <gap:splash gap:platform="android" gap:qualifier="port-hdpi" src="www/res/screen/android/screen-hdpi-portrait.png" />
-    <gap:splash gap:platform="android" gap:qualifier="port-xhdpi" src="www/res/screen/android/screen-xhdpi-portrait.png" />
-    <gap:splash gap:platform="ios" height="480" src="www/res/screen/ios/screen-iphone-portrait.png" width="320" />
-    <gap:splash gap:platform="ios" height="960" src="www/res/screen/ios/screen-iphone-portrait-2x.png" width="640" />
-    <gap:splash gap:platform="ios" height="1136" src="www/res/screen/ios/screen-iphone-portrait-568h-2x.png" width="640" />
-    <gap:splash gap:platform="ios" height="1024" src="www/res/screen/ios/screen-ipad-portrait.png" width="768" />
-    <gap:splash gap:platform="ios" height="768" src="www/res/screen/ios/screen-ipad-landscape.png" width="1024" />
+    <platform name="android">
+        <!-- you can use any density that exists in the Android project -->
+        <splash src="res/screen/android/splash-land-hdpi.png" density="land-hdpi"/>
+        <splash src="res/screen/android/splash-land-ldpi.png" density="land-ldpi"/>
+        <splash src="res/screen/android/splash-land-mdpi.png" density="land-mdpi"/>
+        <splash src="res/screen/android/splash-land-xhdpi.png" density="land-xhdpi"/>
+
+        <splash src="res/screen/android/splash-port-hdpi.png" density="port-hdpi"/>
+        <splash src="res/screen/android/splash-port-ldpi.png" density="port-ldpi"/>
+        <splash src="res/screen/android/splash-port-mdpi.png" density="port-mdpi"/>
+        <splash src="res/screen/android/splash-port-xhdpi.png" density="port-xhdpi"/>
+    </platform>
+    <platform name="ios">
+        <!-- images are determined by width and height. The following are supported -->
+        <splash src="res/screen/ios/splash-iphone-landscape.png" width="480" height="320"/>
+        <splash src="res/screen/ios/splash-iphone-portrait.png" width="320" height="480"/>
+        
+        <splash src="res/screen/ios/splash-iphone-landscape@2x.png" width="960" height="640"/>
+        <splash src="res/screen/ios/splash-iphone-portrait@2x.png" width="640" height="960"/>
+        
+        <splash src="res/screen/ios/splash-ipad-landscape.png" width="1024" height="768"/>
+        <splash src="res/screen/ios/splash-ipad-portrait.png" width="768" height="1024"/>
+        
+        <splash src="res/screen/ios/splash-ipad-landscape@2x.png" width="2048" height="1536"/>
+        <splash src="res/screen/ios/splash-ipad-portrait@2x.png" width="1536" height="2048"/>
+
+        <!-- Larger iPhone5+ -->
+        <splash src="res/screen/ios/splash-iphone-portrait-568h@2x.png" width="640" height="1136"/>
+    </platform>
 </widget>

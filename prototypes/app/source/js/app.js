@@ -244,6 +244,10 @@ var appInit = function appInit() {
     .then(function() {
         // Mark the page as ready
         $('html').addClass('is-ready');
+        // As app, hides splash screen
+        if (window.navigator && window.navigator.splashscreen) {
+            window.navigator.splashscreen.hide();
+        }
     }, alertError);
 
     // DEBUG
