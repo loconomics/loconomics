@@ -942,7 +942,7 @@ body.use-backdrop:before {
 
 /* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 
-/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 
 /* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle {
@@ -1043,7 +1043,7 @@ body.use-backdrop:before {
   border-color: transparent;
 }
 
-/* line 49 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity,
 [data-activity] {
 /* settings specially important for the use of navbar
@@ -1051,7 +1051,6 @@ body.use-backdrop:before {
        with/without navbar
     */
   min-height: 100%;
-  height: 100%;
   position: relative;
   overflow: auto;
 /* activity must be notified of the navbar to fix
@@ -1068,20 +1067,26 @@ body.use-backdrop:before {
     z-index: 1;*/
 }
 
-/* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 21 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+.Activity.full-height,
+[data-activity].full-height {
+  height: 100%;
+}
+
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-navbar,
 [data-activity].has-navbar {
   padding-bottom: 50px;
   height: auto;
 }
 
-/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-frozenTitle,
 [data-activity].has-frozenTitle {
   padding-top: 60px;
 }
 
-/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 41 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-frozenTitle .ActivityTitle,
 [data-activity].has-frozenTitle .ActivityTitle {
   position: fixed;
@@ -1100,7 +1105,7 @@ body.use-backdrop:before {
   overflow: hidden;
 }
 
-/* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.is-active,
 [data-activity].is-active {
   display: block;
@@ -1770,6 +1775,11 @@ body.use-backdrop:before {
   color: #e0004f;
   font-weight: 300;
   font-size: 15px;
+/* Makes problems on Android (persistent :active state
+            after being pushed)
+        &:active {
+            opacity: 0.3;
+        }*/
 }
 
 /* line 115 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
@@ -1777,31 +1787,24 @@ body.use-backdrop:before {
   outline: 0;
 }
 
-/* line 123 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-btn:active {
-  opacity: 0.3;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
-  filter: alpha(opacity=30);
-}
-
-/* line 127 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 129 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn.bold {
   font-weight: 500;
 }
 
-/* line 131 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 133 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn.disabled,
 .SmartNavBar .SmartNavBar-btn [disabled] {
   color: #777;
 }
 
-/* line 135 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 137 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn:hover,
 .SmartNavBar .SmartNavBar-btn:active {
   text-decoration: none;
 }
 
-/* line 142 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 144 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn h1 {
   color: #555;
   font-size: 15px;
@@ -1809,7 +1812,7 @@ body.use-backdrop:before {
   margin: 0 0.6em;
 }
 
-/* line 153 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 155 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar h1 {
   color: #555;
   display: block;
@@ -1826,7 +1829,7 @@ body.use-backdrop:before {
   line-height: 44px;
 }
 
-/* line 169 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 171 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .navbar-toggle .icon-bar {
   background-color: #e0004f;
 }

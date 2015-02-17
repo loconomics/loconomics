@@ -98,7 +98,7 @@ var testData2 = [
         
         subject: 'Jaren Freely',
         description: 'Deep Tissue Massage Long Name',
-        link: '#!calendar/appointment/1',
+        link: '#!appointment/1',
 
         actionIcon: null,
         actionText: '$59.90',

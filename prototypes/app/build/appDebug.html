@@ -174,7 +174,7 @@
       </div>
     </div>
     <!-- Activity appointment -->
-    <div class="container-fluid" data-activity="appointment">
+    <div class="container-fluid full-height" data-activity="appointment">
       <!-- Appointment View (cards) -->
       <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">
@@ -302,13 +302,13 @@
         <p class="lead" data-bind="with: booking">Your booking with <span data-bind="text: client && client() && client().fullName()"></span> is
           all set and ready to go. Both you and <span data-bind="text: client && client() && client().firstName()"></span> will
           receive an e-mail confirmation shortly.</p>
-        <div> <a href="#!go-back/2" class="btn btn-success btn-block">Got it, thanks!</a>
+        <div> <a href="#" data-shell="goBack" class="btn btn-success btn-block">Got it, thanks!</a>
 
         </div>
       </div>
     </div>
     <!-- Activity calendar -->
-    <div class="container-fluid has-frozenTitle" data-activity="calendar">
+    <div class="container-fluid has-frozenTitle full-height" data-activity="calendar">
        <h1 id="calendarDateHeader" class="CalendarDateHeader ActivityTitle">
       <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
       <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time> <span class="caret"></span></a>
@@ -394,7 +394,7 @@
           </fieldset>
         </div>
         <div class="navbar navbar-default ActivityNavbar">
-          <div class="container">
+          <div class="container-fluid">
             <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText"></button>
           </div>
         </div>

@@ -125,6 +125,7 @@ app.UserType = app.model.user().constructor.UserType;
 
 /** App Init **/
 var appInit = function appInit() {
+    /*jshint maxstatements:30 */
     
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that
@@ -136,11 +137,21 @@ var appInit = function appInit() {
     // NOTE: Safari iOS bug workaround, min-height/height on html doesn't work as expected,
     // getting bigger than viewport. May be a problem only on Safari and not in 
     // the WebView, double check.
+    // With the additional problem with height:100%, so Activities get a
+    // fixed size (calculated from body) if height:100% is applied through CSS
     var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
     if (iOS) {
+        var $b = $('body');
+        var fixActivities = function fixActivities() {
+            var h = $b.height();
+            $('[data-activity].full-height').height(h);
+        };
+
         $('html').height(window.innerHeight + 'px');
+        fixActivities();
         $(window).on('layoutUpdate', function() {
             $('html').height(window.innerHeight + 'px');
+            fixActivities();
         });
     }
     

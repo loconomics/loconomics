@@ -122,9 +122,11 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
         font-weight: 300;
         font-size: $SmartNavBar-buttonFontSize;
 
+        /* Makes problems on Android (persistent :active state
+            after being pushed)
         &:active {
             opacity: 0.3;
-        }
+        }*/
 
         &.bold {
             font-weight: 500;

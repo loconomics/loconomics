@@ -9,9 +9,18 @@ Activity() {
        with/without navbar
     */
     min-height: 100%;
-    height: 100%;
     position: relative;
     overflow: auto;
+
+    // Set a full height with 100% is complicated, mainly because of iOS,
+    // so a specific class is used that involve some javascript code to
+    // fix iOS bugs using next class name.
+    // This is need additionally to the general min-height for cases where
+    // content children needs to expand to height:100% too.
+    // NOTE: Incompatible with has-navbar
+    &.full-height {
+        height: 100%;
+    }
 
     /* activity must be notified of the navbar to fix
        available space
