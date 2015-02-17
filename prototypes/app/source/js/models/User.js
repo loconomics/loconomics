@@ -46,7 +46,9 @@ function User(values) {
         active: false,
         accountStatusID: 0,
         bookCode: null,
-        onboardingStep: null
+        onboardingStep: null,
+        businessName: null,
+        alternateEmail: null
     }, values);
 
     this.fullName = ko.computed(function() {

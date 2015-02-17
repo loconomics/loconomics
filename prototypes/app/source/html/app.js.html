@@ -38,16 +38,16 @@
         <nav role="navigation" class="AppNav">
             
             <div class="SmartNavBar">
-                <span data-bind="component: { name: 'navbar-action', params: { action: 'leftAction', navBar: navBar } }" class="SmartNavBar-edge left"></span>
+                <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }" class="SmartNavBar-edge left"></span>
 
                 <h1>&nbsp;
                     <span data-bind="text: navBar() && navBar().title()"></span>
                     <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="#">Loconomics</a>
                 &nbsp;</h1>
                 
-                <span data-bind="component: { name: 'navbar-action', params: { action: 'rightAction', navBar: navBar } }" class="SmartNavBar-edge right"></span>
+                <span data-bind="component: { name: 'app-navbar-action', params: { action: 'rightAction', navBar: navBar } }" class="SmartNavBar-edge right"></span>
             </div>
-                
+
             <div class="App-menus">
                 <div id="menuIn" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">

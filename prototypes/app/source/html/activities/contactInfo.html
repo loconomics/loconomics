@@ -1,30 +1,19 @@
 <!-- Activity contactInfo -->
-<div class="container has-navbar" data-activity="contactInfo">
+<div class="container-fluid has-navbar" data-activity="contactInfo">
   <form role="form">
     <div>
         <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
 
         <fieldset class="isolated">
-            <div class="form-group">
-              <input type="text" class="form-control" required placeholder="First name" aria-label="First name">
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" required placeholder="Last name" aria-label="Last name">
-            </div>
-            <div class="form-group">
-              <input type="tel" class="form-control" required placeholder="Mobile phone" aria-label="Mobile phone">
-            </div>
-
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Street address line 1" aria-label="Street address line 1">
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Street address line 2" aria-label="Street address line 2">
-            </div>
-
-            <div class="form-group">
-                <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bindZZZ="value: postalCode">
-            </div>
+            <app-unlabeled-input params="placeholder: 'First name', value: profile().firstName"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Last name', value: profile().lastName"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile().mobilePhone"></app-unlabeled-input>
+            
+            <app-unlabeled-input params="placeholder: 'Alternate phone', value: profile().alternatePhone"></app-unlabeled-input>
+            
+            <app-unlabeled-input params="placeholder: 'Street address line 1', value: ''"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Street address line 2', value: ''"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Zip code', value: ''"></app-unlabeled-input>
             <div class="form-group">
                 <p class="form-control-static">
                     <span data-bindZZ="text: city">San Francisco</span>, 
@@ -32,15 +21,9 @@
                 </p>
             </div>
             
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Business name (optional)" aria-label="Business name (optional)">
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Website name (optional)" aria-label="Website name (optional)">
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Alternative e-mail address (optional)" aria-label="Alternative e-mail address (optional)">
-            </div>
+            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile().businessName"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Website name (optional)', value: profile().providerWebsiteURL"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile().alternateEmail"></app-unlabeled-input>
         </fieldset>
     </div>
 
@@ -50,5 +33,4 @@
         </div>
     </div>
   </form>
-
 </div>

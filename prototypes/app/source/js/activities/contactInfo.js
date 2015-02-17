@@ -23,6 +23,7 @@ function ContactInfoActivity($activity, app) {
     this.$activity = $activity;
     this.app = app;
     this.dataView = new ViewModel();
+    this.dataView.profile = app.model.user;
     ko.applyBindings(this.dataView, $activity.get(0));
 
     this.navBar = new NavBar({
@@ -63,4 +64,5 @@ function ViewModel() {
 
     this.headerText = ko.observable('Contact information');
     this.buttonText = ko.observable('Save');
+    this.profile = ko.observable();
 }

@@ -1071,7 +1071,7 @@ body.use-backdrop:before {
 /* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-navbar,
 [data-activity].has-navbar {
-  padding-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 /* line 27 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
