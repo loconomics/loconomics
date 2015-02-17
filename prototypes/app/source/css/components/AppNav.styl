@@ -41,6 +41,8 @@
         background: white;
         position: relative;
         top: $app-navbar-height;
+        // iOS7-8.1 requires a explicit z-index:
+        z-index: 300;
         
         // Customization of Bootstrap navigation bar for use as menus
         .nav {
@@ -96,12 +98,6 @@
         // box, overflow:hidden is required:
         overflow: hidden;
         text-overflow: clip !important;
-    }
-
-    // Disable active opacity from SmartNavBar to avoid
-    // visually conflicts with the transition
-    .SmartNavBar-btn:active {
-        opacity: inherit;
     }
 
     .navbar-toggle {

@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2015-02-16
+/*! LoconomicsAppProto 2015-02-17
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -215,9 +215,10 @@ fieldset[disabled] .btn-secondary.active {
   background: #fff;
   position: relative;
   top: 44px;
+  z-index: 300;
 }
 
-/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 48 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .nav {
   background: White;
   margin-top: 0;
@@ -226,14 +227,14 @@ fieldset[disabled] .btn-secondary.active {
   z-index: 200;
 }
 
-/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-
 /* line 57 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+
+/* line 59 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a {
   color: #555;
 }
 
-/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 62 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a:hover,
 .AppNav .App-menus .navbar-nav a:active {
   color: White;
@@ -241,27 +242,27 @@ fieldset[disabled] .btn-secondary.active {
   outline: none;
 }
 
-/* line 79 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 80 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav li.active > a {
   color: White;
   background: #e0004f;
 }
 
-/* line 83 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 84 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav > li + li,
 .AppNav .App-menus .navbar-nav > li > ul {
   border-top: 1px solid #777;
 }
 
-/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-
 /* line 87 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+
+/* line 88 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav > li > ul.nav > li {
   text-indent: 1em;
   line-height: 1em;
 }
 
-/* line 100 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 101 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle,
 .AppNav > .SmartNavBar > .SmartNavBar-edge {
   overflow: hidden;
@@ -269,14 +270,7 @@ fieldset[disabled] .btn-secondary.active {
   text-overflow: clip !important;
 }
 
-/* line 108 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .SmartNavBar-btn:active {
-  opacity: inherit;
-  -ms-filter: inherit;
-  filter: inherit;
-}
-
-/* line 111 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 107 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle {
   -webkit-transition-property: -webkit-transform, opacity;
   -moz-transition-property: -moz-transform, opacity;
@@ -300,7 +294,7 @@ fieldset[disabled] .btn-secondary.active {
   transform: rotate(0deg);
 }
 
-/* line 113 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 109 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle > * {
   -webkit-transition-property: -webkit-transform, opacity;
   -moz-transition-property: -moz-transform, opacity;
@@ -323,13 +317,13 @@ fieldset[disabled] .btn-secondary.active {
   display: block;
 }
 
-/* line 120 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 116 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle > * > .glyphicon,
 .AppNav .navbar-toggle > * > .icon {
   display: block;
 }
 
-/* line 126 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 122 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle:before {
   content: "";
   position: absolute;
@@ -366,7 +360,7 @@ fieldset[disabled] .btn-secondary.active {
   transition-timing-function: ease-in-out;
 }
 
-/* line 145 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 141 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"] {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -375,14 +369,14 @@ fieldset[disabled] .btn-secondary.active {
   transform: rotate(180deg);
 }
 
-/* line 147 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 143 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"] > * {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
 }
 
-/* line 153 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 149 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"]:before {
   opacity: 1;
   -ms-filter: none;
@@ -504,7 +498,7 @@ body:before {
   -o-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
-  position: fixed;
+  position: absolute;
   top: 44px;
   bottom: 0;
   left: 0;
@@ -536,7 +530,7 @@ body:before {
   transition-timing-function: ease-in-out;
 }
 
-/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 body.use-backdrop:before {
   pointer-events: all;
   opacity: 0.4;
@@ -547,7 +541,7 @@ body.use-backdrop:before {
 /* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {
