@@ -89,6 +89,16 @@ public class RestWebPage
 
         dynamic result = null;
 
+        // For all requests:
+        // No cache
+        WebPage.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
+        WebPage.Response.Cache.SetValidUntilExpires(false);
+        WebPage.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+        WebPage.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        WebPage.Response.Cache.SetNoStore();
+        // No cookies
+        WebPage.Response.Cookies.Clear();
+
         try
         {
             switch (Request.HttpMethod.ToUpper())
