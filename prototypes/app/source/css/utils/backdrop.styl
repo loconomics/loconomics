@@ -10,12 +10,7 @@ backdrop() {
         content: '';
         -webkit-backface-visibility: hidden;
         transform: translateZ(0);
-        // Absolute better than fixed to avoid problems
-        // with some browsers, like iOS (on scrolling).
-        // But needs to ensure the element to be applied to
-        // fits all the desired height correctly, or the back-drop
-        // can ending by not fill all the area.
-        position: absolute;
+        position: fixed;
         top: $app-navbar-height;
         bottom: 0;
         left: 0;

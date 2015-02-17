@@ -19,6 +19,7 @@ $SmartNavBar-lateralGap = $container-padding-left; //9px;
 $SmartNavBar-headerFontSize = 17px;
 $SmartNavBar-buttonFontSize = 15px;
 $SmartNavBar-buttonHeaderFontSize = 15px;
+$SmartNavBar-buttonMaxWidth = none; // 140px;
 $SmartNavBar-bgColor = White; //rgba(248, 248, 248, 0.9);
 $SmartNavBar-borderColor = $gray-lighter; //rgb(200, 199, 204);
 $SmartNavBar-buttonColor = $brand-secondary; // rgb(21, 125, 251);
@@ -27,7 +28,7 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
 
 .SmartNavBar {
 
-    position: absolute;
+    position: fixed;
     top: 0;
     height: $SmartNavBar-height;
     line-height: $SmartNavBar-height;
@@ -72,7 +73,7 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
         text-overflow: ellipsis !important; /* why so !important ? */
         white-space: nowrap;
 
-        max-width: 140px;
+        max-width: $SmartNavBar-buttonMaxWidth;
     }
     
     .SmartNavBar-edge {

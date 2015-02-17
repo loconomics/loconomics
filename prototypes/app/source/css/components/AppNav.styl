@@ -39,10 +39,18 @@
     .App-menus {
         // General menus container
         background: white;
-        position: relative;
-        top: $app-navbar-height;
-        // iOS7-8.1 requires a explicit z-index:
-        z-index: 300;
+    
+        // Individual menus set-up
+        > .navbar-collapse {
+            position: fixed;
+            left: 0px;
+            right: 0px;
+            overflow: auto;
+            bottom: 0px;
+            top: $app-navbar-height;
+            // iOS7-8.1 requires a explicit z-index:
+            z-index: 300;
+        }
         
         // Customization of Bootstrap navigation bar for use as menus
         .nav {
