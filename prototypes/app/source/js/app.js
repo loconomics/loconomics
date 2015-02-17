@@ -149,7 +149,7 @@ var appInit = function appInit() {
 
         $('html').height(window.innerHeight + 'px');
         fixActivities();
-        $(window).on('layoutUpdate', function() {
+        $(window).on('layoutUpdate, native.keyboardshow, native.keyboardhide', function() {
             $('html').height(window.innerHeight + 'px');
             fixActivities();
         });
