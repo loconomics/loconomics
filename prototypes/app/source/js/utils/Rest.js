@@ -62,9 +62,11 @@ Rest.prototype.putFile = function putFile(apiUrl, data) {
 Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType) {
     
     var thisRest = this;
-    
+    var url = this.baseUrl + apiUrl;
+
     return Promise.resolve($.ajax({
-        url: this.baseUrl + apiUrl,
+        url: url,
+        // Avoid cache for data.
         cache: false,
         dataType: 'json',
         method: httpMethod,

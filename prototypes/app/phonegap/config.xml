@@ -2,7 +2,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id="com.loconomics.app"
-        version="0.1.5"
+        version="0.1.9"
         >
     <name>Loconomics</name>
     <description>
@@ -102,8 +102,17 @@
 
         Otherwise, you can specify specific domains:
     -->
-    <access origin="http://127.0.0.1*"/> <!-- allow local pages -->
+    <!-- Strict acces is being problematic, not working for subdomains in Android,
+        maybe blocking more things.
+        TODO: review, double check with new PhoneGap version or different Android versions
+        so an be enabled again instead of the 'allow all'.
+        On iOS7.1 there was no problem (not sure if allowed all or was correctly restricted)
+    
+    <access origin="http://127.0.0.1*"/>
     <access origin="https://loconomics.com" subdomains="true" />
+    -->
+    <access origin="*"/>
+    <access uri="*"/>
     <!--
         <access origin="http://phonegap.com" />                    - allow any secure requests to http://phonegap.com/
         <access origin="http://phonegap.com" subdomains="true" />  - same as above, but including subdomains, such as http://build.phonegap.com/
