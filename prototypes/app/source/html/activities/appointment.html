@@ -1,8 +1,8 @@
 <!-- Activity appointment -->
-<div class="container-fluid full-height" data-activity="appointment">
+<div class="container-fluid" data-activity="appointment">
 
   <!-- Appointment View (cards) -->
-  <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">
+  <div id="calendarAppointmentView" class="full-height row CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">
     <div class="Card AppointmentCard">
       <div class="Card-title">
         <h3 data-bind="text: currentAppointment().stateHeader()"></h3>

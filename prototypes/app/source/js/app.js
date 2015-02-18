@@ -125,7 +125,7 @@ app.UserType = app.model.user().constructor.UserType;
 
 /** App Init **/
 var appInit = function appInit() {
-    /*jshint maxstatements:30 */
+    /*jshint maxstatements:35,maxcomplexity:10 */
     
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that
@@ -133,36 +133,71 @@ var appInit = function appInit() {
     // The event is throttle, guaranting that the minor handlers are executed rather
     // than a lot of them in short time frames (as happen with 'resize' events).
     layoutUpdateEvent.on();
-    
-    // NOTE: Safari iOS bug workaround, min-height/height on html doesn't work as expected,
-    // getting bigger than viewport. May be a problem only on Safari and not in 
-    // the WebView, double check.
-    // With the additional problem with height:100%, so Activities get a
-    // fixed size (calculated from body) if height:100% is applied through CSS
-    var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
-    if (iOS) {
-        var $b = $('body');
-        var fixActivities = function fixActivities() {
-            var h = $b.height();
-            $('[data-activity].full-height').height(h);
-        };
 
-        $('html').height(window.innerHeight + 'px');
-        fixActivities();
-        $(window).on('layoutUpdate, native.keyboardshow, native.keyboardhide', function() {
-            $('html').height(window.innerHeight + 'px');
-            fixActivities();
-        });
-    }
-    
     // iOS-7+ status bar fix. Apply on plugin loaded (cordova/phonegap environment)
     // and in any system, so any other systems fix its solved too if needed 
     // just updating the plugin (future proof) and ensure homogeneous cross plaftform behavior.
     if (window.StatusBar) {
         // Fix iOS-7+ overlay problem
-        // Is in config.xml too, but seems not to work there.
+        // Is in config.xml too, but seems not to work without next call:
         window.StatusBar.overlaysWebView(false);
     }
+
+    var iOsWebview = false;
+    if (window.device && 
+        /iOS|iPad|iPhone|iPod/i.test(window.device.platform)) {
+        iOsWebview = true;
+    }
+    
+    // Layout events to hear for:
+    var importantLayoutEvents = 'layoutUpdate,orientationchange,native.keyboardshow,native.keyboardhide';
+    
+    // NOTE: Safari iOS bug workaround, min-height/height on html doesn't work as expected,
+    // getting bigger than viewport.
+    var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
+    if (iOS) {
+        var getHeight = function getHeight() {
+            return (window.innerHeight - (iOsWebview ? 20 : 0));
+        };
+        
+        $('html').height(getHeight() + 'px');        
+        $(window).on(importantLayoutEvents, function() {
+            $('html').height(getHeight() + 'px');
+        });
+    }
+
+    // Because of the iOS7+8 bugs with height calculation,
+    // a different way of apply content height to fill all the available height (as minimum)
+    // is required.
+    // For that, the 'full-height' class was added, to be used in elements inside the 
+    // activity that needs all the available height, here the calculation is applied for
+    // all platforms for this homogeneous approach to solve the problemm.
+    (function() {
+        var $b = $('body');
+        var fullHeight = function fullHeight() {
+            var h = $b.height();
+            $('.full-height')
+            // Let browser to compute
+            .css('height', 'auto')
+            // As minimum
+            .css('min-height', h)
+            // Set explicit the automatic computed height
+            .css('height', function() {
+                return $(this).height();
+            })
+            ;
+        };
+        
+        fullHeight();
+        $(window).on(importantLayoutEvents, function() {
+            fullHeight();
+        });
+    })();
+    
+    // Force an update delayed to ensure update after some things did additional work
+    setTimeout(function() {
+        $(window).trigger('layoutUpdate');
+    }, 200);
     
     // Bootstrap
     preBootstrapWorkarounds();
@@ -195,6 +230,16 @@ var appInit = function appInit() {
             e.preventDefault();
         }
     });
+    
+    // On Cordova/Phonegap app, special targets must be called using the window.open
+    // API to ensure is correctly opened on the InAppBrowser (_blank) or system default
+    // browser (_system).
+    if (window.cordova) {
+        $(document).on('tap', '[target="_blank"], [target="_system"]', function(e) {
+            window.open(this.getAttribute('href'), this.getAttribute('target'));
+            e.preventDefault();
+        });
+    }
     
     // When an activity is ready in the Shell:
     app.shell.on(app.shell.events.itemReady, function($act, state) {

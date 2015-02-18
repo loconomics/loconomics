@@ -16,11 +16,10 @@ Activity() {
     // so a specific class is used that involve some javascript code to
     // fix iOS bugs using next class name.
     // This is need additionally to the general min-height for cases where
-    // content children needs to expand to height:100% too.
-    // NOTE: Incompatible with has-navbar
-    &.full-height {
+    // content children needs to expand to height:100% too,
+    // SO this must be applied only to child elements inside the Activity.
+    .full-height {
         height: 100%;
-        overflow: auto;
     }
 
     /* activity must be notified of the navbar to fix

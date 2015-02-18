@@ -26,10 +26,14 @@
     }    
 
     /** We use ever all the available screen **/
-    height: 100%;    
+    height: 100%;
+    // Fix for iOS
+    overflow: auto;
     
     > body {
         height: 100%;
+        // Fix for iOS
+        overflow: auto;
         /* Space for app-nav on top */
         padding-top: $app-navbar-height;
     }

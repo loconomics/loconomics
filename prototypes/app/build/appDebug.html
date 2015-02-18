@@ -6,7 +6,7 @@
     <meta name="description" content="Loconomics.com App">
     <meta name="author" content="Loconomics Coop.">
     <link rel="icon" href="assets/images/favicon.ico" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width"
     />
     <meta name="format-detection" content="telephone=no" />
     <title>Loconomics App</title>
@@ -152,11 +152,11 @@
           <div class="ListView-item-marker">
             <p><span class="glyphicon glyphicon-file"></span>
             </p>
-          </div> <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank"
+          </div> <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_system"
           class="btn btn-link btn-block ListView-item-content">
         <p>Terms of Use</p>
       </a>
- <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank"
+ <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_system"
           class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
         </div>
@@ -164,19 +164,20 @@
           <div class="ListView-item-marker">
             <p><span class="glyphicon glyphicon-file"></span>
             </p>
-          </div> <a href="https://loconomics.com/en-US/About/PrivacyPolicy/" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank"
+          class="btn btn-link btn-block ListView-item-content">
         <p>Privacy policy</p>
       </a>
  <a href="https://loconomics.com/en-US/About/PrivacyPolicy/"
-          class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          target="_blank" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
         </div>
       </div>
     </div>
     <!-- Activity appointment -->
-    <div class="container-fluid full-height" data-activity="appointment">
+    <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
-      <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
+      <div id="calendarAppointmentView" class="full-height row CardsDeck CardsDeck--dotsSlider"
       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">
         <div class="Card AppointmentCard">
           <div class="Card-title">
@@ -308,7 +309,7 @@
       </div>
     </div>
     <!-- Activity calendar -->
-    <div class="container-fluid has-frozenTitle full-height" data-activity="calendar">
+    <div class="container-fluid has-frozenTitle" data-activity="calendar">
        <h1 id="calendarDateHeader" class="CalendarDateHeader ActivityTitle">
       <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
       <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time> <span class="caret"></span></a>
@@ -317,7 +318,7 @@
 
       <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
       <!-- Daily View (appointments list) -->
-      <div id="calendarDailyView" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags"
+      <div id="calendarDailyView" class="full-height ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags"
       data-bind="foreach: slots">
         <div class="ListView-item" data-bind="css: classNames">
           <div class="ListView-item-marker">

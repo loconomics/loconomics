@@ -1,5 +1,5 @@
 <!-- Activity calendar -->
-<div class="container-fluid has-frozenTitle full-height" data-activity="calendar">
+<div class="container-fluid has-frozenTitle" data-activity="calendar">
 
   <h1 id="calendarDateHeader" class="CalendarDateHeader ActivityTitle">
       <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
@@ -10,7 +10,7 @@
   <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
 
   <!-- Daily View (appointments list) -->
-  <div id="calendarDailyView" class="ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags" data-bind="foreach: slots">
+  <div id="calendarDailyView" class="full-height ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags" data-bind="foreach: slots">
     <div class="ListView-item" data-bind="css: classNames">
       <div class="ListView-item-marker"><div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div><div class="text-muted" data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></div></div>
       <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !description()"></p><div data-bind="text: subject, visible: description()"></div><div data-bind="text: description, visible: description()"></div></a>

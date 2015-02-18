@@ -1,4 +1,4 @@
-/*! LoconomicsAppProto 2015-02-17
+/*! LoconomicsAppProto 2015-02-18
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -127,7 +127,7 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 84 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\appVars.styl */
+/* line 88 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\appVars.styl */
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
@@ -400,6 +400,7 @@ fieldset[disabled] .btn-secondary.active {
 .App {
 /** We use ever all the available screen **/
   height: 100%;
+  overflow: auto;
 /**
         Custom Buttons --very specific
     **/
@@ -437,30 +438,31 @@ fieldset[disabled] .btn-secondary.active {
   visibility: hidden;
 }
 
-/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 33 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App > body {
   height: 100%;
+  overflow: auto;
 /* Space for app-nav on top */
   padding-top: 44px;
 }
 
-/* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 44 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .btn-google {
   background-color: #c00;
   color: #fff;
   border: none;
 }
 
-/* line 45 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 49 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .btn-facebook {
   background-color: #085394;
   color: #fff;
   border: none;
 }
 
-/* line 59 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 63 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 60 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 64 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal.bottom .modal-dialog {
   position: absolute;
   padding: 10px;
@@ -469,14 +471,14 @@ fieldset[disabled] .btn-secondary.active {
   bottom: 0;
 }
 
-/* line 73 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 77 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 74 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal .modal-dialog {
   padding-top: 44px;
 }
 
-/* line 80 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 84 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal {
   background: rgba(0,0,0,0.4);
 }
@@ -942,7 +944,7 @@ body.use-backdrop:before {
 
 /* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 
-/* line 62 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 
 /* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 .ActivityTitle {
@@ -1043,7 +1045,7 @@ body.use-backdrop:before {
   border-color: transparent;
 }
 
-/* line 59 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity,
 [data-activity] {
 /* settings specially important for the use of navbar
@@ -1068,26 +1070,25 @@ body.use-backdrop:before {
 }
 
 /* line 21 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
-.Activity.full-height,
-[data-activity].full-height {
+.Activity .full-height,
+[data-activity] .full-height {
   height: 100%;
-  overflow: auto;
 }
 
-/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-navbar,
 [data-activity].has-navbar {
   padding-bottom: 50px;
   height: auto;
 }
 
-/* line 38 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-frozenTitle,
 [data-activity].has-frozenTitle {
   padding-top: 60px;
 }
 
-/* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 41 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-frozenTitle .ActivityTitle,
 [data-activity].has-frozenTitle .ActivityTitle {
   position: fixed;
@@ -1106,7 +1107,7 @@ body.use-backdrop:before {
   overflow: hidden;
 }
 
-/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 51 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.is-active,
 [data-activity].is-active {
   display: block;
