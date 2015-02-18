@@ -132,6 +132,7 @@ var appInit = function appInit() {
     // may require adjustments on other scripts that listen to it.
     // The event is throttle, guaranting that the minor handlers are executed rather
     // than a lot of them in short time frames (as happen with 'resize' events).
+    layoutUpdateEvent.layoutUpdateEvent += ' orientationchange native.keyboardshow native.keyboardhide';
     layoutUpdateEvent.on();
 
     // iOS-7+ status bar fix. Apply on plugin loaded (cordova/phonegap environment)
@@ -149,9 +150,6 @@ var appInit = function appInit() {
         iOsWebview = true;
     }
     
-    // Layout events to hear for:
-    var importantLayoutEvents = 'layoutUpdate,orientationchange,native.keyboardshow,native.keyboardhide';
-    
     // NOTE: Safari iOS bug workaround, min-height/height on html doesn't work as expected,
     // getting bigger than viewport.
     var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
@@ -161,7 +159,7 @@ var appInit = function appInit() {
         };
         
         $('html').height(getHeight() + 'px');        
-        $(window).on(importantLayoutEvents, function() {
+        $(window).on('layoutUpdate', function() {
             $('html').height(getHeight() + 'px');
         });
     }
@@ -189,7 +187,7 @@ var appInit = function appInit() {
         };
         
         fullHeight();
-        $(window).on(importantLayoutEvents, function() {
+        $(window).on('layoutUpdate', function() {
             fullHeight();
         });
     })();

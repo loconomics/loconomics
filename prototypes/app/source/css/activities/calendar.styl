@@ -6,9 +6,13 @@
 [data-activity=calendar] {
 
     #calendarDailyView {
-        /*padding-top: $calendarDateHeaderHeight;*/
-        min-height: 100%;
-        padding-top: (0 - $activityTitleGap);
+        margin-top: $activityTitleHeight;
+    }
+
+    #calendarDateHeader {
+        position: fixed;
+        z-index: 100;
+        background: White;
     }
 
     #calendarDatePicker {
