@@ -222,7 +222,7 @@ public static partial class LcData
                 d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, nextWeekStart, nextWeekEnd);
                 ret["nextWeek"] = new RestUpcomingBookingsInfo {
                     quantity = d.count,
-                    time = null
+                    time = d.startTime
                 };
 
                 ret["nextBookingID"] = db.QueryValue(sqlGetNextBookingID, userID, leftToday);
