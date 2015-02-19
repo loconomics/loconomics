@@ -1,7 +1,10 @@
 {
-  "name": "LoconomicsAppProto",
-  "version": "0.1.0",
-  "description": "App Prototype",
+  "name": "LoconomicsApp",
+  "version": "0.1.51",
+  "description": "Loconomics.com mobile app",
+  "appName": "Loconomics",
+  "appDescription": "Make your life better",
+  "author": "Loconomics Cooperative, Inc.",
   "main": "Scripts/app/app.js",
   "scripts": {
     "test": "grunt test",
@@ -12,7 +15,6 @@
     "type": "git",
     "url": "git@github.com:dani0198/Loconomics.git"
   },
-  "author": "Loconomics Inc.",
   "private": true,
   "devDependencies": {
     "grunt": "~0.4.2",

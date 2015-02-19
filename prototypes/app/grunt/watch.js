@@ -30,5 +30,10 @@ module.exports = {
     html: {
         files: ['./source/html/app.js.html', './source/html/activities/*.html', './source/html/modals/*.html'],
         tasks: ['build-html']
+    },
+    
+    package: {
+        files: ['./package.json'],
+        tasks: ['build']
     }
 };

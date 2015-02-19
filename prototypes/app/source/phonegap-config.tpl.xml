@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "com.loconomics.app"
-        version   = "0.1.51"
+        id        = "<%= id %>"
+        version   = "<%= version %>"
         >
 
-    <name>Loconomics</name>
-    <description>Make your life better</description>
-    <author href="https://loconomics.com" email="support@loconomics.com"></author>
+    <name><%= name %></name>
+    <description><%= description %></description>
+    <author href="<%= author.url %>" email="<%= author.email %>"><%= author.name %></author>
 
     <content src="index.html" />
 
