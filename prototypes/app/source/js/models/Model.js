@@ -26,6 +26,8 @@
 'use strict';
 var ko = require('knockout');
 ko.mapping = require('knockout.mapping');
+var $ = require('jquery');
+var clone = function(obj) { return $.extend(true, {}, obj); };
 
 function Model(modelObject) {
     
@@ -123,10 +125,72 @@ Model.prototype.defFields = function defFields(fields, initialValues) {
         
         // Add to the internal registry
         fieldsList.push(key);
-    });    
+    });
 };
 
-Model.prototype.updateWith = function updateWith(data) {
+/**
+    Returns a plain object with the properties and fields
+    of the model object, just values.
+    
+    @param deepCopy:bool If left undefined, do not copy objects in
+    values and not references. If false, do a shallow copy, setting
+    up references in the result. If true, to a deep copy of all objects.
+**/
+Model.prototype.toPlainObject = function toPlainObject(deepCopy) {
+
+    var plain = {},
+        modelObj = this.modelObject;
+
+    function setValue(property, val) {
+        /*jshint maxcomplexity: 10*/
+        
+        if (typeof(val) === 'object') {
+            if (deepCopy === true) {
+                if (val instanceof Date) {
+                    // A date clone
+                    plain[property] = new Date(val);
+                }
+                else if (val && val.model instanceof Model) {
+                    // A model copy
+                    plain[property] = val.model.toPlainObject(deepCopy);
+                }
+                else if (val === null) {
+                    plain[property] = null;
+                }
+                else {
+                    // Plain 'standard' object clone
+                    plain[property] = clone(val);
+                }
+            }
+            else if (deepCopy === false) {
+                // Shallow copy
+                plain[property] = val;
+            }
+            // On else, do nothing, no references, no clones
+        }
+        else {
+            plain[property] = val;
+        }
+    }
+
+    this.propertiesList.forEach(function(property) {
+        // Properties are observables, so functions without params:
+        var val = modelObj[property]();
+
+        setValue(property, val);
+    });
+
+    this.fieldsList.forEach(function(field) {
+        // Fields are just plain object members for values, just copy:
+        var val = modelObj[field];
+
+        setValue(field, val);
+    });
+
+    return plain;
+};
+
+Model.prototype.updateWith = function updateWith(data, deepCopy) {
     
     // We need a plain object for 'fromJS'.
     // If is a model, extract their properties and fields from
@@ -134,27 +198,15 @@ Model.prototype.updateWith = function updateWith(data) {
     // or functions, just registered properties and fields
     if (data && data.model instanceof Model) {
         
-        var plain = {};
-
-        data.model.propertiesList.forEach(function(property) {
-            // Properties are observables, so functions without params:
-            plain[property] = data[property]();
-        });
-        
-        data.model.fieldsList.forEach(function(field) {
-            // Fields are just plain object members for values, just copy:
-            plain[field] = data[field];
-        });
-
-        data = plain;
+        data = data.model.toPlainObject(deepCopy);
     }
 
     ko.mapping.fromJS(data, this.mappingOptions, this.modelObject);
 };
 
-Model.prototype.clone = function clone(data) {
+Model.prototype.clone = function clone(data, deepCopy) {
     // Get a plain object with the object data
-    var plain = ko.mapping.toJS(this.modelObject);
+    var plain = this.toPlainObject(deepCopy);
     // Create a new model instance, using the source plain object
     // as initial values
     var cloned = new this.modelObject.constructor(plain);

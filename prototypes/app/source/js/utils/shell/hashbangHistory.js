@@ -209,13 +209,13 @@ var hashbangHistory = {
         location.hash = '#!' + url;
     },
     get state() {
-    
-        // Get latest saved state, thats the current one
-        var last = session.states.length;
-        if (last === 0)
-            return null;
-        else
-            return session.states[last - 1];
+        
+        var suid = getSuid(location.hash);
+        return (
+            suid !== null ?
+            session.states[suid] :
+            null
+        );
     },
     get length() {
         return window.history.length;

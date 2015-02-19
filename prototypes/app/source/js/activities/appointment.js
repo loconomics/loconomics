@@ -85,8 +85,20 @@ function AppointmentActivity($activity, app) {
         var urlId = /appointment\/(\d+)/i.test(window.location);
         urlId = urlId && urlId[1] || '';
         if (urlId !== '0' && aptId !== null && urlId !== aptId.toString()) {
-            // TODO: save a useful state
-            app.shell.history.pushState(null, null, 'appointment/' + aptId);
+            
+            // TODO save a useful state
+            // Not for now, is failing, but something based on:
+            /*
+            var viewstate = {
+                appointment: apt.model.toPlainObject(true)
+            };
+            */
+            
+            // If was a root URL, no ID, just replace current state
+            if (urlId === '')
+                app.shell.history.replaceState(null, null, 'appointment/' + aptId);
+            else
+                app.shell.history.pushState(null, null, 'appointment/' + aptId);
         }
         
         // Trigger a layout update, required by the full-height feature
@@ -97,6 +109,17 @@ function AppointmentActivity($activity, app) {
 AppointmentActivity.prototype.show = function show(options) {
     /* jshint maxcomplexity:10 */
     this.requestInfo = options || {};
+    
+    var apt;
+    if (this.requestInfo.appointment) {
+        apt = this.requestInfo.appointment;
+    } else {
+    // Get ID
+        var aptId = options && options.route && options.route.segments[0];
+        aptId = parseInt(aptId, 10);
+        apt = aptId || 0;
+    }
+    this.showAppointment(apt);
     
     // If there are options (there are not on startup or
     // on cancelled edition).
@@ -135,25 +158,32 @@ AppointmentActivity.prototype.show = function show(options) {
             booking.location(options.selectedLocation);
         }
     }
-    
-    var aptId = options && options.route && options.route.segments[0];
-    aptId = parseInt(aptId, 10);
-    aptId = aptId || 0;
-    this.showAppointment(aptId);
 };
 
 var Appointment = require('../models/Appointment');
 
-AppointmentActivity.prototype.showAppointment = function showAppointment(aptId) {
-    /*jshint maxstatements:36*/
+AppointmentActivity.prototype.showAppointment = function showAppointment(apt) {
 
-    if (aptId) {
-        // TODO: select appointment 'aptId'
-        
+    if (typeof(apt) === 'number') {
+        if (apt) {
+            // TODO: select appointment apt ID
 
-    } else if (aptId === 0) {
-        this.appointmentsDataView.newAppointment(new Appointment());
-        this.appointmentsDataView.editMode(true);        
+        } else if (apt === 0) {
+            this.appointmentsDataView.newAppointment(new Appointment());
+            this.appointmentsDataView.editMode(true);
+        }
+    }
+    else {
+        // Appointment object
+        if (apt.id) {
+            // TODO: select appointment by apt id
+            // TODO: then update values with in-editing values from apt
+        }
+        else {
+            // New apopintment with the in-editing values
+            this.appointmentsDataView.newAppointment(new Appointment(apt));
+            this.appointmentsDataView.editMode(true);
+        }
     }
 };
 
@@ -269,16 +299,38 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
             
         }.bind(this));
         
+        appointmentsDataView.currentDate = ko.computed(function() {
+            
+            var apt = this.currentAppointment(),
+                justDate = null;
+
+            if (apt && apt.startTime())
+                justDate = moment(apt.startTime()).hours(0).minutes(0).seconds(0).toDate();
+            
+            return justDate;
+        }, appointmentsDataView);
+        
+        /**
+            External actions
+        **/
+        var editFieldOn = function editFieldOn(activity, data) {
+            
+            // Include appointment to recover state on return:
+            data.appointment = appointmentsDataView.currentAppointment().model.toPlainObject(true);
+
+            app.shell.go(activity, data);
+        };
+        
         appointmentsDataView.pickDateTime = function pickDateTime() {
 
-            app.shell.go('datetimePicker', {
+            editFieldOn('datetimePicker', {
                 selectedDatetime: null
             });
         };
         
         appointmentsDataView.pickClient = function pickClient() {
 
-            app.shell.go('clients', {
+            editFieldOn('clients', {
                 selectClient: true,
                 selectedClient: null
             });
@@ -286,7 +338,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
 
         appointmentsDataView.pickService = function pickService() {
 
-            app.shell.go('services', {
+            editFieldOn('services', {
                 selectServices: true,
                 selectedServices: appointmentsDataView.currentAppointment().services()
             });
@@ -298,7 +350,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         
         appointmentsDataView.pickLocation = function pickLocation() {
 
-            app.shell.go('locations', {
+            editFieldOn('locations', {
                 selectLocation: true,
                 selectedLocation: appointmentsDataView.currentAppointment().location()
             });
@@ -313,7 +365,7 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
         
         appointmentsDataView.editTextField = function editTextField(field) {
 
-            app.shell.go('textEditor', {
+            editFieldOn('textEditor', {
                 request: 'textEditor',
                 field: field,
                 title: appointmentsDataView.isNew() ? 'New booking' : 'Booking',
@@ -321,17 +373,6 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
                 text: appointmentsDataView.currentAppointment()[field]()
             });
         }.bind(this);
-        
-        appointmentsDataView.currentDate = ko.computed(function() {
-            
-            var apt = this.currentAppointment(),
-                justDate = null;
-
-            if (apt && apt.startTime())
-                justDate = moment(apt.startTime()).hours(0).minutes(0).seconds(0).toDate();
-            
-            return justDate;
-        }, appointmentsDataView);
         
         ko.applyBindings(appointmentsDataView, this.$activity.get(0));
     }
