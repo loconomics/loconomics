@@ -125,15 +125,24 @@ app.UserType = app.model.user().constructor.UserType;
 
 /** App Init **/
 var appInit = function appInit() {
-    /*jshint maxstatements:35,maxcomplexity:10 */
+    /*jshint maxstatements:50,maxcomplexity:16 */
     
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that
     // may require adjustments on other scripts that listen to it.
     // The event is throttle, guaranting that the minor handlers are executed rather
     // than a lot of them in short time frames (as happen with 'resize' events).
-    layoutUpdateEvent.layoutUpdateEvent += ' orientationchange native.keyboardshow native.keyboardhide';
+    layoutUpdateEvent.layoutUpdateEvent += ' orientationchange';
     layoutUpdateEvent.on();
+    
+    // Keyboard plugin events are not compatible with jQuery events, but needed to
+    // trigger a layoutUpdate, so here are connected, mainly fixing bugs on iOS when the keyboard
+    // is hidding.
+    var trigLayout = function trigLayout(event) {
+        $(window).trigger('layoutUpdate');
+    };
+    window.addEventListener('native.keyboardshow', trigLayout);
+    window.addEventListener('native.keyboardhide', trigLayout);
 
     // iOS-7+ status bar fix. Apply on plugin loaded (cordova/phonegap environment)
     // and in any system, so any other systems fix its solved too if needed 
