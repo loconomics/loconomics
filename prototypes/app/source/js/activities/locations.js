@@ -22,9 +22,11 @@ function LocationsActivity($activity, app) {
     
     this.accessLevel = app.UserType.Provider;
     this.navBar = new NavBar({
-        title: 'Locations',
-        leftAction: NavAction.menuNewItem,
-        rightAction: NavAction.menuIn
+        title: '',
+        leftAction: NavAction.goBack.model.clone({
+            isTitle: true
+        }),
+        rightAction: NavAction.goHelpIndex
     });
 
     this.app = app;
@@ -42,10 +44,11 @@ function LocationsActivity($activity, app) {
         this.dataView.headerText(itIs ? 'Select or add a service location' : 'Locations');
         
         // Update navbar too
-        this.navBar.leftAction(NavAction.goBack.model.clone());
-        this.navBar.rightAction(NavAction.goHelpIndex);
+        // TODO: Can be other than 'scheduling', like marketplace profile or the job-title?
+        this.navBar.leftAction().text(itIs ? 'Booking' : 'Scheduling');
         // Title must be empty
         this.navBar.title('');
+        
         // TODO Replaced by a progress bar on booking creation
         // TODO Or leftAction().text(..) on booking edition (return to booking)
         // or coming from Jobtitle/schedule (return to schedule/job title)?

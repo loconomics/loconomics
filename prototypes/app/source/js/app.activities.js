@@ -26,5 +26,7 @@ module.exports = {
     'locationEdition': require('./activities/locationEdition'),
     'onboardingComplete': require('./activities/onboardingComplete'),
     'account': require('./activities/account'),
-    'inbox': require('./activities/inbox')
+    'inbox': require('./activities/inbox'),
+    'scheduling': require('./activities/scheduling'),
+    'jobtitles': require('./activities/jobtitles')
 };

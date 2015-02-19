@@ -45,4 +45,16 @@ exports.registerAll = function() {
             this.placeholder = getObservable(params.placeholder);
         }
     });
+    
+    /// feedback-entry
+    ko.components.register('app-feedback-entry', {
+        template: { element: 'feedback-entry-template' },
+        viewModel: function(params) {
+
+            this.section = getObservable(params.section || '');
+            this.url = ko.pureComputed(function() {
+                return '/feedback/' + this.section();
+            }, this);
+        }
+    });
 };

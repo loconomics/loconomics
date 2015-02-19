@@ -509,7 +509,7 @@
         </div>
       </div>
     </div>
-    <!-- Inbox home -->
+    <!-- Inbox activity -->
     <div class="container-fluid" data-activity="inbox">
       <div id="inboxList" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
       data-bind="foreach: inbox.top()">
@@ -543,6 +543,35 @@
           href="#!learnMore/customer" class="btn btn-default btn-block">I'm a potential client</a>
         </div>
       </div>
+    </div>
+    <!-- Jobtitles activity -->
+    <div class="container-fluid" data-activity="jobtitles">
+       <h2 class="SectionTitle">Massage Therapist</h2>
+
+      <div class="ListView ListView--twolines ListView--textualmarker">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><span class="glyphicon glyphicon-tag"></span>
+            </p>
+          </div> <a href="/services/106" class="btn btn-link btn-block ListView-item-content">
+        <div>Pricing and services</div>
+        <div class="text-muted">7 services</div>
+      </a>
+ <a href="/services/106" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/locations" class="btn btn-link btn-block ListView-item-content">
+        <div>Service locations</div>
+        <div class="text-muted">2 locations</div>
+      </a>
+ <a href="/locations" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
+
+        </div>
+      </div>
+      <app-feedback-entry params="section: 'jobtitles'"></app-feedback-entry>
     </div>
     <!-- Activity learnMoreFreelancers -->
     <div class="container-fluid" data-activity="learnMore">
@@ -647,7 +676,7 @@
             data-bind="event: { tap: $root.selectLocation }">
           <div><strong data-bind="text: name"></strong></div><div data-bind="text: singleLine"></div>
         </a>
- <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.selectLocation }"
+ <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectLocation }"
             role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
 
           </div>
@@ -791,6 +820,91 @@
         </div>
       </div>
     </div>
+    <!-- Scheduling activity -->
+    <div class="container-fluid" data-activity="scheduling">
+       <h2 class="SectionTitle">Services, Pricing, &amp; Locations</h2>
+
+      <div class="ListView ListView--twolines ListView--textualmarker">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/jobtitles/106" class="btn btn-link btn-block ListView-item-content">
+        <p>Massage Therapist</p>
+      </a>
+ <a href="/jobtitles/106" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/jobtitles/99" class="btn btn-link btn-block ListView-item-content">
+        <p>Esthetician</p>
+      </a>
+ <a href="/jobtitles/99" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/jobtitles/0" class="btn btn-link btn-block ListView-item-content">
+        <p>Add a job title</p>
+      </a>
+ <a href="/jobtitles/0" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+
+        </div>
+      </div>
+       <h2 class="SectionTitle">Availability</h2>
+
+      <div class="ListView ListView--twolines ListView--textualmarker">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/weeklySchedule" class="btn btn-link btn-block ListView-item-content">
+        <p>Weekly schedule</p>
+      </a>
+ <a href="/weeklySchedule" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/schedulePreferences" class="btn btn-link btn-block ListView-item-content">
+        <p>Schedule preferences</p>
+      </a>
+ <a href="/schedulePreferences" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/event/0" class="btn btn-link btn-block ListView-item-content">
+        <p>Block a time off my calendar</p>
+      </a>
+ <a href="/event/0" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/bookNowButton" class="btn btn-link btn-block ListView-item-content">
+        <p>Add a Book Now button to your website</p>
+      </a>
+ <a href="/bookNowButton" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><span class="glyphicon glyphicon-download-alt"></span>
+            </p>
+          </div> <a href="/calendarSync" class="btn btn-link btn-block ListView-item-content">
+        <p>Sync your existing calendars</p>
+      </a>
+ <a href="/calendarSync" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
+
+        </div>
+      </div>
+      <app-feedback-entry></app-feedback-entry>
+    </div>
     <!-- Activity services -->
     <div class="container-fluid" data-activity="services">
       <div id="servicesListView">
@@ -806,14 +920,18 @@
             <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
             <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
           </a>
- <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.toggleServiceSelection }, attr: { 'aria-pressed': isSelected }"
+ <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: $root.isSelectionMode, event: { tap: $root.toggleServiceSelection }, attr: { 'aria-pressed': isSelected }"
             role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
 
+            <a
+            href="#" class="ListView-item-action btn btn-link" data-bind="visible: !$root.isSelectionMode()"
+            role="button"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Edit</span>
+              </a>
           </div>
           <!-- /ko -->
         </div>
       </div>
-      <div class="isolated">
+      <div class="isolated" data-bind="visible: isSelectionMode">
         <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }">Save and continue</button>
       </div>
     </div>
@@ -844,7 +962,8 @@
         </form>
         <p class="isolated">By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/"
           target="_blank">Terms of Use</a>, <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
-          target="_blank">Privacy Policy &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy" target="_blank">Co-op Membership Agreement</a>
+          target="_blank">Privacy Policy</a> &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
+          target="_blank">Co-op Membership Agreement</a>
 
         </p>
       </div>
@@ -866,6 +985,21 @@
         </div>
       </div>
     </div>
+    <!-- Component Template feedback-entry -->
+    <script type="text/html" id="feedback-entry-template">
+      <h2 class="SectionTitle">Feedback</h2>
+      <div class="ListView ListView--twolines ListView--textualmarker">
+          <div class="ListView-item">
+            <div class="ListView-item-marker">
+              <p><span class="glyphicon glyphicon-lamp"></span></p>
+            </div>
+            <a href="/feedback" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
+              <p>Send us your ideas to improve this section</p>
+            </a>
+            <a href="/feedback" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          </div>
+      </div>
+    </script>
     <!-- Component Template navbar-action -->
     <script type="text/html" id="navbar-action-template">
       <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }">
