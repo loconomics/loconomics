@@ -1,12 +1,2 @@
-{
-    "lib": {
-        "www": {
-            "id": "com.loconomics.app",
-            "version": "0.1.1",
-            "uri": "https://github.com/dani0198/Loconomics/archive/master.tar.gz"
-        }
-    },
-    "phonegap": {
-        "id": 1266913
-    }
-}
+{ "lib": { "www": { "id": "com.loconomics.app", "version": "0.1.53" }
+}, "phonegap": { "id": 1266913 } }

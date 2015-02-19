@@ -1,11 +1,16 @@
 {
   "name": "LoconomicsApp",
-  "version": "0.1.51",
+  "version": "0.1.53",
   "description": "Loconomics.com mobile app",
+  "author": "Loconomics Cooperative, Inc.",
+
+  "appId": "com.loconomics.app",
   "appName": "Loconomics",
   "appDescription": "Make your life better",
-  "author": "Loconomics Cooperative, Inc.",
-  "main": "Scripts/app/app.js",
+  "phonegapbuildId": 1266913,
+  
+  "main": "build/app.html",
+
   "scripts": {
     "test": "grunt test",
     "watch": "grunt watch",

@@ -8,7 +8,7 @@ module.exports = function(grunt) {
         cwd: includedDir,
         filter: grunt.file.isFile
     }, includedPatterns);
-    
+
     return {
         app: {
           files: {
@@ -45,6 +45,36 @@ module.exports = function(grunt) {
                 cordovajs: true
             }
           }
+        },
+        cordovaConfigJson: {
+            files: {
+                'phonegap/.cordova/config.json': ['source/cordova-config.js.json']
+            },
+            options: {
+                context: {
+                    id: '<%= package.appId %>',
+                    phonegapbuildId: '<%= package.phonegapbuildId %>',
+                    version: '<%= package.version %>'
+                }
+            }
+        },
+        cordovaConfigXml: {
+            files: {
+                'phonegap/www/config.xml': ['source/cordova-config.js.xml']
+            },
+            options: {
+                context: {
+                    id: '<%= package.appId %>',
+                    version: '<%= package.version %>',
+                    name: '<%= package.appName %>',
+                    description: '<%= package.appDescription %>',
+                    author: {
+                      email: 'support@loconomics.com',
+                      url: 'https://loconomics.com',
+                      text: '<%= package.author %>'
+                    }
+                }
+            }
         }
     };
 };

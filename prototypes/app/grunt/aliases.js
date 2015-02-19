@@ -34,7 +34,8 @@ module.exports = {
         'bliss:phonegap',
         'copyto:phonegap',
         'copyto:platform_merges',
-        'createPhoneGapConfig',
+        'bliss:cordovaConfigJson',
+        'bliss:cordovaConfigXml',
         'notify:phonegap'
     ],
 
