@@ -512,6 +512,18 @@
     </div>
     <!-- Inbox activity -->
     <div class="container-fluid" data-activity="inbox">
+      <div class="isolated">
+        <div class="input-group"> <span class="input-group-addon">
+        <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+</span>
+          <input
+          type="text" class="form-control" placeholder="search inbox" data-bind="value: searchText, valueUpdate: 'afterkeydown'"> <span class="input-group-btn">
+            <button type="button" class="btn btn-secondary">New</button>
+        </span>
+
+        </div>
+        <!-- /input-group -->
+      </div>
       <div id="inboxList" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
       data-bind="foreach: inbox.top()">
         <div class="ListView-item" data-bind="css: classNames">
@@ -546,7 +558,7 @@
       </div>
     </div>
     <!-- Jobtitles activity -->
-    <div class="container-fluid" data-activity="Jobtitles">
+    <div class="container-fluid" data-activity="jobtitles">
        <h2 class="SectionTitle">Massage Therapist</h2>
 
       <div class="ListView ListView--twolines ListView--textualmarker">
@@ -564,11 +576,11 @@
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
-          </div> <a href="/locations/106" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="/locations" class="btn btn-link btn-block ListView-item-content">
         <div>Service locations</div>
         <div class="text-muted">2 locations</div>
       </a>
- <a href="/locations/106" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
+ <a href="/locations" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
 
         </div>
       </div>
@@ -677,7 +689,7 @@
             data-bind="event: { tap: $root.selectLocation }">
           <div><strong data-bind="text: name"></strong></div><div data-bind="text: singleLine"></div>
         </a>
- <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.selectLocation }"
+ <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectLocation }"
             role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
 
           </div>
@@ -904,7 +916,7 @@
 
         </div>
       </div>
-      <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
+      <app-feedback-entry></app-feedback-entry>
     </div>
     <!-- Activity services -->
     <div class="container-fluid" data-activity="services">
@@ -921,14 +933,18 @@
             <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
             <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
           </a>
- <a href="#" class="ListView-item-action" data-bind="event: { tap: $root.toggleServiceSelection }, attr: { 'aria-pressed': isSelected }"
+ <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: $root.isSelectionMode, event: { tap: $root.toggleServiceSelection }, attr: { 'aria-pressed': isSelected }"
             role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
 
+            <a
+            href="#" class="ListView-item-action btn btn-link" data-bind="visible: !$root.isSelectionMode()"
+            role="button"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Edit</span>
+              </a>
           </div>
           <!-- /ko -->
         </div>
       </div>
-      <div class="isolated">
+      <div class="isolated" data-bind="visible: isSelectionMode">
         <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }">Save and continue</button>
       </div>
     </div>
@@ -959,7 +975,8 @@
         </form>
         <p class="isolated">By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/"
           target="_blank">Terms of Use</a>, <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
-          target="_blank">Privacy Policy &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy" target="_blank">Co-op Membership Agreement</a>
+          target="_blank">Privacy Policy</a> &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
+          target="_blank">Co-op Membership Agreement</a>
 
         </p>
       </div>

@@ -228,6 +228,14 @@ Shell.prototype.replace = function replace(state) {
             var err = new Error('Page not found (' + state.route.name + ')');
             console.warn('Shell Page not found, state:', state);
             promise = Promise.reject(err);
+            
+            // To avoid being in an inexistant URL (generating inconsistency between
+            // current view and URL, creating bad history entries),
+            // a goBack is executed, just after the current pipe ends
+            // TODO: implement redirect that cut current processing rather than execute delayed
+            setTimeout(function() {
+                this.goBack();
+            }.bind(this), 1);
         }
     }
     
