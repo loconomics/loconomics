@@ -18,7 +18,8 @@ function UpcomingBookingsSummary() {
         timeFormat: ' [starting @] h:mma'
     });
     this.nextWeek = new BookingSummary({
-        concept: 'next week'
+        concept: 'next week',
+        timeFormat: null
     });
     
     this.items = ko.pureComputed(function() {

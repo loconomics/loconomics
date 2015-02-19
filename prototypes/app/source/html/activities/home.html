@@ -25,10 +25,10 @@
       <div class="ListView-item-marker">
         <p><strong data-bind="text: quantity"></strong></p>
       </div>
-      <a href="#" class="btn btn-link btn-block ListView-item-content">
+      <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
         <p data-bind="text: phrase"></p>
       </a>
-      <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+      <a href="#" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div>
   </div>
 

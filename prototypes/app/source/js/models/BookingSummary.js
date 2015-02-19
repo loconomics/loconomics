@@ -17,10 +17,19 @@ function BookingSummary(values) {
     }, values);
 
     this.phrase = ko.pureComputed(function(){
-        var t = this.time() && moment(this.time()).format(this.timeFormat()) || '';        
+        var t = this.timeFormat() && 
+            this.time() && 
+            moment(this.time()).format(this.timeFormat()) ||
+            '';        
         return this.concept() + t;
     }, this);
 
+    this.url = ko.pureComputed(function() {
+        var url = this.time() &&
+            '/calendar/' + this.time().toISOString();
+        
+        return url;
+    }, this);
 }
 
 module.exports = BookingSummary;

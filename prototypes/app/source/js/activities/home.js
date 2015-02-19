@@ -66,6 +66,7 @@ HomeActivity.prototype.show = function show(options) {
         v.upcomingBookings.tomorrow.quantity(upcoming.tomorrow.quantity);
         v.upcomingBookings.tomorrow.time(upcoming.tomorrow.time && new Date(upcoming.tomorrow.time));
         v.upcomingBookings.nextWeek.quantity(upcoming.nextWeek.quantity);
+        v.upcomingBookings.nextWeek.time(upcoming.nextWeek.time && new Date(upcoming.nextWeek.time));
     });
 };
 
