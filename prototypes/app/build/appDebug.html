@@ -510,6 +510,24 @@
         </div>
       </div>
     </div>
+    <!-- Inbox home -->
+    <div class="container-fluid" data-activity="inbox">
+      <div id="inboxList" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
+      data-bind="foreach: inbox.top()">
+        <div class="ListView-item" data-bind="css: classNames">
+          <div class="ListView-item-marker">
+            <div data-bind="text: displayedDate"></div>
+            <div><span class="text-muted" data-bind="text: displayedTime"></span>
+            </div>
+          </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !content()"></p><div data-bind="text: subject, visible: content()"></div><div data-bind="text: content, visible: content()"></div></a>
+
+          <a
+          href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"
+          data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span>
+            </a>
+        </div>
+      </div>
+    </div>
     <!-- Activity index -->
     <div class="container" data-activity="index">
       <div class="LeadContent">

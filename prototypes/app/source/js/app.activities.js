@@ -25,5 +25,6 @@ module.exports = {
     'onboardingHome': require('./activities/onboardingHome'),
     'locationEdition': require('./activities/locationEdition'),
     'onboardingComplete': require('./activities/onboardingComplete'),
-    'account': require('./activities/account')
+    'account': require('./activities/account'),
+    'inbox': require('./activities/inbox')
 };
