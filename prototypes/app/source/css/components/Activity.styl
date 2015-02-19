@@ -20,6 +20,10 @@ Activity() {
     // SO this must be applied only to child elements inside the Activity.
     .full-height {
         height: 100%;
+        // already applied by Bootstrap, but better to be explicit
+        // on the box-sizing to note that mode is required for how the
+        // script works and the wanted layouts.
+        box-sizing: border-box;
     }
 
     /* activity must be notified of the navbar to fix

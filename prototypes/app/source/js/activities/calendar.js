@@ -55,6 +55,9 @@ function CalendarActivity($activity, app) {
     // Changes on currentDate
     this.dataView.currentDate.subscribe(function(date) {
         
+        // Trigger a layout update, required by the full-height feature
+        $(window).trigger('layoutUpdate');
+        
         if (date) {
             var mdate = moment(date);
 

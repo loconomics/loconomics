@@ -2,7 +2,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id="com.loconomics.app"
-        version="0.1.48"
+        version="0.1.50"
         >
     <name>Loconomics</name>
     <description>

@@ -88,6 +88,9 @@ function AppointmentActivity($activity, app) {
             // TODO: save a useful state
             app.shell.history.pushState(null, null, 'appointment/' + aptId);
         }
+        
+        // Trigger a layout update, required by the full-height feature
+        $(window).trigger('layoutUpdate');
     });
 }
 

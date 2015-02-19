@@ -155,7 +155,9 @@ var appInit = function appInit() {
     var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
     if (iOS) {
         var getHeight = function getHeight() {
-            return (window.innerHeight - (iOsWebview ? 20 : 0));
+            return window.innerHeight;
+            // In case of enable transparent/overlay StatusBar:
+            // (window.innerHeight - (iOsWebview ? 20 : 0))
         };
         
         $('html').height(getHeight() + 'px');        
@@ -181,7 +183,8 @@ var appInit = function appInit() {
             .css('min-height', h)
             // Set explicit the automatic computed height
             .css('height', function() {
-                return $(this).height();
+                // we use box-sizing:border-box, so needs to be outerHeight without margin:
+                return $(this).outerHeight(false);
             })
             ;
         };
