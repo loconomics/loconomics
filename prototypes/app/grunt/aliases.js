@@ -38,6 +38,11 @@ module.exports = {
         'bliss:cordovaConfigXml',
         'notify:phonegap'
     ],
+    
+    'build-phonegapbuild': [
+        'zip:phonegap'
+        //TODO: use REST to upload to phonegapbuild, environment credentials
+    ],
 
 	'build-dev': [
 		'browserify',
@@ -50,6 +55,7 @@ module.exports = {
 		'build-css',
         'build-html',
         'prepare-phonegap',
+        'build-phonegapbuild',
         'notify:build'
 	]
 };
