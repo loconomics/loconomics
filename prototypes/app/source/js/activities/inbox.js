@@ -55,6 +55,8 @@ function ViewModel() {
     this.inbox = new MailFolder({
         topNumber: 20
     });
+    
+    this.searchText = ko.observable('');
 }
 
 /** TESTING DATA **/

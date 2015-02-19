@@ -511,6 +511,18 @@
     </div>
     <!-- Inbox activity -->
     <div class="container-fluid" data-activity="inbox">
+      <div class="isolated">
+        <div class="input-group"> <span class="input-group-addon">
+        <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+</span>
+          <input
+          type="text" class="form-control" placeholder="search inbox" data-bind="value: searchText, valueUpdate: 'afterkeydown'"> <span class="input-group-btn">
+            <button type="button" class="btn btn-secondary">Add</button>
+        </span>
+
+        </div>
+        <!-- /input-group -->
+      </div>
       <div id="inboxList" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
       data-bind="foreach: inbox.top()">
         <div class="ListView-item" data-bind="css: classNames">

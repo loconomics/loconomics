@@ -50,7 +50,7 @@ function ClientsActivity($activity, app) {
     
     // Handler to update header based on a mode change:
     this.dataView.isSelectionMode.subscribe(function (itIs) {
-        this.dataView.headerText(itIs ? 'Select a client' : 'Clients');
+        this.dataView.headerText(itIs ? 'Select a client' : '');
     }.bind(this));
 
     // Object to hold the options passed on 'show' as a result
@@ -92,7 +92,7 @@ ClientsActivity.prototype.show = function show(options) {
 
 function ViewModel() {
 
-    this.headerText = ko.observable('Clients');
+    this.headerText = ko.observable('');
 
     // Especial mode when instead of pick and edit we are just selecting
     // (when editing an appointment)
