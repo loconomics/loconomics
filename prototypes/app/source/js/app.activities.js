@@ -31,5 +31,7 @@ module.exports = {
     'scheduling': require('./activities/scheduling'),
     'jobtitles': require('./activities/jobtitles'),
     'feedback': require('./activities/feedback'),
-    'faqs': require('./activities/faqs')
+    'faqs': require('./activities/faqs'),
+    'feedbackForm': require('./activities/feedbackForm'),
+    'contactForm': require('./activities/contactForm')
 };
