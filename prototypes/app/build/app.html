@@ -400,6 +400,21 @@
         </div>
       </form>
     </div>
+    <!-- Conversation activity -->
+    <div class="container-fluid" data-activity="conversation">
+       <h2 class="SectionTitle" data-bind="text: subject"></h2>
+
+      <div class="panel panel-default isolated" data-bind="foreach: conversation()">
+        <div class="panel-heading"> <span data-bind="text: displayedDate"></span>
+ <span class="text-muted"
+          data-bind="text: displayedTime"></span>
+
+        </div>
+        <div class="panel-body">
+          <div data-bind="text: content"></div>
+        </div>
+      </div>
+    </div>
     <!-- Activity datetimePicker -->
     <div class="container-fluid" data-activity="datetimePicker">
        <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Select a start time</h2>

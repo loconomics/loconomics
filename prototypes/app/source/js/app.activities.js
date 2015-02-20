@@ -27,6 +27,7 @@ module.exports = {
     'onboardingComplete': require('./activities/onboardingComplete'),
     'account': require('./activities/account'),
     'inbox': require('./activities/inbox'),
+    'conversation': require('./activities/conversation'),
     'scheduling': require('./activities/scheduling'),
     'jobtitles': require('./activities/jobtitles')
 };

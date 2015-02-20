@@ -13,11 +13,6 @@ var A = Activity.extends(function InboxActivity() {
     this.viewModel = new ViewModel();
     this.accessLevel = this.app.UserType.LoggedUser;
     
-    this.navBar = new Activity.NavBar({
-        title: 'Inbox',
-        leftAction: Activity.NavAction.menuNewItem,
-        rightAction: Activity.NavAction.menuIn
-    });
     this.navBar = Activity.createSectionNavBar('Inbox');
     
     //this.$inbox = $activity.find('#inboxList');

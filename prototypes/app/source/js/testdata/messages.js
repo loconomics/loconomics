@@ -14,11 +14,12 @@ oldDate.setDate(oldDate.getDate() - 16);
 
 var testData = [
     new Message({
+        id: 1,
         createdDate: new Time(today, 11, 0, 0),
         
         subject: 'CONFIRM-Susan Dee',
         content: 'Deep Tissue Massage',
-        link: '#messages/inbox/1',
+        link: '/conversation/1',
 
         actionIcon: null,
         actionText: '$70',
@@ -26,11 +27,12 @@ var testData = [
         classNames: 'ListView-item--tag-warning'
     }),
     new Message({
+        id: 3,
         createdDate: new Time(yesterday, 13, 0, 0),
 
         subject: 'Do you do "Exotic Massage"?',
         content: 'Hi, I wanted to know if you perform as par of your services...',
-        link: '#messages/inbox/3',
+        link: '/conversation/3',
 
         actionIcon: 'glyphicon glyphicon-share-alt',
         actionText: null,
@@ -38,11 +40,12 @@ var testData = [
         classNames: null
     }),
     new Message({
+        id: 2,
         createdDate: new Time(lastWeek, 12, 0, 0),
         
         subject: 'Josh Danielson',
         content: 'Deep Tissue Massage',
-        link: '#messages/inbox/2',
+        link: '/conversation/2',
 
         actionIcon: 'glyphicon glyphicon-plus',
         actionText: null,
@@ -50,11 +53,12 @@ var testData = [
         classNames: null
     }),
     new Message({
+        id: 4,
         createdDate: new Time(oldDate, 15, 0, 0),
         
         subject: 'Inquiry',
         content: 'Another question from another client.',
-        link: '#messages/inbox/4',
+        link: '/conversation/4',
 
         actionIcon: 'glyphicon glyphicon-share-alt',
 

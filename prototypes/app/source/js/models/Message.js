@@ -16,6 +16,7 @@ function Message(values) {
     Model(this);
 
     this.model.defProperties({
+        id: 0,
         createdDate: null,
         updatedDate: null,
         
