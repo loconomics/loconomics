@@ -51,6 +51,11 @@
             // iOS7-8.1 requires a explicit z-index:
             z-index: 300;
         }
+    
+        > .navbar-collapse.collapsing {
+            // Avoid scrollbar during animation
+            overflow: hidden;
+        }
         
         // Customization of Bootstrap navigation bar for use as menus
         .nav {
