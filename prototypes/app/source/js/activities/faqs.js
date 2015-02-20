@@ -20,6 +20,13 @@ var A = Activity.extends(function FaqsActivity() {
 
 exports.init = A.init;
 
+A.prototype.show = function show(state) {
+    
+    Activity.prototype.show.call(this, state);
+    
+    this.viewModel.searchText('');
+};
+
 var ko = require('knockout');
 
 function ViewModel() {
