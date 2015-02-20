@@ -1,0 +1,36 @@
+<!-- ClientEdition activity -->
+<div class="container-fluid has-navbar" data-activity="clientEdition">
+    <form role="form">
+        <h2 class="SectionTitle" data-bind="visible: header, text: header"></h2>
+
+        <fieldset class="isolated" data-bind="with: client()">
+            
+            <app-unlabeled-input params="placeholder: 'First name', value: firstName"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Last name', value: lastName"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Mobile phone', value: phoneNumber"></app-unlabeled-input>
+            
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" data-bind="checked: canReceiveSms" />
+                    Can receive SMS
+                </label>
+            </div>
+            
+            <app-unlabeled-input params="placeholder: 'Email', value: email, type: 'email'"></app-unlabeled-input>
+            
+            <app-unlabeled-input params="placeholder: 'Birthday (mm/dd)', value: birthDay"></app-unlabeled-input>
+            
+            <textarea class="form-control" data-bind="value: notesAboutClient"></textarea>
+
+        </fieldset>
+  </form>
+
+  <div class="navbar navbar-default ActivityNavbar">
+    <div class="container">
+      <button type="button" class="btn btn-primary btn-block">
+        Save
+      </button>
+    </div>
+  </div>
+
+</div>

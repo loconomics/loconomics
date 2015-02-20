@@ -48,11 +48,25 @@ function User(values) {
         bookCode: null,
         onboardingStep: null,
         businessName: null,
-        alternateEmail: null
+        alternateEmail: null,
+        birthMonthDay: null,
+        birthMonth: null
     }, values);
 
-    this.fullName = ko.computed(function() {
+    this.fullName = ko.pureComputed(function() {
         return (this.firstName() + ' ' + this.lastName());
+    }, this);
+    
+    this.birthDay = ko.pureComputed(function() {
+        if (this.birthMonthDay() &&
+            this.birthMonth()) {
+            
+            // TODO i10n
+            return this.birthMonth() + '/' + this.birthMonthDay();
+        }
+        else {
+            return null;
+        }
     }, this);
     
     this.userType = ko.pureComputed({
