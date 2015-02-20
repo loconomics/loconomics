@@ -33,5 +33,6 @@ module.exports = {
     'feedback': require('./activities/feedback'),
     'faqs': require('./activities/faqs'),
     'feedbackForm': require('./activities/feedbackForm'),
-    'contactForm': require('./activities/contactForm')
+    'contactForm': require('./activities/contactForm'),
+    'cms': require('./activities/cms')
 };

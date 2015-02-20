@@ -45,7 +45,7 @@
                 </li>
                 <li class="go-scheduling"><a href="/scheduling">Scheduling</a>
                 </li>
-                <li class="go-clients"><a href="/clients">Client management</a>
+                <li class="go-cms"><a href="/cms">Client management</a>
                 </li>
                 <li class="go-payments"><a href="/payments">Payment processing</a>
                 </li>
@@ -61,7 +61,7 @@
             </li>
             <li class="go-account"><a href="/account">Account</a>
             </li>
-            <li class="go-talk-to-us"><a href="/talk-to-us">Talk to us</a>
+            <li class="go-feedback"><a href="/feedback">Talk to us</a>
             </li>
             <li class="go-logout"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
             </li>
@@ -368,6 +368,33 @@
           <!-- /ko -->
         </div>
       </div>
+    </div>
+    <!-- CMS activity -->
+    <div class="container-fluid" data-activity="cms">
+       <h2 class="SectionTitle">Clients</h2>
+
+      <div class="ListView ListView--twolines">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/clients" class="btn btn-link btn-block ListView-item-content">
+        <div>My clients</div>
+        <div><span data-bind="text: clientsCount"></span> clients</div>
+      </a>
+ <a href="/clients" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/clientEdition/0" class="btn btn-link btn-block ListView-item-content">
+        <p>Add a new client</p>
+      </a>
+ <a href="/clientsEdition/0" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+
+        </div>
+      </div>
+      <app-feedback-entry params="section: 'cms'"></app-feedback-entry>
     </div>
     <!-- ContactForm activity -->
     <div class="container-fluid" data-activity="contactForm">
