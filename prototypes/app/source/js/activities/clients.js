@@ -114,7 +114,7 @@ function ViewModel() {
         var s = (this.searchText() || '').toLowerCase();
 
         return this.clients().filter(function(client) {
-            var n = client && client.fullName() && client.fullName() || '';
+            var n = client && client.fullName() || '';
             n = n.toLowerCase();
             return n.indexOf(s) > -1;
         });

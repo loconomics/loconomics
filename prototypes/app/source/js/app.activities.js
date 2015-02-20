@@ -29,5 +29,7 @@ module.exports = {
     'inbox': require('./activities/inbox'),
     'conversation': require('./activities/conversation'),
     'scheduling': require('./activities/scheduling'),
-    'jobtitles': require('./activities/jobtitles')
+    'jobtitles': require('./activities/jobtitles'),
+    'feedback': require('./activities/feedback'),
+    'faqs': require('./activities/faqs')
 };

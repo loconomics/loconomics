@@ -435,6 +435,66 @@
         </div>
       </div>
     </div>
+    <!-- Faqs activity -->
+    <div class="container-fluid" data-activity="faqs">
+      <div class="isolated">
+        <div class="input-group"> <span class="input-group-addon">
+        <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+</span>
+          <input
+          type="text" class="form-control" placeholder="search faqs" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+        </div>
+        <!-- /input-group -->
+      </div>
+      <div class="ListView ListView--twolines" data-bind="foreach: filteredFaqs">
+        <div class="ListView-item">
+          <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
+          data-bind="attr: { href: '/faqs/' + id() }"><p data-bind="text: title"></p></a>
+
+          <a
+          href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: '/faqs/' + id() }"><span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+        </div>
+      </div>
+      <div class="isolated text-center" data-bind="if: !filteredFaqs().length">
+        <div>Nothing found :-(</div> <a href="/contactForm" class="btn btn-link">Contact us</a>
+
+      </div>
+    </div>
+    <!-- Feedback activity -->
+    <div class="container-fluid" data-activity="feedback">
+       <h2 class="SectionTitle">We're here to help</h2>
+
+      <div class="ListView ListView--twolines ListView--textualmarker">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/faqs" class="btn btn-link btn-block ListView-item-content">
+        <p>FAQs</p>
+      </a>
+ <a href="/faqs" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/feedbackForm" class="btn btn-link btn-block ListView-item-content">
+        <p>Feedback and ideas</p>
+      </a>
+ <a href="/feedbackForm" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/contactForm" class="btn btn-link btn-block ListView-item-content">
+        <p>Contact us</p>
+      </a>
+ <a href="/contactForm" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+
+        </div>
+      </div>
+    </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
        <h1 class="SectionTitle has-HelpPoint">Your next booking</h1>
@@ -1015,7 +1075,7 @@
     </div>
     <!-- Component Template feedback-entry -->
     <script type="text/html" id="feedback-entry-template">
-      <h2 class="SectionTitle">Feedback</h2>
+      <h2 class="SectionTitle">Talk to us</h2>
       <div class="ListView ListView--twolines ListView--textualmarker">
           <div class="ListView-item">
             <div class="ListView-item-marker">
