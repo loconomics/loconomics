@@ -21,6 +21,11 @@ exports.init = function initClients($activity, app) {
 function ClientsActivity($activity, app) {
 
     this.accessLevel = app.UserType.Provider;
+    
+    //this.navBar = Activity.createSectionNavBar('Clients');
+    // NOTE: For client-edit activity, use this:
+    //this.navBar = Activity.createSubsectionNavBar('Clients');
+    
     this.navBar = new NavBar({
         title: 'Clients',
         leftAction: NavAction.menuNewItem,

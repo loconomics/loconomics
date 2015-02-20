@@ -3,50 +3,30 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    ko = require('knockout'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+var Activity = require('../components/Activity');
+var ko = require('knockout');
 
-var singleton = null;
-
-exports.init = function initInbox($activity, app) {
-
-    if (singleton === null)
-        singleton = new InboxActivity($activity, app);
+var A = Activity.extends(function InboxActivity() {
     
-    return singleton;
-};
-
-function InboxActivity($activity, app) {
-
-    this.accessLevel = app.UserType.LoggedUser;
-    this.navBar = new NavBar({
+    Activity.apply(this, arguments);
+    
+    this.viewModel = new ViewModel();
+    this.accessLevel = this.app.UserType.LoggedUser;
+    
+    this.navBar = new Activity.NavBar({
         title: 'Inbox',
-        leftAction: NavAction.menuNewItem,
-        rightAction: NavAction.menuIn
+        leftAction: Activity.NavAction.menuNewItem,
+        rightAction: Activity.NavAction.menuIn
     });
-
-    this.$activity = $activity;
-    this.app = app;
-    this.$inbox = $activity.find('#inboxList');
-
-    this.dataView = new ViewModel();
-    ko.applyBindings(this.dataView, $activity.get(0));
-
+    this.navBar = Activity.createSectionNavBar('Inbox');
+    
+    //this.$inbox = $activity.find('#inboxList');
+    
     // TestingData
-    setSomeTestingData(this.dataView);
+    setSomeTestingData(this.viewModel);
+});
 
-    // Object to hold the options passed on 'show' as a result
-    // of a request from another activity
-    this.requestInfo = null;
-}
-
-InboxActivity.prototype.show = function show(options) {
- 
-    options = options || {};
-    this.requestInfo = options;
-};
+exports.init = A.init;
 
 var MailFolder = require('../models/MailFolder');
 

@@ -3,40 +3,20 @@
 **/
 'use strict';
 
-var singleton = null,
-    ko = require('knockout'),
-    NavAction = require('../viewmodels/NavAction'),
-    NavBar = require('../viewmodels/NavBar');
+var Activity = require('../components/Activity');
 
-exports.init = function initJobtitles($activity, app) {
-
-    if (singleton === null)
-        singleton = new JobtitlesActivity($activity, app);
+var A = Activity.extends(function JobtitlesActivity() {
     
-    return singleton;
-};
-
-function JobtitlesActivity($activity, app) {
+    Activity.apply(this, arguments);
     
-    this.accessLevel = app.UserType.LoggedUser;
-
-    this.$activity = $activity;
-    this.app = app;
-    this.dataView = new ViewModel();
-    ko.applyBindings(this.dataView, $activity.get(0));
+    this.viewModel = new ViewModel();
     
-    this.navBar = new NavBar({
-        title: '',
-        leftAction: NavAction.goBack.model.clone({
-            text: 'Scheduling'
-        }),
-        rightAction: NavAction.goHelpIndex
-    });
-}
+    this.accessLevel = this.app.UserType.LoggedUser;
+    
+    this.navBar = Activity.createSubsectionNavBar('Scheduling');
+});
 
-JobtitlesActivity.prototype.show = function show(options) {
-
-};
+exports.init = A.init;
 
 function ViewModel() {
 }
