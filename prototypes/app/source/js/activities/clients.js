@@ -144,7 +144,9 @@ function ViewModel() {
     this.selectClient = function(selectedClient) {
         
         this.selectedClient(selectedClient);
-        this.isSelectionMode(false);
+        setTimeout(function() {
+            this.isSelectionMode(false);
+        }.bind(this), 1);
 
     }.bind(this);
 }

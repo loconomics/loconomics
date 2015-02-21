@@ -46,7 +46,7 @@
                 </li>
                 <li class="go-scheduling"><a href="/scheduling">Scheduling</a>
                 </li>
-                <li class="go-clients"><a href="/clients">Client management</a>
+                <li class="go-cms"><a href="/cms">Client management</a>
                 </li>
                 <li class="go-payments"><a href="/payments">Payment processing</a>
                 </li>
@@ -62,7 +62,7 @@
             </li>
             <li class="go-account"><a href="/account">Account</a>
             </li>
-            <li class="go-talk-to-us"><a href="/talk-to-us">Talk to us</a>
+            <li class="go-feedback"><a href="/feedback">Talk to us</a>
             </li>
             <li class="go-logout"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
             </li>
@@ -85,7 +85,7 @@
               <ul class="nav">
                 <li class="go-booking-new"><a href="/appointment/0">Booking</a>
                 </li>
-                <li class="go-client-new"><a href="/client/new">Client</a>
+                <li class="go-client-new"><a href="/clientEdition/0">Client</a>
                 </li>
                 <li class="go-calendar-new"><a href="/calendar/new">Calendar block</a>
                 </li>
@@ -333,6 +333,30 @@
         </div>
       </div>
     </div>
+    <!-- ClientEdition activity -->
+    <div class="container-fluid has-navbar" data-activity="clientEdition">
+      <form role="form">
+         <h2 class="SectionTitle" data-bind="visible: header, text: header"></h2>
+
+        <fieldset class="isolated" data-bind="with: client()">
+          <app-unlabeled-input params="placeholder: 'First name', value: firstName"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Last name', value: lastName"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Mobile phone', value: phoneNumber"></app-unlabeled-input>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" data-bind="checked: canReceiveSms" />Can receive SMS</label>
+          </div>
+          <app-unlabeled-input params="placeholder: 'Email', value: email, type: 'email'"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Birthday (mm/dd)', value: birthDay"></app-unlabeled-input>
+          <textarea class="form-control" data-bind="value: notesAboutClient"></textarea>
+        </fieldset>
+      </form>
+      <div class="navbar navbar-default ActivityNavbar">
+        <div class="container">
+          <button type="button" class="btn btn-primary btn-block">Save</button>
+        </div>
+      </div>
+    </div>
     <!-- Activity clients -->
     <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
        <h2 class="SectionTitle" data-bind="visible: headerText"><span data-bind="text: headerText">Clients</span></h2>
@@ -361,13 +385,51 @@
 
           </div>
           <!-- ko foreach: clients -->
-          <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }">
+          <div class="SimpleList-item"> <a href="/clientEdition/" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }, attr: { href: '/clientEdition/' + id() }">
             <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
           </a>
 
           </div>
           <!-- /ko -->
         </div>
+      </div>
+    </div>
+    <!-- CMS activity -->
+    <div class="container-fluid" data-activity="cms">
+       <h2 class="SectionTitle">Clients</h2>
+
+      <div class="ListView ListView--twolines">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/clients" class="btn btn-link btn-block ListView-item-content">
+        <div>My clients</div>
+        <div><span data-bind="text: clientsCount"></span> clients</div>
+      </a>
+ <a href="/clients" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/clientEdition/0" class="btn btn-link btn-block ListView-item-content">
+        <p>Add a new client</p>
+      </a>
+ <a href="/clientsEdition/0" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+
+        </div>
+      </div>
+      <app-feedback-entry params="section: 'cms'"></app-feedback-entry>
+    </div>
+    <!-- ContactForm activity -->
+    <div class="container-fluid" data-activity="contactForm">
+       <h2 class="SectionTitle">Contact us for help</h2>
+
+      <p class="isolated">If y ou've searched the <a href="/faqs">FAQs</a> and can't find the help
+        you need, send us a note.</p>
+      <textarea class="isolated form-control" data-bind="value: message, valueUpdate: 'afterkeydown'"></textarea>
+      <div>
+        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: wasSent() ? 'Sent' : 'Send'">Send</button>
       </div>
     </div>
     <!-- Activity contactInfo -->
@@ -401,6 +463,21 @@
         </div>
       </form>
     </div>
+    <!-- Conversation activity -->
+    <div class="container-fluid" data-activity="conversation">
+       <h2 class="SectionTitle" data-bind="text: subject"></h2>
+
+      <div class="panel panel-default isolated" data-bind="foreach: conversation()">
+        <div class="panel-heading"> <span data-bind="text: displayedDate"></span>
+ <span class="text-muted"
+          data-bind="text: displayedTime"></span>
+
+        </div>
+        <div class="panel-body">
+          <div data-bind="text: content"></div>
+        </div>
+      </div>
+    </div>
     <!-- Activity datetimePicker -->
     <div class="container-fluid" data-activity="datetimePicker">
        <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Select a start time</h2>
@@ -418,6 +495,80 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <!-- Faqs activity -->
+    <div class="container-fluid" data-activity="faqs">
+      <div class="isolated">
+        <div class="input-group"> <span class="input-group-addon">
+        <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+</span>
+          <input
+          type="text" class="form-control" placeholder="search faqs" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+        </div>
+        <!-- /input-group -->
+      </div>
+      <div class="ListView ListView--twolines" data-bind="foreach: filteredFaqs">
+        <div class="ListView-item">
+          <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
+          data-bind="attr: { href: '/faqs/' + id() }"><p data-bind="text: title"></p></a>
+
+          <a
+          href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: '/faqs/' + id() }"><span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+        </div>
+      </div>
+      <div class="isolated text-center" data-bind="if: !filteredFaqs().length">
+        <div>Nothing found :-(</div> <a href="/contactForm" class="btn btn-link">Contact us</a>
+
+      </div>
+    </div>
+    <!-- Feedback activity -->
+    <div class="container-fluid" data-activity="feedback">
+       <h2 class="SectionTitle">We're here to help</h2>
+
+      <div class="ListView ListView--twolines ListView--textualmarker">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/faqs" class="btn btn-link btn-block ListView-item-content">
+        <p>FAQs</p>
+      </a>
+ <a href="/faqs" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/feedbackForm" class="btn btn-link btn-block ListView-item-content">
+        <p>Feedback and ideas</p>
+      </a>
+ <a href="/feedbackForm" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/contactForm" class="btn btn-link btn-block ListView-item-content">
+        <p>Contact us</p>
+      </a>
+ <a href="/contactForm" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+
+        </div>
+      </div>
+    </div>
+    <!-- FeedbackForm activity -->
+    <div class="container-fluid" data-activity="feedbackForm">
+       <h2 class="SectionTitle">Send us ideas or feedback</h2>
+
+      <textarea class="isolated form-control" data-bind="value: message, valueUpdate: 'afterkeydown'"></textarea>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" data-bind="checked: becomeCollaborator" />I'd like to become an Owner Collaborator and help develop new tools and
+          features for Owners! We'll folow up with detail.</label>
+      </div>
+      <div>
+        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: wasSent() ? 'Sent' : 'Send'">Send</button>
       </div>
     </div>
     <!-- Activity home -->
@@ -1000,7 +1151,7 @@
     </div>
     <!-- Component Template feedback-entry -->
     <script type="text/html" id="feedback-entry-template">
-      <h2 class="SectionTitle">Feedback</h2>
+      <h2 class="SectionTitle">Talk to us</h2>
       <div class="ListView ListView--twolines ListView--textualmarker">
           <div class="ListView-item">
             <div class="ListView-item-marker">
