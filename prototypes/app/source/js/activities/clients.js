@@ -47,18 +47,18 @@ function ClientsActivity($activity, app) {
     this.requestInfo = null;
     
     // Handler to go back with the selected client when 
-    // selection mode goes off and requestInfo is for
+    // there is one selected and requestInfo is for
     // 'select mode'
-    this.dataView.isSelectionMode.subscribe(function (itIs) {
+    this.dataView.selectedClient.subscribe(function (theSelectedClient) {
         // We have a request and
-        // it requested to select a client
-        // and selection mode goes off
+        // it requested to select a client,
+        // and a selected client
         if (this.requestInfo &&
             this.requestInfo.selectClient === true &&
-            itIs === false) {
+            theSelectedClient) {
             
             // Pass the selected client in the info
-            this.requestInfo.selectedClient = this.dataView.selectedClient();
+            this.requestInfo.selectedClient = theSelectedClient;
             // And go back
             this.app.shell.goBack(this.requestInfo);
             // Last, clear requestInfo
@@ -75,8 +75,7 @@ ClientsActivity.prototype.show = function show(options) {
     options = options || {};
     this.requestInfo = options;
 
-    if (options.selectClient === true)
-        this.dataView.isSelectionMode(true);
+    this.dataView.isSelectionMode(options.selectClient === true);
 };
 
 function ViewModel() {
@@ -144,9 +143,5 @@ function ViewModel() {
     this.selectClient = function(selectedClient) {
         
         this.selectedClient(selectedClient);
-        setTimeout(function() {
-            this.isSelectionMode(false);
-        }.bind(this), 1);
-
     }.bind(this);
 }
