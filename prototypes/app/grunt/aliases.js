@@ -57,5 +57,9 @@ module.exports = {
         'prepare-phonegap',
         'build-phonegapbuild',
         'notify:build'
-	]
+	],
+    'atwork': [
+        'connect:atbuild',
+        'watch'
+    ]
 };

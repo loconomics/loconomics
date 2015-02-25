@@ -291,7 +291,14 @@ Shell.prototype.run = function run() {
         e.preventDefault();
         //? e.stopImmediatePropagation();
 
-        shell.go(href);
+        // Executed delayed to avoid handler collisions, because
+        // of the new page modifying the element and other handlers
+        // reading it attributes and applying logic on the updated link
+        // as if was the old one (example: shared links, like in a
+        // global navbar, that modifies with the new page).
+        setTimeout(function() {
+            shell.go(href);
+        }, 1);
     });
 
     // Initiallize state
