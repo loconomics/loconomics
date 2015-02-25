@@ -10,7 +10,7 @@ function UpcomingBookingsSummary() {
     Model(this);
 
     this.today = new BookingSummary({
-        concept: 'left today',
+        concept: 'more today',
         timeFormat: ' [ending @] h:mma'
     });
     this.tomorrow = new BookingSummary({
