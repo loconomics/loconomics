@@ -129,6 +129,34 @@ Model.prototype.defFields = function defFields(fields, initialValues) {
 };
 
 /**
+    Store the list of fields that make the ID/primary key
+    and create an alias 'id' property that returns the
+    value for the ID field or array of values when multiple
+    fields.
+**/
+Model.prototype.defID = function defID(fieldsNames) {
+    
+    // Store the list
+    this.idFieldsNames = fieldsNames;
+    
+    // Define ID observable
+    if (fieldsNames.length === 1) {
+        // Returns single value
+        var field = fieldsNames[0];
+        this.modelObject.id = ko.pureComputed(function() {
+            return this[field]();
+        }, this.modelObject);
+    }
+    else {
+        this.modelObject.id = ko.pureComputed(function() {
+            return fieldsNames.map(function(fieldName) {
+                return this[field]();
+            }.bind(this));
+        }, this.modelObject);
+    }
+};
+
+/**
     Returns a plain object with the properties and fields
     of the model object, just values.
     
