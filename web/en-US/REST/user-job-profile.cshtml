@@ -1,0 +1,43 @@
+﻿@*
+    Allows to retrieve the relationship and data from an user/freelance and
+    its jobs titles, which collection is called the "User Job Profile".
+*@
+@functions{
+    public class RestUserJobProfile : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            // Item ID
+            if (UrlData[0].IsInt())
+            {
+                return GetItem(UrlData[0].AsInt(0));
+            }
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            
+            return LcData.JobTitle.GetUserJobTitles(userId);
+        }
+        
+        public dynamic GetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            if (itemID > 0)
+            {              
+                var items = LcData.JobTitle.GetUserJobTitles(userID, itemID);  
+                var item = items == null || items.Count == 0 ? null : items[0];
+                if (item != null) {
+                    return item;
+                }
+            }
+
+            throw new HttpException(404, "Job Title not found.");
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
+    new RestUserJobProfile().JsonResponse(this);
+}

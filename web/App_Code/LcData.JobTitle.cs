@@ -11,6 +11,33 @@ public static partial class LcData
 {
 	public static class JobTitle
     {
+        public static dynamic GetUserJobTitles(int userID, int jobTitleID = -1)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(@"
+                    SELECT
+                        UserID As userID,
+                        PositionID As jobTitleID,
+                        PositionIntro As intro,
+                        StatusID As statusID,
+                        CancellationPolicyID As cancellationPolicyID,
+                        InstantBooking As instantBooking,
+                        CreateDate As createdDate,
+                        UpdatedDate As updatedDate
+                    FROM
+                        userprofilepositions
+                    WHERE
+                        UserID = @0
+                         AND LanguageID = @1
+                         AND CountryID = @2
+                         AND Active = 1
+                         AND StatusID > 0
+                         AND (@3 = -1 OR @3 = PositionID)
+                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), jobTitleID);
+            }
+        }
+
         public static dynamic GetJobTitle(int jobTitleID)
         {
             using (var db = Database.Open("sqlloco"))
