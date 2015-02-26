@@ -6,9 +6,22 @@
     - GET /@id
 
     - @Result {
-        "EventTypeID":int,
-        "InternalName":string,
-        "DisplayName":string
+        "jobTitleID":int,
+        "singularName":string,
+        "pluralName":string,
+        "aliases":string,
+        "description":string,
+        "searchDescription":string,
+        "createdDate":Date,
+        "updatedDate":Date,
+        "pricingTypes":[
+            {
+                "pricingTypeID":int,
+                "clientTypeID":int,
+                "createdDate":Date,
+                "updatedDate":Date
+            }
+        ]
     }
 *@
 @functions{
