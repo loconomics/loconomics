@@ -3,80 +3,87 @@
 **/
 'use strict';
 
+var Activity = require('../components/Activity');
 var $ = require('jquery'),
-    ko = require('knockout'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+    ko = require('knockout');
     
 var singleton = null;
 
-exports.init = function initServices($activity, app) {
+var A = Activity.extends(function ServicesActivity() {
 
-    if (singleton === null)
-        singleton = new ServicesActivity($activity, app);
+    Activity.apply(this, arguments);
     
-    return singleton;
-};
-
-function ServicesActivity($activity, app) {
-
-    this.accessLevel = app.UserType.Provider;
-    this.navBar = new NavBar({
-        // TODO: on show, need to be updated with the JobTitle name
-        title: 'Pricing and Services',
-        leftAction: NavAction.goBack, // To JobTitles list inside scheduling
-        rightAction: NavAction.goHelpIndex
-    });
+    this.accessLevel = this.app.UserType.Provider;
     
-    this.app = app;
-    this.$activity = $activity;
-    this.$listView = $activity.find('#servicesListView');
+    // TODO: on show, need to be updated with the JobTitle name
+    this.navBar = Activity.createSubsectionNavBar('Job title');
+    
+    //this.$listView = this.$activity.find('#servicesListView');
 
-    var dataView = this.dataView = new ViewModel();
-    ko.applyBindings(dataView, $activity.get(0));
+    this.viewModel = new ViewModel();
 
     // TestingData
-    dataView.services(require('../testdata/services').services.map(Selectable));
-
-    // Object to hold the options passed on 'show' as a result
-    // of a request from another activity
-    this.requestInfo = null;
+    this.viewModel.services(require('../testdata/services').services.map(Selectable));
     
     // Handler to go back with the selected service when 
-    // selection mode goes off and requestInfo is for
+    // selection mode goes off and requestData is for
     // 'select mode'
-    this.dataView.isSelectionMode.subscribe(function (itIs) {
+    this.viewModel.isSelectionMode.subscribe(function (itIs) {
         // We have a request and
         // it requested to select a service
         // and selection mode goes off
-        if (this.requestInfo &&
-            this.requestInfo.selectServices === true &&
+        if (this.requestData &&
+            this.requestData.selectServices === true &&
             itIs === false) {
             
             // Pass the selected client in the info
-            this.requestInfo.selectedServices = this.dataView.selectedServices();
+            this.requestData.selectedServices = this.viewModel.selectedServices();
             // And go back
-            this.app.shell.goBack(this.requestInfo);
-            // Last, clear requestInfo
-            this.requestInfo = null;
+            this.app.shell.goBack(this.requestData);
+            // Last, clear requestData
+            this.requestData = null;
         }
     }.bind(this));
-}
+});
 
-ServicesActivity.prototype.show = function show(options) {
+exports.init = A.init;
 
-  
-    options = options || {};
-    this.requestInfo = options;
+A.prototype.show = function show(options) {
 
-    if (options.selectServices === true) {
-        this.dataView.isSelectionMode(true);
+    Activity.prototype.show.call(this, options);
+    
+    // Get jobtitleID for the request
+    var route = this.requestData.route;
+    var jobTitleID = route && route.segments && route.segments[0];
+    jobTitleID = parseInt(jobTitleID, 10);
+    if (jobTitleID) {
+        // TODO: get data for the Job title ID
+        this.app.model.getUserJobTitle(jobTitleID).then(function(userJobtitle) {
+            if (!userJobtitle) {
+                console.log('No user job title');
+                return;
+            }
+            // Load user data on this activity:
+            this.viewModel.services(userJobtitle.services());
+            // Fill in job title name
+            this.app.model.getJobTitle(jobTitleID).then(function(jobTitle) {
+                if (!jobTitle) {
+                    console.log('No job title');
+                    return;
+                }
+                this.navBar.leftAction().text(jobTitle.singularName());
+            });
+        });
+    }
+
+    if (this.requestData.selectServices === true) {
+        this.viewModel.isSelectionMode(true);
         
         /* Trials to presets the selected services, NOT WORKING
         var services = (options.selectedServices || []);
-        var selectedServices = this.dataView.selectedServices;
+        var selectedServices = this.viewModel.selectedServices;
         selectedServices.removeAll();
-        this.dataView.services().forEach(function(service) {
+        this.viewModel.services().forEach(function(service) {
             services.forEach(function(selService) {
                 if (selService === service) {
                     service.isSelected(true);

@@ -182,5 +182,6 @@ module.exports = AppModel;
 // Class splited in different files to mitigate size and organization
 // but keeping access to the common set of methods and objects easy with
 // the same class.
-// Loading extensions/partials:
-require('./AppModel-events').extends(AppModel);
+// Loading extensions:
+require('./AppModel-events').plugIn(AppModel);
+require('./AppModel-userJobProfile').plugIn(AppModel);

@@ -77,17 +77,27 @@ Activity.createSectionNavBar = function createSectionNavBar(title) {
     });
 };
 
-Activity.createSubsectionNavBar = function createSubsectionNavBar(title, helpId) {
+Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options) {
+    
+    options = options || {};
+    
+    var goBackOptions = {
+        text: title,
+        isTitle: true
+    };
+
+    if (options.backLink) {
+        goBackOptions.link = options.backLink;
+        goBackOptions.isShell = false;
+    }
+
     return new NavBar({
         title: '', // No title
-        leftAction: NavAction.goBack.model.clone({
-            text: title,
-            isTitle: true
-        }),
-        rightAction: helpId ?
+        leftAction: NavAction.goBack.model.clone(goBackOptions),
+        rightAction: options.helpId ?
             NavAction.goHelpIndex :
             NavAction.goHelpIndex.model.clone({
-                link: '#' + helpId
+                link: '#' + options.helpId
             })
     });
 };
