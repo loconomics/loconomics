@@ -1,17 +1,17 @@
 ﻿@*
-    Provider Pricing REST API: it allows to fetch provider pricing
-    and update him (by the provider owner only).
+    Freelancer Pricing REST API: it allows to fetch freelancer pricing
+    and update him (by the freelancer owner only).
 
     Input and Output record scheme example:
     {
-        "providerPricingID": 73,
+        "freelancerPricingID": 73,
         "pricingTypeID": 1,
-        "providerUserID": 141,
-        "positionID": 16,
+        "freelancerUserID": 141,
+        "jobTitleID": 16,
         "name": "Testing 2",
         "description": "Testing 2",
         "price": 0,
-        "serviceDuration": 0, // In minutes! Different than pricing-estimate (there is in hours)
+        "serviceDurationMinutes": 0, // In minutes! Different than pricing-estimate (there is in hours)
         "firstTimeClientsOnly": false,
         "numberOfSessions": 1,
         "priceRate": 14,
@@ -39,7 +39,7 @@
     }
 *@
 @functions{
-    public class RestPricing : RestWebPage
+    public class RestFreelancerPricing : RestWebPage
     {
         public override dynamic Get()
         {
@@ -51,20 +51,20 @@
             
             // Parameters
             // Required providerUserID
-            var providerUserID = Request["providerUserID"].AsInt(0);
-            if (providerUserID <= 0) {
-                ModelState.AddError("providerUserID", LcRessources.RequiredField("Provider"));
+            var freelancerUserID = Request["freelancerUserID"].AsInt(0);
+            if (freelancerUserID <= 0) {
+                ModelState.AddError("freelancerUserID", LcRessources.RequiredField("Freelancer"));
             }
             if (!ModelState.IsValid) {
                 throw new HttpException(404, LcRessources.ValidationSummaryTitle);
             }
                 
             // Optional positionID
-            var positionID = Request["positionID"].AsInt(-1);
+            var jobTitleID = Request["jobTitleID"].AsInt(-1);
 
-            return LcData.GetRestProviderPricing(providerUserID, positionID);
+            return LcData.GetRestFreelancerPricing(freelancerUserID, jobTitleID);
         }
-        
+
         public dynamic GetItem(int itemID)
         {
             // Parameters
@@ -72,7 +72,7 @@
 
             if (itemID > 0)
             {
-                var item = LcData.GetRestProviderPricing(itemID);
+                var item = LcData.GetRestFreelancerPricing(itemID);
                 if (item != null) {
                     return item;
                 }
@@ -84,14 +84,14 @@
         public dynamic SetItem(int itemID)
         {
             // Parameters
-            int providerUserID = WebSecurity.CurrentUserId;
+            int freelancerUserID = WebSecurity.CurrentUserId;
             
             // NOTE: Using same logic and structures than in the edit form on dashboard, from the LcPricingModel classes
             var data = new LcPricingModel.PackageBaseData {
                 ID = itemID,
-                PositionID = Request["PositionID"].AsInt(),
-                PricingTypeID = Request["PricingTypeID"].AsInt(),
-                ProviderUserID = providerUserID,
+                PositionID = Request["jobTitleID"].AsInt(),
+                PricingTypeID = Request["pricingTypeID"].AsInt(),
+                ProviderUserID = freelancerUserID,
                 // some defaults
                 NumberOfSessions = 1,
                 PriceRateUnit = "hour",
@@ -101,8 +101,8 @@
 
             Validation.RequireField("pricingTypeID", LcRessources.RequiredField("Pricing Type"));
             Validation.Add("pricingTypeID", Validator.Integer(LcRessources.RequiredField("Pricing Type")));
-            Validation.RequireField("positionID", LcRessources.RequiredField("Job Title"));
-            Validation.Add("positionID", Validator.Integer(LcRessources.RequiredField("Job Title")));
+            Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
+            Validation.Add("jobTitleID", Validator.Integer(LcRessources.RequiredField("Job Title")));
             Validation.RequireField("name", LcRessources.RequiredField("Name"));
             Validation.Add("name", Validator.StringLength(50, 0, "Name must be fewer than 50 characters."));
             Validation.RequireField("description", LcRessources.RequiredField("Description"));
@@ -114,7 +114,7 @@
                 Validation.Add("price", Validator.Decimal("Price must be a number and not contain the $ symbol."));
             }
             if (config.DurationLabel != null) {
-                Validation.Add("serviceDuration", Validator.Integer("Duration must be the number of minutes without decimals"));
+                Validation.Add("serviceDurationMinutes", Validator.Integer("Duration must be the number of minutes without decimals"));
             }
             if (config.NumberOfSessionsLabel != null) {
                 Validation.RequireField("numberOfSessions", LcRessources.RequiredField("Number of appointments included"));
@@ -127,7 +127,7 @@
             data.Name = config.FixedName ?? Request["name"];
             data.Description = Request["description"];
             data.Price = Request["price"].AsDecimal();
-            data.Duration = TimeSpan.FromMinutes(Request["serviceDuration"].AsInt());
+            data.Duration = TimeSpan.FromMinutes(Request["serviceDurationMinutes"].AsInt());
             data.FirstTimeClientsOnly = Request["firstTimeClientsOnly"].AsBool();
             {
                 var nses = Request["numberOfSessions"].AsInt(1);
@@ -160,7 +160,7 @@
                 ModelState.AddError("priceRateUnit", config.PriceRateUnitIsRequiredValidationError);
             }
 		    if (config.RequireDuration && data.Duration.TotalMinutes < 1) {
-                ModelState.AddError("serviceDuration", LcRessources.RequiredField("Duration"));
+                ModelState.AddError("serviceDurationMinutes", LcRessources.RequiredField("Duration"));
             }
 		    if (config.Mod != null) {
 			    config.Mod.ValidateProviderData(data, ModelState);
@@ -206,14 +206,14 @@
         
         public dynamic DelItem(int itemID)
         {
-            var providerUserID = WebSecurity.CurrentUserId;
+            var freelancerUserID = WebSecurity.CurrentUserId;
             
             var item = GetItem(itemID);
             
             if (item != null) {
                 
-                LcPricingModel.PackageBaseData.Delete(itemID, providerUserID, item.positionID);
-                
+                LcPricingModel.PackageBaseData.Delete(itemID, freelancerUserID, item.jobTitleID);
+
                 return item;
             }
 
@@ -242,5 +242,5 @@
 @{
     // Allow anyone to access, but will be force to provider on editing capabilities
     Response.RestRequiresUser(LcData.UserInfo.UserType.User);
-    new RestPricing().JsonResponse(this);
+    new RestFreelancerPricing().JsonResponse(this);
 }

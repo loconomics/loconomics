@@ -246,21 +246,21 @@
                     'Optional starnt and end dates to reduce the results, accepting ISO strings.'
             }
         },
-        'Provider Pricing': {
+        'Freelancer Pricing': {
             url: '/en-US/rest/provider-pricing',
             get: {
-                "providerUserID": 141,
-                "positionID": -1,
-                'api comment': 'The positionID is optional (the same as value -1).'
+                "freelancerUserID": 141,
+                "jobTitleID": -1,
+                'api comment': 'The jobTitleID is optional (the same as value -1).'
             },
             post: {
                 "pricingTypeID": 3,
-                "providerUserID": 141,
-                "positionID": 106,
+                "freelancerUserID": 141,
+                "jobTitleID": 106,
                 "name": "Testing 2",
                 "description": "Testing 2",
                 "price": 20,
-                "serviceDuration": 60, // In minutes! Different than pricing-estimate (there is in hours)
+                "serviceDurationMinutes": 60, // In minutes! Different than pricing-estimate (there is in hours)
                 "firstTimeClientsOnly": false,
                 "numberOfSessions": 1,
                 "priceRate": 14,
@@ -272,20 +272,20 @@
                     501
                 ],
                 "noPriceRate": false,
-                'api comment': 'serviceDuration in minutes. Different validation rules apply depending on the pricing type'
+                'api comment': 'serviceDurationMinutes as an integer. Different validation rules apply depending on the pricing type'
             }
         },
-        'Provider Pricing (item)': {
+        'Freelancer Pricing (item)': {
             url: '/en-US/rest/provider-pricing/73',
             get: { },
             put: {
                 "pricingTypeID": 3,
-                "providerUserID": 141,
-                "positionID": 106,
+                "freelancerUserID": 141,
+                "jobTitleID": 106,
                 "name": "Testing 2",
                 "description": "Testing 2",
                 "price": 20,
-                "serviceDuration": 60, // In minutes! Different than pricing-estimate (there is in hours)
+                "serviceDurationMinutes": 60, // In minutes! Different than pricing-estimate (there is in hours)
                 "firstTimeClientsOnly": false,
                 "numberOfSessions": 1,
                 "priceRate": 14,
@@ -297,7 +297,7 @@
                     501
                 ],
                 "noPriceRate": false,
-                'api comment': 'serviceDuration in minutes. Different validation rules apply depending on the pricing type'
+                'api comment': 'serviceDurationMinutes as an integer. Different validation rules apply depending on the pricing type'
             },
             delete: {}
         }

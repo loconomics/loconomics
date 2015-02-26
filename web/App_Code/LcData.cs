@@ -241,7 +241,8 @@ public static partial class LcData
             case "ES":
                 return 2;
             default:
-                return 0;
+                // English as default
+                return 1;
         }
     }
     /// <summary>
@@ -260,7 +261,8 @@ public static partial class LcData
             case "ES":
                 return 2;
             default:
-                return 0;
+                // USA as default
+                return 1;
         }
     }
     #endregion
@@ -928,17 +930,17 @@ public static partial class LcData
     public class RestPricing
     {
         public RestPricing() { }
-        public int providerPricingID;
+        public int freelancerPricingID;
         public int pricingTypeID;
-        public int providerUserID;
-        public int positionID;
+        public int freelancerUserID;
+        public int jobTitleID;
         public string name;
         public string description;
         public decimal? price;
         /// <summary>
         /// In minutes
         /// </summary>
-        public int serviceDuration = 0;
+        public int serviceDurationMinutes = 0;
         public bool firstTimeClientsOnly = false;
         public int numberOfSessions = 1;
         public decimal? priceRate;
@@ -957,14 +959,14 @@ public static partial class LcData
             if (record == null) return null;
 
             return new RestPricing {
-                providerPricingID = record.ProviderPackageID,
+                freelancerPricingID = record.ProviderPackageID,
                 pricingTypeID = record.PricingTypeID,
-                providerUserID = record.ProviderUserID,
-                positionID = record.PositionID,
+                freelancerUserID = record.ProviderUserID,
+                jobTitleID = record.PositionID,
                 name = record.Name,
                 description = record.Description,
                 price = record.Price,
-                serviceDuration = record.ServiceDuration,
+                serviceDurationMinutes = record.ServiceDuration,
                 firstTimeClientsOnly = record.FirstTimeClientsOnly,
                 numberOfSessions = record.NumberOfSessions,
                 priceRate = record.PriceRate,
@@ -981,14 +983,14 @@ public static partial class LcData
         }
     }
 
-    public static RestPricing GetRestProviderPricing(int providerPricingID)
+    public static RestPricing GetRestFreelancerPricing(int freelancerPricingID)
     {
-        return RestPricing.FromDatabase(GetProviderPackage(providerPricingID), GetProviderPackageServiceAttributes(providerPricingID));
+        return RestPricing.FromDatabase(GetProviderPackage(freelancerPricingID), GetProviderPackageServiceAttributes(freelancerPricingID));
     }
 
-    public static IEnumerable<RestPricing> GetRestProviderPricing(int providerUserID, int positionID = -1)
+    public static IEnumerable<RestPricing> GetRestFreelancerPricing(int freelancerUserID, int jobTitleID = -1)
     {
-        var packages = GetPricingPackagesByProviderPosition(providerUserID, positionID);
+        var packages = GetPricingPackagesByProviderPosition(freelancerUserID, jobTitleID);
 
         return ((IEnumerable<dynamic>)packages.Packages).Select<dynamic, RestPricing>(pak => {
             var pakID = (int)pak.ProviderPackageID;
