@@ -1,0 +1,42 @@
+﻿@*
+    Retrieving the Job Title information for a single record.
+
+    Options:
+    
+    - GET /@id
+
+    - @Result {
+        "EventTypeID":int,
+        "InternalName":string,
+        "DisplayName":string
+    }
+*@
+@functions{
+    public class RestJobTitles : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt(0);
+                
+                var item = LcData.JobTitle.GetJobTitle(id);
+                
+                if (item != null)
+                    return item;
+                else
+                    throw new HttpException(404, "Job Title not found.");
+            }
+            else if (UrlData.Count == 1) {
+                throw new HttpException(400, "Invalid format for the Job Title ID");
+            }
+            else
+            {
+                throw new HttpException(405, "GET is not allowed.");
+            }
+        }
+    }
+}
+@{   
+    new RestJobTitles().JsonResponse(this);
+}

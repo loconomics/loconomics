@@ -155,7 +155,7 @@
             Validation.Add("RecurrenceRule[Until]", Validator.DateTime("Repetition End Date is not valid"));
             
             if (!Validation.IsValid()) {
-                throw new HttpException(404, LcRessources.ValidationSummaryTitle);
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
             
             LcCalendar.SimplifiedRecurrenceRule rrule = null;

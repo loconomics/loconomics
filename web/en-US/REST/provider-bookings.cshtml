@@ -64,7 +64,7 @@
             }
 
             if (!Validation.IsValid()) {
-                throw new HttpException(404, LcRessources.ValidationSummaryTitle);
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
 
             try
