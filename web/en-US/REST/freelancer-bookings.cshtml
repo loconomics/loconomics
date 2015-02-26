@@ -1,12 +1,12 @@
 ﻿@*
-    It allows providers to create and update bookings.
-    It has a different set of possibilities than a customer or the normal booking process.
+    It allows freelancers to create and update bookings.
+    It has a different set of possibilities than a client or the normal booking process.
     NOTE: To query/get bookings, use the general 'bookings' API.
 
     TODO: To implement "payment processing enabled", implemented only for "scheduling software"
 *@
 @functions{
-    public class RestProviderBookings : RestWebPage
+    public class RestFreelancerBookings : RestWebPage
     { 
         /// <summary>
         /// It returns an item.
@@ -140,5 +140,5 @@
 }
 @{
     Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
-    new RestProviderBookings().JsonResponse(this);
+    new RestFreelancerBookings().JsonResponse(this);
 }
