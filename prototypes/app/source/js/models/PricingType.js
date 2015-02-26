@@ -28,7 +28,7 @@ function PricingType(values) {
         priceLabel: null,
         priceNote: null,
         firstTimeClientsOnlyLabel: null,
-        dDescriptionPlaceHolder: null,
+        descriptionPlaceHolder: null,
         priceRateQuantityLabel: null,
         priceRateUnitLabel: null,
         noPriceRateLabel: null,
