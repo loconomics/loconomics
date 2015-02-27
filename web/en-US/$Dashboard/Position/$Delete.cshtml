@@ -5,10 +5,7 @@
     var positionID = Request["PositionID"].AsInt();
 
     if (positionID > 0) {
-        using (var db = Database.Open("sqlloco")) {
-            // Set StatusID to 0 'deleted by user'
-            db.Execute("UPDATE UserProfilePositions SET StatusID = 0 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
-        }
+        LcData.JobTitle.SoftDeleteUserJobTitle(u.UserID, positionID);
     } else {
         if (Request.IsAjaxRequest()) {
             LcHelpers.ReturnJsonResult(103, new { Message = "We're sorry, we're unable to deactivate your profile.  Please contact us for help." });

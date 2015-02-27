@@ -11,33 +11,6 @@ public static partial class LcData
 {
 	public static class JobTitle
     {
-        public static dynamic GetUserJobTitles(int userID, int jobTitleID = -1)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                return db.Query(@"
-                    SELECT
-                        UserID As userID,
-                        PositionID As jobTitleID,
-                        PositionIntro As intro,
-                        StatusID As statusID,
-                        CancellationPolicyID As cancellationPolicyID,
-                        InstantBooking As instantBooking,
-                        CreateDate As createdDate,
-                        UpdatedDate As updatedDate
-                    FROM
-                        userprofilepositions
-                    WHERE
-                        UserID = @0
-                         AND LanguageID = @1
-                         AND CountryID = @2
-                         AND Active = 1
-                         AND StatusID > 0
-                         AND (@3 = -1 OR @3 = PositionID)
-                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), jobTitleID);
-            }
-        }
-
         public static dynamic GetJobTitle(int jobTitleID)
         {
             using (var db = Database.Open("sqlloco"))
@@ -97,5 +70,69 @@ public static partial class LcData
                 }
             }
         }
+
+        #region User Job Title relationship
+        public static dynamic GetUserJobTitles(int userID, int jobTitleID = -1)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(@"
+                    SELECT
+                        UserID As userID,
+                        PositionID As jobTitleID,
+                        PositionIntro As intro,
+                        StatusID As statusID,
+                        CancellationPolicyID As cancellationPolicyID,
+                        InstantBooking As instantBooking,
+                        CreateDate As createdDate,
+                        UpdatedDate As updatedDate
+                    FROM
+                        userprofilepositions
+                    WHERE
+                        UserID = @0
+                         AND LanguageID = @1
+                         AND CountryID = @2
+                         AND Active = 1
+                         AND StatusID > 0
+                         AND (@3 = -1 OR @3 = PositionID)
+                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), jobTitleID);
+            }
+        }
+
+        public static void SoftDeleteUserJobTitle(int userID, int jobTitleID)
+        {
+            using (var db = Database.Open("sqlloco")) {
+                // Set StatusID to 0 'deleted by user'
+                db.Execute("UPDATE UserProfilePositions SET StatusID = 0 WHERE UserID = @0 AND PositionID = @1", userID, jobTitleID);
+            }
+        }
+
+        public static void UpdateUserJobTitle(int userID, int jobTitleID,
+            string intro,
+            int policyID,
+            bool instantBooking)
+        {
+            var sqlUpdate = @"
+                UPDATE  UserProfilePositions
+                SET     PositionIntro = @4,
+                        CancellationPolicyID = @5,
+                        InstantBooking = @6
+                WHERE   UserID = @0 AND PositionID = @1
+                    AND LanguageID = @2
+                    AND CountryID = @3
+            ";
+
+            using (var db = Database.Open("sqlloco")) {
+                db.Execute(sqlUpdate,
+                    userID,
+                    jobTitleID,
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    intro,
+                    policyID,
+                    instantBooking
+                );
+            }
+        }
+        #endregion
     }
 }

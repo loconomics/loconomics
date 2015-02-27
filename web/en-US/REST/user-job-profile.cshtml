@@ -5,12 +5,21 @@
 @functions{
     public class RestUserJobProfile : RestWebPage
     {
+        /// <summary>
+        /// Retrieve the full list of job titles or one by jobTitleID
+        /// </summary>
+        /// <returns></returns>
         public override dynamic Get()
         {
             // Item ID
-            if (UrlData[0].IsInt())
-            {
+            if (UrlData[0].IsInt()) {
                 return GetItem(UrlData[0].AsInt(0));
+            }
+            else if (UrlData.Count == 1) {
+                throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+            }
+            else if (UrlData.Count > 1) {
+                throw new HttpException(404, "Not Found");
             }
             
             // Parameters
@@ -19,7 +28,12 @@
             return LcData.JobTitle.GetUserJobTitles(userId);
         }
         
-        public dynamic GetItem(int itemID)
+        /// <summary>
+        /// Internal utility to get a record for a single job title
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        private dynamic GetItem(int itemID)
         {
             // Parameters
             int userID = WebSecurity.CurrentUserId;
@@ -34,6 +48,136 @@
             }
 
             throw new HttpException(404, "Job Title not found.");
+        }
+        
+        /// <summary>
+        /// Add a new job title to the profile.
+        /// Or execute some actions on specific sub-URLs applied to 
+        /// a jobTitleID URL.
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 2) {
+                if (UrlData[0].IsInt()) {
+                    switch (UrlData[1].ToLower()) {
+                        case "deactivate":
+                            // TODO dashboard7position/$deactivate
+                            return null;
+                        case "reactivate":
+                            // TODO dashboard7position/$reactivate
+                            return null;
+                        default:
+                            throw new HttpException(404, "Not found");
+                    }
+                }
+                else {
+                    throw new HttpException(400, "Invalid job title ID");
+                }
+            }
+            else if (UrlData.Count == 0) {
+                // TODO
+                // dashboard/position/$AddNew
+                return null;
+            }
+            else {
+                throw new HttpException(404, "Not found");
+            }
+        }
+        
+        /// <summary>
+        /// Checks that there is a valid itemID in the URL,
+        /// emiting errors on fail and double checking that 
+        /// the item exists.
+        /// Returns the itemID on success.
+        /// </summary>
+        /// <returns></returns>
+        private int CheckAndGetItemID() {
+            // Item ID
+            var itemID = 0;
+            if (UrlData[0].IsInt()) {
+                itemID = UrlData[0].AsInt(0);
+            }
+            else if (UrlData.Count == 1) {
+                throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+            }
+            else {
+                throw new HttpException(404, "Not Found");
+            }
+            
+            // Check that the item exists
+            if (GetItem(itemID) == null) {
+                throw new HttpException(404, "Job Title not found");
+            }
+            
+            return itemID;
+        }
+
+        /// <summary>
+        /// Update editable fields for the job title:
+        /// - intro
+        /// - cancellationPolicyID
+        /// - instantBooking
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Put()
+        {
+            // Item ID
+            var itemID = CheckAndGetItemID();
+
+            // Validation rules
+            Validation.Add("intro", Validator.StringLength(2000, 0, "Job title introduction must be fewer than 2000 characters"));
+            Validation.RequireField("cancellationPolicyID", "Is required to choose a valid cancellation policy");
+            Validation.Add("cancellationPolicyID", Validator.Integer("Is required to choose a valid cancellation policy"));
+            Validation.RequireField("instantBooking", "Is required to choose a scheduling option");
+            if (!Request["instantBooing"].IsBool()) {
+                ModelState.AddError("instantBooking", "The scheduling option must be a boolean (true for instant booking)");
+            }
+
+            if (!Validation.IsValid() || !ModelState.IsValid) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            var jobTitleID = itemID;
+            var intro = Request["intro"];
+            var policyID = Request["cancellationPolicyID"].AsInt();
+            var instantBooking = Request["instantBooking"].AsBool();
+
+            // Updating
+            LcData.JobTitle.UpdateUserJobTitle(
+                userID,
+                jobTitleID,
+                intro,
+                policyID,
+                instantBooking
+            );
+
+            // Return the updated item
+            return GetItem(itemID);
+        }
+
+        /// <summary>
+        /// Soft removal of a job title from the profile.
+        /// It is internally disabled but appears as deleted for the user,
+        /// could be enabled by re-adding the job title to the profile.
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Delete()
+        {
+            // Item ID
+            var itemID = CheckAndGetItemID();            
+
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            var jobTitleID = itemID;
+
+            // Delete
+            LcData.JobTitle.SoftDeleteUserJobTitle(userID, jobTitleID);
+         
+            // Return updated item, since here there is no an actual deletion, just a Status update   
+            return GetItem(itemID);
         }
     }
 }
