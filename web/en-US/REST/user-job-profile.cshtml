@@ -60,19 +60,33 @@
         {
             if (UrlData.Count == 2) {
                 if (UrlData[0].IsInt()) {
+                    
+                    // Parameters
+                    int userID = WebSecurity.CurrentUserId;
+                    var jobTitleID = UrlData[0].AsInt();
+                    
                     switch (UrlData[1].ToLower()) {
                         case "deactivate":
-                            // TODO dashboard7position/$deactivate
-                            return null;
+                            var done = LcData.JobTitle.DeactivateUserJobTitle(userID, jobTitleID);
+                            // It cannot be done if record not exists, notify:
+                            if (!done) {
+                                throw new HttpException(404, "Not found");
+                            }
+                            else {
+                                // Return an updated item
+                                return GetItem(jobTitleID);
+                            }
+
                         case "reactivate":
                             // TODO dashboard7position/$reactivate
                             return null;
+
                         default:
                             throw new HttpException(404, "Not found");
                     }
                 }
                 else {
-                    throw new HttpException(400, "Invalid job title ID");
+                    throw new HttpException(400, "Invalid Job Ttle ID");
                 }
             }
             else if (UrlData.Count == 0) {
@@ -99,7 +113,7 @@
                 itemID = UrlData[0].AsInt(0);
             }
             else if (UrlData.Count == 1) {
-                throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+                throw new HttpException(400, "Invalid Job Title ID");
             }
             else {
                 throw new HttpException(404, "Not Found");

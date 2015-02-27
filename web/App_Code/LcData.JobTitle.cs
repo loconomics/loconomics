@@ -99,15 +99,23 @@ public static partial class LcData
             }
         }
 
-        public static void SoftDeleteUserJobTitle(int userID, int jobTitleID)
+        public static bool SoftDeleteUserJobTitle(int userID, int jobTitleID)
         {
             using (var db = Database.Open("sqlloco")) {
                 // Set StatusID to 0 'deleted by user'
-                db.Execute("UPDATE UserProfilePositions SET StatusID = 0 WHERE UserID = @0 AND PositionID = @1", userID, jobTitleID);
+                int affected = db.Execute(@"
+                    UPDATE UserProfilePositions SET StatusID = 0
+                    WHERE UserID = @0 AND PositionID = @1
+                     AND LanguageID = @2
+                     AND CountryID = @3
+                ", userID, jobTitleID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+
+                // Task done? Almost a record must be affected to be a success
+                return affected > 1;
             }
         }
 
-        public static void UpdateUserJobTitle(int userID, int jobTitleID,
+        public static bool UpdateUserJobTitle(int userID, int jobTitleID,
             string intro,
             int policyID,
             bool instantBooking)
@@ -123,7 +131,7 @@ public static partial class LcData
             ";
 
             using (var db = Database.Open("sqlloco")) {
-                db.Execute(sqlUpdate,
+                var affected = db.Execute(sqlUpdate,
                     userID,
                     jobTitleID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
@@ -131,6 +139,27 @@ public static partial class LcData
                     policyID,
                     instantBooking
                 );
+
+                // Task done? Almost a record must be affected to be a success
+                return affected > 1;
+            }
+        }
+
+        public static bool DeactivateUserJobTitle(int userID, int jobTitleID)
+        {
+            using (var db = Database.Open("sqlloco")) {
+                // It just update StatusID to 3 'private profile, manual activation'
+                var affected = db.Execute(@"
+                    UPDATE UserProfilePositions SET StatusID = 3
+                    WHERE UserID = @0 AND PositionID = @1
+                     AND LanguageID = @2
+                     AND CountryID = @3
+                ",
+                userID, jobTitleID,
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+
+                // Task done? Almost a record must be affected to be a success
+                return affected > 1;
             }
         }
         #endregion
