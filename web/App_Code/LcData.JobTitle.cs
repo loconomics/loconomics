@@ -117,9 +117,11 @@ public static partial class LcData
             }
         }
 
-        public static bool UpdateUserJobTitle(int userID, int jobTitleID,
-            string intro,
+        public static bool UpdateUserJobTitle(
+            int userID,
+            int jobTitleID,
             int policyID,
+            string intro,
             bool instantBooking)
         {
             var sqlUpdate = @"

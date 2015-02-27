@@ -315,7 +315,13 @@
         },
         'User Job Profile': {
             url: '/en-US/rest/user-job-profile',
-            get: { }
+            get: { },
+            post: {
+                jobTitleID: 106,
+                intro: 'Job title introduction',
+                cancellationPolicyID: 1,
+                instantBooking: true
+            }
         },
         'User Job Profile (item -- Job Title)': {
             url: '/en-US/rest/user-job-profile/106',

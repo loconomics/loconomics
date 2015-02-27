@@ -50,14 +50,11 @@
             throw new HttpException(404, "Job Title not found.");
         }
         
-        /// <summary>
-        /// Add a new job title to the profile.
-        /// Or execute some actions on specific sub-URLs applied to 
-        /// a jobTitleID URL.
-        /// </summary>
-        /// <returns></returns>
-        public override dynamic Post()
-        {
+        private dynamic PerformAction() {
+            
+            // Two segments:
+            // - jobTitleID
+            // - actionName to execute
             if (UrlData.Count == 2) {
                 if (UrlData[0].IsInt()) {
                     
@@ -114,16 +111,48 @@
                     }
                 }
                 else {
-                    throw new HttpException(400, "Invalid Job Ttle ID");
+                    throw new HttpException(400, "Invalid Job Title ID");
                 }
             }
-            else if (UrlData.Count == 0) {
-                // TODO
-                // dashboard/position/$AddNew
-                return null;
+            
+            throw new HttpException(404, "Not found");
+        }
+        
+        /// <summary>
+        /// Add a new job title to the profile.
+        /// Or execute some actions on specific sub-URLs applied to 
+        /// a jobTitleID URL.
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 0) {
+
+                // Parameters
+                int userID = WebSecurity.CurrentUserId;
+                var jobTitleID = 0;
+                if (Request["jobTitleID"].IsInt()) {
+                    jobTitleID = Request["jobTitleID"].AsInt(0);
+                }
+                else if (UrlData.Count == 1) {
+                    throw new HttpException(400, "A Job Title ID is required");
+                }
+                
+                // Stop on not valid:
+                var data = GetValidatedItemBodyInput();
+                
+                LcData.UserInfo.InsProviderPosition(
+                    userID,
+                    jobTitleID,
+                    data.policyID,
+                    data.intro,
+                    data.instantBooking
+                );
+                
+                return GetItem(jobTitleID);
             }
             else {
-                throw new HttpException(404, "Not found");
+                return PerformAction();
             }
         }
         
@@ -154,6 +183,33 @@
             
             return itemID;
         }
+        
+        /// <summary>
+        /// Runs validation against the 'body' fields of an item, that is the editable
+        /// fields without the primary key.
+        /// It throws HttpException if error, returns an object with the
+        /// data or defaults on success.
+        /// </summary>
+        private dynamic GetValidatedItemBodyInput()
+        {
+            // Validation rules
+            Validation.Add("intro", Validator.StringLength(2000, 0, "Job title introduction must be fewer than 2000 characters"));
+            Validation.Add("cancellationPolicyID", Validator.Integer("Invalid cancellation policy"));
+            if (!Request["instantBooking"].IsEmpty() && !Request["instantBooking"].IsBool()) {
+                ModelState.AddError("instantBooking", "The scheduling option must be a boolean (true for instant booking)");
+            }
+
+            if (!Validation.IsValid() || !ModelState.IsValid) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+            
+            return new {
+                intro = Request["intro"] ?? null,
+                policyID = Request["cancellationPolicyID"].AsInt(LcData.Booking.DefaultCancellationPolicyID),
+                // False as default
+                instantBooking = Request["instantBooking"].AsBool(false)
+            };
+        }
 
         /// <summary>
         /// Update editable fields for the job title:
@@ -167,33 +223,20 @@
             // Item ID
             var itemID = CheckAndGetItemID();
 
-            // Validation rules
-            Validation.Add("intro", Validator.StringLength(2000, 0, "Job title introduction must be fewer than 2000 characters"));
-            Validation.RequireField("cancellationPolicyID", "Is required to choose a valid cancellation policy");
-            Validation.Add("cancellationPolicyID", Validator.Integer("Is required to choose a valid cancellation policy"));
-            //if (Request["instantBooing"] != "true" && Request["instantBooing"] != "false" ) {
-            if (!Request["instantBooking"].IsBool()) {
-                ModelState.AddError("instantBooking", "The scheduling option must be a boolean (true for instant booking)");
-            }
-
-            if (!Validation.IsValid() || !ModelState.IsValid) {
-                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
-            }
-
             // Parameters
             int userID = WebSecurity.CurrentUserId;
             var jobTitleID = itemID;
-            var intro = Request["intro"];
-            var policyID = Request["cancellationPolicyID"].AsInt();
-            var instantBooking = Request["instantBooking"].AsBool();
+            
+            // Stop on not valid:
+            var data = GetValidatedItemBodyInput();
 
             // Updating
             LcData.JobTitle.UpdateUserJobTitle(
                 userID,
                 jobTitleID,
-                intro,
-                policyID,
-                instantBooking
+                data.policyID,
+                data.intro,
+                data.instantBooking
             );
 
             // Return the updated item

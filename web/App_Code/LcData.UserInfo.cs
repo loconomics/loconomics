@@ -583,9 +583,12 @@ public static partial class LcData
 
         #region Create
         private const string sqlInsProviderPosition = @"
-            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4
+            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6
         ";
-        public static void InsProviderPosition(int userID, int positionID)
+        public static void InsProviderPosition(int userID, int positionID,
+            int cancellationPolicyID = LcData.Booking.DefaultCancellationPolicyID,
+            string intro = null,
+            bool instantBooking = false)
         {
             using (var db = Database.Open("sqlloco"))
             {
@@ -593,9 +596,11 @@ public static partial class LcData
                 var Results = db.QuerySingle(LcData.UserInfo.sqlInsProviderPosition,
                     userID, positionID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
-                    LcData.Booking.DefaultCancellationPolicyID);
+                    cancellationPolicyID,
+                    intro,
+                    instantBooking);
                 if (Results.Result != "Success") {
-                    throw new Exception("We're sorry, there was an error creating your position: " + Results.Result);
+                    throw new Exception("We're sorry, there was an error creating your job title: " + Results.Result);
                 }
             }
         }
