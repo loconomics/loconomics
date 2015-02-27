@@ -12,7 +12,7 @@
         public override dynamic Get()
         {
             // Item ID
-            if (UrlData[0].IsInt()) {
+            if (UrlData.Count == 1 && UrlData[0].IsInt()) {
                 return GetItem(UrlData[0].AsInt(0));
             }
             else if (UrlData.Count == 1) {
@@ -60,6 +60,10 @@
         {
             if (UrlData.Count == 2) {
                 if (UrlData[0].IsInt()) {
+                    
+                    // Response must be OK if goes fine (by default for POST is 'Created'
+                    // it does not apply on this case)
+                    WebPage.Response.StatusCode = 200;
                     
                     // Parameters
                     int userID = WebSecurity.CurrentUserId;
@@ -167,8 +171,8 @@
             Validation.Add("intro", Validator.StringLength(2000, 0, "Job title introduction must be fewer than 2000 characters"));
             Validation.RequireField("cancellationPolicyID", "Is required to choose a valid cancellation policy");
             Validation.Add("cancellationPolicyID", Validator.Integer("Is required to choose a valid cancellation policy"));
-            Validation.RequireField("instantBooking", "Is required to choose a scheduling option");
-            if (!Request["instantBooing"].IsBool()) {
+            //if (Request["instantBooing"] != "true" && Request["instantBooing"] != "false" ) {
+            if (!Request["instantBooking"].IsBool()) {
                 ModelState.AddError("instantBooking", "The scheduling option must be a boolean (true for instant booking)");
             }
 
@@ -205,7 +209,12 @@
         public override dynamic Delete()
         {
             // Item ID
-            var itemID = CheckAndGetItemID();            
+            var itemID = CheckAndGetItemID();
+            
+            // Get item to be deleted.
+            // It already throws 'not found' 
+            // if doesn't exists
+            var item = GetItem(itemID);
 
             // Parameters
             int userID = WebSecurity.CurrentUserId;
@@ -214,8 +223,8 @@
             // Delete
             LcData.JobTitle.SoftDeleteUserJobTitle(userID, jobTitleID);
          
-            // Return updated item, since here there is no an actual deletion, just a Status update   
-            return GetItem(itemID);
+            // Return 'deleted' item (internal updated info cannot be fetched)
+            return item;
         }
     }
 }

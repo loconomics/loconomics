@@ -319,7 +319,21 @@
         },
         'User Job Profile (item -- Job Title)': {
             url: '/en-US/rest/user-job-profile/106',
-            get: { }
+            get: { },
+            put: {
+                intro: 'Job title introduction',
+                cancellationPolicyID: 1,
+                instantBooking: true
+            },
+            delete: { }
+        },
+        'User Job Profile - Deactivation': {
+            url: '/en-US/rest/user-job-profile/106/deactivate',
+            post: { }
+        },
+        'User Job Profile - Reactivation': {
+            url: '/en-US/rest/user-job-profile/106/reactivate',
+            post: { }
         }
     };
 
@@ -421,6 +435,9 @@
         max-height: 200px;
         overflow: auto;
     }
+    #apiList {
+        padding-bottom: 40px;
+    }
     #apiList li span {
         margin-left: 1em;
         cursor: pointer;
@@ -460,5 +477,4 @@
     <pre id="log"></pre>
     <h6>REST API examples</h6>
     <ul id="apiList"></ul>
-    <p style="margin: 40px 0"></p>
 </div>

@@ -104,14 +104,16 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco")) {
                 // Set StatusID to 0 'deleted by user'
                 int affected = db.Execute(@"
-                    UPDATE UserProfilePositions SET StatusID = 0
+                    UPDATE UserProfilePositions
+                    SET     StatusID = 0,
+                            UpdatedDate = getdate()
                     WHERE UserID = @0 AND PositionID = @1
                      AND LanguageID = @2
                      AND CountryID = @3
                 ", userID, jobTitleID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
 
                 // Task done? Almost a record must be affected to be a success
-                return affected > 1;
+                return affected > 0;
             }
         }
 
@@ -124,7 +126,8 @@ public static partial class LcData
                 UPDATE  UserProfilePositions
                 SET     PositionIntro = @4,
                         CancellationPolicyID = @5,
-                        InstantBooking = @6
+                        InstantBooking = @6,
+                        UpdatedDate = getdate()
                 WHERE   UserID = @0 AND PositionID = @1
                     AND LanguageID = @2
                     AND CountryID = @3
@@ -141,7 +144,7 @@ public static partial class LcData
                 );
 
                 // Task done? Almost a record must be affected to be a success
-                return affected > 1;
+                return affected > 0;
             }
         }
 
@@ -157,7 +160,9 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco")) {
                 // It just update StatusID to 3 'private profile, manual activation'
                 var affected = db.Execute(@"
-                    UPDATE UserProfilePositions SET StatusID = 3
+                    UPDATE UserProfilePositions
+                    SET     StatusID = 3,
+                            UpdatedDate = getdate()
                     WHERE UserID = @0 AND PositionID = @1
                      AND LanguageID = @2
                      AND CountryID = @3
@@ -166,7 +171,7 @@ public static partial class LcData
                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
 
                 // Task done? Almost a record must be affected to be a success
-                return affected > 1;
+                return affected > 0;
             }
         }
 
@@ -197,7 +202,9 @@ public static partial class LcData
                     // ..modify the profile StatusID from 3 to 2 'private profile, automatic activation'
                     // (because the TestProfileActivation only works for StatusID:2 to avoid unexpected changes)
                     db.Execute(@"
-                        UPDATE UserProfilePositions SET StatusID = 2
+                        UPDATE  UserProfilePositions
+                        SET     StatusID = 2,
+                                UpdatedDate = getdate()
                         WHERE UserID = @0 AND PositionID = @1
                          AND LanguageID = @2
                          AND CountryID = @3
@@ -219,7 +226,9 @@ public static partial class LcData
                     // the TestProfileActivation procedure)
                     if (statusID >= 2) {
                         db.Execute(@"
-                            UPDATE UserProfilePositions SET StatusID = @2
+                            UPDATE UserProfilePositions
+                            SET     StatusID = @2,
+                                    UpdatedDate = getdate()
                             WHERE UserID = @0 AND PositionID = @1
                              AND LanguageID = @3
                              AND CountryID = @4
