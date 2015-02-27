@@ -65,9 +65,12 @@
                     int userID = WebSecurity.CurrentUserId;
                     var jobTitleID = UrlData[0].AsInt();
                     
+                    // Result holders
+                    var done = false;
+                    
                     switch (UrlData[1].ToLower()) {
                         case "deactivate":
-                            var done = LcData.JobTitle.DeactivateUserJobTitle(userID, jobTitleID);
+                            done = LcData.JobTitle.DeactivateUserJobTitle(userID, jobTitleID);
                             // It cannot be done if record not exists, notify:
                             if (!done) {
                                 throw new HttpException(404, "Not found");
@@ -78,8 +81,29 @@
                             }
 
                         case "reactivate":
-                            // TODO dashboard7position/$reactivate
-                            return null;
+                            
+                            // Double check if item exists
+                            if (GetItem(jobTitleID) == null) {
+                                throw new HttpException(404, "Not found");
+                            }
+                            else {
+                                done = LcData.JobTitle.ReactivateUserJobTitle(userID, jobTitleID);
+                                
+                                if (!done) {
+                                    // It cannot be done, since we already know
+                                    // that the record exists, the problem only can
+                                    // be that constraints for 'active profile' were not
+                                    // fullfilled to allow manual activation.
+                                    // Notify about pending steps:
+                                    var alertsMsg = "You must complete another {0} steps to activate this profile.";
+                                    var alerts = LcData.GetActiveRequiredUserAlertsCount(userID, jobTitleID);
+                                    throw new HttpException(400, String.Format(alertsMsg, alerts));
+                                }
+                                else {
+                                    // Return an updated item
+                                    return GetItem(jobTitleID);
+                                }
+                            }
 
                         default:
                             throw new HttpException(404, "Not found");

@@ -6,36 +6,20 @@
 
     if (positionID > 0) {
         
-        var alertsMsg = "You must complete another {0} steps to activate this profile--please visit the <a href='{1}'>To-dos</a> section to complete";
+        var done = LcData.JobTitle.ReactivateUserJobTitle(u.UserID, positionID);
         
-        using (var db = Database.Open("sqlloco")) {
-            /* PROCESS: */
-            // Check the current StatusID
-            var statusID = LcData.UserInfo.GetUserPositionStatus(u.UserID, positionID);
-            // If status is of type 3 'private profile, manual activation'..
-            if (statusID == 3) {
-                // ..modify the profile StatusID from 3 to 2 'private profile, automatic activation'
-                // (because the TestProfileActivation only works for StatusID:2 to avoid unexpected changes)
-                db.Execute("UPDATE UserProfilePositions SET StatusID = 2 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
+        if (done) {
+            if (Request.IsAjaxRequest()) {
+                LcHelpers.ReturnJsonResult(101, null);
             }
-            // It executes the profile activation that checks that all required alerts must be off to activate:
-            db.Execute("EXEC TestProfileActivation @0, @1", u.UserID, positionID);
-            // Check the updated StatusID
-            var newStatusID = LcData.UserInfo.GetUserPositionStatus(u.UserID, positionID);
-            // If the status is 1 'public profile', success!
-            if (newStatusID == 1) {
+        }
+        else {
+            if (Request.IsAjaxRequest()) {
+                
+                var alertsMsg = "You must complete another {0} steps to activate this profile--please visit the <a href='{1}'>To-dos</a> section to complete";
+                
+                // Notify about pending alerts:
                 if (Request.IsAjaxRequest()) {
-                    LcHelpers.ReturnJsonResult(101, null);
-                }
-            } else {
-                // It is Not activated still, required alerts are pending, back to the original
-                // StatusID if was not 2 originally (it was updated in the middle of the process to run
-                // the TestProfileActivation procedure)
-                if (statusID >= 2) {
-                    db.Execute("UPDATE UserProfilePositions SET StatusID = @2 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID, statusID);
-                }
-                if (Request.IsAjaxRequest()) {
-                    // Notify about pending alerts:
                     var alerts = LcData.GetActiveRequiredUserAlertsCount(u.UserID, positionID);
                     LcHelpers.ReturnJsonResult(102, new {
                         AlertsRequired = alerts,
@@ -44,6 +28,7 @@
                 }
             }
         }
+
     } else {
         if (Request.IsAjaxRequest()) {
             LcHelpers.ReturnJsonResult(103, new { Message = "We're sorry, we're unable to reactivate this position.  Please contact us for help" });
