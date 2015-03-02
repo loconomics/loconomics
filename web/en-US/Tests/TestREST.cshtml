@@ -131,7 +131,6 @@
             post: {
                  "username": "some user email",
                  "password": "",
-                 "redirect": "/en-US/dashboard",
                  "returnProfile": false,
                  'api comment': 'Param returnProfile allows to return a "profile" property with the user profile data (table [users]).' + 
                     ' The returned "redirectUrl" on success must be mandatory when there is a value since sometimes ' +
@@ -142,6 +141,19 @@
         'Logout': {
             url: '/en-US/rest/logout',
             post: {}
+        },
+        'Signup': {
+            url: '/en-US/rest/signup',
+            post: {
+                 "username": "some user email",
+                 "password": "",
+                 "profileType": "freelancer",
+                 "returnProfile": false,
+                 'api comment': 'Same returned data as in Login, and returnProfile behaves the same too.' + 
+                    ' The returned "redirectUrl" on success must be mandatory when there is a value since sometimes ' +
+                    'will be different from the given "redirect", as for providers in the Onboarding, they must continue that ' +
+                    'at the step given in "redirectUrl". This is the fact for current Website, what rules we will manage on mobile?.'
+            }
         },
         'Events and to add event': {
             url: '/en-US/rest/events',

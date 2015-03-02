@@ -6,7 +6,9 @@
     {
         public override dynamic Post()
         {
- 	         return LcAuthHelper.Login(this.WebPage);
+            // If success, will be 200 not 201
+            WebPage.Response.StatusCode = 200;
+ 	        return LcAuthHelper.Login(this.WebPage);
         }
     }
 }

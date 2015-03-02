@@ -1,0 +1,29 @@
+﻿@*
+    Sign-up a user, getting logged if success and returns the same
+    result as the Login method. If the user and password exists
+    already and match, it just get logged (exception: if the user
+    was a customer as is requesting the 'freelancer' type, will become
+    a freelance and get logged).
+
+    - POST:
+        - username:string
+        - password:string
+        - returnProfile:bool as in Login
+        - profileType:string Enumeration: 'freelancer', 'customer'
+            NOTE: Currently allowed: 'freelancer', 'freelance', 'provider' as aliases,
+                any other value or not value will create a 'customer' profile.
+
+    - return: same as Login, or 400 with validation errors.
+*@
+@functions{
+    public class RestSignup : RestWebPage
+    {
+        public override dynamic Post()
+        {
+ 	         return LcAuthHelper.Signup(this.WebPage);
+        }
+    }
+}
+@{   
+    new RestSignup().JsonResponse(this);
+}

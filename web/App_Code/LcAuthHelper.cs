@@ -77,10 +77,11 @@ public static class LcAuthHelper {
         }
     }
 
-    public static LoginResult Login(string username, string password, bool rememberMe = false, bool returnProfile = false) {
+    public static LoginResult Login(string username, string password, bool rememberMe = false, bool returnProfile = false, bool allowUnconfirmed = false) {
             
         checkAccountIsLocked(username);
-        checkAccountIsConfirmed(username);
+        if (!allowUnconfirmed)
+            checkAccountIsConfirmed(username);
             
         if (LcAuth.Login(username, password, rememberMe)) {
             
@@ -184,4 +185,64 @@ public static class LcAuthHelper {
             throw new HttpException(409, "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.");
         }
     }
+
+    #region Signup
+    public static LoginResult Signup(WebPage page) {
+
+        if (page.Validation.GetHtml("username") == null) {
+            page.Validation.RequireField("username", "You must specify an email.");
+            // Username is an email currently, so need to be restricted
+            page.Validation.Add("username",
+                Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
+        }
+        if (page.Validation.GetHtml("password") == null) {
+	        page.Validation.RequireField("password", "You must specify a password.");
+        }
+        
+        if (page.Validation.IsValid()) {
+            var username = Request.Form["username"];
+            var password = Request.Form["password"];
+            var rememberMe = Request.Form["rememberMe"].AsBool();
+            var returnProfile = Request.Form["returnProfile"].AsBool();
+            var profileTypeStr = Request.Form["profileType"] ?? "";
+            var isProvider = new string[] { "FREELANCE", "FREELANCER", "PROVIDER" }.Contains(profileTypeStr.ToUpper());
+            var utm = Request.Url.Query;
+
+            // If the user exists, try to log-in with the given password,
+            // becoming a provider if that was the requested profileType and follow as 
+            // a normal login.
+            // If the password didn't match, throw a sign-up specific error (email in use)
+            // Otherwise, just register the user.
+            if (LcAuth.ExistsEmail(username))
+            {
+                // Try Login
+                try
+                {
+                    var logged = Login(username, password, rememberMe, returnProfile);
+                    // throw exception on error
+                    if (isProvider) {
+                        LcAuth.BecomeProvider(logged.userId);
+                    }
+                    return logged;
+                }
+                catch (HttpException ex)
+                {
+                    // Not valid log-in, throw a 'email exists' error with Conflict http code
+                    throw new HttpException(409, "Email address is already in use.");
+                }
+            }
+            else
+            {
+                var registered = LcAuth.RegisterUser(username, "", "", password, isProvider, utm);
+                LcAuth.SendRegisterUserEmail(registered);
+                // Auto login:
+                return Login(username, password, rememberMe, returnProfile, true);
+            }
+        }
+        else {
+            // Bad request, input data incorrect because of validation rules
+            throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+        }
+    }
+    #endregion
 }
