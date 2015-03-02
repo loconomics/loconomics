@@ -100,14 +100,22 @@ public static class LcFacebook
     #region Access Token
     static string GetUserAccessToken()
     {
-        var signed_request = GetSignedRequest();
-        
-        if (signed_request != null)
+        var token = Request["access_token"] ?? Request["accessToken"];
+        if (!String.IsNullOrEmpty(token))
         {
-            if (signed_request.oauth_token != null)
-                return signed_request.oauth_token;
-            else
-                return GetAccessTokenFromCode(N.W(signed_request.code) ?? Request["code"] ?? "");
+            return token;
+        }
+        else
+        {
+            var signed_request = GetSignedRequest();
+
+            if (signed_request != null)
+            {
+                if (signed_request.oauth_token != null)
+                    return signed_request.oauth_token;
+                else
+                    return GetAccessTokenFromCode(N.W(signed_request.code) ?? Request["code"] ?? "");
+            }
         }
         return null;
     }

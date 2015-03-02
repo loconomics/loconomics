@@ -15,9 +15,11 @@ using System.Collections.Generic;
 using WebMatrix.Data;
 using WebMatrix.Security;
 using WebMatrix.WebData;
+using System.Web.Security;
 
-public static class LcAuthHelper {
-
+public static class LcAuthHelper
+{
+    #region WebPage API shortcuts
     private static HttpRequestBase Request
     {
         get
@@ -41,7 +43,9 @@ public static class LcAuthHelper {
             return HelperPage.PageData;
         }
     }
+    #endregion
 
+    #region Login
     public class LoginResult {
         public LoginResult() { }
         public string redirectUrl;
@@ -86,39 +90,53 @@ public static class LcAuthHelper {
         if (LcAuth.Login(username, password, rememberMe)) {
             
             var userId = WebSecurity.GetUserId(username);
-            var authKey = LcAuth.GetAutologinKey(userId);
-            object profile = null;
-            
-            if (returnProfile) {
-                profile = LcData.UserInfo.GetRestUserProfile(userId);
-            }
-
-            return new LoginResult {
-                redirectUrl = getRedirectUrl(username),
-                userId = userId,
-                authKey = authKey,
-                profile = profile
-            };
+            return GetLoginResultForID(userId, returnProfile);
         }
         else {
             throw new HttpException(400, "Incorrect Username or password.");
         }
     }
-    
+
+    private static LoginResult GetLoginResultForID(int userID, bool returnProfile)
+    {
+        var authKey = LcAuth.GetAutologinKey(userID);
+        object profile = null;
+            
+        if (returnProfile) {
+            profile = LcData.UserInfo.GetRestUserProfile(userID);
+        }
+
+        return new LoginResult {
+            redirectUrl = getRedirectUrl(userID),
+            userId = userID,
+            authKey = authKey,
+            profile = profile
+        };
+    }
+    #endregion
+
+    #region Logout
     public static void Logout() {
         // Log out of the current user context
         WebSecurity.Logout();
         Session.Clear();
     }
+    #endregion
 
-    public static string getRedirectUrl(string username) {
+    #region Account Utilities
+    public static string getRedirectUrl(string username)
+    {
+        return getRedirectUrl(WebSecurity.GetUserId(username));
+    }
+
+    public static string getRedirectUrl(int userID) {
 
         string redirect =  N.W(Request["ReturnUrl"]) ??
             N.W(PageData["Redirect"]) ?? N.W(Request["Redirect"]) ??
             "";
         
         // Check Onboarding status (#455):
-        string onboardingStep = Database.Open("sqlloco").QueryValue("SELECT coalesce(OnboardingStep, '') FROM users WHERE UserID=@0", WebSecurity.GetUserId(username));
+        string onboardingStep = Database.Open("sqlloco").QueryValue("SELECT coalesce(OnboardingStep, '') FROM users WHERE UserID=@0", userID);
         if (!String.IsNullOrEmpty(onboardingStep)) {
             redirect = LcUrl.LangPath + "dashboard/" + onboardingStep + "/";
         }
@@ -185,6 +203,7 @@ public static class LcAuthHelper {
             throw new HttpException(409, "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.");
         }
     }
+    #endregion
 
     #region Signup
     public static LoginResult Signup(WebPage page) {
@@ -243,6 +262,72 @@ public static class LcAuthHelper {
             // Bad request, input data incorrect because of validation rules
             throw new HttpException(400, LcRessources.ValidationSummaryTitle);
         }
+    }
+    #endregion
+
+    #region Facebook
+    public static LoginResult FacebookLogin(WebPage page, bool createAccount = false, bool isProvider = false)
+    {
+        var returnProfile = Request.Form["returnProfile"].AsBool();
+
+        // Get Facebook User using the Request["accessToken"],
+        // or signed_request or cookie.
+        var fbuser = LcFacebook.GetUserFromCurrentRequest();
+        var fuserid = fbuser != null ? ((string)fbuser["id"] ?? "0").AsLong() : 0;
+        if (fuserid > 0) {
+            // It exists?
+            var user = LcAuth.GetFacebookUser(fuserid);
+            if (user != null)
+            {
+                // Become provider
+                if (createAccount && isProvider)
+                {
+                    LcAuth.BecomeProvider(user.UserID);
+                }
+            }
+            else
+            {
+                if (createAccount)
+                {
+                    user = CreateFacebookAccount(fbuser, isProvider);
+                }
+                else
+                {
+                    throw new HttpException(400, "Incorrect user");
+                }
+            }
+
+            // Performs system login, using the autologin info since
+            // there is no password here.
+            var ret = GetLoginResultForID(user.UserID, returnProfile);
+            LcAuth.Autologin(ret.userId.ToString(), ret.authKey);
+            return ret;
+        }
+        else {
+            throw new HttpException(500, "Invalid Facebook credentials");
+        }
+    }
+
+    private static LcAuth.RegisteredUser CreateFacebookAccount(dynamic facebookUser, bool isProvider)
+    {
+        // Create user with Facebook
+        return LcAuth.RegisterUser(
+            facebookUser.email,
+            facebookUser.first_name,
+            facebookUser.last_name,
+            Membership.GeneratePassword(14, 5),
+            isProvider,
+            Request.Url.Query
+            //,facebookUser.gender
+        );
+    }
+
+    public static LoginResult FacebookSignup(WebPage page)
+    {
+        var profileTypeStr = Request.Form["profileType"] ?? "";
+        var isProvider = new string[] { "FREELANCE", "FREELANCER", "PROVIDER" }.Contains(profileTypeStr.ToUpper());
+
+        return FacebookLogin(page, true, isProvider);
     }
     #endregion
 }

@@ -1,5 +1,19 @@
 ﻿@*
-    Log-in a user setting its authentification cookie.
+    Log-in a user creating a session and returning the authentication
+    key for further API requests.
+
+    - POST:
+        - username:string
+        - password:string
+        - returnProfile:bool ask to return the basic profile data on the result, in the key "profile"
+
+    - return: code 400 with validation errors or object
+        {
+            "redirectUrl": "suggested URL to redirect the user, like pointing to an onboarding step",
+            "userId": 100,
+            "authKey": "authentication key to hold in session and send on further API request to detect the session",
+            "profile": null // Object with a copy of the user basic profile data if requested with returnProfile param
+        }
 *@
 @functions{
     public class RestLogin : RestWebPage
@@ -8,7 +22,18 @@
         {
             // If success, will be 200 not 201
             WebPage.Response.StatusCode = 200;
- 	        return LcAuthHelper.Login(this.WebPage);
+            
+            if (UrlData.Count > 0 ) {
+                if (UrlData[0] == "facebook") {
+                    return LcAuthHelper.FacebookLogin(this.WebPage);
+                }
+                else {
+                    throw new HttpException(404, "Not Found");
+                }
+            }
+            else {
+                return LcAuthHelper.Login(this.WebPage);
+            }
         }
     }
 }

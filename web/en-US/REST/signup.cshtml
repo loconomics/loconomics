@@ -13,6 +13,12 @@
             NOTE: Currently allowed: 'freelancer', 'freelance', 'provider' as aliases,
                 any other value or not value will create a 'customer' profile.
 
+    - POST /facebook:
+        - accessToken:string Given by the Facebook API on the browser/app
+            Currently, as of implementation, is supported too: signed_request and 'Facebook App cookie'
+        - returnProfile:bool as in normal Signup
+        - profileType:string as in normal Signup
+
     - return: same as Login, or 400 with validation errors.
 *@
 @functions{
@@ -20,7 +26,17 @@
     {
         public override dynamic Post()
         {
- 	         return LcAuthHelper.Signup(this.WebPage);
+            if (UrlData.Count > 0 ) {
+                if (UrlData[0] == "facebook") {
+                    return LcAuthHelper.FacebookSignup(this.WebPage);
+                }
+                else {
+                    throw new HttpException(404, "Not Found");
+                }
+            }
+            else {
+ 	            return LcAuthHelper.Signup(this.WebPage);
+            }
         }
     }
 }

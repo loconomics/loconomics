@@ -155,6 +155,21 @@
                     'at the step given in "redirectUrl". This is the fact for current Website, what rules we will manage on mobile?.'
             }
         },
+        'Facebook Login': {
+            url: '/en-US/rest/login/facebook',
+            post: {
+                "accessToken": "Facebook Access Token",
+                "returnProfile": true
+            }
+        },
+        'Facebook Signup': {
+            url: '/en-US/rest/signup/facebook',
+            post: {
+                "accessToken": "Facebook Access Token",
+                "profileType": "freelancer",
+                "returnProfile": true
+            }
+        },
         'Events and to add event': {
             url: '/en-US/rest/events',
             get: {
