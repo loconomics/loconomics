@@ -1,19 +1,46 @@
-﻿@**
+﻿/**
     Website authentication pages must use the utilities
     given here on most cases rather than directly the LcAuth API
     since it helps with validate data from form for Log-in and
     required actions depending on the account status and
     different kind of errors.
-**@
-@using System.Linq;
-@using System.Web;
-@using System.Web.WebPages;
-@using System.Web.WebPages.Html;
-@using System.Collections;
-@using System.Collections.Generic;
-@using WebMatrix.Data;
+**/
+using System;
+using System.Linq;
+using System.Web;
+using System.Web.WebPages;
+using System.Web.WebPages.Html;
+using System.Collections;
+using System.Collections.Generic;
+using WebMatrix.Data;
+using WebMatrix.Security;
+using WebMatrix.WebData;
 
-@functions{
+public static class LcAuthHelper {
+
+    private static HttpRequestBase Request
+    {
+        get
+        {
+            return HelperPage.Request;
+        }
+    }
+
+    private static HttpSessionStateBase Session
+    {
+        get
+        {
+            return HelperPage.Session;
+        }
+    }
+
+    private static IDictionary<object, dynamic> PageData
+    {
+        get
+        {
+            return HelperPage.PageData;
+        }
+    }
 
     public class LoginResult {
         public LoginResult() { }
@@ -139,7 +166,7 @@
             // is already confirmed
             .QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userId);
 
-        if (userId > -1 && !String.IsNullOrWhiteSpace(token)) {
+        if (userId > -1 && !string.IsNullOrWhiteSpace(token)) {
             // Resend confirmation mail
             var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");
             
