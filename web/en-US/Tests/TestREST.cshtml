@@ -378,7 +378,16 @@
         'Calendar Syncing Reset Export URL': {
             url: '/en-US/rest/calendar-syncing/resetExportURL',
             post: { }
-        }
+        },
+        'Scheduling Preferences': {
+            url: '/en-US/rest/scheduling-preferences',
+            get: { },
+            put: {
+                advanceTime: 0.5,
+                betweenTime: 1,
+                incrementsSizeInMinutes: 30
+            }
+        },
     };
 
     function useApi(name, method) {
