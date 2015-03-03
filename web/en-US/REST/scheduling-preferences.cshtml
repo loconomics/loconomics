@@ -1,0 +1,65 @@
+﻿@*
+    Reading and updating the User Scheduling Preferences.
+
+    Options:
+
+    - GET: no params
+    
+    - PUT: sending
+        - icalImportURL: URL to update
+
+    - @Result {
+        "advanceTime":decimal, // Hours before allow do a booking
+        "betweenTime":decimal, // Hours to add as unavailable between bookings
+        "incrementsSizeInMinutes":int // Size in minutes of the increments in which availability slots are displayed.
+    }
+*@
+@functions{
+    public class RestSchedulingPreferences : RestWebPage
+    {
+        private dynamic GetData()
+        {
+            return LcCalendar.GetSchedulingPreferences(WebSecurity.CurrentUserId);
+        }
+        
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+ 	        return GetData();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+            var userID = WebSecurity.CurrentUserId;
+
+            if (Request["advanceTime"].IsEmpty()) {
+                ModelState.AddError("advanceTime", LcRessources.RequiredField("Time in advance of bookings"));
+            }
+            if (Request["betweenTime"].IsEmpty()) {
+                ModelState.AddError("betweenTime", LcRessources.RequiredField("Preparation time between bookings"));
+            }
+
+            var advanceTime = Request["advanceTime"].AsDecimal(0);
+            var betweenTime = Request["betweenTime"].AsDecimal(0);
+            var incrementsSizeInMinutes = Request["incrementsSizeInMinutes"].AsInt(15);
+
+            LcCalendar.SetSchedulingPreferences(userID, new LcCalendar.RestSchedulingPreferences {
+                advanceTime = advanceTime,
+                betweenTime = betweenTime,
+                incrementsSizeInMinutes = incrementsSizeInMinutes
+            });
+            
+            return GetData();
+        }
+    }
+}
+@{   
+    new RestSchedulingPreferences().JsonResponse(this);
+}

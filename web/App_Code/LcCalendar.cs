@@ -1838,6 +1838,16 @@ public static partial class LcCalendar
     }
     #endregion
 
+    #region Provider Attributes (shared calendar syncing and scheduling preferences)
+    public static dynamic GetCalendarAttributes(int userID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QuerySingle("EXEC GetUserCalendarProviderAttributes @0", userID);
+        }
+    }
+    #endregion
+
     #region Calendar Syncing
     public static string ResetIcalendarExportUrl(int userID){
         using (var db = Database.Open("sqlloco")) {
@@ -1865,14 +1875,6 @@ public static partial class LcCalendar
 
     public static string BuildIcalendarExportUrl(int userID, string privateUrlToken) {
         return (LcUrl.AppUrl + "Calendar/" + userID + "/" + privateUrlToken + "/ical/");
-    }
-
-    public static dynamic GetCalendarAttributes(int userID)
-    {
-        using (var db = Database.Open("sqlloco"))
-        {
-            return db.QuerySingle("EXEC GetUserCalendarProviderAttributes @0", userID);
-        }
     }
 
     public class RestSyncingOptions
@@ -1908,6 +1910,59 @@ public static partial class LcCalendar
             icalExportURL = atts.CalendarURL,
             icalImportURL = BuildIcalendarExportUrl(userID, privateCalendarToken)
         };
+    }
+    #endregion
+
+    #region Scheduling Preferences
+    public class RestSchedulingPreferences
+    {
+        public decimal advanceTime;
+        public decimal betweenTime;
+        public int incrementsSizeInMinutes;
+    }
+
+    public static void SetSchedulingPreferences(int userID, RestSchedulingPreferences preferences)
+    {
+        using (var db = Database.Open("sqlloco")) {
+            db.Execute("SetCalendarProviderAttributes @0, @1, @2, null, null, @3",
+                userID,
+                preferences.advanceTime,
+                preferences.betweenTime,
+                preferences.incrementsSizeInMinutes
+            );
+
+            db.Execute("EXEC TestAlertAvailability @0", userID);
+        }
+    }
+
+    public static RestSchedulingPreferences GetSchedulingPreferences(int userID)
+    {
+        var atts = GetCalendarAttributes(userID);
+        RestSchedulingPreferences prefs = null;
+
+        // Ever must exist the record, if not, its forced to be
+        // created with some defaults and that are returned
+        if (atts == null)
+        {
+            prefs = new RestSchedulingPreferences
+            {
+                advanceTime = 24M,
+                betweenTime = 0,
+                incrementsSizeInMinutes = 15
+            };
+
+            SetSchedulingPreferences(userID, prefs);
+        }
+        else
+        {
+            prefs = new RestSchedulingPreferences {
+                advanceTime = atts.AdvanceTime,
+                betweenTime = atts.BetweenTime,
+                incrementsSizeInMinutes = atts.IncrementsSizeInMinutes
+            };
+        }
+
+        return prefs;
     }
     #endregion
 }

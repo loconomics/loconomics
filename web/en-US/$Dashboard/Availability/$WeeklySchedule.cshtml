@@ -76,15 +76,9 @@
         return;
     }
     
-    var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
-    dynamic atts = null;
-    using (var db = Database.Open("sqlloco")) {
-        atts = db.QuerySingle(varSQLGetUserCalendarProviderAttributes, userId);  
-    }
-    if (atts != null) {
-        advanceTime = atts.AdvanceTime;
-        betweenTime = atts.BetweenTime;
-    }
+    var prefs = LcCalendar.GetSchedulingPreferences(userId);
+    advanceTime = prefs.advanceTime;
+    betweenTime = prefs.betweenTime;
 }
 
 @helper printOption(string selected, string val, string label) {
