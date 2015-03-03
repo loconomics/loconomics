@@ -1,0 +1,60 @@
+﻿@*
+    Reading and updating the Calendar Syncing URLs.
+
+    Options:
+
+    - GET: no params
+    
+    - PUT: sending
+        - icalImportURL: URL to update
+
+    /resetExportURL
+        - POST: no data send, just reset the Token and returns the new URL, including all the object for convenience
+            as a normal GET
+
+    - @Result {
+        "icalExportURL":string, // (Loconomics generated URL using the internal privateCalendarToken and the userID)
+        "icalImportURL":string // (google calendar public or private URL or any icalendar URL)
+    }
+*@
+@functions{
+    public class RestCalendarSyncing : RestWebPage
+    {
+        public override dynamic Get()
+        {
+ 	         return LcCalendar.GetRestCalendarSyncingOptions(WebSecurity.CurrentUserId);
+        }
+
+        public override dynamic Put()
+        {
+            var userID = WebSecurity.CurrentUserId;
+            var icalImportURL = Request["icalImportURL"];
+
+            LcCalendar.SetIcalendarImportUrl(userID, icalImportURL);
+            
+            return Get();
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData[0] == "resetExportURL") {
+                
+                // Respond with OK, rather than default 201
+                this.WebPage.Response.StatusCode = 200;
+                
+                LcCalendar.ResetIcalendarExportUrl(WebSecurity.CurrentUserId);
+                
+                return Get();
+            }
+            else if (UrlData.Count == 0) {
+                throw new HttpException(405, "Method not allowed");
+            }
+            else {
+                throw new HttpException(404, "Not found");
+            }
+        }
+    }
+}
+@{   
+    new RestCalendarSyncing().JsonResponse(this);
+}

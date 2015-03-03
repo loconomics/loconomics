@@ -14,10 +14,10 @@
     // Request specific to only Reset private url
     if (!IsPost & Request["reset-private-url"].AsBool()) {
 
-        var newToken = resetPrivateUrl(userId);
+        var newToken = LcCalendar.ResetIcalendarExportUrl(userId);
 
         if (Request.IsAjaxRequest()) {
-            LcHelpers.ReturnJsonResult(0, getPrivateUrl(userId, newToken));
+            LcHelpers.ReturnJsonResult(0, LcCalendar.BuildIcalendarExportUrl(userId, newToken));
         } else {
             var url = LcUrl.LangUrl + "NewDasboard/availability/";
             if (Request.UrlReferrer != null) {
@@ -83,40 +83,13 @@
         @("<div/>")
         return;
     }
-    
-    var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
-    dynamic atts = null;
-    using (var db = Database.Open("sqlloco")) {
-        atts = db.QuerySingle(varSQLGetUserCalendarProviderAttributes, userId);  
-    }
-    if (atts != null) {
-        programURL       = atts.CalendarURL;
-        privateUrlToken = atts.PrivateCalendarToken;
-    }
-    // If there is no privateUrlToken, generate one (avoiding user to explicitely do a required action):
-    if (String.IsNullOrEmpty(privateUrlToken)) {
-        privateUrlToken = resetPrivateUrl(userId);
-    }
-    
-    var idprefix = "DashboardCalendarSync";
-}
-@functions {
-    string resetPrivateUrl(int userID){
-        using (var db = Database.Open("sqlloco")) {
-            var newtoken = LcEncryptor.GenerateRandomToken(userID.ToString());
-            
-            db.Execute("SetCalendarProviderAttributes @0, null, null, null, @1",
-                userID, 
-                newtoken
-            );
 
-            return newtoken;
-        }
-    }
-    
-    string getPrivateUrl(int userId, string privateUrlToken) {
-        return (LcUrl.AppUrl + "Calendar/" + userId + "/" + privateUrlToken + "/ical/");
-    }
+    var syncOptions = LcCalendar.GetRestCalendarSyncingOptions(userId);
+
+    programURL      = syncOptions.icalImportURL;
+    var privateUrl  = syncOptions.icalExportURL;
+
+    var idprefix = "DashboardCalendarSync";
 }
 <p class="DashboardSection-page-section-introduction">Do you use a calendar already?
     We can both import your availability and export your Loconomics bookings to ensure
@@ -130,7 +103,7 @@
         </li>
         <li>
             <label for="@idprefix-private-url">Please copy this URL and paste it into your iCal-supported calendar to sync all your Loconomics appointments:</label>
-            <input class="BasicForm-fill DashboardCalendarSync-privateUrlField" placeholder="Reseting.." data-error-message="An error happen, please try again" id="@idprefix-private-url" readonly="readonly" type="text" value="@getPrivateUrl(userId, privateUrlToken)" />
+            <input class="BasicForm-fill DashboardCalendarSync-privateUrlField" placeholder="Reseting.." data-error-message="An error happen, please try again" id="@idprefix-private-url" readonly="readonly" type="text" value="@(privateUrl)" />
         </li>
         <li>
             <a class="DashboardCalendarSync-reset-action action" target="_blank" href="@(LcUrl.LangPath)$dashboard/Availability/$CalendarSync/?reset-private-url=true">Reset Private URL</a>

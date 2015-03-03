@@ -1837,4 +1837,77 @@ public static partial class LcCalendar
         */
     }
     #endregion
+
+    #region Calendar Syncing
+    public static string ResetIcalendarExportUrl(int userID){
+        using (var db = Database.Open("sqlloco")) {
+            var newtoken = LcEncryptor.GenerateRandomToken(userID.ToString());
+            
+            db.Execute("SetCalendarProviderAttributes @0, null, null, null, @1",
+                userID, 
+                newtoken
+            );
+            
+            db.Execute("EXEC TestAlertAvailability @0", userID);
+
+            return newtoken;
+        }
+    }
+
+    public static void SetIcalendarImportUrl(int userID, string icalImportURL)
+    {
+        using (var db = Database.Open("sqlloco")) {
+            db.Execute("SetCalendarProviderAttributes @0, null, null, @1, null", userID, icalImportURL);
+                
+            db.Execute("EXEC TestAlertAvailability @0", userID);
+        }
+    }
+
+    public static string BuildIcalendarExportUrl(int userID, string privateUrlToken) {
+        return (LcUrl.AppUrl + "Calendar/" + userID + "/" + privateUrlToken + "/ical/");
+    }
+
+    public static dynamic GetCalendarAttributes(int userID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QuerySingle("EXEC GetUserCalendarProviderAttributes @0", userID);
+        }
+    }
+
+    public class RestSyncingOptions
+    {
+        public string icalExportURL;
+        public string icalImportURL;
+    }
+
+    /// <summary>
+    /// Get the Syncing Options in a suitable way for the REST API.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns></returns>
+    public static dynamic GetRestCalendarSyncingOptions(int userID)
+    {
+        var atts = GetCalendarAttributes(userID);
+
+        // Ever must exist the record, if not, its forced to be
+        // created, and the just created data is fetched
+        if (atts == null)
+        {
+            SetIcalendarImportUrl(userID, "");
+            atts = GetCalendarAttributes(userID);
+        }
+
+        var privateCalendarToken = atts.PrivateCalendarToken;
+
+        if (String.IsNullOrEmpty(privateCalendarToken)) {
+            privateCalendarToken = LcCalendar.ResetIcalendarExportUrl(userID);
+        }
+
+        return new RestSyncingOptions {
+            icalExportURL = atts.CalendarURL,
+            icalImportURL = BuildIcalendarExportUrl(userID, privateCalendarToken)
+        };
+    }
+    #endregion
 }
