@@ -169,6 +169,43 @@ AppModel.prototype.logout = function logout() {
     return Promise.resolve();
 };
 
+AppModel.prototype.signup = function signup(username, password) {
+    
+    // Reset the extra headers to attempt the signup
+    this.rest.extraHeadres = null;
+    
+    return this.rest.post('signup?utm_source=app', {
+        username: username,
+        password: password,
+        returnProfile: true
+    }).then(function(logged) {
+        // The result is the same as in a login, and
+        // we do the same as there to get the user logged
+        // on the app on sign-up success.
+        
+        // use authorization key for each
+        // new Rest request
+        this.rest.extraHeaders = {
+            alu: logged.userId,
+            alk: logged.authKey
+        };
+
+        // async local save, don't wait
+        localforage.setItem('credentials', {
+            userID: logged.userId,
+            username: username,
+            password: password,
+            authKey: logged.authKey
+        });
+        localforage.setItem('profile', logged.profile);
+
+        // Set user data
+        this.user().model.updateWith(logged.profile);
+
+        return logged;
+    }.bind(this));
+};
+
 AppModel.prototype.getUpcomingBookings = function getUpcomingBookings() {
     return this.rest.get('upcoming-bookings');
 };

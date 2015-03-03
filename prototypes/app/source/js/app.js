@@ -82,14 +82,42 @@ var app = {
         in the history, that create the problem of 'broken back button'
     **/
     goDashboard: function goDashboard() {
-        var onboarding = this.model.user().onboardingStep();
-        if (onboarding) {
-            this.shell.go('onboardingHome/' + onboarding);
+        
+        // To avoid infinite loops if we already are performing 
+        // a goDashboard task, we flag the execution
+        // being care of the delay introduced in the execution
+        if (goDashboard._going === true) {
+            return;
         }
         else {
-            this.shell.go('home');
+            // Delayed to avoid collisions with in-the-middle
+            // tasks: just allowing current routing to finish
+            // before perform the 'redirect'
+            // TODO: change by a real redirect that is able to
+            // cancel the current app.shell routing process.
+            setTimeout(function() {
+        
+                goDashboard._going = true;
+
+                var onboarding = this.model.user().onboardingStep();
+
+                if (onboarding) {
+                    this.shell.go('onboardingHome/' + onboarding);
+                }
+                else {
+                    this.shell.go('home');
+                }
+
+                // Just because is delayed, needs
+                // to be set off after an inmediate to 
+                // ensure is set off after any other attempt
+                // to add a delayed goDashboard:
+                setTimeout(function() {
+                    goDashboard._going = false;
+                }, 1);
+            }.bind(this), 1);
         }
-    }._delayed(1)
+    }
 };
 
 /** Continue app creation with things that need a reference to the app **/

@@ -76,9 +76,13 @@ function LoginActivity($activity, app) {
                 
                 this.app.goDashboard();
 
-            }.bind(this)).catch(function() {
-                
-                this.dataView.loginError('Invalid username or password');
+            }.bind(this)).catch(function(err) {
+
+                var msg = err && err.responseJSON && err.responseJSON.errorMessage ||
+                    err && err.statusText ||
+                    'Invalid username or password';
+
+                this.dataView.loginError(msg);
                 ended();
             }.bind(this));
         }
@@ -99,10 +103,14 @@ function LoginActivity($activity, app) {
 LoginActivity.prototype.show = function show(options) {
 };
 
+var FormCredentials = require('../viewmodels/FormCredentials');
+
 function ViewModel() {
-    
-    this.username = ko.observable('');
-    this.password = ko.observable('');
+
+    var credentials = new FormCredentials();    
+    this.username = credentials.username;
+    this.password = credentials.password;
+
     this.loginError = ko.observable('');
     
     this.isLogingIn = ko.observable(false);
@@ -111,31 +119,4 @@ function ViewModel() {
 
         this.isLogingIn(true);        
     }.bind(this);
-    
-    // validate username as an email
-    var emailRegexp = /^[-0-9A-Za-z!#$%&'*+/=?^_`{|}~.]+@[-0-9A-Za-z!#$%&'*+/=?^_`{|}~.]+$/;
-    this.username.error = ko.observable('');
-    this.username.subscribe(function(v) {
-        if (v) {
-            if (emailRegexp.test(v)) {
-                this.username.error('');
-            }
-            else {
-                this.username.error('Is not a valid email');
-            }
-        }
-        else {
-            this.username.error('Required');
-        }
-    }.bind(this));
-    
-    // required password
-    this.password.error = ko.observable('');
-    this.password.subscribe(function(v) {
-        var err = '';
-        if (!v)
-            err = 'Required';
-        
-        this.password.error(err);
-    }.bind(this));
 }

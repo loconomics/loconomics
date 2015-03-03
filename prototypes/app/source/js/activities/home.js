@@ -20,7 +20,7 @@ exports.init = function initHome($activity, app) {
 
 function HomeActivity($activity, app) {
     
-    this.accessLevel = app.UserType.Provider;
+    this.accessLevel = app.UserType.Customer;
     this.navBar = new NavBar({
         title: null, // null for logo
         leftAction: NavAction.menuNewItem,

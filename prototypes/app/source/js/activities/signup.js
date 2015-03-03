@@ -33,30 +33,71 @@ function SignupActivity($activity, app) {
         rightAction: NavAction.menuOut
     });
     
-    // TODO: implement real login
-    // TESTING: the button state with a fake delay
-    $activity.find('#accountSignUpBtn').on('click', function (e) {
-        var $btn = $(e.target).button('loading');
-
-        setTimeout(function() {
-        
-            $btn.button('reset');
+    // Perform sign-up request when is requested by the form:
+    this.dataView.isSigningUp.subscribe(function(v) {
+        if (v === true) {
             
-            // TESTING: populating user
-            fakeSignup(this.app);
-          
-            // NOTE: onboarding or not?
-            var onboarding = false;
-            if (onboarding) {
-                this.app.shell.go('onboardingHome');
+            // Perform signup
+            
+            // Notify state:
+            var $btn = $activity.find('[type="submit"]');
+            $btn.button('loading');
+            
+            // Clear previous error so makes clear we
+            // are attempting
+            this.dataView.signupError('');
+        
+            var ended = function ended() {
+                this.dataView.isSigningUp(false);
+                $btn.button('reset');
+            }.bind(this);
+            
+            // After clean-up error (to force some view updates),
+            // validate and abort on error
+            // Manually checking error on each field
+            if (this.dataView.username.error() ||
+                this.dataView.password.error()) {
+                this.dataView.signupError('Review your data');
+                ended();
+                return;
             }
-            else {
-                this.app.shell.go('home');
-            }
-        }, 1000);
+            
+            app.model.signup(
+                this.dataView.username(),
+                this.dataView.password()
+            ).then(function(signupData) {
+                
+                this.dataView.signupError('');
+                ended();
+                
+                // Remove form data
+                this.dataView.username('');
+                this.dataView.password('');
+                
+                this.app.goDashboard();
 
-        return false;
+            }.bind(this)).catch(function(err) {
+                
+                var msg = err && err.responseJSON && err.responseJSON.errorMessage ||
+                    err && err.statusText ||
+                    'Invalid username or password';
+
+                this.dataView.signupError(msg);
+                ended();
+            }.bind(this));
+        }
     }.bind(this));
+    
+    // Focus first bad field on error
+    this.dataView.signupError.subscribe(function(err) {
+        // Signup is easy since we mark both unique fields
+        // as error on signupError (its a general form error)
+        var input = $activity.find(':input').get(0);
+        if (err)
+            input.focus();
+        else
+            input.blur();
+    });
 }
 
 SignupActivity.prototype.show = function show(options) {
@@ -67,12 +108,22 @@ SignupActivity.prototype.show = function show(options) {
         this.dataView.profile(options.route.segments[0]);
     }
 };
-
-// TODO: remove after implement real login
-function fakeSignup(app) {
-    app.model.user.model().updateWith(app.model.user().constructor.newAnonymous());
-}
+var FormCredentials = require('../viewmodels/FormCredentials');
 
 function ViewModel() {
+
+    var credentials = new FormCredentials();    
+    this.username = credentials.username;
+    this.password = credentials.password;
+
+    this.signupError = ko.observable('');
+    
+    this.isSigningUp = ko.observable(false);
+    
+    this.performSignup = function performSignup() {
+
+        this.isSigningUp(true);
+    }.bind(this);
+
     this.profile = ko.observable('customer');
 }
