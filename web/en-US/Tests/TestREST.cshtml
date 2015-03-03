@@ -367,6 +367,17 @@
         'User Job Profile - Reactivation': {
             url: '/en-US/rest/user-job-profile/106/reactivate',
             post: { }
+        },
+        'Calendar Syncing': {
+            url: '/en-US/rest/calendar-syncing',
+            get: { },
+            put: {
+                icalImportURL: "http://calendar.google.com/something/ical.ics"
+            }
+        },
+        'Calendar Syncing Reset Export URL': {
+            url: '/en-US/rest/calendar-syncing/resetExportURL',
+            post: { }
         }
     };
 

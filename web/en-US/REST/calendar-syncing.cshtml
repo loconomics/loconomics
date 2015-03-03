@@ -20,9 +20,19 @@
 @functions{
     public class RestCalendarSyncing : RestWebPage
     {
+        private dynamic GetData()
+        {
+            return LcCalendar.GetRestCalendarSyncingOptions(WebSecurity.CurrentUserId);
+        }
+        
         public override dynamic Get()
         {
- 	         return LcCalendar.GetRestCalendarSyncingOptions(WebSecurity.CurrentUserId);
+            if (UrlData.Count == 0) {
+ 	            return GetData();
+            }
+            else {
+                throw new HttpException(404, "Not found");
+            }
         }
 
         public override dynamic Put()
@@ -32,7 +42,7 @@
 
             LcCalendar.SetIcalendarImportUrl(userID, icalImportURL);
             
-            return Get();
+            return GetData();
         }
 
         public override dynamic Post()
@@ -44,7 +54,7 @@
                 
                 LcCalendar.ResetIcalendarExportUrl(WebSecurity.CurrentUserId);
                 
-                return Get();
+                return GetData();
             }
             else if (UrlData.Count == 0) {
                 throw new HttpException(405, "Method not allowed");
