@@ -169,7 +169,7 @@ AppModel.prototype.logout = function logout() {
     return Promise.resolve();
 };
 
-AppModel.prototype.signup = function signup(username, password) {
+AppModel.prototype.signup = function signup(username, password, profileType) {
     
     // Reset the extra headers to attempt the signup
     this.rest.extraHeadres = null;
@@ -177,6 +177,7 @@ AppModel.prototype.signup = function signup(username, password) {
     return this.rest.post('signup?utm_source=app', {
         username: username,
         password: password,
+        profileType: profileType,
         returnProfile: true
     }).then(function(logged) {
         // The result is the same as in a login, and

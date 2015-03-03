@@ -64,7 +64,8 @@ function SignupActivity($activity, app) {
             
             app.model.signup(
                 this.dataView.username(),
-                this.dataView.password()
+                this.dataView.password(),
+                this.dataView.profile()
             ).then(function(signupData) {
                 
                 this.dataView.signupError('');
