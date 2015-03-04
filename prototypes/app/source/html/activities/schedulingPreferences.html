@@ -1,0 +1,54 @@
+<!-- SchedulingPreferences activity -->
+<div class="container-fluid" data-activity="schedulingPreferences">
+
+    <h2 class="SectionTitle">Schedule preferences</h2>
+    
+    <form data-bind="submit: save">
+        <div class="checkbox">
+            <label>Show my availability in increments of</label>
+            <label><input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 15" /> 15 min</label>
+            <label><input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 30" /> 30 min</label>
+            <label><input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 60" /> 1 hour</label>
+
+            <p>e.g. 10:00, 10:15, 10:30, 10:45</p>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                Allow bookings up to
+                <select data-bind="value: prefs.advanceTime" class="form-control">
+                    <option value="0">0 hours</option>
+                    <option value="1">1 hour</option>
+                    <option value="1.5">1.5 hours</option>
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                    <option value="4">4 hours</option>
+                    <option value="12">12 hours</option>
+                    <option value="24">1 day</option>
+                    <option value="48">2 days</option>
+                    <option value="72">3 days</option>
+                </select>
+                in advance
+            </label>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                Preparation time between bookings:
+                <select data-bind="value: prefs.betweenTime" class="form-control">
+                    <option value="0">Nothing</option>
+                    <option value="0.25">15 min</option>
+                    <option value="0.5">30 min</option>
+                    <option value="0.75">45 min</option>
+                    <option value="1">1 hour</option>
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                </select>
+            </label>
+        </div>
+        
+        <div>
+            <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: isLoading() ? 'loading...' : isSaving() ? 'saving...' : 'Save'"></button>
+        </div>
+    </form>
+</div>
