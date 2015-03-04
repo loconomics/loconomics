@@ -59,7 +59,10 @@ function Model(modelObject) {
     // added to the model cannot be observed for changes,
     // requiring manual updating with a 'new Date()', but is
     // better to use properties.
-    this.dataTimestamp = ko.observable(new Date());
+    // Its rated to zero just to avoid that consecutive
+    // synchronous changes emit lot of notifications, specially
+    // with bulk tasks like 'updateWith'.
+    this.dataTimestamp = ko.observable(new Date()).extend({ rateLimit: 0 });
 }
 
 module.exports = Model;
@@ -262,12 +265,19 @@ Model.prototype.updateWith = function updateWith(data, deepCopy) {
     // If is a model, extract their properties and fields from
     // the observables (fromJS), so we not get computed
     // or functions, just registered properties and fields
+    var timestamp = null;
     if (data && data.model instanceof Model) {
         
         data = data.model.toPlainObject(deepCopy);
+        // We need to set the same timestamp, so
+        // remember for after the fromJS
+        timestamp = data.model.dataTimestamp();
     }
 
     ko.mapping.fromJS(data, this.mappingOptions, this.modelObject);
+    // Same timestamp if any
+    if (timestamp)
+        this.modelObject.model.dataTimestamp(timestamp);
 };
 
 Model.prototype.clone = function clone(data, deepCopy) {
