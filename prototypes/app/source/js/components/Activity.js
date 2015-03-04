@@ -95,10 +95,10 @@ Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options
         title: '', // No title
         leftAction: NavAction.goBack.model.clone(goBackOptions),
         rightAction: options.helpId ?
-            NavAction.goHelpIndex :
             NavAction.goHelpIndex.model.clone({
                 link: '#' + options.helpId
-            })
+            }) :
+            NavAction.goHelpIndex
     });
 };
 

@@ -15,6 +15,21 @@ var A = Activity.extends(function SchedulingPreferencesActivity() {
     this.accessLevel = this.app.UserType.Provider;
 
     this.navBar = Activity.createSubsectionNavBar('Scheduling');
+//    
+//    this.viewModel.prefsVersion.isObsolete.subscribe(function(itIs) {
+//        if (itIs) {
+//            // Notify newer that comes from the server
+//            if(window.confirm('There was remote changes in the Scheduling Preferences' +
+//                    '. Do you want to load them? (press No to discard them)')) {
+//                
+//                // Replace in edit data with the server updated data
+//                this.viewModel.prefsVersion.pull();
+//            }
+//            else {
+//                // Just nothing
+//            }
+//        }
+//    });
 });
 
 exports.init = A.init;
@@ -25,43 +40,33 @@ A.prototype.show = function show(state) {
     this.viewModel.load();
 };
 
-var SchedulingPreferences = require('../models/SchedulingPreferences');
-
 function ViewModel(app) {
-    this.prefs = new SchedulingPreferences();
-    this.latestLoad = null;
-    this.cacheTTL = moment.duration(10, 'seconds').asMilliseconds();
 
-    this.isLoading = ko.observable(false);
-    this.isSaving = ko.observable(false);
-    
-    this.load = function load() {
-        
-        var tdiff = this.latestLoad && new Date() - this.latestLoad || Number.POSITIVE_INFINITY;
-        if (tdiff <= this.cacheTTL) {
-            // Cache still valid, do nothing
-            return;
-        }
-        
-        this.isLoading(true);
+    var schedulingPreferences = this.schedulingPreferences = app.model.schedulingPreferences;
 
-        app.model.getSchedulingPreferences()
-        .then(function (prefs) {
-            this.prefs.model.updateWith(prefs);
-            this.isLoading(false);
-            this.latestLoad = new Date();
+    this.prefsVersion = schedulingPreferences.newVersion();
+    this.prefs = this.prefsVersion.version;
+
+    this.isLoading = schedulingPreferences.isLoading;
+    this.isSaving = schedulingPreferences.isSaving;
+
+    this.load = function() {
+        schedulingPreferences.load().then(function() {
+            this.prefsVersion.pull({ evenIfNewer: true });
         }.bind(this));
+
     }.bind(this);
+    
+    this.save = function() {
+        if (this.prefsVersion.push()) {
+            schedulingPreferences.save()
+            .then(function() {
+                // Close activity?
+            });
+        }
+        else if (this.prefsVersion.isObsolete()) {
+            window.alert('Data conflict, is obsolete');
+        }
 
-    this.save = function save() {
-        
-        this.isSaving(true);
-        
-        app.model.setSchedulingPreferences(this.prefs.model.toPlainObject())
-        .then(function (prefs) {
-            this.prefs.model.updateWith(prefs);
-            this.isSaving(false);
-            this.latestLoad = new Date();
-        }.bind(this));
     }.bind(this);
 }

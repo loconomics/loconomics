@@ -47,7 +47,7 @@ function ModelVersion(original) {
             this.original.model.dataTimestamp() > 
             this.version.model.dataTimestamp()
         );
-    });
+    }, this);
 }
 
 module.exports = ModelVersion;
@@ -61,10 +61,12 @@ module.exports = ModelVersion;
 **/
 ModelVersion.prototype.pull = function pull(options) {
 
+    options = options || {};
+    
     if (options.evenIfNewer || !this.isNewer()) {
-        // Update original
+        // Update version, getting original
         // (updateWith takes care to set the same dataTimestamp)
-        this.original.model.updateWith(this.version);
+        this.version.model.updateWith(this.original);
         // Done
         return true;
     }
@@ -82,10 +84,12 @@ ModelVersion.prototype.pull = function pull(options) {
 **/
 ModelVersion.prototype.push = function push(options) {
     
+    options = options || {};
+    
     if (options.evenIfObsolete || !this.isObsolete()) {
-        // Update version, getting original again
+        // Update original
         // (updateWith takes care to set the same dataTimestamp)
-        this.version.model.updateWith(this.original);
+        this.original.model.updateWith(this.version);
         // Done
         return true;
     }

@@ -267,11 +267,13 @@ Model.prototype.updateWith = function updateWith(data, deepCopy) {
     // or functions, just registered properties and fields
     var timestamp = null;
     if (data && data.model instanceof Model) {
-        
-        data = data.model.toPlainObject(deepCopy);
+
         // We need to set the same timestamp, so
         // remember for after the fromJS
         timestamp = data.model.dataTimestamp();
+        
+        // Replace data with a plain copy of itself
+        data = data.model.toPlainObject(deepCopy);
     }
 
     ko.mapping.fromJS(data, this.mappingOptions, this.modelObject);
@@ -286,10 +288,12 @@ Model.prototype.clone = function clone(data, deepCopy) {
     // Create a new model instance, using the source plain object
     // as initial values
     var cloned = new this.modelObject.constructor(plain);
-    // Update the cloned with the provided plain data used
-    // to replace values on the cloned one, for quick one-step creation
-    // of derived objects.
-    cloned.model.updateWith(data);
+    if (data) {
+        // Update the cloned with the provided plain data used
+        // to replace values on the cloned one, for quick one-step creation
+        // of derived objects.
+        cloned.model.updateWith(data);
+    }
     // Cloned model ready:
     return cloned;
 };

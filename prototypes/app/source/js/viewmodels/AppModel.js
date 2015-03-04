@@ -15,6 +15,8 @@ function AppModel(values) {
     this.model.defProperties({
         user: User.newAnonymous()
     }, values);
+    
+    this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
 }
 
 /** Initialize and wait for anything up **/
