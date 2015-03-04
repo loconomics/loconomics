@@ -52,6 +52,14 @@ function Model(modelObject) {
     // to control conversions from plain JS objects when 
     // 'updateWith'.
     this.mappingOptions = {};
+    
+    // Timestamp with the date of last change
+    // in the data (automatically updated when changes
+    // happens on properties; fields or any other member
+    // added to the model cannot be observed for changes,
+    // requiring manual updating with a 'new Date()', but is
+    // better to use properties.
+    this.dataTimestamp = ko.observable(new Date());
 }
 
 module.exports = Model;
@@ -74,7 +82,8 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
     initialValues = initialValues || {};
 
     var modelObject = this.modelObject,
-        propertiesList = this.propertiesList;
+        propertiesList = this.propertiesList,
+        dataTimestamp = this.dataTimestamp;
 
     Object.keys(properties).forEach(function(key) {
         
@@ -93,9 +102,17 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
             modelObject[key](initialValues[key]);
         }
         
+        // Add subscriber to update the timestamp on changes
+        modelObject[key].subscribe(function() {
+            dataTimestamp(new Date());
+        });
+        
         // Add to the internal registry
         propertiesList.push(key);
     });
+    
+    // Update timestamp after the bulk creation.
+    dataTimestamp(new Date());
 };
 
 /**
@@ -154,6 +171,27 @@ Model.prototype.defID = function defID(fieldsNames) {
             }.bind(this));
         }, this.modelObject);
     }
+};
+
+/**
+    Allows to register a property (previously defined) as 
+    the model timestamp, so gets updated on any data change
+    (keep in sync with the internal dataTimestamp).
+**/
+Model.prototype.regTimestamp = function regTimestampProperty(propertyName) {
+
+    var prop = this.modelObject[propertyName];
+    if (typeof(prop) !== 'function') {
+        throw new Error('There is no observable property with name [' + 
+                        propertyName + 
+                        '] to register as timestamp.'
+       );
+    }
+    // Add subscriber on internal timestamp to keep
+    // the property updated
+    this.dataTimestamp.subscribe(function(timestamp) {
+        prop(timestamp);
+    });
 };
 
 /**

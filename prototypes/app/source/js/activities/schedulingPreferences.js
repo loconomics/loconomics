@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var moment = require('moment');
 
 var A = Activity.extends(function SchedulingPreferencesActivity() {
     
@@ -28,18 +29,27 @@ var SchedulingPreferences = require('../models/SchedulingPreferences');
 
 function ViewModel(app) {
     this.prefs = new SchedulingPreferences();
-    
+    this.latestLoad = null;
+    this.cacheTTL = moment.duration(10, 'seconds').asMilliseconds();
+
     this.isLoading = ko.observable(false);
     this.isSaving = ko.observable(false);
     
     this.load = function load() {
         
-        this.isLoading(true);
+        var tdiff = this.latestLoad && new Date() - this.latestLoad || Number.POSITIVE_INFINITY;
+        if (tdiff <= this.cacheTTL) {
+            // Cache still valid, do nothing
+            return;
+        }
         
+        this.isLoading(true);
+
         app.model.getSchedulingPreferences()
         .then(function (prefs) {
             this.prefs.model.updateWith(prefs);
             this.isLoading(false);
+            this.latestLoad = new Date();
         }.bind(this));
     }.bind(this);
 
@@ -51,6 +61,7 @@ function ViewModel(app) {
         .then(function (prefs) {
             this.prefs.model.updateWith(prefs);
             this.isSaving(false);
+            this.latestLoad = new Date();
         }.bind(this));
     }.bind(this);
 }
