@@ -27,20 +27,23 @@ exports.defineCrudApiForRest = function defineCrudApiForRest(settings) {
         
         return this.rest.get(modelUrl + '/' + itemID)
         .then(function(rawItem) {
-            
             return rawItem && new Model(rawItem);
         });
     };
 
     extendedObject['post' + modelName] = function postItem(anItem) {
         
-        return this.rest.post(modelUrl, anItem).then(function(anItem) {
-            return new Model(anItem);
+        return this.rest.post(modelUrl, anItem)
+        .then(function(serverItem) {
+            return new Model(serverItem);
         });
     };
 
     extendedObject['put' + modelName] = function putItem(anItem) {
-        return this.rest.put(modelUrl + '/' + unwrap(anItem[idPropertyName]), anItem);
+        return this.rest.put(modelUrl + '/' + unwrap(anItem[idPropertyName]), anItem)
+        .then(function(serverItem) {
+            return new Model(serverItem);
+        });
     };
     
     extendedObject['set' + modelName] = function setItem(anItem) {
