@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-02-25
+/*! LoconomicsApp 2015-03-05
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -54,7 +54,7 @@
 
 /* line 79 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
-/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
 
@@ -118,6 +118,16 @@ fieldset[disabled] .btn-secondary.active {
 /* line 25 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .form-control-static {
   padding: 7px 13px;
+}
+
+/* line 39 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+
+/* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+.ut-noRadioCheck input[type="radio"],
+.ut-noRadioCheck input[type="checkbox"] {
+  position: absolute;
+  left: -99999px;
+  clip: rect(0px, 0px, 0px, 0px);
 }
 
 /* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */

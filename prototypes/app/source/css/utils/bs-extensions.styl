@@ -25,3 +25,23 @@ $btn-secondary-border = darken($btn-secondary-bg, 5%)
 .form-control-static {
     padding: 7px 13px;
 }
+
+/**
+    To solve the usability and between-scripts interaction problems 
+    of Bootstrap toggle buttons for radio and checkboxes, is better
+    replace the use of data-toggle="buttons" on .btn-groups > input[type=radio|checkbox]
+    by this utility class .ut-noRadioCheck.
+    The Boostrap code for the toggle-buttons breaks when used with other
+    scripts like Knockout; using Knockout to keep the 'active' class applied
+    on the label (with .btn class) fix interaction and this class
+    removes the native UI for the radio and checkbox if unwanted.
+**/
+.ut-noRadioCheck {
+    input[type="radio"],
+    input[type="checkbox"] {
+        position: absolute;
+        left: -99999px;
+        // Bootstrap uses the deprecated 'clip' trick rather than a negative position.
+        clip: rect(0px, 0px, 0px, 0px);
+    }
+}

@@ -1071,20 +1071,29 @@
     <div class="container-fluid" data-activity="schedulingPreferences">
        <h2 class="SectionTitle">Schedule preferences</h2>
 
+      <script type="text/html" id="schedulingPrefs-radioButton">
+        <label class="btn btn-primary" data-bind="css: { 'active': value() === itemValue }">
+            <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+            <span data-bind="text: labelText"></span>
+        </label>
+      </script>
       <form data-bind="submit: save">
-        <div class="checkbox">
-          <label>Show my availability in increments of</label>
-          <label>
-            <input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 15, disable: isLocked"
-            />15 min</label>
-          <label>
-            <input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 30, disable: isLocked"
-            />30 min</label>
-          <label>
-            <input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 60, disable: isLocked"
-            />1 hour</label>
-          <p>e.g. 10:00, 10:15, 10:30, 10:45</p>
+        <p>Show my availability in increments of</p>
+        <div class="btn-group ut-noRadioCheck">
+          <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
+          prefs.incrementsSizeInMinutes, itemValue: 15, disabled: isLocked, labelText:
+          '15 min' } } -->
+          <!-- /ko -->
+          <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
+          prefs.incrementsSizeInMinutes, itemValue: 30, disabled: isLocked, labelText:
+          '30 min' } } -->
+          <!-- /ko -->
+          <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
+          prefs.incrementsSizeInMinutes, itemValue: 60, disabled: isLocked, labelText:
+          '1 hour' } } -->
+          <!-- /ko -->
         </div>
+        <p>e.g. 10:00, 10:15, 10:30, 10:45</p>
         <div class="form-group">
           <label>Allow bookings up to
             <select data-bind="value: prefs.advanceTime, disable: isLocked"
