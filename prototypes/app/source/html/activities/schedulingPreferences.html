@@ -6,9 +6,9 @@
     <form data-bind="submit: save">
         <div class="checkbox">
             <label>Show my availability in increments of</label>
-            <label><input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 15" /> 15 min</label>
-            <label><input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 30" /> 30 min</label>
-            <label><input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 60" /> 1 hour</label>
+            <label><input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 15, disable: isLocked" /> 15 min</label>
+            <label><input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 30, disable: isLocked" /> 30 min</label>
+            <label><input type="radio" name="incremensSizeInMinutes" data-bind="checked: prefs.incrementsSizeInMinutes, checkedValue: 60, disable: isLocked" /> 1 hour</label>
 
             <p>e.g. 10:00, 10:15, 10:30, 10:45</p>
         </div>
@@ -16,7 +16,7 @@
         <div class="form-group">
             <label>
                 Allow bookings up to
-                <select data-bind="value: prefs.advanceTime" class="form-control">
+                <select data-bind="value: prefs.advanceTime, disable: isLocked" class="form-control">
                     <option value="0">0 hours</option>
                     <option value="1">1 hour</option>
                     <option value="1.5">1.5 hours</option>
@@ -35,7 +35,7 @@
         <div class="form-group">
             <label>
                 Preparation time between bookings:
-                <select data-bind="value: prefs.betweenTime" class="form-control">
+                <select data-bind="value: prefs.betweenTime, disable: isLocked" class="form-control">
                     <option value="0">Nothing</option>
                     <option value="0.25">15 min</option>
                     <option value="0.5">30 min</option>
@@ -48,7 +48,7 @@
         </div>
         
         <div>
-            <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: isLoading() ? 'loading...' : isSaving() ? 'saving...' : 'Save'"></button>
+            <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
         </div>
     </form>
 </div>

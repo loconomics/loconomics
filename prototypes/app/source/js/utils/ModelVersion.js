@@ -11,9 +11,12 @@
 **/
 'use strict';
 
-var ko = require('knockout');
+var ko = require('knockout'),
+    EventEmitter = require('events').EventEmitter;
 
 function ModelVersion(original) {
+    
+    EventEmitter.call(this);
     
     this.original = original;
     
@@ -21,13 +24,18 @@ function ModelVersion(original) {
     // (updateWith takes care to set the same dataTimestamp)
     this.version = original.model.clone();
     
-    // Computed that test equality
+    // Computed that test equality, allowing being notified of changes
+    // A rateLimit is used on each to avoid several syncrhonous notifications.
+    
+    /**
+        Returns true when both versions has the same timestamp
+    **/
     this.areDifferent = ko.pureComputed(function areDifferent() {
         return (
             this.original.model.dataTimestamp() !== 
             this.version.model.dataTimestamp()
         );
-    }, this);
+    }, this).extend({ rateLimit: 0 });
     /**
         Returns true when the version has newer changes than
         the original
@@ -37,7 +45,7 @@ function ModelVersion(original) {
             this.original.model.dataTimestamp() < 
             this.version.model.dataTimestamp()
         );
-    }, this);
+    }, this).extend({ rateLimit: 0 });
     /**
         Returns true when the version has older changes than
         the original
@@ -47,10 +55,12 @@ function ModelVersion(original) {
             this.original.model.dataTimestamp() > 
             this.version.model.dataTimestamp()
         );
-    }, this);
+    }, this).extend({ rateLimit: 0 });
 }
 
 module.exports = ModelVersion;
+
+ModelVersion._inherits(EventEmitter);
 
 /**
     Sends the version changes to the original
@@ -63,15 +73,19 @@ ModelVersion.prototype.pull = function pull(options) {
 
     options = options || {};
     
+    // By default, nothing to do, or avoid overwrite changes.
+    var result = false;
+    
     if (options.evenIfNewer || !this.isNewer()) {
         // Update version, getting original
         // (updateWith takes care to set the same dataTimestamp)
         this.version.model.updateWith(this.original);
         // Done
-        return true;
+        result = true;
     }
-    // Nothing to do, or avoid overwrite changes.
-    return false;
+    
+    this.emit('pull', result);
+    return result;
 };
 
 /**
@@ -86,15 +100,19 @@ ModelVersion.prototype.push = function push(options) {
     
     options = options || {};
     
+    // By default, nothing to do, or avoid overwrite changes.
+    var result = false;
+    
     if (options.evenIfObsolete || !this.isObsolete()) {
         // Update original
         // (updateWith takes care to set the same dataTimestamp)
         this.original.model.updateWith(this.version);
         // Done
-        return true;
+        result = true;
     }
-    // Nothing to do, or avoid overwrite changes.
-    return false;
+    
+    this.emit('push', result);
+    return result;
 };
 
 /**

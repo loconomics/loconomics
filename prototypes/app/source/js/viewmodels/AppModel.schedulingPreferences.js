@@ -11,10 +11,10 @@ exports.create = function create(appModel) {
         data: new SchedulingPreferences(),
         ttl: { seconds: 5 },
         fetch: function fetch() {
-            return appModel.getSchedulingPreferences();
+            return appModel.rest.get('scheduling-preferences');
         },
         push: function push() {
-            return appModel.setSchedulingPreferences(this.data.model.toPlainObject());
+            return appModel.rest.put('scheduling-preferences', this.data.model.toPlainObject());
         }
     });
 };

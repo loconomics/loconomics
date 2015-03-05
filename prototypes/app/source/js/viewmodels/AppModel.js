@@ -225,4 +225,3 @@ module.exports = AppModel;
 // Loading extensions:
 require('./AppModel-events').plugIn(AppModel);
 require('./AppModel-userJobProfile').plugIn(AppModel);
-require('./AppModel-schedulingPreferences').plugIn(AppModel);

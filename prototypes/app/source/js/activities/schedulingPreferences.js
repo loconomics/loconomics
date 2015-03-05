@@ -15,21 +15,6 @@ var A = Activity.extends(function SchedulingPreferencesActivity() {
     this.accessLevel = this.app.UserType.Provider;
 
     this.navBar = Activity.createSubsectionNavBar('Scheduling');
-//    
-//    this.viewModel.prefsVersion.isObsolete.subscribe(function(itIs) {
-//        if (itIs) {
-//            // Notify newer that comes from the server
-//            if(window.confirm('There was remote changes in the Scheduling Preferences' +
-//                    '. Do you want to load them? (press No to discard them)')) {
-//                
-//                // Replace in edit data with the server updated data
-//                this.viewModel.prefsVersion.pull();
-//            }
-//            else {
-//                // Just nothing
-//            }
-//        }
-//    });
 });
 
 exports.init = A.init;
@@ -37,36 +22,52 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-    this.viewModel.load();
+    // Request a load, even if is a background load after the first time:
+    this.app.model.schedulingPreferences.load();
+    // Discard any previous unsaved edit
+    this.viewModel.discard();
 };
 
 function ViewModel(app) {
 
-    var schedulingPreferences = this.schedulingPreferences = app.model.schedulingPreferences;
+    var schedulingPreferences = app.model.schedulingPreferences;
 
-    this.prefsVersion = schedulingPreferences.newVersion();
-    this.prefs = this.prefsVersion.version;
-
-    this.isLoading = schedulingPreferences.isLoading;
-    this.isSaving = schedulingPreferences.isSaving;
-
-    this.load = function() {
-        schedulingPreferences.load().then(function() {
-            this.prefsVersion.pull({ evenIfNewer: true });
-        }.bind(this));
-
-    }.bind(this);
+    var prefsVersion = schedulingPreferences.newVersion();
+    prefsVersion.isObsolete.subscribe(function(itIs) {
+        if (itIs) {
+            // new version from server while editing
+            // FUTURE: warn about a new remote version asking
+            // confirmation to load them or discard and overwrite them;
+            // the same is need on save(), and on server response
+            // with a 509:Conflict status (its body must contain the
+            // server version).
+            // Right now, just overwrite current changes with
+            // remote ones:
+            prefsVersion.pull({ evenIfNewer: true });
+        }
+    });
     
-    this.save = function() {
-        if (this.prefsVersion.push()) {
-            schedulingPreferences.save()
-            .then(function() {
-                // Close activity?
-            });
-        }
-        else if (this.prefsVersion.isObsolete()) {
-            window.alert('Data conflict, is obsolete');
-        }
+    // Actual data for the form:
+    this.prefs = prefsVersion.version;
 
+    this.isLocked = schedulingPreferences.isLocked;
+
+    this.submitText = ko.pureComputed(function() {
+        return (
+            this.isLoading() ? 
+                'loading...' : 
+                this.isSaving() ? 
+                    'saving...' : 
+                    'Save'
+        );
+    }, schedulingPreferences);
+    
+    this.discard = function discard() {
+        prefsVersion.pull({ evenIfNewer: true });
+    }.bind(this);
+
+    this.save = function save() {
+        // Force to save, even if there was remote updates
+        prefsVersion.push({ evenIfObsolete: true });
     }.bind(this);
 }
