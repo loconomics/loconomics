@@ -10,50 +10,64 @@
         </label>
     </script>
     
-    <form data-bind="submit: save">
-        <p>Show my availability in increments of</p>
-        <div class="btn-group ut-noRadioCheck">
-            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 15, disabled: isLocked, labelText: '15 min' } } --><!-- /ko -->
-            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 30, disabled: isLocked, labelText:  '30 min' } } --><!-- /ko -->
-            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 60, disabled: isLocked, labelText: '1 hour' } } --><!-- /ko -->
-        </div>
-        <p>e.g. 10:00, 10:15, 10:30, 10:45</p>
-        
-        <div class="form-group">
-            <label>
-                Allow bookings up to
-                <select data-bind="value: prefs.advanceTime, disable: isLocked" class="form-control">
-                    <option value="0">0 hours</option>
-                    <option value="1">1 hour</option>
-                    <option value="1.5">1.5 hours</option>
-                    <option value="2">2 hours</option>
-                    <option value="3">3 hours</option>
-                    <option value="4">4 hours</option>
-                    <option value="12">12 hours</option>
-                    <option value="24">1 day</option>
-                    <option value="48">2 days</option>
-                    <option value="72">3 days</option>
-                </select>
-                in advance
-            </label>
+    <form data-bind="submit: save" class="container">
+        <div class="center-block row isolated" style="text-align: center">
+            <p>Show my availability in increments of:</p>
+            <div class="btn-group ut-noRadioCheck">
+                <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 15, disabled: isLocked, labelText: '15 min' } } --><!-- /ko -->
+                <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 30, disabled: isLocked, labelText:  '30 min' } } --><!-- /ko -->
+                <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 60, disabled: isLocked, labelText: '1 hour' } } --><!-- /ko -->
+            </div>
+            <p class="isolated" data-bind="text: incrementsExample">e.g. 10:00, 10:15, 10:30, 10:45</p>
         </div>
         
-        <div class="form-group">
-            <label>
-                Preparation time between bookings:
-                <select data-bind="value: prefs.betweenTime, disable: isLocked" class="form-control">
-                    <option value="0">Nothing</option>
-                    <option value="0.25">15 min</option>
-                    <option value="0.5">30 min</option>
-                    <option value="0.75">45 min</option>
-                    <option value="1">1 hour</option>
-                    <option value="2">2 hours</option>
-                    <option value="3">3 hours</option>
-                </select>
-            </label>
+        <div class="row">
+            <div class="form-group col-sm-6 row">
+                <label for="schedulingPrefs-advanceTime"
+                       class="col-xs-7">
+                    Allow bookings up to <br />
+                    in advance
+                </label>
+                <div class="col-xs-5">
+                    <select id="schedulingPrefs-advanceTime"
+                            data-bind="value: prefs.advanceTime, disable: isLocked"
+                            class="form-control">
+                        <option value="0">0 hours</option>
+                        <option value="1">1 hour</option>
+                        <option value="1.5">1.5 hours</option>
+                        <option value="2">2 hours</option>
+                        <option value="3">3 hours</option>
+                        <option value="4">4 hours</option>
+                        <option value="12">12 hours</option>
+                        <option value="24">1 day</option>
+                        <option value="48">2 days</option>
+                        <option value="72">3 days</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-5 col-sm-offset-1 row">
+                <label for="schedulingPrefs-betweenTime"
+                       class="col-xs-7">
+                    Preparation time between bookings:
+                </label>
+                <div class="col-xs-5">
+                    <select id="schedulingPrefs-betweenTime"
+                            data-bind="value: prefs.betweenTime, disable: isLocked"
+                            class="form-control">
+                        <option value="0">Nothing</option>
+                        <option value="0.25">15 min</option>
+                        <option value="0.5">30 min</option>
+                        <option value="0.75">45 min</option>
+                        <option value="1">1 hour</option>
+                        <option value="2">2 hours</option>
+                        <option value="3">3 hours</option>
+                    </select>
+                </div>
+            </div>
         </div>
         
-        <div>
+        <div class="row">
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
         </div>
     </form>

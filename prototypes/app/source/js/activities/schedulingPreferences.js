@@ -70,4 +70,23 @@ function ViewModel(app) {
         // Force to save, even if there was remote updates
         prefsVersion.push({ evenIfObsolete: true });
     }.bind(this);
+    
+    this.incrementsExample = ko.pureComputed(function() {
+        
+        var str = 'e.g. ',
+            incSize = this.incrementsSizeInMinutes(),
+            m = moment({ hour: 10, minute: 0 }),
+            hours = [m.format('HH:mm')];
+        
+        for (var i = 1; i < 4; i++) {
+            hours.push(
+                m.add(incSize, 'minutes')
+                .format('HH:mm')
+            );
+        }
+        str += hours.join(', ');
+        
+        return str;
+        
+    }, this.prefs);
 }

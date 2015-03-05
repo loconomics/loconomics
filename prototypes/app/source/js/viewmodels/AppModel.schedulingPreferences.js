@@ -9,7 +9,7 @@ var RemoteModel = require('../utils/RemoteModel');
 exports.create = function create(appModel) {
     return new RemoteModel({
         data: new SchedulingPreferences(),
-        ttl: { seconds: 5 },
+        ttl: { minutes: 1 },
         fetch: function fetch() {
             return appModel.rest.get('scheduling-preferences');
         },
