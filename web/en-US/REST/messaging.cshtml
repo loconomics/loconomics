@@ -1,8 +1,7 @@
 ﻿@*
     Messaging API: threads and messages.
 
-    Options:
-
+    ### API
     /messaging
         - GET: list the most recent user conversations (messagingThreads).
             - limit:int Default:20. Sets the maximum amount of threads to include in the results.
@@ -22,7 +21,7 @@
             - subject:string Required
             - bodyText:string Required                
 
-        - Updates and removal not supported.
+        - Updates and delete not supported.
 
     /messaging/:threadID
         - GET: single conversation with list of messages.
@@ -37,7 +36,7 @@
         - GET: show message for that ID on that conversation with full details
         - Update and delete not supported.
 
-    Structures
+    ### Structures
         - thread {
             threadID:int Auto
             customerUserID:int
@@ -54,7 +53,7 @@
             threadID:int Set-by-request
             sentByUserID:int Auto
             typeID:int internal-edit
-            auxT:int internal-edit
+            auxT:string internal-edit
             auxID:int internal-edit
             bodyText:string
             createdDate:datetime Auto
@@ -83,11 +82,17 @@
             int? untilID = Request["untilID"].IsInt() ? Request["untilID"].AsInt() : (int?)null;
             int? sinceID = Request["sinceID"].IsInt() ? Request["sinceID"].AsInt() : (int?)null;
             
-            var thread = LcMessaging.GetRestThreads(userId, 1, threadID + 1, threadID - 1, limit);
-            if (thread == null) {
+            // To be able to apply the filtering options to messages, we need to use the 
+            // API GetRestMessages directly, but previously use the GetRestThreads to 
+            // get the single thread record.
+            var thread = LcMessaging.GetRestThreads(userId, 1, threadID + 1, threadID - 1, 1);
+            if (thread.Count == 0) {
                 throw new HttpException(404, "Not found");
             }
-            return thread;
+
+            thread[0].messages = LcMessaging.GetRestThreadMessages(threadID, limit, untilID, sinceID);
+
+            return thread[0];
         }
         private dynamic GetMessage(int threadID, int messageID) {
             
@@ -100,10 +105,10 @@
             if (thread.customerUserID == userId ||
                 thread.freelancerUserID == userId) {
                 var message = LcMessaging.GetRestThreadMessages(threadID, 1, messageID + 1, messageID - 1);
-                if (message == null) {
+                if (message.Count == 0) {
                     throw new HttpException(404, "Not found");
                 }
-                return message;
+                return message[0];
             }
             else {
                 // Rather than an authorization exception, we throw a not found to don't
@@ -180,10 +185,10 @@
                 if (!Request["jobTitleID"].IsInt()) {
                     ModelState.AddError("jobTitleID", LcRessources.RequiredField("Job Title"));
                 }
-                if (!Request["subject"].IsEmpty()) {
+                if (Request["subject"].IsEmpty()) {
                     ModelState.AddError("subject", LcRessources.RequiredField("Subject"));
                 }
-                if (!Request["bodyText"].IsEmpty()) {
+                if (Request["bodyText"].IsEmpty()) {
                     ModelState.AddError("bodyText", LcRessources.RequiredField("Message"));
                 }
 
@@ -209,7 +214,7 @@
                     string bodyText = Request.Form["bodyText"];
                     
                     // Validation
-                    if (!Request["bodyText"].IsEmpty()) {
+                    if (Request["bodyText"].IsEmpty()) {
                         ModelState.AddError("bodyText", LcRessources.RequiredField("Message"));
                     }
                     

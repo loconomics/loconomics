@@ -273,8 +273,8 @@ public class LcMessaging
         public int threadID;
         public int sentByUserID;
         public int typeID;
-        public int auxT;
-        public int auxID;
+        public string auxT;
+        public int? auxID;
         public string bodyText;
         public DateTime createdDate;
         public DateTime updatedDate;
@@ -338,7 +338,7 @@ public class LcMessaging
                 M.CreatedDate As createdDate,
                 M.UpdatedDate As updatedDate
         FROM    Messages As M
-        WHERE   M.ThreadID = @10
+        WHERE   M.ThreadID = @0
                     AND
                 (@2 is null OR M.MessageID < @2)
                     AND
@@ -377,6 +377,10 @@ public class LcMessaging
 
         using (var db = Database.Open("sqlloco"))
         {
+            // db.Query has a bug not processiong parameters in 'select top @1'
+            // so manual replacement
+            sql = sql.Replace("@1", limit.ToString());
+
             var data = db.Query(sql, userID, limit, untilID, sinceID)
              .Select(thread =>
              {
@@ -421,6 +425,10 @@ public class LcMessaging
 
         using (var db = Database.Open("sqlloco"))
         {
+            // db.Query has a bug not processiong parameters in 'select top @1'
+            // so manual replacement
+            sql = sql.Replace("@1", limit.ToString());
+
             var data = db.Query(sql, threadID, limit, untilID, sinceID)
              .Select(RestMessage.FromDB)
              .ToList();
