@@ -10,10 +10,34 @@
     var messageID = Request["MessageID"].AsInt();
     
     // Data for the EmailLayout:
-    if (kind == 2) {
-        PageData["messageTitle"] = "Provider answer to your inquiry";
-    } else {
-        PageData["messageTitle"] = "Customer Inquiry";
+    switch (kind) {
+        case 6:
+            // Further message
+            PageData["messageTitle"] = "Freelancer inquiry";
+            break;
+        case 5:
+            // Any answer
+            PageData["messageTitle"] = "Client answer to your inquiry";
+            break;
+        case 4:
+            // First message
+            PageData["messageTitle"] = "Freelancer inquiry";
+            break;
+        case 3:
+            // Further message
+            PageData["messageTitle"] = "Client Inquiry";
+            break;
+        case 2:
+            // Any answer
+            PageData["messageTitle"] = "Freelancer answer to your inquiry";
+            break;
+        case 1:
+            // First message
+            PageData["messageTitle"] = "Client Inquiry";
+            break;
+        default:
+            PageData["messageTitle"] = "Inquiry";
+            break;
     }
     // Create URL:
     PageData["viewOnSiteUrl"] = LcUrl.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString() + "_Message-" + messageID.ToString();

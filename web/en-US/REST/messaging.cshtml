@@ -10,13 +10,27 @@
             - sinceID:int Default:null. Ask for the inmediate newer threads than the given threadID. The thread for that ID is not included in the results.
             - messagesLimit:int Default:1. Sets the maximum amount of messages to include per thread. By default it includes the latest message.
         
-        - POST: create conversation with first message(s), pass in a thread structure with the initial message(s) in the messages property.
+        - POST: create conversation with first message(s), pass first-time editable fields of a thread structure 
+            with the initial message in the bodyText property.
+            FUTURE: This is a simplification to avoid pass an array of *messages* with just *bodyText* and 
+                *createdDate* to detect the sort if several messages were included, but maybe on the future, allowing to
+                send several quick messages in a same request and post the same Thread structure as used locally even if
+                the read-only/auto fields are discarded.
+            - customerUserID:int Required
+            - freelancerUserID:int Required
+            - jobTitleID:int Required
+            - subject:string Required
+            - bodyText:string Required                
 
         - Updates and removal not supported.
 
     /messaging/:threadID
         - GET: single conversation with list of messages.
-        - POST: append a message to the conversation. Body is a single message structure.
+            - limit:int Default:20. Sets the maximum amount of messages to include in the results.
+            - untilID:int Default:null. Ask for the inmediate older messages than the given messageID. The message for that ID is not included in the results.
+            - sinceID:int Default:null. Ask for the inmediate newer messages than the given messageID. The message for that ID is not included in the results.
+        - POST: append a message to the conversation. Body is a single message structure. Essentially, a unique field is allowed:
+            - bodyText:string Required
         - Update and delete not supported.
 
     /messaging/:threadID/:messageID
@@ -29,7 +43,7 @@
             customerUserID:int
             freelancerUserID:int
             jobTitleID:int
-            statudID:int Auto
+            statusID:int Auto
             subject:string
             createdDate:datetime Auto
             updatedDate:datetime Auto
@@ -37,7 +51,7 @@
         }
         - message {
             messageID:int Auto
-            threadID:int
+            threadID:int Set-by-request
             sentByUserID:int Auto
             typeID:int internal-edit
             auxT:int internal-edit
@@ -69,7 +83,11 @@
             int? untilID = Request["untilID"].IsInt() ? Request["untilID"].AsInt() : (int?)null;
             int? sinceID = Request["sinceID"].IsInt() ? Request["sinceID"].AsInt() : (int?)null;
             
-            return LcMessaging.GetRestThreads(userId, 1, threadID + 1, threadID - 1, limit);
+            var thread = LcMessaging.GetRestThreads(userId, 1, threadID + 1, threadID - 1, limit);
+            if (thread == null) {
+                throw new HttpException(404, "Not found");
+            }
+            return thread;
         }
         private dynamic GetMessage(int threadID, int messageID) {
             
@@ -81,7 +99,11 @@
             var thread = GetThread(threadID);
             if (thread.customerUserID == userId ||
                 thread.freelancerUserID == userId) {
-                return LcMessaging.GetRestThreadMessages(threadID, 1, messageID + 1, messageID - 1);
+                var message = LcMessaging.GetRestThreadMessages(threadID, 1, messageID + 1, messageID - 1);
+                if (message == null) {
+                    throw new HttpException(404, "Not found");
+                }
+                return message;
             }
             else {
                 // Rather than an authorization exception, we throw a not found to don't
@@ -121,18 +143,87 @@
 
         public override dynamic Post()
         {
-            // TODO Implement
             if (UrlData.Count == 0) {
-                // TODO Add conversation
-                var newThreadID = 0;
+                
+                // Parameters
+                int userId = WebSecurity.CurrentUserId;
+                int customerUserID = Request.Form["customerUserID"].AsInt(0);
+                int freelancerUserID = Request.Form["freelancerUserID"].AsInt(0);
+                int jobTitleID = Request.Form["jobTitleID"].AsInt(0);
+                string subject = Request.Form["subject"];
+                string bodyText = Request.Form["bodyText"];
+                
+                // Auto values and validation for userID's.
+                // Both userID fields are exclusive, if one is set, the other
+                // one gets as value the current userId. If both are set
+                // freelanceUserID takes precedence and customer is set to userId,
+                // except if is the own userId
+                if (freelancerUserID > 0 &&
+                    freelancerUserID != userId ||
+                    customerUserID == 0) {
+                    customerUserID = userId;
+                } else {
+                    freelancerUserID = userId;
+                }
+                // Validation after auto-set values:
+                if (freelancerUserID == 0 ||
+                    customerUserID == 0) {
+                    ModelState.AddFormError("You must specify a recipient.");
+                }
+                // Validate special case
+                if (freelancerUserID == userId &&
+                    customerUserID == userId) {
+                    ModelState.AddFormError("Please, don't send messages to yourself :-)");
+                }
+                
+                // Validation
+                if (!Request["jobTitleID"].IsInt()) {
+                    ModelState.AddError("jobTitleID", LcRessources.RequiredField("Job Title"));
+                }
+                if (!Request["subject"].IsEmpty()) {
+                    ModelState.AddError("subject", LcRessources.RequiredField("Subject"));
+                }
+                if (!Request["bodyText"].IsEmpty()) {
+                    ModelState.AddError("bodyText", LcRessources.RequiredField("Message"));
+                }
+
+                if (!ModelState.IsValid) {
+                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                }
+  
+                // Create thread with initial message
+                var newThreadID = LcMessaging.PostRestThread(customerUserID, freelancerUserID, jobTitleID, subject, bodyText, userId);
+                if (newThreadID == 0) {
+                    throw new HttpException(400, "The recipient does not exists.");
+                }
+                
+                // Return created thread
                 return GetThread(newThreadID);
             }
             else if (UrlData.Count == 1) {
                 if (UrlData[0].IsInt()) {
-                    var threadID = UrlData[0].AsInt();
-                    // TODO Add message to conversation
                     
-                    return GetThread(threadID);
+                    // Parameters
+                    int userId = WebSecurity.CurrentUserId;
+                    var threadID = UrlData[0].AsInt();
+                    string bodyText = Request.Form["bodyText"];
+                    
+                    // Validation
+                    if (!Request["bodyText"].IsEmpty()) {
+                        ModelState.AddError("bodyText", LcRessources.RequiredField("Message"));
+                    }
+                    
+                    if (!ModelState.IsValid) {
+                        throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                    }
+                    
+                    // Add message to conversation
+                    var newMessageID = LcMessaging.PostRestMessage(threadID, bodyText, userId);
+                    if (newMessageID == 0) {
+                        throw new HttpException(404, "Not found");
+                    }
+                    
+                    return GetMessage(threadID, newMessageID);
                 }
             }
             

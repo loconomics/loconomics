@@ -388,6 +388,37 @@
                 incrementsSizeInMinutes: 30
             }
         },
+        'Messaging: Threads': {
+            url: '/en-US/rest/messaging',
+            get: {
+                limit: 20,
+                untilID: null,
+                sinceID: null,
+                messagesLimit: 1
+            },
+            post: {
+                customerUserID: 141,
+                freelancerUserID: 141,
+                jobTitleID: 106,
+                subject: 'Testing conversation',
+                bodyText: 'Testing first message'
+            }
+        },
+        'Messaging: Single Thread': {
+            url: '/en-US/rest/messaging/123',
+            get: {
+                limit: 20,
+                untilID: null,
+                sinceID: null
+            },
+            post: {
+                bodyText: 'Answering to testing message (second)'
+            }
+        },
+        'Messaging: Single Message': {
+            url: '/en-US/rest/messaging/123/45',
+            get: { }
+        }
     };
 
     function useApi(name, method) {

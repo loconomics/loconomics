@@ -10,7 +10,7 @@ using System.Web;
 /// </summary>
 public class ConstraintException : Exception
 {
-    public string Message { get; set; }
+    public new string Message { get; set; }
 	public ConstraintException()
 	{}
     public ConstraintException(string message)
