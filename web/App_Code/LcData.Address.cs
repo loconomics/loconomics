@@ -89,7 +89,7 @@ public static partial class LcData
         }
         /// <summary>
         /// Get the country code in format 'alpha2' (2 letters).
-        /// TODO: Need to be localizable, and cached table lookup instead of hardcoded.
+        /// TODO: Need to be on database with a table lookup, cached, instead of hardcoded.
         /// </summary>
         public string CountryCodeAlpha2
         {

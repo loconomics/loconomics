@@ -12,7 +12,7 @@
     dynamic locations = null;
 
     // Since user can delete addresses from being available on its list but still
-    // we need preserve that addresses information for cases in that is liked to 
+    // we need preserve that addresses information for cases in that is linked to 
     // a booking, that addresses get 'smooth deleted', changing its flags for kind
     // of location to false, then we only show addresses with almost one flag.
     var sqlcondOnlyActiveServiceAddress = " AND (TravelFromLocation = 1 OR ServicesPerformedAtLocation = 1)";

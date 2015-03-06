@@ -1,0 +1,175 @@
+﻿@*
+    Addresses API: addresses organized by Job Title, with personal ones under a 0 jobTitleID.
+
+    Current database scheme is two tables for addresses, generic address and service specific address details.
+    It's more complex than need to be (see issue #677), so in the API is treated as a unique, flat table,
+    but keeping the two primary keys scheme of the [service-address] table to avoid breakage for the
+    time the two tables scheme is keep on database and any old data that has duplicated addressID
+    on service-addresses for several jobTitleID (formerly positionID).
+    
+    Because of that, we use /service-addresses/:jobTitleID[/:addressID] as API entry, using value zero
+    for jobTitleID to access personal addresses (not related to a job title, like home or billing addresses).
+    // FUTURE: If database changes to a single table scheme and unique addressID key, the API can be
+    recreated as /addresses[/:addressID] with a GET query parameter for jobTitleID allowing filtering.
+
+    ### API
+    /service-addresses/:jobTitleID
+        - GET: list all the addresses attached to the Job Title, or personal addresses passing value zero.
+
+        - POST: create a new address for the Job Title.
+            - addressName:string REQUIRED For the special 'home' address is not editable but needs a value to be sent,
+                                    internally keeps being 'Home' discarding incoming value.
+            - addressLine1:string OPTIONAL-IF:isServiceArea=1
+            - addressLine2:string OPTIONAL
+            - postalCode:string REQUIRED Public Postal Code, internally translated to postalCodeID and computes City and StateProvinceID,
+                                it uses too the current CountryID (per API call).
+            - latitude:float OPTIONAL
+            - longitud:float OPTIONAL
+            - specialInstructions:string OPTIONAL
+            - isServiceLocation:bool NOTE:For an actual Job Title (jobTitleID>0), one of both fields isServiceLocation and isServiceArea must
+                                        to be set as 1:true. A job title address cannot exists without almost one flag.
+            - isServiceArea:bool NOTE: see isServiceLocation note.
+            - serviceRadius:decimal NOTE: Required to be greater than zero if isServiceArea is set to 1:true.
+
+    /service-addresses/:jobTitleID/:addressID
+        - GET: single address.
+
+        - PUT: update an address for the Job Title. Same fields as POSTing a new address with the addition of:
+            - updatedDate:datetime Optional for now, in future to check for update collisions.
+
+        - DELETE: deletes the address. If the address is internally linked, can be soft deleted.
+
+    ### Structures
+        service-address {
+            addressID:int Auto
+            jobTitleID:int
+            userID:int
+            addressName:string Auto-per-case Editable-per-case
+            addressLine1:string Editable
+            addressLine2:string Editable
+            postalCode:string Editable Note:internally is stored as postalCodeID, performing a lookup, but transparent to the API
+            city:string Auto Note:is assigned and stored with an automatic internal lookup per postalCodeID
+            stateProvinceCode:string Computed Note:internally is stored as stateProvinceID, performing a lookup with the postalCodeID,
+                                        but this field shows the country official CODE that represents the entity (its a short string, usually 2 uppercase letters)
+            stateProvinceName:string Computed Note:internally is stored as stateProvinceID, performing a lookup with the postalCodeID,
+                                        but this field shows the country official NAME that represents the entity in the local language
+            countryCode:string Computed Note:internally is stored as countryID, based on API-call/user-country and is used along with Postal Code for lookups.
+                                        It shows the international code for the country (ISO 3 letters, uppercase).
+            latitude:float Editable Note:if not specified, can be calculated server-side using Geolocation where possible.
+            longitude:float Editable Note:if not specified, can be calculated server-side using Geolocation where possible.
+            specialInstructions:string Editable
+            isServiceLocation:bool Editable Flag marking the address as a location where services are performed.
+            isServiceArea:bool Editable Flag marking the address as the reference point for an area where the freelancer travels to performa services.
+            serviceRadius:decimal Editable Only required if isServiceArea has value 1:true. Sets the approximate distance of the service area (in miles for USA).
+            createdDate:datetime Auto Note: since internally there are two records internally with this field duplicated, the public value is get from the
+                                        [address] table (the first record to be created). 
+            updatedDate:datetime Auto Note: since internally there are two records internally with this field duplicated, the public value is get from the
+                                        one with the newest/greater value.
+        }
+*@
+@functions{
+    public class RestAddresses : RestWebPage
+    {
+        private dynamic GetAddresses(int jobTitleID)
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            return null;
+        }
+        
+        private dynamic GetAddress(int jobTitleID, int addressID)
+        {   
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+
+            throw new HttpException(404, "Not found");
+        }
+
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                if (UrlData[0].IsInt()) {
+                    var jobTitleID = UrlData[0].AsInt();
+
+                    if (UrlData.Count == 2 &&
+                        UrlData[1].IsInt()) {
+
+                        var addressID = UrlData[1].AsInt();
+
+                        // Get Address
+                        var add = GetAddress(jobTitleID, addressID);
+                        if (add == null) {
+                            throw new HttpException(404, "Not found");
+                        }
+                        else {
+                            return add;
+                        }
+                    }
+                    else if (UrlData.Count == 1) {
+                        // Get Addresses
+                        return GetAddresses(jobTitleID);
+                    }
+                }
+            }
+
+            throw new HttpException(404, "Not found");
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 1 &&
+                UrlData[0].IsInt()) {
+                
+                // First Parameters
+                int userId = WebSecurity.CurrentUserId;
+                var jobTitleID = UrlData[0].AsInt();
+                var isServiceArea = Request.Form["isServiceArea"].AsBool(false);
+                
+                // Validation
+                if (!isServiceArea) {
+                    Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
+                }
+                Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
+                Validation.RequireField("postalCode", LcRessources.RequiredField("Zip Code"));
+                Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
+                Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
+                Validation.Add("serviceRadius", Validator.Decimal("Service Radius must be a number"));
+                Validation.Add("addressName", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
+                Validation.Add("addressLine1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
+                Validation.Add("addressLine2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
+                Validation.Add("special-instructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
+
+                if (!Validation.IsValid() || !ModelState.IsValid) {
+                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                }
+                
+                // Rest of Parameters
+                // TODO on RestAddress Object
+  
+                // TODO Create address
+                var newAddressID = 0;
+                if (newAddressID == 0) {
+                    throw new HttpException(400, "TODO Some bad request error.");
+                }
+
+                // Return created address
+                return GetAddress(jobTitleID, newAddressID);
+            }
+            
+            throw new HttpException(404, "Not found");
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count == 2) {
+            }
+
+            throw new HttpException(404, "Not found");
+        }
+    }
+}
+@{   
+    new RestAddresses().JsonResponse(this);
+}
