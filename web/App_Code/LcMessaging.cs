@@ -238,6 +238,202 @@ public class LcMessaging
     }
     #endregion
 
+    #region REST
+    public class RestThread
+    {
+        public int threadID;
+        public int customerUserID;
+        public int freelancerUserID;
+        public int jobTitleID;
+        public int statusID;
+        public string subject;
+        public DateTime createdDate;
+        public DateTime updatedDate;
+        public List<RestMessage> messages;
+
+        public static RestThread FromDB(dynamic record, IEnumerable<dynamic> messages = null)
+        {
+            return new RestThread {
+                threadID = record.threadID,
+                customerUserID = record.customerUserID,
+                freelancerUserID = record.freelancerUserID,
+                jobTitleID = record.jobTitleID,
+                statusID = record.statusID,
+                subject = record.subject,
+                createdDate = record.createdDate,
+                updatedDate = record.updatedDate,
+                messages = messages == null ? null : messages.Select(RestMessage.FromDB).ToList<RestMessage>()
+            };
+        }
+    }
+    public class RestMessage
+    {
+        public int messageID;
+        public int threadID;
+        public int sentByUserID;
+        public int typeID;
+        public int auxT;
+        public int auxID;
+        public string bodyText;
+        public DateTime createdDate;
+        public DateTime updatedDate;
+
+        public static RestMessage FromDB(dynamic record)
+        {
+            return new RestMessage {
+                messageID = record.messageID,
+                threadID = record.threadID,
+                sentByUserID = record.sentByUserID,
+                typeID = record.typeID,
+                auxT = record.auxT,
+                auxID = record.auxID,
+                bodyText = record.bodyText,
+                createdDate = record.createdDate,
+                updatedDate = record.updatedDate
+            };
+        }
+    }
+
+    private const string sqlSelectRestThreads = @"
+        SELECT TOP @1
+            T.ThreadID As threadID,
+            T.CustomerUserID As customerUserID,
+            T.ProviderUserID As freelancerUserID,
+            T.PositionID As jobTitleID,
+            T.MessageThreadStatusID As statusID,
+            T.Subject As subject,                
+            T.CreatedDate As createdDate,
+            T.UpdatedDate As updatedDate
+        FROM MessagingThreads As T
+        WHERE
+            (T.CustomerUserID = @0 OR T.ProviderUserID = @0)
+                AND
+            (@2 is null OR T.ThreadID < @2)
+                AND
+            (@3 is null OR T.ThreadID > @3)
+    ";
+    /// <summary>
+    /// UpdatedDate gets touch on every new message and thread edition
+    /// is not possible except when adding a message, so
+    /// it works effectively as 'date of last message'.
+    /// </summary>
+    private const string sqlOrderDescRestThreads = @"
+        ORDER BY T.UpdatedDate DESC
+    ";
+    private const string sqlOrderAscRestThreads = @"
+        ORDER BY T.UpdatedDate ASC
+    ";
+
+    private const string sqlSelectRestMessages = @"
+        SELECT  TOP @1
+                M.MessageID As messageID,
+                M.ThreadID As threadID,
+                M.SentByUserID As sentByUserID,
+                M.AuxT As auxT,
+                M.AuxID As auxID,
+                M.MessageTypeID As typeID,
+                M.BodyText As bodyText,
+                M.CreatedDate As createdDate,
+                M.UpdatedDate As updatedDate
+        FROM    Messages As M
+        WHERE   M.ThreadID = @10
+                    AND
+                (@2 is null OR M.MessageID < @2)
+                    AND
+                (@3 is null OR M.MessageID > @3)
+    ";
+    private const string sqlOrderDescRestMessages = @"
+        -- Latest first, by creation/reception
+        ORDER BY M.CreatedDate DESC
+    ";
+    private const string sqlOrderAscRestMessages = @"
+        -- Latest first, by creation/reception
+        ORDER BY M.CreatedDate ASC
+    ";
+
+    public static List<RestThread> GetRestThreads(int userID, int limit = 20, int? untilID = null, int? sinceID = null, int messagesLimit = 1)
+    {
+        // Maximum limit: 100
+        if (limit > 100)
+            limit = 100;
+        else if (limit < 1)
+            limit = 1;
+
+        var sql = sqlSelectRestThreads + sqlOrderDescRestThreads;
+
+        // Generally, we get the more recent threads (order desc), except
+        // if the parameter sinceID was set without an untilID: we
+        // want the closest threads to that, in other words, 
+        // the older threads that are more recent that sinceID.
+        // A final sorting is done to return rows in descending as ever.
+        var usingSinceOnly = sinceID.HasValue && !untilID.HasValue;
+        if (usingSinceOnly)
+        {
+            sql = sqlSelectRestThreads + sqlOrderAscRestThreads;
+        }
+
+        using (var db = Database.Open("sqlloco"))
+        {
+            var data = db.Query(sql, userID, limit, untilID, sinceID)
+             .Select(thread =>
+             {
+                 var t = (RestThread)RestThread.FromDB(thread);
+                 if (messagesLimit > 0)
+                 {
+                     t.messages = GetRestThreadMessages(thread.threadID, messagesLimit);
+                 }
+                 return t;
+             }).ToList();
+
+            if (usingSinceOnly)
+            {
+                // Since rows were get in ascending, records need to be inverted
+                // so we ever return data in descending order (latest first).
+                data.Reverse();
+            }
+
+            return data;
+        }
+    }
+    public static List<RestMessage> GetRestThreadMessages(int threadID, int limit = 20, int? untilID = null, int? sinceID = null)
+    {
+        // Maximum limit: 100
+        if (limit > 100)
+            limit = 100;
+        else if (limit < 1)
+            limit = 1;
+
+        var sql = sqlSelectRestMessages + sqlOrderDescRestMessages;
+
+        // Generally, we get the more recent threads (order desc), except
+        // if the parameter sinceID was set without an untilID: we
+        // want the closest threads to that, in other words, 
+        // the older threads that are more recent that sinceID.
+        // A final sorting is done to return rows in descending as ever.
+        var usingSinceOnly = sinceID.HasValue && !untilID.HasValue;
+        if (usingSinceOnly)
+        {
+            sql = sqlSelectRestMessages + sqlOrderAscRestMessages;
+        }
+
+        using (var db = Database.Open("sqlloco"))
+        {
+            var data = db.Query(sql, threadID, limit, untilID, sinceID)
+             .Select(RestMessage.FromDB)
+             .ToList();
+
+            if (usingSinceOnly)
+            {
+                // Since rows were get in ascending, records need to be inverted
+                // so we ever return data in descending order (latest first).
+                data.Reverse();
+            }
+
+            return data;
+        }
+    }
+    #endregion
+
     #region Message Summary (building small reusable summaries, as of messages listings)
     public class MessageSummary
     {

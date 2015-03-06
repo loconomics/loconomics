@@ -1,0 +1,145 @@
+﻿@*
+    Messaging API: threads and messages.
+
+    Options:
+
+    /messaging
+        - GET: list the most recent user conversations (messagingThreads).
+            - limit:int Default:20. Sets the maximum amount of threads to include in the results.
+            - untilID:int Default:null. Ask for the inmediate older threads than the given threadID. The thread for that ID is not included in the results.
+            - sinceID:int Default:null. Ask for the inmediate newer threads than the given threadID. The thread for that ID is not included in the results.
+            - messagesLimit:int Default:1. Sets the maximum amount of messages to include per thread. By default it includes the latest message.
+        
+        - POST: create conversation with first message(s), pass in a thread structure with the initial message(s) in the messages property.
+
+        - Updates and removal not supported.
+
+    /messaging/:threadID
+        - GET: single conversation with list of messages.
+        - POST: append a message to the conversation. Body is a single message structure.
+        - Update and delete not supported.
+
+    /messaging/:threadID/:messageID
+        - GET: show message for that ID on that conversation with full details
+        - Update and delete not supported.
+
+    Structures
+        - thread {
+            threadID:int Auto
+            customerUserID:int
+            freelancerUserID:int
+            jobTitleID:int
+            statudID:int Auto
+            subject:string
+            createdDate:datetime Auto
+            updatedDate:datetime Auto
+            messages:array<message>
+        }
+        - message {
+            messageID:int Auto
+            threadID:int
+            sentByUserID:int Auto
+            typeID:int internal-edit
+            auxT:int internal-edit
+            auxID:int internal-edit
+            bodyText:string
+            createdDate:datetime Auto
+            updatedDate:datetime Auto
+        }
+*@
+@functions{
+    public class RestMessaging : RestWebPage
+    {
+        private dynamic GetThreads()
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            var limit = Request["limit"].AsInt(20);
+            var messagesLimit = Request["messagesLimit"].AsInt(1);
+            int? untilID = Request["untilID"].IsInt() ? Request["untilID"].AsInt() : (int?)null;
+            int? sinceID = Request["sinceID"].IsInt() ? Request["sinceID"].AsInt() : (int?)null;
+
+            return LcMessaging.GetRestThreads(WebSecurity.CurrentUserId, limit, untilID, sinceID, messagesLimit);
+        }
+        private dynamic GetThread(int threadID) {
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            var limit = Request["limit"].AsInt(20);
+            int? untilID = Request["untilID"].IsInt() ? Request["untilID"].AsInt() : (int?)null;
+            int? sinceID = Request["sinceID"].IsInt() ? Request["sinceID"].AsInt() : (int?)null;
+            
+            return LcMessaging.GetRestThreads(userId, 1, threadID + 1, threadID - 1, limit);
+        }
+        private dynamic GetMessage(int threadID, int messageID) {
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            // We need to double check that the user is involved in the thread to
+            // avoid security/privacy leaks.
+            var thread = GetThread(threadID);
+            if (thread.customerUserID == userId ||
+                thread.freelancerUserID == userId) {
+                return LcMessaging.GetRestThreadMessages(threadID, 1, messageID + 1, messageID - 1);
+            }
+            else {
+                // Rather than an authorization exception, we throw a not found to don't
+                // let know it exists.
+                throw new HttpException(404, "Not found");
+            }
+        }
+
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                if (UrlData[0].IsInt()) {
+                    var threadID = UrlData[0].AsInt();
+                    
+                    if (UrlData[1].IsInt()) {
+                        var messageID = UrlData[1].AsInt();
+
+                        // Get Message
+                        var msg = GetMessage(threadID, messageID);
+                        if (msg == null) {
+                            throw new HttpException(404, "Not found");
+                        }
+                        else {
+                            return msg;
+                        }
+                    }
+                    else {
+                        // Get Thread
+                        return GetThread(threadID);
+                    }
+                }
+                throw new HttpException(404, "Not found");
+            }
+
+ 	        return GetThreads();
+        }
+
+        public override dynamic Post()
+        {
+            // TODO Implement
+            if (UrlData.Count == 0) {
+                // TODO Add conversation
+                var newThreadID = 0;
+                return GetThread(newThreadID);
+            }
+            else if (UrlData.Count == 1) {
+                if (UrlData[0].IsInt()) {
+                    var threadID = UrlData[0].AsInt();
+                    // TODO Add message to conversation
+                    
+                    return GetThread(threadID);
+                }
+            }
+            
+            throw new HttpException(404, "Not found");
+        }
+    }
+}
+@{   
+    new RestMessaging().JsonResponse(this);
+}
