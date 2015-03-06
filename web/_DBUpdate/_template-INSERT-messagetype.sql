@@ -1,0 +1,20 @@
+﻿INSERT INTO [loconomics].[dbo].[messagetype]
+    ([MessageTypeID]
+    ,[LanguageID]
+    ,[CountryID]
+    ,[MessageTypeName]
+    ,[MessageTypeDescription]
+    ,[CreatedDate]
+    ,[UpdatedDate]
+    ,[ModifiedBy]
+    ,[Active])
+VALUES
+    (@MessageTypeID
+    ,@LanguageID
+    ,@CountryID
+    ,@MessageTypeName
+    ,@MessageTypeDescription
+    ,@CreatedDate
+    ,@UpdatedDate
+    ,@ModifiedBy
+    ,@Active)
