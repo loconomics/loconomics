@@ -63,5 +63,6 @@
     }
 }
 @{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
     new RestSchedulingPreferences().JsonResponse(this);
 }

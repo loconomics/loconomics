@@ -1,20 +1,29 @@
 ﻿@*
-    Addresses API: addresses organized by Job Title, with personal ones under a 0 jobTitleID.
+    Addresses API: addresses organized by Kind of address.
 
-    Current database scheme is two tables for addresses, generic address and service specific address details.
+    Kind:
+        /home
+        /billing
+        /service
+
+    The kind string-flag is attached to the address info as read-only for any of that types.
+
+    Under each, different sets of addresses are managed, the single home address, the personal
+    billing addresses (when booking a freelancer, as customer), and the service addresses
+    attached to a Job Title.
+
+    Technical back-end notes: Current database scheme is two tables for addresses, generic address and service specific address details.
     It's more complex than need to be (see issue #677), so in the API is treated as a unique, flat table,
-    but keeping the two primary keys scheme of the [service-address] table to avoid breakage for the
+    but keeping the two primary keys scheme of the [service-address] table (addressID and jobTitleID) to avoid breakage for the
     time the two tables scheme is keep on database and any old data that has duplicated addressID
     on service-addresses for several jobTitleID (formerly positionID).
-    
-    Because of that, we use /service-addresses/:jobTitleID[/:addressID] as API entry, using value zero
-    for jobTitleID to access personal addresses (not related to a job title, like home or billing addresses).
-    // FUTURE: If database changes to a single table scheme and unique addressID key, the API can be
-    recreated as /addresses[/:addressID] with a GET query parameter for jobTitleID allowing filtering.
+    Here the address structure is considered like a single table where the few service specific fields are only
+    used when kind=service, validation applies only on that cases, on any other kind those include default false/null values and discarded
+    if included in an update or creation.
 
     ### API
-    /service-addresses/:jobTitleID
-        - GET: list all the addresses attached to the Job Title, or personal addresses passing value zero.
+    /addresses/service/:jobTitleID
+        - GET: list all the addresses attached to the Job Title. Kind=service
 
         - POST: create a new address for the Job Title.
             - addressName:string REQUIRED For the special 'home' address is not editable but needs a value to be sent,
@@ -26,18 +35,34 @@
             - latitude:float OPTIONAL
             - longitud:float OPTIONAL
             - specialInstructions:string OPTIONAL
-            - isServiceLocation:bool NOTE:For an actual Job Title (jobTitleID>0), one of both fields isServiceLocation and isServiceArea must
+            - isServiceLocation:bool NOTE:For kind=service addresses, one of both fields (isServiceLocation and isServiceArea) must
                                         to be set as 1:true. A job title address cannot exists without almost one flag.
             - isServiceArea:bool NOTE: see isServiceLocation note.
             - serviceRadius:decimal NOTE: Required to be greater than zero if isServiceArea is set to 1:true.
 
-    /service-addresses/:jobTitleID/:addressID
+    /addresses/:jobTitleID/:addressID
         - GET: single address.
 
         - PUT: update an address for the Job Title. Same fields as POSTing a new address with the addition of:
             - updatedDate:datetime Optional for now, in future to check for update collisions.
 
-        - DELETE: deletes the address. If the address is internally linked, can be soft deleted.
+        - DELETE: deletes the address. If the address is internally linked, will be soft deleted.
+
+    /addresses/home
+        - GET: get the home address (single, permanent -ever exists-). Kind=home
+        - PUT: update the home address
+
+    /addresses/billing
+        - GET: get a list of personal billing addresses. Kind=billing
+        - POST: create a new billing address. Fields as described in service addresses but without the service specific
+            fields (isServiceLocation, isServiceArea, serviceRadius)
+
+    /addresses/billing/:addressID
+        - GET: single address
+
+        - PUT: Update a billing address. Same fields as in POST.
+
+        - DELETE: deletes the address. If the address is internally linked, will be soft deleted.
 
     ### Structures
         service-address {
@@ -65,24 +90,62 @@
                                         [address] table (the first record to be created). 
             updatedDate:datetime Auto Note: since internally there are two records internally with this field duplicated, the public value is get from the
                                         one with the newest/greater value.
+            kind:string Computed Note: possible set of server-set values is: home, billing, service. It matches every API path, and all addresses returned
+                                    from each path will have the same value for Kind matching that API path. Is just an informative field and cannot be 
+                                    specified by the user.
         }
 *@
 @functions{
     public class RestAddresses : RestWebPage
     {
-        private dynamic GetAddresses(int jobTitleID)
+        private dynamic GetServiceAddresses(int jobTitleID)
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            
+            // TODO: Strictly, if jobTitleID does not exists for the user, the result must be a Not Found rather than empty
+
+            return LcRestAddress.GetServiceAddresses(userId, jobTitleID);
+        }
+        
+        private dynamic GetBillingAddresses()
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            
+            // TODO: Strictly, if jobTitleID does not exists for the user, the result must be a Not Found rather than empty
+
+            return LcRestAddress.GetBillingAddresses(userId);
+        }
+        
+        private dynamic GetHomeAddress()
         {
             // Parameters
             int userId = WebSecurity.CurrentUserId;
 
-            return null;
+            return LcRestAddress.GetHomeAddress(userId);
         }
-        
-        private dynamic GetAddress(int jobTitleID, int addressID)
+
+        private dynamic GetServiceAddress(int jobTitleID, int addressID)
         {   
             // Parameters
             int userId = WebSecurity.CurrentUserId;
 
+            var address = LcRestAddress.GetServiceAddress(userId, jobTitleID, addressID);
+            if (address != null)
+                return address;
+
+            throw new HttpException(404, "Not found");
+        }
+        
+        private dynamic GetBillingAddress(int addressID)
+        {   
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            var address = LcRestAddress.GetBillingAddress(userId, addressID);
+            if (address != null)
+                return address;
 
             throw new HttpException(404, "Not found");
         }
@@ -90,26 +153,59 @@
         public override dynamic Get()
         {
             if (UrlData.Count > 0) {
-                if (UrlData[0].IsInt()) {
-                    var jobTitleID = UrlData[0].AsInt();
+                
+                switch (UrlData[0]) {
+                    case "service": {
+                        
+                        // Route: /services/:jobTitleID[/:addressID]
+                        
+                        var jobTitleID = UrlData[1].AsInt(0);
+                        
+                        if (jobTitleID > 0) {
+                            
+                            if (UrlData.Count == 3) {
+                                var addressID = UrlData[2].AsInt(0);
 
-                    if (UrlData.Count == 2 &&
-                        UrlData[1].IsInt()) {
-
-                        var addressID = UrlData[1].AsInt();
-
-                        // Get Address
-                        var add = GetAddress(jobTitleID, addressID);
-                        if (add == null) {
-                            throw new HttpException(404, "Not found");
+                                if (addressID > 0) {
+                                    return GetServiceAddress(jobTitleID, addressID);
+                                }
+                            }
+                            else if (UrlData.Count == 2) {
+                                 return GetServiceAddresses(jobTitleID);
+                            }
                         }
-                        else {
-                            return add;
-                        }
+
+                        // Any other case, continue to Not Found
+                        break;
                     }
-                    else if (UrlData.Count == 1) {
-                        // Get Addresses
-                        return GetAddresses(jobTitleID);
+                    case "billing": {
+         
+                        // Route: /billing/[/:addressID]
+                        
+                        if (UrlData.Count == 2) {               
+                            var addressID = UrlData[1].AsInt(0);
+                        
+                            if (addressID > 0) {
+                                return GetBillingAddress(addressID);
+                            }
+                        }
+                        else if (UrlData.Count == 1) {   
+                            return GetBillingAddresses();
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "home": {
+                        
+                        // Route: /home
+                        
+                        if (UrlData.Count == 1) {
+                            return GetHomeAddress();
+                        }
+                        
+                        // Any other case, continue to Not Found
+                        break;
                     }
                 }
             }
@@ -155,7 +251,7 @@
                 }
 
                 // Return created address
-                return GetAddress(jobTitleID, newAddressID);
+                return GetServiceAddress(jobTitleID, newAddressID);
             }
             
             throw new HttpException(404, "Not found");
@@ -170,6 +266,7 @@
         }
     }
 }
-@{   
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
     new RestAddresses().JsonResponse(this);
 }

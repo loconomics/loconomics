@@ -418,6 +418,32 @@
         'Messaging: Single Message': {
             url: '/en-US/rest/messaging/225/525',
             get: { }
+        },
+        'Addresses: home (ever single)': {
+            url: '/en-US/rest/addresses/home',
+            get: { },
+            put: { }
+        },
+        'Addresses: service addresses per Job Title': {
+            url: '/en-US/rest/addresses/service/106',
+            get: { },
+            post: { },
+            api_comment: 'Use jobTitleID for specific job addresses. All service addresses is not allowed.'
+        },
+        'Addresses: service addresses per Job Title (single)': {
+            url: '/en-US/rest/addresses/service/106/95',
+            get: { },
+            put: { }
+        },
+        'Addresses: billing addresses': {
+            url: '/en-US/rest/addresses/billing',
+            get: { },
+            post: { }
+        },
+        'Addresses: billing addresses (single)': {
+            url: '/en-US/rest/addresses/billing/71',
+            get: { },
+            put: { }
         }
     };
 

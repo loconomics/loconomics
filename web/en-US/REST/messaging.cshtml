@@ -236,6 +236,7 @@
         }
     }
 }
-@{   
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
     new RestMessaging().JsonResponse(this);
 }

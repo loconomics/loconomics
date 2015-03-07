@@ -1,0 +1,22 @@
+﻿INSERT INTO [loconomics].[dbo].[country]
+    ([CountryID]
+    ,[LanguageID]
+    ,[CountryName]
+    ,[CountryCode]
+    ,[CountryCodeAlpha2]
+    ,[CountryCallingCode]
+    ,[CreatedDate]
+    ,[UpdatedDate]
+    ,[ModifiedBy]
+    ,[Active])
+VALUES
+    (@CountryID
+    ,@LanguageID
+    ,@CountryName
+    ,@CountryCode
+    ,@CountryCodeAlpha2
+    ,@CountryCallingCode
+    ,@CreatedDate
+    ,@UpdatedDate
+    ,@ModifiedBy
+    ,@Active)
