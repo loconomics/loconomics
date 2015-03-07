@@ -50,7 +50,8 @@
 
     /addresses/home
         - GET: get the home address (single, permanent -ever exists-). Kind=home
-        - PUT: update the home address
+        - PUT: update the home address. Fields as described in service addresses but without the service specific
+            fields (isServiceLocation, isServiceArea, serviceRadius)
 
     /addresses/billing
         - GET: get a list of personal billing addresses. Kind=billing
@@ -65,7 +66,7 @@
         - DELETE: deletes the address. If the address is internally linked, will be soft deleted.
 
     ### Structures
-        service-address {
+        address {
             addressID:int Auto
             jobTitleID:int
             userID:int
@@ -149,6 +150,25 @@
 
             throw new HttpException(404, "Not found");
         }
+        
+        private LcRestAddress GetAddress(int userId, int jobTitleID, int addressID, string kind = null) {
+            // Return created address
+            switch (kind) {
+                case LcRestAddress.AddressKind.Service:
+                    return GetServiceAddress(jobTitleID, addressID);
+
+                case LcRestAddress.AddressKind.Billing:
+                    return GetBillingAddress(addressID);
+
+                case LcRestAddress.AddressKind.Home:
+                    return GetHomeAddress();
+
+                default:
+                    // Is 'impossible' to reach this if every case was implemented,
+                    // mostly an error for dev/debug time
+                    throw new HttpException(500, "Server Error: Address Kind not managed.");
+            }
+        }
 
         public override dynamic Get()
         {
@@ -180,7 +200,7 @@
                     }
                     case "billing": {
          
-                        // Route: /billing/[/:addressID]
+                        // Route: /billing[/:addressID]
                         
                         if (UrlData.Count == 2) {               
                             var addressID = UrlData[1].AsInt(0);
@@ -200,10 +220,181 @@
                         
                         // Route: /home
                         
-                        if (UrlData.Count == 1) {
-                            return GetHomeAddress();
-                        }
+                        return GetHomeAddress();
+                    }
+                }
+            }
+
+            throw new HttpException(404, "Not found");
+        }
+        
+        private bool IsValidAddress(int jobTitleID) {
+
+            Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
+            Validation.RequireField("postalCode", LcRessources.RequiredField("Zip Code"));
+            Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
+            Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
+            Validation.Add("serviceRadius", Validator.Decimal("Service Radius must be a number"));
+            Validation.Add("addressName", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
+            Validation.Add("addressLine1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
+            Validation.Add("addressLine2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
+            Validation.Add("specialInstructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
+            
+            var isServiceArea = Request.Form["isServiceArea"].AsBool(false);
+            if (!isServiceArea) {
+                Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
+            }
+            
+            if (jobTitleID > 0) {
+                // One of the service flags is required
+                if (!Request.Form["isServiceLocation"].AsBool() &&
+                    !Request.Form["isServiceArea"].AsBool()) {
+                    ModelState.AddFormError("The service address must be a service location or a service area.");
+                }
+            }
+            
+            return Validation.IsValid() && !ModelState.IsValid;
+        }
+        
+        /// <summary>
+        /// It builds an address object using the form
+        /// data, and the formal parameters
+        /// </summary>
+        /// <returns></returns>
+        private LcRestAddress GetFormAddress(int userId, int jobTitleID) {
+            
+            var locale = LcRestLocale.Current;
+
+            return new LcRestAddress {
+                userID = userId,
+                jobTitleID = jobTitleID,
+                countryCode = locale.countryCode,
+                addressLine1 = Request.Form["addressLine1"],
+                addressLine2 = Request.Form["addressLine2"],
+                addressName = Request.Form["addressName"],
+                postalCode = Request.Form["postalCode"],
+                latitude = Request.Form["latitude"].IsEmpty() ? null : DataTypes.GetTypedValue<double?>(Request.Form["latitude"], 0),
+                longitude = Request.Form["longitude"].IsEmpty() ? null : DataTypes.GetTypedValue<double?>(Request.Form["longitude"], 0),
+                isServiceArea = Request.Form["isServiceArea"].AsBool(),
+                isServiceLocation = Request.Form["isServiceLocation"].AsBool(),
+                serviceRadius = Request.Form["serviceRadius"].IsEmpty() ? null : DataTypes.GetTypedValue<decimal?>(Request.Form["serviceRadius"], 0),
+                specialInstructions = Request.Form["specialInstructions"]
+            };
+        }
+        
+        /// <summary>
+        /// Validate and create/update an address with the form information and the given parameters
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="jobTitleID"></param>
+        /// <param name="kind"></param>
+        /// <returns></returns>
+        private LcRestAddress SetAddress(int userId, int jobTitleID, int addressID, string kind = null) {
+            // Validation
+            if (!IsValidAddress(jobTitleID)) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+                
+            // Get data
+            var address = GetFormAddress(userId, jobTitleID);
+            
+            if (jobTitleID > 0) {
+                kind = LcRestAddress.AddressKind.Service;
+            }
+            else {
+                if (!LcRestAddress.AddressKind.IsValid(kind)) {
+                    throw new HttpException(500, "Server Error: Invalid address Kind specified.");
+                }
+            }
+                            
+            // Set address
+            var newAddressID = 0;
+            switch (kind) {
+                case LcRestAddress.AddressKind.Service:
+                    // TODO Setaddress
+                    address = GetServiceAddress(jobTitleID, newAddressID);
+                    break;
+                case LcRestAddress.AddressKind.Billing:
+                    // TODO Setaddress
+                    address = GetBillingAddress(newAddressID);
+                    break;
+                case LcRestAddress.AddressKind.Home:
+                    // TODO Setaddress
+                    address = GetHomeAddress();
+                    break;
+                default:
+                    // Is 'impossible' to reach this if every case was implemented,
+                    // mostly an error for dev/debug time
+                    throw new HttpException(500, "Address Kind not managed.");
+            }
+
+            if (newAddressID == 0) {
+                throw new HttpException(400, "TODO Some bad request error.");
+            }
+                            
+            // Return created address
+            return GetAddress(userId, jobTitleID, newAddressID, kind);
+        }
+        
+        private LcRestAddress DeleteAddress(int userId, int jobTitleID, int addressID, string kind = null) {
+
+            // Correct Kind first
+            if (jobTitleID > 0) {
+                kind = LcRestAddress.AddressKind.Service;
+            }
+            else {
+                if (!LcRestAddress.AddressKind.IsValid(kind)) {
+                    throw new HttpException(500, "Server Error: Invalid address Kind specified.");
+                }
+            }
+            
+            // Grab a copy of the address
+            var address = GetAddress(userId, jobTitleID, addressID, kind);
+
+            // Double check it exists (that means too that the addressID exists for that Kind of address and not
+            // another --avoid attempts to try delete an addressID using a Kind API that does not apply to the ID),
+            // but still, best to be explicit on that check:
+            if (address != null &&
+                address.kind == kind) {
+                // Delete
+                LcRestAddress.DelAddress(userId, jobTitleID, addressID);
+                return address;
+            }
+
+            // Does not exists, or not on that Kind
+            throw new HttpException(404, "Not found");
+        }
+
+        public override dynamic Post()
+        {           
+            int userId = WebSecurity.CurrentUserId;
+            
+            if (UrlData.Count > 0) {
+                
+                switch (UrlData[0]) {
+                    case "service": {
                         
+                        // Route: /services/:jobTitleID
+                        
+                        var jobTitleID = UrlData[1].AsInt(0);
+                        
+                        if (jobTitleID > 0 &&
+                            UrlData.Count == 2) {
+                            
+                            return SetAddress(userId, jobTitleID, LcRestAddress.NewAddressID);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "billing": {
+         
+                        // Route: /billing/
+
+                        if (UrlData.Count == 1) {
+                            return SetAddress(userId, LcRestAddress.NotAJobTitleID, LcRestAddress.NewAddressID, LcRestAddress.AddressKind.Billing);
+                        }
+
                         // Any other case, continue to Not Found
                         break;
                     }
@@ -213,57 +404,102 @@
             throw new HttpException(404, "Not found");
         }
 
-        public override dynamic Post()
-        {
-            if (UrlData.Count == 1 &&
-                UrlData[0].IsInt()) {
-                
-                // First Parameters
-                int userId = WebSecurity.CurrentUserId;
-                var jobTitleID = UrlData[0].AsInt();
-                var isServiceArea = Request.Form["isServiceArea"].AsBool(false);
-                
-                // Validation
-                if (!isServiceArea) {
-                    Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
-                }
-                Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
-                Validation.RequireField("postalCode", LcRessources.RequiredField("Zip Code"));
-                Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
-                Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
-                Validation.Add("serviceRadius", Validator.Decimal("Service Radius must be a number"));
-                Validation.Add("addressName", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
-                Validation.Add("addressLine1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
-                Validation.Add("addressLine2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
-                Validation.Add("special-instructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
-
-                if (!Validation.IsValid() || !ModelState.IsValid) {
-                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
-                }
-                
-                // Rest of Parameters
-                // TODO on RestAddress Object
-  
-                // TODO Create address
-                var newAddressID = 0;
-                if (newAddressID == 0) {
-                    throw new HttpException(400, "TODO Some bad request error.");
-                }
-
-                // Return created address
-                return GetServiceAddress(jobTitleID, newAddressID);
-            }
-            
-            throw new HttpException(404, "Not found");
-        }
-
         public override dynamic Put()
         {
-            if (UrlData.Count == 2) {
+            int userId = WebSecurity.CurrentUserId;
+            
+            if (UrlData.Count > 0) {
+                
+                switch (UrlData[0]) {
+                    case "service": {
+                        
+                        // Route: /services/:jobTitleID/:addressID
+                        
+                        var jobTitleID = UrlData[1].AsInt(0);
+                        var addressID = UrlData[2].AsInt(0);
+                        
+                        if (UrlData.Count == 3 &&
+                            jobTitleID > 0 &&
+                            addressID > 0) {
+
+                            return SetAddress(userId, jobTitleID, addressID);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "billing": {
+         
+                        // Route: /billing/:addressID
+                        
+                        var addressID = UrlData[1].AsInt(0);
+
+                        if (UrlData.Count == 2 &&
+                            addressID > 0) {
+                            
+                            return SetAddress(userId, LcRestAddress.NotAJobTitleID, addressID, LcRestAddress.AddressKind.Billing);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "home": {
+                        
+                        // Route: /home
+                        
+                        return SetAddress(userId, LcRestAddress.NotAJobTitleID, LcRestAddress.NotAnAddressID, LcRestAddress.AddressKind.Home);
+                    }
+                }
             }
 
             throw new HttpException(404, "Not found");
         }
+        
+        public override dynamic Delete()
+        {
+            int userId = WebSecurity.CurrentUserId;
+            
+            if (UrlData.Count > 0) {
+                
+                switch (UrlData[0]) {
+                    case "service": {
+                        
+                        // Route: /services/:jobTitleID/:addressID
+                        
+                        var jobTitleID = UrlData[1].AsInt(0);
+                        var addressID = UrlData[2].AsInt(0);
+                        
+                        if (UrlData.Count == 3 &&
+                            jobTitleID > 0 &&
+                            addressID > 0) {
+
+                            return DeleteAddress(userId, jobTitleID, addressID);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "billing": {
+         
+                        // Route: /billing/:addressID
+                        
+                        var addressID = UrlData[1].AsInt(0);
+
+                        if (UrlData.Count == 2 &&
+                            addressID > 0) {
+                            
+                            return DeleteAddress(userId, LcRestAddress.NotAJobTitleID, addressID, LcRestAddress.AddressKind.Billing);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                }
+            }
+
+            throw new HttpException(404, "Not found");
+        }
+    }
     }
 }
 @{

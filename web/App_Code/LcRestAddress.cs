@@ -12,28 +12,28 @@ using WebMatrix.Data;
 public class LcRestAddress
 {
     #region Fields
-    public int addressID { get; private set; }
-    public int jobTitleID { get; private set; }
-    public int userID { get; private set; }
+    public int addressID;
+    public int jobTitleID;
+    public int userID;
     public string addressName;
     public string addressLine1;
     public string addressLine2;
     private int postalCodeID;
     public string postalCode;
-    public string city { get; private set; }
+    public string city;
     private int stateProvinceID;
-    public string stateProvinceCode { get; private set; }
-    public string stateProvinceName { get; private set; }
+    public string stateProvinceCode;
+    public string stateProvinceName;
     private int countryID;
-    public string countryCode { get; private set; }
+    public string countryCode;
     public double? latitude;
     public double? longitude;
     public string specialInstructions;
     public bool isServiceLocation;
     public bool isServiceArea;
     public decimal? serviceRadius;
-    public DateTime createdDate { get; private set; }
-    public DateTime updatedDate { get; private set; }
+    public DateTime createdDate;
+    public DateTime updatedDate;
     /// <summary>
     /// A valid AddressKind string.
     /// </summary>
@@ -42,6 +42,10 @@ public class LcRestAddress
 
     #region Enums
     public const int NotAJobTitleID = 0;
+
+    public const int NewAddressID = 0;
+    public const int NotAnAddressID = 0;
+
     /// <summary>
     /// Internal address type, used in database but not exposed
     /// in the REST API.
@@ -200,6 +204,13 @@ public class LcRestAddress
     private static string sqlAndTypeID = @"
         AND L.AddressTypeID = @4
     ";
+    // Since user can delete addresses from being available on its list but still
+    // we need preserve that addresses information for cases in that is linked to 
+    // a booking, that addresses get 'soft deleted', changing its flags for kind
+    // of location to false, then we only show addresses with almost one flag.
+    // NOTE: Its public because is used externally on webpages, since initially was
+    // there and to avoid duplicated is just linked from there right now.
+    public static string sqlcondOnlyActiveServiceAddress = " AND (TravelFromLocation = 1 OR ServicesPerformedAtLocation = 1)";
     #endregion
 
     #region Fetch
@@ -207,7 +218,7 @@ public class LcRestAddress
     {
         using (var db = Database.Open("sqlloco"))
         {
-            return db.Query(sqlSelect + sqlFields + sqlAndJobTitleID,
+            return db.Query(sqlSelect + sqlFields + sqlAndJobTitleID + sqlcondOnlyActiveServiceAddress,
                 LcData.GetCurrentLanguageID(), userID, jobTitleID)
                 .Select(FromDB)
                 .ToList();
@@ -245,7 +256,7 @@ public class LcRestAddress
         using (var db = Database.Open("sqlloco"))
         {
             return GetSingleFrom(db.Query(
-                sqlSelectOne + sqlFields + sqlAndJobTitleID + sqlAndAddressID,
+                sqlSelectOne + sqlFields + sqlAndJobTitleID + sqlAndAddressID + sqlcondOnlyActiveServiceAddress,
                 LcData.GetCurrentLanguageID(), userID, jobTitleID, addressID
             ));
         }
@@ -279,6 +290,36 @@ public class LcRestAddress
                 LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, null, AddressType.Home
             ));
         }
+    }
+    #endregion
+
+    #region Delete
+    /// <summary>
+    /// Delete an address, or transparently 'soft delete' if is linked internally.
+    /// BE CAREFUL that this does not check for what kind of address is to delete,
+    /// on the REST API or any other preliminar checks must be done to ensure
+    /// the address can be deleted (like a service from the service API
+    /// and a billing from the billing API; the home address is treated special
+    /// internally and is not allowed to be deleted -because of [UniquePerUser]-; for a time, the billing
+    /// address will not too, but that can change with the time).
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="jobTitleID"></param>
+    /// <param name="addressID"></param>
+    public static void DelAddress(int userID, int jobTitleID, int addressID)
+    {
+        using (var db = Database.Open("sqlloco")) {
+            // Some old logics apply here because of the Dashboard up to v6, 
+            // like the last parameter with "both".
+            db.Execute(LcData.sqlDelServiceAddress, addressID, userID, jobTitleID, "both");
+        }
+    }
+    #endregion
+
+    #region Create/Update
+    public static void SetAddress(int userID, int jobTitleID, int addressID, string kind = null)
+    {
+
     }
     #endregion
 }

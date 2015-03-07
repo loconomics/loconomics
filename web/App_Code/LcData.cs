@@ -603,7 +603,7 @@ public static partial class LcData
             WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
 
             IF @@ERROR <> 0 BEGIN
-                -- Non deletable serviceaddress, because is linked, simply 'unactive' and remove its use (as work or travel)
+                -- Non deletable serviceaddress, because is linked, simply 'disable it' and remove its use (as work or travel)
                 DECLARE @bitWork bit, @bitTravel bit
                 IF @Type like 'work'
                     SET @bitWork = cast(1 as bit)
@@ -618,7 +618,19 @@ public static partial class LcData
                     Active = 0
                     ,ServicesPerformedAtLocation = @bitWork
                     ,TravelFromLocation = @bitTravel
-                WHERE   AddressID = @0 AND UserID = @1 AND PositionID = @2
+                WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
+
+                
+                -- Soft delete the linked address, if not used by other service-addresses
+                UPDATE Address SET
+                    Active = 0
+                WHERE AddressID = @0 AND UserID = @1
+                    AND 0 = (SELECT count(*) FROM ServiceAddress As S2
+                        WHERE S2.AddressID = @0
+                            -- Dont count for this position, since obviously is linking it
+                            AND S2.Position <> @2
+                )
+
             END ELSE BEGIN
 
                 -- Try to remove the Address record too, if is not 'special' ([UniquePerUser]).
