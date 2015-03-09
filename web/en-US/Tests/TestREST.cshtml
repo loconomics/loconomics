@@ -422,29 +422,68 @@
         'Addresses: home (ever single)': {
             url: '/en-US/rest/addresses/home',
             get: { },
-            put: { }
+            put: {
+                "addressName":"Home",
+                "addressLine1":"Avda Castelao",
+                "addressLine2":"44",
+                "postalCode":"90001",
+                "specialInstructions":""
+            }
         },
         'Addresses: service addresses per Job Title': {
             url: '/en-US/rest/addresses/service/106',
             get: { },
-            post: { },
-            api_comment: 'Use jobTitleID for specific job addresses. All service addresses is not allowed.'
+            post: {
+                "addressName":"Workshop",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "isServiceLocation":true,
+                "isServiceArea":false,
+                "serviceRadius":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            }
         },
         'Addresses: service addresses per Job Title (single)': {
             url: '/en-US/rest/addresses/service/106/95',
             get: { },
-            put: { },
+            put: {
+                "addressName":"Billing",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "isServiceLocation":true,
+                "isServiceArea":false,
+                "serviceRadius":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            },
             delete: { }
         },
         'Addresses: billing addresses': {
             url: '/en-US/rest/addresses/billing',
             get: { },
-            post: { }
+            post: {
+                "addressName":"Workshop",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            }
         },
         'Addresses: billing addresses (single)': {
             url: '/en-US/rest/addresses/billing/71',
             get: { },
-            put: { },
+            put: {
+                "addressName":"Workshop",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            },
             delete: { }
         }
     };

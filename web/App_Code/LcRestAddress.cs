@@ -64,6 +64,9 @@ public class LcRestAddress
     /// Let each returned address to be clearly identified
     /// inside the API. The numeric values are only internal
     /// is expected to expose as text.
+    /// 
+    /// NOTE: Maybe an actual enum can be created using toString() to produce
+    /// the string value? Any assigned numeric value is not wanted just a side effect
     /// </summary>
     public static class AddressKind
     {
@@ -143,9 +146,9 @@ public class LcRestAddress
     }
 
     #region SQL
-    private static string sqlSelect = @"SELECT ";
-    private static string sqlSelectOne = @"SELECT TOP 1 ";
-    private static string sqlFields = @"
+    private const string sqlSelect = @"SELECT ";
+    private const string sqlSelectOne = @"SELECT TOP 1 ";
+    private const string sqlFields = @"
                 L.AddressID as addressID
                 ,L.UserID as userID
                 ,coalesce(SA.PositionID, 0) as jobTitleID
@@ -195,13 +198,13 @@ public class LcRestAddress
         WHERE   L.Active = 1
                  AND L.UserID = @1
     ";
-    private static string sqlAndJobTitleID = @"
+    private const string sqlAndJobTitleID = @"
         AND coalesce(SA.PositionID, 0) = @2
     ";
-    private static string sqlAndAddressID = @"
+    private const string sqlAndAddressID = @"
         AND L.AddressID = @3
     ";
-    private static string sqlAndTypeID = @"
+    private const string sqlAndTypeID = @"
         AND L.AddressTypeID = @4
     ";
     // Since user can delete addresses from being available on its list but still
@@ -210,7 +213,17 @@ public class LcRestAddress
     // of location to false, then we only show addresses with almost one flag.
     // NOTE: Its public because is used externally on webpages, since initially was
     // there and to avoid duplicated is just linked from there right now.
-    public static string sqlcondOnlyActiveServiceAddress = " AND (TravelFromLocation = 1 OR ServicesPerformedAtLocation = 1)";
+    public const string sqlcondOnlyActiveServiceAddress = " AND (TravelFromLocation = 1 OR ServicesPerformedAtLocation = 1)";
+    /// <summary>
+    /// Parameter @0 the UserID.
+    /// </summary>
+    public static readonly string sqlGetHomeAddressID = @"
+        SELECT  AddressID
+        FROM    Address
+        WHERE   UserID = @0
+                AND Active = 1
+                AND AddressTypeID = " + ((short)AddressType.Home).ToString()
+    ;
     #endregion
 
     #region Fetch
@@ -408,6 +421,16 @@ public class LcRestAddress
                 LcData.sqlSetServiceAddress :
                 LcData.sqlSetAddress
             ;
+
+            // Special: for the kind 'home' we need to set the addressID
+            // that exists on database (it behaves a bit like a 'singleton',
+            // and its ID is not know when the update is requested
+            // If for some internal disaster it does not exists, use 0
+            // to create one. and fix that :-)
+            if (address.kind == AddressKind.Home)
+            {
+                address.addressID = (int)(N.D(db.QueryValue(sqlGetHomeAddressID, address.userID)) ?? NewAddressID);
+            }
 
             return (int)db.QueryValue(sql,
                 address.addressID,

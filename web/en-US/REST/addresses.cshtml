@@ -255,7 +255,7 @@
                 Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
             }
             
-            return Validation.IsValid() && !ModelState.IsValid;
+            return Validation.IsValid() && ModelState.IsValid;
         }
         
         /// <summary>

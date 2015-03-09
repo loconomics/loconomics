@@ -594,11 +594,13 @@ public static partial class LcData
 
             IF @Type like 'work'
                 UPDATE ServiceAddress SET
-                    ServicesPerformedAtLocation = 0
+                    ServicesPerformedAtLocation = 0,
+                    UpdatedDate = getdate()
                 WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
             ELSE IF @Type like 'travel'
                 UPDATE ServiceAddress SET
-                    TravelFromLocation = 0
+                    TravelFromLocation = 0,
+                    UpdatedDate = getdate()
                 WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
 
         END ELSE BEGIN
@@ -622,17 +624,19 @@ public static partial class LcData
                     Active = 0
                     ,ServicesPerformedAtLocation = @bitWork
                     ,TravelFromLocation = @bitTravel
+                    ,UpdatedDate = getdate()
                 WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
 
                 
                 -- Soft delete the linked address, if not used by other service-addresses
                 UPDATE Address SET
-                    Active = 0
+                    Active = 0,
+                    UpdatedDate = getdate()
                 WHERE AddressID = @0 AND UserID = @1
                     AND 0 = (SELECT count(*) FROM ServiceAddress As S2
                         WHERE S2.AddressID = @0
                             -- Dont count for this position, since obviously is linking it
-                            AND S2.Position <> @2
+                            AND S2.PositionID <> @2
                 )
 
             END ELSE BEGIN
