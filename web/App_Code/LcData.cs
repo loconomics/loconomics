@@ -641,12 +641,20 @@ public static partial class LcData
 
             END ELSE BEGIN
 
+                /* REMOVED THE CHECK OF NOT ALLOW TO REMOVE THE [UniquePerUser] ADDRESSES
+                    THAT FIELD WILL BE DEPRECATED, SO SEE NEXT LINES
                 -- Try to remove the Address record too, if is not 'special' ([UniquePerUser]).
                 DELETE FROM Address
                 WHERE AddressID = @0 AND
                     (SELECT TOP 1 A.UniquePerUser FROM AddressType As A WHERE 
                         A.AddressTypeID = (SELECT B.AddressTypeID FROM Address As B WHERE B.AddressID = @0 AND UserID = @1)
                     ) = 0
+                */
+
+                /* Try  to delete the address record, except if the special type Home, but allowed to any other. */
+                DELETE FROM Address
+                WHERE AddressID = @0
+                        AND AddressTypeID <> 1 -- Home
 
                 -- If is not possible, maybe is linked, do nothing (but read @@ERROR to not throw the error)
                 SELECT @@ERROR As ErrorNumber

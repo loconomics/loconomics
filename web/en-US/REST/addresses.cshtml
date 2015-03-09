@@ -495,6 +495,9 @@
                         // Any other case, continue to Not Found
                         break;
                     }
+                    case "home": {
+                        throw new HttpException(405, "DELETE is not allowed");
+                    }
                 }
             }
 
