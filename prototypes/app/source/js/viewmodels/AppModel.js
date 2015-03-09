@@ -23,8 +23,8 @@ function AppModel(values) {
 AppModel.prototype.init = function init() {
     
     // NOTE: URL to be updated
-    this.rest = new Rest('http://dev.loconomics.com/en-US/rest/');
-    //this.rest = new Rest('http://localhost/source/en-US/rest/');
+    this.rest = new Rest('http://dev.loconomics.com/api/v1/en-US/');
+    //this.rest = new Rest('http://localhost/source/api/v1/en-US/');
     
     // Setup Rest authentication
     this.rest.onAuthorizationRequired = function(retry) {
