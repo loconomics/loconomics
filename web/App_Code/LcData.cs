@@ -515,6 +515,10 @@ public static partial class LcData
                 WHERE
                     AddressID = @AddressID AND UserID = @1
         END
+
+        EXEC TestAlertPersonalInfo @1
+
+        SELECT @AddressID As AddressID
     ";
     public const string sqlSetServiceAddress = @"
         BEGIN TRAN

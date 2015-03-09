@@ -140,7 +140,7 @@
         }
         
         private dynamic GetBillingAddress(int addressID)
-        {   
+        {
             // Parameters
             int userId = WebSecurity.CurrentUserId;
 
@@ -152,7 +152,6 @@
         }
         
         private LcRestAddress GetAddress(int userId, int jobTitleID, int addressID, string kind = null) {
-            // Return created address
             switch (kind) {
                 case LcRestAddress.AddressKind.Service:
                     return GetServiceAddress(jobTitleID, addressID);
@@ -230,7 +229,6 @@
         
         private bool IsValidAddress(int jobTitleID) {
 
-            Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
             Validation.RequireField("postalCode", LcRessources.RequiredField("Zip Code"));
             Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
             Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
@@ -239,18 +237,22 @@
             Validation.Add("addressLine1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
             Validation.Add("addressLine2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
             Validation.Add("specialInstructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
-            
-            var isServiceArea = Request.Form["isServiceArea"].AsBool(false);
-            if (!isServiceArea) {
-                Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
-            }
-            
-            if (jobTitleID > 0) {
+           
+            if (jobTitleID != LcRestAddress.NotAJobTitleID) {
                 // One of the service flags is required
                 if (!Request.Form["isServiceLocation"].AsBool() &&
                     !Request.Form["isServiceArea"].AsBool()) {
                     ModelState.AddFormError("The service address must be a service location or a service area.");
                 }
+            }
+
+            // This check makes required some fields (name and address line 1) if not a service
+            // address or is service location, thats excludes the service area addresses
+            // from the need of that fields.
+            var isServiceLocation = Request.Form["isServiceLocation"].AsBool(false);
+            if (jobTitleID == LcRestAddress.NotAJobTitleID || isServiceLocation) {
+                Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
+                Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
             }
             
             return Validation.IsValid() && !ModelState.IsValid;
@@ -261,11 +263,12 @@
         /// data, and the formal parameters
         /// </summary>
         /// <returns></returns>
-        private LcRestAddress GetFormAddress(int userId, int jobTitleID) {
+        private LcRestAddress GetFormAddress(int userId, int jobTitleID, int addressID = 0) {
             
             var locale = LcRestLocale.Current;
 
             return new LcRestAddress {
+                addressID = addressID,
                 userID = userId,
                 jobTitleID = jobTitleID,
                 countryCode = locale.countryCode,
@@ -296,8 +299,9 @@
             }
                 
             // Get data
-            var address = GetFormAddress(userId, jobTitleID);
-            
+            var address = GetFormAddress(userId, jobTitleID, addressID);
+
+            // Auto or validate kind
             if (jobTitleID > 0) {
                 kind = LcRestAddress.AddressKind.Service;
             }
@@ -306,33 +310,30 @@
                     throw new HttpException(500, "Server Error: Invalid address Kind specified.");
                 }
             }
+            // Set kind
+            address.kind = kind;
+            
+            // Aditional validation
+            // Per comment on #677 2015-03-07 (https://github.com/dani0198/Loconomics/issues/677#issuecomment-77714980)
+            // The constraint that makes only one service radius allowed at a time is removed but with code copy, so next lines are commented:
+            // // Validate that the service radius is unique
+            // // Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
+            // if (kind == LcRestAddress.AddressKind.Service &&
+            //     address.isServiceArea && !LcRestAddress.IsNewServiceAreaAllowed(userId, jobTitleID, addressID)) {
+            //     throw new HttpException(400, "You already have a service radius location (can be only one).");
+            // }
                             
-            // Set address
-            var newAddressID = 0;
-            switch (kind) {
-                case LcRestAddress.AddressKind.Service:
-                    // TODO Setaddress
-                    address = GetServiceAddress(jobTitleID, newAddressID);
-                    break;
-                case LcRestAddress.AddressKind.Billing:
-                    // TODO Setaddress
-                    address = GetBillingAddress(newAddressID);
-                    break;
-                case LcRestAddress.AddressKind.Home:
-                    // TODO Setaddress
-                    address = GetHomeAddress();
-                    break;
-                default:
-                    // Is 'impossible' to reach this if every case was implemented,
-                    // mostly an error for dev/debug time
-                    throw new HttpException(500, "Address Kind not managed.");
-            }
-
+            // Set address: even for updates, the ID is returned as treated as can be new (thats only on creation)
+            var newAddressID = LcRestAddress.SetAddress(address);
             if (newAddressID == 0) {
-                throw new HttpException(400, "TODO Some bad request error.");
+                // NOTE: Very, very strange this errors happens with current logic, just an important unexpected database error.
+                // OR a code udpate on the SQL code broke the creation or retrieval off the @AddressID
+                // OR new constraints added to SetAddress() allowed to return zero rather than raise an exception, the recommended
+                // way.
+                throw new HttpException(500, "Server Error: impossible to create the address at this time.");
             }
                             
-            // Return created address
+            // Return created/updated address
             return GetAddress(userId, jobTitleID, newAddressID, kind);
         }
         

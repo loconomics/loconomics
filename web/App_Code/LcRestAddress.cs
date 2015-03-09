@@ -37,7 +37,7 @@ public class LcRestAddress
     /// <summary>
     /// A valid AddressKind string.
     /// </summary>
-    public string kind { get; private set; }
+    public string kind;
     #endregion
 
     #region Enums
@@ -316,10 +316,184 @@ public class LcRestAddress
     }
     #endregion
 
-    #region Create/Update
-    public static void SetAddress(int userID, int jobTitleID, int addressID, string kind = null)
+    #region Constraints
+    /// <summary>
+    /// Returns true if is allowed to add a new address that is a service area.
+    /// Constraint: only one service area is allowed at this time.
+    ///
+    /// Original notes:
+    /// Validate that 'travel from location' is unique
+    /// Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
+    /// 
+    /// Update 2015-03-07: Per comments on #677 2015-03-07 (following https://github.com/dani0198/Loconomics/issues/677#issuecomment-77714980),
+    /// this contraint is not used with the creation of the App and the REST API, but code is preserved (the call to this function was
+    /// commented on the RestPage).
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="jobTitleID"></param>
+    /// <param name="addressID"></param>
+    /// <returns></returns>
+    public static bool IsNewServiceAreaAllowed(int userID, int jobTitleID, int addressID)
     {
+        using (var db = Database.Open("sqlloco")) {
+            
+            return db.QueryValue(@"
+                SELECT count(*) FROM ServiceAddress
+                WHERE UserID = @0 AND PositionID = @1
+                        AND TravelFromLocation = 1 -- Only travel from addresses
+                        AND AddressID <> @2 --Don't count this address!
+            ", userID, jobTitleID, addressID) == 0;
+        }
+    }
 
+    #endregion
+
+    #region Create/Update
+    public static int SetAddress(LcRestAddress address)
+    {
+        // Inferred TypeID
+        var internalTypeID = AddressType.Other;
+        switch (address.kind)
+        {
+            case AddressKind.Home:
+                internalTypeID = AddressType.Home;
+                break;
+            case AddressKind.Billing:
+                internalTypeID = AddressType.Billing;
+                break;
+            // Any other kind (Service), is already set to 'Other'.
+        }
+
+        // Automatically set the City, StateProvinceID and PostalCodeID given
+        // the PostalCode and Country information from the object.
+        AutosetByCountryPostalCode(address);
+
+        // GPS
+        if ((!address.latitude.HasValue || address.latitude.Value == 0) &&
+            (!address.longitude.HasValue || address.longitude.Value == 0))
+        {
+            var addressInline = ASP.LcHelpers.JoinNotEmptyStrings(", ",
+                address.addressLine1,
+                address.addressLine2,
+                address.city,
+                address.postalCode,
+                address.stateProvinceCode,
+                address.countryCode
+            );
+
+            var latLng = LcData.Address.GoogleGeoCode(addressInline);
+
+            if (latLng != null) {
+                address.latitude = (double)latLng.Lat;
+                address.longitude = (double)latLng.Lng;
+            }
+            else {
+                // Per comment on #677 2015-03-07 (following https://github.com/dani0198/Loconomics/issues/677#issuecomment-77714980)
+                // The constraint that makes GPS required is removed but with code copy, so next lines are commented:
+                // // Coordinates are required
+                // throw new HttpException(404, "Looks like we're having problems verifying this location. Please double-check it or use the pin to choose a location.");
+            }
+        }
+
+        using (var db = Database.Open("sqlloco")) {
+
+            // Different SQL for service addresses.
+            // Despite of that, we pass later all the service
+            // parameters, since they will be just discarded
+            // by the placeholder replacement, and the sort
+            // of the standard address fields is the same
+            // since the SQL for that part is the same
+            // in the service-address sql.
+            var sql = address.kind == AddressKind.Service ?
+                LcData.sqlSetServiceAddress :
+                LcData.sqlSetAddress
+            ;
+
+            return (int)db.QueryValue(sql,
+                address.addressID,
+                address.userID,
+                address.addressLine1,
+                address.addressLine2,
+                address.city,
+                address.stateProvinceID,
+                address.postalCodeID,
+                address.countryID,
+                address.addressName,
+                internalTypeID,
+                address.specialInstructions,
+                address.latitude,
+                address.longitude,
+                null, // old unused field "google-map-url",
+                // Beggining of service-address specific fields:
+                address.jobTitleID,
+                address.isServiceLocation,
+                address.isServiceArea,
+                address.serviceRadius,
+                null, // unused field on REST "travel-transport",
+                false // unused field on REST "preferred-address"
+            );
+        }
+    }
+    #endregion
+
+    #region Look up tasks
+    /// <summary>
+    /// For an address with the Country (code or ID) and Postal Code information,
+    /// it looks in database for the PostalCodeID, City and StateProvinceID and 
+    /// set it in the passed address object.
+    /// If the initial address contains a Country Code but not ID, the ID is
+    /// auto set too.
+    /// 
+    /// It throws ArgumentException if the required postal code and country information
+    /// does not exists in the address object.
+    /// </summary>
+    /// <param name="address"></param>
+    /// <returns>The success of the task.</returns>
+    public static bool AutosetByCountryPostalCode(LcRestAddress address)
+    {
+        if (String.IsNullOrWhiteSpace(address.postalCode))
+        {
+            throw new ArgumentException("Address must contain a postal code", "address");
+        }
+        if (address.countryID <= 0)
+        {
+            if (String.IsNullOrWhiteSpace(address.countryCode))
+            {
+                throw new ArgumentException("Address must contain a country code or country ID", "address");
+            }
+            address.countryID = LcRestLocale.GetCountryIDByCode(address.countryCode);
+        }
+        else
+        {
+            // Just ensure the Country Code is the correct for the given ID
+            address.countryCode = LcRestLocale.GetCountryCodeByID(address.countryID);
+        }
+
+        // Get the information by postal code and country from database
+        var sqlGetPostalCodeData = @"
+            SELECT  PostalCodeID, City, StateProvinceID
+            FROM    PostalCode
+            WHERE   PostalCode = @0
+                        AND
+                    CountryID = @1
+        ";
+        using (var db = Database.Open("sqlloco"))
+        {
+            var data = db.QuerySingle(sqlGetPostalCodeData, address.postalCode, address.countryID);
+            if (data != null)
+            {
+                address.postalCodeID = data.PostalCodeID;
+                address.city = data.City;
+                address.stateProvinceID = data.StateProvinceID;
+                // Done:
+                return true;
+            }
+            else
+            {
+                // Failed look-up
+                return false;
+            }
+        }
     }
     #endregion
 }
