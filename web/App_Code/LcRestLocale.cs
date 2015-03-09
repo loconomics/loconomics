@@ -68,19 +68,46 @@ public class LcRestLocale
         }
     }
 
+    private static readonly System.Text.RegularExpressions.Regex regURLLocale =
+        new System.Text.RegularExpressions.Regex(@"/api/v([^/]+)/([a-z]{2})-([A-Z]{2})(/|$)", 
+            System.Text.RegularExpressions.RegexOptions.ECMAScript | System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    public static dynamic AnalyzeURL(string url)
+    {
+        var matches = regURLLocale.Match(url);
+        if (matches.Success)
+        {
+            var version = matches.Groups[1].Value;
+            var lang = matches.Groups[2].Value;
+            var country = matches.Groups[3].Value;
+            return new {
+                version = version,
+                language = lang,
+                country = country
+            };
+        }
+        return null;
+    }
+
     public static LcRestLocale Current
     {
         get
         {
-            // TODO: Reimplement when the URL for REST changes
-            var locale = new LcRestLocale {
-                countryID = LcData.GetCurrentCountryID(),
-                languageID = LcData.GetCurrentLanguageID()
-            };
-            locale.countryCode = GetCountryCodeByID(locale.countryID);
-            locale.languageCode = GetLanguageCodeByID(locale.languageID);
+            var info = AnalyzeURL(HttpContext.Current.Request.RawUrl);
 
-            return locale;
+            if (info != null)
+            {
+                var locale = new LcRestLocale
+                {
+                    countryCode = info.country,
+                    countryID = GetCountryIDByCode(info.country),
+                    languageCode = info.language,
+                    languageID = GetLanguageIDByCode(info.language)
+                };
+
+                return locale;
+            }
+            return null;
         }
     }
 }

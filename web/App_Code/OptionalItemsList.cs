@@ -53,8 +53,8 @@ public class OptionalItemsList<T> : IList<T>
     {
         get
         {
-            // REVIEW: what about index < 0
-            if (index >= _data.Count)
+            // NOTE: Fixed < 0 cases, passing default too
+            if (index >= _data.Count || index < 0)
             {
                 return default(T);
             }

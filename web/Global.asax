@@ -13,7 +13,7 @@
         //  Código que se ejecuta cuando se cierra la aplicación
 
     }
-        
+
     void Application_Error(object sender, EventArgs e) 
     {
         Exception ex = Server.GetLastError();
@@ -30,6 +30,18 @@
                     // Execution ends right here.
                     break;
             }
+        }
+
+        // The wildcard Route for the /api (REST service) will try to map the URL
+        // to a 'cshtml' file, if does not exists, the next error is triggered, so
+        // we catch it and return the correct message;
+        // NO NEED to log this, is just a regular not found, but not controlled by the
+        // routing system.
+        if (ex is InvalidOperationException && ex.Message.Contains("'WebPagesRouteHandler'"))
+        {
+            Response.StatusCode = 404;
+            Response.Write("Not Found");
+            Response.End();
         }
 
         if (ex is HttpUnhandledException && ex.InnerException != null)

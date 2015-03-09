@@ -11,10 +11,10 @@
             }
         
             if (!UrlData[0].IsEmpty()) {
-                throw new HttpException(404, "That item does not exists (" + UrlData[0] + ")");
+                throw new HttpException(404, "Not found: (" + UrlData[0] + ")");
             }
 
-            if (Request["name"] == "indians") {
+            if (Request["name"] == "userpos") {
                 var pos = LcData.UserInfo.GetUserPos();
                 if (pos == null || pos.Count == 0)
                     return new { rows = new object[]{}, message = "You have not positions. Logged?" };
@@ -23,7 +23,10 @@
             }
             else {
                 return new {
-                    rows = new string[] { "one", "little", "two", "little", "three", "little", "indians" }
+                    current = LcRestLocale.Current,
+                    urlLocaleTest1 = LcRestLocale.AnalyzeURL("/api/v1/en-US"),
+                    urlLocaleTest2 = LcRestLocale.AnalyzeURL("/api/v2.3.4/es-ES"),
+                    urlLocaleTest3 = LcRestLocale.AnalyzeURL("/source/api/v2/es-US/")
                 };
             }
         }

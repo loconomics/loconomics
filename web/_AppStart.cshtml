@@ -31,4 +31,8 @@
     RouteTable.Routes.MapWebPageRoute("{city}/{position}/{user}", "~/PublicProfileURL.cshtml");
     // CustomURL:
     RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/CustomURL.cshtml");
+    // REST API, locale independent:
+    RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/icalendar/{page}", "~/api/v1/icalendar/{page}.cshtml");
+    RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/{page}/{*urldata}", "~/api/v1/{page}.cshtml");
+    
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.WebPages;
+using System.Web.Routing;
 
 /// <summary>
 /// Base class to simplify implementation of REST pages
@@ -39,11 +41,33 @@ public class RestWebPage
             return WebPage.Validation;
         }
     }
+    
+    private IList<string> _urlData;
     public IList<string> UrlData
     {
         get
         {
-            return WebPage.UrlData;
+            if (_urlData == null)
+            {
+                // NOTE: The call to RouteTable.Routes.MapWebPageRoute
+                // must use the placeholder name {*urldata} for the 
+                // dynamic part of the URL that want to be catched up
+                // as a typical WebPage.UrlData.
+                var rpath = WebPage.Context.GetRouteValue("urldata");
+
+                if (rpath != null)
+                {
+                    _urlData = OptionalItemsList<string>.FromUrlPath(rpath);
+                }
+                else
+                {
+                    // On null, treat as this was not routed, just direct
+                    // WebPage call, use the standard:
+                    _urlData = WebPage.UrlData;
+                }
+            }
+
+            return _urlData;
         }
     }
     public int StatusCode

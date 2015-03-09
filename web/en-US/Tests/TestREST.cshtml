@@ -10,9 +10,9 @@
 
     var REST_API = {
         'Test': {
-            url: '/en-US/REST/Test',
+            url: '/api/v1/en-US/Test',
             get: {
-                name: 'indians'
+                name: 'userpos'
             },
             post: {
                 name: 'Me',
@@ -21,7 +21,7 @@
             }
         },
         'Test item': {
-            url: '/en-US/REST/Test/20',
+            url: '/api/v1/en-US/Test/20',
             put: {
                 name: 'Me',
                 num: 10
@@ -29,37 +29,28 @@
             'delete': {}
         },
         'Test Server Error': {
-            url: '/en-US/REST/Test',
+            url: '/api/v1/en-US/Test',
             all: {
                 givemeerror: 'Something goes wrong'
             }
         },
         'Upcoming Bookings': {
-            url: '/en-US/REST/upcoming-bookings',
+            url: '/api/v1/en-US/upcoming-bookings',
             get: {
                 'api comment': 'The result is an object with: nextWeek, tomorrow, today, nextBookingID; ' +
                 'first three will contain the quantity of bookings and the time it starts/ends depending on the case.'
             }
         },
         'Get Availability Weekly': {
-            url: '/en-US/REST/availability/weekly',
+            url: '/api/v1/en-US/availability/weekly',
             get: {
-                user: 141,
-                start: '2014-07-17',
-                end: null
-            }
-        },
-        'Get Availability Weekly (pre-REST API)': {
-            url: '/en-US/calendar/get-availability',
-            get: {
-                type: 'weekly',
                 user: 141,
                 start: '2014-07-17',
                 end: null
             }
         },
         'Get/put Availability Weekly Schedule (aka work-hours)': {
-            url: '/en-US/REST/availability/weekly-schedule',
+            url: '/api/v1/en-US/availability/weekly-schedule',
             get: {
             },
             put: {
@@ -74,26 +65,9 @@
                 '}'
             }
         },
-        'Get Availability workHours (pre-REST API)': {
-            url: '/en-US/calendar/get-availability',
-            get: {
-                type: 'workHours'
-            }
-        },
         'Get Availability monthly': {
-            url: '/en-US/REST/availability/monthly',
+            url: '/api/v1/en-US/availability/monthly',
             get: {
-                editable: false,
-                'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
-                    'the first month-date for that date; or a given "start" and "end" dates, ' +
-                    'default is the current date',
-                date: null
-            }
-        },
-        'Get Availability monthly (pre-REST API)': {
-            url: '/en-US/calendar/get-availability',
-            get: {
-                type: 'monthly',
                 editable: false,
                 'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
                     'the first month-date for that date; or a given "start" and "end" dates, ' +
@@ -102,7 +76,7 @@
             }
         },
         'Get/put Availability monthly-schedule': {
-            url: '/en-US/REST/availability/monthly-schedule',
+            url: '/api/v1/en-US/availability/monthly-schedule',
             get: {
                 'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
                     'the first month-date for that date; or a given "start" and "end" dates, ' +
@@ -115,19 +89,8 @@
                     '{"defaultStatus":"available","slots":{"2014-09-28":{},"2014-09-29":{"source":"user","status":"unavailable"},"2014-10-15":{"source":"user","status":"available"},"2014-11-08":{} }}'
             }
         },
-        'Get Availability monthly-schedule (pre-REST API)': {
-            url: '/en-US/calendar/get-availability',
-            get: {
-                type: 'monthly-schedule',
-                'api comment': 'parameters allowed: "date" to pick the firts week-date for ' +
-                    'the first month-date for that date; or a given "start" and "end" dates, ' +
-                    'default is the current date',
-                start: null,
-                end: null
-            }
-        },
         'Login': {
-            url: '/en-US/rest/login',
+            url: '/api/v1/en-US/login',
             post: {
                  "username": "some user email",
                  "password": "",
@@ -139,11 +102,11 @@
             }
         },
         'Logout': {
-            url: '/en-US/rest/logout',
+            url: '/api/v1/en-US/logout',
             post: {}
         },
         'Signup': {
-            url: '/en-US/rest/signup',
+            url: '/api/v1/en-US/signup',
             post: {
                  "username": "some user email",
                  "password": "",
@@ -156,14 +119,14 @@
             }
         },
         'Facebook Login': {
-            url: '/en-US/rest/login/facebook',
+            url: '/api/v1/en-US/login/facebook',
             post: {
                 "accessToken": "Facebook Access Token",
                 "returnProfile": true
             }
         },
         'Facebook Signup': {
-            url: '/en-US/rest/signup/facebook',
+            url: '/api/v1/en-US/signup/facebook',
             post: {
                 "accessToken": "Facebook Access Token",
                 "profileType": "freelancer",
@@ -171,7 +134,7 @@
             }
         },
         'Events and to add event': {
-            url: '/en-US/rest/events',
+            url: '/api/v1/en-US/events',
             get: {
                  "types": [3, 5],
                  "start": "2014-06-01T12:00:00",
@@ -193,7 +156,7 @@
             }
         },
         'Event (single)': {
-            url: '/en-US/rest/events/353',
+            url: '/api/v1/en-US/events/353',
             get: {},
             put: {
                 "EventTypeID":3,
@@ -216,18 +179,18 @@
             'delete': {}
         },
         'Bookings (read only)': {
-            url: '/en-US/rest/bookings',
+            url: '/api/v1/en-US/bookings',
             get: {
                  "start": "2014-06-01T12:00:00",
                  "end": "2014-09-30T10:00:00Z",
             }
         },
         'Bookings (single; read only)': {
-            url: '/en-US/rest/bookings/73',
+            url: '/api/v1/en-US/bookings/73',
             get: {}
         },
         'Freelancer Bookings (post only)': {
-            url: '/en-US/rest/freelancer-bookings',
+            url: '/api/v1/en-US/freelancer-bookings',
             post: {
                 'customerUserID': 141,
                 'addressID': 1,
@@ -239,7 +202,7 @@
             }
         },
         'Freelancer Bookings (single only)': {
-            url: '/en-US/rest/freelancer-bookings/73',
+            url: '/api/v1/en-US/freelancer-bookings/73',
             put: {
                 'customerUserID': 141,
                 'addressID': 19,
@@ -253,17 +216,17 @@
             }
         },
         'Availability Types': {
-            url: '/en-US/rest/availability-types',
+            url: '/api/v1/en-US/availability-types',
             get: {},
         },
         'Event Types': {
-            url: '/en-US/rest/event-types',
+            url: '/api/v1/en-US/event-types',
             get: {
                 "OnlySelectable":true
             },
         },
         'iCalendar Events': {
-            url: '/en-US/rest/icalendar/events',
+            url: '/api/v1/en-US/icalendar/events',
             get: {
                  "types": [1, 3, 5],
                  "start": "2014-01-01T12:00:00",
@@ -274,7 +237,7 @@
             }
         },
         'Freelancer Pricing': {
-            url: '/en-US/rest/freelancer-pricing',
+            url: '/api/v1/en-US/freelancer-pricing',
             get: {
                 "freelancerUserID": 141,
                 "jobTitleID": -1,
@@ -303,7 +266,7 @@
             }
         },
         'Freelancer Pricing (item)': {
-            url: '/en-US/rest/freelancer-pricing/73',
+            url: '/api/v1/en-US/freelancer-pricing/73',
             get: { },
             put: {
                 "pricingTypeID": 3,
@@ -329,19 +292,19 @@
             delete: {}
         },
         'Job Titles (item)': {
-            url: '/en-US/rest/job-titles/106',
+            url: '/api/v1/en-US/job-titles/106',
             get: { }
         },
         'Pricing Types': {
-            url: '/en-US/rest/pricing-types',
+            url: '/api/v1/en-US/pricing-types',
             get: { }
         },
         'Pricing Types (item)': {
-            url: '/en-US/rest/pricing-types/3',
+            url: '/api/v1/en-US/pricing-types/3',
             get: { }
         },
         'User Job Profile': {
-            url: '/en-US/rest/user-job-profile',
+            url: '/api/v1/en-US/user-job-profile',
             get: { },
             post: {
                 jobTitleID: 106,
@@ -351,7 +314,7 @@
             }
         },
         'User Job Profile (item -- Job Title)': {
-            url: '/en-US/rest/user-job-profile/106',
+            url: '/api/v1/en-US/user-job-profile/106',
             get: { },
             put: {
                 intro: 'Job title introduction',
@@ -361,26 +324,26 @@
             delete: { }
         },
         'User Job Profile - Deactivation': {
-            url: '/en-US/rest/user-job-profile/106/deactivate',
+            url: '/api/v1/en-US/user-job-profile/106/deactivate',
             post: { }
         },
         'User Job Profile - Reactivation': {
-            url: '/en-US/rest/user-job-profile/106/reactivate',
+            url: '/api/v1/en-US/user-job-profile/106/reactivate',
             post: { }
         },
         'Calendar Syncing': {
-            url: '/en-US/rest/calendar-syncing',
+            url: '/api/v1/en-US/calendar-syncing',
             get: { },
             put: {
                 icalImportURL: "http://calendar.google.com/something/ical.ics"
             }
         },
         'Calendar Syncing Reset Export URL': {
-            url: '/en-US/rest/calendar-syncing/resetExportURL',
+            url: '/api/v1/en-US/calendar-syncing/resetExportURL',
             post: { }
         },
         'Scheduling Preferences': {
-            url: '/en-US/rest/scheduling-preferences',
+            url: '/api/v1/en-US/scheduling-preferences',
             get: { },
             put: {
                 advanceTime: 0.5,
@@ -389,7 +352,7 @@
             }
         },
         'Messaging: Threads': {
-            url: '/en-US/rest/messaging',
+            url: '/api/v1/en-US/messaging',
             get: {
                 limit: 20,
                 untilID: null,
@@ -405,7 +368,7 @@
             }
         },
         'Messaging: Single Thread': {
-            url: '/en-US/rest/messaging/225',
+            url: '/api/v1/en-US/messaging/225',
             get: {
                 limit: 20,
                 untilID: null,
@@ -416,11 +379,11 @@
             }
         },
         'Messaging: Single Message': {
-            url: '/en-US/rest/messaging/225/525',
+            url: '/api/v1/en-US/messaging/225/525',
             get: { }
         },
         'Addresses: home (ever single)': {
-            url: '/en-US/rest/addresses/home',
+            url: '/api/v1/en-US/addresses/home',
             get: { },
             put: {
                 "addressName":"Home",
@@ -431,7 +394,7 @@
             }
         },
         'Addresses: service addresses per Job Title': {
-            url: '/en-US/rest/addresses/service/106',
+            url: '/api/v1/en-US/addresses/service/106',
             get: { },
             post: {
                 "addressName":"Workshop",
@@ -446,7 +409,7 @@
             }
         },
         'Addresses: service addresses per Job Title (single)': {
-            url: '/en-US/rest/addresses/service/106/95',
+            url: '/api/v1/en-US/addresses/service/106/95',
             get: { },
             put: {
                 "addressName":"Billing",
@@ -462,7 +425,7 @@
             delete: { }
         },
         'Addresses: billing addresses': {
-            url: '/en-US/rest/addresses/billing',
+            url: '/api/v1/en-US/addresses/billing',
             get: { },
             post: {
                 "addressName":"Workshop",
@@ -474,7 +437,7 @@
             }
         },
         'Addresses: billing addresses (single)': {
-            url: '/en-US/rest/addresses/billing/71',
+            url: '/api/v1/en-US/addresses/billing/71',
             get: { },
             put: {
                 "addressName":"Workshop",
@@ -605,7 +568,7 @@
 </style>
 <div>
     <form>
-        <label>REST API URL (for example /en-US/REST/Test) <input type="text" name="url" value="/en-US/REST/Test" /></label>
+        <label>REST API URL (for example /en-US/REST/Test) <input type="text" name="url" value="/api/v1/en-US/Test" /></label>
         <div>
             <!-- Some example data as JSON -->
             <label>Request raw data as JSON
