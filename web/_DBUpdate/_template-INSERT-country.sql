@@ -1,4 +1,4 @@
-﻿INSERT INTO [loconomics].[dbo].[country]
+﻿INSERT INTO [country]
     ([CountryID]
     ,[LanguageID]
     ,[CountryName]

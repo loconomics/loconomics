@@ -2,7 +2,7 @@
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'
 DELETE FROM country 
-INSERT INTO [loconomics].[dbo].[country]
+INSERT INTO [country]
     ([CountryID]
     ,[LanguageID]
     ,[CountryName]
@@ -25,7 +25,7 @@ VALUES
     ,'jd'
     ,'True')
 
-INSERT INTO [loconomics].[dbo].[country]
+INSERT INTO [country]
     ([CountryID]
     ,[LanguageID]
     ,[CountryName]
@@ -48,7 +48,7 @@ VALUES
     ,'jd'
     ,'True')
 
-INSERT INTO [loconomics].[dbo].[country]
+INSERT INTO [country]
     ([CountryID]
     ,[LanguageID]
     ,[CountryName]
@@ -71,7 +71,7 @@ VALUES
     ,'jd'
     ,'True')
 
-INSERT INTO [loconomics].[dbo].[country]
+INSERT INTO [country]
     ([CountryID]
     ,[LanguageID]
     ,[CountryName]
