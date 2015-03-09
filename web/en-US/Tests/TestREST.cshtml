@@ -448,6 +448,31 @@
                 "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
             },
             delete: { }
+        },
+        'User Profile (get and update)': {
+            url: '/api/v1/en-US/profile',
+            get: { },
+            put: {
+                // Name
+                "firstName": "Iago",
+                "lastName": "Lorenzo",
+                "secondLastName": "Salgueiro",
+                // Contact
+                "alternativeEmail": "",
+                "phone": "",
+                "canReceiveSms": false,
+                "birthMonthDay": 20,
+                "birthMonth": 4
+            }
+        },
+        'Marketplace Profile (get and update)': {
+            url: '/api/v1/en-US/marketplace-profile',
+            get: { },
+            put: {
+                "publicBio": "I have little to tell. That's all.",
+                "freelancerProfileUrl": "my-custom-loconomics-url",
+                "freelancerWebsiteUrl": "http://loconomics.com"
+            }
         }
     };
 

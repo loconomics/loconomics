@@ -143,12 +143,17 @@ public static class LcAuth
         {
             db = Database.Open("sqlloco");
         }
+
+        // Provider profiles must have a BookCode, so generate one
+        // (but not replace if one exists)
+        var bookCode = LcData.UserInfo.GenerateBookCode(userID);
         
         db.Execute(@"UPDATE Users SET 
             IsProvider = 1,
-            OnboardingStep = 'welcome'
+            OnboardingStep = 'welcome',
+            BookCode = @1
             WHERE UserID = @0
-        ", userID);
+        ", userID, bookCode);
 
         if (ownDb)
         {

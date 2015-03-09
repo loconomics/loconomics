@@ -1,0 +1,102 @@
+﻿@*
+    Reading and updating the user Marketplace Profile.
+    Internally, is a subset of profile fields specifically used on
+    the marketplace public profile, most of them freelancer specific.
+    The API /profile does not include this information.
+
+    Options:
+
+    - GET: no params
+    
+    - PUT:
+        publicBio:string Editable
+        freelancerProfileUrl:string Editable
+        freelancerWebsiteUrl:string Editable
+
+    - @Result {
+        userID:int Auto
+        publicBio:string Editable
+        freelancerProfileUrl:string Editable
+        freelancerWebsiteUrl:string Editable
+        bookCode:string Auto
+        createdDate:datetime Auto
+        updatedDate:datetime Auto
+    }
+*@
+@functions{
+    public class RestUserMarketplaceProfile : RestWebPage
+    {
+        private dynamic GetData()
+        {
+            return LcRestMarketplaceProfile.GetUserProfile(WebSecurity.CurrentUserId);
+        }
+        
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+ 	        return GetData();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+            var userID = WebSecurity.CurrentUserId;
+            
+            // Validation
+            Validation.Add("publicBio", Validator.StringLength(4000, 0, "Public Bio must be fewer than 4000 characters"));
+            Validation.Add("freelancerProfileUrl", Validator.Regex(@"\w*", "The custom URL you've entered is invalid. Remember: just words and dashes, no white space, no slashes"));
+            
+            // Automatically add http:// if users doesn't put a protocol on its website url. Before validation!
+            var webUrl = Request.Form["freelancerWebsiteUrl"];
+            if (!String.IsNullOrEmpty(webUrl)) {
+                if (!webUrl.StartsWith("http")) {
+                    webUrl = "http://" + webUrl;
+                }
+                if (!LcValidators.IsUrl(webUrl)) {
+                    ModelState.AddError("website-url", "The Website URL is not valid, check that is complete");
+                }
+            }
+            
+            // First validation check
+            if (!Validation.IsValid() || !ModelState.IsValid) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+            
+            // Check on database that the requested profile URL is available
+            // NOTE: more expensive check, and irrelevant on previous validation errors, so is done
+            // after the first check
+            var profileUrl = Request.Form["freelancerProfileUrl"].Trim();
+            if (!LcRestMarketplaceProfile.IsProfileUrlAvailable(userID, profileUrl)) {
+                ModelState.AddError("freelancerProfileUrl", "We're sorry, that URL is unavailable, please choose other.");
+            }
+
+            // Second validation check: just, there are errros?
+            if (!ModelState.IsValid) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            // Parameters
+            var profile = new LcRestMarketplaceProfile {
+                userID = userID,
+                publicBio = Request.Form["publicBio"],
+                freelancerProfileUrl = profileUrl,
+                freelancerWebsiteUrl = webUrl
+            };
+
+            // Update!
+            LcRestMarketplaceProfile.UpdateUserProfile(profile);
+            
+            return GetData();
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestUserMarketplaceProfile().JsonResponse(this);
+}

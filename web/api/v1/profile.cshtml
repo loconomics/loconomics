@@ -1,0 +1,105 @@
+﻿@*
+    Reading and updating the User Profile.
+
+    Options:
+
+    - GET: no params
+    
+    - PUT:
+        // Name
+        firstName:string Editable
+        lastName:string Editable
+        secondLastName:string Editable
+        // Contact
+        alternativeEmail:string Editable
+        phone:string Editable
+        canReceiveSms:bool Editable
+        birthMonthDay:int Editable. Day of the month of the birthday (the year is not wanted)
+        birthMonth:int Editable. Month of the birthday (the year is not wanted)
+
+    - @Result {
+        // ID
+        userID:int Auto
+        email:string
+
+        // Name
+        firstName:string Editable
+        lastName:string Editable
+        secondLastName:string Editable
+
+        // Contact
+        alternativeEmail:string Editable
+        phone:string Editable
+        canReceiveSms:bool Editable
+        birthMonthDay:int Editable. Day of the month of the birthday (the year is not wanted)
+        birthMonth:int Editable. Month of the birthday (the year is not wanted)
+   
+        // Account Type
+        isFreelancer:bool Auto
+        isCustomer:bool Auto
+        isMember:bool Auto
+
+        // Account Status
+        onboardingStep:string Auto. The name of the step in the onboarding process, the UI must guide user to that to complete the basic profile.
+        accountStatusID:int Auto
+        createdDate:datetime Auto
+        updatedDate:datetime Auto
+    }
+*@
+@functions{
+    public class RestUserProfile : RestWebPage
+    {
+        private dynamic GetData()
+        {
+            return LcRestUserProfile.GetUserProfile(WebSecurity.CurrentUserId);
+        }
+        
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+ 	        return GetData();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+            // Validation
+            Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
+            Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
+            Validation.Add("alternativeEmail", Validator.Regex(LcValidators.EmailAddressRegexPattern, "The alternative email is not valid."));
+            Validation.Add("birthMonthDay", Validator.Integer("Birth Day must be an number (day of the month)"));
+            Validation.Add("birthMonth", Validator.Integer("Birth Month must be an number"));
+
+            if (!Validation.IsValid() || !ModelState.IsValid) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            // Parameters
+            var profile = new LcRestUserProfile {
+                userID = WebSecurity.CurrentUserId,
+                firstName = Request.Form["firstName"],
+                lastName = Request.Form["lastName"],
+                secondLastName = Request.Form["secondLastName"],
+                alternativeEmail = Request.Form["alternativeEmail"],
+                phone = Request.Form["phone"],
+                canReceiveSms = Request.Form["canReceiveSms"].AsBool(),
+                birthMonthDay = Request.Form["birthMonthDay"].AsInt(),
+                birthMonth = Request.Form["birthMonth"].AsInt()
+            };
+
+            LcRestUserProfile.UpdateUserProfile(profile);
+            
+            return GetData();
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestUserProfile().JsonResponse(this);
+}

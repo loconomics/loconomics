@@ -22,34 +22,37 @@
             }
         }
         
-        using (var db = Database.Open("sqlloco"))
-        {
-            db.Execute(@"
-                DECLARE 
-                @UserID int
-                ,@WebsiteUrl varchar(2078)
+        if (PageState.IsValid) {
 
-                SET @UserID = @0
-                SET @WebsiteUrl = @1
+            using (var db = Database.Open("sqlloco"))
+            {
+                db.Execute(@"
+                    DECLARE 
+                    @UserID int
+                    ,@WebsiteUrl varchar(2078)
 
-                BEGIN TRAN
+                    SET @UserID = @0
+                    SET @WebsiteUrl = @1
 
-                /* Update User Personal Data */
-                UPDATE	Users
-                SET
-                        ProviderWebsiteURL = @WebsiteUrl
+                    BEGIN TRAN
 
-                        ,UpdatedDate = getdate()
-                        ,ModifiedBy = 'sys'
-                WHERE   UserId = @UserID
+                    /* Update User Personal Data */
+                    UPDATE	Users
+                    SET
+                            ProviderWebsiteURL = @WebsiteUrl
 
-                COMMIT TRAN
-            ",
-                u.UserID,
-                WebsiteUrl);
+                            ,UpdatedDate = getdate()
+                            ,ModifiedBy = 'sys'
+                    WHERE   UserId = @UserID
+
+                    COMMIT TRAN
+                ",
+                    u.UserID,
+                    WebsiteUrl);
             
-            if (doReturn) {
-                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                if (doReturn) {
+                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                }
             }
         }
     }

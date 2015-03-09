@@ -47,6 +47,10 @@
             if (Request["betweenTime"].IsEmpty()) {
                 ModelState.AddError("betweenTime", LcRessources.RequiredField("Preparation time between bookings"));
             }
+            
+            if (!ModelState.IsValid) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
 
             var advanceTime = Request["advanceTime"].AsDecimal(0);
             var betweenTime = Request["betweenTime"].AsDecimal(0);
