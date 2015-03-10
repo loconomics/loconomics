@@ -49,7 +49,7 @@ public static class LcAuthHelper
     public class LoginResult {
         public LoginResult() { }
         public string redirectUrl;
-        public int userId;
+        public int userID;
         /// <summary>
         /// This is the internal 'AutologinKey'
         /// that we need now for the secure session-less REST calls
@@ -103,12 +103,12 @@ public static class LcAuthHelper
         object profile = null;
             
         if (returnProfile) {
-            profile = LcData.UserInfo.GetRestUserProfile(userID);
+            profile = LcRestUserProfile.GetUserProfile(userID);
         }
 
         return new LoginResult {
             redirectUrl = getRedirectUrl(userID),
-            userId = userID,
+            userID = userID,
             authKey = authKey,
             profile = profile
         };
@@ -240,7 +240,7 @@ public static class LcAuthHelper
                     var logged = Login(username, password, rememberMe, returnProfile);
                     // throw exception on error
                     if (isProvider) {
-                        LcAuth.BecomeProvider(logged.userId);
+                        LcAuth.BecomeProvider(logged.userID);
                     }
                     return logged;
                 }
@@ -300,7 +300,7 @@ public static class LcAuthHelper
             // Performs system login, using the autologin info since
             // there is no password here.
             var ret = GetLoginResultForID(user.UserID, returnProfile);
-            LcAuth.Autologin(ret.userId.ToString(), ret.authKey);
+            LcAuth.Autologin(ret.userID.ToString(), ret.authKey);
             return ret;
         }
         else {
