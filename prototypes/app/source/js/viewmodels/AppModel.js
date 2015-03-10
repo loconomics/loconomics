@@ -138,13 +138,13 @@ AppModel.prototype.login = function login(username, password) {
         // use authorization key for each
         // new Rest request
         this.rest.extraHeaders = {
-            alu: logged.userId,
+            alu: logged.userID,
             alk: logged.authKey
         };
 
         // async local save, don't wait
         localforage.setItem('credentials', {
-            userID: logged.userId,
+            userID: logged.userID,
             username: username,
             password: password,
             authKey: logged.authKey
@@ -189,13 +189,13 @@ AppModel.prototype.signup = function signup(username, password, profileType) {
         // use authorization key for each
         // new Rest request
         this.rest.extraHeaders = {
-            alu: logged.userId,
+            alu: logged.userID,
             alk: logged.authKey
         };
 
         // async local save, don't wait
         localforage.setItem('credentials', {
-            userID: logged.userId,
+            userID: logged.userID,
             username: username,
             password: password,
             authKey: logged.authKey
