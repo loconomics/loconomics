@@ -5,8 +5,8 @@ using System.Web;
 using WebMatrix.Data;
 
 /// <summary>
-/// Implements the scheme for a 'service-address' object
-/// in the REST API, and static methods for database
+/// User profile information from a subset of [users] table
+/// for the REST API, and static methods for database
 /// operations
 /// </summary>
 public class LcRestUserProfile

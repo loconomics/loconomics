@@ -473,6 +473,19 @@
                 "freelancerProfileUrlSlug": "my-custom-loconomics-url",
                 "freelancerWebsiteUrl": "http://loconomics.com"
             }
+        },
+        'Privacy Settings (get and update)': {
+            url: '/api/v1/en-US/privacy-settings',
+            get: { },
+            put: {
+                "smsBookingCommunication": false,
+                "phoneBookingCommunication": true,
+                "loconomicsCommunityCommunication": true,
+                "loconomicsDbmCampaigns": false,
+                "profileSeoPermission": true,
+                "loconomicsMarketingCampaigns": true,
+                "coBrandedPartnerPermissions": false
+            }
         }
     };
 

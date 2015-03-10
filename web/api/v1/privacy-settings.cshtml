@@ -1,0 +1,102 @@
+﻿@*
+    Reading and updating the user Privacy Settings.
+
+    Options:
+
+    - GET: no params
+    
+    - PUT:
+        smsBookingCommunication:bool Editable
+        phoneBookingCommunication:bool Editable
+        loconomicsCommunityCommunication:bool Editable
+        loconomicsDbmCampaigns:bool Editable
+        profileSeoPermission:bool Editable
+        loconomicsMarketingCampaigns:bool Editable
+        coBrandedPartnerPermissions:bool Editable
+
+    - @Result {
+        // ID
+        userID:int Auto
+
+        // General user preferences
+        smsBookingCommunication:bool Editable
+        phoneBookingCommunication:bool Editable
+        loconomicsCommunityCommunication:bool Editable
+        loconomicsDbmCampaigns:bool Editable
+
+        // Freelancer only preferences
+        profileSeoPermission:bool Editable
+        loconomicsMarketingCampaigns:bool Editable
+        coBrandedPartnerPermissions:bool Editable
+
+        // Control fields
+        createdDate:datetime Auto
+        updatedDate:datetime Auto
+    }
+*@
+@functions{
+    public class RestPrivacyPreferences : RestWebPage
+    {
+        private dynamic GetData()
+        {
+            return LcRestPrivacySettings.GetPrivacySettings(WebSecurity.CurrentUserId);
+        }
+        
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+ 	        return GetData();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+            var userId = WebSecurity.CurrentUserId;
+            var profile = LcRestUserProfile.GetUserProfile(userId);
+
+            // Validation
+            Validation.RequireField("smsBookingCommunication", "Bookings by SMS preference is required");
+            Validation.RequireField("phoneBookingCommunication", "Bookings by Phone preference is required");
+            Validation.RequireField("loconomicsCommunityCommunication", "Loconomics community messages preference is required");
+            Validation.RequireField("loconomicsDbmCampaigns", "Marketing e-mails about Loconomics Service Providers preference is required");
+            // freelancer only
+            if (profile.isFreelancer) {
+                Validation.RequireField("profileSeoPermission", "Include my profile in search listings preference is required");
+                Validation.RequireField("loconomicsMarketingCampaigns", "Loconomics marketing messages preference is required");
+                Validation.RequireField("coBrandedPartnerPermissions", "Co-branded promotions preference is required");
+            }
+
+            if (!Validation.IsValid()) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            // Parameters
+            var settings = new LcRestPrivacySettings {
+                userID = userId,
+
+                smsBookingCommunication = Request["smsBookingCommunication"].AsBool(), 
+                phoneBookingCommunication = Request["phoneBookingCommunication"].AsBool(),
+                loconomicsCommunityCommunication = Request["loconomicsCommunityCommunication"].AsBool(),
+                loconomicsDbmCampaigns = Request["loconomicsDbmCampaigns"].AsBool(),
+
+                profileSeoPermission = profile.isFreelancer ? Request["profileSeoPermission"].AsBool() : false,
+                loconomicsMarketingCampaigns = profile.isFreelancer ? Request["loconomicsMarketingCampaigns"].AsBool() : false,
+                coBrandedPartnerPermissions = profile.isFreelancer ? Request["coBrandedPartnerPermissions"].AsBool() : false
+            };
+
+            LcRestPrivacySettings.UpdatePrivacySettings(settings);
+            
+            return GetData();
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestPrivacyPreferences().JsonResponse(this);
+}
