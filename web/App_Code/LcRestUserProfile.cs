@@ -18,6 +18,7 @@ public class LcRestUserProfile
     public string firstName;
     public string lastName;
     public string secondLastName;
+    public string businessName;
 
     public string alternativeEmail;
     public string phone;
@@ -48,6 +49,7 @@ public class LcRestUserProfile
             firstName = record.firstName,
             lastName = record.lastName,
             secondLastName = record.secondLastName,
+            businessName = record.businessName,
 
             alternativeEmail = record.alternativeEmail,
             phone = record.phone,
@@ -77,6 +79,7 @@ public class LcRestUserProfile
             ,firstName
             ,lastName
             ,secondLastName
+            ,businessName
 
             -- User Type
             ,isProvider as isFreelancer
@@ -108,6 +111,7 @@ public class LcRestUserProfile
         ,@FirstName varchar(50)
         ,@LastName varchar(145)
         ,@SecondLastName varchar(145)
+        ,@businessName nvarchar(145)
 
         ,@AlternativeEmail nvarchar(56)
         ,@Phone varchar(20)
@@ -119,11 +123,12 @@ public class LcRestUserProfile
         SET @FirstName = @1
         SET @LastName = @2
         SET @SecondLastName = @3
-        SET @AlternativeEmail = @4
-        SET @Phone = @5
-        SET @CanReceiveSms = @6
-        SET @BirthMonthDay = @7
-        SET @BirthMonth = @8
+        SET @businessName = @4
+        SET @AlternativeEmail = @5
+        SET @Phone = @6
+        SET @CanReceiveSms = @7
+        SET @BirthMonthDay = @8
+        SET @BirthMonth = @9
 
         -- Saving all the data and updating verifications
         BEGIN TRAN
@@ -182,6 +187,7 @@ public class LcRestUserProfile
         SET     FirstName = @FirstName
 		        ,LastName = @LastName
 		        ,SecondLastName = @SecondLastName
+                ,BusinessName = @businessName
 
                 ,AlternativeEmail = @AlternativeEmail		        
                 ,MobilePhone = @Phone
@@ -221,6 +227,7 @@ public class LcRestUserProfile
                 profile.firstName,
                 profile.lastName,
                 profile.secondLastName,
+                profile.businessName,
                 profile.alternativeEmail,
                 profile.phone,
                 profile.canReceiveSms,
