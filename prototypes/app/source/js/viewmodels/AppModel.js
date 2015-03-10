@@ -19,6 +19,8 @@ function AppModel(values) {
     this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
 }
 
+require('./AppModel-account').plugIn(AppModel);
+
 /** Initialize and wait for anything up **/
 AppModel.prototype.init = function init() {
     
@@ -101,111 +103,6 @@ AppModel.prototype.init = function init() {
                 resolve();
             }
         }.bind(this), resolveAnyway);
-    }.bind(this));
-};
-
-/**
-    Account methods
-**/
-AppModel.prototype.tryLogin = function tryLogin() {
-    // Get saved credentials
-    return localforage.getItem('credentials')
-    .then(function(credentials) {
-        // If we have ones, try to log-in
-        if (credentials) {
-            // Attempt login with that
-            return this.login(
-                credentials.username,
-                credentials.password
-            );
-        } else {
-            throw new Error('No saved credentials');
-        }
-    }.bind(this));
-};
-
-AppModel.prototype.login = function login(username, password) {
-
-    // Reset the extra headers to attempt the login
-    this.rest.extraHeaders = null;
-
-    return this.rest.post('login', {
-        username: username,
-        password: password,
-        returnProfile: true
-    }).then(function(logged) {
-
-        // use authorization key for each
-        // new Rest request
-        this.rest.extraHeaders = {
-            alu: logged.userID,
-            alk: logged.authKey
-        };
-
-        // async local save, don't wait
-        localforage.setItem('credentials', {
-            userID: logged.userID,
-            username: username,
-            password: password,
-            authKey: logged.authKey
-        });
-        localforage.setItem('profile', logged.profile);
-
-        // Set user data
-        this.user().model.updateWith(logged.profile);
-
-        return logged;
-    }.bind(this));
-};
-
-AppModel.prototype.logout = function logout() {
-
-    // Local app close session
-    this.rest.extraHeaders = null;
-    localforage.removeItem('credentials');
-    localforage.removeItem('profile');
-    
-    // Don't need to wait the result of the REST operation
-    this.rest.post('logout');
-    
-    return Promise.resolve();
-};
-
-AppModel.prototype.signup = function signup(username, password, profileType) {
-    
-    // Reset the extra headers to attempt the signup
-    this.rest.extraHeadres = null;
-    
-    return this.rest.post('signup?utm_source=app', {
-        username: username,
-        password: password,
-        profileType: profileType,
-        returnProfile: true
-    }).then(function(logged) {
-        // The result is the same as in a login, and
-        // we do the same as there to get the user logged
-        // on the app on sign-up success.
-        
-        // use authorization key for each
-        // new Rest request
-        this.rest.extraHeaders = {
-            alu: logged.userID,
-            alk: logged.authKey
-        };
-
-        // async local save, don't wait
-        localforage.setItem('credentials', {
-            userID: logged.userID,
-            username: username,
-            password: password,
-            authKey: logged.authKey
-        });
-        localforage.setItem('profile', logged.profile);
-
-        // Set user data
-        this.user().model.updateWith(logged.profile);
-
-        return logged;
     }.bind(this));
 };
 
