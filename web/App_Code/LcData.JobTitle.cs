@@ -71,6 +71,27 @@ public static partial class LcData
             }
         }
 
+        /// <summary>
+        /// Search job titles by a partial text by singular or plural name, or alias,
+        /// and the given locale.
+        /// Just returns the ID as value and singular name as label, suitable for autocomplete components.
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="locale"></param>
+        /// <returns></returns>
+        public static IEnumerable<dynamic> SearchJobTitles(string searchText, LcRestLocale locale)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                var sql = "EXEC SearchPositions @0, @1, @2";
+                return db.Query(sql, "%" + searchText + "%", locale.languageID, locale.countryID)
+                    .Select(job => new {
+                        value = job.PositionID,
+                        label = job.PositionSingular
+                    });
+            }
+        }
+
         #region User Job Title relationship
         public static dynamic GetUserJobTitles(int userID, int jobTitleID = -1)
         {

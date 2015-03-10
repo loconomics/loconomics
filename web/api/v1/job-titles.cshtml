@@ -1,11 +1,20 @@
 ﻿@*
     Retrieving the Job Title information for a single record.
 
+    TODO: Add autocomplete
+    TODO: Add posibility to create a job title given a name, see #650
+
     Options:
     
     - GET /@id
+        Returns a list of JobTitle records
 
-    - @Result {
+    - GET /autocomplete
+        Receives param 'search' or 'term' (just an alias) to perform a search of job titles by name or alias
+        returning an Autocomplete list, suitable for use in an autocomplete UI.
+
+    Structures
+    - JobTitle {
         "jobTitleID":int,
         "singularName":string,
         "pluralName":string,
@@ -22,6 +31,10 @@
                 "updatedDate":Date
             }
         ]
+    }
+    - Autocomplete {
+        "label":string, // The job title singularName
+        "value":int // The jobTitleID
     }
 *@
 @functions{
@@ -40,13 +53,14 @@
                 else
                     throw new HttpException(404, "Job Title not found.");
             }
-            else if (UrlData.Count == 1) {
-                throw new HttpException(400, "Invalid format for the Job Title ID");
+            else if (UrlData[0].ToLower() == "autocomplete") {
+                
+                var search = Request["search"] ?? Request["term"];
+                
+                return LcData.JobTitle.SearchJobTitles(search, LcRestLocale.Current);
             }
-            else
-            {
-                throw new HttpException(405, "GET is not allowed.");
-            }
+
+            throw new HttpException(404, "Not Found");
         }
     }
 }

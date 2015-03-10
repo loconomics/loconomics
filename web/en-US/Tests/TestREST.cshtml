@@ -295,6 +295,13 @@
             url: '/api/v1/en-US/job-titles/106',
             get: { }
         },
+        'Job Titles Autocomplete Search': {
+            url: '/api/v1/en-US/job-titles/autocomplete',
+            get: {
+                search: 'massag',
+                api_comment: 'The parameter "term" is allowed too as an alias for "search", just for easier integration with some UI components'
+            }
+        },
         'Pricing Types': {
             url: '/api/v1/en-US/pricing-types',
             get: { }
