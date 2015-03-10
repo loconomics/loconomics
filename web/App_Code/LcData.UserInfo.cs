@@ -864,6 +864,12 @@ public static partial class LcData
         {
             return GetUserPublicURL(WebSecurity.CurrentUserId);
         }
+        /// <summary>
+        /// TODO: rename to GetUserPublicURLPath since it doesn't includes the domain part.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="positionID"></param>
+        /// <returns></returns>
         public static string GetUserPublicURL(int userid, object positionID = null)
         {
             string city = GetUserCity(userid);

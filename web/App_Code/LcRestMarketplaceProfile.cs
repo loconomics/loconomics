@@ -15,7 +15,42 @@ public class LcRestMarketplaceProfile
     public int userID;
 
     public string publicBio;
-    public string freelancerProfileUrl;
+    /// <summary>
+    /// Slug or URL fragment choosen by the freelancer
+    /// as a custom URL belonging the loconomics.com domain.
+    /// About the slug term: https://en.wikipedia.org/wiki/Semantic_URL#Slug
+    /// </summary>
+    public string freelancerProfileUrlSlug;
+    /// <summary>
+    /// This full URL is not editable directly, just
+    /// a computed using the Loconomics URL and
+    /// the freelancer choosen 'slug', or fallback
+    /// to the standard URL.
+    /// </summary>
+    public string freelancerProfileUrl
+    {
+        get
+        {
+            var url = BuildFreelancerCustomURL(freelancerProfileUrlSlug);
+            if (String.IsNullOrWhiteSpace(url))
+            {
+                // Gets the standard, base URL provided by Loconomics.
+                // It's a SEO friendly URL that additionally to the userID
+                // contains information like the city and the primary
+                // job title name (if some information is missed it fallbacks
+                // to the non-SEO, ID based, URL, ever a valid address).
+                return LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(this.userID);
+            }
+            else
+            {
+                return url;
+            }
+        }
+    }
+    /// <summary>
+    /// A full URL outside Loconomics for
+    /// a professional website of the freelancer.
+    /// </summary>
     public string freelancerWebsiteUrl;
     public string bookCode;
 
@@ -29,12 +64,20 @@ public class LcRestMarketplaceProfile
         return new LcRestMarketplaceProfile {
             userID = record.userID,
             publicBio = record.publicBio,
-            freelancerProfileUrl = record.freelancerProfileUrl,
+            freelancerProfileUrlSlug = record.freelancerProfileUrlSlug,
             freelancerWebsiteUrl = record.freelancerWebsiteUrl,
             bookCode = record.bookCode,
             createdDate = record.createdDate,
             updatedDate = record.updatedDate
         };
+    }
+
+    public static string BuildFreelancerCustomURL(string slug)
+    {
+        if (String.IsNullOrWhiteSpace(slug))
+            return "";
+        else
+            return LcUrl.AppUrl + ASP.LcHelpers.StringSlugify(slug);
     }
 
     #region SQL
@@ -43,8 +86,8 @@ public class LcRestMarketplaceProfile
             Users.userID
 
             ,publicBio
-            ,providerProfileUrl
-            ,providerWebsiteUrl
+            ,providerProfileUrl as freelancerProfileUrlSlug
+            ,providerWebsiteUrl as freelancerWebsiteUrl
             ,bookCode   
                         
             ,createdDate
@@ -61,17 +104,17 @@ public class LcRestMarketplaceProfile
         DECLARE 
         @UserID int
         ,@PublicBio varchar(500)
-        ,@ProviderProfileURL varchar(2078)
+        ,@ProviderProfileURLSlug varchar(2078)
         ,@ProviderWebsiteURL varchar(2078)
 
         SET @UserID = @0
         SET @PublicBio = @1
-        SET @ProviderProfileURL = @2
+        SET @ProviderProfileURLSlug = @2
         SET @ProviderWebsiteURL = @3
 
         UPDATE	Users
         SET     PublicBio = @PublicBio
-		        ,ProviderProfileURL = @ProviderProfileURL
+		        ,ProviderProfileURL = @ProviderProfileURLSlug
 		        ,ProviderWebsiteURL = @ProviderWebsiteURL
 
                 ,UpdatedDate = getdate()
@@ -104,14 +147,13 @@ public class LcRestMarketplaceProfile
     #endregion
 
     #region Update
-    public static int UpdateUserProfile(LcRestMarketplaceProfile profile)
+    public static void UpdateUserProfile(LcRestMarketplaceProfile profile)
     {
         using (var db = Database.Open("sqlloco")) {
-
-            return (int)db.QueryValue(sqlUpdateProfile,
+            db.Execute(sqlUpdateProfile,
                 profile.userID,
                 profile.publicBio,
-                profile.freelancerProfileUrl,
+                profile.freelancerProfileUrlSlug,
                 profile.freelancerWebsiteUrl
             );
         }
@@ -126,14 +168,14 @@ public class LcRestMarketplaceProfile
                 AND ProviderProfileURL like @1
     ";
 
-    public static bool IsProfileUrlAvailable(int userID, string profileUrl)
+    public static bool IsProfileUrlAvailable(int userID, string profileUrlSlug)
     {
         using (var db = Database.Open("sqlloco"))
         {
             // Check that profile-url is not in use by other provider, but discarding in the check the own user
             return (
-                String.IsNullOrWhiteSpace(profileUrl) ||
-                db.QueryValue(sqlCheckProfileUrlAvailabiality, userID, profileUrl) == 0
+                String.IsNullOrWhiteSpace(profileUrlSlug) ||
+                db.QueryValue(sqlCheckProfileUrlAvailabiality, userID, profileUrlSlug) == 0
             );
         }
     }

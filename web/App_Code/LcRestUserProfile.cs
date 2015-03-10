@@ -22,8 +22,8 @@ public class LcRestUserProfile
     public string alternativeEmail;
     public string phone;
     public bool canReceiveSms;
-    public int birthMonthDay;
-    public int birthMonth;
+    public int? birthMonthDay;
+    public int? birthMonth;
    
     public bool isFreelancer;
     public bool isCustomer;
@@ -79,7 +79,7 @@ public class LcRestUserProfile
             ,secondLastName
 
             -- User Type
-            ,isProvider
+            ,isProvider as isFreelancer
             ,isCustomer
             ,isMember
 
@@ -167,7 +167,7 @@ public class LcRestUserProfile
         SELECT  @c = count(*)
         FROM    Users
         WHERE   UserID = @UserID
-                AND MobilePhone = @MobilePhone
+                AND MobilePhone = @Phone
 
         IF @c = 0 BEGIN
             -- Revoke phone verification (VerificationID=4)
@@ -212,11 +212,11 @@ public class LcRestUserProfile
     #endregion
 
     #region Create/Update
-    public static int UpdateUserProfile(LcRestUserProfile profile)
+    public static void UpdateUserProfile(LcRestUserProfile profile)
     {
         using (var db = Database.Open("sqlloco")) {
 
-            return (int)db.QueryValue(sqlUpdateProfile,
+            db.Execute(sqlUpdateProfile,
                 profile.userID,
                 profile.firstName,
                 profile.lastName,
