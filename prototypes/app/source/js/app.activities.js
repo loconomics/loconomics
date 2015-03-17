@@ -36,5 +36,6 @@ module.exports = {
     'contactForm': require('./activities/contactForm'),
     'cms': require('./activities/cms'),
     'clientEdition': require('./activities/clientEdition'),
-    'schedulingPreferences': require('./activities/schedulingPreferences')
+    'schedulingPreferences': require('./activities/schedulingPreferences'),
+    'calendarSyncing': require('./activities/calendarSyncing')
 };

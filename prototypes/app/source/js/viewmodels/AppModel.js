@@ -17,6 +17,7 @@ function AppModel(values) {
     }, values);
     
     this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
+    this.calendarSyncing = require('./AppModel.calendarSyncing').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);
