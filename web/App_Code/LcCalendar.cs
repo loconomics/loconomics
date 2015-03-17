@@ -1907,8 +1907,8 @@ public static partial class LcCalendar
         }
 
         return new RestSyncingOptions {
-            icalExportUrl = atts.CalendarURL,
-            icalImportUrl = BuildIcalendarExportUrl(userID, privateCalendarToken)
+            icalImportUrl = atts.CalendarURL,
+            icalExportUrl = BuildIcalendarExportUrl(userID, privateCalendarToken)
         };
     }
     #endregion
