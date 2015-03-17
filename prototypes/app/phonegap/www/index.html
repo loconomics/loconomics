@@ -74,8 +74,6 @@
             </li>
             <li class="go-login"><a href="/login">Login</a>
             </li>
-            <li class="go-signup"><a href="/signup">Signup</a>
-            </li>
           </ul>
         </div>
         <div id="menuNewItem" class="navbar-collapse collapse">
@@ -332,6 +330,36 @@
             </a>
         </div>
       </div>
+    </div>
+    <!-- CalendarSyncing activity -->
+    <div class="container-fluid" data-activity="calendarSyncing">
+       <h2 class="SectionTitle">Calendar Syncing</h2>
+
+      <form data-bind="submit: save" class="container">
+        <p class="isolated text-muted">Do you use a calendar already? We can both import your availability and
+          export your Loconomics bookings to ensure you never miss an appointment.</p>
+        <div
+        class="isolated">
+          <div class="form-group">
+            <label for="calendarSync-icalImportUrl">Please paste the URL from your iCal-supported calendar to import your
+              free/busy information here:</label>
+            <div>
+              <input type="url" id="calendarSync-icalImportUrl" class="form-control"
+              data-bind="value: sync.icalImportUrl, disable: isLocked" />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+    </div>
+    <div class="form-group">
+      <label for="calendarSync-icalExportUrl">Please copy this URL and paste it into your iCal-supported calendar to
+        sync all your Loconomics appointments:</label>
+      <div>
+        <input type="url" readonly id="calendarSync-icalExportUrl" class="form-control"
+        data-bind="value: sync.icalExportUrl" />
+      </div>
+    </div>
+    <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { tap: reset }">Reset Private URL</button>
+    </form>
     </div>
     <!-- ClientEdition activity -->
     <div class="container-fluid has-navbar" data-activity="clientEdition">
@@ -701,7 +729,7 @@
           and employees doing the work. They share in the profits and decision-makina
           power.</p>
         <p class="text-center">To learn more, click below:</p>
-        <div> <a href="#!learnMore/provider" class="btn btn-default btn-block">I provide services</a>
+        <div> <a href="#!learnMore/freelancer" class="btn btn-default btn-block">I provide services</a>
 
           <a
           href="#!learnMore/customer" class="btn btn-default btn-block">I'm a potential client</a>
@@ -745,15 +773,15 @@
         </div>
          <h3>Everything you need</h3>
 
-        <p class="lead" data-bind="visible: profile() === 'provider'">Scheduling, payments, client management, marketing tools, and a community
+        <p class="lead" data-bind="visible: profile() === 'freelancer'">Scheduling, payments, client management, marketing tools, and a community
           of like-minded individuals. You share in the profits and decision makina.</p>
         <p
         class="lead" data-bind="visible: profile() === 'customer'"></p>
           <p> <a href="#!signup" data-bind="attr: { href: '#!signup/' + profile() }"
-            class="btn btn-default btn-block">Try it out for free<span data-bind="visible: profile() === 'provider'">*</span></a>
+            class="btn btn-default btn-block">Try it out for free<span data-bind="visible: profile() === 'freelancer'">*</span></a>
 
           </p>
-          <p data-bind="visible: profile() === 'provider'">*Your free trial last 90 days and annual membership fees are currently
+          <p data-bind="visible: profile() === 'freelancer'">*Your free trial last 90 days and annual membership fees are currently
             $199.</p>
       </div>
     </div>
@@ -1032,8 +1060,8 @@
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
-          </div> <a href="/schedulePreferences" class="btn btn-link btn-block ListView-item-content">
-        <p>Schedule preferences</p>
+          </div> <a href="/schedulingPreferences" class="btn btn-link btn-block ListView-item-content">
+        <p>Scheduling preferences</p>
       </a>
  <a href="/schedulePreferences" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
 
@@ -1060,14 +1088,88 @@
           <div class="ListView-item-marker">
             <p><span class="glyphicon glyphicon-download-alt"></span>
             </p>
-          </div> <a href="/calendarSync" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="/calendarSyncing" class="btn btn-link btn-block ListView-item-content">
         <p>Sync your existing calendars</p>
       </a>
- <a href="/calendarSync" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
+ <a href="/calendarSyncing" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
 
         </div>
       </div>
       <app-feedback-entry></app-feedback-entry>
+    </div>
+    <!-- SchedulingPreferences activity -->
+    <div class="container-fluid" data-activity="schedulingPreferences">
+       <h2 class="SectionTitle">Schedule preferences</h2>
+
+      <script type="text/html" id="schedulingPrefs-radioButton">
+        <label class="btn btn-primary" data-bind="css: { 'active': value() === itemValue }">
+            <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+            <span data-bind="text: labelText"></span>
+        </label>
+      </script>
+      <form data-bind="submit: save" class="container">
+        <div class="center-block row isolated" style="text-align: center">
+          <p>Show my availability in increments of:</p>
+          <div class="btn-group ut-noRadioCheck">
+            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
+            prefs.incrementsSizeInMinutes, itemValue: 15, disabled: isLocked, labelText:
+            '15 min' } } -->
+            <!-- /ko -->
+            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
+            prefs.incrementsSizeInMinutes, itemValue: 30, disabled: isLocked, labelText:
+            '30 min' } } -->
+            <!-- /ko -->
+            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
+            prefs.incrementsSizeInMinutes, itemValue: 60, disabled: isLocked, labelText:
+            '1 hour' } } -->
+            <!-- /ko -->
+          </div>
+          <p class="isolated" data-bind="text: incrementsExample">e.g. 10:00, 10:15, 10:30, 10:45</p>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-6 row">
+            <label for="schedulingPrefs-advanceTime" class="col-xs-7">Time clients can book you in advance:</label>
+            <div class="col-xs-5">
+              <select id="schedulingPrefs-advanceTime" data-bind="value: prefs.advanceTime, disable: isLocked"
+              class="form-control">
+                <option value="0">Anytime</option>
+                <option value="0.5">30 minutes</option>
+                <option value="1">1 hour</option>
+                <option value="2">2 hours</option>
+                <option value="3">3 hours</option>
+                <option value="4">4 hours</option>
+                <option value="12">12 hours</option>
+                <option value="24">1 day</option>
+                <option value="48">2 days</option>
+                <option value="168">1 week</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group col-sm-5 col-sm-offset-1 row">
+            <label for="schedulingPrefs-betweenTime" class="col-xs-7">Preparation time needed between clients:</label>
+            <div class="col-xs-5">
+              <select id="schedulingPrefs-betweenTime" data-bind="value: prefs.betweenTime, disable: isLocked"
+              class="form-control">
+                <option value="0">None</option>
+                <option value="0.08">5 min</option>
+                <option value="0.16">10 min</option>
+                <option value="0.25">15 min</option>
+                <option value="0.5">30 min</option>
+                <option value="0.75">45 min</option>
+                <option value="1">1 hour</option>
+                <option value="2">2 hours</option>
+                <option value="3">3 hours</option>
+                <option value="4">4 hours</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-4 col-lg-2 col-lg-offset-10">
+            <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+          </div>
+        </div>
+      </form>
     </div>
     <!-- Activity services -->
     <div class="container-fluid" data-activity="services">
@@ -1110,19 +1212,20 @@
           href="#!home" class="btn btn-default btn-block btn-google">Google</a>
         </div>
         <p class="isolated text-center">or</p>
-        <form role="form">
-          <div class="form-group">
-            <label for="accountEmail">Email address</label>
-            <input type="email" class="form-control" id="accountEmail"
-            placeholder="Enter email">
+        <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }"
+        novalidate>
+          <div class="form-group" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
+            <label for="signupAccountEmail">Email address</label>
+            <input type="email" class="form-control" id="signupAccountEmail"
+            placeholder="Enter email" data-bind="value: username, valueUpdate: 'keyup', popover: { content: username.error() || signupError(), trigger: 'focus', container: 'body', placement: 'bottom' }">
           </div>
-          <div class="form-group">
-            <label for="accountPassword">Password</label>
-            <input type="password" class="form-control" id="accountPassword"
-            placeholder="Password">
+          <div class="form-group" data-bind="css: { 'has-warning': password.error }, 'has-success': !password.error()">
+            <label for="signupAccountPassword">Password</label>
+            <input type="password" class="form-control" id="signupAccountPassword"
+            placeholder="Password" data-bind="value: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
           </div>
-          <button id="accountSignUpBtn" type="submit" data-loading-text="Creating... (fake loading)"
-          class="btn btn-primary btn-block" autocomplete="off">Create account</button>
+          <button type="submit" data-loading-text="Creating account..." class="btn btn-primary btn-block"
+          autocomplete="off">Create account</button>
         </form>
         <p class="isolated">By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/"
           target="_blank">Terms of Use</a>, <a href="https://loconomics.com/en-US/About/PrivacyPolicy"

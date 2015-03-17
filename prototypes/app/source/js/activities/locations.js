@@ -20,7 +20,7 @@ exports.init = function initLocations($activity, app) {
 
 function LocationsActivity($activity, app) {
     
-    this.accessLevel = app.UserType.Provider;
+    this.accessLevel = app.UserType.Freelancer;
     this.navBar = new NavBar({
         title: '',
         leftAction: NavAction.goBack.model.clone({

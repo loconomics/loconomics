@@ -12,7 +12,7 @@ var A = Activity.extends(function SchedulingPreferencesActivity() {
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
-    this.accessLevel = this.app.UserType.Provider;
+    this.accessLevel = this.app.UserType.Freelancer;
 
     this.navBar = Activity.createSubsectionNavBar('Scheduling');
 });

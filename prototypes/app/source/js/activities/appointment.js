@@ -20,7 +20,7 @@ exports.init = function initAppointment($activity, app) {
 
 function AppointmentActivity($activity, app) {
 
-    this.accessLevel = app.UserType.Provider;
+    this.accessLevel = app.UserType.Freelancer;
     this.menuItem = 'calendar';
     
     /* Getting elements */

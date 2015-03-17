@@ -8,7 +8,7 @@
   "EventID": 353,
   "UserID": 141,
   "EventTypeID": 3,
-  "Summary": "Housekeeper services for JoshuaProvider D.",
+  "Summary": "Housekeeper services for John D.",
   "AvailabilityTypeID": 3,
   "StartTime": "2014-03-25T08:00:00Z",
   "EndTime": "2014-03-25T18:00:00Z",

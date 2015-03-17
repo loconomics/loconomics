@@ -20,7 +20,7 @@ exports.init = function initOnboardingPositions($activity, app) {
 
 function OnboardingPositionsActivity($activity, app) {
 
-    this.accessLevel = app.UserType.Provider;
+    this.accessLevel = app.UserType.Freelancer;
     
     this.$activity = $activity;
     this.app = app;

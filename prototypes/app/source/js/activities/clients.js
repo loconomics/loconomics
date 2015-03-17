@@ -22,7 +22,7 @@ exports.init = function initClients($activity, app) {
 
 function ClientsActivity($activity, app) {
 
-    this.accessLevel = app.UserType.Provider;
+    this.accessLevel = app.UserType.Freelancer;
     
     this.navBar = Activity.createSubsectionNavBar('Clients');
     

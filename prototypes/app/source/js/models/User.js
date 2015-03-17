@@ -9,7 +9,7 @@ var UserType = {
     None: 0,
     Anonymous: 1,
     Customer: 2,
-    Provider: 4,
+    Freelancer: 4,
     Admin: 8,
     LoggedUser: 14,
     User: 15,
@@ -23,38 +23,37 @@ function User(values) {
     this.model.defProperties({
         userID: 0,
         email: '',
+        
         firstName: '',
-        middleIn: '',
         lastName: '',
         secondLastName: '',
-        nickName: null,
-        publicBio: null,
-        genderID: 0,
-        preferredLanguageID: null,
-        preferredCountryID: null,
-        isProvider: false,
+        businessName: '',
+        
+        alternativeEmail: '',
+        phone: '',
+        canReceiveSms: '',
+        birthMonthDay: null,
+        birthMonth: null,
+        
+        isFreelancer: false,
         isCustomer: false,
         isMember: false,
         isAdmin: false,
-        mobilePhone: null,
-        alternatePhone: null,
-        providerProfileURL: null,
-        providerWebsiteURL: null,
-        createdDate: null,
-        updatedDate: null,
-        modifiedBy: null,
-        active: false,
-        accountStatusID: 0,
-        bookCode: null,
+
         onboardingStep: null,
-        businessName: null,
-        alternateEmail: null,
-        birthMonthDay: null,
-        birthMonth: null
+        accountStatusID: 0,
+        createdDate: null,
+        updatedDate: null
     }, values);
 
     this.fullName = ko.pureComputed(function() {
-        return (this.firstName() + ' ' + this.lastName());
+        var nameParts = [this.firstName()];
+        if (this.lastName())
+            nameParts.push(this.lastName());
+        if (this.secondLastName())
+            nameParts.push(this.secondLastName);
+        
+        return nameParts.join(' ');
     }, this);
     
     this.birthDay = ko.pureComputed(function() {
@@ -72,24 +71,23 @@ function User(values) {
     this.userType = ko.pureComputed({
         read: function() {
             var c = this.isCustomer(),
-                p = this.isProvider(),
+                p = this.isFreelancer(),
                 a = this.isAdmin();
             
             var userType = 0;
             
-            if (this.isAnonymous()) {
+            if (this.isAnonymous())
                 userType = userType | UserType.Anonymous;
-            }
             if (c)
                 userType = userType | UserType.Customer;
             if (p)
-                userType = userType | UserType.Provider;
+                userType = userType | UserType.Freelancer;
             if (a)
                 userType = userType | UserType.Admin;
             
             return userType;
         },
-        /* NOTE: Not require for now:
+        /* NOTE: Not required for now:
         write: function(v) {
         },*/
         owner: this

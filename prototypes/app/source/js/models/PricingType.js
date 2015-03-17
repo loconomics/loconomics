@@ -15,7 +15,7 @@ function PricingType(values) {
         pluralName: '',
         slugName: '',
         addNewLabel: null,
-        providerDescription: null,
+        freelancerDescription: null,
         // PriceCalculationType enumeration value:
         priceCalculation: null,
         isAddon: false,
@@ -69,7 +69,7 @@ function PricingType(values) {
         summaryFormatNoDuration: null,
         summaryFormatMultipleSessionsNoDuration: null,
         withoutServiceAttributesCustomerMessage: null,
-        withoutServiceAttributesProviderMessage: null,
+        withoutServiceAttributesFreelancerMessage: null,
         firstTimeClientsOnlyListText: null,
         priceRateQuantityListLabel: null,
         priceRateUnitListLabel: null,

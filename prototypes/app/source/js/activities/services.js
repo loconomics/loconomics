@@ -13,7 +13,7 @@ var A = Activity.extends(function ServicesActivity() {
 
     Activity.apply(this, arguments);
     
-    this.accessLevel = this.app.UserType.Provider;
+    this.accessLevel = this.app.UserType.Frelancer;
     
     // TODO: on show, need to be updated with the JobTitle name
     this.navBar = Activity.createSubsectionNavBar('Job title');
