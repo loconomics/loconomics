@@ -1879,8 +1879,8 @@ public static partial class LcCalendar
 
     public class RestSyncingOptions
     {
-        public string icalExportURL;
-        public string icalImportURL;
+        public string icalExportUrl;
+        public string icalImportUrl;
     }
 
     /// <summary>
@@ -1907,8 +1907,8 @@ public static partial class LcCalendar
         }
 
         return new RestSyncingOptions {
-            icalExportURL = atts.CalendarURL,
-            icalImportURL = BuildIcalendarExportUrl(userID, privateCalendarToken)
+            icalExportUrl = atts.CalendarURL,
+            icalImportUrl = BuildIcalendarExportUrl(userID, privateCalendarToken)
         };
     }
     #endregion
