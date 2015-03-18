@@ -47,20 +47,20 @@ function WeekDaySchedule(values) {
     this.isEnabled = ko.pureComputed({
         read: function() {
             return (
-                typeof(this.from) === 'number' &&
-                typeof(this.to) === 'number' &&
-                this.from < this.to
+                typeof(this.from()) === 'number' &&
+                typeof(this.to()) === 'number' &&
+                this.from() < this.to()
             );
         },
         write: function(val) {
             if (val === true) {
                 // Default range 9a - 5p
-                this.from = 9;
-                this.to = 17;
+                this.from(9);
+                this.to(17);
             }
             else {
-                this.from = 0;
-                this.to = 0;
+                this.from(0);
+                this.to(0);
             }
         },
         owner: this
@@ -69,13 +69,13 @@ function WeekDaySchedule(values) {
     this.isAllDay = ko.pureComputed({
         read: function() {
             return  (
-                this.from === 0 &&
-                this.to === 1440
+                this.from() === 0 &&
+                this.to() === 1440
             );
         },
         write: function(val) {
-            this.from = 0;
-            this.to = 1440;
+            this.from(0);
+            this.to(1440);
         },
         owner: this
     });

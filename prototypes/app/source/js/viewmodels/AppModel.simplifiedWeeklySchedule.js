@@ -78,6 +78,8 @@ function fromWeeklySchedule(weeklySchedule) {
                 if (previous + slotSize === minutes) {
                     // New end
                     to = minutes;
+                    // Next iteration
+                    previous = minutes;
                 }
                 else {
                     // No consecutive, we already has a range, any
@@ -107,7 +109,7 @@ function fromWeeklySchedule(weeklySchedule) {
             if (to !== null) {
                 // and has an end!
                 // add the slot size to the ending
-                simpleDay.to = to;
+                simpleDay.to = to + slotSize;
             }
             else {
                 // smaller range, just one slot,
