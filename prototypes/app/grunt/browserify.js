@@ -33,6 +33,11 @@ module.exports = function(grunt) {
                     path: './vendor/bootstrap/js/bootstrap.min.js',
                     exports: null,
                     depends: { 'jquery': 'jquery' }
+                },
+                'bootstrap-switch': {
+                    path: './vendor/bootstrap-switch/js/bootstrap-switch.min.js',
+                    exports: null,
+                    depends: { 'jquery': 'jquery', 'bootstrap': 'bootstrap' }
                 }
             }
         }

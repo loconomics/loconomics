@@ -20,6 +20,7 @@ module.exports = {
         'notify:browserify'
 	],
 	'build-css': [
+        'concat:css-libs',
 		'stylus',
 		'cssmin',//'newer:cssmin'
         'notify:css'
