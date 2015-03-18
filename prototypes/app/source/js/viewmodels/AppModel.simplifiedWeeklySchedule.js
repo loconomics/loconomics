@@ -65,7 +65,7 @@ function fromWeeklySchedule(weeklySchedule) {
     }
     
     // given slotSize or default
-    var slotSize = weeklySchedule.slotSize || defaultSlotSize;
+    var slotSize = (weeklySchedule.slotSize || defaultSlotSize) |0;
 
     // Read slots per week-day ({ slots: { "sunday": [] } })
     Object.keys(weeklySchedule.slots)
@@ -144,7 +144,7 @@ function fromWeeklySchedule(weeklySchedule) {
             }
         }
     });
-    
+
     // Done!
     return simpleWS;
 }
@@ -180,8 +180,8 @@ function toWeeklySchedule(simplifiedWeeklySchedule) {
         // in slots of the slotSize
         // The end time will be excluded, since slots
         // define only the start, being implicit the slotSize.
-        var from = simpleDay.from,
-            to = simpleDay.to;
+        var from = simpleDay.from |0,
+            to = simpleDay.to |0;
 
         // Create the slot array
         weeklySchedule.slots[weekday] = [];

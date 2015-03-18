@@ -79,7 +79,9 @@ ModelVersion.prototype.pull = function pull(options) {
     if (options.evenIfNewer || !this.isNewer()) {
         // Update version, getting original
         // (updateWith takes care to set the same dataTimestamp)
-        this.version.model.updateWith(this.original);
+        // Ever deepCopy, since only properties and fields from models
+        // are copied and that must avoid circular references
+        this.version.model.updateWith(this.original, true);
         // Done
         result = true;
     }
@@ -106,7 +108,9 @@ ModelVersion.prototype.push = function push(options) {
     if (options.evenIfObsolete || !this.isObsolete()) {
         // Update original
         // (updateWith takes care to set the same dataTimestamp)
-        this.original.model.updateWith(this.version);
+        // Ever deepCopy, since only properties and fields from models
+        // are copied and that must avoid circular references
+        this.original.model.updateWith(this.version, true);
         // Done
         result = true;
     }

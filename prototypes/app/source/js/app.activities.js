@@ -37,5 +37,6 @@ module.exports = {
     'cms': require('./activities/cms'),
     'clientEdition': require('./activities/clientEdition'),
     'schedulingPreferences': require('./activities/schedulingPreferences'),
-    'calendarSyncing': require('./activities/calendarSyncing')
+    'calendarSyncing': require('./activities/calendarSyncing'),
+    'weeklySchedule': require('./activities/weeklySchedule')
 };

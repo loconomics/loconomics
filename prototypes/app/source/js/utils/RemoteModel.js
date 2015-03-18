@@ -92,7 +92,10 @@ function RemoteModel(options) {
             
             var promise = this.fetch()
             .then(function (serverData) {
-                this.data.model.updateWith(serverData);
+                // Ever deepCopy, since plain data from the server (and any
+                // in between conversion on 'fecth') cannot have circular
+                // references:
+                this.data.model.updateWith(serverData, true);
                 this.isLoading(false);
                 this.isSyncing(false);
                 this.cache.latest = new Date();
@@ -129,7 +132,9 @@ function RemoteModel(options) {
         
         return this.push()
         .then(function (serverData) {
-            this.data.model.updateWith(serverData);
+            // Ever deepCopy, since plain data from the server
+            // cannot have circular references:
+            this.data.model.updateWith(serverData, true);
             this.data.model.dataTimestamp(ts);
 
             this.isSaving(false);

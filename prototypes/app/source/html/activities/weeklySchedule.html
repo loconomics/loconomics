@@ -1,0 +1,105 @@
+<!-- WeeklySchedule activity -->
+<div class="container-fluid" data-activity="weeklySchedule">
+
+    <h2 class="SectionTitle">Weekly schedule</h2>
+    
+    <script type="text/html" id="weeklySchedule-timeSelectorHourMinutesTpl">
+        <select data-bind="value: value, disable: isLocked">
+            <option value="0">12a</option>
+            <option value="60">1a</option>
+            <option value="120">2a</option>
+            <option value="180">3a</option>
+            <option value="240">4a</option>
+            <option value="300">5a</option>
+            <option value="360">6a</option>
+            <option value="420">7a</option>
+            <option value="480">8a</option>
+            <option value="540">9a</option>
+            <option value="600">10a</option>
+            <option value="660">11a</option>
+            <option value="720">12p</option>
+            <option value="780">1p</option>
+            <option value="840">2p</option>
+            <option value="900">3p</option>
+            <option value="960">4p</option>
+            <option value="1020">5p</option>
+            <option value="1080">6p</option>
+            <option value="1140">7p</option>
+            <option value="1200">8p</option>
+            <option value="1260">9p</option>
+            <option value="1320">10p</option>
+            <option value="1380">11p</option>
+            <option value="1440">12a</option>
+        </select>
+    </script>
+    <script type="text/html" id="weeklySchedule-timeSelectorHourTpl">
+        <select data-bind="value: value, disable: isLocked">
+            <option value="0">12a</option>
+            <option value="1">1a</option>
+            <option value="2">2a</option>
+            <option value="3">3a</option>
+            <option value="4">4a</option>
+            <option value="5">5a</option>
+            <option value="6">6a</option>
+            <option value="7">7a</option>
+            <option value="8">8a</option>
+            <option value="9">9a</option>
+            <option value="10">10a</option>
+            <option value="11">11a</option>
+            <option value="12">12p</option>
+            <option value="13">1p</option>
+            <option value="14">2p</option>
+            <option value="15">3p</option>
+            <option value="16">4p</option>
+            <option value="17">5p</option>
+            <option value="18">6p</option>
+            <option value="19">7p</option>
+            <option value="20">8p</option>
+            <option value="21">9p</option>
+            <option value="22">10p</option>
+            <option value="23">11p</option>
+            <option value="24">12a</option>
+        </select>
+    </script>
+    <script type="text/html" id="weeklySchedule-weekDayTpl">
+        <div class="isolated">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="checkbox"
+                           data-bind="checked: day().isEnabled, disable: isLocked" />
+                    <span data-bind="text: label"></span>
+                </label>
+            </div>
+            <div data-bind="visible: day().isEnabled">
+                <!-- ko template: { name: 'weeklySchedule-timeSelectorHourTpl', data: { value: day().fromHour, isLocked: isLocked } } --><!-- /ko -->
+                <span>to</span>
+                <!-- ko template: { name: 'weeklySchedule-timeSelectorHourTpl', data: { value: day().toHour, isLocked: isLocked} } --><!-- /ko -->
+            </div>
+        </div>
+    </script>
+    
+    <form data-bind="submit: save" class="container">
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" data-bind="checked: schedule.isAllTime, disable: isLocked" />
+                All days/times
+            </label>
+        </div>
+        <div data-bind="visible: !schedule.isAllTime()">
+            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.sunday, label: 'Sunday', isLocked: isLocked } } --><!-- /ko -->
+            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.monday, label: 'Monday', isLocked: isLocked } } --><!-- /ko -->
+            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.tuesday, label: 'Tuesday', isLocked: isLocked } } --><!-- /ko -->
+            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.wednesday, label: 'Wednesday', isLocked: isLocked } } --><!-- /ko -->
+            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.thursday, label: 'Thursday', isLocked: isLocked } } --><!-- /ko -->
+            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.friday, label: 'Friday', isLocked: isLocked } } --><!-- /ko -->
+            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.saturday, label: 'Saturday', isLocked: isLocked } } --><!-- /ko -->
+        </div>
+
+        <div class="row">
+            <div>
+                <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+            </div>
+        </div>
+    </form>
+</div>

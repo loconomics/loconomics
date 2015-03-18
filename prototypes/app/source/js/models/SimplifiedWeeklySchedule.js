@@ -44,7 +44,7 @@ function WeekDaySchedule(values) {
         a default range (9a-5p) or false 
         setting both as 0p.
     **/
-    this.isEnabled = ko.pureComputed({
+    this.isEnabled = ko.computed({
         read: function() {
             return (
                 typeof(this.from()) === 'number' &&
@@ -66,7 +66,7 @@ function WeekDaySchedule(values) {
         owner: this
     });
     
-    this.isAllDay = ko.pureComputed({
+    this.isAllDay = ko.computed({
         read: function() {
             return  (
                 this.from() === 0 &&
@@ -76,6 +76,49 @@ function WeekDaySchedule(values) {
         write: function(val) {
             this.from(0);
             this.to(1440);
+        },
+        owner: this
+    });
+    
+    // Additional interfaces to get/set the from/to times
+    // by using a different data unit or format.
+    
+    // Integer, rounded-up, number of hours
+    this.fromHour = ko.computed({
+        read: function() {
+            return Math.floor(this.from() / 60);
+        },
+        write: function(hours) {
+            this.from((hours * 60) |0);
+        },
+        owner: this
+    });
+    this.toHour = ko.computed({
+        read: function() {
+            return Math.ceil(this.to() / 60);
+        },
+        write: function(hours) {
+            this.to((hours * 60) |0);
+        },
+        owner: this
+    });
+    
+    // String, time format ('hh:mm')
+    this.fromTime = ko.computed({
+        read: function() {
+            return minutesToTimeString(this.from() |0);
+        },
+        write: function(time) {
+            this.from(timeStringToMinutes(time));
+        },
+        owner: this
+    });
+    this.toTime = ko.computed({
+        read: function() {
+            return minutesToTimeString(this.to() |0);
+        },
+        write: function(time) {
+            this.to(timeStringToMinutes(time));
         },
         owner: this
     });
@@ -103,3 +146,34 @@ function SimplifiedWeeklySchedule(values) {
 }
 
 module.exports = SimplifiedWeeklySchedule;
+
+//// UTILS,
+// TODO Organize or externalize. some copied form appmodel..
+/**
+    internal utility function 'to string with two digits almost'
+**/
+function twoDigits(n) {
+    return Math.floor(n / 10) + '' + n % 10;
+}
+
+/**
+    Convert a number of minutes
+    in a string like: 00:00:00 (hours:minutes:seconds)
+**/
+function minutesToTimeString(minutes) {
+    var d = moment.duration(minutes, 'minutes'),
+        h = d.hours(),
+        m = d.minutes(),
+        s = d.seconds();
+    
+    return (
+        twoDigits(h) + ':' +
+        twoDigits(m) + ':' +
+        twoDigits(s)
+    );
+}
+
+var moment = require('moment');
+function timeStringToMinutes(time) {
+    return moment.duration(time).asMinutes() |0;
+}
