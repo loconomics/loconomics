@@ -98,7 +98,7 @@ function SimplifiedWeeklySchedule(values) {
         thursday: new WeekDaySchedule(),
         friday: new WeekDaySchedule(),
         saturday: new WeekDaySchedule(),
-        allDaysTimes: false
+        isAllTime: false
     }, values);
 }
 

@@ -6,8 +6,10 @@ var SimplifiedWeeklySchedule = require('../models/SimplifiedWeeklySchedule'),
     RemoteModel = require('../utils/RemoteModel'),
     moment = require('moment');
 
-// The slot size is fixed to 15 minutes:
-var slotSize = 15;
+// The slot size is fixed to 15 minutes by default.
+// NOTE: currently, the API only allows 15 minutes slots,
+// being that implicit, but part of the code is ready for explicit slotSize.
+var defaultSlotSize = 15;
 // A list of week day properties names allowed
 // to be part of the objects describing weekly schedule
 // (simplified or complete/slot based)
@@ -17,14 +19,24 @@ var weekDayProperties = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday',
 exports.create = function create(appModel) {
     return new RemoteModel({
         data: new SimplifiedWeeklySchedule(),
-        ttl: { minutes: 10 },
+        ttl: { minutes: 1 },
         fetch: function fetch() {
             return appModel.rest.get('availability/weekly-schedule')
             .then(fromWeeklySchedule);
         },
         push: function push() {
-            var plainData = toWeeklySchedule(this.data.model.toPlainObject());
-            return appModel.rest.put('availability/weekly-schedule', this.data)
+            var plainData = {
+                'all-time': false,
+                'json-data': {}
+            };
+            if (this.data.isAllTime() === true) {
+                plainData['all-time'] = true;
+            }
+            else {
+                plainData['json-data'] = JSON.stringify(toWeeklySchedule(this.data.model.toPlainObject(true)));
+            }
+
+            return appModel.rest.put('availability/weekly-schedule', plainData)
             .then(fromWeeklySchedule);
         }
     });
@@ -40,6 +52,20 @@ function fromWeeklySchedule(weeklySchedule) {
     // so plain is simple and better on performance; can be
     // converted easily to the SimplifiedWeeklySchedule object.
     var simpleWS = {};
+    
+    // Only supports 'available' status with default 'unavailable'
+    if (weeklySchedule.defaultStatus !== 'unavailable' ||
+        weeklySchedule.status !== 'available') {
+        throw {
+            name: 'input-format',
+            message: 'Weekly schedule, given statuses not supported, status: ' +
+            weeklySchedule.status + ', defaultStatus: ' + 
+            weeklySchedule.defaultStatus
+          };
+    }
+    
+    // given slotSize or default
+    var slotSize = weeklySchedule.slotSize || defaultSlotSize;
 
     // Read slots per week-day ({ slots: { "sunday": [] } })
     Object.keys(weeklySchedule.slots)
@@ -128,36 +154,49 @@ function fromWeeklySchedule(weeklySchedule) {
     getting an object suitable for the API endpoint.
 **/
 function toWeeklySchedule(simplifiedWeeklySchedule) {
+
+    var slotSize = defaultSlotSize;
     
-    var weeklySchedule = {};
+    // It's build with 'available' as explicit status:
+    var weeklySchedule = {
+        status: 'available',
+        defaultAvailability: 'unavailable',
+        slots: {},
+        slotSize: slotSize
+    };
 
     // Per weekday
     Object.keys(simplifiedWeeklySchedule)
     .forEach(function(weekday) {
-        
+
         // Verify is a weekday property, or exit early
         if (weekDayProperties.indexOf(weekday) === -1) {
             return;
         }
-        
+
+        var simpleDay = simplifiedWeeklySchedule[weekday];
+
         // We need to expand the simplified time ranges 
         // in slots of the slotSize
-        // The end time is excluded, so must be a slot
-        // with the end time substracting the slotSize
-        var from = weekday.from,
-            to = weekday.to - slotSize;
-        
-        // Create the beggining slot
-        weeklySchedule[weekday] = [minutesToTimeString(from)];
+        // The end time will be excluded, since slots
+        // define only the start, being implicit the slotSize.
+        var from = simpleDay.from,
+            to = simpleDay.to;
 
-        // Integrity verification, or just only the initial slot
-        if (to > from) {            
+        // Create the slot array
+        weeklySchedule.slots[weekday] = [];
+
+        // Integrity verification
+        if (to > from) {
             // Iterate by the slotSize until we reach
-            // the end
+            // the end, not including the 'to' since
+            // slots indicate only the start of the slot
+            // that is assumed to fill a slotSize starting
+            // on that slot-time
             var previous = from;
-            while (previous <= to) {
+            while (previous < to) {
+                weeklySchedule.slots[weekday].push(minutesToTimeString(previous));
                 previous += slotSize;
-                weeklySchedule[weekday].push(minutesToTimeString(previous));
             }
         }
     });
