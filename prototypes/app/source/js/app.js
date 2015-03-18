@@ -243,6 +243,7 @@ var appInit = function appInit() {
     
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
+    require('./utils/bootstrapSwitchBinding').plugIn(ko);
     
     // Plugins setup
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {

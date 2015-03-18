@@ -1318,7 +1318,7 @@
             <div class="checkbox">
                 <label>
                     <input type="checkbox" class="checkbox"
-                           data-bind="checked: day().isEnabled, disable: isLocked" />
+                           data-bind="switch: { disabled: isLocked, state: day().isEnabled }" />
                     <span data-bind="text: label"></span>
                 </label>
             </div>
@@ -1330,10 +1330,11 @@
         </div>
       </script>
       <form data-bind="submit: save" class="container">
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" data-bind="checked: schedule.isAllTime, disable: isLocked"
-            />All days/times</label>
+        <div>
+          <label>All days/times
+            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime }"
+            />
+          </label>
         </div>
         <div data-bind="visible: !schedule.isAllTime()">
           <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.sunday,
