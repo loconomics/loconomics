@@ -1286,7 +1286,7 @@
       </script>
       <script type="text/html" id="weeklySchedule-timeSelectorHourTpl">
         <select data-bind="value: value, disable: isLocked">
-            <option value="0">12a</option>
+            <!-- ko if: midnightAtBeginning --><option value="0">12a</option><!-- /ko -->
             <option value="1">1a</option>
             <option value="2">2a</option>
             <option value="3">3a</option>
@@ -1310,7 +1310,7 @@
             <option value="21">9p</option>
             <option value="22">10p</option>
             <option value="23">11p</option>
-            <option value="24">12a</option>
+            <!-- ko if: midnightAtEnd --><option value="24">12a</option><!-- /ko -->
         </select>
       </script>
       <script type="text/html" id="weeklySchedule-weekDayTpl">
@@ -1323,9 +1323,25 @@
                 </label>
             </div>
             <div data-bind="visible: day().isEnabled">
-                <!-- ko template: { name: 'weeklySchedule-timeSelectorHourTpl', data: { value: day().fromHour, isLocked: isLocked } } --><!-- /ko -->
+                <!-- ko template: { 
+                        name: 'weeklySchedule-timeSelectorHourTpl',
+                        data: {
+                            value: day().fromHour,
+                            isLocked: isLocked,
+                            midnightAtBeginning: true,
+                            midnightAtEnd: false
+                        }
+                } --><!-- /ko -->
                 <span>to</span>
-                <!-- ko template: { name: 'weeklySchedule-timeSelectorHourTpl', data: { value: day().toHour, isLocked: isLocked} } --><!-- /ko -->
+                <!-- ko template: { 
+                        name: 'weeklySchedule-timeSelectorHourTpl',
+                        data: {
+                            value: day().tpHour,
+                            isLocked: isLocked,
+                            midnightAtBeginning: false,
+                            midnightAtEnd: true
+                        }
+                } --><!-- /ko -->
             </div>
         </div>
       </script>
