@@ -99,13 +99,17 @@ function RemoteModel(options) {
             else
                 this.isSyncing(true);
             
-            var promise = Promise.resolve();
+            var promise = Promise.resolve(),
+                localPromise = null;
             
             // If local storage is set for this, load first
             // from local, then follow with syncing from remote
             if (firstTimeLoad &&
                 this.localStorageName) {
-                promise = localforage.getItem(this.localStorageName)
+                // Set both localPromise and promise,
+                // since we only will wait for localPromise and the
+                // other one is required by the remote loading
+                localPromise = promise = localforage.getItem(this.localStorageName)
                 .then(function(localData) {
                     if (localData) {
                         this.data.model.updateWith(localData, true);
@@ -116,7 +120,7 @@ function RemoteModel(options) {
             }
 
             // Perform the remote load (it doesn't matter if a local load
-            // happened or not).
+            // happened or not), getting the new promise
             promise = promise
             .then(this.fetch.bind(this))
             .then(function (serverData) {
@@ -145,7 +149,10 @@ function RemoteModel(options) {
             // it returns when the load returns
             if (firstTimeLoad) {
                 firstTimeLoad = false;
-                return promise;
+                // It returns the promise to the local storage loading
+                // if any, or the remote loading promise, because
+                // we must resolve as soon there is data.
+                return localPromise || promise;
             }
             else {
                 // Background load: is loading still

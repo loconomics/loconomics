@@ -13,15 +13,18 @@ function AppModel(values) {
 
     Model(this);
     
-    this.model.defProperties({
-        user: User.newAnonymous()
-    }, values);
-    
+    this.userProfile = require('./AppModel.userProfile').create(this);
+    // NOTE: Alias for the user data
+    // TODO:TOREVIEW if continue to makes sense to keep this 'user()' alias, document
+    // where is used and why is preferred to the canonical way.
+    this.user = ko.computed(function() {
+        return this.userProfile.data;
+    }, this);
+
     this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
     this.calendarSyncing = require('./AppModel.calendarSyncing').create(this);
     this.simplifiedWeeklySchedule = require('./AppModel.simplifiedWeeklySchedule').create(this);
     this.marketplaceProfile = require('./AppModel.marketplaceProfile').create(this);
-    this.userProfile = require('./AppModel.userProfile').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);
@@ -84,10 +87,11 @@ AppModel.prototype.init = function init() {
                 };
                 
                 // It has credentials! Has basic profile data?
-                localforage.getItem('profile').then(function(profile) {
+                // NOTE: the userProfile will load from local storage on this first
+                // attempt, and lazily request updated data from remote
+                this.userProfile.load().then(function(profile) {
                     if (profile) {
-                        // Set user data
-                        this.user().model.updateWith(profile);
+                        // There is a profile cached
                         // End succesfully
                         resolve();
                     }
