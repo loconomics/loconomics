@@ -1,0 +1,43 @@
+<!-- BookMeButton activity -->
+<div class="container-fluid" data-activity="bookMeButton">
+
+    <h2 class="SectionTitle">Book Me Now Button</h2>
+    
+    <script type="text/html" id="bookMeButton-radioButton">
+        <label class="btn btn-primary" data-bind="css: { 'active': value() === itemValue }">
+            <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+            <span data-bind="text: labelText"></span>
+        </label>
+    </script>
+    
+    <form class="container">
+        
+        <div class="center-block isolated" style="height: 60px; text-align: center" data-bind="html: buttonHtmlCode"></div>
+        
+        <div class="center-block row isolated" style="text-align: center">
+            <div class="btn-group ut-noRadioCheck">
+                <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'small', disabled: isLocked, labelText: 'Small' } } --><!-- /ko -->
+                <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'medium', disabled: isLocked, labelText: 'Medium' } } --><!-- /ko -->
+                <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'large', disabled: isLocked, labelText: 'Large' } } --><!-- /ko -->
+            </div>
+            <div class="ut-noRadioCheck isolated">
+                <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'link', disabled: isLocked, labelText: 'Link only (no button)' } } --><!-- /ko -->
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                Using "Source" or "Code" view in your website editor, copy the code below and paste it into yours:
+                <textarea rows="6" readonly data-bind="value: buttonHtmlCode" class="form-control">
+                </textarea>
+            </label>
+        </div>
+        
+        <!-- TODO Unhide when implemented the handlers
+        <div class="row">
+            <button type="button" class="btn btn-default btn-block" data-bind="event: { tap: copyCode }, disable: isLocked">Copy</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="event: { tap: sendByEmail }, disable: isLocked">E-mail to your tech person</button>
+        </div>
+        -->
+    </form>
+</div>

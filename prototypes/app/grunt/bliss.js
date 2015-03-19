@@ -18,7 +18,8 @@ module.exports = function(grunt) {
             context: {
                 debug: false,
                 includedFiles: includedFiles,
-                cordovajs: false
+                cordovajs: false,
+                siteUrl: 'http://dev.loconomics.com'
             }
           }
         },
@@ -30,7 +31,8 @@ module.exports = function(grunt) {
             context: {
                 debug: true,
                 includedFiles: includedFiles,
-                cordovajs: false
+                cordovajs: false,
+                siteUrl: 'http://dev.loconomics.com'
             }
           }
         },
@@ -42,7 +44,8 @@ module.exports = function(grunt) {
             context: {
                 debug: false,
                 includedFiles: includedFiles,
-                cordovajs: true
+                cordovajs: true,
+                siteUrl: 'http://dev.loconomics.com'
             }
           }
         },

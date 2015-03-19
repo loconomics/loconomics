@@ -38,5 +38,6 @@ module.exports = {
     'clientEdition': require('./activities/clientEdition'),
     'schedulingPreferences': require('./activities/schedulingPreferences'),
     'calendarSyncing': require('./activities/calendarSyncing'),
-    'weeklySchedule': require('./activities/weeklySchedule')
+    'weeklySchedule': require('./activities/weeklySchedule'),
+    'bookMeButton': require('./activities/bookMeButton')
 };

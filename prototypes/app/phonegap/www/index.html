@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="App">
+<html lang="en" class="App" data-site-url="siteUrl">
   
   <head>
     <meta charset="utf-8">
@@ -291,6 +291,80 @@
 
         </div>
       </div>
+    </div>
+    <!-- BookMeButton activity -->
+    <div class="container-fluid" data-activity="bookMeButton">
+       <h2 class="SectionTitle">Schedule preferences</h2>
+
+      <script type="text/html" id="schedulingPrefs-radioButton">
+        <label class="btn btn-primary" data-bind="css: { 'active': value() === itemValue }">
+            <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+            <span data-bind="text: labelText"></span>
+        </label>
+      </script>
+      <form data-bind="submit: save" class="container">
+        <div class="center-block row isolated" style="text-align: center">
+          <p>Show my availability in increments of:</p>
+          <div class="btn-group ut-noRadioCheck">
+            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
+            prefs.incrementsSizeInMinutes, itemValue: 15, disabled: isLocked, labelText:
+            '15 min' } } -->
+            <!-- /ko -->
+            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
+            prefs.incrementsSizeInMinutes, itemValue: 30, disabled: isLocked, labelText:
+            '30 min' } } -->
+            <!-- /ko -->
+            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
+            prefs.incrementsSizeInMinutes, itemValue: 60, disabled: isLocked, labelText:
+            '1 hour' } } -->
+            <!-- /ko -->
+          </div>
+          <p class="isolated" data-bind="text: incrementsExample">e.g. 10:00, 10:15, 10:30, 10:45</p>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-6 row">
+            <label for="schedulingPrefs-advanceTime" class="col-xs-7">Time clients can book you in advance:</label>
+            <div class="col-xs-5">
+              <select id="schedulingPrefs-advanceTime" data-bind="value: prefs.advanceTime, disable: isLocked"
+              class="form-control">
+                <option value="0">Anytime</option>
+                <option value="0.5">30 minutes</option>
+                <option value="1">1 hour</option>
+                <option value="2">2 hours</option>
+                <option value="3">3 hours</option>
+                <option value="4">4 hours</option>
+                <option value="12">12 hours</option>
+                <option value="24">1 day</option>
+                <option value="48">2 days</option>
+                <option value="168">1 week</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group col-sm-5 col-sm-offset-1 row">
+            <label for="schedulingPrefs-betweenTime" class="col-xs-7">Preparation time needed between clients:</label>
+            <div class="col-xs-5">
+              <select id="schedulingPrefs-betweenTime" data-bind="value: prefs.betweenTime, disable: isLocked"
+              class="form-control">
+                <option value="0">None</option>
+                <option value="0.08">5 min</option>
+                <option value="0.16">10 min</option>
+                <option value="0.25">15 min</option>
+                <option value="0.5">30 min</option>
+                <option value="0.75">45 min</option>
+                <option value="1">1 hour</option>
+                <option value="2">2 hours</option>
+                <option value="3">3 hours</option>
+                <option value="4">4 hours</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-4 col-lg-2 col-lg-offset-10">
+            <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+          </div>
+        </div>
+      </form>
     </div>
     <!-- Activity bookingConfirmation -->
     <div class="container-fluid app-complete" data-activity="bookingConfirmation">
@@ -1351,7 +1425,7 @@
         <div class="weeklySchedule-allTime">
           <label> <span>All days/times</span>
 
-            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime }"
+            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'warning', offColor: 'primary' }"
             />
           </label>
         </div>

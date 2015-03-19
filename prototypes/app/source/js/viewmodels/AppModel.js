@@ -3,6 +3,7 @@
     requests
 **/
 var ko = require('knockout'),
+    $ = require('jquery'),
     Model = require('../models/Model'),
     User = require('../models/User'),
     Rest = require('../utils/Rest'),
@@ -28,9 +29,8 @@ require('./AppModel-account').plugIn(AppModel);
 /** Initialize and wait for anything up **/
 AppModel.prototype.init = function init() {
     
-    // NOTE: URL to be updated
-    this.rest = new Rest('http://dev.loconomics.com/api/v1/en-US/');
-    //this.rest = new Rest('http://localhost/source/api/v1/en-US/');
+    var siteUrl = $('html').attr('data-site-url');
+    this.rest = new Rest(siteUrl + '/api/v1/en-US/');
     
     // Setup Rest authentication
     this.rest.onAuthorizationRequired = function(retry) {
