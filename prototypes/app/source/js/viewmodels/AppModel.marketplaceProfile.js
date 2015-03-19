@@ -10,6 +10,7 @@ exports.create = function create(appModel) {
     return new RemoteModel({
         data: new MarketplaceProfile(),
         ttl: { minutes: 1 },
+        localStorageName: 'marketplaceProfile',
         fetch: function fetch() {
             return appModel.rest.get('marketplace-profile');
         },
