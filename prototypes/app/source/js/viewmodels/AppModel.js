@@ -19,6 +19,8 @@ function AppModel(values) {
     this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
     this.calendarSyncing = require('./AppModel.calendarSyncing').create(this);
     this.simplifiedWeeklySchedule = require('./AppModel.simplifiedWeeklySchedule').create(this);
+    this.marketplaceProfile = require('./AppModel.marketplaceProfile').create(this);
+    this.userProfile = require('./AppModel.userProfile').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);

@@ -15,7 +15,8 @@
 
 var ModelVersion = require('../utils/ModelVersion'),
     CacheControl = require('../utils/CacheControl'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    localforage = require('localforage');
 
 function RemoteModel(options) {
 
@@ -47,6 +48,14 @@ function RemoteModel(options) {
     this.cache = new CacheControl({
         ttl: options.ttl
     });
+    
+    // Optional name used to persist a copy of the data as plain object
+    // in the local storage on every successfully load/save operation.
+    // With no name, no saved (default).
+    // It uses 'localforage', so may be not saved using localStorage actually,
+    // but any supported and initialized storage system, like WebSQL, IndexedDB or LocalStorage.
+    // localforage must have a set-up previous use of this option.
+    this.localStorageName = options.localStorageName || null;
     
     // Recommended way to get the instance data
     // since it ensures to launch a load of the
@@ -90,12 +99,42 @@ function RemoteModel(options) {
             else
                 this.isSyncing(true);
             
-            var promise = this.fetch()
+            var promise = Promise.resolve();
+            
+            // If local storage is set for this, load first
+            // from local, then follow with syncing from remote
+            if (firstTimeLoad &&
+                this.localStorageName) {
+                promise = localforage.getItem(this.localStorageName)
+                .then(function(localData) {
+                    if (localData) {
+                        this.data.model.updateWith(localData, true);
+                        this.isLoading(false);
+                        this.isSyncing(true);
+                    }
+                }.bind(this));
+            }
+
+            // Perform the remote load (it doesn't matter if a local load
+            // happened or not).
+            promise = promise
+            .then(this.fetch.bind(this))
             .then(function (serverData) {
-                // Ever deepCopy, since plain data from the server (and any
-                // in between conversion on 'fecth') cannot have circular
-                // references:
-                this.data.model.updateWith(serverData, true);
+                if (serverData) {
+                    // Ever deepCopy, since plain data from the server (and any
+                    // in between conversion on 'fecth') cannot have circular
+                    // references:
+                    this.data.model.updateWith(serverData, true);
+
+                    // persistent local copy?
+                    if (this.localStorageName) {
+                        localforage.setItem(this.localStorageName, serverData);
+                    }
+                }
+                else {
+                    throw new Error('Remote model did not returned data, response must be a "Not Found"');
+                }
+                
                 this.isLoading(false);
                 this.isSyncing(false);
                 this.cache.latest = new Date();
@@ -136,6 +175,11 @@ function RemoteModel(options) {
             // cannot have circular references:
             this.data.model.updateWith(serverData, true);
             this.data.model.dataTimestamp(ts);
+            
+            // persistent local copy?
+            if (this.localStorageName) {
+                localforage.setItem(this.localStorageName, serverData);
+            }
 
             this.isSaving(false);
             this.cache.latest = new Date();
