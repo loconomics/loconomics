@@ -10,7 +10,8 @@ exports.create = function create(appModel) {
     return new RemoteModel({
         data: new User(),
         ttl: { minutes: 1 },
-        //localStorageName: 'profile',
+        // IMPORTANT: Keep the name in sync with set-up at AppModel-account
+        localStorageName: 'profile',
         fetch: function fetch() {
             return appModel.rest.get('profile');
         },

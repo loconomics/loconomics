@@ -46,29 +46,7 @@ exports.plugIn = function (AppModel) {
             username: username,
             password: password,
             returnProfile: true
-        }).then(function(logged) {
-
-            // use authorization key for each
-            // new Rest request
-            this.rest.extraHeaders = {
-                alu: logged.userID,
-                alk: logged.authKey
-            };
-
-            // async local save, don't wait
-            localforage.setItem('credentials', {
-                userID: logged.userID,
-                username: username,
-                password: password,
-                authKey: logged.authKey
-            });
-            localforage.setItem('profile', logged.profile);
-
-            // Set user data
-            this.user().model.updateWith(logged.profile);
-
-            return logged;
-        }.bind(this));
+        }).then(performLocalLogin(this, username, password));
     };
 
     /**
@@ -105,36 +83,41 @@ exports.plugIn = function (AppModel) {
         // Reset the extra headers to attempt the signup
         this.rest.extraHeadres = null;
 
+        // The result is the same as in a login, and
+        // we do the same as there to get the user logged
+        // on the app on sign-up success.
         return this.rest.post('signup?utm_source=app', {
             username: username,
             password: password,
             profileType: profileType,
             returnProfile: true
-        }).then(function(logged) {
-            // The result is the same as in a login, and
-            // we do the same as there to get the user logged
-            // on the app on sign-up success.
-
-            // use authorization key for each
-            // new Rest request
-            this.rest.extraHeaders = {
-                alu: logged.userID,
-                alk: logged.authKey
-            };
-
-            // async local save, don't wait
-            localforage.setItem('credentials', {
-                userID: logged.userID,
-                username: username,
-                password: password,
-                authKey: logged.authKey
-            });
-            localforage.setItem('profile', logged.profile);
-
-            // Set user data
-            this.user().model.updateWith(logged.profile);
-
-            return logged;
-        }.bind(this));
+        }).then(performLocalLogin(this, username, password));
     };
 };
+
+function performLocalLogin(thisAppModel, username, password) {
+    
+    return function(logged) {
+        // use authorization key for each
+        // new Rest request
+        thisAppModel.rest.extraHeaders = {
+            alu: logged.userID,
+            alk: logged.authKey
+        };
+
+        // async local save, don't wait
+        localforage.setItem('credentials', {
+            userID: logged.userID,
+            username: username,
+            password: password,
+            authKey: logged.authKey
+        });
+        // IMPORTANT: Local name kept in sync with set-up at AppModel.userProfile
+        localforage.setItem('profile', logged.profile);
+
+        // Set user data
+        thisAppModel.user().model.updateWith(logged.profile);
+
+        return logged;
+    };
+}
