@@ -43,6 +43,12 @@ function WeekDaySchedule(values) {
         It allows to be set as true putting
         a default range (9a-5p) or false 
         setting both as 0p.
+        
+        Since on write two observables are being modified, and
+        both are used in the read, a single change to the 
+        value will trigger two notifications; to avoid that,
+        the observable is rate limited with an inmediate value,
+        son only one notification is received.
     **/
     this.isEnabled = ko.computed({
         read: function() {
@@ -55,16 +61,16 @@ function WeekDaySchedule(values) {
         write: function(val) {
             if (val === true) {
                 // Default range 9a - 5p
-                this.from(9);
-                this.to(17);
+                this.fromHour(9);
+                this.toHour(17);
             }
             else {
+                this.toHour(0);
                 this.from(0);
-                this.to(0);
             }
         },
         owner: this
-    });
+    }).extend({ rateLimit: 0 });
     
     this.isAllDay = ko.computed({
         read: function() {
@@ -78,7 +84,7 @@ function WeekDaySchedule(values) {
             this.to(1440);
         },
         owner: this
-    });
+    }).extend({ rateLimit: 0 });
     
     // Additional interfaces to get/set the from/to times
     // by using a different data unit or format.

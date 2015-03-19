@@ -1285,7 +1285,7 @@
         </select>
       </script>
       <script type="text/html" id="weeklySchedule-timeSelectorHourTpl">
-        <select data-bind="value: value, disable: isLocked">
+        <select data-bind="value: value, disable: isLocked, valueAllowUnset: true">
             <!-- ko if: midnightAtBeginning --><option value="0">12a</option><!-- /ko -->
             <option value="1">1a</option>
             <option value="2">2a</option>
@@ -1336,7 +1336,7 @@
                 <!-- ko template: { 
                         name: 'weeklySchedule-timeSelectorHourTpl',
                         data: {
-                            value: day().tpHour,
+                            value: day().toHour,
                             isLocked: isLocked,
                             midnightAtBeginning: false,
                             midnightAtEnd: true

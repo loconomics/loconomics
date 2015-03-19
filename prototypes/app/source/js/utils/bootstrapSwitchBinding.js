@@ -38,10 +38,19 @@ exports.plugIn = function plugIn(ko, prefix) {
                 var v = valueAccessor() || {};
                 //console.log('switchChange', ko.toJS(v));
                 
-                if (ko.isObservable(v.state))
-                    v.state(state);
-                else
-                    v.state = state;
+                // changed?
+                var oldState = !!ko.unwrap(v.state),
+                    newState = !!state;
+                // Only update on change
+                if (oldState !== newState) {
+                    if (ko.isObservable(v.state)) {
+                        if (ko.isWriteableObservable(v.state)) {
+                            v.state(newState);
+                        }
+                    } else {
+                        v.state = newState;
+                    }
+                }
             });
         },
         update: function(element, valueAccessor, allBindings) {
@@ -56,7 +65,6 @@ exports.plugIn = function plugIn(ko, prefix) {
             //console.log('switch update', options);
 
             var $el = $(element);
-            
             // Update every option in the plugin
             Object.keys(options).forEach(function(key) {
                 $el.bootstrapSwitch(key, options[key]);
