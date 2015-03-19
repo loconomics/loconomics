@@ -1,0 +1,52 @@
+/** WeeklySchedule activity styles **/
+
+@import '../utils/isolated.styl';
+
+[data-activity=weeklySchedule] {
+
+    // Some values from the Bootstrap-Switch plugin styles
+    $switchBtn-height = 32px;
+    $switchBtn-width = 106px;
+    $gapWithSwitch = 14px;
+
+    .weeklySchedule-weekDay {
+        
+        isolated();
+    
+        /* The element with the label text on 
+            the right of the switch button
+        */
+        label div + span {
+            pointer-events: none;
+            // IMPORTANT: A gap carefully aligned in vertical
+            // with the dropdowns .weeklySchedule-weekDay-timeSelectors
+            padding-left: $gapWithSwitch;
+            // To be vertically aligned with the Switch button,
+            // using the Switch height:
+            line-height: $switchBtn-height;
+        }
+
+        .weeklySchedule-weekDay-timeSelectors {
+            // IMPORTANT: is aligned with the label text.
+            padding-left: $switchBtn-width + $gapWithSwitch;
+        }
+    }
+
+    .weeklySchedule-allTime {
+        
+        isolated();
+    
+        label {
+            display: block;
+            text-align: center;
+        
+            > span {
+                line-height: $switchBtn-height;
+            }
+        
+            .bootstrap-switch {
+                margin-left: 1em;
+            }
+        }
+    }
+}

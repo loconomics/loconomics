@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-03-18
+/*! LoconomicsApp 2015-03-19
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -503,16 +503,16 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
 
-/* line 2 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
+/* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 .isolated {
   margin: 14px 0;
   clear: both;
   display: block;
 }
 
-/* line 7 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 
-/* line 14 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 17 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 
 /* line 9 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 body:before {
@@ -563,7 +563,7 @@ body.use-backdrop:before {
   filter: alpha(opacity=40);
 }
 
-/* line 18 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 21 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
 /* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
@@ -1854,7 +1854,7 @@ body.use-backdrop:before {
   background-color: #e0004f;
 }
 
-/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 34 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
@@ -2118,4 +2118,55 @@ body.use-backdrop:before {
 /* line 50 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\clients.styl */
 [data-activity=clients].is-searching .SimpleList-divider {
   display: none;
+}
+
+/* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+
+/* line 53 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\isolated.styl */
+
+/* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+[data-activity=weeklySchedule] .weeklySchedule-weekDay {
+  margin: 14px 0;
+  clear: both;
+  display: block;
+/* The element with the label text on 
+            the right of the switch button
+        */
+}
+
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+[data-activity=weeklySchedule] .weeklySchedule-weekDay label div + span {
+  pointer-events: none;
+  padding-left: 14px;
+  line-height: 32px;
+}
+
+/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+[data-activity=weeklySchedule] .weeklySchedule-weekDay .weeklySchedule-weekDay-timeSelectors {
+  padding-left: 120px;
+}
+
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+[data-activity=weeklySchedule] .weeklySchedule-allTime {
+  margin: 14px 0;
+  clear: both;
+  display: block;
+}
+
+/* line 39 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+[data-activity=weeklySchedule] .weeklySchedule-allTime label {
+  display: block;
+  text-align: center;
+}
+
+/* line 43 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+[data-activity=weeklySchedule] .weeklySchedule-allTime label > span {
+  line-height: 32px;
+}
+
+/* line 47 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+[data-activity=weeklySchedule] .weeklySchedule-allTime label .bootstrap-switch {
+  margin-left: 1em;
 }

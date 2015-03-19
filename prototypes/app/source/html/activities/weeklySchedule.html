@@ -62,15 +62,16 @@
         </select>
     </script>
     <script type="text/html" id="weeklySchedule-weekDayTpl">
-        <div class="isolated">
-            <div class="checkbox">
+        <div class="isolated weeklySchedule-weekDay">
+            <div>
                 <label>
                     <input type="checkbox" class="checkbox"
-                           data-bind="switch: { disabled: isLocked, state: day().isEnabled }" />
-                    <span data-bind="text: label"></span>
+                           data-bind="switch: { disabled: isLocked, state: day().isEnabled }"
+                   /><span data-bind="text: label"></span>
                 </label>
             </div>
-            <div data-bind="visible: day().isEnabled">
+            <div class="weeklySchedule-weekDay-timeSelectors"
+                 data-bind="visible: day().isEnabled">
                 <!-- ko template: { 
                         name: 'weeklySchedule-timeSelectorHourTpl',
                         data: {
@@ -96,9 +97,9 @@
     
     <form data-bind="submit: save" class="container">
 
-        <div>
+        <div class="weeklySchedule-allTime">
             <label>
-                All days/times
+                <span>All days/times</span>
                 <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime }" />
             </label>
         </div>
