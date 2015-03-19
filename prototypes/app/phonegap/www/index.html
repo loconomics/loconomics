@@ -1286,8 +1286,8 @@
         </select>
       </script>
       <script type="text/html" id="weeklySchedule-timeSelectorHourTpl">
-        <select data-bind="value: value, disable: isLocked">
-            <option value="0">12a</option>
+        <select data-bind="value: value, disable: isLocked, valueAllowUnset: true">
+            <!-- ko if: midnightAtBeginning --><option value="0">12a</option><!-- /ko -->
             <option value="1">1a</option>
             <option value="2">2a</option>
             <option value="3">3a</option>
@@ -1311,30 +1311,49 @@
             <option value="21">9p</option>
             <option value="22">10p</option>
             <option value="23">11p</option>
-            <option value="24">12a</option>
+            <!-- ko if: midnightAtEnd --><option value="24">12a</option><!-- /ko -->
         </select>
       </script>
       <script type="text/html" id="weeklySchedule-weekDayTpl">
-        <div class="isolated">
-            <div class="checkbox">
+        <div class="isolated weeklySchedule-weekDay">
+            <div>
                 <label>
                     <input type="checkbox" class="checkbox"
-                           data-bind="checked: day().isEnabled, disable: isLocked" />
-                    <span data-bind="text: label"></span>
+                           data-bind="switch: { disabled: isLocked, state: day().isEnabled }"
+                   /><span data-bind="text: label"></span>
                 </label>
             </div>
-            <div data-bind="visible: day().isEnabled">
-                <!-- ko template: { name: 'weeklySchedule-timeSelectorHourTpl', data: { value: day().fromHour, isLocked: isLocked } } --><!-- /ko -->
+            <div class="weeklySchedule-weekDay-timeSelectors"
+                 data-bind="visible: day().isEnabled">
+                <!-- ko template: { 
+                        name: 'weeklySchedule-timeSelectorHourTpl',
+                        data: {
+                            value: day().fromHour,
+                            isLocked: isLocked,
+                            midnightAtBeginning: true,
+                            midnightAtEnd: false
+                        }
+                } --><!-- /ko -->
                 <span>to</span>
-                <!-- ko template: { name: 'weeklySchedule-timeSelectorHourTpl', data: { value: day().toHour, isLocked: isLocked} } --><!-- /ko -->
+                <!-- ko template: { 
+                        name: 'weeklySchedule-timeSelectorHourTpl',
+                        data: {
+                            value: day().toHour,
+                            isLocked: isLocked,
+                            midnightAtBeginning: false,
+                            midnightAtEnd: true
+                        }
+                } --><!-- /ko -->
             </div>
         </div>
       </script>
       <form data-bind="submit: save" class="container">
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" data-bind="checked: schedule.isAllTime, disable: isLocked"
-            />All days/times</label>
+        <div class="weeklySchedule-allTime">
+          <label> <span>All days/times</span>
+
+            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime }"
+            />
+          </label>
         </div>
         <div data-bind="visible: !schedule.isAllTime()">
           <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.sunday,

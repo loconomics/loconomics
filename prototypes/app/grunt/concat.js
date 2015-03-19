@@ -15,9 +15,9 @@ module.exports ={
     */
     'css-libs': {
         src: [
-            './vendor/bootstrap/css/bootstrap.min.css',
-            './vendor/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css'
+            './vendor/bootstrap/css/bootstrap.css',
+            './vendor/bootstrap-switch/custom-css/bootstrap-switch.css'
         ],
-        dest: './build/assets/css/libs.min.css'
+        dest: './build/assets/css/libs.css'
     }
 };

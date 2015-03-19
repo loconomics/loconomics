@@ -24,7 +24,11 @@ module.exports = {
     
     css: {
         files: ['./source/css/**/*.styl', './source/css/**/*.css', 'Gruntfile.js'],
-        tasks: ['build-css']
+        tasks: [
+            'stylus:app',
+            'cssmin:app',//'newer:cssmin:app'
+            'notify:css'
+        ]
     },
     
     html: {
