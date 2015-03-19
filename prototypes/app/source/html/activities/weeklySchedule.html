@@ -100,7 +100,7 @@
         <div class="weeklySchedule-allTime">
             <label>
                 <span>All days/times</span>
-                <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime }" />
+                <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'warning', offColor: 'primary' }" />
             </label>
         </div>
         <div data-bind="visible: !schedule.isAllTime()">
