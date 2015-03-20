@@ -43,6 +43,7 @@ exports.registerAll = function() {
 
             this.value = getObservable(params.value);
             this.placeholder = getObservable(params.placeholder);
+            this.disabled = getObservable(params.disabled);
         }
     });
     

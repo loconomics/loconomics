@@ -507,15 +507,21 @@
     </div>
     <!-- Activity contactInfo -->
     <div class="container-fluid has-navbar" data-activity="contactInfo">
-      <form role="form">
+      <form role="form" data-bind="submit: save">
         <div>
            <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
 
           <fieldset class="isolated">
-            <app-unlabeled-input params="placeholder: 'First name', value: profile().firstName"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Last name', value: profile().lastName"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile().mobilePhone"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Alternate phone', value: profile().alternatePhone"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disabled: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Last name', value: profile.lastName, disabled: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile.phone, disabled: isLocked"></app-unlabeled-input>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked"
+                /> <span>Can receive SMS</span>
+
+              </label>
+            </div>
             <app-unlabeled-input params="placeholder: 'Street address line 1', value: ''"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Street address line 2', value: ''"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Zip code', value: ''"></app-unlabeled-input>
@@ -524,9 +530,9 @@
 
               </p>
             </div>
-            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile().businessName"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Website name (optional)', value: profile().providerWebsiteURL"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile().alternateEmail"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Website name (optional)', value: profile.providerWebsiteURL"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternateEmail"></app-unlabeled-input>
           </fieldset>
         </div>
         <div class="navbar navbar-default ActivityNavbar">
@@ -1521,7 +1527,7 @@
     <!-- Component Template unlabeled-input -->
     <script type="text/html" id="unlabeled-input-template">
       <div class="form-group">
-        <input type="text" class="form-control" data-bind="value: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder }">
+        <input type="text" class="form-control" data-bind="value: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder }, disabled: disabled">
       </div>
     </script>
   </body>
