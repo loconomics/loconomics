@@ -111,6 +111,8 @@ function RemoteModel(options) {
                 // other one is required by the remote loading
                 localPromise = promise = localforage.getItem(this.localStorageName)
                 .then(function(localData) {
+                    // TODO: if no localData, promise must wait for remote, not
+                    // to finish still
                     if (localData) {
                         this.data.model.updateWith(localData, true);
                         this.isLoading(false);

@@ -29,7 +29,7 @@ function ContactInfoActivity($activity, app) {
     this.navBar = new NavBar({
         title: '',
         leftAction: NavAction.goBack.model.clone({
-            text: 'Account',
+            text: 'Owner information',
             isTitle: true
         }),
         rightAction: NavAction.goHelpIndex
