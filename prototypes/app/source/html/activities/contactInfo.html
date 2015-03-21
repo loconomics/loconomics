@@ -6,6 +6,7 @@
         <fieldset class="isolated">
             <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Last name', value: profile.lastName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Second Last name', value: profile.secondLastName, disable: isLocked" data-bind="visible: !!profile.secondLastName()"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile.phone, disable: isLocked"></app-unlabeled-input>
             
             <div class="checkbox">
@@ -26,8 +27,13 @@
             </div>
             
             <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Website name (optional)', value: profile.providerWebsiteURL, disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternateEmail, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
+            <div class="form-group">
+                <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)'"></select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)'"></select>
+            </div>
         </fieldset>
     </div>
 

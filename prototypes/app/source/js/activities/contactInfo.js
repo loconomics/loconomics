@@ -74,7 +74,41 @@ function ViewModel(app) {
     
     // Actual data for the form:
     this.profile = profileVersion.version;
+    
+    // TODO l10n
+    this.months = ko.observableArray([
+        { id: 1, name: 'January'},
+        { id: 2, name: 'February'},
+        { id: 3, name: 'March'},
+        { id: 4, name: 'April'},
+        { id: 5, name: 'May'},
+        { id: 6, name: 'June'},
+        { id: 7, name: 'July'},
+        { id: 8, name: 'August'},
+        { id: 9, name: 'September'},
+        { id: 10, name: 'October'},
+        { id: 11, name: 'November'},
+        { id: 12, name: 'December'}
+    ]);
+    // We need to use a special observable in the form, that will
+    // update the back-end profile.birthMonth
+    this.selectedBirthMonth = ko.computed({
+        read: function() {
+            var birthMonth = this.profile.birthMonth();
+            return birthMonth ? this.months()[birthMonth - 1] : null;
+        },
+        write: function(month) {
+            this.profile.birthMonth(month && month.id || null);
+        },
+        owner: this
+    });
+    
+    this.monthDays = ko.observableArray([]);
+    for (var iday = 1; iday <= 31; iday++) {
+        this.monthDays.push(iday);
+    }
 
+    // Control observables
     this.isLocked = userProfile.isLocked;
 
     this.submitText = ko.pureComputed(function() {
@@ -87,6 +121,8 @@ function ViewModel(app) {
         );
     }, userProfile);
     
+    // Actions
+
     this.discard = function discard() {
         profileVersion.pull({ evenIfNewer: true });
     }.bind(this);
