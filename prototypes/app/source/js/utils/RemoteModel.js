@@ -16,10 +16,13 @@
 var ModelVersion = require('../utils/ModelVersion'),
     CacheControl = require('../utils/CacheControl'),
     ko = require('knockout'),
-    localforage = require('localforage');
+    localforage = require('localforage'),
+    EventEmitter = require('events').EventEmitter;
 
 function RemoteModel(options) {
 
+    EventEmitter.call(this);
+    
     options = options || {};
     
     var firstTimeLoad = true;
@@ -87,10 +90,15 @@ function RemoteModel(options) {
                     // from the remote, that may include remote computed
                     // values:
                     v.pull({ evenIfNewer: true });
+                })
+                .catch(function() {
+                    // Just catch the error to avoid 'unknow error's from being
+                    // logged on the console; the error can be listening on
+                    // the 'error' event.
                 });
             }
         }.bind(this));
-        
+
         return v;
     };
     
@@ -117,12 +125,17 @@ function RemoteModel(options) {
                 // other one is required by the remote loading
                 localPromise = promise = localforage.getItem(this.localStorageName)
                 .then(function(localData) {
-                    // TODO: if no localData, promise must wait for remote, not
-                    // to finish still
                     if (localData) {
                         this.data.model.updateWith(localData, true);
+                        
+                        // Load done:
                         this.isLoading(false);
-                        this.isSyncing(true);
+                        this.isSyncing(false);
+                    }
+                    else {
+                        // When no data, return the general promise
+                        // that will fullfill after server load:
+                        return promise;
                     }
                 }.bind(this));
             }
@@ -147,10 +160,47 @@ function RemoteModel(options) {
                     throw new Error('Remote model did not returned data, response must be a "Not Found"');
                 }
                 
+                // Event
+                if (this.isLoading()) {
+                    this.emit('load', serverData);
+                }
+                else {
+                    this.emit('synced', serverData);
+                }
+                
+                // Finally: common tasks on success or error
                 this.isLoading(false);
                 this.isSyncing(false);
+                
                 this.cache.latest = new Date();
                 return this.data;
+            }.bind(this))
+            .catch(function(err) {
+                
+                var wasLoad = this.isLoading();
+                
+                // Finally: common tasks on success or error
+                this.isLoading(false);
+                this.isSyncing(false);
+                
+                // Event
+                var errPkg = {
+                    task: wasLoad ? 'load' : 'sync',
+                    error: err
+                };
+                // Be careful with 'error' event, is special and stops execution on emit
+                // if no listeners attached: overwritting that behavior by just
+                // print on console when nothing, or emit if some listener:
+                if (EventEmitter.listenerCount(this, 'error') > 0) {
+                    this.emit('error', errPkg);
+                }
+                else {
+                    // Log it when not handled (even if the promise error is handled)
+                    console.error('RemoteModel Error', errPkg);
+                }
+                
+                // Rethrow error
+                return err;
             }.bind(this));
             
             // First time, blocking load:
@@ -183,7 +233,7 @@ function RemoteModel(options) {
         // to avoid false 'obsolete' warnings with
         // the version that created the new original
         var ts = this.data.model.dataTimestamp();
-        
+
         return this.push()
         .then(function (serverData) {
             // Ever deepCopy, since plain data from the server
@@ -195,12 +245,58 @@ function RemoteModel(options) {
             if (this.localStorageName) {
                 localforage.setItem(this.localStorageName, serverData);
             }
-
+            
+            // Event
+            this.emit('saved', serverData);
+            
+            // Finally: common tasks on success or error
             this.isSaving(false);
+            
             this.cache.latest = new Date();
             return this.data;
+        }.bind(this))
+        .catch(function(err) {
+            // Finally: common tasks on success or error
+            this.isSaving(false);
+            
+            // Event
+            var errPkg = {
+                task: 'save',
+                error: err
+            };
+            // Be careful with 'error' event, is special and stops execution on emit
+            // if no listeners attached: overwritting that behavior by just
+            // print on console when nothing, or emit if some listener:
+            if (EventEmitter.listenerCount(this, 'error') > 0) {
+                this.emit('error', errPkg);
+            }
+            else {
+                // Log it when not handled (even if the promise error is handled)
+                console.error('RemoteModel Error', errPkg);
+            }
+            
+            // Rethrow error
+            return err;
         }.bind(this));
+    };
+    
+    /**
+        Launch a syncing request. Returns nothing, the
+        way to track any result is with events or 
+        the instance observables.
+        IMPORTANT: right now is just a request for 'load'
+        that avoids promise errors from throwing.
+    **/
+    this.sync = function sync() {
+        // Call for a load, that will be treated as 'syncing' after the
+        // first load
+        this.load()
+        // Avoid errors from throwing in the console,
+        // the 'error' event is there to track anyone.
+        .catch(function() {});
     };
 }
 
 module.exports = RemoteModel;
+
+RemoteModel._inherits(EventEmitter);

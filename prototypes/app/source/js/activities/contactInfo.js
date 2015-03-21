@@ -42,12 +42,12 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-    // Request a load, even if is a background load after the first time:
-    this.app.model.userProfile.load();
-    this.app.model.homeAddress.load();
-    
     // Discard any previous unsaved edit
     this.viewModel.discard();
+    
+    // Keep data updated:
+    this.app.model.userProfile.sync();
+    this.app.model.homeAddress.sync();
 };
 
 var ko = require('knockout');
@@ -140,7 +140,7 @@ function ViewModel(app) {
     }, this);
     this.isSaving = ko.computed(function() {
         return userProfile.isSaving() || homeAddress.isSaving();
-    }, this),
+    }, this);
 
     this.submitText = ko.pureComputed(function() {
         return (
