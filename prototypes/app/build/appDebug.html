@@ -524,21 +524,21 @@
 
               </label>
             </div>
-            <app-unlabeled-input params="placeholder: 'Street address line 1', value: '', disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Street address line 2', value: '', disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Zip code', value: '', disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Zip code', value: address.postalCode, disable: isLocked"></app-unlabeled-input>
             <div class="form-group">
-              <p class="form-control-"> <span data-bindZZ="text: city">San Francisco</span>, <span data-bindZZ="text: stateProvinceCode">CA</span>
+              <p class="form-control-"> <span data-bind="text: address.city"></span>, <span data-bind="text: address.stateProvinceCode"></span>
 
               </p>
             </div>
             <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
             <div class="form-group">
-              <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)'"></select>
+              <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: isLocked"></select>
             </div>
             <div class="form-group">
-              <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)'"></select>
+              <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)', disable: isLocked"></select>
             </div>
           </fieldset>
         </div>

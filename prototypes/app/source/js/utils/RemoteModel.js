@@ -81,7 +81,13 @@ function RemoteModel(options) {
         // Save the remote when successfully pushed the new version
         v.on('push', function(success) {
             if (success) {
-                this.save();
+                this.save()
+                .then(function() {
+                    // Update the version data with the new one
+                    // from the remote, that may include remote computed
+                    // values:
+                    v.pull({ evenIfNewer: true });
+                });
             }
         }.bind(this));
         

@@ -1,0 +1,20 @@
+/** Home Address
+**/
+'use strict';
+
+var Address = require('../models/Address');
+
+var RemoteModel = require('../utils/RemoteModel');
+
+exports.create = function create(appModel) {
+    return new RemoteModel({
+        data: new Address(),
+        ttl: { minutes: 1 },
+        fetch: function fetch() {
+            return appModel.rest.get('addresses/home');
+        },
+        push: function push() {
+            return appModel.rest.put('addresses/home', this.data.model.toPlainObject());
+        }
+    });
+};

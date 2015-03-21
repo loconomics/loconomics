@@ -44,6 +44,8 @@ A.prototype.show = function show(state) {
     
     // Request a load, even if is a background load after the first time:
     this.app.model.userProfile.load();
+    this.app.model.homeAddress.load();
+    
     // Discard any previous unsaved edit
     this.viewModel.discard();
 };
@@ -55,8 +57,8 @@ function ViewModel(app) {
     this.headerText = ko.observable('Contact information');
     this.buttonText = ko.observable('Save');
     
+    // User Profile
     var userProfile = app.model.userProfile;
-
     var profileVersion = userProfile.newVersion();
     profileVersion.isObsolete.subscribe(function(itIs) {
         if (itIs) {
@@ -107,9 +109,38 @@ function ViewModel(app) {
     for (var iday = 1; iday <= 31; iday++) {
         this.monthDays.push(iday);
     }
+    
+    // Home Address
+    var homeAddress = app.model.homeAddress;
+    var homeAddressVersion = homeAddress.newVersion();
+    homeAddressVersion.isObsolete.subscribe(function(itIs) {
+        if (itIs) {
+            // new version from server while editing
+            // FUTURE: warn about a new remote version asking
+            // confirmation to load them or discard and overwrite them;
+            // the same is need on save(), and on server response
+            // with a 509:Conflict status (its body must contain the
+            // server version).
+            // Right now, just overwrite current changes with
+            // remote ones:
+            homeAddressVersion.pull({ evenIfNewer: true });
+        }
+    });
+    
+    // Actual data for the form:
+    this.address = homeAddressVersion.version;
 
-    // Control observables
-    this.isLocked = userProfile.isLocked;
+    // Control observables: special because must a mix
+    // of the both remote models used in this viewmodel
+    this.isLocked = ko.computed(function() {
+        return userProfile.isLocked() || homeAddress.isLocked();
+    }, this);
+    this.isLoading = ko.computed(function() {
+        return userProfile.isLoading() || homeAddress.isLoading();
+    }, this);
+    this.isSaving = ko.computed(function() {
+        return userProfile.isSaving() || homeAddress.isSaving();
+    }, this),
 
     this.submitText = ko.pureComputed(function() {
         return (
@@ -119,16 +150,18 @@ function ViewModel(app) {
                     'saving...' : 
                     'Save'
         );
-    }, userProfile);
+    }, this);
     
     // Actions
 
     this.discard = function discard() {
         profileVersion.pull({ evenIfNewer: true });
+        homeAddressVersion.pull({ evenIfNewer: true });
     }.bind(this);
 
     this.save = function save() {
         // Force to save, even if there was remote updates
         profileVersion.push({ evenIfObsolete: true });
+        homeAddressVersion.push({ evenIfObsolete: true });
     }.bind(this);
 }
