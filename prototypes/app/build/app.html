@@ -512,9 +512,9 @@
            <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
 
           <fieldset class="isolated">
-            <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disabled: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Last name', value: profile.lastName, disabled: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile.phone, disabled: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Last name', value: profile.lastName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile.phone, disable: isLocked"></app-unlabeled-input>
             <div class="checkbox">
               <label>
                 <input type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked"
@@ -522,22 +522,22 @@
 
               </label>
             </div>
-            <app-unlabeled-input params="placeholder: 'Street address line 1', value: ''"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Street address line 2', value: ''"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Zip code', value: ''"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Street address line 1', value: '', disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Street address line 2', value: '', disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Zip code', value: '', disable: isLocked"></app-unlabeled-input>
             <div class="form-group">
-              <p class="form-control-static"> <span data-bindZZ="text: city">San Francisco</span>, <span data-bindZZ="text: stateProvinceCode">CA</span>
+              <p class="form-control-"> <span data-bindZZ="text: city">San Francisco</span>, <span data-bindZZ="text: stateProvinceCode">CA</span>
 
               </p>
             </div>
-            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Website name (optional)', value: profile.providerWebsiteURL"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternateEmail"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Website name (optional)', value: profile.providerWebsiteURL, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternateEmail, disable: isLocked"></app-unlabeled-input>
           </fieldset>
         </div>
         <div class="navbar navbar-default ActivityNavbar">
           <div class="container-fluid">
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText"></button>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText, disable: isLocked"></button>
           </div>
         </div>
       </form>
@@ -1527,7 +1527,7 @@
     <!-- Component Template unlabeled-input -->
     <script type="text/html" id="unlabeled-input-template">
       <div class="form-group">
-        <input type="text" class="form-control" data-bind="value: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder }, disabled: disabled">
+        <input type="text" class="form-control" data-bind="value: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder }, disable: disable">
       </div>
     </script>
   </body>
