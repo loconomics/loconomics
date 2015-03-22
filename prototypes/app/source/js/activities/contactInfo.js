@@ -38,11 +38,17 @@ var A = Activity.extends(function ContactInfoActivity() {
     
     this.app.model.userProfile.on('error', function(err) {
         var msg = err.task === 'save' ? 'Error saving contact data.' : 'Error loading contact data.';
-        this.app.modals.showError({ message: msg });
+        this.app.modals.showError({
+            title: msg,
+            error: err && err.task && err.error || err
+        });
     }.bind(this));
     this.app.model.homeAddress.on('error', function(err) {
         var msg = err.task === 'save' ? 'Error saving address details.' : 'Error loading address details.';
-        this.app.modals.showError({ message: msg });
+        this.app.modals.showError({
+            title: msg,
+            error: err && err.task && err.error || err
+        });
     }.bind(this));
 });
 

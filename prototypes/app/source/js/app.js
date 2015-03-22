@@ -3,6 +3,7 @@
 /** Global dependencies **/
 var $ = require('jquery');
 require('jquery-mobile');
+require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 var bootknock = require('./utils/bootknockBindingHelpers');
