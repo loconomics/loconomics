@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="App" data-site-url="siteUrl">
+<html lang="en" class="App" data-site-url="http://dev.loconomics.com">
   
   <head>
     <meta charset="utf-8">
@@ -97,6 +97,26 @@
         </div>
       </div>
     </nav>
+    <!-- errorModal -->
+    <div id="errorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="errorModal-label"
+    aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+             <h4 class="modal-title" id="errorModal-label">There was an error</h4>
+
+          </div>
+          <div class="modal-body">
+            <p id="errorModal-body"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Modal newItem .. TO REMOVE, IS REPLACED BY A MENU -->
     <div id="newItem" class="modal" tabindex="-1" role="dialog" aria-labelledby="newItemLabel"
     aria-hidden="true" data-backdrop="static">
@@ -130,10 +150,10 @@
           <div class="ListView-item-marker">
             <p><span class="glyphicon glyphicon-user"></span>
             </p>
-          </div> <a href="#!contactInfo" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="#!ownerInfo" class="btn btn-link btn-block ListView-item-content">
         <p>Owner information</p>
       </a>
- <a href="#contactInfo" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+ <a href="#ownerInfo" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
         </div>
         <div class="ListView-item">
@@ -294,76 +314,48 @@
     </div>
     <!-- BookMeButton activity -->
     <div class="container-fluid" data-activity="bookMeButton">
-       <h2 class="SectionTitle">Schedule preferences</h2>
+       <h2 class="SectionTitle">Book Me Now Button</h2>
 
-      <script type="text/html" id="schedulingPrefs-radioButton">
+      <script type="text/html" id="bookMeButton-radioButton">
         <label class="btn btn-primary" data-bind="css: { 'active': value() === itemValue }">
-            <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+            <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
             <span data-bind="text: labelText"></span>
         </label>
       </script>
-      <form data-bind="submit: save" class="container">
+      <form class="container">
+        <div class="center-block isolated" style="height: 60px; text-align: center"
+        data-bind="html: buttonHtmlCode"></div>
         <div class="center-block row isolated" style="text-align: center">
-          <p>Show my availability in increments of:</p>
           <div class="btn-group ut-noRadioCheck">
-            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
-            prefs.incrementsSizeInMinutes, itemValue: 15, disabled: isLocked, labelText:
-            '15 min' } } -->
+            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
+            itemValue: 'small', disabled: isLocked, labelText: 'Small' } } -->
             <!-- /ko -->
-            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
-            prefs.incrementsSizeInMinutes, itemValue: 30, disabled: isLocked, labelText:
-            '30 min' } } -->
+            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
+            itemValue: 'medium', disabled: isLocked, labelText: 'Medium' } } -->
             <!-- /ko -->
-            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value:
-            prefs.incrementsSizeInMinutes, itemValue: 60, disabled: isLocked, labelText:
-            '1 hour' } } -->
+            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
+            itemValue: 'large', disabled: isLocked, labelText: 'Large' } } -->
             <!-- /ko -->
           </div>
-          <p class="isolated" data-bind="text: incrementsExample">e.g. 10:00, 10:15, 10:30, 10:45</p>
-        </div>
-        <div class="row">
-          <div class="form-group col-sm-6 row">
-            <label for="schedulingPrefs-advanceTime" class="col-xs-7">Time clients can book you in advance:</label>
-            <div class="col-xs-5">
-              <select id="schedulingPrefs-advanceTime" data-bind="value: prefs.advanceTime, disable: isLocked"
-              class="form-control">
-                <option value="0">Anytime</option>
-                <option value="0.5">30 minutes</option>
-                <option value="1">1 hour</option>
-                <option value="2">2 hours</option>
-                <option value="3">3 hours</option>
-                <option value="4">4 hours</option>
-                <option value="12">12 hours</option>
-                <option value="24">1 day</option>
-                <option value="48">2 days</option>
-                <option value="168">1 week</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group col-sm-5 col-sm-offset-1 row">
-            <label for="schedulingPrefs-betweenTime" class="col-xs-7">Preparation time needed between clients:</label>
-            <div class="col-xs-5">
-              <select id="schedulingPrefs-betweenTime" data-bind="value: prefs.betweenTime, disable: isLocked"
-              class="form-control">
-                <option value="0">None</option>
-                <option value="0.08">5 min</option>
-                <option value="0.16">10 min</option>
-                <option value="0.25">15 min</option>
-                <option value="0.5">30 min</option>
-                <option value="0.75">45 min</option>
-                <option value="1">1 hour</option>
-                <option value="2">2 hours</option>
-                <option value="3">3 hours</option>
-                <option value="4">4 hours</option>
-              </select>
-            </div>
+          <div class="ut-noRadioCheck isolated">
+            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
+            itemValue: 'link', disabled: isLocked, labelText: 'Link only (no button)'
+            } } -->
+            <!-- /ko -->
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-4 col-sm-offset-4 col-lg-2 col-lg-offset-10">
-            <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
-          </div>
+        <div class="form-group">
+          <label>Using "Source" or "Code" view in your website editor, copy the code below
+            and paste it into yours:
+            <textarea rows="6" readonly data-bind="value: buttonHtmlCode"
+            class="form-control"></textarea>
+          </label>
         </div>
+        <!-- TODO Unhide when implemented the handlers <div class="row">
+            <button type="button" class="btn btn-default btn-block" data-bind="event: { tap: copyCode }, disable: isLocked">Copy</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="event: { tap: sendByEmail }, disable: isLocked">E-mail to your tech person</button>
+        </div>
+        -->
       </form>
     </div>
     <!-- Activity bookingConfirmation -->
@@ -536,31 +528,44 @@
     </div>
     <!-- Activity contactInfo -->
     <div class="container-fluid has-navbar" data-activity="contactInfo">
-      <form role="form">
+      <form role="form" data-bind="submit: save">
         <div>
            <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
 
           <fieldset class="isolated">
-            <app-unlabeled-input params="placeholder: 'First name', value: profile().firstName"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Last name', value: profile().lastName"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile().mobilePhone"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Alternate phone', value: profile().alternatePhone"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Street address line 1', value: ''"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Street address line 2', value: ''"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Zip code', value: ''"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Last name', value: profile.lastName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Second Last name', value: profile.secondLastName, disable: isLocked"
+            data-bind="visible: !!profile.secondLastName()"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile.phone, disable: isLocked"></app-unlabeled-input>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked"
+                /> <span>Can receive SMS</span>
+
+              </label>
+            </div>
+            <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Zip code', value: address.postalCode, disable: isLocked"></app-unlabeled-input>
             <div class="form-group">
-              <p class="form-control-static"> <span data-bindZZ="text: city">San Francisco</span>, <span data-bindZZ="text: stateProvinceCode">CA</span>
+              <p class="form-control-"> <span data-bind="text: address.city"></span>, <span data-bind="text: address.stateProvinceCode"></span>
 
               </p>
             </div>
-            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile().businessName"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Website name (optional)', value: profile().providerWebsiteURL"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile().alternateEmail"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
+            <div class="form-group">
+              <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: isLocked"></select>
+            </div>
+            <div class="form-group">
+              <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)', disable: isLocked"></select>
+            </div>
           </fieldset>
         </div>
         <div class="navbar navbar-default ActivityNavbar">
           <div class="container-fluid">
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText"></button>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText, disable: isLocked"></button>
           </div>
         </div>
       </form>
@@ -836,6 +841,15 @@
  <a href="/locations" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
 
         </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p></p>
+          </div> <a href="/bookMeButton/106" class="btn btn-link btn-block ListView-item-content">
+        <p>Add a Book Now button to your website</p>
+      </a>
+ <a href="/bookMeButton/106" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+
+        </div>
       </div>
       <app-feedback-entry params="section: 'jobtitles'"></app-feedback-entry>
     </div>
@@ -1086,6 +1100,61 @@
         </div>
       </div>
     </div>
+    <!-- OwnerInfo activity -->
+    <div class="container-fluid" data-activity="ownerInfo">
+       <h1 class="SectionTitle has-HelpPoint">Owner information</h1>
+
+      <div class="ListView ListView--twolines ListView--textualmarker">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><span class="glyphicon glyphicon-user"></span>
+            </p>
+          </div> <a href="#!contactInfo" class="btn btn-link btn-block ListView-item-content">
+        <p>Contact information</p>
+      </a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><span class="glyphicon glyphicon-lock"></span>
+            </p>
+          </div> <a href="#!userFees" class="btn btn-link btn-block ListView-item-content">
+        <p>User fees</p>
+      </a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><span class="glyphicon glyphicon-file"></span>
+            </p>
+          </div> <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_system"
+          class="btn btn-link btn-block ListView-item-content">
+        <p>Owner acknowledgment</p>
+      </a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><span class="glyphicon glyphicon-file"></span>
+            </p>
+          </div> <a href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank"
+          class="btn btn-link btn-block ListView-item-content">
+        <p>Cooperative Bylaws</p>
+      </a>
+
+        </div>
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><span class="glyphicon glyphicon-file"></span>
+            </p>
+          </div> <a href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank"
+          class="btn btn-link btn-block ListView-item-content">
+        <p>Board nominations</p>
+      </a>
+
+        </div>
+      </div>
+    </div>
     <!-- Scheduling activity -->
     <div class="container-fluid" data-activity="scheduling">
        <h2 class="SectionTitle">Services, Pricing, &amp; Locations</h2>
@@ -1147,15 +1216,6 @@
         <p>Block a time off my calendar</p>
       </a>
  <a href="/event/0" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/bookNowButton" class="btn btn-link btn-block ListView-item-content">
-        <p>Add a Book Now button to your website</p>
-      </a>
- <a href="/bookNowButton" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
 
         </div>
         <div class="ListView-item">
@@ -1495,7 +1555,7 @@
     <!-- Component Template unlabeled-input -->
     <script type="text/html" id="unlabeled-input-template">
       <div class="form-group">
-        <input type="text" class="form-control" data-bind="value: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder }">
+        <input type="text" class="form-control" data-bind="value: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder }, disable: disable">
       </div>
     </script>
   </body>

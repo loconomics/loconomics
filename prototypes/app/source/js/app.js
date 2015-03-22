@@ -70,6 +70,8 @@ var app = {
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
     
+    modals: require('./app.modals'),
+    
     /**
         Just redirect the better place for current user and state.
         NOTE: Its a delayed function, since on many contexts need to

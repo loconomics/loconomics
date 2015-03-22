@@ -35,6 +35,15 @@ var A = Activity.extends(function ContactInfoActivity() {
             this.viewModel.buttonText('Save');
         }
     }.bind(this));
+    
+    this.app.model.userProfile.on('error', function(err) {
+        var msg = err.task === 'save' ? 'Error saving contact data.' : 'Error loading contact data.';
+        this.app.modals.showError({ message: msg });
+    }.bind(this));
+    this.app.model.homeAddress.on('error', function(err) {
+        var msg = err.task === 'save' ? 'Error saving address details.' : 'Error loading address details.';
+        this.app.modals.showError({ message: msg });
+    }.bind(this));
 });
 
 exports.init = A.init;

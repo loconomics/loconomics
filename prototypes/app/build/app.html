@@ -96,6 +96,26 @@
         </div>
       </div>
     </nav>
+    <!-- errorModal -->
+    <div id="errorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="errorModal-label"
+    aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+             <h4 class="modal-title" id="errorModal-label">There was an error</h4>
+
+          </div>
+          <div class="modal-body">
+            <p id="errorModal-body"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Modal newItem .. TO REMOVE, IS REPLACED BY A MENU -->
     <div id="newItem" class="modal" tabindex="-1" role="dialog" aria-labelledby="newItemLabel"
     aria-hidden="true" data-backdrop="static">
