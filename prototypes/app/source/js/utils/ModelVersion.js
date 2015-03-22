@@ -74,19 +74,22 @@ ModelVersion.prototype.pull = function pull(options) {
     options = options || {};
     
     // By default, nothing to do, or avoid overwrite changes.
-    var result = false;
+    var result = false,
+        rollback = null;
     
     if (options.evenIfNewer || !this.isNewer()) {
-        // Update version, getting original
-        // (updateWith takes care to set the same dataTimestamp)
+        // Update version with the original data,
+        // creating first a rollback function.
+        rollback = createRollbackFunction(this.version);
         // Ever deepCopy, since only properties and fields from models
         // are copied and that must avoid circular references
+        // The method updateWith takes care to set the same dataTimestamp:        
         this.version.model.updateWith(this.original, true);
         // Done
         result = true;
     }
-    
-    this.emit('pull', result);
+
+    this.emit('pull', result, rollback);
     return result;
 };
 
@@ -103,19 +106,21 @@ ModelVersion.prototype.push = function push(options) {
     options = options || {};
     
     // By default, nothing to do, or avoid overwrite changes.
-    var result = false;
-    
+    var result = false,
+        rollback = null;
+
     if (options.evenIfObsolete || !this.isObsolete()) {
-        // Update original
-        // (updateWith takes care to set the same dataTimestamp)
+        // Update original, creating first a rollback function.
+        rollback = createRollbackFunction(this.original);
         // Ever deepCopy, since only properties and fields from models
         // are copied and that must avoid circular references
+        // The method updateWith takes care to set the same dataTimestamp.
         this.original.model.updateWith(this.version, true);
         // Done
         result = true;
     }
-    
-    this.emit('push', result);
+
+    this.emit('push', result, rollback);
     return result;
 };
 
@@ -132,3 +137,25 @@ ModelVersion.prototype.sync = function sync() {
     else
         return false;
 };
+
+/**
+    Utility that create a function able to 
+    perform a data rollback on execution, useful
+    to pass on the events to allow react upon changes
+    or external synchronization failures.
+**/
+function createRollbackFunction(modelInstance) {
+    // Previous function creation, get NOW the information to
+    // be backed for later.
+    var backedData = modelInstance.model.toPlainObject(true),
+        backedTimestamp = modelInstance.model.dataTimestamp();
+
+    // Create the function that *may* get executed later, after
+    // changes were done in the modelInstance.
+    return function rollback() {
+        // Set the backed data
+        modelInstance.model.updateWith(backedData);
+        // And the timestamp
+        modelInstance.model.dataTimestamp(backedTimestamp);
+    };
+}

@@ -82,7 +82,7 @@ function RemoteModel(options) {
         });
         
         // Save the remote when successfully pushed the new version
-        v.on('push', function(success) {
+        v.on('push', function(success, rollback) {
             if (success) {
                 this.save()
                 .then(function() {
@@ -92,9 +92,15 @@ function RemoteModel(options) {
                     v.pull({ evenIfNewer: true });
                 })
                 .catch(function() {
-                    // Just catch the error to avoid 'unknow error's from being
-                    // logged on the console; the error can be listening on
-                    // the 'error' event.
+                    // To catch the error is important 
+                    // to avoid 'unknow error's from being
+                    // logged on the console.
+                    // The error can be read by listening the 'error' event.
+                    
+                    // Performs a rollback of the original model
+                    rollback();
+                    // The version data keeps untouched, user may want to retry
+                    // or made changes on its un-saved data.
                 });
             }
         }.bind(this));
