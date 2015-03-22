@@ -14,11 +14,12 @@ exports.getErrorMessageFrom = function getErrorMessageFrom(err) {
 exports.showError = function showErrorModal(options) {
     
     var modal = $('#errorModal'),
+        header = modal.find('#errorModal-label'),
         body = modal.find('#errorModal-body');
     
     options = options || {};
     
-    var msg = body.data('default-message');
+    var defMsg = body.data('default-text');
 
     if (options.error)
         msg = exports.getErrorMessageFrom(options.error);
@@ -26,6 +27,8 @@ exports.showError = function showErrorModal(options) {
         msg = options.message;
 
     body.text(msg);
+
+    header.text(options.title || header.data('default-text'));
     
     modal.modal('show');
 };

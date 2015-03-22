@@ -32,7 +32,8 @@ module.exports = function(grunt) {
                 debug: true,
                 includedFiles: includedFiles,
                 cordovajs: false,
-                siteUrl: 'http://localhost/source'
+                siteUrl: 'http://dev.loconomics.com'
+                //siteUrl: 'http://localhost/source'
             }
           }
         },
