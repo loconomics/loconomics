@@ -324,19 +324,28 @@
             // }
                             
             // Set address: even for updates, the ID is returned as treated as can be new (thats only on creation)
-            var newAddressID = LcRestAddress.SetAddress(address);
-            if (newAddressID == 0) {
-                // NOTE: Very, very strange this errors happens with current logic, just an important unexpected database error.
-                // OR a code udpate on the SQL code broke the creation or retrieval off the @AddressID
-                // OR new constraints added to SetAddress() allowed to return zero rather than raise an exception, the recommended
-                // way.
-                throw new HttpException(500, "Server Error: impossible to create the address at this time.");
-            }
-                            
-            // Return created/updated address
-            return GetAddress(userId, jobTitleID, newAddressID, kind);
+			try {
+				var newAddressID = LcRestAddress.SetAddress(address);
+				if (newAddressID == 0) {
+					// NOTE: Very, very strange this errors happens with current logic, just an important unexpected database error.
+					// OR a code udpate on the SQL code broke the creation or retrieval off the @AddressID
+					// OR new constraints added to SetAddress() allowed to return zero rather than raise an exception, the recommended
+					// way.
+					throw new HttpException(500, "Server Error: impossible to create the address at this time.");
+				}
+
+				// Return created/updated address
+				return GetAddress(userId, jobTitleID, newAddressID, kind);
+			}
+			catch (ArgumentException ex) {
+				// A bad argument on SetAddress is in fact a validation error.
+				// Mainly, bad postal code, no city and stateprovince resolved
+				ModelState.AddError(ex.ParamName, ex.Message);
+
+				throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+			}
         }
-        
+
         private LcRestAddress DeleteAddress(int userId, int jobTitleID, int addressID, string kind = null) {
 
             // Correct Kind first

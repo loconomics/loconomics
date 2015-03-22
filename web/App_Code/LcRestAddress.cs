@@ -379,7 +379,11 @@ public class LcRestAddress
 
         // Automatically set the City, StateProvinceID and PostalCodeID given
         // the PostalCode and Country information from the object.
-        AutosetByCountryPostalCode(address);
+        if (!AutosetByCountryPostalCode(address))
+        {
+            // TODO l10n
+            throw new ArgumentException("Invalid ZIP code", "postalCode");
+        }
 
         // GPS
         if ((!address.latitude.HasValue || address.latitude.Value == 0) &&
@@ -476,13 +480,15 @@ public class LcRestAddress
     {
         if (String.IsNullOrWhiteSpace(address.postalCode))
         {
-            throw new ArgumentException("Address must contain a postal code", "address");
+            // TODO l10n
+            throw new ArgumentException("Address must contain a postal code", "postalCode");
         }
         if (address.countryID <= 0)
         {
             if (String.IsNullOrWhiteSpace(address.countryCode))
             {
-                throw new ArgumentException("Address must contain a country code or country ID", "address");
+                // TODO l10n
+                throw new ArgumentException("Address must contain a country code or country ID", "countryCode");
             }
             address.countryID = LcRestLocale.GetCountryIDByCode(address.countryCode);
         }
