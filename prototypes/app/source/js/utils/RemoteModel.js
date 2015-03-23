@@ -111,6 +111,68 @@ function RemoteModel(options) {
     this.fetch = options.fetch || function fetch() { throw new Error('Not implemented'); };
     this.push = options.push || function push() { throw new Error('Not implementd'); };
 
+    var loadFromRemote = function loadFromRemote() {
+        return this.fetch()
+        .then(function (serverData) {
+            if (serverData) {
+                // Ever deepCopy, since plain data from the server (and any
+                // in between conversion on 'fecth') cannot have circular
+                // references:
+                this.data.model.updateWith(serverData, true);
+
+                // persistent local copy?
+                if (this.localStorageName) {
+                    localforage.setItem(this.localStorageName, serverData);
+                }
+            }
+            else {
+                throw new Error('Remote model did not returned data, response must be a "Not Found"');
+            }
+
+            // Event
+            if (this.isLoading()) {
+                this.emit('load', serverData);
+            }
+            else {
+                this.emit('synced', serverData);
+            }
+
+            // Finally: common tasks on success or error
+            this.isLoading(false);
+            this.isSyncing(false);
+
+            this.cache.latest = new Date();
+            return this.data;
+        }.bind(this))
+        .catch(function(err) {
+
+            var wasLoad = this.isLoading();
+
+            // Finally: common tasks on success or error
+            this.isLoading(false);
+            this.isSyncing(false);
+
+            // Event
+            var errPkg = {
+                task: wasLoad ? 'load' : 'sync',
+                error: err
+            };
+            // Be careful with 'error' event, is special and stops execution on emit
+            // if no listeners attached: overwritting that behavior by just
+            // print on console when nothing, or emit if some listener:
+            if (EventEmitter.listenerCount(this, 'error') > 0) {
+                this.emit('error', errPkg);
+            }
+            else {
+                // Log it when not handled (even if the promise error is handled)
+                console.error('RemoteModel Error', errPkg);
+            }
+
+            // Rethrow error
+            return err;
+        }.bind(this));
+    }.bind(this);
+    
     this.load = function load() {
         if (this.cache.mustRevalidate()) {
             
@@ -119,17 +181,14 @@ function RemoteModel(options) {
             else
                 this.isSyncing(true);
             
-            var promise = Promise.resolve(),
-                localPromise = null;
+            var promise = null;
             
             // If local storage is set for this, load first
             // from local, then follow with syncing from remote
             if (firstTimeLoad &&
                 this.localStorageName) {
-                // Set both localPromise and promise,
-                // since we only will wait for localPromise and the
-                // other one is required by the remote loading
-                localPromise = promise = localforage.getItem(this.localStorageName)
+
+                promise = localforage.getItem(this.localStorageName)
                 .then(function(localData) {
                     if (localData) {
                         this.data.model.updateWith(localData, true);
@@ -137,86 +196,32 @@ function RemoteModel(options) {
                         // Load done:
                         this.isLoading(false);
                         this.isSyncing(false);
+                        
+                        // Local load done, do a background
+                        // remote load
+                        loadFromRemote();
+                        // just don't wait, return current
+                        // data
+                        return this.data;
                     }
                     else {
-                        // When no data, return the general promise
-                        // that will fullfill after server load:
-                        return promise;
+                        // When no data, perform a remote
+                        // load and wait for it:
+                        return loadFromRemote();
                     }
                 }.bind(this));
             }
-
-            // Perform the remote load (it doesn't matter if a local load
-            // happened or not), getting the new promise
-            promise = promise
-            .then(this.fetch.bind(this))
-            .then(function (serverData) {
-                if (serverData) {
-                    // Ever deepCopy, since plain data from the server (and any
-                    // in between conversion on 'fecth') cannot have circular
-                    // references:
-                    this.data.model.updateWith(serverData, true);
-
-                    // persistent local copy?
-                    if (this.localStorageName) {
-                        localforage.setItem(this.localStorageName, serverData);
-                    }
-                }
-                else {
-                    throw new Error('Remote model did not returned data, response must be a "Not Found"');
-                }
-                
-                // Event
-                if (this.isLoading()) {
-                    this.emit('load', serverData);
-                }
-                else {
-                    this.emit('synced', serverData);
-                }
-                
-                // Finally: common tasks on success or error
-                this.isLoading(false);
-                this.isSyncing(false);
-                
-                this.cache.latest = new Date();
-                return this.data;
-            }.bind(this))
-            .catch(function(err) {
-                
-                var wasLoad = this.isLoading();
-                
-                // Finally: common tasks on success or error
-                this.isLoading(false);
-                this.isSyncing(false);
-                
-                // Event
-                var errPkg = {
-                    task: wasLoad ? 'load' : 'sync',
-                    error: err
-                };
-                // Be careful with 'error' event, is special and stops execution on emit
-                // if no listeners attached: overwritting that behavior by just
-                // print on console when nothing, or emit if some listener:
-                if (EventEmitter.listenerCount(this, 'error') > 0) {
-                    this.emit('error', errPkg);
-                }
-                else {
-                    // Log it when not handled (even if the promise error is handled)
-                    console.error('RemoteModel Error', errPkg);
-                }
-                
-                // Rethrow error
-                return err;
-            }.bind(this));
+            else {
+                // Perform the remote load:
+                promise = loadFromRemote();
+            }
             
             // First time, blocking load:
             // it returns when the load returns
             if (firstTimeLoad) {
                 firstTimeLoad = false;
-                // It returns the promise to the local storage loading
-                // if any, or the remote loading promise, because
-                // we must resolve as soon there is data.
-                return localPromise || promise;
+                // Returns the promise and will wait for the first load:
+                return promise;
             }
             else {
                 // Background load: is loading still

@@ -10,6 +10,7 @@ exports.create = function create(appModel) {
     var rem = new RemoteModel({
         data: new CalendarSyncing(),
         ttl: { minutes: 1 },
+        localStorageName: 'calendarSyncing',
         fetch: function fetch() {
             return appModel.rest.get('calendar-syncing');
         },

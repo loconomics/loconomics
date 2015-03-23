@@ -10,6 +10,7 @@ exports.create = function create(appModel) {
     return new RemoteModel({
         data: new Address(),
         ttl: { minutes: 1 },
+        localStorageName: 'homeAddress',
         fetch: function fetch() {
             return appModel.rest.get('addresses/home');
         },

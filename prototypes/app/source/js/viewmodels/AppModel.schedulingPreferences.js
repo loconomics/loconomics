@@ -10,6 +10,7 @@ exports.create = function create(appModel) {
     return new RemoteModel({
         data: new SchedulingPreferences(),
         ttl: { minutes: 1 },
+        localStorageName: 'schedulingPreferences',
         fetch: function fetch() {
             return appModel.rest.get('scheduling-preferences');
         },

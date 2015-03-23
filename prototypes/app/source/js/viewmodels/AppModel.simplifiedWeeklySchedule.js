@@ -20,6 +20,7 @@ exports.create = function create(appModel) {
     return new RemoteModel({
         data: new SimplifiedWeeklySchedule(),
         ttl: { minutes: 1 },
+        localStorageName: 'weeklySchedule',
         fetch: function fetch() {
             return appModel.rest.get('availability/weekly-schedule')
             .then(fromWeeklySchedule);
