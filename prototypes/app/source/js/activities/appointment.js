@@ -3,52 +3,38 @@
 
 var $ = require('jquery'),
     moment = require('moment'),
-    ko = require('knockout'),
-    NavAction = require('../viewmodels/NavAction'),
-    NavBar = require('../viewmodels/NavBar');
+    ko = require('knockout');
 require('../components/DatePicker');
 
-var singleton = null;
+var Activity = require('../components/Activity');
 
-exports.init = function initAppointment($activity, app) {
-
-    if (singleton === null)
-        singleton = new AppointmentActivity($activity, app);
+var A = Activity.extends(function AppointmentActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function AppointmentActivity($activity, app) {
-
-    this.accessLevel = app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.Freelancer;    
     this.menuItem = 'calendar';
-    
-    /* Getting elements */
-    this.$activity = $activity;
-    this.$appointmentView = $activity.find('#calendarAppointmentView');
-    this.$chooseNew = $('#calendarChooseNew');
-    this.app = app;
-    
-    // Object to hold the options passed on 'show' as a result
-    // of a request from another activity
-    this.requestInfo = null;
     
     // Create a specific backAction that shows current date
     // and return to calendar in current date.
     // Later some more changes are applied, with viewmodel ready
-    var backAction = new NavAction({
+    var backAction = new Activity.NavAction({
         link: 'calendar/', // Preserve last slash, for later use
-        icon: NavAction.goBack.icon(),
+        icon: Activity.NavAction.goBack.icon(),
         isTitle: true,
         text: 'Calendar'
     });
-    this.navBar = new NavBar({
+    this.navBar = new Activity.NavBar({
         title: '',
         leftAction: backAction,
-        rightAction: NavAction.goHelpIndex
+        rightAction: Activity.NavAction.goHelpIndex
     });
     
+    this.$appointmentView = this.$activity.find('#calendarAppointmentView');
+    this.$chooseNew = $('#calendarChooseNew');
+    
     this.initAppointment();
+    this.viewModel = this.appointmentsDataView;
     
     // This title text is dynamic, we need to replace it by a computed observable
     // showing the current date
@@ -96,23 +82,26 @@ function AppointmentActivity($activity, app) {
             
             // If was a root URL, no ID, just replace current state
             if (urlId === '')
-                app.shell.history.replaceState(null, null, 'appointment/' + aptId);
+                this.app.shell.history.replaceState(null, null, 'appointment/' + aptId);
             else
-                app.shell.history.pushState(null, null, 'appointment/' + aptId);
+                this.app.shell.history.pushState(null, null, 'appointment/' + aptId);
         }
         
         // Trigger a layout update, required by the full-height feature
         $(window).trigger('layoutUpdate');
-    });
-}
+    }.bind(this));
+});
 
-AppointmentActivity.prototype.show = function show(options) {
+exports.init = A.init;
+
+A.prototype.show = function show(options) {
     /* jshint maxcomplexity:10 */
-    this.requestInfo = options || {};
+
+    Activity.prototype.show.call(this, options);
     
     var apt;
-    if (this.requestInfo.appointment) {
-        apt = this.requestInfo.appointment;
+    if (this.requestData.appointment) {
+        apt = this.requestData.appointment;
     } else {
     // Get ID
         var aptId = options && options.route && options.route.segments[0];
@@ -121,7 +110,7 @@ AppointmentActivity.prototype.show = function show(options) {
     }
     this.showAppointment(apt);
     
-    // If there are options (there are not on startup or
+    // If there are options (there  not on startup or
     // on cancelled edition).
     // And it comes back from the textEditor.
     if (options !== null) {
@@ -162,7 +151,7 @@ AppointmentActivity.prototype.show = function show(options) {
 
 var Appointment = require('../models/Appointment');
 
-AppointmentActivity.prototype.showAppointment = function showAppointment(apt) {
+A.prototype.showAppointment = function showAppointment(apt) {
 
     if (typeof(apt) === 'number') {
         if (apt) {
@@ -187,7 +176,7 @@ AppointmentActivity.prototype.showAppointment = function showAppointment(apt) {
     }
 };
 
-AppointmentActivity.prototype.initAppointment = function initAppointment() {
+A.prototype.initAppointment = function initAppointment() {
     if (!this.__initedAppointment) {
         this.__initedAppointment = true;
 
@@ -373,7 +362,5 @@ AppointmentActivity.prototype.initAppointment = function initAppointment() {
                 text: appointmentsDataView.currentAppointment()[field]()
             });
         }.bind(this);
-        
-        ko.applyBindings(appointmentsDataView, this.$activity.get(0));
     }
 };

@@ -300,6 +300,16 @@ var appInit = function appInit() {
         // Update app navigation
         app.updateAppNav(activity);
     });
+    // When an activity is hidden
+    app.shell.on(app.shell.events.closed, function($act) {
+        
+        // Connect the 'activities' controllers to their views
+        var actName = $act.data('activity');
+        var activity = app.getActivity(actName);
+        // Trigger the 'hide' logic of the activity controller:
+        if (activity.hide)
+            activity.hide();
+    });
     
     // Set model for the AppNav
     ko.applyBindings({

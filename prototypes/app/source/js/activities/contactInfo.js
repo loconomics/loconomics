@@ -16,40 +16,52 @@ var A = Activity.extends(function ContactInfoActivity() {
     
     // Update navBar for onboarding mode when the onboardingStep
     // in the current model changes:
-    this.viewModel.profile.onboardingStep.subscribe(function (step) {
-        
-        if (step) {
-            // TODO Set navbar step index
-            // Setting navbar for Onboarding/wizard mode
-            this.navBar.leftAction().text('');
-            // Setting header
-            this.viewModel.headerText('How can we reach you?');
-            this.viewModel.buttonText('Save and continue');
-        }
-        else {
-            // TODO Remove step index
-            // Setting navbar to default
-            this.navBar.leftAction().text('Account');
-            // Setting header to default
-            this.viewModel.headerText('Contact information');
-            this.viewModel.buttonText('Save');
-        }
-    }.bind(this));
+    this.registerHandler({
+        target: this.viewModel.profile.onboardingStep,
+        handler: function (step) {
+            if (step) {
+                // TODO Set navbar step index
+                // Setting navbar for Onboarding/wizard mode
+                this.navBar.leftAction().text('');
+                // Setting header
+                this.viewModel.headerText('How can we reach you?');
+                this.viewModel.buttonText('Save and continue');
+            }
+            else {
+                // TODO Remove step index
+                // Setting navbar to default
+                this.navBar.leftAction().text('Account');
+                // Setting header to default
+                this.viewModel.headerText('Contact information');
+                this.viewModel.buttonText('Save');
+            }
+        }.bind(this)
+    });
+    //this.viewModel.profile.onboardingStep.subscribe();
     
-    this.app.model.userProfile.on('error', function(err) {
-        var msg = err.task === 'save' ? 'Error saving contact data.' : 'Error loading contact data.';
-        this.app.modals.showError({
-            title: msg,
-            error: err && err.task && err.error || err
-        });
-    }.bind(this));
-    this.app.model.homeAddress.on('error', function(err) {
-        var msg = err.task === 'save' ? 'Error saving address details.' : 'Error loading address details.';
-        this.app.modals.showError({
-            title: msg,
-            error: err && err.task && err.error || err
-        });
-    }.bind(this));
+    this.registerHandler({
+        target: this.app.model.userProfile,
+        event: 'error',
+        handler: function(err) {
+            var msg = err.task === 'save' ? 'Error saving contact data.' : 'Error loading contact data.';
+            this.app.modals.showError({
+                title: msg,
+                error: err && err.task && err.error || err
+            });
+        }.bind(this)
+    });
+    
+    this.registerHandler({
+        target: this.app.model.homeAddress,
+        event: 'error',
+        handler: function(err) {
+            var msg = err.task === 'save' ? 'Error saving address details.' : 'Error loading address details.';
+            this.app.modals.showError({
+                title: msg,
+                error: err && err.task && err.error || err
+            });
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;

@@ -1,5 +1,7 @@
 /**
     bookingConfirmation activity
+    
+    TODO: To replaced by a modal
 **/
 'use strict';
 

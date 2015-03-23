@@ -3,32 +3,15 @@
 **/
 'use strict';
 
-var singleton = null,
-    NavAction = require('../viewmodels/NavAction'),
-    NavBar = require('../viewmodels/NavBar');
+var Activity = require('../components/Activity');
 
-exports.init = function initAccount($activity, app) {
-
-    if (singleton === null)
-        singleton = new AccountActivity($activity, app);
+var A = Activity.extends(function AccountActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function AccountActivity($activity, app) {
+    this.accessLevel = this.app.UserType.LoggedUser;
     
-    this.accessLevel = app.UserType.LoggedUser;
+    this.navBar = Activity.createSectionNavBar('Account');
+});
 
-    this.$activity = $activity;
-    this.app = app;
-    
-    this.navBar = new NavBar({
-        title: 'Account',
-        leftAction: NavAction.menuNewItem,
-        rightAction: NavAction.menuIn
-    });
-}
-
-AccountActivity.prototype.show = function show(options) {
-
-};
+exports.init = A.init;

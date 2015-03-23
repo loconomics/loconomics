@@ -19,8 +19,26 @@ var A = Activity.extends(function BookMeButtonActivity() {
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, not tap, not focus,
     // only 'click' is reliable and bug-free.
-    this.$activity.on('click', 'textarea', function() {
-        $(this).select();
+    this.registerHandler({
+        target: this.$activity,
+        event: 'click',
+        selector: 'textarea',
+        handler: function() {
+            $(this).select();
+        }
+    });
+    
+    this.registerHandler({
+        target: this.app.model.marketplaceProfile,
+        event: 'error',
+        handler: function(err) {
+            if (err && err.task === 'save') return;
+            var msg = 'Error loading data to build the Button.';
+            this.app.modals.showError({
+                title: msg,
+                error: err && err.task && err.error || err
+            });
+        }.bind(this)
     });
 });
 
@@ -29,8 +47,8 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-    // Request a load, even if is a background load after the first time:
-    this.app.model.marketplaceProfile.load();
+    // Keep data updated:
+    this.app.model.marketplaceProfile.sync();
     
     // Set the job title
     var jobID = state.route.segments[0] |0;
