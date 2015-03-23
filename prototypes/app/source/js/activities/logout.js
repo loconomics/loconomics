@@ -3,26 +3,20 @@
 **/
 'use strict';
 
-var singleton = null;
+var Activity = require('../components/Activity');
 
-exports.init = function initLogout($activity, app) {
-
-    if (singleton === null)
-        singleton = new LogoutActivity($activity, app);
+var A = Activity.extends(function LogoutActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function LogoutActivity($activity, app) {
+    this.accessLevel = this.app.UserType.LoggedUser;
+});
+
+exports.init = A.init;
+
+A.prototype.show = function show(state) {
+    Activity.prototype.show.call(this, state);
     
-    this.accessLevel = app.UserType.LoggedUser;
-
-    this.$activity = $activity;
-    this.app = app;
-}
-
-LogoutActivity.prototype.show = function show(options) {
-
     this.app.model.logout().then(function() {
         // Anonymous user again
         var newAnon = this.app.model.user().constructor.newAnonymous();

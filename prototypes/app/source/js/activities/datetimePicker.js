@@ -6,92 +6,84 @@
 var $ = require('jquery'),
     moment = require('moment'),
     ko = require('knockout'),
-    Time = require('../utils/Time'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+    Time = require('../utils/Time');
 require('../components/DatePicker');
+
+var Activity = require('../components/Activity');
+
+var A = Activity.extends(function DatetimePickerActivity() {
     
-var singleton = null;
+    Activity.apply(this, arguments);
 
-exports.init = function initDatetimePicker($activity, app) {
-
-    if (singleton === null)
-        singleton = new DatetimePickerActivity($activity, app);
-
-    return singleton;
-};
-
-function DatetimePickerActivity($activity, app) {
-
-    this.accessLevel = app.UserType.LoggedUser;
-    this.navBar = new NavBar({
-        title: '',
-        leftAction: NavAction.goBack,
-        rightAction: NavAction.goHelpIndex
-    });
+    this.accessLevel = this.app.UserType.LoggedUser;
+    this.viewModel = new ViewModel(this.app);
+    this.navBar = Activity.createSubsectionNavBar('');
     
-    this.app = app;
-    this.$activity = $activity;
-    this.$datePicker = $activity.find('#datetimePickerDatePicker');
-    this.$timePicker = $activity.find('#datetimePickerTimePicker');
-
+    // Getting elements
+    this.$datePicker = this.$activity.find('#datetimePickerDatePicker');
+    this.$timePicker = this.$activity.find('#datetimePickerTimePicker');
+    
     /* Init components */
     this.$datePicker.show().datepicker();
     
-    var dataView = this.dataView = new ViewModel();
-    dataView.headerText = 'Select a start time';
-    ko.applyBindings(dataView, $activity.get(0));
+    this.registerHandler({
+        target: this.$datePicker,
+        event: 'changeDate',
+        handler: function(e) {
+            if (e.viewMode === 'days') {
+                this.viewModel.selectedDate(e.date);
+            }
+        }.bind(this)
+    });
     
-    // Events
-    this.$datePicker.on('changeDate', function(e) {
-        if (e.viewMode === 'days') {
-            dataView.selectedDate(e.date);
-        }
-    }.bind(this));
-    
-    // TestingData
-    dataView.slotsData = require('../testdata/timeSlots').timeSlots;
- 
-    dataView.selectedDate.subscribe(function(date) {
-        this.bindDateData(date);
-    }.bind(this));
-
-    this.bindDateData(new Date());
-    
-    // Object to hold the options passed on 'show' as a result
-    // of a request from another activity
-    this.requestInfo = null;
+    this.registerHandler({
+        target: this.viewModel.selectedDate,
+        handler: function(date) {
+            this.bindDateData(date);
+        }.bind(this)
+    });
     
     // Handler to go back with the selected date-time when
     // that selection is done (could be to null)
-    this.dataView.selectedDatetime.subscribe(function (datetime) {
-        // We have a request
-        if (this.requestInfo) {
-            // Pass the selected datetime in the info
-            this.requestInfo.selectedDatetime = this.dataView.selectedDatetime();
-            // And go back
-            this.app.shell.goBack(this.requestInfo);
-            // Last, clear requestInfo
-            this.requestInfo = null;
-        }
-    }.bind(this));
-}
+    this.registerHandler({
+        target: this.viewModel.selectedDatetime,
+        handler: function (datetime) {
+            // We have a request
+            if (this.requestData) {
+                // Pass the selected datetime in the info
+                this.requestData.selectedDatetime = this.viewModel.selectedDatetime();
+                // And go back
+                this.app.shell.goBack(this.requestData);
+                // Last, clear requestData
+                this.requestData = null;
+            }
+        }.bind(this)
+    });
+    
+    // TestingData
+    this.viewModel.slotsData = require('../testdata/timeSlots').timeSlots;
+    
+    this.bindDateData(new Date());
+});
 
-DatetimePickerActivity.prototype.show = function show(options) {
-  
-    options = options || {};
-    this.requestInfo = options;
+exports.init = A.init;
+
+A.prototype.show = function show(state) {
+    Activity.prototype.show.call(this, state);
+
+    // TODO: text from outside or depending on state?
+    this.viewModel.headerText('Select a start time');
 };
 
-DatetimePickerActivity.prototype.bindDateData = function bindDateData(date) {
+A.prototype.bindDateData = function bindDateData(date) {
 
     var sdate = moment(date).format('YYYY-MM-DD');
-    var slotsData = this.dataView.slotsData;
+    var slotsData = this.viewModel.slotsData;
 
     if (slotsData.hasOwnProperty(sdate)) {
-        this.dataView.slots(slotsData[sdate]);
+        this.viewModel.slots(slotsData[sdate]);
     } else {
-        this.dataView.slots(slotsData['default']);
+        this.viewModel.slots(slotsData['default']);
     }
 };
 

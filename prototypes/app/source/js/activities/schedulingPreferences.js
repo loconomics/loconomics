@@ -15,6 +15,18 @@ var A = Activity.extends(function SchedulingPreferencesActivity() {
     this.accessLevel = this.app.UserType.Freelancer;
 
     this.navBar = Activity.createSubsectionNavBar('Scheduling');
+    
+    this.registerHandler({
+        target: this.app.model.schedulingPreferences,
+        event: 'error',
+        handler: function(err) {
+            var msg = err.task === 'save' ? 'Error saving scheduling preferences.' : 'Error loading scheduling preferences.';
+            this.app.modals.showError({
+                title: msg,
+                error: err && err.task && err.error || err
+            });
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;
@@ -22,8 +34,8 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-    // Request a load, even if is a background load after the first time:
-    this.app.model.schedulingPreferences.load();
+        // Keep data updated:
+    this.app.model.schedulingPreferences.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
 };

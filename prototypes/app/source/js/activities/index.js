@@ -3,34 +3,24 @@
 **/
 'use strict';
 
-var singleton = null,
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+var Activity = require('../components/Activity');
 
-exports.init = function initIndex($activity, app) {
-
-    if (singleton === null)
-        singleton = new IndexActivity($activity, app);
+var A = Activity.extends(function IndexActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function IndexActivity($activity, app) {
-
-    this.$activity = $activity;
-    this.app = app;
-    
-    this.navBar = new NavBar({
-        title: null, // null for logo
-        leftAction: NavAction.goLogin,
-        rightAction: NavAction.menuOut
-    });
-    
     // Any user can access this
     this.accessLevel = null;
-}
+    
+    // null for logo
+    this.navBar = Activity.createSectionNavBar(null);
+});
 
-IndexActivity.prototype.show = function show(options) {
+exports.init = A.init;
+
+A.prototype.show = function show(state) {
+    Activity.prototype.show.call(this, state);
+    
     // It checks if the user is logged so then 
     // their 'logged index' is the dashboard not this
     // page that is focused on anonymous users

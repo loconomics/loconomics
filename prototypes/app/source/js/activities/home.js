@@ -4,53 +4,36 @@
 'use strict';
 
 var $ = require('jquery'),
-    ko = require('knockout'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+    ko = require('knockout');
 
-var singleton = null;
+var Activity = require('../components/Activity');
 
-exports.init = function initHome($activity, app) {
-
-    if (singleton === null)
-        singleton = new HomeActivity($activity, app);
+var A = Activity.extends(function HomeActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function HomeActivity($activity, app) {
+    this.accessLevel = this.app.UserType.LoggedUser;
+    this.viewModel = new ViewModel(this.app);
+    // null for logo
+    this.navBar = Activity.createSectionNavBar(null);
     
-    this.accessLevel = app.UserType.Customer;
-    this.navBar = new NavBar({
-        title: null, // null for logo
-        leftAction: NavAction.menuNewItem,
-        rightAction: NavAction.menuIn
-    });
-
-    this.$activity = $activity;
-    this.app = app;
-    this.$nextBooking = $activity.find('#homeNextBooking');
-    this.$upcomingBookings = $activity.find('#homeUpcomingBookings');
-    this.$inbox = $activity.find('#homeInbox');
-    this.$performance = $activity.find('#homePerformance');
-    this.$getMore = $activity.find('#homeGetMore');
-
-    this.dataView = new ViewModel();
-    ko.applyBindings(this.dataView, $activity.get(0));
-
+    // Getting elements
+    this.$nextBooking = this.$activity.find('#homeNextBooking');
+    this.$upcomingBookings = this.$activity.find('#homeUpcomingBookings');
+    this.$inbox = this.$activity.find('#homeInbox');
+    this.$performance = this.$activity.find('#homePerformance');
+    this.$getMore = this.$activity.find('#homeGetMore');
+    
     // TestingData
-    setSomeTestingData(this.dataView);
+    setSomeTestingData(this.viewModel);
+});
 
-    // Object to hold the options passed on 'show' as a result
-    // of a request from another activity
-    this.requestInfo = null;
-}
+exports.init = A.init;
 
-HomeActivity.prototype.show = function show(options) {
- 
-    options = options || {};
-    this.requestInfo = options;
-    var v = this.dataView,
+A.prototype.show = function show(options) {
+    Activity.prototype.show.call(this, options);
+    
+    var v = this.viewModel,
         appModel = this.app.model;
     
     // Update data
@@ -69,6 +52,7 @@ HomeActivity.prototype.show = function show(options) {
         v.upcomingBookings.nextWeek.time(upcoming.nextWeek.time && new Date(upcoming.nextWeek.time));
     });
 };
+
 
 var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
     MailFolder = require('../models/MailFolder'),
@@ -94,15 +78,15 @@ function ViewModel() {
 /** TESTING DATA **/
 var Time = require('../utils/Time');
 
-function setSomeTestingData(dataView) {
+function setSomeTestingData(viewModel) {
     
-    dataView.inbox.messages(require('../testdata/messages').messages);
+    viewModel.inbox.messages(require('../testdata/messages').messages);
     
-    dataView.performance.earnings.currentAmount(2400);
-    dataView.performance.earnings.nextAmount(6200.54);
-    dataView.performance.timeBooked.percent(0.93);
+    viewModel.performance.earnings.currentAmount(2400);
+    viewModel.performance.earnings.nextAmount(6200.54);
+    viewModel.performance.timeBooked.percent(0.93);
     
-    dataView.getMore.model.updateWith({
+    viewModel.getMore.model.updateWith({
         availability: true,
         payments: true,
         profile: true,

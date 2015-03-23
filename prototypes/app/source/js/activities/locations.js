@@ -5,90 +5,74 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+    Activity = require('../components/Activity');
+
+var A = Activity.extends(function LocationsActivity() {
     
-var singleton = null;
+    Activity.apply(this, arguments);
 
-exports.init = function initLocations($activity, app) {
-
-    if (singleton === null)
-        singleton = new LocationsActivity($activity, app);
+    this.accessLevel = this.app.UserType.Freelancer;
+    this.viewModel = new ViewModel(this.app);
+    this.navBar = Activity.createSubsectionNavBar('Scheduling');
     
-    return singleton;
-};
-
-function LocationsActivity($activity, app) {
+    // Getting elements
+    this.$listView = this.$activity.find('#locationsListView');
     
-    this.accessLevel = app.UserType.Freelancer;
-    this.navBar = new NavBar({
-        title: '',
-        leftAction: NavAction.goBack.model.clone({
-            isTitle: true
-        }),
-        rightAction: NavAction.goHelpIndex
-    });
-
-    this.app = app;
-    this.$activity = $activity;
-    this.$listView = $activity.find('#locationsListView');
-
-    var dataView = this.dataView = new ViewModel(app);
-    ko.applyBindings(dataView, $activity.get(0));
-
-    // TestingData
-    dataView.locations(require('../testdata/locations').locations);
-
     // Handler to update header based on a mode change:
-    this.dataView.isSelectionMode.subscribe(function (itIs) {
-        this.dataView.headerText(itIs ? 'Select or add a service location' : 'Locations');
-        
-        // Update navbar too
-        // TODO: Can be other than 'scheduling', like marketplace profile or the job-title?
-        this.navBar.leftAction().text(itIs ? 'Booking' : 'Scheduling');
-        // Title must be empty
-        this.navBar.title('');
-        
-        // TODO Replaced by a progress bar on booking creation
-        // TODO Or leftAction().text(..) on booking edition (return to booking)
-        // or coming from Jobtitle/schedule (return to schedule/job title)?
-        
-    }.bind(this));
+    this.registerHandler({
+        target: this.viewModel.isSelectionMode,
+        handler: function (itIs) {
+            this.viewModel.headerText(itIs ? 'Select or add a service location' : 'Locations');
 
-    // Object to hold the options passed on 'show' as a result
-    // of a request from another activity
-    this.requestInfo = null;
+            // Update navbar too
+            // TODO: Can be other than 'scheduling', like marketplace profile or the job-title?
+            this.navBar.leftAction().text(itIs ? 'Booking' : 'Scheduling');
+            // Title must be empty
+            this.navBar.title('');
+
+            // TODO Replaced by a progress bar on booking creation
+            // TODO Or leftAction().text(..) on booking edition (return to booking)
+            // or coming from Jobtitle/schedule (return to schedule/job title)?
+
+        }.bind(this)
+    });
     
     // Handler to go back with the selected location when 
     // selection mode goes off and requestInfo is for
     // 'select mode'
-    this.dataView.isSelectionMode.subscribe(function (itIs) {
-        // We have a request and
-        // it requested to select a location
-        // and selection mode goes off
-        if (this.requestInfo &&
-            this.requestInfo.selectLocation === true &&
-            itIs === false) {
-            
-            // Pass the selected client in the info
-            this.requestInfo.selectedLocation = this.dataView.selectedLocation();
-            // And go back
-            this.app.shell.goBack(this.requestInfo);
-            // Last, clear requestInfo
-            this.requestInfo = null;
-        }
-    }.bind(this));
-}
+    this.registerHandler({
+        target: this.viewModel.isSelectionMode,
+        handler: function (itIs) {
+            // We have a request and
+            // it requested to select a location
+            // and selection mode goes off
+            if (this.requestInfo &&
+                this.requestInfo.selectLocation === true &&
+                itIs === false) {
 
-LocationsActivity.prototype.show = function show(options) {
-  
-    options = options || {};
-    this.requestInfo = options;
+                // Pass the selected client in the info
+                this.requestInfo.selectedLocation = this.viewModel.selectedLocation();
+                // And go back
+                this.app.shell.goBack(this.requestInfo);
+                // Last, clear requestInfo
+                this.requestInfo = null;
+            }
+        }.bind(this)
+    });
+    
+    // TestingData
+    this.viewModel.locations(require('../testdata/locations').locations);
+});
 
+exports.init = A.init;
+
+A.prototype.show = function show(options) {
+    Activity.prototype.show.call(this, options);
+    
     if (options.selectLocation === true) {
-        this.dataView.isSelectionMode(true);
+        this.viewModel.isSelectionMode(true);
         // preset:
-        this.dataView.selectedLocation(options.selectedLocation);
+        this.viewModel.selectedLocation(options.selectedLocation);
     }
     else if (options.route && options.route.segments) {
         var id = options.route.segments[0];

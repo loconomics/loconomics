@@ -3,39 +3,27 @@
 **/
 'use strict';
 var ko = require('knockout'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+    Activity = require('../components/Activity');
 
-var singleton = null;
-
-exports.init = function initLearnMore($activity, app) {
-
-    if (singleton === null)
-        singleton = new LearnMoreActivity($activity, app);
+var A = Activity.extends(function LearnMoreActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function LearnMoreActivity($activity, app) {
+    this.accessLevel = this.app.UserType.LoggedUser;
+    this.viewModel = new ViewModel(this.app);
+    // null for logo
+    this.navBar = Activity.createSectionNavBar(null);
+});
 
-    this.$activity = $activity;
-    this.app = app;
-    this.dataView = new ViewModel();
-    ko.applyBindings(this.dataView, $activity.get(0));
+exports.init = A.init;
+
+A.prototype.show = function show(options) {
+    Activity.prototype.show.call(this, options);
     
-    this.navBar = new NavBar({
-        title: null, // null for logo
-        leftAction: NavAction.goBack,
-        rightAction: NavAction.menuOut
-    });
-}
-
-LearnMoreActivity.prototype.show = function show(options) {
-
     if (options && options.route &&
         options.route.segments &&
         options.route.segments.length) {
-        this.dataView.profile(options.route.segments[0]);
+        this.viewModel.profile(options.route.segments[0]);
     }
 };
 

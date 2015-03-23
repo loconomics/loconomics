@@ -3,9 +3,10 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
-var ko = require('knockout');
-var moment = require('moment');
+var Activity = require('../components/Activity'),
+    $ = require('jquery'),
+    ko = require('knockout'),
+    moment = require('moment');
 
 var A = Activity.extends(function CalendarSyncingActivity() {
     
@@ -17,9 +18,24 @@ var A = Activity.extends(function CalendarSyncingActivity() {
     this.navBar = Activity.createSubsectionNavBar('Scheduling');
     
     // Adding auto-select behavior to the export URL
-    this.$activity.find('#calendarSync-icalExportUrl')
-    .on('click', function() {
-        this.select();
+    this.registerHandler({
+        target: this.$activity.find('#calendarSync-icalExportUrl'),
+        event: 'click',
+        handler: function() {
+            $(this).select();
+        }
+    });
+    
+    this.registerHandler({
+        target: this.app.model.calendarSyncing,
+        event: 'error',
+        handler: function(err) {
+            var msg = err.task === 'save' ? 'Error saving calendar syncing settings.' : 'Error loading calendar syncing settings.';
+            this.app.modals.showError({
+                title: msg,
+                error: err && err.task && err.error || err
+            });
+        }.bind(this)
     });
 });
 
@@ -28,8 +44,8 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-    // Request a load, even if is a background load after the first time:
-    this.app.model.calendarSyncing.load();
+    // Keep data updated:
+    this.app.model.calendarSyncing.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
 };

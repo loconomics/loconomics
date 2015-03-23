@@ -4,39 +4,23 @@
 'use strict';
 var ko = require('knockout'),
     Location = require('../models/Location'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+    Activity = require('../components/Activity');
 
-var singleton = null;
-
-exports.init = function initLocationEdition($activity, app) {
-
-    if (singleton === null)
-        singleton = new LocationEditionActivity($activity, app);
+var A = Activity.extends(function LocationEditionActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function LocationEditionActivity($activity, app) {
-    
-    this.accessLevel = app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.Freelancer;
+    this.viewModel = new ViewModel(this.app);
+    this.navBar = Activity.createSubsectionNavBar('Locations');
+});
 
-    this.$activity = $activity;
-    this.app = app;
-    this.dataView = new ViewModel();
-    ko.applyBindings(this.dataView, $activity.get(0));
-    
-    this.navBar = new NavBar({
-        title: '',
-        leftAction: NavAction.goBack.model.clone({
-            text: 'Locations'
-        }),
-        rightAction: NavAction.goHelpIndex
-    });
-}
+exports.init = A.init;
 
-LocationEditionActivity.prototype.show = function show(options) {
+A.prototype.show = function show(options) {
     //jshint maxcomplexity:10
+    
+    Activity.prototype.show.call(this, options);
     
     var id = 0,
         create = '';
@@ -84,31 +68,31 @@ LocationEditionActivity.prototype.show = function show(options) {
         };
         var location = locations[id];
         if (location) {
-            this.dataView.location(location);
+            this.viewModel.location(location);
 
-            this.dataView.header('Edit Location');
+            this.viewModel.header('Edit Location');
         } else {
-            this.dataView.location(null);
-            this.dataView.header('Unknow location or was deleted');
+            this.viewModel.location(null);
+            this.viewModel.header('Unknow location or was deleted');
         }
     }
     else {
         // New location
-        this.dataView.location(new Location());
+        this.viewModel.location(new Location());
         
         switch (options.create) {
             case 'serviceRadius':
-                this.dataView.location().isServiceRadius(true);
-                this.dataView.header('Add a service radius');
+                this.viewModel.location().isServiceRadius(true);
+                this.viewModel.header('Add a service radius');
                 break;
             case 'serviceLocation':
-                this.dataView.location().isServiceLocation(true);
-                this.dataView.header('Add a service location');
+                this.viewModel.location().isServiceLocation(true);
+                this.viewModel.header('Add a service location');
                 break;
             default:
-                this.dataView.location().isServiceRadius(true);
-                this.dataView.location().isServiceLocation(true);
-                this.dataView.header('Add a location');
+                this.viewModel.location().isServiceRadius(true);
+                this.viewModel.location().isServiceLocation(true);
+                this.viewModel.header('Add a location');
                 break;
         }
     }

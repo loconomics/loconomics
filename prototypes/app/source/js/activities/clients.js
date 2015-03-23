@@ -5,77 +5,83 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+    Activity = require('../components/Activity');
+
+var A = Activity.extends(function ClientsActivity() {
     
-var Activity = require('../components/Activity');
+    Activity.apply(this, arguments);
 
-var singleton = null;
-
-exports.init = function initClients($activity, app) {
-
-    if (singleton === null)
-        singleton = new ClientsActivity($activity, app);
-    
-    return singleton;
-};
-
-function ClientsActivity($activity, app) {
-
-    this.accessLevel = app.UserType.Freelancer;
-    
+    this.accessLevel = this.app.UserType.Freelancer;
+    this.viewModel = new ViewModel(this.app);    
     this.navBar = Activity.createSubsectionNavBar('Clients');
     
-    this.$activity = $activity;
-    this.app = app;
-    this.$index = $activity.find('#clientsIndex');
-    this.$listView = $activity.find('#clientsListView');
-
-    this.dataView = new ViewModel();
-    ko.applyBindings(this.dataView, $activity.get(0));
-
+    // Getting elements
+    this.$index = this.$activity.find('#clientsIndex');
+    this.$listView = this.$activity.find('#clientsListView');
+    
     // TestingData
-    this.dataView.clients(require('../testdata/clients').clients);
+    this.viewModel.clients(require('../testdata/clients').clients);
     
     // Handler to update header based on a mode change:
-    this.dataView.isSelectionMode.subscribe(function (itIs) {
-        this.dataView.headerText(itIs ? 'Select a client' : '');
-    }.bind(this));
+    this.registerHandler({
+        target: this.viewModel.isSelectionMode,
+        handler: function (itIs) {
+            this.viewModel.headerText(itIs ? 'Select a client' : '');
+        }.bind(this)
+    });
 
-    // Object to hold the options passed on 'show' as a result
-    // of a request from another activity
-    this.requestInfo = null;
-    
     // Handler to go back with the selected client when 
-    // there is one selected and requestInfo is for
+    // there is one selected and requestData is for
     // 'select mode'
-    this.dataView.selectedClient.subscribe(function (theSelectedClient) {
-        // We have a request and
-        // it requested to select a client,
-        // and a selected client
-        if (this.requestInfo &&
-            this.requestInfo.selectClient === true &&
-            theSelectedClient) {
-            
-            // Pass the selected client in the info
-            this.requestInfo.selectedClient = theSelectedClient;
-            // And go back
-            this.app.shell.goBack(this.requestInfo);
-            // Last, clear requestInfo
-            this.requestInfo = null;
-        }
-    }.bind(this));
-}
+    this.registerHandler({
+        target: this.viewModel.selectedClient,
+        handler: function (theSelectedClient) {
+            // We have a request and
+            // it requested to select a client,
+            // and a selected client
+            if (this.requestData &&
+                this.requestData.selectClient === true &&
+                theSelectedClient) {
 
-ClientsActivity.prototype.show = function show(options) {
+                // Pass the selected client in the info
+                this.requestData.selectedClient = theSelectedClient;
+                // And go back
+                this.app.shell.goBack(this.requestData);
+                // Last, clear requestData
+                this.requestData = null;
+            }
+        }.bind(this)
+    });
+    
+    // TODO: check errors from loading, will be RemoteModel??
+    /*this.registerHandler({
+        target: this.app.model.clients,
+        event: 'error',
+        handler: function(err) {
+            if (err.task === 'save') return;
+            var msg = 'Error loading clients.';
+            this.app.modals.showError({
+                title: msg,
+                error: err && err.task && err.error || err
+            });
+        }.bind(this)
+    });*/
+});
 
+exports.init = A.init;
+
+A.prototype.show = function show(state) {
+    Activity.prototype.show.call(this, state);
+    
     // On every show, search gets reseted
-    this.dataView.searchText('');
-  
-    options = options || {};
-    this.requestInfo = options;
-
-    this.dataView.isSelectionMode(options.selectClient === true);
+    this.viewModel.searchText('');
+    
+    // Set selection:
+    this.viewModel.isSelectionMode(state.selectClient === true);
+    
+    // Keep data updated:
+    // TODO: as RemoteModel?
+    //this.app.model.clients.sync();
 };
 
 function ViewModel() {

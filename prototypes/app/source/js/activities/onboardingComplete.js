@@ -3,24 +3,15 @@
 **/
 'use strict';
 
-var singleton = null;
+var Activity = require('../components/Activity');
 
-exports.init = function initOnboardingComplete($activity, app) {
-
-    if (singleton === null)
-        singleton = new OnboardingCompleteActivity($activity, app);
+var A = Activity.extends(function OnboardingCompleteActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function OnboardingCompleteActivity($activity, app) {
-
-    this.accessLevel = app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.LoggedUser;
     
-    this.$activity = $activity;
-    this.app = app;
-}
+    this.navBar = Activity.createSectionNavBar(null);
+});
 
-OnboardingCompleteActivity.prototype.show = function show(options) {
-
-};
+exports.init = A.init;

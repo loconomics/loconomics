@@ -7,8 +7,6 @@ var Activity = require('../components/Activity');
 var $ = require('jquery'),
     ko = require('knockout');
     
-var singleton = null;
-
 var A = Activity.extends(function ServicesActivity() {
 
     Activity.apply(this, arguments);
@@ -28,22 +26,25 @@ var A = Activity.extends(function ServicesActivity() {
     // Handler to go back with the selected service when 
     // selection mode goes off and requestData is for
     // 'select mode'
-    this.viewModel.isSelectionMode.subscribe(function (itIs) {
-        // We have a request and
-        // it requested to select a service
-        // and selection mode goes off
-        if (this.requestData &&
-            this.requestData.selectServices === true &&
-            itIs === false) {
-            
-            // Pass the selected client in the info
-            this.requestData.selectedServices = this.viewModel.selectedServices();
-            // And go back
-            this.app.shell.goBack(this.requestData);
-            // Last, clear requestData
-            this.requestData = null;
-        }
-    }.bind(this));
+    this.registerHandler({
+        target: this.viewModel.isSelectionMode,
+        handler: function (itIs) {
+            // We have a request and
+            // it requested to select a service
+            // and selection mode goes off
+            if (this.requestData &&
+                this.requestData.selectServices === true &&
+                itIs === false) {
+
+                // Pass the selected client in the info
+                this.requestData.selectedServices = this.viewModel.selectedServices();
+                // And go back
+                this.app.shell.goBack(this.requestData);
+                // Last, clear requestData
+                this.requestData = {};
+            }
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;
@@ -53,7 +54,7 @@ A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     
     // Get jobtitleID for the request
-    var route = this.requestData.route;
+    var route = this.requestData && this.requestData.route;
     var jobTitleID = route && route.segments && route.segments[0];
     jobTitleID = parseInt(jobTitleID, 10);
     if (jobTitleID) {

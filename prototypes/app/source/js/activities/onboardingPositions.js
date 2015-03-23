@@ -5,47 +5,21 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+    Activity = require('../components/Activity');
 
-var singleton = null;
-
-exports.init = function initOnboardingPositions($activity, app) {
-
-    if (singleton === null)
-        singleton = new OnboardingPositionsActivity($activity, app);
+var A = Activity.extends(function OnboardingPositionsActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function OnboardingPositionsActivity($activity, app) {
-
-    this.accessLevel = app.UserType.Freelancer;
-    
-    this.$activity = $activity;
-    this.app = app;
-    this.dataView = new ViewModel();
-    ko.applyBindings(this.dataView, $activity.get(0));
+    this.accessLevel = this.app.UserType.Freelancer;
+    this.viewModel = new ViewModel(this.app);
+    this.navBar = Activity.createSectionNavBar('Job Titles');
 
     // TestingData
-    setSomeTestingData(this.dataView);
+    setSomeTestingData(this.viewModel);
+});
 
-    // Object to hold the options passed on 'show' as a result
-    // of a request from another activity
-    this.requestInfo = null;
-    
-    this.navBar = new NavBar({
-        title: 'Job Titles',
-        leftAction: NavAction.menuNewItem,
-        rightAction: NavAction.menuIn
-    });
-}
-
-OnboardingPositionsActivity.prototype.show = function show(options) {
- 
-    options = options || {};
-    this.requestInfo = options;
-};
+exports.init = A.init;
 
 function ViewModel() {
 
@@ -55,12 +29,12 @@ function ViewModel() {
 
 var Position = require('../models/Position');
 // UserPosition model
-function setSomeTestingData(dataview) {
+function setSomeTestingData(viewModel) {
     
-    dataview.positions.push(new Position({
+    viewModel.positions.push(new Position({
         positionSingular: 'Massage Therapist'
     }));
-    dataview.positions.push(new Position({
+    viewModel.positions.push(new Position({
         positionSingular: 'Housekeeper'
     }));
 }

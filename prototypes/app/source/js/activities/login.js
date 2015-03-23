@@ -5,103 +5,91 @@
 
 var $ = require('jquery'),
     ko = require('knockout'),
-  User = require('../models/User'),
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+    User = require('../models/User'),
+    Activity = require('../components/Activity');
 
-var singleton = null;
-
-exports.init = function initLogin($activity, app) {
-
-    if (singleton === null)
-        singleton = new LoginActivity($activity, app);
+var A = Activity.extends(function LoginActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function LoginActivity($activity, app) {
-    
-    this.accessLevel = app.UserType.Anonymous;
-    this.navBar = new NavBar({
-        title: 'Log in',
-        leftAction: NavAction.goBack,
-        rightAction: NavAction.menuOut
-    });
-
-    this.$activity = $activity;
-    this.app = app;
-    this.dataView = new ViewModel();
-    ko.applyBindings(this.dataView, $activity.get(0));
+    this.accessLevel = this.app.UserType.Anonymous;
+    this.viewModel = new ViewModel(this.app);
+    this.navBar = Activity.createSectionNavBar('Log in');
     
     // Perform log-in request when is requested by the form:
-    this.dataView.isLogingIn.subscribe(function(v) {
-        if (v === true) {
-            
-            // Perform loging
-            
-            // Notify state:
-            var $btn = $activity.find('[type="submit"]');
-            $btn.button('loading');
-            
-            // Clear previous error so makes clear we
-            // are attempting
-            this.dataView.loginError('');
-        
-            var ended = function ended() {
-                this.dataView.isLogingIn(false);
-                $btn.button('reset');
-            }.bind(this);
-            
-            // After clean-up error (to force some view updates),
-            // validate and abort on error
-            // Manually checking error on each field
-            if (this.dataView.username.error() ||
-                this.dataView.password.error()) {
-                this.dataView.loginError('Review your data');
-                ended();
-                return;
+    this.registerHandler({
+        target: this.viewModel.isLogingIn,
+        handler: function(v) {
+            if (v === true) {
+
+                // Perform loging
+
+                // Notify state:
+                var $btn = this.$activity.find('[type="submit"]');
+                $btn.button('loading');
+
+                // Clear previous error so makes clear we
+                // are attempting
+                this.viewModel.loginError('');
+
+                var ended = function ended() {
+                    this.viewModel.isLogingIn(false);
+                    $btn.button('reset');
+                }.bind(this);
+
+                // After clean-up error (to force some view updates),
+                // validate and abort on error
+                // Manually checking error on each field
+                if (this.viewModel.username.error() ||
+                    this.viewModel.password.error()) {
+                    this.viewModel.loginError('Review your data');
+                    ended();
+                    return;
+                }
+
+                this.app.model.login(
+                    this.viewModel.username(),
+                    this.viewModel.password()
+                ).then(function(loginData) {
+
+                    this.viewModel.loginError('');
+                    ended();
+
+                    // Remove form data
+                    this.viewModel.username('');
+                    this.viewModel.password('');
+
+                    this.app.goDashboard();
+
+                }.bind(this)).catch(function(err) {
+
+                    var msg = err && err.responseJSON && err.responseJSON.errorMessage ||
+                        err && err.statusText ||
+                        'Invalid username or password';
+
+                    this.viewModel.loginError(msg);
+                    ended();
+                }.bind(this));
             }
-            
-            app.model.login(
-                this.dataView.username(),
-                this.dataView.password()
-            ).then(function(loginData) {
-                
-                this.dataView.loginError('');
-                ended();
-                
-                // Remove form data
-                this.dataView.username('');
-                this.dataView.password('');
-                
-                this.app.goDashboard();
-
-            }.bind(this)).catch(function(err) {
-
-                var msg = err && err.responseJSON && err.responseJSON.errorMessage ||
-                    err && err.statusText ||
-                    'Invalid username or password';
-
-                this.dataView.loginError(msg);
-                ended();
-            }.bind(this));
-        }
-    }.bind(this));
+        }.bind(this)
+    });
     
     // Focus first bad field on error
-    this.dataView.loginError.subscribe(function(err) {
-        // Login is easy since we mark both unique fields
-        // as error on loginError (its a general form error)
-        var input = $activity.find(':input').get(0);
-        if (err)
-            input.focus();
-        else
-            input.blur();
+    this.registerHandler({
+        target: this.viewModel.loginError,
+        handler: function(err) {
+            // Login is easy since we mark both unique fields
+            // as error on loginError (its a general form error)
+            var input = this.$activity.find(':input').get(0);
+            if (err)
+                input.focus();
+            else
+                input.blur();
+        }.bind(this)
     });
-}
+});
 
-LoginActivity.prototype.show = function show(options) {
-};
+exports.init = A.init;
 
 var FormCredentials = require('../viewmodels/FormCredentials');
 

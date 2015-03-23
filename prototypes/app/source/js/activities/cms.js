@@ -21,9 +21,12 @@ var A = Activity.extends(function CmsActivity() {
     // TODO this.app.model.clients
     var clients = ko.observableArray(require('../testdata/clients').clients);
     this.viewModel.clientsCount(clients().length);
-    clients.subscribe(function() {
-        this.viewModel.clientsCount(clients().length);
-    }.bind(this));
+    this.registerHandler({
+        target: clients,
+        handler: function() {
+            this.viewModel.clientsCount(clients().length);
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;

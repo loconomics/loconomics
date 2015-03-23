@@ -3,32 +3,16 @@
 **/
 'use strict';
 
-var singleton = null,
-    NavBar = require('../viewmodels/NavBar'),
-    NavAction = require('../viewmodels/NavAction');
+var Activity = require('../components/Activity');
 
-exports.init = function initOnboardingHome($activity, app) {
-
-    if (singleton === null)
-        singleton = new OnboardingHomeActivity($activity, app);
+var A = Activity.extends(function OnboardingHomeActivity() {
     
-    return singleton;
-};
+    Activity.apply(this, arguments);
 
-function OnboardingHomeActivity($activity, app) {
-
-    this.accessLevel = app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.LoggedUser;
     
-    this.$activity = $activity;
-    this.app = app;
-    
-    this.navBar = new NavBar({
-        title: null, // null for Logo
-        leftAction: NavAction.goLogout,
-        rightAction: null
-    });
-}
+    // null for Logo
+    this.navBar = Activity.createSectionNavBar(null);
+});
 
-OnboardingHomeActivity.prototype.show = function show(options) {
-
-};
+exports.init = A.init;
