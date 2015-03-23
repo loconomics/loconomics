@@ -48,7 +48,7 @@ exports.create = function create(appModel) {
             // Remote loading data
             return api.remote.getCalendarEvents({
                 start: date,
-                end: date
+                end: moment(date).add(1, 'days').toDate()
             }).then(function(events) {
                 // TODO localforage copy of [dateKey]=bookings
 

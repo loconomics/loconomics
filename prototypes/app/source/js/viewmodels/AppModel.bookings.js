@@ -48,7 +48,7 @@ exports.create = function create(appModel) {
             // Remote loading data
             return api.remote.getBookings({
                 start: date,
-                end: date
+                end: moment(date).add(1, 'days').toDate()
             }).then(function(bookings) {
                 // TODO localforage copy of [dateKey]=bookings
 

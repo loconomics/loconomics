@@ -178,7 +178,7 @@ function convertEventToSlot(event, booking) {
         endTime: event.endTime(),
         
         subject: event.summary(), // FullName
-        description: null, // summary. 'Deep Tissue Massage Long Name',
+        description: event.description(), // 'Deep Tissue Massage Long Name',
         link: '#!appointment/' + event.calendarEventID(),
 
         actionIcon: booking === null ? 'glyphicon glyphicon-chevron-right' : null,
