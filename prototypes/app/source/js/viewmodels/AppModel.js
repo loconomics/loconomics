@@ -30,36 +30,11 @@ function AppModel(values) {
 
 require('./AppModel-account').plugIn(AppModel);
 
-/** Initialize and wait for anything up **/
-AppModel.prototype.init = function init() {
-    
-    var siteUrl = $('html').attr('data-site-url');
-    this.rest = new Rest(siteUrl + '/api/v1/en-US/');
-    
-    // Setup Rest authentication
-    this.rest.onAuthorizationRequired = function(retry) {
-        
-        this.tryLogin()
-        .then(function() {
-            // Logged! Just retry
-            retry();
-        });
-    }.bind(this);
-    
-    // Local data
-    // TODO Investigate why automatic selection an IndexedDB are
-    // failing and we need to use the worse-performance localstorage back-end
-    localforage.config({
-        name: 'LoconomicsApp',
-        version: 0.1,
-        size : 4980736, // Size of database, in bytes. WebSQL-only for now.
-        storeName : 'keyvaluepairs',
-        description : 'Loconomics App',
-        driver: localforage.LOCALSTORAGE
-    });
-
-    // Initialize: check the user has login data and needed
-    // cached data
+/**
+    Load credentials from the local storage, without error if there is nothing
+    saved. If load profile data too, performing an tryLogin if no local data.
+**/
+AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
     return new Promise(function(resolve, reject) {
 
         // Callback to just resolve without error (passing in the error
@@ -112,6 +87,55 @@ AppModel.prototype.init = function init() {
                 resolve();
             }
         }.bind(this), resolveAnyway);
+    }.bind(this));
+};
+
+/** Initialize and wait for anything up **/
+AppModel.prototype.init = function init() {
+    
+    // Local data
+    // TODO Investigate why automatic selection an IndexedDB are
+    // failing and we need to use the worse-performance localstorage back-end
+    localforage.config({
+        name: 'LoconomicsApp',
+        version: 0.1,
+        size : 4980736, // Size of database, in bytes. WebSQL-only for now.
+        storeName : 'keyvaluepairs',
+        description : 'Loconomics App',
+        driver: localforage.LOCALSTORAGE
+    });
+    
+    // First, get any saved local config
+    // NOTE: for now, this is optional, to get a saved siteUrl rather than the
+    // default one, if any.
+    return localforage.getItem('config')
+    .then(function(config) {
+        // Optional config
+        config = config || {};
+        
+        if (config.siteUrl) {
+            // Update the html URL
+            $('html').attr('data-site-url', config.siteUrl);
+        }
+        else {
+            config.siteUrl = $('html').attr('data-site-url');
+        }
+        
+        this.rest = new Rest(config.siteUrl + '/api/v1/en-US/');
+        
+        // Setup Rest authentication
+        this.rest.onAuthorizationRequired = function(retry) {
+
+            this.tryLogin()
+            .then(function() {
+                // Logged! Just retry
+                retry();
+            });
+        }.bind(this);
+        
+        // Initialize: check the user has login data and needed
+        // cached data, return its promise
+        return this.loadLocalCredentials();
     }.bind(this));
 };
 
