@@ -337,10 +337,15 @@
 				// Return created/updated address
 				return GetAddress(userId, jobTitleID, newAddressID, kind);
 			}
-			catch (ArgumentException ex) {
+			catch (ValidationException ex) {
 				// A bad argument on SetAddress is in fact a validation error.
 				// Mainly, bad postal code, no city and stateprovince resolved
-				ModelState.AddError(ex.ParamName, ex.Message);
+                if (String.IsNullOrEmpty(ex.ParamName)) {
+                    ModelState.AddFormError(ex.Message);
+                }
+                else {
+				    ModelState.AddError(ex.ParamName, ex.Message);
+                }
 
 				throw new HttpException(400, LcRessources.ValidationSummaryTitle);
 			}

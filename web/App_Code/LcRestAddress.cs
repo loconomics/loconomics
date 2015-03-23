@@ -382,7 +382,7 @@ public class LcRestAddress
         if (!AutosetByCountryPostalCode(address))
         {
             // TODO l10n
-            throw new ArgumentException("Invalid ZIP code", "postalCode");
+            throw new ValidationException("Invalid ZIP code", "postalCode", "address");
         }
 
         // GPS
@@ -471,7 +471,7 @@ public class LcRestAddress
     /// If the initial address contains a Country Code but not ID, the ID is
     /// auto set too.
     /// 
-    /// It throws ArgumentException if the required postal code and country information
+    /// It throws ValidationException if the required postal code and country information
     /// does not exists in the address object.
     /// </summary>
     /// <param name="address"></param>
@@ -481,14 +481,14 @@ public class LcRestAddress
         if (String.IsNullOrWhiteSpace(address.postalCode))
         {
             // TODO l10n
-            throw new ArgumentException("Address must contain a postal code", "postalCode");
+            throw new ValidationException("Address must contain a postal code", "postalCode", "address");
         }
         if (address.countryID <= 0)
         {
             if (String.IsNullOrWhiteSpace(address.countryCode))
             {
                 // TODO l10n
-                throw new ArgumentException("Address must contain a country code or country ID", "countryCode");
+                throw new ValidationException("Address must contain a country code or country ID", "countryCode", "address");
             }
             address.countryID = LcRestLocale.GetCountryIDByCode(address.countryCode);
         }
