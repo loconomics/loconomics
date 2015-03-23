@@ -26,6 +26,7 @@ function AppModel(values) {
     this.simplifiedWeeklySchedule = require('./AppModel.simplifiedWeeklySchedule').create(this);
     this.marketplaceProfile = require('./AppModel.marketplaceProfile').create(this);
     this.homeAddress = require('./AppModel.homeAddress').create(this);
+    this.privacySettings = require('./AppModel.privacySettings').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);

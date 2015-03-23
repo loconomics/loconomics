@@ -40,5 +40,6 @@ module.exports = {
     'calendarSyncing': require('./activities/calendarSyncing'),
     'weeklySchedule': require('./activities/weeklySchedule'),
     'bookMeButton': require('./activities/bookMeButton'),
-    'ownerInfo': require('./activities/ownerInfo')
+    'ownerInfo': require('./activities/ownerInfo'),
+    'privacySettings': require('./activities/privacySettings')
 };

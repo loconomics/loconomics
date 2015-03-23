@@ -7,7 +7,7 @@ var Model = require('./Model');
 
 function PrivacySettings(values) {
     
-    Model(values);
+    Model(this);
     
     this.model.defProperties({
         userID: 0,
