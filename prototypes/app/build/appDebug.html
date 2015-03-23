@@ -548,9 +548,12 @@
             <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Zip code', value: address.postalCode, disable: isLocked"></app-unlabeled-input>
             <div class="form-group">
-              <p class="form-control-"> <span data-bind="text: address.city"></span>, <span data-bind="text: address.stateProvinceCode"></span>
-
-              </p>
+              <p class="form-control-static"> <span data-bind="visible: address.city() || address.stateProvinceCode()">
+                        <span data-bind="text: address.city"></span>,
+                <span
+                data-bind="text: address.stateProvinceCode"></span>
+                  </span>
+                  <!-- White space to reserve vertical space -->&nbsp;</p>
             </div>
             <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
