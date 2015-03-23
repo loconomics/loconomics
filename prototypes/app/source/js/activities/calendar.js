@@ -150,24 +150,97 @@ A.prototype.show = function show(options) {
     }
 };
 
-function ViewModel() {
+var Time = require('../utils/Time');
+function createFreeSlot(options) {
+    
+    var start = options.start || new Time(options.date, 0, 0, 0),
+        end = options.end || new Time(options.date, 0, 0, 0);
+
+    return new CalendarSlot({
+        startTime: start,
+        endTime: end,
+
+        subject: 'Free',
+        description: null,
+        link: '#!appointment/0',
+
+        actionIcon: 'glyphicon glyphicon-plus',
+        actionText: null,
+
+        classNames: 'ListView-item--tag-success'
+    });
+}
+
+function convertEventToSlot(event, booking) {
+
+    return new CalendarSlot({
+        startTime: event.startTime(),
+        endTime: event.endTime(),
+        
+        subject: event.summary(), // FullName
+        description: null, // summary. 'Deep Tissue Massage Long Name',
+        link: '#!appointment/' + event.calendarEventID(),
+
+        actionIcon: booking === null ? 'glyphicon glyphicon-chevron-right' : null,
+        actionText: booking === null ? null : (booking && booking.bookingRequest && booking.bookingRequest.pricingEstimate.totalPrice || '$0.00'),
+
+        classNames: null
+    });
+}
+
+function ViewModel(app) {
 
     this.slots = ko.observableArray([]);
     this.slotsData = ko.observable({});
     this.currentDate = ko.observable(new Date());
     
+    this.isLoading = ko.observable(false);
+    
     // Update current slots on date change
     this.currentDate.subscribe(function (date) {
 
         var mdate = moment(date),
-            sdate = mdate.format('YYYY-MM-DD');
+            sdate = mdate.format('YYYYMMDD');
         
         var slots = this.slotsData();
 
-        if (slots.hasOwnProperty(sdate)) {
+        this.isLoading(true);
+        
+        Promise.all([
+            app.model.bookings.getBookingsByDate(date),
+            app.model.calendarEvents.getEventsByDate(date)
+        ]).then(function(group) {
+            
+            var events = group[1],
+                bookings = group[0];
+            
+            if (events && events().length) {
+                this.slots(events().map(function(event) {
+                    
+                    var booking = null;
+                    bookings().some(function(searchBooking) {
+                        var found = searchBooking.confirmedDateID() === event.calendarEventID();
+                        if (found) {
+                            booking = searchBooking;
+                            return true;
+                        }
+                    });
+                    
+                    return convertEventToSlot(event, booking);
+                }));
+
+                this.isLoading(false);
+            }
+            else {
+                this.slots([createFreeSlot({ date: date })]);
+            }
+
+        }.bind(this));
+        
+        /*if (slots.hasOwnProperty(sdate)) {
             this.slots(slots[sdate]);
         } else {
             this.slots(slots['default']);
-        }
+        }*/
     }.bind(this));
 }

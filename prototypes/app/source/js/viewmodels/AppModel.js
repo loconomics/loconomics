@@ -27,6 +27,8 @@ function AppModel(values) {
     this.marketplaceProfile = require('./AppModel.marketplaceProfile').create(this);
     this.homeAddress = require('./AppModel.homeAddress').create(this);
     this.privacySettings = require('./AppModel.privacySettings').create(this);
+    this.bookings = require('./AppModel.bookings').create(this);
+    this.calendarEvents = require('./AppModel.calendarEvents').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);
