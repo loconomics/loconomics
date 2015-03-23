@@ -97,7 +97,7 @@
     dynamic calEvent = LcCalendar.GetUserAppointment((int)u.UserID, eventID);
     
     rrule = LcCalendar.GetSimplifiedRecurrenceRule(
-        calEvent == null ? null : calEvent.CalendarReccurrence
+        calEvent == null ? null : (IEnumerable<CalendarDll.Data.CalendarReccurrence>)calEvent.CalendarReccurrence
     );
     var calEventIsRecurrent = rrule != null;
     var recEnds = "never";

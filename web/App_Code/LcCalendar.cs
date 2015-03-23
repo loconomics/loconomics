@@ -1099,13 +1099,17 @@ public static partial class LcCalendar
         string TimeZone,
         SimplifiedRecurrenceRule RRule)
     {
-        var previousItem = GetSimplifiedEvents(UserID, null, null, null, CalendarEventID).First();
+        if (CalendarEventID > 0)
+        {
+            var previousItem = GetSimplifiedEvents(UserID, null, null, null, CalendarEventID).FirstOrDefault();
 
-        // Avoid standard edition of read-only types,
-        // and conversion of an editable into a non editable event:
-        if (ReadOnlyEventTypes.Contains((int)previousItem.EventTypeID) ||
-            ReadOnlyEventTypes.Contains(EventTypeID))
-            throw new ConstraintException("Cannot be inserted/updated");
+            // Avoid standard edition of read-only types,
+            // and conversion of an editable into a non editable event:
+            if (previousItem == null ||
+                ReadOnlyEventTypes.Contains((int)previousItem.EventTypeID) ||
+                ReadOnlyEventTypes.Contains(EventTypeID))
+                throw new ConstraintException("Cannot be inserted/updated");
+        }
 
         int? repeatFrequency = null;
         List<int> selectedWeekDays = null;
