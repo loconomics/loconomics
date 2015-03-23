@@ -63,7 +63,8 @@ Activity.prototype.show = function show(options) {
     // Enable registered handlers
     // Validation of each settings object is performed
     // on registered, avoided here.
-    if (this._handlers) {
+    if (this._handlers &&
+        this._handlersAreConnected !== true) {
         this._handlers.forEach(function(settings) {
             // Check if is an observable subscription
             if (!settings.event && settings.target.subscribe) {
@@ -89,6 +90,11 @@ Activity.prototype.show = function show(options) {
                 settings.target.on(settings.event, settings.handler);
             }
         });
+        // To avoid double connections:
+        // NOTE: may happen that 'show' gets called several times without a 'hide'
+        // in between, because 'show' acts as a refresher right now even from segment
+        // changes from the same activity.
+        this._handlersAreConnected = true;
     }
 };
 
@@ -120,6 +126,8 @@ Activity.prototype.hide = function hide() {
                 settings.target.removeListener(settings.event, settings.handler);
             }
         });
+        
+        this._handlersAreConnected = false;
     }
 };
 
