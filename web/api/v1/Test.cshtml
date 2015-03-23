@@ -23,6 +23,7 @@
             }
             else {
                 return new {
+                    date = DateTimeFromISO("2015-03-22T23:02:00Z").Value.ToString(),
                     current = LcRestLocale.Current,
                     urlLocaleTest1 = LcRestLocale.AnalyzeURL("/api/v1/en-US"),
                     urlLocaleTest2 = LcRestLocale.AnalyzeURL("/api/v2.3.4/es-ES"),

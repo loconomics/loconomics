@@ -254,7 +254,7 @@ public class RestWebPage
     {
         DateTime dt;
         return (DateTime.TryParse(datetime, null, System.Globalization.DateTimeStyles.RoundtripKind, out dt)) ?
-            (DateTime?)dt :
+            (DateTime?)dt.ToLocalTime() :
             null;
     }
     #endregion
