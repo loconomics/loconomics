@@ -52,7 +52,7 @@
 
 /* line 16 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
-/* line 79 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 82 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
 /* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
@@ -563,10 +563,137 @@ body.use-backdrop:before {
   filter: alpha(opacity=40);
 }
 
-/* line 21 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+
+/* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.loadingSpinner {
+  font-size: 1.5em;
+  vertical-align: middle;
+  -webkit-transition: opacity 1.5s;
+  -moz-transition: opacity 1.5s;
+  -o-transition: opacity 1.5s;
+  -ms-transition: opacity 1.5s;
+  transition: opacity 1.5s;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  pointer-events: none;
+}
+
+/* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.loadingSpinner.loadingSpinner--collapsed {
+  display: none;
+}
+
+/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.loadingSpinner.btn {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+
+/* line 25 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.loadingSpinner.loadingSpinner--floating {
+  position: absolute;
+  z-index: 9000;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background: #fff;
+}
+
+/* line 33 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+
+/* line 34 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-loading .loadingSpinner,
+.is-saving .loadingSpinner {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+
+/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-loading .loadingSpinner.loadingSpinner--collapsed,
+.is-saving .loadingSpinner.loadingSpinner--collapsed {
+  display: inline-block;
+}
+
+/* line 40 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-loading .loadingSpinner .glyphicon,
+.is-saving .loadingSpinner .glyphicon {
+  -webkit-animation: spin 3s linear infinite;
+  -moz-animation: spin 3s linear infinite;
+  -o-animation: spin 3s linear infinite;
+  -ms-animation: spin 3s linear infinite;
+  animation: spin 3s linear infinite;
+}
+
+/* line 43 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-saving .loadingSpinner .glyphicon {
+  color: #f0ad4e;
+}
+
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+@-moz-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+@-o-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+@-ms-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/* line 10 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 37 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 48 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {
@@ -1854,7 +1981,7 @@ body.use-backdrop:before {
   background-color: #e0004f;
 }
 
-/* line 34 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */

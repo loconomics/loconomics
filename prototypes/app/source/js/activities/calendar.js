@@ -245,8 +245,22 @@ function ViewModel(app) {
             }
             else {
                 this.slots(fullDayFree);
+                this.isLoading(false);
             }
 
+        }.bind(this))
+        .catch(function(err) {
+            
+            // Show free on error
+            this.slots(fullDayFree);
+            this.isLoading(false);
+            
+            var msg = 'Error loading calendar events.';
+            app.modals.showError({
+                title: msg,
+                error: err && err.error || err
+            });
+            
         }.bind(this));
         
         /*

@@ -1,0 +1,47 @@
+/**
+    Classes for .loadingSpinner and .is-loading and .is-saving states.
+    
+    The element to set the .loadingSpinner class is usually like:
+      <span class="spinner text-info">
+        <span class="glyphicon glyphicon-refresh"></span>
+      </span>
+**/
+
+@keyframes spin { 100% { transform:rotate(360deg); } }
+
+.loadingSpinner
+    font-size: 1.5em;
+    vertical-align: middle;
+    transition: opacity 1.5s;
+    opacity: 0;
+    pointer-events: none;
+
+    &.loadingSpinner--collapsed
+        display: none;
+
+    &.btn
+        opacity: 1;
+        
+    &.loadingSpinner--floating
+        position: absolute
+        z-index: 9000
+        left: 0
+        right: 0
+        text-align: center
+        background: white
+
+.is-loading
+    .loadingSpinner
+        opacity: 1;
+
+        &.loadingSpinner--collapsed
+            display: inline-block;
+
+        .glyphicon
+            animation: spin 3s linear infinite;
+
+.is-saving
+    @extend .is-loading
+
+    .loadingSpinner .glyphicon
+        color $state-warning-text
