@@ -73,7 +73,7 @@ Activity.prototype.show = function show(options) {
                 // they return an object that must be 'disposed'.
                 // Saving that with settings to allow 'unsubscribe' later.
                 settings._subscription = subscription;
-                
+
                 // Inmediate execution: if current observable value is different
                 // than previous one, execute the handler:
                 // (this avoid that a changed state get omitted because happened

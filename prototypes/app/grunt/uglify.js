@@ -2,12 +2,18 @@
 
 module.exports = {
     'libs': {
+        // Not sure if #709 affects this too, but being conservative until further investigation results
+        'options': { compress: false },
         'files': {
             './build/assets/js/libs.min.js': ['<%= browserify.libs.dest %>']
         }
     },
     'app': {
         'options': {
+            // Some recommended settings from http://discuss.emberjs.com/t/uglify-breaks-ember/5557
+            // BUT did not fix the problem with advanced options, so compress is disabled at all.
+            // See #709 for investigation about that.
+            compress: false,
             /*compress: {
                 global_defs: {
                     DEBUG: false,
@@ -34,20 +40,26 @@ module.exports = {
                 pure_getters: false,
                 pure_funcs: null,
                 drop_console: true
-            },*/
-            compress: {
-                warnings: false
             },
-            /*mangle: false,
             preserveComments: false,
             report: 'gzip',
-            screw_ie8: true*/
+            screw_ie8: true,*/
+            
+            // To look for compression warnings only:
+            /*compress: {
+                warnings: false
+            },*/
+            
+            // Reduce variable names
+            mangle: true
         },
         'files': {
             './build/assets/js/app.min.js': ['<%= browserify.app.dest %>']
         }
     },
     'styleguidelibs': {
+        // Not sure if #709 affects this too, but being conservative until further investigation results
+        'options': { compress: false },
         'files': {
             './build/assets/js/styleguidelibs.min.js': ['<%= browserify.styleguidelibs.dest %>']
         }
