@@ -3,7 +3,7 @@
 'use strict';
 
 var Booking = require('../models/Booking'),
-    apiHelper = require('../utils/apiHelper'),
+//  apiHelper = require('../utils/apiHelper'),
     moment = require('moment'),
     ko = require('knockout');
 

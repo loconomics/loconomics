@@ -5,8 +5,7 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    ko = require('knockout');
+var ko = require('knockout');
     
 var singleton = null;
 

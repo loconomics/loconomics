@@ -3,8 +3,7 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    ko = require('knockout'),
+var ko = require('knockout'),
     Activity = require('../components/Activity');
 
 var A = Activity.extends(function SignupActivity() {
@@ -51,7 +50,7 @@ var A = Activity.extends(function SignupActivity() {
                     this.viewModel.username(),
                     this.viewModel.password(),
                     this.viewModel.profile()
-                ).then(function(signupData) {
+                ).then(function(/*signupData*/) {
 
                     this.viewModel.signupError('');
                     ended();

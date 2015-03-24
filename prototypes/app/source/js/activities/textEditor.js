@@ -3,8 +3,7 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    ko = require('knockout'),
+var ko = require('knockout'),
     EventEmitter = require('events').EventEmitter,
     Activity = require('../components/Activity');
 

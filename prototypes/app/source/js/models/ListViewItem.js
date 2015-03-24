@@ -5,9 +5,7 @@
  **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    moment = require('moment');
+var Model = require('./Model');
 
 function ListViewItem(values) {
     

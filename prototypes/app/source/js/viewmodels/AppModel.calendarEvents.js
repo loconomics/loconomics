@@ -3,7 +3,7 @@
 'use strict';
 
 var CalendarEvent = require('../models/CalendarEvent'),
-    apiHelper = require('../utils/apiHelper'),
+//  apiHelper = require('../utils/apiHelper'),
     moment = require('moment'),
     ko = require('knockout');
 

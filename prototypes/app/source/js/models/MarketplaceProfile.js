@@ -1,8 +1,7 @@
 /** MarketplaceProfile model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model');
+var Model = require('./Model');
 
 function MarketplaceProfile(values) {
     

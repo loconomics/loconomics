@@ -13,9 +13,7 @@ require('./utils/Function.prototype._delayed');
 require('es6-promise').polyfill();
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
-var NavBar = require('./viewmodels/NavBar'),
-    NavAction = require('./viewmodels/NavAction'),
-    AppModel = require('./viewmodels/AppModel');
+var AppModel = require('./viewmodels/AppModel');
 
 // Register the special locale
 require('./locales/en-US-LC');
@@ -44,7 +42,7 @@ function preBootstrapWorkarounds() {
     // (the latests clicked, and not the cached one under the 'data' API).    
     // NOTE: handler must execute before the Bootstrap handler for the same
     // event in order to work.
-    $(document).on('click.bs.collapse.data-api.workaround', '[data-toggle="collapse"]', function(e) {
+    $(document).on('click.bs.collapse.data-api.workaround', '[data-toggle="collapse"]', function() {
         var $t = $(this),
             $target = getTargetFromTrigger($t),
             data = $target && $target.data('bs.collapse');
@@ -169,7 +167,7 @@ var appInit = function appInit() {
     // Keyboard plugin events are not compatible with jQuery events, but needed to
     // trigger a layoutUpdate, so here are connected, mainly fixing bugs on iOS when the keyboard
     // is hidding.
-    var trigLayout = function trigLayout(event) {
+    var trigLayout = function trigLayout() {
         $(window).trigger('layoutUpdate');
     };
     window.addEventListener('native.keyboardshow', trigLayout);

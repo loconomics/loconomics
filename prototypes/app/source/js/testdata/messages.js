@@ -2,7 +2,7 @@
 var Message = require('../models/Message');
 
 var Time = require('../utils/Time');
-var moment = require('moment');
+//var moment = require('moment');
 
 var today = new Date(),
     yesterday = new Date(),

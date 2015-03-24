@@ -102,7 +102,7 @@ function checkState(state) {
     
     if (state) {
         // is empty?
-        for(var i in state) {
+        if (Object.keys(state).length > 0) {
             // No
             return state;
         }

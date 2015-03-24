@@ -3,7 +3,6 @@
 
 var ko = require('knockout'),
     Model = require('./Model'),
-    moment = require('moment'),
     _ = require('lodash');
 
 function MailFolder(values) {

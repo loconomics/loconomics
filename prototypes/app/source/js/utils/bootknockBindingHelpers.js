@@ -16,7 +16,7 @@ function createHelpers(ko) {
 
     /** Popover Binding **/
     helpers.popover = {
-        update: function(element, valueAccessor, allBindings) {
+        update: function(element, valueAccessor) {
             var srcOptions = ko.unwrap(valueAccessor());
 
             // Duplicating options object to pass to popover without

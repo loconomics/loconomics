@@ -62,8 +62,7 @@ function RecurrenceOccurrence(values) {
 }
 
 var ko = require('knockout'),
-    Model = require('./Model'),
-    moment = require('moment');
+    Model = require('./Model');
    
 function CalendarEvent(values) {
     

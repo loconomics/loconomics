@@ -10,7 +10,7 @@ module.exports = {
     absolutizeUrl: null,
     jquery: null,
     loader: null,
-    accessControl: function allowAll(name) {
+    accessControl: function allowAll(/*name*/) {
         // allow access by default
         return null;
     },

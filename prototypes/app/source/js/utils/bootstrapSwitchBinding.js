@@ -27,7 +27,7 @@ require('bootstrap-switch');
 exports.plugIn = function plugIn(ko, prefix) {
 
     ko.bindingHandlers[prefix ? prefix + 'switch' : 'switch'] = {
-        init: function(element, valueAccessor, allBindings) {
+        init: function(element, valueAccessor) {
             // Create plugin instance
             $(element).bootstrapSwitch();
             
@@ -53,7 +53,7 @@ exports.plugIn = function plugIn(ko, prefix) {
                 }
             });
         },
-        update: function(element, valueAccessor, allBindings) {
+        update: function(element, valueAccessor) {
             // Get options to be applied to the plugin instance
             var srcOptions = valueAccessor();
             

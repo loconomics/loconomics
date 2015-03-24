@@ -3,8 +3,7 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    ko = require('knockout'),
+var ko = require('knockout'),
     Activity = require('../components/Activity');
 
 var A = Activity.extends(function LocationsActivity() {

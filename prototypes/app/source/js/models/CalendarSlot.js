@@ -5,9 +5,7 @@
  **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    Client = require('./Client');
+var Model = require('./Model');
 
 function CalendarSlot(values) {
     

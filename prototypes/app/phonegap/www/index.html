@@ -373,11 +373,14 @@
       </div>
     </div>
     <!-- Activity calendar -->
-    <div class="container-fluid" data-activity="calendar">
+    <div class="container-fluid" data-activity="calendar" data-bind="css: { 'is-loading': isLoading }">
        <h1 id="calendarDateHeader" class="CalendarDateHeader ActivityTitle">
       <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
       <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time> <span class="caret"></span></a>
       <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
+      <span class="loadingSpinner loadingSpinner--floating">
+        <span class="glyphicon glyphicon-refresh"></span>
+      </span>
   </h1>
 
       <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>

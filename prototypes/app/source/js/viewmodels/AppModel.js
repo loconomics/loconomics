@@ -5,11 +5,10 @@
 var ko = require('knockout'),
     $ = require('jquery'),
     Model = require('../models/Model'),
-    User = require('../models/User'),
     Rest = require('../utils/Rest'),
     localforage = require('localforage');
 
-function AppModel(values) {
+function AppModel() {
 
     Model(this);
     
@@ -38,7 +37,7 @@ require('./AppModel-account').plugIn(AppModel);
     saved. If load profile data too, performing an tryLogin if no local data.
 **/
 AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) { // Never rejects: , reject) {
 
         // Callback to just resolve without error (passing in the error
         // to the 'resolve' will make the process to fail),

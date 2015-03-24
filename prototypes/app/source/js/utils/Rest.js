@@ -101,9 +101,10 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
     });
 };
 
-Rest.prototype.onAuthorizationRequired = function onAuthorizationRequired(retry) {
-    // To be implemented outside, by default don't wait
-    // for retry, just return nothing:
+Rest.prototype.onAuthorizationRequired = function onAuthorizationRequired(/*retry*/) {
+    // To be implemented outside, if convenient executing:
+    //retry();
+    // by default don't wait for retry, just return nothing:
     return;
 };
 

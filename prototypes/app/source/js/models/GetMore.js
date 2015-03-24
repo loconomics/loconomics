@@ -14,7 +14,7 @@ function GetMore(values) {
         payments: false,
         profile: false,
         coop: true
-    });
+    }, values);
     
     var availableItems = {
         availability: new ListViewItem({

@@ -3,8 +3,7 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    ko = require('knockout');
+var ko = require('knockout');
 
 var Activity = require('../components/Activity');
 
@@ -76,8 +75,6 @@ function ViewModel() {
 }
 
 /** TESTING DATA **/
-var Time = require('../utils/Time');
-
 function setSomeTestingData(viewModel) {
     
     viewModel.inbox.messages(require('../testdata/messages').messages);

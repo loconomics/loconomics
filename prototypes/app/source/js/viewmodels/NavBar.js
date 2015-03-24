@@ -1,9 +1,8 @@
 /** NavBar view model.
     It allows customize the NavBar per activity.
 **/
-var ko = require('knockout'),
-    Model = require('../models/Model'),
-    NavAction = require('./NavAction');
+var Model = require('../models/Model');
+    //NavAction = require('./NavAction');
 
 function NavBar(values) {
     

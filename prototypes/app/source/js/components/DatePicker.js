@@ -519,7 +519,7 @@ $.fn.datepicker = function ( option ) {
 };
 
 $.fn.datepicker.defaults = {
-    onRender: function(date) {
+    onRender: function(/*date*/) {
         return '';
     }
 };

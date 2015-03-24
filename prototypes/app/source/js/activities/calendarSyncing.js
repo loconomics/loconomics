@@ -5,8 +5,7 @@
 
 var Activity = require('../components/Activity'),
     $ = require('jquery'),
-    ko = require('knockout'),
-    moment = require('moment');
+    ko = require('knockout');
 
 var A = Activity.extends(function CalendarSyncingActivity() {
     

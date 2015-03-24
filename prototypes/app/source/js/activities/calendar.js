@@ -315,9 +315,6 @@ function ViewModel(app) {
             return;
         }
         previousDate = date.toISOString();
-        
-        var mdate = moment(date),
-            sdate = mdate.format('YYYYMMDD');
 
         this.isLoading(true);
         

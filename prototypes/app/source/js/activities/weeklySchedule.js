@@ -5,7 +5,6 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var moment = require('moment');
 
 var A = Activity.extends(function WeeklyScheduleActivity() {
     

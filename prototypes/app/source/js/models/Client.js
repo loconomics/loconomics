@@ -4,6 +4,8 @@
 var ko = require('knockout'),
     Model = require('./Model');
 
+// TODO Double check User, must be the same or extended??
+
 function Client(values) {
     
     Model(this);
@@ -13,8 +15,8 @@ function Client(values) {
         firstName: '',
         lastName: '',
         email: '',
-        mobilePhone: null,
-        alternatePhone: null,
+        phone: null,
+        canReceiveSms: false,
         birthMonthDay: null,
         birthMonth: null,
         notesAboutClient: null
@@ -35,32 +37,6 @@ function Client(values) {
             return null;
         }
     }, this);
-    
-    this.phoneNumber = ko.pureComputed({
-        read: function() {
-            var m = this.mobilePhone(),
-                a = this.alternatePhone();
-
-            return m ? m : a;
-        },
-        write: function(v) {
-            // TODO
-        },
-        owner: this
-    });
-    
-    this.canReceiveSms = ko.pureComputed({
-        read: function() {
-        
-            var m = this.mobilePhone();
-
-            return m ? true : false;
-        },
-        write: function(v) {
-            // TODO
-        },
-        owner: this
-    });
 }
 
 module.exports = Client;

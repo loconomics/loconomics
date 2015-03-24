@@ -170,7 +170,7 @@ Model.prototype.defID = function defID(fieldsNames) {
     else {
         this.modelObject.id = ko.pureComputed(function() {
             return fieldsNames.map(function(fieldName) {
-                return this[field]();
+                return this[fieldName]();
             }.bind(this));
         }, this.modelObject);
     }

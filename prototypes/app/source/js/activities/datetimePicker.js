@@ -3,8 +3,7 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    moment = require('moment'),
+var moment = require('moment'),
     ko = require('knockout'),
     Time = require('../utils/Time');
 require('../components/DatePicker');
@@ -51,7 +50,7 @@ var A = Activity.extends(function DatetimePickerActivity() {
             // We have a request
             if (this.requestData) {
                 // Pass the selected datetime in the info
-                this.requestData.selectedDatetime = this.viewModel.selectedDatetime();
+                this.requestData.selectedDatetime = datetime;
                 // And go back
                 this.app.shell.goBack(this.requestData);
                 // Last, clear requestData

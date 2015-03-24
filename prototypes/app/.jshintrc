@@ -90,6 +90,8 @@
     "supernew": false,
     // Whether variables must be declared before used.
     "undef": true,
+    // Whether variables are declared but not used
+    "unused": true,
     // Whether `this` inside a non-constructor function should be allowed.
     "validthis": false,
     // Whether smarttabs should be allowed

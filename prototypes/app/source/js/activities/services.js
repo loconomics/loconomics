@@ -4,8 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var $ = require('jquery'),
-    ko = require('knockout');
+var ko = require('knockout');
     
 var A = Activity.extends(function ServicesActivity() {
 

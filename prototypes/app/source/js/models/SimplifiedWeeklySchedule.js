@@ -79,7 +79,7 @@ function WeekDaySchedule(values) {
                 this.to() === 1440
             );
         },
-        write: function(val) {
+        write: function(/*val*/) {
             this.from(0);
             this.to(1440);
         },

@@ -5,7 +5,7 @@ var testServices = require('./services').services;
 var ko = require('knockout');
 var moment = require('moment');
 
-var today = moment(),
+var //today = moment(),
     tomorrow = moment().add(1, 'days'),
     tomorrow10 = tomorrow.clone().hours(10).minutes(0).seconds(0),
     tomorrow16 = tomorrow.clone().hours(16).minutes(30).seconds(0);

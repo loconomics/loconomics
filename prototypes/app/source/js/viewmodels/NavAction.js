@@ -1,8 +1,7 @@
 /** NavAction view model.
     It allows set-up per activity for the AppNav action button.
 **/
-var ko = require('knockout'),
-    Model = require('../models/Model');
+var Model = require('../models/Model');
 
 function NavAction(values) {
     

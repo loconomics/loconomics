@@ -32,3 +32,5 @@ function FreelancerPricing(values) {
     
     this.model.defID(['freelancerPricingID']);
 }
+
+module.exports = FreelancerPricing;

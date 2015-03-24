@@ -24,6 +24,6 @@ exports.plugIn = function (AppModel) {
     **/
     AppModel.prototype.getUserJobTitle = function (jobTitleID) {
         // TODO
-        return Promise.resolve(null);
+        return Promise.resolve(jobTitleID);
     };
 };
