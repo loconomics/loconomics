@@ -27,9 +27,6 @@ var A = Activity.extends(function CalendarActivity() {
     
     /* Init components */
     this.$datepicker.show().datepicker();
-
-    // Testing data
-    this.viewModel.slotsData(require('../testdata/calendarSlots').calendar);
     
     /* Event handlers */
     // Changes on currentDate
@@ -171,6 +168,11 @@ function createFreeSlot(options) {
     });
 }
 
+/**
+    Take a single CalendarEvent model and single Booking model
+    and creates a CalendarSlot, using mainly the event info
+    but upgraded with booking info, if there is a booking.
+**/
 function convertEventToSlot(event, booking) {
 
     return new CalendarSlot({
@@ -188,13 +190,114 @@ function convertEventToSlot(event, booking) {
     });
 }
 
+/**
+    Takes appModel observables for events and bookings for the same date
+    and creates an array of CalendarSlots.
+**/
+function slotsFromEventsBookings(events, bookings) {
+    return events().map(function(event) {
+
+        var booking = null;
+        bookings().some(function(searchBooking) {
+            var found = searchBooking.confirmedDateID() === event.calendarEventID();
+            if (found) {
+                booking = searchBooking;
+                return true;
+            }
+        });
+
+        return convertEventToSlot(event, booking);
+    });
+}
+
+/**
+    Introduce free slots wherever need in the given
+    array of CalendarSlots.
+    It sorts the array first and append from 12AM to 12AM
+    any gap with a free slot.
+**/
+function fillFreeSlots(slots) {
+
+    // First, ensure list is sorted
+    slots = slots.sort(function(a, b) {
+        return a.startTime() > b.startTime();
+    });
+    
+    var filledSlots = [],
+        zeroTime = '00:00:00',
+        last = zeroTime,
+        lastDateTime = null,
+        timeFormat = 'HH:mm:ss';
+
+    slots.forEach(function(slot) {
+        var start = slot.startTime(),
+            s = moment(start),
+            end = slot.endTime(),
+            e = moment(end);
+
+        if (s.format(timeFormat) > last) {
+            
+            if (lastDateTime === null) {
+                // First slot of the date, 12AM=00:00
+                lastDateTime = new Date(
+                    start.getFullYear(), start.getMonth(), start.getDate(),
+                    0, 0, 0
+                );
+            }
+
+            // There is a gap, filled it
+            filledSlots.push(createFreeSlot({
+                start: lastDateTime,
+                end: start
+            }));
+        }
+
+        filledSlots.push(slot);
+        lastDateTime = end;
+        last = e.format(timeFormat);
+    });
+    
+    // Check latest to see a gap at the end:
+    var lastEnd = lastDateTime && moment(lastDateTime).format(timeFormat);
+    if (lastEnd !== zeroTime) {
+        // There is a gap, filled it
+        var nextMidnight = new Date(
+            lastDateTime.getFullYear(),
+            lastDateTime.getMonth(),
+            // Next date!
+            lastDateTime.getDate() + 1,
+            // At zero hours!
+            0, 0, 0
+        );
+
+        filledSlots.push(createFreeSlot({
+            start: lastDateTime,
+            end: nextMidnight
+        }));
+    }
+
+    return filledSlots;
+}
+
 function ViewModel(app) {
 
-    this.slotsData = ko.observable({});
     this.currentDate = ko.observable(new Date());
     var fullDayFree = [createFreeSlot({ date: this.currentDate() })];
 
-    this.slots = ko.observableArray(fullDayFree);
+    // slotsSource save the data as processed by a request of 
+    // data because a date change.
+    // It's updated by changes on currentDate that performs the remote loading
+    this.slotsSource = ko.observable(fullDayFree);
+    // slots computed, using slotsSource.
+    // As computed in order to allow any other observable change
+    // from trigger the creation of a new value
+    this.slots = ko.computed(function() {
+    
+        var slots = this.slotsSource();
+        
+        return fillFreeSlots(slots);
+
+    }, this);
     
     this.isLoading = ko.observable(false);
     
@@ -223,7 +326,7 @@ function ViewModel(app) {
             app.model.calendarEvents.getEventsByDate(date)
         ]).then(function(group) {
             
-            // IMPORTANT: First, we need to check that we are
+            // IMPORTANT: First, we need to check that we 
             // in the same date still, because several loadings
             // can happen at a time (changing quickly from date to date
             // without wait for finish), avoiding a race-condition
@@ -244,24 +347,13 @@ function ViewModel(app) {
                 bookings = group[0];
             
             if (events && events().length) {
-                this.slots(events().map(function(event) {
-                    
-                    var booking = null;
-                    bookings().some(function(searchBooking) {
-                        var found = searchBooking.confirmedDateID() === event.calendarEventID();
-                        if (found) {
-                            booking = searchBooking;
-                            return true;
-                        }
-                    });
-                    
-                    return convertEventToSlot(event, booking);
-                }));
+                // Create the slots and update the source:
+                this.slotsSource(slotsFromEventsBookings(events, bookings));
 
                 this.isLoading(false);
             }
             else {
-                this.slots(fullDayFree);
+                this.slotsSource(fullDayFree);
                 this.isLoading(false);
             }
 
@@ -269,7 +361,7 @@ function ViewModel(app) {
         .catch(function(err) {
             
             // Show free on error
-            this.slots(fullDayFree);
+            this.slotsSource(fullDayFree);
             this.isLoading(false);
             
             var msg = 'Error loading calendar events.';
@@ -279,13 +371,6 @@ function ViewModel(app) {
             });
             
         }.bind(this));
-        
-        /*
-        var slots = this.slotsData();
-        if (slots.hasOwnProperty(sdate)) {
-            this.slots(slots[sdate]);
-        } else {
-            this.slots(slots['default']);
-        }*/
+
     }.bind(this));
 }

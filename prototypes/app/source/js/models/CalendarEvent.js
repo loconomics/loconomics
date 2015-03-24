@@ -69,6 +69,15 @@ function CalendarEvent(values) {
     
     Model(this);
     
+    // Special values: dates must be converted
+    // to a Date object. They come as ISO string
+    // TODO: Make this something generic, or even in Model definitions,
+    // and use for updated/createdDate around all the project
+    if (values) {
+        values.startTime = values.startTime && new Date(Date.parse(values.startTime)) || null;
+        values.endTime = values.endTime && new Date(Date.parse(values.endTime)) || null;
+    }
+
     this.model.defProperties({
         calendarEventID: 0,
         userID: 0,
