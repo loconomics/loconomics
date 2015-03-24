@@ -64,7 +64,7 @@ var A = Activity.extends(function CalendarActivity() {
             }
 
             // Something fail, bad date or not date at all
-            // Set the current one
+            // Set the current 
             this.viewModel.currentDate(new Date());
 
         }.bind(this)
@@ -190,19 +190,31 @@ function convertEventToSlot(event, booking) {
 
 function ViewModel(app) {
 
-    this.slots = ko.observableArray([]);
     this.slotsData = ko.observable({});
     this.currentDate = ko.observable(new Date());
+    var fullDayFree = [createFreeSlot({ date: this.currentDate() })];
+
+    this.slots = ko.observableArray(fullDayFree);
     
     this.isLoading = ko.observable(false);
     
     // Update current slots on date change
+    var previousDate = this.currentDate().toISOString();
     this.currentDate.subscribe(function (date) {
+        
+        // IMPORTANT: The date object may be reused and mutated between calls
+        // (mostly because the widget I think), so is better to create
+        // a clone and avoid getting race-conditions in the data downloading.
+        date = new Date(Date.parse(date.toISOString()));
 
+        // Avoid duplicated notification, un-changed date
+        if (date.toISOString() === previousDate) {
+            return;
+        }
+        previousDate = date.toISOString();
+        
         var mdate = moment(date),
             sdate = mdate.format('YYYYMMDD');
-        
-        var slots = this.slotsData();
 
         this.isLoading(true);
         
@@ -232,12 +244,14 @@ function ViewModel(app) {
                 this.isLoading(false);
             }
             else {
-                this.slots([createFreeSlot({ date: date })]);
+                this.slots(fullDayFree);
             }
 
         }.bind(this));
         
-        /*if (slots.hasOwnProperty(sdate)) {
+        /*
+        var slots = this.slotsData();
+        if (slots.hasOwnProperty(sdate)) {
             this.slots(slots[sdate]);
         } else {
             this.slots(slots['default']);

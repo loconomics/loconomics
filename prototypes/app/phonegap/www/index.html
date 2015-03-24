@@ -549,9 +549,12 @@
             <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Zip code', value: address.postalCode, disable: isLocked"></app-unlabeled-input>
             <div class="form-group">
-              <p class="form-control-"> <span data-bind="text: address.city"></span>, <span data-bind="text: address.stateProvinceCode"></span>
-
-              </p>
+              <p class="form-control-static"> <span data-bind="visible: address.city() || address.stateProvinceCode()">
+                        <span data-bind="text: address.city"></span>,
+                <span
+                data-bind="text: address.stateProvinceCode"></span>
+                  </span>
+                  <!-- White space to reserve vertical space -->&nbsp;</p>
             </div>
             <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
@@ -1154,6 +1157,75 @@
 
         </div>
       </div>
+    </div>
+    <!-- PrivacySettings activity -->
+    <div class="container-fluid" data-activity="privacySettings">
+       <h2 class="SectionTitle">Privacy Settings</h2>
+
+      <script type="text/html" id="privacySettings-optionCheck">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" data-bind="checked: value, disable: disable">
+                <span data-bind="text: label"></span>
+            </label>
+        </div>
+      </script>
+      <form data-bind="submit: save" class="container">
+        <p class="isolated text-muted">Yep, privacy is pretty important. Let us know what you’re thinking below,
+          and let us know of any concerns or questions.</p>
+        <fieldset class="isolated">
+          <legend>Bookings:</legend>
+          <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
+                            value: settings.smsBookingCommunication,
+                            label: 'It’s OK to send me text messages about bookings',
+                            disable: isLocked
+            } }"></div>
+          <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
+                            value: settings.phoneBookingCommunication,
+                            label: 'It’s OK to call me about bookings',
+                            disable: isLocked
+            } }"></div>
+        </fieldset>
+        <fieldset class="isolated">
+          <legend>Loconomics:</legend>
+          <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
+                            value: settings.loconomicsCommunityCommunication,
+                            label: 'It’s OK to send me updates about the Loconomics community',
+                            disable: isLocked
+            } }"></div>
+          <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
+                            value: settings.loconomicsDbmCampaigns,
+                            label: 'It’s OK to email me marketing efforts about other service providers within Loconomics',
+                            disable: isLocked
+            } }"></div>
+        </fieldset>
+        <fieldset class="isolated">
+          <legend>Marketing:</legend>
+          <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
+                            value: settings.profileSeoPermission,
+                            label: 'It’s OK to include me in search engine listings like Google and Bing',
+                            disable: isLocked
+            } }"></div>
+          <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
+                            value: settings.loconomicsMarketingCampaigns,
+                            label: 'It’s OK to include my profile in Loconomics marketing',
+                            disable: isLocked
+            } }"></div>
+        </fieldset>
+        <fieldset class="isolated">
+          <legend>Co-branding partners:</legend>
+          <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
+                            value: settings.coBrandedPartnerPermissions,
+                            label: 'It’s OK to share my user data for co-branded promotions with our partners',
+                            disable: isLocked
+            } }"></div>
+        </fieldset>
+        <div class="row">
+          <div>
+            <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+          </div>
+        </div>
+      </form>
     </div>
     <!-- Scheduling activity -->
     <div class="container-fluid" data-activity="scheduling">
