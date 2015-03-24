@@ -223,6 +223,23 @@ function ViewModel(app) {
             app.model.calendarEvents.getEventsByDate(date)
         ]).then(function(group) {
             
+            // IMPORTANT: First, we need to check that we are
+            // in the same date still, because several loadings
+            // can happen at a time (changing quickly from date to date
+            // without wait for finish), avoiding a race-condition
+            // that create flickering effects or replace the date events
+            // by the events from other date, because it tooks more an changed.
+            // TODO: still this has the minor bug of losing the isLoading
+            // if a previous triggered load still didn't finished; its minor
+            // because is very rare that happens, moving this stuff
+            // to a special appModel for mixed bookings and events with 
+            // per date cache that includes a view object with isLoading will
+            // fix it and reduce this complexity.
+            if (date.toISOString() !== this.currentDate().toISOString()) {
+                // Race condition, not the same!! out:
+                return;
+            }
+            
             var events = group[1],
                 bookings = group[0];
             
