@@ -1,7 +1,7 @@
 <!-- Scheduling activity -->
 <div class="container-fluid" data-activity="scheduling">
     <h2 class="SectionTitle">Services, Pricing, &amp; Locations</h2>
-    <div class="ListView ListView--twolines ListView--textualmarker">
+    <div class="ListView ListView--twolines ListView--textualmarker" data-bind="css: { 'is-loading': isLoading }">
         <!-- ko foreach: userJobProfile -->
             <div class="ListView-item">
                 <div class="ListView-item-marker">
@@ -17,6 +17,9 @@
                    class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
             </div>
         <!-- /ko -->
+        <div class="loadingSpinner loadingSpinner--floating">
+            <span class="glyphicon glyphicon-refresh"></span>
+        </div>
         <div class="ListView-item">
             <div class="ListView-item-marker">
                 <p></p>
