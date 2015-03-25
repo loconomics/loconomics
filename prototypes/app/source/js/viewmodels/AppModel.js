@@ -28,6 +28,7 @@ function AppModel() {
     this.privacySettings = require('./AppModel.privacySettings').create(this);
     this.bookings = require('./AppModel.bookings').create(this);
     this.calendarEvents = require('./AppModel.calendarEvents').create(this);
+    this.jobTitles = require('./AppModel.jobTitles').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);
