@@ -161,7 +161,7 @@ exports.create = function create(appModel) {
         // If no cache or must revalidate, go remote
         if (!cache.userJobTitles[jobTitleID] ||
             cache.userJobTitles[jobTitleID].cache.mustRevalidate()) {
-            return fetchUserJobTitle();
+            return fetchUserJobTitle(jobTitleID);
         }
         else {
             // First, try cache

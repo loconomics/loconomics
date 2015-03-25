@@ -58,13 +58,12 @@ A.prototype.show = function show(options) {
     jobTitleID = parseInt(jobTitleID, 10);
     if (jobTitleID) {
         // TODO: get data for the Job title ID
-        this.app.model.getUserJobTitle(jobTitleID).then(function(userJobtitle) {
+        console.log('jobTitleID', jobTitleID);
+        this.app.model.userJobProfile.getUserJobTitle(jobTitleID).then(function(userJobtitle) {
             if (!userJobtitle) {
                 console.log('No user job title');
                 return;
             }
-            // Load user data on this activity:
-            this.viewModel.services(userJobtitle.services());
             // Fill in job title name
             this.app.model.getJobTitle(jobTitleID).then(function(jobTitle) {
                 if (!jobTitle) {
@@ -73,6 +72,10 @@ A.prototype.show = function show(options) {
                 }
                 this.navBar.leftAction().text(jobTitle.singularName());
             });
+            
+            // TODO Load job title pricing on this activity:
+            //this.viewModel.services(userJobtitle.services());
+            console.log('Job Title Pricing/Services load not supported still');
         });
     }
 
