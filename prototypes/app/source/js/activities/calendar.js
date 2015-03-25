@@ -62,7 +62,7 @@ var A = Activity.extends(function CalendarActivity() {
 
             // Something fail, bad date or not date at all
             // Set the current 
-            this.viewModel.currentDate(new Date());
+            this.viewModel.currentDate(getDateWithoutTime());
 
         }.bind(this)
     });
@@ -123,13 +123,13 @@ var A = Activity.extends(function CalendarActivity() {
         event: 'changeDate',
         handler: function(e) {
             if (e.viewMode === 'days') {
-                this.viewModel.currentDate(e.date);
+                this.viewModel.currentDate(getDateWithoutTime(e.date));
             }
         }.bind(this)
     });
 
-    // Set date to match datepicker for first update
-    this.viewModel.currentDate(this.$datepicker.datepicker('getValue'));
+    // Set date to today
+    this.viewModel.currentDate(getDateWithoutTime()); //this.$datepicker.datepicker('getValue'));
 });
 
 exports.init = A.init;
@@ -146,6 +146,16 @@ A.prototype.show = function show(options) {
             this.viewModel.currentDate(date);
     }
 };
+
+function getDateWithoutTime(date) {
+    date = date || new Date();
+    return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0, 0, 0
+    );
+}
 
 var Time = require('../utils/Time');
 function createFreeSlot(options) {
@@ -281,7 +291,7 @@ function fillFreeSlots(slots) {
 
 function ViewModel(app) {
 
-    this.currentDate = ko.observable(new Date());
+    this.currentDate = ko.observable(getDateWithoutTime());
     var fullDayFree = [createFreeSlot({ date: this.currentDate() })];
 
     // slotsSource save the data as processed by a request of 

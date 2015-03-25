@@ -12,13 +12,6 @@ module.exports = {
         ]
     },
     
-    jshint: {
-        files: ['<%= jshint.app.src %>'],
-        tasks: [
-            'jshint:app'//'newer:jshint',
-        ]
-    },
-    
     js: {
         files: ['<%= jshint.app.src %>'],
         tasks: [

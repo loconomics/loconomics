@@ -71,12 +71,12 @@ A.prototype.show = function show(options) {
                     return;
                 }
                 this.navBar.leftAction().text(jobTitle.singularName());
-            });
+            }.bind(this));
             
             // TODO Load job title pricing on this activity:
             //this.viewModel.services(userJobtitle.services());
             console.log('Job Title Pricing/Services load not supported still');
-        });
+        }.bind(this));
     }
 
     if (this.requestData.selectServices === true) {
