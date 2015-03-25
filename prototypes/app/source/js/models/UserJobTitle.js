@@ -8,7 +8,7 @@ var Model = require('./Model');
 
 function UserJobTitle(values) {
     
-    Model(values);
+    Model(this);
     
     this.model.defProperties({
         userID: 0,

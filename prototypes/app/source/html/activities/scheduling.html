@@ -1,35 +1,32 @@
 <!-- Scheduling activity -->
 <div class="container-fluid" data-activity="scheduling">
-  <h2 class="SectionTitle">Services, Pricing, &amp; Locations</h2>
-  <div class="ListView ListView--twolines ListView--textualmarker">
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p></p>
-      </div>
-      <a href="/jobtitles/106" class="btn btn-link btn-block ListView-item-content">
-        <p>Massage Therapist</p>
-      </a>
-      <a href="/jobtitles/106" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    <h2 class="SectionTitle">Services, Pricing, &amp; Locations</h2>
+    <div class="ListView ListView--twolines ListView--textualmarker">
+        <!-- ko foreach: userJobProfile -->
+            <div class="ListView-item">
+                <div class="ListView-item-marker">
+                    <p></p>
+                </div>
+                <a href="/jobtitles/"
+                   data-bind="attr: { href: '/jobtitles/' + jobTitleID() }"
+                   class="btn btn-link btn-block ListView-item-content">
+                    <p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p>
+                </a>
+                <a href="/jobtitles/"
+                   data-bind="attr: { href: '/jobtitles/' + jobTitleID() }"
+                   class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+            </div>
+        <!-- /ko -->
+        <div class="ListView-item">
+            <div class="ListView-item-marker">
+                <p></p>
+            </div>
+            <a href="/jobtitles/0" class="btn btn-link btn-block ListView-item-content">
+                <p>Add a job title</p>
+            </a>
+            <a href="/jobtitles/0" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+        </div>
     </div>
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p></p>
-      </div>
-      <a href="/jobtitles/99" class="btn btn-link btn-block ListView-item-content">
-        <p>Esthetician</p>
-      </a>
-      <a href="/jobtitles/99" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p></p>
-      </div>
-      <a href="/jobtitles/0" class="btn btn-link btn-block ListView-item-content">
-        <p>Add a job title</p>
-      </a>
-      <a href="/jobtitles/0" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-    </div>
-  </div>
 
   <h2 class="SectionTitle">Availability</h2>
   <div class="ListView ListView--twolines ListView--textualmarker">

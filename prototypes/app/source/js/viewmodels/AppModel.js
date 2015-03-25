@@ -29,6 +29,7 @@ function AppModel() {
     this.bookings = require('./AppModel.bookings').create(this);
     this.calendarEvents = require('./AppModel.calendarEvents').create(this);
     this.jobTitles = require('./AppModel.jobTitles').create(this);
+    this.userJobProfile = require('./AppModel.userJobProfile').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);
@@ -157,4 +158,4 @@ module.exports = AppModel;
 // the same class.
 // Loading extensions:
 require('./AppModel-events').plugIn(AppModel);
-require('./AppModel-userJobProfile').plugIn(AppModel);
+
