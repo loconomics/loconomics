@@ -103,29 +103,50 @@ exports.create = function create(appModel) {
         localforage.setItem('userJobProfile', plain);
     }
     
+    // Private, fetch from remote
+    var fetchUserJobProfile = function () {
+        // Third and last, remote loading
+        return appModel.rest.get('user-job-profile')
+        .then(function (raw) {
+            // Cache in local storage
+            localforage.setItem('userJobProfile', raw);
+            return mapToUserJobProfile(raw);
+        });
+    };
+    
     /**
         Public API
         Get the complete list of UserJobTitle for
         all the JobTitles assigned to the current user
     **/
     api.getUserJobProfile = function () {
-        // First, in-memory cache
-        if (cache.userJobProfile.list) {
-            return Promise.resolve(cache.userJobProfile.list);
+        // If no cache or must revalidate, go remote
+        if (cache.userJobProfile.cache.mustRevalidate()) {
+            return fetchUserJobProfile();
         }
         else {
-            // Second, local storage
-            return getUserJobProfileFromLocal()
-            .catch(function() {
-                // Third and last, remote loading
-                return appModel.rest.get('user-job-profile')
-                .then(function (raw) {
-                    // Cache in local storage
-                    localforage.setItem('userJobProfile', raw);
-                    return mapToUserJobProfile(raw);
-                });
-            });
+            // First, try cache
+            if (cache.userJobProfile.list)
+                return Promise.resolve(cache.userJobProfile.list);
+            else
+                // Second, local storage
+                return getUserJobProfileFromLocal()
+                // Fallback to remote if not found in local
+                .catch(fetchUserJobProfile);
         }
+    };
+    
+    // Private, fetch from remote
+    var fetchUserJobTitle = function(jobTitleID) {
+        return appModel.rest.get('user-job-profile/' + jobTitleID)
+        .then(function(raw) {
+            // Save to cache and get model
+            var m = setGetUserJobTitleToCache(raw);
+            // Save in local
+            saveCacheInLocal();
+            // Return model
+            return m;
+        });
     };
     
     /**
@@ -137,33 +158,30 @@ exports.create = function create(appModel) {
         // Quick error
         if (!jobTitleID) return Promise.reject('Job Title ID required');
         
-        // First, in-memory cache, and still valid
-        if (cache.userJobTitles[jobTitleID] &&
-            !cache.userJobTitles[jobTitleID].cache.mustRevalidate()) {
-            cache.userJobTitles[jobTitleID].model;
+        // If no cache or must revalidate, go remote
+        if (!cache.userJobTitles[jobTitleID] ||
+            cache.userJobTitles[jobTitleID].cache.mustRevalidate()) {
+            return fetchUserJobTitle();
         }
         else {
-            // Second, local storage, where is the full job profile
-            return getUserJobProfileFromLocal()
-            .then(function(/*userJobProfile*/) {
-                // Not need for the parameter, the data is
-                // in memory and indexed
-                return cache.userJobTitles[jobTitleID].model;
-            })
-            .catch(function() {
+            // First, try cache
+            if (cache.userJobTitles[jobTitleID] &&
+                cache.userJobTitles[jobTitleID].model) {
+                return Promise.resolve(cache.userJobTitles[jobTitleID].model);
+            }
+            else {
+                // Second, local storage, where we have the full job profile
+                return getUserJobProfileFromLocal()
+                .then(function(/*userJobProfile*/) {
+                    // Not need for the parameter, the data is
+                    // in memory and indexed, look for the job title
+                    return cache.userJobTitles[jobTitleID].model;
+                })
                 // If no local copy (error on promise),
                 // or that does not contains the job title (error on 'then'):
                 // Third and last, remote loading
-                return appModel.rest.get('user-job-profile/' + jobTitleID)
-                .then(function(raw) {
-                    // Save to cache and get model
-                    var m = setGetUserJobTitleToCache(raw);
-                    // Save in local
-                    saveCacheInLocal();
-                    // Return model
-                    return m;
-                });
-            });
+                .catch(fetchUserJobTitle.bind(null, jobTitleID));
+            }
         }
     };
     
