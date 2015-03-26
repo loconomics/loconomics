@@ -36,12 +36,25 @@ A.prototype.show = function show(options) {
         appModel = this.app.model;
     
     // Update data
-    appModel.getUpcomingBookings().then(function(upcoming) {
+    appModel.bookings.getUpcomingBookings().then(function(upcoming) {
 
-        if (upcoming.nextBookingID)
-            appModel.getBooking(upcoming.nextBookingID).then(v.nextBooking);
-        else
+        if (upcoming.nextBookingID) {
+            var previousID = v.nextBooking() && v.nextBooking().sourceBooking().bookingID();
+            if (upcoming.nextBookingID !== previousID) {
+                v.isLoadingNextBooking(true);
+                appModel.calendarEvents.getAppointment({ bookingID: upcoming.nextBookingID })
+                .then(function(apt) {
+                    v.nextBooking(apt);
+                    v.isLoadingNextBooking(false);
+                })
+                .catch(function() {
+                    v.isLoadingNextBooking(false);
+                });
+            }
+        }
+        else {
             v.nextBooking(null);
+        }
 
         v.upcomingBookings.today.quantity(upcoming.today.quantity);
         v.upcomingBookings.today.time(upcoming.today.time && new Date(upcoming.today.time));
@@ -64,6 +77,7 @@ function ViewModel() {
 
     // :Appointment
     this.nextBooking = ko.observable(null);
+    this.isLoadingNextBooking = ko.observable(false);
     
     this.inbox = new MailFolder({
         topNumber: 4

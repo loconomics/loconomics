@@ -61,5 +61,25 @@ exports.create = function create(appModel) {
         }
     };
     
+    /**
+        Get upcoming bookings meta-information for dashboard page
+        TODO: implement cache??
+    **/
+    api.getUpcomingBookings = function getUpcomingBookings() {
+        return appModel.rest.get('upcoming-bookings');
+    };
+
+    /**
+        Get a specific booking by ID
+        TODO: Implement cache? reusing cacheByDate?
+    **/
+    api.getBooking = function getBooking(id) {
+        if (!id) return Promise.reject('The bookingID is required to get a booking');
+        return appModel.rest.get('bookings/' + id)
+        .then(function(booking) {
+            return new Booking(booking);
+        });
+    };
+    
     return api;
 };

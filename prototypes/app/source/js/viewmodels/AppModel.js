@@ -143,14 +143,6 @@ AppModel.prototype.init = function init() {
     }.bind(this));
 };
 
-AppModel.prototype.getUpcomingBookings = function getUpcomingBookings() {
-    return this.rest.get('upcoming-bookings');
-};
-
-AppModel.prototype.getBooking = function getBooking(id) {
-    return this.rest.get('get-booking', { bookingID: id });
-};
-
 module.exports = AppModel;
 
 // Class splited in different files to mitigate size and organization

@@ -13,6 +13,8 @@ function Appointment(values) {
     Model(this);
 
     this.model.defProperties({
+        // An appointment ever references an event, and its 'id' is a CalendarEventID
+        // even if other complementary object are used as 'source'
         id: null,
         
         startTime: null,
@@ -30,7 +32,11 @@ function Appointment(values) {
         preNotesToClient: null,
         postNotesToClient: null,
         preNotesToSelf: null,
-        postNotesToSelf: null
+        postNotesToSelf: null,
+        
+        sourceEvent: null,
+        sourceBooking: null
+        //sourceBookingRequest, maybe future?
     }, values);
     
     values = values || {};
@@ -119,3 +125,41 @@ function Appointment(values) {
 }
 
 module.exports = Appointment;
+
+/**
+    Creates an appointment instance from a CalendarEvent model instance
+**/
+Appointment.fromCalendarEvent = function fromCalendarEvent(event) {
+    var apt = new Appointment();
+    
+    // Include event in apt
+    apt.id(event.calendarEventID());
+    apt.startTime(event.startTime());
+    apt.endTime(event.endTime());
+    apt.summary(event.summary());
+    apt.sourceEvent(event);
+    
+    return apt;
+};
+
+/**
+    Creates an appointment instance from a Booking and a CalendarEvent model instances
+**/
+Appointment.fromBooking = function fromBooking(booking, event) {
+    // Include event in apt
+    var apt = Appointment.fromCalendarEvent(event);
+    
+    // Include booking in apt
+    // TODO Needs review, maybe after redone appointment:
+    var prices = booking.bookingRequest() && booking.bookingRequest().pricingEstimate();
+    if (prices) {
+        apt.subtotalPrice(prices.subtotalPrice());
+        apt.feePrice(prices.feePrice());
+        apt.pfeePrice(prices.pFeePrice());
+        apt.totalPrice(prices.totalPrice());
+        apt.ptotalPrice(prices.totalPrice() - prices.pFeePrice());
+    }
+    apt.sourceBooking(booking);
+    
+    return apt;
+};
