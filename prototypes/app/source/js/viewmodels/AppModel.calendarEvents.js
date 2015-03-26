@@ -3,7 +3,6 @@
 'use strict';
 
 var CalendarEvent = require('../models/CalendarEvent'),
-    Appointment = require('../models/Appointment'),
 //  apiHelper = require('../utils/apiHelper'),
     moment = require('moment'),
     ko = require('knockout');
@@ -23,6 +22,10 @@ exports.create = function create(appModel) {
             }
         }
     };
+    
+    var cache = {
+        eventsByDate: {}
+    };
 
     /*apiHelper.defineCrudApiForRest({
         extendedObject: api.remote,
@@ -33,18 +36,16 @@ exports.create = function create(appModel) {
         idPropertyName: 'calendarEventID'
     });*/
 
-    var cacheByDate = {};
-
     api.getEventsByDate = function getEventsByDate(date) {
         var dateKey = moment(date).format('YYYYMMDD');
-        if (cacheByDate.hasOwnProperty(dateKey)) {
+        if (cache.eventsByDate.hasOwnProperty(dateKey)) {
             
-            return Promise.resolve(cacheByDate[dateKey]);
+            return Promise.resolve(cache.eventsByDate[dateKey].data);
 
-            // TODO lazy load, on background, for synchronization
+            // TODO lazy load, on background, for synchronization, based on cache control
         }
         else {
-            // TODO check localforage copy first
+            // TODO check localforage copy first?
 
             // Remote loading data
             return api.remote.getCalendarEvents({
@@ -55,8 +56,9 @@ exports.create = function create(appModel) {
 
                 // Put in cache (they are already model instances)
                 var arr = ko.observableArray(events);
-                cacheByDate[dateKey] = arr;
+                cache.eventsByDate[dateKey] = { data: arr };
                 // Return the observable array
+                // TODO Review really if has sense to have an observable array, take care of its use (on appointments mainly)
                 return arr;
             });
         }
@@ -73,31 +75,6 @@ exports.create = function create(appModel) {
         .then(function(event) {
             return new CalendarEvent(event);
         });
-    };
-    
-    /**
-        Get a generic calendar appointment object, made of events and/or bookings,
-        depending on the given ID in the ids object.
-    **/
-    api.getAppointment = function getAppointment(ids) {
-
-        if (ids.calendarEventID) {
-            return appModel.calendarEvents.getEvent(ids.calendarEventID)
-            .then(Appointment.fromCalendarEvent);
-        }
-        else if (ids.bookingID) {
-            return appModel.bookings.getBooking(ids.bookingID)
-            .then(function(booking) {
-                // An appointment for booking needs the confirmed event information
-                return appModel.calendarEvents.getEvent(booking.confirmedDateID())
-                .then(function(event) {
-                    return Appointment.fromBooking(booking, event);
-                });
-            });
-        }
-        else {
-            return Promise.reject('Unrecognized ID');
-        }
     };
 
     return api;

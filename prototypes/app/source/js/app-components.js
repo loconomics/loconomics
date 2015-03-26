@@ -9,15 +9,9 @@
 **/
 'use strict';
 
-var ko = require('knockout');
-var propTools = require('./utils/jsPropertiesTools');
-
-function getObservable(obsOrValue) {
-    if (typeof(obsOrValue) === 'function')
-        return obsOrValue;
-    else
-        return ko.observable(obsOrValue);
-}
+var ko = require('knockout'),
+    propTools = require('./utils/jsPropertiesTools'),
+    getObservable = require('./utils/getObservable');
 
 exports.registerAll = function() {
     
@@ -57,5 +51,11 @@ exports.registerAll = function() {
                 return '/feedback/' + this.section();
             }, this);
         }
+    });
+    
+    /// feedback-entry
+    ko.components.register('app-time-slot-tile', {
+        template: { element: 'time-slot-tile-template' },
+        viewModel: require('./viewmodels/TimeSlot')
     });
 };

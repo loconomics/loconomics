@@ -42,7 +42,7 @@ A.prototype.show = function show(options) {
             var previousID = v.nextBooking() && v.nextBooking().sourceBooking().bookingID();
             if (upcoming.nextBookingID !== previousID) {
                 v.isLoadingNextBooking(true);
-                appModel.calendarEvents.getAppointment({ bookingID: upcoming.nextBookingID })
+                appModel.appointments.getAppointment({ bookingID: upcoming.nextBookingID })
                 .then(function(apt) {
                     v.nextBooking(apt);
                     v.isLoadingNextBooking(false);

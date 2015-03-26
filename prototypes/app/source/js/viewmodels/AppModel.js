@@ -30,6 +30,7 @@ function AppModel() {
     this.calendarEvents = require('./AppModel.calendarEvents').create(this);
     this.jobTitles = require('./AppModel.jobTitles').create(this);
     this.userJobProfile = require('./AppModel.userJobProfile').create(this);
+    this.appointments = require('./AppModel.appointments').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);

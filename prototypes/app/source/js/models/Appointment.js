@@ -22,6 +22,7 @@ function Appointment(values) {
         
         // Event summary:
         summary: 'New booking',
+        description: null,
         
         subtotalPrice: 0,
         feePrice: 0,
@@ -162,4 +163,55 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     apt.sourceBooking(booking);
     
     return apt;
+};
+
+/**
+    Creates a list of appointment instances from the list of events and bookings.
+    The bookings list must contain every booking that belongs to the events of type
+    'booking' from the list of events.
+**/
+Appointment.listFromCalendarEventsBookings = function listFromCalendarEventsBookings(events, bookings) {
+    return events.map(function(event) {
+        var booking = null;
+        bookings.some(function(searchBooking) {
+            var found = searchBooking.confirmedDateID() === event.calendarEventID();
+            if (found) {
+                booking = searchBooking;
+                return true;
+            }
+        });
+
+        if (booking)
+            return Appointment.fromBooking(booking, event);
+        else
+            return Appointment.fromCalendarEvent(event);
+    });
+};
+
+var Time = require('../utils/Time');
+/**
+    Creates an Appointment instance that represents a calendar slot of
+    free/spare time, for the given time range, or the full given date.
+    @param options:Object {
+        date:Date. Optional. Used to create a full date slot or default for start/end
+            to date start or date end
+        start:Date. Optional. Beggining of the slot
+        end:Date. Optional. Ending of the slot
+        text:string. Optional ['Free']. To allow external localization of the text.
+    }
+**/
+Appointment.newFreeSlot = function newFreeSlot(options) {
+    
+    var start = options.start || new Time(options.date, 0, 0, 0),
+        end = options.end || new Time(options.date, 0, 0, 0);
+
+    return new Appointment({
+        id: 0,
+
+        startTime: start,
+        endTime: end,
+
+        summary: options.text || 'Free',
+        description: null
+    });
 };

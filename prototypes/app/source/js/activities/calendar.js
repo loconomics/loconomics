@@ -3,8 +3,8 @@
 
 var $ = require('jquery'),
     moment = require('moment'),
-    ko = require('knockout'),
-    CalendarSlot = require('../models/CalendarSlot');
+    ko = require('knockout');
+    //CalendarSlot = require('../models/CalendarSlot');
 
 require('../components/DatePicker');
 
@@ -129,7 +129,7 @@ var A = Activity.extends(function CalendarActivity() {
     });
 
     // Set date to today
-    this.viewModel.currentDate(getDateWithoutTime()); //this.$datepicker.datepicker('getValue'));
+    this.viewModel.currentDate(getDateWithoutTime());
 });
 
 exports.init = A.init;
@@ -164,142 +164,13 @@ function getDateWithoutTime(date) {
     );
 }
 
-var Time = require('../utils/Time');
-function createFreeSlot(options) {
-    
-    var start = options.start || new Time(options.date, 0, 0, 0),
-        end = options.end || new Time(options.date, 0, 0, 0);
-
-    return new CalendarSlot({
-        startTime: start,
-        endTime: end,
-
-        subject: 'Free',
-        description: null,
-        link: '#!appointment/0',
-
-        actionIcon: 'glyphicon glyphicon-plus',
-        actionText: null,
-
-        classNames: 'ListView-item--tag-success'
-    });
-}
-
-/**
-    Take a single CalendarEvent model and single Booking model
-    and creates a CalendarSlot, using mainly the event info
-    but upgraded with booking info, if there is a booking.
-**/
-function convertEventToSlot(event, booking) {
-
-    return new CalendarSlot({
-        startTime: event.startTime(),
-        endTime: event.endTime(),
-        
-        subject: event.summary(), // FullName
-        description: event.description(), // 'Deep Tissue Massage Long Name',
-        link: '#!appointment/' + event.calendarEventID(),
-
-        actionIcon: booking === null ? 'glyphicon glyphicon-chevron-right' : null,
-        actionText: booking === null ? null : (booking && booking.bookingRequest && booking.bookingRequest.pricingEstimate.totalPrice || '$0.00'),
-
-        classNames: null
-    });
-}
-
-/**
-    Takes appModel observables for events and bookings for the same date
-    and creates an array of CalendarSlots.
-**/
-function slotsFromEventsBookings(events, bookings) {
-    return events().map(function(event) {
-
-        var booking = null;
-        bookings().some(function(searchBooking) {
-            var found = searchBooking.confirmedDateID() === event.calendarEventID();
-            if (found) {
-                booking = searchBooking;
-                return true;
-            }
-        });
-
-        return convertEventToSlot(event, booking);
-    });
-}
-
-/**
-    Introduce free slots wherever need in the given
-    array of CalendarSlots.
-    It sorts the array first and append from 12AM to 12AM
-    any gap with a free slot.
-**/
-function fillFreeSlots(slots) {
-
-    // First, ensure list is sorted
-    slots = slots.sort(function(a, b) {
-        return a.startTime() > b.startTime();
-    });
-    
-    var filledSlots = [],
-        zeroTime = '00:00:00',
-        last = zeroTime,
-        lastDateTime = null,
-        timeFormat = 'HH:mm:ss';
-
-    slots.forEach(function(slot) {
-        var start = slot.startTime(),
-            s = moment(start),
-            end = slot.endTime(),
-            e = moment(end);
-
-        if (s.format(timeFormat) > last) {
-            
-            if (lastDateTime === null) {
-                // First slot of the date, 12AM=00:00
-                lastDateTime = new Date(
-                    start.getFullYear(), start.getMonth(), start.getDate(),
-                    0, 0, 0
-                );
-            }
-
-            // There is a gap, filled it
-            filledSlots.push(createFreeSlot({
-                start: lastDateTime,
-                end: start
-            }));
-        }
-
-        filledSlots.push(slot);
-        lastDateTime = end;
-        last = e.format(timeFormat);
-    });
-    
-    // Check latest to see a gap at the end:
-    var lastEnd = lastDateTime && moment(lastDateTime).format(timeFormat);
-    if (lastEnd !== zeroTime) {
-        // There is a gap, filled it
-        var nextMidnight = new Date(
-            lastDateTime.getFullYear(),
-            lastDateTime.getMonth(),
-            // Next date!
-            lastDateTime.getDate() + 1,
-            // At zero hours!
-            0, 0, 0
-        );
-
-        filledSlots.push(createFreeSlot({
-            start: lastDateTime,
-            end: nextMidnight
-        }));
-    }
-
-    return filledSlots;
-}
+var Appointment = require('../models/Appointment'),
+    TimeSlotViewModel = require('../viewmodels/TimeSlot');
 
 function ViewModel(app) {
 
     this.currentDate = ko.observable(getDateWithoutTime());
-    var fullDayFree = [createFreeSlot({ date: this.currentDate() })];
+    var fullDayFree = [Appointment.newFreeSlot({ date: this.currentDate() })];
 
     // slotsSource save the data as processed by a request of 
     // data because a date change.
@@ -312,12 +183,14 @@ function ViewModel(app) {
     
         var slots = this.slotsSource();
         
-        return fillFreeSlots(slots);
+        return app.model.appointments
+            .fillWithFreeSlots(slots)
+            .map(TimeSlotViewModel.fromAppointment);
 
     }, this);
     
     this.isLoading = ko.observable(false);
-    
+
     // Update current slots on date change
     var previousDate = this.currentDate().toISOString();
     this.currentDate.subscribe(function (date) {
@@ -335,12 +208,10 @@ function ViewModel(app) {
 
         this.isLoading(true);
         
-        Promise.all([
-            app.model.bookings.getBookingsByDate(date),
-            app.model.calendarEvents.getEventsByDate(date)
-        ]).then(function(group) {
+        app.model.appointments.getAppointmentsByDate(date)
+        .then(function(appointmentsList) {
             
-            // IMPORTANT: First, we need to check that we 
+            // IMPORTANT: First, we need to check that we are
             // in the same date still, because several loadings
             // can happen at a time (changing quickly from date to date
             // without wait for finish), avoiding a race-condition
@@ -356,14 +227,10 @@ function ViewModel(app) {
                 // Race condition, not the same!! out:
                 return;
             }
-            
-            var events = group[1],
-                bookings = group[0];
-            
-            if (events && events().length) {
-                // Create the slots and update the source:
-                this.slotsSource(slotsFromEventsBookings(events, bookings));
-
+        
+            if (appointmentsList && appointmentsList.length) {
+                // Update the source:
+                this.slotsSource(appointmentsList);
                 this.isLoading(false);
             }
             else {
