@@ -137,14 +137,21 @@ exports.init = A.init;
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
-    if (options && options.route && options.route.segments) {
-        var sdate = options.route.segments[0],
-            mdate = moment(sdate),
-            date = mdate.isValid() ? mdate.toDate() : null;
-
-        if (date)
-            this.viewModel.currentDate(date);
+    // Date from the parameter, fallback to today
+    var sdate = options.route && options.route.segments && options.route.segments[0],
+        date;
+    if (sdate) {
+        // Parsing date from ISO format
+        var mdate = moment(sdate);
+        // Check is valid, and ensure is date at 12AM
+        date = mdate.isValid() ? getDateWithoutTime(mdate.toDate()) : null;
     }
+    
+    if (!date)
+        // Today:
+        date = getDateWithoutTime();
+    
+    this.viewModel.currentDate(date);
 };
 
 function getDateWithoutTime(date) {
