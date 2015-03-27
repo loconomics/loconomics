@@ -64,7 +64,7 @@ var A = Activity.extends(function AppointmentActivity() {
         return defLink + d.toISOString();
     }, this);
     
-    this.registerHandler({
+    /*this.registerHandler({
         target: this.viewModel.currentAppointment,
         handler: function (apt) {
             
@@ -85,7 +85,7 @@ var A = Activity.extends(function AppointmentActivity() {
                 var viewstate = {
                     appointment: apt.model.toPlainObject(true)
                 };
-                */
+                * /
 
                 // If was a root URL, no ID, just replace current state
                 if (urlId === '')
@@ -98,17 +98,155 @@ var A = Activity.extends(function AppointmentActivity() {
             $(window).trigger('layoutUpdate');
         }.bind(this)
     });
+    /*this.currentAppointment.subscribe(function(apt) {
+
+        var newDate = null,
+            curDate = this.currentDate();
+        
+        if (apt && apt.startTime())
+            newDate = getDateWithoutTime(apt.startTime());
+
+        // Update date with the new from current appointment
+        // or keep the current date, with latest fallback to the current date
+        newDate = newDate || curDate || getDateWithoutTime();
+        
+        if (newDate.toISOString() !== curDate.toISOString()) {
+            this.currentDate(newDate);
+        }
+        
+    }, this);
+    */
+
+    // Update  on currentDate changes:
+    // NOTE: Lot of code shared with calendar.js
+    var previousDate = this.viewModel.currentDate();
+    previousDate = previousDate && previousDate.toISOString();
+    var app = this.app;
+    this.registerHandler({
+        target: this.viewModel.currentDate,
+        handler: function (date) {
+            if (!date) {
+                this.appointments([]);
+                return;
+            }
+
+            // IMPORTANT: The date object may be reused and mutated between calls
+            // (mostly because the widget I think), so is better to create
+            // a clone and avoid getting race-conditions in the data downloading.
+            date = new Date(date.toISOString());
+
+            // Avoid duplicated notification, un-changed date
+            if (date.toISOString() === previousDate) {
+                return;
+            }
+            previousDate = date.toISOString();
+
+            this.isLoading(true);
+
+            app.model.appointments.getAppointmentsByDate(date)
+            .then(function(appointmentsList) {
+
+                // IMPORTANT: First, we need to check that we are
+                // in the same date still, because several loadings
+                // can happen at a time (changing quickly from date to date
+                // without wait for finish), avoiding a race-condition
+                // that create flickering effects or replace the date events
+                // by the events from other date, because it tooks more an changed.
+                // TODO: still this has the minor bug of losing the isLoading
+                // if a previous triggered load still didn't finished; its minor
+                // because is very rare that happens, moving this stuff
+                // to a special appModel for mixed bookings and events with 
+                // per date cache that includes a view object with isLoading will
+                // fix it and reduce this complexity.
+                if (date.toISOString() !== this.currentDate().toISOString()) {
+                    // Race condition, not the same!! out:
+                    return;
+                }
+
+                // New date list must start with the first ID of the list:
+                // Put current ID to zero forcing
+                // currentAppointment to look for the first in the
+                // new list
+                this.currentID(0);
+                // Update the source, it will update currentAppointment too:
+                this.appointments(appointmentsList || []);
+
+                this.isLoading(false);
+
+            }.bind(this))
+            .catch(function(err) {
+
+                // Show free on error
+                this.appointments([]);
+                this.isLoading(false);
+
+                var msg = 'Error loading calendar events.';
+                app.modals.showError({
+                    title: msg,
+                    error: err && err.error || err
+                });
+
+            }.bind(this));
+
+        }.bind(this.viewModel)
+    });
     
+    var ModelVersion = require('../utils/ModelVersion');
+
     this.registerHandler({
         target: this.viewModel.editMode,
         handler: function(isEdit) {
             this.$activity.toggleClass('in-edit', isEdit);
             this.$appointmentView.find('.AppointmentCard').toggleClass('in-edit', isEdit);
 
+            var version;
+            
             if (isEdit) {
-                // Create a copy of the appointment so we revert on 'cancel'
-                this.viewModel.originalEditedAppointment = 
-                    ko.toJS(this.viewModel.currentAppointment());
+                // Create and set a version to be edited
+                version = new ModelVersion(this.viewModel.currentAppointment());
+                this.viewModel.editedVersion(version);
+                this.viewModel.editedAppointment(version.version);
+                
+                // Setup auto-saving
+                var vw = this.viewModel;
+                version.on('push', function(success) {
+                    if (success) {
+                        vw.isSaving(true);
+                        app.model.appointments.setAppointment(version.version)
+                        .then(function(savedApt) {
+                            //var wasNew = version.original.id() < 1;
+                            // Update with remote data, the original appointment in the version,
+                            // not the currentAppointment or in the index in the list to avoid
+                            // race-conditions
+                            version.original.model.updateWith(savedApt);
+                            
+                            // TODO: wasNew:true: add to the list and sort it??
+                            // There is a wizard for bookings, so may be different on that case
+                        })
+                        .catch(function(err) {
+                            // Show error
+                            app.modals.showError({
+                                title: 'There was an error saving the data.',
+                                error: err && err.error || err
+                            });
+                            // Don't replicate error, allow always
+                        })
+                        .then(function() {
+                            // ALWAYS:
+                            vw.isSaving(false);
+                        });
+                    }
+                });
+            }
+            else {
+                // There is a version? Push changes!
+                version = this.viewModel.editedVersion();
+                
+                if (version) {
+                    // Push version to original, will launch a remote update 
+                    // if anithing changed
+                    version.push();
+                }
             }
 
         }.bind(this)
@@ -119,23 +257,24 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     /* jshint maxcomplexity:10 */
-
     Activity.prototype.show.call(this, options);
     
-    var apt;
-    if (this.requestData.appointment) {
-        apt = this.requestData.appointment;
-    } else {
-        // Get ID
-        var aptId = options && options.route && options.route.segments[0];
-        aptId = parseInt(aptId, 10);
-        apt = aptId || 0;
-    }
-    this.showAppointment(apt);
+    var date = getDateWithoutTime(options && options.route && options.route.segments[0]);
+    var id = (options && options.route && options.route.segments[1]) |0;
+
+    this.viewModel.currentDate(date);
+    this.viewModel.currentID(id);
     
+    // If the request includes an appointment plain object, that's an
+    // in-editing appointment so put it in place (to restore a previous edition)
+    if (this.requestData.appointment) {
+        this.viewModel.editMode(true);
+        this.viewModel.editedAppointment().model.updateWith(this.requestData.appointment);
+    }
+
     // If there are options (may not be on startup or
     // on cancelled edition).
-    if (options !== null) {
+    /*if (options !== null) {
 
         var booking = this.viewModel.currentAppointment();
         // It comes back from the textEditor.
@@ -168,38 +307,19 @@ A.prototype.show = function show(options) {
 
             booking.location(options.selectedLocation);
         }
-    }
+    }*/
 };
 
 var Appointment = require('../models/Appointment');
 
-A.prototype.showAppointment = function showAppointment(apt) {
-
-    if (typeof(apt) === 'number') {
-        if (apt) {
-            // TODO: select appointment apt ID
-
-        } else if (apt === 0) {
-            this.viewModel.newAppointment(new Appointment());
-            this.viewModel.editMode(true);
-        }
-    }
-    else {
-        // Appointment object
-        if (apt.id) {
-            // TODO: select appointment by apt id
-            // TODO: then update values with in-editing values from apt
-        }
-        else {
-            // New apopintment with the in-editing values
-            this.viewModel.newAppointment(new Appointment(apt));
-            this.viewModel.editMode(true);
-        }
-    }
-};
-
 function getDateWithoutTime(date) {
-    date = date || new Date();
+    if (!date) {
+        date = new Date();
+    }
+    else if (!(date instanceof Date)) {
+        date = new Date(date);
+    }
+
     return new Date(
         date.getFullYear(),
         date.getMonth(),
@@ -208,121 +328,201 @@ function getDateWithoutTime(date) {
     );
 }
 
+function findAppointmentInList(list, id) {
+    var found = null,
+        index = -1;
+    list.some(function(apt, i) {
+        if (apt.id() === id) {
+            found = apt;
+            index = i;
+            return true;
+        }
+    });
+    return {
+        item: found,
+        index: index
+    };
+}
+
+var CalendarEvent = require('../models/CalendarEvent'),
+    Booking = require('../models/Booking');
+
 function ViewModel(app) {
     /*jshint maxstatements: 30 */
 
     this.appointments = ko.observableArray([]);
+    this.currentDate = ko.observable(new Date());
+    this.currentID = ko.observable(0);
     this.currentIndex = ko.observable(0);
     this.editMode = ko.observable(false);
-    this.newAppointment = ko.observable(null);
-    this.noAppointment = new Appointment({
+    this.isLoading = ko.observable(false);
+    this.editedVersion = ko.observable(null);
+    this.editedAppointment = ko.observable(new Appointment());
+
+    var loadingAppointment = new Appointment({
+        id: 0,
+        summary: 'Loading...'
+    });
+    var emptyDateAppointment = new Appointment({
         id: -1,
         summary: 'There is no appointments on this date'
     });
+    var freeAppointment = new Appointment({
+        id: -2,
+        summary: 'Free'
+    });
+    function newEventAppointment() {
+        return new Appointment({
+            id: -3,
+            summary: 'New event...',
+            sourceEvent: new CalendarEvent()
+        });
+    }
+    function newBookingAppointment() {
+        return new Appointment({
+            id: -4,
+            summary: 'New booking...',
+            sourceEvent: new CalendarEvent(),
+            sourceBooking: new Booking()
+        });
+    }
 
     this.isNew = ko.computed(function(){
-        return this.newAppointment() !== null;
+        return this.currentID() === -3 || this.currentID() === -4;
     }, this);
 
-    this.currentAppointment = ko.computed({
-        read: function() {
-            if (this.isNew()) {
-                return this.newAppointment();
-            }
-            else {
-                var apt = this.appointments()[this.currentIndex() % this.appointments().length];
-                if (!apt)
-                    return this.noAppointment;
-                return apt;
-            }
-        },
-        write: function(apt) {
-            var index = this.currentIndex() % this.appointments().length;
-            this.appointments()[index] = apt;
-            this.appointments.valueHasMutated();
-        },
-        owner: this
-    });
+    this.currentAppointment = ko.computed(function() {
+        /*jshint maxcomplexity: 10*/
 
-    this.originalEditedAppointment = {};
+        var id = this.currentID(),
+            // Important, used in the search but too required
+            // to be a dependency when the list changes (to update
+            // from the 'loadingAppointment'):
+            apts = this.appointments();
+
+        switch (id) {
+            case -1:
+                return emptyDateAppointment;
+            case -2:
+                return freeAppointment;
+            case -3:
+                this.editMode(true);
+                return newEventAppointment();
+            case -4:
+                this.editMode(true);
+                return newBookingAppointment();
+            case -5:
+                return loadingAppointment;
+            default:
+                // Positive ID: set a temporary/loading apt
+                // and search for the ID
+                if (id > 0) {
+                    // Trigger inmediate search if not in loading
+                    if (!this.isLoading()) {
+                        // search in list and set index
+                        var found = findAppointmentInList(apts, id);
+                        this.currentIndex(found.index);
+                        return found.item;
+                    }
+                    return loadingAppointment;
+                }
+                else {
+                    // 0 or any other value:
+                    // look first in list
+                    if (this.appointments().length === 0) {
+                        // empty date -> -1
+                        setTimeout(function(){
+                            this.currentID(-1);
+                        }.bind(this), 0);
+                        this.currentIndex(-1);
+                        return emptyDateAppointment;
+                    }
+                    else {
+                        setTimeout(function(){
+                            this.currentID(this.appointments()[0].id());
+                            this.currentIndex(0);
+                        }.bind(this), 0);
+                        // Waiting for load:
+                        return loadingAppointment;
+                    }
+                }
+        }
+    }, this)
+    // Avoiding multiple evaluations because of consecutive updates on the observables
+    .extend({ rateLimit: 0 });
 
     this.goPrevious = function goPrevious() {
         if (this.editMode()) return;
 
-        if (this.currentIndex() === 0)
-            this.currentIndex(this.appointments().length - 1);
-        else
-            this.currentIndex((this.currentIndex() - 1) % this.appointments().length);
+        var index = this.currentIndex() - 1;
+
+        if (index < 0) {
+            // Go previous date
+            // First change ID to be 'loading' to show state and 
+            // allow for auto look-up on loading finish.
+            this.currentID(-5);
+            // Calculate previous date
+            var m = moment(this.currentDate());
+            if (m.isValid()) {
+                this.currentDate(m.subtract(1, 'days').toDate());
+            }
+            else {
+                // Error fallback to today
+                this.currentDate(getDateWithoutTime());
+            }
+        }
+        else {
+            // Go previous item in the list, by changing currentID
+            var apt = this.appointments()[index % this.appointments().length];
+            this.currentID(apt.id());
+        }
     };
 
     this.goNext = function goNext() {
         if (this.editMode()) return;
+        var index = this.currentIndex() + 1;
 
-        this.currentIndex((this.currentIndex() + 1) % this.appointments().length);
+        if (index >= this.appointments().length) {
+            // Go next date
+            // First change ID to be 'loading' to show state and 
+            // allow for auto look-up on loading finish.
+            this.currentID(-5);
+            // Calculate next date
+            var m = moment(this.currentDate());
+            if (m.isValid()) {
+                this.currentDate(m.add(1, 'days').toDate());
+            }
+            else {
+                // Error fallback to today
+                this.currentDate(getDateWithoutTime());
+            }
+        }
+        else {
+            // Go next item in the list, by changing currentID
+            var apt = this.appointments()[index % this.appointments().length];
+            this.currentID(apt.id());
+        }
     };
 
     this.edit = function edit() {
+        // A subscribed handler ensure to do the needed tasks
         this.editMode(true);
+    }.bind(this);
+    
+    this.save = function save() {
+        // A subscribed handler ensure to do the needed tasks
+        this.editMode(false);
     }.bind(this);
 
     this.cancel = function cancel() {
 
-        // if is new, discard
-        if (this.isNew()) {
-            this.newAppointment(null);
+        if (this.editedVersion()) {
+            // Discard previous version
+            this.editedVersion().pull({ evenIfNewer: true });
         }
-        else {
-            // revert changes
-            this.currentAppointment(new Appointment(this.originalEditedAppointment));
-        }
-
+        // Out of edit mode
         this.editMode(false);
     }.bind(this);
-
-    this.save = function save() {
-        // If is a new one, add it to the collection
-        if (this.isNew()) {
-
-            var newApt = this.newAppointment();
-            // TODO: some fieds need some kind of calculation that is persisted
-            // son cannot be computed. Simulated:
-            newApt.summary('Massage Therapist Booking');
-            newApt.id(4);
-
-            // Add to the list:
-            this.appointments.push(newApt);
-            // now, reset
-            this.newAppointment(null);
-            // current index must be the just-added apt
-            this.currentIndex(this.appointments().length - 1);
-
-            // On adding a new one, the confirmation page must be showed
-            app.shell.go('bookingConfirmation', {
-                booking: newApt
-            });
-        }
-
-        this.editMode(false);
-    }.bind(this);
-
-    this.currentDate = ko.observable(new Date());
-    this.currentAppointment.subscribe(function(apt) {
-
-        var newDate = null,
-            curDate = this.currentDate();
-        
-        if (apt && apt.startTime())
-            newDate = getDateWithoutTime(apt.startTime());
-
-        // Update date with the new from current appointment
-        // or keep the current date, with latest fallback to the current date
-        newDate = newDate || curDate || getDateWithoutTime();
-        
-        if (newDate.toISOString() !== curDate.toISOString()) {
-            this.currentDate(newDate);
-        }
-        
-    }, this);
 
     /**
         External actions
@@ -387,78 +587,4 @@ function ViewModel(app) {
             text: this.currentAppointment()[field]()
         });
     }.bind(this);
-    
-
-    // Data Updates
-    this.isLoading = ko.observable(false);
-    // on currentDate changes:
-    // NOTE: Lot of code shared with calendar.js
-    var previousDate = this.currentDate();
-    previousDate = previousDate && previousDate.toISOString();
-    this.currentDate.subscribe(function (date) {
-        
-        if (!date) {
-            this.appointments([]);
-            return;
-        }
-        
-        // IMPORTANT: The date object may be reused and mutated between calls
-        // (mostly because the widget I think), so is better to create
-        // a clone and avoid getting race-conditions in the data downloading.
-        date = new Date(date.toISOString());
-
-        // Avoid duplicated notification, un-changed date
-        if (date.toISOString() === previousDate) {
-            return;
-        }
-        previousDate = date.toISOString();
-
-        this.isLoading(true);
-        
-        app.model.appointments.getAppointmentsByDate(date)
-        .then(function(appointmentsList) {
-            
-            // IMPORTANT: First, we need to check that we are
-            // in the same date still, because several loadings
-            // can happen at a time (changing quickly from date to date
-            // without wait for finish), avoiding a race-condition
-            // that create flickering effects or replace the date events
-            // by the events from other date, because it tooks more an changed.
-            // TODO: still this has the minor bug of losing the isLoading
-            // if a previous triggered load still didn't finished; its minor
-            // because is very rare that happens, moving this stuff
-            // to a special appModel for mixed bookings and events with 
-            // per date cache that includes a view object with isLoading will
-            // fix it and reduce this complexity.
-            if (date.toISOString() !== this.currentDate().toISOString()) {
-                // Race condition, not the same!! out:
-                return;
-            }
-        
-            if (appointmentsList && appointmentsList.length) {
-                // Update the source:
-                this.appointments(appointmentsList);
-                this.isLoading(false);
-            }
-            else {
-                this.appointments([]);
-                this.isLoading(false);
-            }
-
-        }.bind(this))
-        .catch(function(err) {
-            
-            // Show free on error
-            this.appointments([]);
-            this.isLoading(false);
-            
-            var msg = 'Error loading calendar events.';
-            app.modals.showError({
-                title: msg,
-                error: err && err.error || err
-            });
-            
-        }.bind(this));
-
-    }.bind(this));
 }
