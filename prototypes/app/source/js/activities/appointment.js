@@ -199,6 +199,10 @@ var A = Activity.extends(function AppointmentActivity() {
             this.$activity.toggleClass('in-edit', isEdit);
             this.$appointmentView.find('.AppointmentCard').toggleClass('in-edit', isEdit);
 
+            if (this.viewModel.currentID() <= 0) {
+                return;
+            }
+            
             var version;
             
             if (isEdit) {
@@ -242,10 +246,11 @@ var A = Activity.extends(function AppointmentActivity() {
                 // There is a version? Push changes!
                 version = this.viewModel.editedVersion();
                 
-                if (version) {
+                if (version && version.areDifferent()) {
                     // Push version to original, will launch a remote update 
                     // if anithing changed
-                    version.push();
+                    // TODO: ask for confirmation if version isObsolete
+                    version.push({ evenIfObsolete: true });
                 }
             }
 
@@ -356,6 +361,7 @@ function ViewModel(app) {
     this.currentIndex = ko.observable(0);
     this.editMode = ko.observable(false);
     this.isLoading = ko.observable(false);
+    this.isSaving = ko.observable(false);
     this.editedVersion = ko.observable(null);
     this.editedAppointment = ko.observable(new Appointment());
 
@@ -363,29 +369,37 @@ function ViewModel(app) {
         id: 0,
         summary: 'Loading...'
     });
-    var emptyDateAppointment = new Appointment({
-        id: -1,
-        summary: 'There is no appointments on this date'
-    });
-    var freeAppointment = new Appointment({
-        id: -2,
-        summary: 'Free'
-    });
-    function newEventAppointment() {
+    var newEmptyDateAppointment = function newEmptyDateAppointment() {
+        return new Appointment({
+            id: -1,
+            summary: 'There is no appointments on this date',
+            startTime: this.currentDate(),
+            endTime: moment(this.currentDate()).add(1, 'days').toDate()
+        });
+    }.bind(this);
+    var newFreeAppointment = function newFreeAppointment() {
+        return new Appointment({
+            id: -2,
+            summary: 'Free',
+            startTime: this.currentDate(),
+            endTime: moment(this.currentDate()).add(1, 'days').toDate()
+        });
+    }.bind(this);
+    var newEventAppointment = function newEventAppointment() {
         return new Appointment({
             id: -3,
             summary: 'New event...',
             sourceEvent: new CalendarEvent()
         });
-    }
-    function newBookingAppointment() {
+    };
+    var newBookingAppointment = function newBookingAppointment() {
         return new Appointment({
             id: -4,
             summary: 'New booking...',
             sourceEvent: new CalendarEvent(),
             sourceBooking: new Booking()
         });
-    }
+    };
 
     this.isNew = ko.computed(function(){
         return this.currentID() === -3 || this.currentID() === -4;
@@ -402,9 +416,9 @@ function ViewModel(app) {
 
         switch (id) {
             case -1:
-                return emptyDateAppointment;
+                return newEmptyDateAppointment();
             case -2:
-                return freeAppointment;
+                return newFreeAppointment();
             case -3:
                 this.editMode(true);
                 return newEventAppointment();
@@ -435,7 +449,7 @@ function ViewModel(app) {
                             this.currentID(-1);
                         }.bind(this), 0);
                         this.currentIndex(-1);
-                        return emptyDateAppointment;
+                        return newEmptyDateAppointment();
                     }
                     else {
                         setTimeout(function(){

@@ -31,7 +31,7 @@ function Booking(values) {
         bookingRequest: null // BookingRequest
     }, values);
     
-    this.bookingRequest(new BookingRequest(values && values.bookingRequest));
+    this.bookingRequest(new BookingRequest(values && values.bookingRequest || {}));
 }
 
 module.exports = Booking;
@@ -63,7 +63,7 @@ function BookingRequest(values) {
         pricingEstimate: null // PricingEstimate
     }, values);
     
-    this.pricingEstimate(new PricingEstimate(values && values.pricingEstimate));
+    this.pricingEstimate(new PricingEstimate(values && values.pricingEstimate || {}));
 }
 
 function PricingEstimate(values) {
@@ -90,7 +90,7 @@ function PricingEstimate(values) {
         details: []
     }, values);
     
-    if (Array.isArray(values.details)) {
+    if (values && Array.isArray(values.details)) {
         this.details(values.details.map(function(detail) {
             return new PricingEstimateDetail(detail);
         }));
