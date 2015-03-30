@@ -302,7 +302,7 @@
                   </span> <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().postNotesToSelf(), 'glyphicon-plus': !currentAppointment().postNotesToSelf()}"></span></span>
             </li>
           </ul>
-          <div class="AppointmentCard-actions row" data-bind="visible: !editMode()">
+          <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && !editMode()">
             <div class="col-xs-6">
               <button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: edit }">Edit</button>
             </div>
@@ -310,7 +310,7 @@
               <button type="button" class="btn btn-default btn-block">Contact client</button>
             </div>
           </div>
-          <div class="AppointmentCard-actions row" data-bind="visible: editMode()">
+          <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && editMode()">
             <div class="col-xs-6">
               <button type="button" class="btn btn-danger btn-block" data-bind="event: { tap: cancel }">Cancel</button>
             </div>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
-id="com.loconomics.app" version="0.2.4">
+id="com.loconomics.app" version="0.2.5">
   <name>Loconomics</name>
   <description>Make your life better</description>
   <author href="https://loconomics.com"
   email="support@loconomics.com"></author>
   <content src="index.html" />
+  <!-- Page Not Found error goes to: -->
+  <preference name="ErrorUrl" value="index.html" />
   <!-- Enable individual API permissions here. The "device" permission is
   required for the 'deviceready' event. -->
   <feature name="http://api.phonegap.com/1.0/device" />
@@ -16,7 +18,7 @@ id="com.loconomics.app" version="0.2.4">
   on your app, which PhoneGap requires. -->
   <preference name="permissions" value="none" />
   <!-- Customize your app and platform with the preference element. -->
-  <preference name="phonegap-version" value="3.6.3" />
+  <preference name="phonegap-version" value="3.7.0" />
   <!-- all: default means both landscape and portrait are enabled -->
   <preference name="orientation" value="default" />
   <!-- all: possible values handset, tablet, or universal -->

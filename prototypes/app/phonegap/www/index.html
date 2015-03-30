@@ -81,11 +81,11 @@
             <li><a>Add new</a>
 
               <ul class="nav">
-                <li class="go-booking-new"><a href="/appointment/0">Booking</a>
+                <li class="go-booking-new"><a href="/appointment/-4">Booking</a>
                 </li>
                 <li class="go-client-new"><a href="/clientEdition/0">Client</a>
                 </li>
-                <li class="go-calendar-new"><a href="/calendar/new">Calendar block</a>
+                <li class="go-calendar-new"><a href="/appointment/-3">Calendar block</a>
                 </li>
                 <li class="go-pricing-new"><a href="/pricing/new">Pricing</a>
                 </li>
@@ -196,15 +196,16 @@
     <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
       <div id="calendarAppointmentView" class="full-height row CardsDeck CardsDeck--dotsSlider"
-      data-bind="event: { swipeleft: goNext, swiperight: goPrevious }">
+      data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
         <div class="Card AppointmentCard">
           <div class="Card-title">
-             <h3 data-bind="text: currentAppointment().stateHeader()"></h3>
+             <h3><span data-bind="text: currentAppointment().id() > 0 ? currentAppointment().stateHeader() : ''"></span>&nbsp;</h3>
 
              <h2 data-bind="text: currentAppointment().summary()"></h2>
 
+            <div class="loadingSpinner pull-right"></div>
           </div>
-          <ul class="list-unstyled">
+          <ul class="list-unstyled" data-bind="visible: currentAppointment().id() > 0">
             <li data-bind="event: { tap: editMode() && pickDateTime }"> <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
 
               <span
@@ -219,6 +220,18 @@
                   <span
                   class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().startTime(), 'glyphicon-plus': !currentAppointment().startTime()}"></span></span>
             </li>
+          </ul>
+          <ul class="list-unstyled" data-bind="visible: currentID() === -2 || currentID() === -1">
+            <li> <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-4"
+              data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-4' }">Add new booking</a>
+
+            </li>
+            <li> <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-3"
+              data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-3' }">Add new calendar block</a>
+
+            </li>
+          </ul>
+          <ul class="list-unstyled" data-bind="visible: currentAppointment().sourceBooking()">
             <li data-bind="event: { tap: editMode() && pickClient }"> <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
 
               <span
@@ -290,7 +303,7 @@
                   </span> <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': currentAppointment().postNotesToSelf(), 'glyphicon-plus': !currentAppointment().postNotesToSelf()}"></span></span>
             </li>
           </ul>
-          <div class="AppointmentCard-actions row" data-bind="visible: !editMode()">
+          <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && !editMode()">
             <div class="col-xs-6">
               <button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: edit }">Edit</button>
             </div>
@@ -298,7 +311,7 @@
               <button type="button" class="btn btn-default btn-block">Contact client</button>
             </div>
           </div>
-          <div class="AppointmentCard-actions row" data-bind="visible: editMode()">
+          <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && editMode()">
             <div class="col-xs-6">
               <button type="button" class="btn btn-danger btn-block" data-bind="event: { tap: cancel }">Cancel</button>
             </div>
