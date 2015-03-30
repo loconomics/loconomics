@@ -206,7 +206,7 @@ Appointment.newFreeSlot = function newFreeSlot(options) {
         end = options.end || new Time(options.date, 0, 0, 0);
 
     return new Appointment({
-        id: 0,
+        id: -2,
 
         startTime: start,
         endTime: end,

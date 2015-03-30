@@ -26,11 +26,11 @@
       <ul class="list-unstyled" data-bind="visible: currentID() === -2 || currentID() === -1">
         <li>
             <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-4"
-               data-bind="attr: { href: '#appointment/' + currentDate().toISOString() + '/-4' }">Add new booking</a>
+               data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-4' }">Add new booking</a>
         </li>
         <li>
             <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-3"
-                data-bind="attr: { href: '#appointment/' + currentDate().toISOString() + '/-3' }">Add new calendar block</a>
+                data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-3' }">Add new calendar block</a>
         </li>
       </ul>
       <ul class="list-unstyled" data-bind="visible: currentAppointment().sourceBooking()">

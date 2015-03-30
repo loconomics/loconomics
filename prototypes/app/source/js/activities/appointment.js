@@ -64,7 +64,7 @@ var A = Activity.extends(function AppointmentActivity() {
         return defLink + d.toISOString();
     }, this);
     
-    /*this.registerHandler({
+    this.registerHandler({
         target: this.viewModel.currentAppointment,
         handler: function (apt) {
             
@@ -74,24 +74,29 @@ var A = Activity.extends(function AppointmentActivity() {
             // Update URL to match the appointment ID and
             // track it state
             // Get ID from URL, to avoid do anything if the same.
-            var aptId = apt.id();
-            var urlId = /appointment\/(\d+)/i.test(window.location);
-            urlId = urlId && urlId[1] || '';
-            if (urlId !== '0' && aptId !== null && urlId !== aptId.toString()) {
+            var aptId = apt.id(),
+                found = /appointment\/([^\/]+)\/(\-?\d+)/i.exec(window.location),
+                urlId = found && found[2] |0,
+                urlDate = found && found[1],
+                curDateStr = getDateWithoutTime(this.viewModel.currentDate()).toISOString();
 
+            if (!found ||
+                urlId !== aptId.toString() ||
+                urlDate !== curDateStr) {
+                
                 // TODO save a useful state
                 // Not for now, is failing, but something based on:
                 /*
                 var viewstate = {
                     appointment: apt.model.toPlainObject(true)
                 };
-                * /
+                */
 
                 // If was a root URL, no ID, just replace current state
                 if (urlId === '')
-                    this.app.shell.history.replaceState(null, null, 'appointment/' + aptId);
+                    this.app.shell.history.replaceState(null, null, 'appointment/' + curDateStr + '/' + aptId);
                 else
-                    this.app.shell.history.pushState(null, null, 'appointment/' + aptId);
+                    this.app.shell.history.pushState(null, null, 'appointment/' + curDateStr + '/' + aptId);
             }
 
             // Trigger a layout update, required by the full-height feature
@@ -264,17 +269,34 @@ A.prototype.show = function show(options) {
     /* jshint maxcomplexity:10 */
     Activity.prototype.show.call(this, options);
     
-    var date = getDateWithoutTime(options && options.route && options.route.segments[0]);
-    var id = (options && options.route && options.route.segments[1]) |0;
+    var s1 = options && options.route && options.route.segments[0],
+        s2 = options && options.route && options.route.segments[1],
+        date,
+        id;
 
-    this.viewModel.currentDate(date);
+    if (/^\-?\d+$/.test(s1)) {
+        // first parameter is an ID, use current date and try to load if possible
+        date = new Date();
+        id = s1 |0;
+    }
+    else {
+        date = getDateWithoutTime(s1);
+        id = s2 |0;
+    }
+
     this.viewModel.currentID(id);
+    this.viewModel.currentDate(date);
     
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)
     if (this.requestData.appointment) {
         this.viewModel.editMode(true);
         this.viewModel.editedAppointment().model.updateWith(this.requestData.appointment);
+    }
+    else {
+        // On any other case, and to prevent bad editMode on entering, 
+        // do a discard taht sets editMode off
+        this.viewModel.cancel();
     }
 
     // If there are options (may not be on startup or
@@ -372,7 +394,7 @@ function ViewModel(app) {
     var newEmptyDateAppointment = function newEmptyDateAppointment() {
         return new Appointment({
             id: -1,
-            summary: 'There is no appointments on this date',
+            summary: 'There are no appointments on this date',
             startTime: this.currentDate(),
             endTime: moment(this.currentDate()).add(1, 'days').toDate()
         });
