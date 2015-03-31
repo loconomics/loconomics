@@ -191,6 +191,56 @@
         </div>
       </div>
     </div>
+    <!-- Activity addressEditor -->
+    <div class="container-fluid has-navbar" data-activity="addressEditor">
+      <form role="form">
+         <h2 class="SectionTitle" data-bind="visible: header, text: header"></h2>
+
+        <fieldset class="isolated" data-bind="with: address()">
+          <app-unlabeled-input params="placeholder: 'Zip code', value: postalCode, disable: $root.isLocked"></app-unlabeled-input>
+          <div data-bind="visible: isServiceArea">
+            <div class="form-group">
+              <label for="addressEditorRadius">Service radius</label>
+              <select class="form-control" id="addressEditorRadius"
+              data-bind="value: serviceRadius, disable: $root.isLocked">
+                <option value="0.5">0.5 mile</option>
+                <option value="1">1 mile</option>
+                <option value="2">2 miles</option>
+                <option value="3">3 miles</option>
+                <option value="4">4 miles</option>
+                <option value="5">5 miles</option>
+                <option value="10">10 miles</option>
+                <option value="25">25 miles</option>
+                <option value="25">50 miles</option>
+              </select>
+            </div>
+          </div>
+          <div data-bind="visible: isServiceLocation">
+            <div class="form-group">
+              <p class="form-control-static"> <span data-bind="visible: city() || stateProvinceCode()">
+                            <span data-bind="text: city"></span>,
+                <span
+                data-bind="text: stateProvinceCode"></span>
+                  </span>
+                  <!-- White space to reserve space -->&nbsp;</p>
+            </div>
+            <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Location name, e.g. `Joshua´s Appartment`', value: addressName, disable: $root.isLocked"></app-unlabeled-input>
+            <div class="form-group">
+              <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
+              <textarea rows="2" class="form-control" placeholder="Special instructions"
+              id="addressEditorSpecialInstructions" data-bind="value: specialInstructions, disable: $root.isLocked"></textarea>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+      <div class="navbar navbar-default ActivityNavbar">
+        <div class="container">
+          <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }, text: submitText, disable: $root.isLocked"></button>
+        </div>
+      </div>
+    </div>
     <!-- Activity appointment -->
     <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
@@ -884,78 +934,6 @@
           </p>
           <p data-bind="visible: profile() === 'freelancer'">*Your free trial last 90 days and annual membership fees are currently
             $199.</p>
-      </div>
-    </div>
-    <!-- Activity locationEdition -->
-    <div class="container-fluid has-navbar" data-activity="locationEdition">
-      <form role="form">
-         <h2 class="SectionTitle" data-bind="visible: header, text: header"></h2>
-
-        <fieldset class="isolated" data-bind="with: location()">
-          <div class="form-group">
-            <label for="locationEditionPostalCode">Zip code</label>
-            <input type="number" class="form-control" id="locationEditionPostalCode"
-            data-bind="value: postalCode">
-          </div>
-          <div data-bind="visible: isServiceRadius">
-            <div class="form-group">
-              <label for="locationEditionRadius">Service radius</label>
-              <select class="form-control" id="locationEditionRadius"
-              data-bind="value: serviceRadius">
-                <option value="0.5">0.5 miles</option>
-                <option value="1">1 mile</option>
-                <option value="2">2 miles</option>
-                <option value="3">3 miles</option>
-                <option value="5">5 miles</option>
-                <option value="10">10 miles</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="locationEditionRadiusNumber">Service radius (miles)</label>
-              <input type="number" step=".5" class="form-control"
-              id="locationEditionRadiusNumber" placeholder="n miles" data-bind="value: serviceRadius">
-            </div>
-          </div>
-          <div data-bind="visible: isServiceLocation">
-            <div class="row">
-              <div class="form-group col-xs-8">
-                <label class="control-label">City</label>
-                <p class="form-control-static" data-bind="text: city">San Francisco</p>
-              </div>
-              <div class="form-group col-xs-4">
-                <label class="control-label">State</label>
-                <div>
-                  <p class="form-control-static" data-bind="text: stateProvinceCode">CA</p>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="locationEditionAddressLine1">Address</label>
-              <input type="text" class="form-control" id="locationEditionAddressLine1"
-              placeholder="street address" data-bind="value: addressLine1">
-            </div>
-            <div class="form-group">
-              <label for="locationEditionAddressLine2">Suite/apt No.</label>
-              <input type="text" class="form-control" id="locationEditionAddressLine2"
-              data-bind="value: addressLine2">
-            </div>
-            <div class="form-group">
-              <label for="locationEditionName">Location name</label>
-              <input type="text" class="form-control" id="locationEditionName"
-              data-bind="value: name">
-            </div>
-            <div class="form-group">
-              <label for="locationEditionSpecialInstructions">Special instructions</label>
-              <textarea rows="2" class="form-control" id="locationEditionSpecialInstructions"
-              data-bind="value: specialInstructions"></textarea>
-            </div>
-          </div>
-        </fieldset>
-      </form>
-      <div class="navbar navbar-default ActivityNavbar">
-        <div class="container">
-          <button type="button" class="btn btn-primary btn-block">Save and continue</button>
-        </div>
       </div>
     </div>
     <!-- Activity login -->

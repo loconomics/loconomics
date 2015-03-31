@@ -23,7 +23,7 @@ module.exports = {
     'contactInfo': require('./activities/contactInfo'),
     'onboardingPositions': require('./activities/onboardingPositions'),
     'onboardingHome': require('./activities/onboardingHome'),
-    'locationEdition': require('./activities/locationEdition'),
+    'addressEditor': require('./activities/addressEditor'),
     'onboardingComplete': require('./activities/onboardingComplete'),
     'account': require('./activities/account'),
     'inbox': require('./activities/inbox'),

@@ -62,3 +62,10 @@ function Address(values) {
 }
 
 module.exports = Address;
+
+// Public Enumeration for the 'kind' property:
+Address.kind = {
+    home: 'home',
+    billing: 'billing',
+    service: 'service'
+};

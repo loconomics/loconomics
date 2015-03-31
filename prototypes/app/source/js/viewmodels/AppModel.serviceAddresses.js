@@ -27,6 +27,10 @@ exports.create = function create(appModel) {
     };
     var cache = {};
     
+    api.state.isLocked = ko.pureComputed(function() {
+        return this.isLoading() || this.isSaving();
+    }, api.state);
+    
     function newCacheEntry(list) {
         return {
             control: new CacheControl({ ttl: { minutes: 1 } }),
@@ -120,10 +124,17 @@ exports.create = function create(appModel) {
                 })
                 .then(function(data) {
                     setJobTitleCache(jobTitleID, data);
+                    pushToLocal(jobTitleID, data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
                     
                     return data;
+                })
+                .catch(function(err) {
+                    api.state.isLoading(false);
+                    api.state.isSyncing(false);
+                    // rethrow error
+                    return err;
                 });
             } else {
                 api.state.isSyncing(true);
@@ -131,10 +142,17 @@ exports.create = function create(appModel) {
                 return fetchFromRemote(jobTitleID)
                 .then(function(data) {
                     setJobTitleCache(jobTitleID, data);
+                    pushToLocal(jobTitleID, data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
                     
                     return data;
+                })
+                .catch(function(err) {
+                    api.state.isLoading(false);
+                    api.state.isSyncing(false);
+                    // rethrow error
+                    return err;
                 });
             }
         }
@@ -149,7 +167,7 @@ exports.create = function create(appModel) {
         // and look from its cached index
         // TODO Implement item server look-up. Be careful with cache update,
         // list sorting and state flags.
-        return api.getByJobTitle(jobTitleID)
+        return api.getList(jobTitleID)
         .then(function() {
             // Get from cached index
             var cacheItem = getItemFromCache(jobTitleID, addressID);
@@ -186,6 +204,7 @@ exports.create = function create(appModel) {
         @param data:object Plain object
     **/
     api.setItem = function setItem(data) {
+        api.state.isSaving(true);
         // Send to remote first
         return pushToRemote(data)
         .then(function(serverData) {
@@ -199,6 +218,14 @@ exports.create = function create(appModel) {
                 // full list to save local
                 pushToLocal(data.jobTitleID, getJobTitleCache(data.jobTitleID).list);
             }
+            api.state.isSaving(false);
+
+            return serverData;
+        })
+        .catch(function(err) {
+            api.state.isSaving(false);
+            // Rethrow error
+            return err;
         });
     };
     
