@@ -85,6 +85,12 @@ A.prototype.show = function show(options) {
             list = this.app.model.serviceAddresses.asModel(list);
             this.viewModel.addresses(list);
 
+        }.bind(this))
+        .catch(function (err) {
+            this.app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            });
         }.bind(this));
     }
     else {

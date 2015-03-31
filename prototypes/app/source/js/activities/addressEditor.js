@@ -58,26 +58,30 @@ A.prototype.show = function show(options) {
         .catch(function (err) {
             this.app.modals.showError({
                 title: 'There was an error while loading.',
-                error: err && err.error || err
+                error: err
             });
         }.bind(this));
     }
     else {
         // New address
-        this.viewModel.address(new Address());
+        this.viewModel.address(new Address({
+            jobTitleID: jobTitleID
+        }));
 
         switch (serviceType) {
-            case 'serviceRadius':
-                this.viewModel.address().isServiceRadius(true);
-                this.viewModel.header('Add a service radius');
+            case 'serviceArea':
+                this.viewModel.address().isServiceArea(true);
+                this.viewModel.address().isServiceLocation(false);
+                this.viewModel.header('Add a service area');
                 break;
             case 'serviceLocation':
+                this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a service location');
                 break;
             default:
-                this.viewModel.addres().isServiceRadius(false);
-                this.viewModel.addres().isServiceLocation(false);
+                this.viewModel.address().isServiceArea(true);
+                this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a location');
                 break;
         }
@@ -113,7 +117,7 @@ function ViewModel(app) {
         .catch(function(err) {
             app.modals.showError({
                 title: 'There was an error while saving.',
-                error: err && err.error || err
+                error: err
             });
         });
 

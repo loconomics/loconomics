@@ -1354,7 +1354,7 @@
           <div class="ListView-item">
             <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
             data-bind="event: { tap: $root.selectAddress }">
-          <div><strong data-bind="text: addressName"></strong></div><div data-bind="text: singleLine"></div>
+          <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
         </a>
  <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress }"
             role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
@@ -1362,9 +1362,11 @@
           </div>
         </div>
       </div>
-      <div id="addressesAddNewButtons" class="isolated">
-        <button type="button" class="btn btn-primary btn-block" data-href="#!addressEditor/service/"
-        data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID()">Add new client location</button>
+      <div id="addressesAddNewButtons" class="isolated" data-bind="visible: !isSelectionMode()">
+        <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/service/"
+        data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceLocation'}">Add a service location</button>
+        <button type="button" class="btn btn-default btn-block"
+        data-href="#!addressEditor/service/" data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceArea'}">Add a service area</button>
       </div>
     </div>
     <!-- Activity services -->
