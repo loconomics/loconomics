@@ -122,6 +122,8 @@ exports.create = function create(appModel) {
                     setJobTitleCache(jobTitleID, data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    
+                    return data;
                 });
             } else {
                 api.state.isSyncing(true);
@@ -131,12 +133,14 @@ exports.create = function create(appModel) {
                     setJobTitleCache(jobTitleID, data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    
+                    return data;
                 });
             }
         }
         else {
             // From cache
-            return cacheEntry.list;
+            return Promise.resolve(cacheEntry.list);
         }
     };
     

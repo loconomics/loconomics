@@ -10,7 +10,7 @@ module.exports = {
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),
     'services': require('./activities/services'),
-    'locations': require('./activities/locations'),
+    'serviceAddresses': require('./activities/serviceAddresses'),
     'textEditor': require('./activities/textEditor'),
     'home': require('./activities/home'),
     'appointment': require('./activities/appointment'),

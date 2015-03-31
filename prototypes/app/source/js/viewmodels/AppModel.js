@@ -31,6 +31,7 @@ function AppModel() {
     this.jobTitles = require('./AppModel.jobTitles').create(this);
     this.userJobProfile = require('./AppModel.userJobProfile').create(this);
     this.appointments = require('./AppModel.appointments').create(this);
+    this.serviceAddresses = require('./AppModel.serviceAddresses').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);

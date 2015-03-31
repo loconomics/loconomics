@@ -1,13 +1,13 @@
 /**
-    locations activity
+    Service Addresses activity
 **/
 'use strict';
 
 var ko = require('knockout'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function LocationsActivity() {
-    
+var A = Activity.extends(function ServiceAddressesActivity() {
+
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.Freelancer;
@@ -15,8 +15,8 @@ var A = Activity.extends(function LocationsActivity() {
     this.navBar = Activity.createSubsectionNavBar('Scheduling');
     
     // Getting elements
-    this.$listView = this.$activity.find('#locationsListView');
-    
+    this.$listView = this.$activity.find('#addressesListView');
+
     // Handler to update header based on a mode change:
     this.registerHandler({
         target: this.viewModel.isSelectionMode,
@@ -39,6 +39,7 @@ var A = Activity.extends(function LocationsActivity() {
     // Handler to go back with the selected location when 
     // selection mode goes off and requestInfo is for
     // 'select mode'
+    // TODO: requestInfo->requestData, mix this with the previous handler for the same target.
     this.registerHandler({
         target: this.viewModel.isSelectionMode,
         handler: function (itIs) {
@@ -46,11 +47,11 @@ var A = Activity.extends(function LocationsActivity() {
             // it requested to select a location
             // and selection mode goes off
             if (this.requestInfo &&
-                this.requestInfo.selectLocation === true &&
+                this.requestInfo.selectAddress === true &&
                 itIs === false) {
 
                 // Pass the selected client in the info
-                this.requestInfo.selectedLocation = this.viewModel.selectedLocation();
+                this.requestInfo.selectedAddress = this.viewModel.selectedAddress();
                 // And go back
                 this.app.shell.goBack(this.requestInfo);
                 // Last, clear requestInfo
@@ -58,9 +59,6 @@ var A = Activity.extends(function LocationsActivity() {
             }
         }.bind(this)
     });
-    
-    // TestingData
-    this.viewModel.locations(require('../testdata/locations').locations);
 });
 
 exports.init = A.init;
@@ -68,17 +66,38 @@ exports.init = A.init;
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     
-    if (options.selectLocation === true) {
+    if (options.selectAddress === true) {
         this.viewModel.isSelectionMode(true);
         // preset:
-        this.viewModel.selectedLocation(options.selectedLocation);
+        this.viewModel.selectedAddress(options.selectedAddress);
     }
+    
+    var params = options && options.route && options.route.segments;
+    var jobTitleID = params[0] |0;
+    
+    this.viewModel.jobTitleID(jobTitleID);
+
+    // Updating list, for the jobTitle
+    if (jobTitleID) {
+        this.app.model.serviceAddresses.getList(jobTitleID)
+        .then(function(list) {
+
+            list = this.app.model.serviceAddresses.asModel(list);
+            this.viewModel.addresses(list);
+
+        }.bind(this));
+    }
+    else {
+        this.viewModel.addresses([]);
+    }
+    
+    /* TODO REVIEW, but redirection are not wanted anymore
     else if (options.route && options.route.segments) {
-        var id = options.route.segments[0];
+        var id = params[1] |0;
         if (id) {
             if (id === 'new') {
                 this.app.shell.go('locationEdition', {
-                    create: options.route.segments[1] // 'serviceRadius', 'serviceLocation'
+                    create: options.route.segments[1] // 'serviceRadius', 'serviceAddress'
                 });
             }
             else {
@@ -87,32 +106,37 @@ A.prototype.show = function show(options) {
                 });
             }
         }
-    }
+    }*/
 };
 
 function ViewModel(app) {
 
     this.headerText = ko.observable('Locations');
+    
+    this.jobTitleID = ko.observable(0);
 
-    // Full list of locations
-    this.locations = ko.observableArray([]);
+    // List of addresses
+    this.addresses = ko.observableArray([]);
+    
+    this.isLoading = app.model.serviceAddresses.state.isLoading;
 
     // Especial mode when instead of pick and edit we are just selecting
     // (when editing an appointment)
     this.isSelectionMode = ko.observable(false);
 
-    this.selectedLocation = ko.observable(null);
+    this.selectedAddress = ko.observable(null);
     
-    this.selectLocation = function(selectedLocation) {
+    this.selectAddress = function(selectedAddress) {
         
         if (this.isSelectionMode() === true) {
-            this.selectedLocation(selectedLocation);
+            this.selectedAddress(selectedAddress);
             this.isSelectionMode(false);
         }
         else {
-            app.shell.go('locationEdition', {
-                locationID: selectedLocation.locationID()
-            });
+            app.shell.go('addressEditor/service/' +
+                this.jobTitleID() +
+                '/' + selectedAddress.addressID()
+            );
         }
 
     }.bind(this);
