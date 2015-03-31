@@ -58,8 +58,9 @@ exports.create = function create(appModel) {
             if (userJobProfile) {
                 return mapToUserJobProfile(userJobProfile);
             }
-            // Throw error, so use catch to detect it
-            throw { name: 'NotFoundLocal', message: 'Not found on local storage' };
+            // Return null since there is no data, the promise can catch
+            // there is no data and attempt a remote
+            return null;
         });
     }
     
@@ -121,18 +122,27 @@ exports.create = function create(appModel) {
     **/
     api.getUserJobProfile = function () {
         // If no cache or must revalidate, go remote
+        // (the first loading is ever 'must revalidate')
         if (cache.userJobProfile.cache.mustRevalidate()) {
-            return fetchUserJobProfile();
+            // If no cache, is first load, so try local
+            if (!cache.userJobProfile.list) {
+                // Local storage
+                return getUserJobProfileFromLocal()
+                .then(function(data) {
+                    // launch remote for sync
+                    var remotePromise = fetchUserJobProfile();
+                    // Remote fallback: If no local, wait for remote
+                    return data ? data : remotePromise;
+                });
+            }
+            else {
+                // No cache, no local, or obsolete, go remote:
+                return fetchUserJobProfile();
+            }
         }
         else {
-            // First, try cache
-            if (cache.userJobProfile.list)
-                return Promise.resolve(cache.userJobProfile.list);
-            else
-                // Second, local storage
-                return getUserJobProfileFromLocal()
-                // Fallback to remote if not found in local
-                .catch(fetchUserJobProfile);
+            // There is cache and is still valid:
+            return Promise.resolve(cache.userJobProfile.list);
         }
     };
     

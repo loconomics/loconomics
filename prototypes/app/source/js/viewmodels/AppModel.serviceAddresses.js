@@ -44,11 +44,11 @@ exports.create = function create(appModel) {
         if (cacheEntry) {
             cacheEntry.list = list || [];
             cacheEntry.index = createIndex(list || [], 'addressID');
-            cacheEntry.control.latest = new Date();
         }
         else {
-            cache[jobTitleID] = newCacheEntry(list);
+            cacheEntry = cache[jobTitleID] = newCacheEntry(list);
         }
+        cacheEntry.control.latest = new Date();
     }
     
     function getJobTitleCache(jobTitleID) {
