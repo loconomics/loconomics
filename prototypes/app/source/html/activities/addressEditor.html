@@ -1,7 +1,12 @@
 <!-- Activity addressEditor -->
-<div class="container-fluid has-navbar" data-activity="addressEditor">
+<div class="container-fluid has-navbar" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
     <form role="form">
-        <h2 class="SectionTitle" data-bind="visible: header, text: header"></h2>
+        <h2 class="SectionTitle">
+            <span data-bind="text: header"></span>
+            <div class="loadingSpinner loadingSpinner--onRight">
+                <span class="glyphicon glyphicon-refresh"></span>
+            </div>
+        </h2>
 
         <fieldset class="isolated" data-bind="with: address()">
             

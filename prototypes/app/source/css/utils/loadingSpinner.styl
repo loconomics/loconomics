@@ -10,11 +10,14 @@
 @keyframes spin { 100% { transform:rotate(360deg); } }
 
 .loadingSpinner
-    font-size: 1.5em;
+    font-size: 1em;
     vertical-align: middle;
     transition: opacity 1.5s;
     opacity: 0;
     pointer-events: none;
+    
+    &.loadingSpinner--big
+        font-size: 1.5em;
 
     &.loadingSpinner--collapsed
         display: none;
@@ -29,6 +32,12 @@
         right: 0
         text-align: center
         background: white
+        
+    &.loadingSpinner--onRight
+        position: absolute
+        top: 0
+        right: 0
+        z-index: 9000
 
 .is-loading
     .loadingSpinner
@@ -45,3 +54,8 @@
 
     .loadingSpinner .glyphicon
         color $state-warning-text
+
+.SectionTitle
+    .loadingSpinner--onRight
+        padding: 7px
+            

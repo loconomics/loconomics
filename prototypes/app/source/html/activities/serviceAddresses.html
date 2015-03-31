@@ -2,11 +2,12 @@
 <div class="container-fluid" data-activity="serviceAddresses"
      data-bind="css: { 'is-loading': isLoading }">
 
-  <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Locations</h2>
-
-  <span class="loadingSpinner loadingSpinner--floating">
-    <span class="glyphicon glyphicon-refresh"></span>
-  </span>
+  <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">
+      Locations
+    <div class="loadingSpinner loadingSpinner--onRight">
+        <span class="glyphicon glyphicon-refresh"></span>
+    </div>
+  </h2>
     
   <div id="addressesListView">
     <div class="ListView ListView--twolines" data-bind="foreach: addresses">

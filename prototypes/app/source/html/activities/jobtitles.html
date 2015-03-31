@@ -1,6 +1,10 @@
 <!-- Jobtitles activity -->
-<div class="container-fluid" data-activity="jobtitles">
-  <h2 class="SectionTitle">Massage Therapist</h2>
+<div class="container-fluid" data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
+  <h2 class="SectionTitle">Massage Therapist
+    <div class="loadingSpinner loadingSpinner--onRight">
+        <span class="glyphicon glyphicon-refresh"></span>
+    </div>
+  </h2>
   <div class="ListView ListView--twolines ListView--textualmarker">
     <div class="ListView-item">
       <div class="ListView-item-marker">
