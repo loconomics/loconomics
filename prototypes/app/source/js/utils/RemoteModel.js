@@ -131,7 +131,7 @@ function RemoteModel(options) {
 
             // Event
             if (this.isLoading()) {
-                this.emit('load', serverData);
+                this.emit('loaded', serverData);
             }
             else {
                 this.emit('synced', serverData);
