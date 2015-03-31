@@ -69,7 +69,10 @@ exports.create = function create(appModel) {
     function setItemCache(groupID, itemID, item) {
         var cacheEntry = cache[groupID] || newCacheEntry([]),
             itemIndex = -1;
-        if (itemID) {
+        
+        // Check if exists, so is update or insertion
+        var exists = !!cacheEntry.index[itemID];
+        if (exists) {
             // Update entry
             itemIndex = cacheEntry.index[itemID];
             cacheEntry.list[itemIndex] = item;
@@ -209,14 +212,17 @@ exports.create = function create(appModel) {
         return pushToRemote(data)
         .then(function(serverData) {
             // Success! update local copy with returned data
+            // IMPORTANT: to use server data here so we get values set
+            // by the server, as updates dates and addressID when creating
+            // a new address.
             if (serverData) {
                 // Save in cache
-                setItemCache(data.jobTitleID, data.addressID, data);
+                setItemCache(serverData.jobTitleID, serverData.addressID, serverData);
                 // Save in local storage
                 // In local need to be saved all the grouped data, not just
                 // the item; since we have the cache list updated, use that
                 // full list to save local
-                pushToLocal(data.jobTitleID, getJobTitleCache(data.jobTitleID).list);
+                pushToLocal(serverData.jobTitleID, getJobTitleCache(serverData.jobTitleID).list);
             }
             api.state.isSaving(false);
 
