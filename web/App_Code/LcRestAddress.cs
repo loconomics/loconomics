@@ -412,6 +412,15 @@ public class LcRestAddress
             }
         }
 
+        // Presets
+        // If is a service area location and has no name, put automatically a name:
+        if (address.isServiceArea &&
+            String.IsNullOrWhiteSpace(address.addressName))
+        {
+            // TODO l10n preset address name for service area addresses
+            address.addressName = "Service Area";
+        }
+
         using (var db = Database.Open("sqlloco")) {
 
             // Different SQL for service addresses.
@@ -439,7 +448,8 @@ public class LcRestAddress
             return (int)db.QueryValue(sql,
                 address.addressID,
                 address.userID,
-                address.addressLine1,
+                // Cannot be null on database, but can be empty on some addresses (service radius)
+                address.addressLine1 ?? "",
                 address.addressLine2,
                 address.city,
                 address.stateProvinceID,
