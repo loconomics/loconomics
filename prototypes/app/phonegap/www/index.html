@@ -192,6 +192,62 @@
         </div>
       </div>
     </div>
+    <!-- Activity addressEditor -->
+    <div class="container-fluid has-navbar" data-activity="addressEditor"
+    data-bind="css: { 'is-loading': isLoading }">
+      <form role="form">
+         <h2 class="SectionTitle">
+            <span data-bind="text: header"></span>
+            <div class="loadingSpinner loadingSpinner--onRight">
+                <span class="glyphicon glyphicon-refresh"></span>
+            </div>
+        </h2>
+
+        <fieldset class="isolated" data-bind="with: address()">
+          <app-unlabeled-input params="placeholder: 'Zip code', value: postalCode, disable: $root.isLocked"></app-unlabeled-input>
+          <div data-bind="visible: isServiceArea">
+            <div class="form-group">
+              <label for="addressEditorRadius">Service radius</label>
+              <select class="form-control" id="addressEditorRadius"
+              data-bind="value: serviceRadius, disable: $root.isLocked">
+                <option value="0.5">0.5 mile</option>
+                <option value="1">1 mile</option>
+                <option value="2">2 miles</option>
+                <option value="3">3 miles</option>
+                <option value="4">4 miles</option>
+                <option value="5">5 miles</option>
+                <option value="10">10 miles</option>
+                <option value="25">25 miles</option>
+                <option value="50">50 miles</option>
+              </select>
+            </div>
+          </div>
+          <div data-bind="visible: isServiceLocation">
+            <div class="form-group">
+              <p class="form-control-static"> <span data-bind="visible: city() || stateProvinceCode()">
+                            <span data-bind="text: city"></span>,
+                <span
+                data-bind="text: stateProvinceCode"></span>
+                  </span>
+                  <!-- White space to reserve space -->&nbsp;</p>
+            </div>
+            <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Location name, e.g. `Joshua´s Appartment`', value: addressName, disable: $root.isLocked"></app-unlabeled-input>
+            <div class="form-group">
+              <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
+              <textarea rows="2" class="form-control" placeholder="Special instructions"
+              id="addressEditorSpecialInstructions" data-bind="value: specialInstructions, disable: $root.isLocked"></textarea>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+      <div class="navbar navbar-default ActivityNavbar">
+        <div class="container">
+          <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }, text: submitText, disable: $root.isLocked"></button>
+        </div>
+      </div>
+    </div>
     <!-- Activity appointment -->
     <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
@@ -830,8 +886,12 @@
       </div>
     </div>
     <!-- Jobtitles activity -->
-    <div class="container-fluid" data-activity="jobtitles">
-       <h2 class="SectionTitle">Massage Therapist</h2>
+    <div class="container-fluid" data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
+       <h2 class="SectionTitle">Massage Therapist
+    <div class="loadingSpinner loadingSpinner--onRight">
+        <span class="glyphicon glyphicon-refresh"></span>
+    </div>
+  </h2>
 
       <div class="ListView ListView--twolines ListView--textualmarker">
         <div class="ListView-item">
@@ -848,11 +908,12 @@
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
-          </div> <a href="/locations" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="/serviceAddresses" class="btn btn-link btn-block ListView-item-content"
+          data-bind="attr: { href: '/serviceAddresses/' + jobTitleID() }">
         <div>Service locations</div>
-        <div class="text-muted">2 locations</div>
+        <div class="text-muted" data-bind="text: addressesCount"></div>
       </a>
- <a href="/locations" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
+ <a href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: '/serviceAddresses/' + jobTitleID() }"><span class="glyphicon glyphicon-edit"></span></a>
 
         </div>
         <div class="ListView-item">
@@ -885,99 +946,6 @@
           </p>
           <p data-bind="visible: profile() === 'freelancer'">*Your free trial last 90 days and annual membership fees are currently
             $199.</p>
-      </div>
-    </div>
-    <!-- Activity locationEdition -->
-    <div class="container-fluid has-navbar" data-activity="locationEdition">
-      <form role="form">
-         <h2 class="SectionTitle" data-bind="visible: header, text: header"></h2>
-
-        <fieldset class="isolated" data-bind="with: location()">
-          <div class="form-group">
-            <label for="locationEditionPostalCode">Zip code</label>
-            <input type="number" class="form-control" id="locationEditionPostalCode"
-            data-bind="value: postalCode">
-          </div>
-          <div data-bind="visible: isServiceRadius">
-            <div class="form-group">
-              <label for="locationEditionRadius">Service radius</label>
-              <select class="form-control" id="locationEditionRadius"
-              data-bind="value: serviceRadius">
-                <option value="0.5">0.5 miles</option>
-                <option value="1">1 mile</option>
-                <option value="2">2 miles</option>
-                <option value="3">3 miles</option>
-                <option value="5">5 miles</option>
-                <option value="10">10 miles</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="locationEditionRadiusNumber">Service radius (miles)</label>
-              <input type="number" step=".5" class="form-control"
-              id="locationEditionRadiusNumber" placeholder="n miles" data-bind="value: serviceRadius">
-            </div>
-          </div>
-          <div data-bind="visible: isServiceLocation">
-            <div class="row">
-              <div class="form-group col-xs-8">
-                <label class="control-label">City</label>
-                <p class="form-control-static" data-bind="text: city">San Francisco</p>
-              </div>
-              <div class="form-group col-xs-4">
-                <label class="control-label">State</label>
-                <div>
-                  <p class="form-control-static" data-bind="text: stateProvinceCode">CA</p>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="locationEditionAddressLine1">Address</label>
-              <input type="text" class="form-control" id="locationEditionAddressLine1"
-              placeholder="street address" data-bind="value: addressLine1">
-            </div>
-            <div class="form-group">
-              <label for="locationEditionAddressLine2">Suite/apt No.</label>
-              <input type="text" class="form-control" id="locationEditionAddressLine2"
-              data-bind="value: addressLine2">
-            </div>
-            <div class="form-group">
-              <label for="locationEditionName">Location name</label>
-              <input type="text" class="form-control" id="locationEditionName"
-              data-bind="value: name">
-            </div>
-            <div class="form-group">
-              <label for="locationEditionSpecialInstructions">Special instructions</label>
-              <textarea rows="2" class="form-control" id="locationEditionSpecialInstructions"
-              data-bind="value: specialInstructions"></textarea>
-            </div>
-          </div>
-        </fieldset>
-      </form>
-      <div class="navbar navbar-default ActivityNavbar">
-        <div class="container">
-          <button type="button" class="btn btn-primary btn-block">Save and continue</button>
-        </div>
-      </div>
-    </div>
-    <!-- Activity locations -->
-    <div class="container-fluid" data-activity="locations">
-       <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Locations</h2>
-
-      <div id="locationsListView">
-        <div class="ListView ListView--twolines" data-bind="foreach: locations">
-          <div class="ListView-item">
-            <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
-            data-bind="event: { tap: $root.selectLocation }">
-          <div><strong data-bind="text: name"></strong></div><div data-bind="text: singleLine"></div>
-        </a>
- <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectLocation }"
-            role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
-
-          </div>
-        </div>
-      </div>
-      <div id="locationsAddNewButtons" class="isolated">
-        <button type="button" class="btn btn-primary btn-block" data-href="#!locations/new/serviceLocation">Add new client location</button>
       </div>
     </div>
     <!-- Activity login -->
@@ -1239,10 +1207,14 @@
       </form>
     </div>
     <!-- Scheduling activity -->
-    <div class="container-fluid" data-activity="scheduling">
-       <h2 class="SectionTitle">Services, Pricing, &amp; Locations</h2>
+    <div class="container-fluid" data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }">
+       <h2 class="SectionTitle">Services, Pricing, &amp; Locations
+        <div class="loadingSpinner loadingSpinner--onRight">
+            <span class="glyphicon glyphicon-refresh"></span>
+        </div>
+    </h2>
 
-      <div class="ListView ListView--twolines ListView--textualmarker" data-bind="css: { 'is-loading': isLoading }">
+      <div class="ListView ListView--twolines ListView--textualmarker">
         <!-- ko foreach: userJobProfile -->
         <div class="ListView-item">
           <div class="ListView-item-marker">
@@ -1256,9 +1228,6 @@
 
         </div>
         <!-- /ko -->
-        <div class="loadingSpinner loadingSpinner--floating"> <span class="glyphicon glyphicon-refresh"></span>
-
-        </div>
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
@@ -1385,6 +1354,35 @@
           </div>
         </div>
       </form>
+    </div>
+    <!-- Activity locations -->
+    <div class="container-fluid" data-activity="serviceAddresses" data-bind="css: { 'is-loading': isLoading }">
+       <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">
+      Locations
+    <div class="loadingSpinner loadingSpinner--onRight">
+        <span class="glyphicon glyphicon-refresh"></span>
+    </div>
+  </h2>
+
+      <div id="addressesListView">
+        <div class="ListView ListView--twolines" data-bind="foreach: addresses">
+          <div class="ListView-item">
+            <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
+            data-bind="event: { tap: $root.selectAddress }">
+          <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
+        </a>
+ <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress }"
+            role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
+
+          </div>
+        </div>
+      </div>
+      <div id="addressesAddNewButtons" class="isolated" data-bind="visible: !isSelectionMode()">
+        <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/service/"
+        data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceLocation'}">Add a service location</button>
+        <button type="button" class="btn btn-default btn-block"
+        data-href="#!addressEditor/service/" data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceArea'}">Add a service area</button>
+      </div>
     </div>
     <!-- Activity services -->
     <div class="container-fluid" data-activity="services">

@@ -2,8 +2,8 @@
 
 module.exports = {
     'libs': {
-        // Not sure if #709 affects this too, but being conservative until further investigation results
-        'options': { compress: false },
+        // Not sure if #709 affects this too, with some testing seems to not affect so left enabled but documented:
+        //'options': { compress: false, mangle: false },
         'files': {
             './build/assets/js/libs.min.js': ['<%= browserify.libs.dest %>']
         }
@@ -51,15 +51,17 @@ module.exports = {
             },*/
             
             // Reduce variable names
-            mangle: true
+            // IMPORTANT: Disabled because it cause the bug #709 to re-appear on some pages/activities,
+            // like scheduling/job-titles/addresses
+            mangle: false
         },
         'files': {
             './build/assets/js/app.min.js': ['<%= browserify.app.dest %>']
         }
     },
     'styleguidelibs': {
-        // Not sure if #709 affects this too, but being conservative until further investigation results
-        'options': { compress: false },
+        // Not sure if #709 affects this too, with some testing seems to not affect so left enabled but documented:
+        //'options': { compress: false, mangle: false },
         'files': {
             './build/assets/js/styleguidelibs.min.js': ['<%= browserify.styleguidelibs.dest %>']
         }
