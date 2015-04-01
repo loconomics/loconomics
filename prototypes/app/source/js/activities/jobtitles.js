@@ -20,6 +20,8 @@ var A = Activity.extends(function JobtitlesActivity() {
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
             if (jobTitleID) {
+                ////////////
+                // Addresses
                 this.app.model.serviceAddresses.getList(jobTitleID)
                 .then(function(list) {
 
@@ -28,6 +30,22 @@ var A = Activity.extends(function JobtitlesActivity() {
 
                 }.bind(this))
                 .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+                
+                ////////////
+                // Job Title
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function(err) {
                     this.app.modals.showError({
                         title: 'There was an error while loading.',
                         error: err
@@ -56,6 +74,7 @@ A.prototype.show = function show(state) {
 function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
+    this.jobTitleName = ko.observable('Job Title');
     
     this.addresses = ko.observable([]);
 

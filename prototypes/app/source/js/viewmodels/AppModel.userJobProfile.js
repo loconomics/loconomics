@@ -25,7 +25,7 @@ exports.create = function create(appModel) {
         };
     
     /**
-        Convert raw array of pricing types records into
+        Convert raw array of job titles records into
         an indexed array of models, actually an object
         with ID numbers as properties,
         and cache it in memory.
@@ -95,14 +95,16 @@ exports.create = function create(appModel) {
     /**
         Get the content from the cache, for full profile
         and save it in local storage
+        NOTE It has no sense in current implementation (problem of fetch
+        job title without a full job profile in cache/local)
     **/
-    function saveCacheInLocal() {
+    /*function saveCacheInLocal() {
         var plain = cache.userJobProfile.list.map(function(item) {
             // Each item is a model, get it in plain:
             return item.model.toPlainObject();
         });
         localforage.setItem('userJobProfile', plain);
-    }
+    }*/
     
     // Private, fetch from remote
     var fetchUserJobProfile = function () {
@@ -152,8 +154,14 @@ exports.create = function create(appModel) {
         .then(function(raw) {
             // Save to cache and get model
             var m = setGetUserJobTitleToCache(raw);
+            
+            // TODO implement cache saving for single job-titles, currently
+            // it needs to save the profile cache, that may not exists if
+            // the first request is for a single job title.
+            // Next lines are to save full profile, not valid here.
             // Save in local
-            saveCacheInLocal();
+            //saveCacheInLocal();
+            
             // Return model
             return m;
         });
@@ -193,6 +201,47 @@ exports.create = function create(appModel) {
                 .catch(fetchUserJobTitle.bind(null, jobTitleID));
             }
         }
+    };
+    
+    /*************************/
+    /** ADITIONAL UTILITIES **/
+    api.getUserJobTitleAndJobTitle = function getUserJobTitleAndJobTitle(jobTitleID) {
+        return api.getUserJobTitle(jobTitleID)
+        .then(function(userJobTitle) {
+            // Very unlikely error
+            if (!userJobTitle) {
+                throw {
+                    name: 'Not Found',
+                    message:
+                        // LJDI:
+                        'You have not this job title in your profile. ' + 
+                        'Maybe was deleted from your profile recently.'
+                };
+            }
+
+            // Get job title info too
+            return Promise.all([
+                userJobTitle,
+                appModel.jobTitles.getJobTitle(jobTitleID)
+            ]);
+        })
+        .then(function(all) {
+            var jobTitle = all[1];
+            // Very unlikely error
+            if (!jobTitle) {
+                throw {
+                    name: 'Not Found',
+                    // LJDI:
+                    message: 'The job title does not exist.'
+                };
+            }
+        
+            return {
+                jobTitleID: jobTitleID,
+                userJobTitle: all[0],
+                jobTitle: jobTitle
+            };
+        });
     };
     
     return api;

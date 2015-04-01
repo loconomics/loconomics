@@ -1,6 +1,7 @@
 <!-- Jobtitles activity -->
 <div class="container-fluid" data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
-  <h2 class="SectionTitle">Massage Therapist
+  <h2 class="SectionTitle">
+      <span data-bind="text: jobTitleName">Job Title</span>
     <div class="loadingSpinner loadingSpinner--onRight">
         <span class="glyphicon glyphicon-refresh"></span>
     </div>
@@ -10,11 +11,13 @@
       <div class="ListView-item-marker">
         <p><span class="glyphicon glyphicon-tag"></span></p>
       </div>
-      <a href="/services/106" class="btn btn-link btn-block ListView-item-content">
+      <a href="/pricing" class="btn btn-link btn-block ListView-item-content"
+         data-bind="attr: { href: '/pricing/' + jobTitleID() }">
         <div>Pricing and services</div>
         <div class="text-muted">7 services</div>
       </a>
-      <a href="/services/106" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
+      <a href="/pricing" class="btn btn-link ListView-item-action"
+         data-bind="attr: { href: '/pricing/' + jobTitleID() }"><span class="glyphicon glyphicon-edit"></span></a>
     </div>
     <div class="ListView-item">
       <div class="ListView-item-marker">
