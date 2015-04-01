@@ -71,7 +71,7 @@ exports.create = function create(appModel) {
             itemIndex = -1;
         
         // Check if exists, so is update or insertion
-        var exists = !!cacheEntry.index[itemID];
+        var exists = cacheEntry.index[itemID] >= 0;
         if (exists) {
             // Update entry
             itemIndex = cacheEntry.index[itemID];

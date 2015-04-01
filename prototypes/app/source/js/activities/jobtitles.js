@@ -16,9 +16,12 @@ var A = Activity.extends(function JobtitlesActivity() {
     
     // On changing jobTitleID:
     // - load addresses
+    // - load job title information
+    // - load pricing
     this.registerHandler({
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
+
             if (jobTitleID) {
                 ////////////
                 // Addresses
@@ -54,6 +57,7 @@ var A = Activity.extends(function JobtitlesActivity() {
             }
             else {
                 this.viewModel.addresses([]);
+                this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
@@ -64,9 +68,14 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
+    // Reset: avoiding errors because persisted data for different ID on loading
+    // or outdated info forcing update
+    this.viewModel.jobTitleID(0);
+
+    // Parameters
     var params = state && state.route && state.route.segments || {};
     
-    //// Set the job title
+    // Set the job title
     var jobID = params[0] |0;
     this.viewModel.jobTitleID(jobID);
 };

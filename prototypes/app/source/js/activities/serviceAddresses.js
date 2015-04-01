@@ -12,11 +12,46 @@ var A = Activity.extends(function ServiceAddressesActivity() {
 
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
+    this.navBar = Activity.createSubsectionNavBar('Job Title');
     
     // Getting elements
     this.$listView = this.$activity.find('#addressesListView');
 
+    // On changing jobTitleID:
+    // - load addresses
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+            if (jobTitleID) {
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+                    // Fill in job title name
+                    this.navBar.leftAction().text(jobTitle.singularName());
+                    
+                    // Get addresses
+                    return this.app.model.serviceAddresses.getList(jobTitleID);
+                }.bind(this))
+                .then(function(list) {
+
+                    list = this.app.model.serviceAddresses.asModel(list);
+                    this.viewModel.addresses(list);
+
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.addresses([]);
+                this.navBar.leftAction().text('Job Title');
+            }
+        }.bind(this)
+    });
+    
     // Handler to update header based on a mode change:
     this.registerHandler({
         target: this.viewModel.isSelectionMode,
@@ -66,6 +101,10 @@ exports.init = A.init;
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     
+    // Reset: avoiding errors because persisted data for different ID on loading
+    // or outdated info forcing update
+    this.viewModel.jobTitleID(0);
+    
     if (options.selectAddress === true) {
         this.viewModel.isSelectionMode(true);
         // preset:
@@ -76,26 +115,6 @@ A.prototype.show = function show(options) {
     var jobTitleID = params[0] |0;
     
     this.viewModel.jobTitleID(jobTitleID);
-
-    // Updating list, for the jobTitle
-    if (jobTitleID) {
-        this.app.model.serviceAddresses.getList(jobTitleID)
-        .then(function(list) {
-
-            list = this.app.model.serviceAddresses.asModel(list);
-            this.viewModel.addresses(list);
-
-        }.bind(this))
-        .catch(function (err) {
-            this.app.modals.showError({
-                title: 'There was an error while loading.',
-                error: err
-            });
-        }.bind(this));
-    }
-    else {
-        this.viewModel.addresses([]);
-    }
     
     /* TODO REVIEW, but redirection are not wanted anymore
     else if (options.route && options.route.segments) {

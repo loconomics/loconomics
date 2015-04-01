@@ -18,6 +18,41 @@ var A = Activity.extends(function PricingActivity() {
 
     this.viewModel = new ViewModel();
     
+    // On changing jobTitleID:
+    // - load pricing
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+            
+            if (jobTitleID) {
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+                    // Fill in job title name
+                    this.navBar.leftAction().text(jobTitle.singularName());
+                    
+                    // Get pricing
+                    return null; //this.viewModel.services(userJobtitle.services());
+                }.bind(this))
+                .then(function(pricing) {
+                    // TODO Load job title pricing on this activity:
+                    //this.viewModel.services(userJobtitle.services());
+                    console.log('Job Title Pricing/Services load not supported still', pricing);
+                })
+                .catch(function(err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.pricing([]);
+                this.navBar.leftAction().text('Job Title');
+            }
+        }.bind(this)
+    });
+    
     // Handler to go back with the selected service when 
     // selection mode goes off and requestData is for
     // 'select mode'
@@ -48,32 +83,14 @@ A.prototype.show = function show(options) {
 
     Activity.prototype.show.call(this, options);
     
+    // Reset: avoiding errors because persisted data for different ID on loading
+    // or outdated info forcing update
+    this.viewModel.jobTitleID(0);
+    
     var params = options && options.route && options.route.segments || [];
     
     // Get jobTitleID
-    var jobTitleID = params[0] |0;
-
-    if (jobTitleID) {
-        // Get data for the Job title ID
-        this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
-        .then(function(info) {
-            
-            // info: { jobTitleID, jobTitle, userJobTitle }
-            var jobTitle = info.jobTitle;
-            
-            // Fill in job title name
-            this.navBar.leftAction().text(jobTitle.singularName());
-            
-            // TODO Load job title pricing on this activity:
-            //this.viewModel.services(userJobtitle.services());
-            console.log('Job Title Pricing/Services load not supported still');
-        }.bind(this))
-        .catch(function(err) {
-            this.app.modals.showError({
-                error: err
-            });
-        }.bind(this));
-    }
+    this.viewModel.jobTitleID(params[0] |0);
 
     if (this.requestData.selectPricing === true) {
         this.viewModel.isSelectionMode(true);
@@ -105,6 +122,7 @@ function ViewModel() {
 
     // Full list of services
     this.pricing = ko.observableArray([]);
+    this.jobTitleID = ko.observable(0);
     this.isLoading = ko.observable(false);
     this.isLocked = this.isLoading;
 
