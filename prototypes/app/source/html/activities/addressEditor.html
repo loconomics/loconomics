@@ -10,7 +10,7 @@
 
         <fieldset class="isolated" data-bind="with: address()">
             
-            <app-unlabeled-input params="placeholder: 'Zip code', value: postalCode, disable: $root.isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Zip code', value: postalCode, disable: $root.isLocked, type: 'number'"></app-unlabeled-input>
             
             <div data-bind="visible: isServiceArea">
                 <div class="form-group">

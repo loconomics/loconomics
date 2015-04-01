@@ -203,7 +203,7 @@
         </h2>
 
         <fieldset class="isolated" data-bind="with: address()">
-          <app-unlabeled-input params="placeholder: 'Zip code', value: postalCode, disable: $root.isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Zip code', value: postalCode, disable: $root.isLocked, type: 'number'"></app-unlabeled-input>
           <div data-bind="visible: isServiceArea">
             <div class="form-group">
               <label for="addressEditorRadius">Service radius</label>
@@ -1674,7 +1674,7 @@
     <!-- Component Template unlabeled-input -->
     <script type="text/html" id="unlabeled-input-template">
       <div class="form-group">
-        <input type="text" class="form-control" data-bind="textInput: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder }, disable: disable">
+        <input type="text" class="form-control" data-bind="textInput: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder, type: type }, disable: disable">
       </div>
     </script>
   </body>

@@ -38,6 +38,10 @@ exports.registerAll = function() {
             this.value = getObservable(params.value);
             this.placeholder = getObservable(params.placeholder);
             this.disable = getObservable(params.disable);
+            var type = getObservable(params.type);
+            this.type = ko.computed(function() {
+                return type() || 'text';
+            }, this);
         }
     });
     
