@@ -253,6 +253,8 @@ exports.create = function create(appModel) {
         });
     };
     
+    /** Some Utils **/
+    
     api.asModel = function asModel(object) {
         // if is an array, return a list of models
         if (Array.isArray(object)) {
@@ -263,6 +265,30 @@ exports.create = function create(appModel) {
         else {
             return new Address(object);
         }
+    };
+    
+    api.getItemModel = function getItemModel(jobTitleID, addressID) {
+        return api.getItem(jobTitleID, addressID)
+        .then(function(data) {
+            return data ? api.asModel(data) : null;
+        });
+    };
+    
+    var ModelVersion = require('../utils/ModelVersion');
+    api.getItemVersion = function getItemVersion(jobTitleID, addressID) {
+        return api.getItemModel(jobTitleID, addressID)
+        .then(function(model) {
+            return model ? new ModelVersion(model) : null;
+        });
+    };
+    
+    api.newItemVersion = function newItemVersion(values) {
+        // New original and version for the model
+        var version = new ModelVersion(new Address(values));
+        // To be sure that the version appear as something 'new', unsaved,
+        // we update its timestamp to be different to the original.
+        version.version.model.touch();
+        return version;
     };
     
     return api;

@@ -208,17 +208,7 @@
             <div class="form-group">
               <label for="addressEditorRadius">Service radius</label>
               <select class="form-control" id="addressEditorRadius"
-              data-bind="value: serviceRadius, disable: $root.isLocked">
-                <option value="0.5">0.5 mile</option>
-                <option value="1">1 mile</option>
-                <option value="2">2 miles</option>
-                <option value="3">3 miles</option>
-                <option value="4">4 miles</option>
-                <option value="5">5 miles</option>
-                <option value="10">10 miles</option>
-                <option value="25">25 miles</option>
-                <option value="50">50 miles</option>
-              </select>
+              data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked"></select>
             </div>
           </div>
           <div data-bind="visible: isServiceLocation">

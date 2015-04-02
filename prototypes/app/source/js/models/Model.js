@@ -294,6 +294,29 @@ Model.prototype.clone = function clone(data, deepCopy) {
         // of derived objects.
         cloned.model.updateWith(data);
     }
+    else {
+        // Since there is no initial differential data, ensure the
+        // same timestamp since the clone is still identical to the source
+        cloned.model.dataTimestamp(this.modelObject.model.dataTimestamp());
+    }
     // Cloned model ready:
     return cloned;
+};
+
+/**
+    Updates the dataTimestamp to the current unique datetime,
+    so the model appear as touched/updated, even if not data change.
+    Useful sometimes to make a difference from a cloned instance
+    so appear different.
+    NOTE: the datetime set is not exactly the current one, is the current
+    number of milliseconds plus one,
+    to ensure that the timestamp is different on edge cases where this
+    method is called just after a creation or clonation, because the way
+    javascript works and the limited milliseconds precision of the Date object
+    there is a chance that the 'touched' date will be the same as before,
+    thats avoided with this simple trick, so remains 'unique' in the current execution.
+**/
+Model.prototype.touch = function touch() {
+    // We use the function way to get milliseconds, add 1 and create instance
+    this.dataTimestamp(new Date(Date() + 1));
 };

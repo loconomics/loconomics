@@ -42,16 +42,19 @@ A.prototype.show = function show(options) {
         // Only used on service address creation, instead an ID we get
         // a string for 'serviceArea' or 'serviceLocation')
         serviceType = params[2] || '';
+    
+    this.viewModel.jobTitleID(jobTitleID);
+    this.viewModel.addressID(addressID);
 
     if (addressID) {
         // Get the address
-        this.app.model.serviceAddresses.getItem(jobTitleID, addressID)
-        .then(function (address) {
-            if (address) {
-                this.viewModel.address(new Address(address));
+        this.app.model.serviceAddresses.getItemVersion(jobTitleID, addressID)
+        .then(function (addressVersion) {
+            if (addressVersion) {
+                this.viewModel.addressVersion(addressVersion);
                 this.viewModel.header('Edit Location');
             } else {
-                this.viewModel.address(null);
+                this.viewModel.addressVersion(null);
                 this.viewModel.header('Unknow location or was deleted');
             }
         }.bind(this))
@@ -64,7 +67,7 @@ A.prototype.show = function show(options) {
     }
     else {
         // New address
-        this.viewModel.address(new Address({
+        this.viewModel.addressVersion(this.app.model.serviceAddresses.newItemVersion({
             jobTitleID: jobTitleID
         }));
 
@@ -92,19 +95,32 @@ function ViewModel(app) {
 
     this.header = ko.observable('Edit Location');
     
-    this.address = ko.observable(new Address());
+    this.jobTitleID = ko.observable(0);
+    this.addressID = ko.observable(0);
+    
+    this.addressVersion = ko.observable(null);
+    this.address = ko.pureComputed(function() {
+        var v = this.addressVersion();
+        if (v) {
+            return v.version;
+        }
+        return null;
+    }, this);
     this.isLoading = app.model.serviceAddresses.state.isLoading;
     this.isSaving = app.model.serviceAddresses.state.isSaving;
     
     this.isLocked = app.model.serviceAddresses.state.isLocked;
 
     this.submitText = ko.pureComputed(function() {
+        var v = this.addressVersion();
         return (
             this.isLoading() ? 
                 'loading...' : 
                 this.isSaving() ? 
                     'saving...' : 
-                    'Save'
+                    v && v.areDifferent() ?
+                        'Save' :
+                        'Saved'
         );
     }, this);
 
@@ -112,7 +128,10 @@ function ViewModel(app) {
 
         app.model.serviceAddresses.setItem(this.address().model.toPlainObject())
         .then(function(serverData) {
+            // Update version with server data.
             this.address().model.updateWith(serverData);
+            // Push version so it appears as saved
+            this.addressVersion().push({ evenIfObsolete: true });
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
@@ -122,4 +141,24 @@ function ViewModel(app) {
         });
 
     }.bind(this);
+    
+    /**
+        Typed value binding rather than html binding allow to avoid
+        problems because the data in html are string values while
+        the actual data from the model is a number.
+        Cause problems on some edge cases matching values and with
+        detection of changes in the data (because the binding coming from the
+        control assigning a string to the value).
+    **/
+    this.serviceRadiusOptions = ko.observableArray([
+        { value: 0.5, label: '0.5 miles' },
+        { value: 1.0, label: '1 mile' },
+        { value: 2.0, label: '2 miles' },
+        { value: 3.0, label: '3 miles' },
+        { value: 4.0, label: '4 miles' },
+        { value: 5.0, label: '5 miles' },
+        { value: 10, label: '10 miles' },
+        { value: 25, label: '25 miles' },
+        { value: 50, label: '50 miles' },
+    ]);
 }
