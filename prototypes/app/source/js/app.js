@@ -308,6 +308,11 @@ var appInit = function appInit() {
         if (activity.hide)
             activity.hide();
     });
+    // Catch errors on item/page loading, showing..
+    app.shell.on('error', function(err) {
+        app.modals.showError({ error: err });
+    });
+
     
     // Set model for the AppNav
     ko.applyBindings({

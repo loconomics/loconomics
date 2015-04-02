@@ -22,14 +22,16 @@ var $ = require('jquery');
     - Object with 'errors' property. Each element in the array or object own keys
       is appended to the errorMessage or message separated by newline.
 **/
-exports.getErrorMessageFrom = function getErrorMessageFrom(err) {
-    /*jshint maxcomplexity:10*/
+exports.getErrorMessageFrom = function getErrorMessageFrom(err, defaultText) {
+    /*jshint maxcomplexity:14, maxdepth:5*/
 
+    defaultText = defaultText || 'Unknow error';
+    
     if (!err) {
-        return 'Unknow error';
+        return defaultText;
     }
     else if (typeof(err) === 'string') {
-        return err;
+        return err || defaultText;
     }
     else {
         // If is a XHR object, use its response as the error.
@@ -39,23 +41,52 @@ exports.getErrorMessageFrom = function getErrorMessageFrom(err) {
         msg += err.errorMessage || err.message || '';
 
         if (err.errors) {
-            if (Array.isArray(err.errors)) {
-                msg += '\n' + err.errors.join('\n');
-            }
-            else {
-                Object.keys(err.errors).forEach(function(key) {
-                    msg += '\n' + err.errors[key].join('\n');
-                });
-            }
+            msg += '\n' + exports.stringifyErrorsList(err.errors);
         }
         else {
-            msg += '\nTechnical details: ' + JSON.stringify(err);
+            // Avoiding that en error converting the object (circular references)
+            // breaks the error control!
+            try {
+                var jserr = JSON.stringify(err);
+                // Avoiding that empty results (empty string or empty object when there
+                // is no details to show) makes us to show an annoying 'technical details'
+                if (jserr && jserr !== '{}')
+                    msg += '\nTechnical details: ' + jserr;
+            }
+            catch (ex) {
+                console.log('Impossible to stringify JSON error', err, ex);
+            }
         }
 
-        return msg;
+        return msg || defaultText;
     }
 };
 
+exports.stringifyErrorsList = function (errors) {
+    var msg = '';
+    if (Array.isArray(errors)) {
+        msg = errors.join('\n');
+    }
+    else {
+        msg = Object.keys(errors).map(function(key) {
+            return errors[key].join('\n');
+        }).join('\n');
+    }
+    return msg;
+};
+
+/**
+    Show an error modal to notify the user.
+    @param options:Object {
+        message:string DEPRECATED. Optional. Informative error message.
+        error:string Optional. Error/Exception/XHR object, used to auto
+            generate the error message. It takes precedence over 'message'
+            option, discarding an error object/string is passed.
+            It replaces 'message' since can do the same and more.
+        title:string Optional. The text to show in the modal's header,
+            with fallback to the Modal's default title.
+    }
+**/
 exports.showError = function showErrorModal(options) {
     
     var modal = $('#errorModal'),
@@ -64,12 +95,12 @@ exports.showError = function showErrorModal(options) {
     
     options = options || {};
     
+    // Fallback error message
     var msg = body.data('default-text');
 
-    if (options.error)
-        msg = exports.getErrorMessageFrom(options.error);
-    else if (options.message)
-        msg = options.message;
+    // Error message from given error object, with fallback to default one.
+    // DEPRECATED temporarly using the 'message' option.
+    msg = exports.getErrorMessageFrom(options.error || options.message, msg);
 
     body.multiline(msg);
 
