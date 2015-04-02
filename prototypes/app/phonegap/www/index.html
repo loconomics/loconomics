@@ -209,17 +209,7 @@
             <div class="form-group">
               <label for="addressEditorRadius">Service radius</label>
               <select class="form-control" id="addressEditorRadius"
-              data-bind="value: serviceRadius, disable: $root.isLocked">
-                <option value="0.5">0.5 mile</option>
-                <option value="1">1 mile</option>
-                <option value="2">2 miles</option>
-                <option value="3">3 miles</option>
-                <option value="4">4 miles</option>
-                <option value="5">5 miles</option>
-                <option value="10">10 miles</option>
-                <option value="25">25 miles</option>
-                <option value="50">50 miles</option>
-              </select>
+              data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked"></select>
             </div>
           </div>
           <div data-bind="visible: isServiceLocation">
@@ -1143,6 +1133,9 @@
     <!-- Pricing Activity -->
     <div class="container-fluid" data-activity="pricing">
       <div>
+        <div class="loadingSpinner loadingSpinner--floating"> <span class="glyphicon glyphicon-refresh"></span>
+
+        </div>
         <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedPricing">
           <div class="ListView-divider SectionTitle"> <span data-bind="text: group"></span>
 
@@ -1390,11 +1383,13 @@
     </div>
     <!-- Activity locations -->
     <div class="container-fluid" data-activity="serviceAddresses" data-bind="css: { 'is-loading': isLoading }">
-       <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">
-      Locations
-    <div class="loadingSpinner loadingSpinner--onRight">
+       <h2 class="SectionTitle">
+      <span data-bind="visible: headerText, text: headerText">
+        Locations
+      </span>
+      <div class="loadingSpinner loadingSpinner--onRight">
         <span class="glyphicon glyphicon-refresh"></span>
-    </div>
+      </div>
   </h2>
 
       <div id="addressesListView">
