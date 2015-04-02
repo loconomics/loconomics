@@ -272,11 +272,38 @@ Shell.prototype.run = function run() {
         shell.replace(state);
     });
 
-    // Catch all links in the page (not only $root ones) and like-links
+    // Catch all links in the page (not only $root ones) and like-links.
+    // IMPORTANT: the timeout and linkWorking is a kind of hack/workaround because of:
+    // - iOS click delay: changing linkEvent to be 'tap click' (jqm tap event) or 
+    //   more standard but simplistic 'touchend click', only on iOS if possible, the
+    //   iOS click delay can be avoided, letting the touch event to trigger this Shell handler
+    //   and preventing the click from happening to avoid double execution
+    //   (thanks to linkWorking and setTimeout).
+    //   A broken alternative would be to use only one event, like 'tap' or 'touchend', but
+    //   they fall down when a touch gesture happens in the limit of a link/element because
+    //   a touchstart happens out of our target link -failing touchend and tap since don't 
+    //   get triggered in our link- but the browser/webview still executes (and inmediatly)
+    //   the 'click' event on the link. It seems an edge case but is easier to make it happens
+    //   than it seems. It's the bug that forced to implement this workaournd :-/
+    // - And additionally: it prevents wo 'clicks' from happening excessive fast because
+    //   some kind of a second unwanted touch happening very fast, making
+    //   a click by mistake on a different link on the loaded new page.
+    var linkWorking = null,
+        // iOS 300ms delay, a bit increased to avoid problems.
+        linkWorkingDelay = 340;
+    //DEBUG var linkEvent = this.linkEvent;
     this.$(document).on(this.linkEvent, '[href], [data-href]', function(e) {
-        
+        //DEBUG console.log('Shell on event', e.type, linkWorking);
+        // If working, avoid everything:
+        if (linkWorking) return false;
+        linkWorking = setTimeout(function() {
+            linkWorking = null;
+        }, linkWorkingDelay);
+
         var $t = shell.$(this),
             href = $t.attr('href') || $t.data('href');
+        
+        //DEBUG console.log('Shell on', linkEvent, e.type, 'href', href, 'element', $t);
 
         // Do nothing if the URL contains the protocol
         if (/^[a-z]+:/i.test(href)) {
@@ -289,7 +316,6 @@ Shell.prototype.run = function run() {
         }
 
         e.preventDefault();
-        //? e.stopImmediatePropagation();
 
         // Executed delayed to avoid handler collisions, because
         // of the new page modifying the element and other handlers

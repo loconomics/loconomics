@@ -30,16 +30,11 @@ var shell = new Shell({
     indexName: 'index',
 
     // WORKAROUND: Using the 'tap' event for faster mobile experience
-    // (from jquery-mobile event) on iOS devices, but left
+    // (from jquery-mobile event) on iOS devices with fallback to 'click'
+    // (the shell is ready to manage multiple events but firing once), but left
     // 'click' on others since they has not the slow-click problem
     // thanks to the meta-viewport.
-    // WORKAROUND: IMPORTANT, using 'click' rather than 'tap' on Android
-    // prevents an app crash (or go out and page not found on Chrome for Android)
-    // because of some 'clicks' happening on
-    // a half-link-element tap, where the 'tap' event detects as target the non-link and the
-    // link gets executed anyway by the browser, not catched so Webview moves to 
-    // a non existant file (and thats make PhoneGap to crash).
-    linkEvent: iOS ? 'tap' : 'click',
+    linkEvent: iOS ? 'tap click' : 'click',
 
     // No need for loader, everything comes bundled
     loader: null,
