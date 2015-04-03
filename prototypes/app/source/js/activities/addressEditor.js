@@ -33,6 +33,10 @@ A.prototype.show = function show(options) {
     //jshint maxcomplexity:10    
     Activity.prototype.show.call(this, options);
     
+    // Reset
+    this.viewModel.wasRemoved(false);
+    
+    // Params    
     var params = options && options.route && options.route.segments || [];
 
     var kind = params[0] || '',
@@ -109,7 +113,16 @@ function ViewModel(app) {
     this.isLoading = app.model.serviceAddresses.state.isLoading;
     this.isSaving = app.model.serviceAddresses.state.isSaving;
     
-    this.isLocked = app.model.serviceAddresses.state.isLocked;
+    this.isRemoving = ko.observable(false);
+    this.wasRemoved = ko.observable(false);
+    
+    this.isLocked = ko.computed(function() {
+        return this.isRemoving() || app.model.serviceAddresses.state.isLocked();
+    }, this);
+    
+    this.isNew = ko.pureComputed(function() {
+        return !this.address().updatedDate();
+    }, this);
 
     this.submitText = ko.pureComputed(function() {
         var v = this.addressVersion();
@@ -121,6 +134,14 @@ function ViewModel(app) {
                     v && v.areDifferent() ?
                         'Save' :
                         'Saved'
+        );
+    }, this);
+    
+    this.deleteText = ko.pureComputed(function() {
+        return (
+            this.isRemoving() ? 
+                'deleting...' : 
+                'Delete'
         );
     }, this);
 
@@ -140,6 +161,38 @@ function ViewModel(app) {
             });
         });
 
+    }.bind(this);
+    
+    this.confirmRemoval = function() {
+        app.modals.confirm({
+            title: 'Delete location',
+            message: 'Are you sure? The operation cannot be undone.',
+            yes: 'Delete',
+            no: 'Keep'
+        })
+        .then(function() {
+            this.remove();
+        }.bind(this));
+    }.bind(this);
+
+    this.remove = function() {
+        this.isRemoving(true);
+        app.model.serviceAddresses.delItem(this.jobTitleID(), this.addressID())
+        .then(function() {
+            this.wasRemoved(true);
+            // Go out the deleted location
+            app.shell.goBack();
+        }.bind(this))
+        .catch(function(err) {
+            app.modals.showError({
+                title: 'There was an error while deleting.',
+                error: err
+            });
+        })
+        .then(function(){
+            // Always:
+            this.isRemoving(false);
+        }.bind(this));
     }.bind(this);
     
     /**

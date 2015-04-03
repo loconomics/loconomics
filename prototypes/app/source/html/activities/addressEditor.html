@@ -1,6 +1,6 @@
 <!-- Activity addressEditor -->
 <div class="container-fluid has-navbar" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
-    <form role="form">
+    <form role="form" data-bind="submit: save">
         <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
             <div class="loadingSpinner loadingSpinner--onRight">
@@ -42,14 +42,14 @@
                 </div>
             </div>
         </fieldset>
-  </form>
 
-  <div class="navbar navbar-default ActivityNavbar">
-    <div class="container">
-      <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }, text: submitText, disable: $root.isLocked">
+      <div class="navbar navbar-default ActivityNavbarDISABLED">
+        <div>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked"></button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
+        </div>
+      </div>
         
-      </button>
-    </div>
-  </div>
+  </form>
 
 </div>

@@ -96,6 +96,29 @@
         </div>
       </div>
     </nav>
+    <!-- confirmModal -->
+    <div id="confirmModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="confirmModal-label"
+    aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+             <h4 class="modal-title" id="confirmModal-label" data-default-text="Confirmation">Confirmation</h4>
+
+          </div>
+          <div class="modal-body">
+            <p id="confirmModal-body" data-default-text="Are you sure?"></p>
+          </div>
+          <div class="modal-footer">
+            <button id="confirmModal-noBtn" type="button" class="btn btn-default"
+            data-default-text="No" data-dismiss="modal">No</button>
+            <button id="confirmModal-yesBtn" type="button" class="btn btn-default"
+            data-default-text="Yes" data-dismiss="modal">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- errorModal -->
     <div id="errorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="errorModal-label"
     aria-hidden="true" data-backdrop="static">
@@ -194,7 +217,7 @@
     <!-- Activity addressEditor -->
     <div class="container-fluid has-navbar" data-activity="addressEditor"
     data-bind="css: { 'is-loading': isLoading }">
-      <form role="form">
+      <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
             <div class="loadingSpinner loadingSpinner--onRight">
@@ -230,12 +253,13 @@
             </div>
           </div>
         </fieldset>
-      </form>
-      <div class="navbar navbar-default ActivityNavbar">
-        <div class="container">
-          <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }, text: submitText, disable: $root.isLocked"></button>
+        <div class="navbar navbar-default ActivityNavbarDISABLED">
+          <div>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked"></button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
     <!-- Activity appointment -->
     <div class="container-fluid" data-activity="appointment">

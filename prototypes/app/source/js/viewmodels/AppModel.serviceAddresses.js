@@ -89,7 +89,7 @@ exports.create = function create(appModel) {
         if (cacheEntry) {
             var itemIndex = cacheEntry.index[itemID];
             // Update list removing the element in place, without holes
-            cacheEntry.splice(itemIndex, 1);
+            cacheEntry.list.splice(itemIndex, 1);
             // Update index by:
             // - Remove itemID entry
             delete cacheEntry.index[itemID];
@@ -121,7 +121,13 @@ exports.create = function create(appModel) {
                 return fetchFromLocal(jobTitleID)
                 .then(function(data) {
                     // launch remote for sync
-                    var remotePromise = fetchFromRemote(jobTitleID);
+                    api.state.isSyncing(true);
+                    var remotePromise = fetchFromRemote(jobTitleID)
+                    .then(function(serverData) {
+                        setJobTitleCache(jobTitleID, serverData);
+                        pushToLocal(jobTitleID, serverData);
+                        api.state.isSyncing(false);
+                    });
                     // Remote fallback: If no local, wait for remote
                     return data ? data : remotePromise;
                 })
@@ -129,7 +135,6 @@ exports.create = function create(appModel) {
                     setJobTitleCache(jobTitleID, data);
                     pushToLocal(jobTitleID, data);
                     api.state.isLoading(false);
-                    api.state.isSyncing(false);
                     
                     return data;
                 })
@@ -242,7 +247,7 @@ exports.create = function create(appModel) {
     api.delItem = function delItem(jobTitleID, addressID) {
         // Remove in remote first
         return removeFromRemote(jobTitleID, addressID)
-        .then(function(/*removedData*/) {
+        .then(function(removedData) {
             // Update cache
             delItemCache(jobTitleID, addressID);
             // Save in local storage
@@ -250,6 +255,8 @@ exports.create = function create(appModel) {
             // since we have the cache list updated, use that
             // full list to save local
             pushToLocal(jobTitleID, getJobTitleCache(jobTitleID).list);
+            
+            return removedData;
         });
     };
     
