@@ -86,8 +86,11 @@ Activity.prototype.show = function show(options) {
             else if (settings.selector) {
                 settings.target.on(settings.event, settings.selector, settings.handler);
             }
-            else {
+            else if (settings.target.on) {
                 settings.target.on(settings.event, settings.handler);
+            }
+            else {
+                console.error('Activity.show: Bad registered handler', settings);
             }
         });
         // To avoid double connections:
@@ -122,8 +125,11 @@ Activity.prototype.hide = function hide() {
                 else
                     settings.target.off(settings.event, settings.handler);
             }
-            else {
+            else if (settings.target.removeListener) {
                 settings.target.removeListener(settings.event, settings.handler);
+            }
+            else {
+                console.error('Activity.hide: Bad registered handler', settings);
             }
         });
         
@@ -210,16 +216,15 @@ Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options
 /**
     Singleton helper
 **/
+var singlentonInstances = {};
 var createSingleton = function createSingleton(ActivityClass, $activity, app) {
     
-    createSingleton.instances = createSingleton.instances || {};
-    
-    if (createSingleton.instances[ActivityClass.name] instanceof ActivityClass) {
-        return createSingleton.instances[ActivityClass.name];
+    if (singlentonInstances[ActivityClass.name] instanceof ActivityClass) {
+        return singlentonInstances[ActivityClass.name];
     }
     else {
         var s = new ActivityClass($activity, app);
-        createSingleton.instances[ActivityClass.name] = s;
+        singlentonInstances[ActivityClass.name] = s;
         return s;
     }
 };

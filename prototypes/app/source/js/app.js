@@ -9,6 +9,9 @@ ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 var bootknock = require('./utils/bootknockBindingHelpers');
 require('./utils/Function.prototype._inherits');
 require('./utils/Function.prototype._delayed');
+// Polyfill for useful non-standard feature Function.name for IE9+
+// (feature used to simplify creation of Activities and Models)
+require('./utils/Function.prototype.name-polyfill');
 // Promise polyfill, so its not 'require'd per module:
 require('es6-promise').polyfill();
 
