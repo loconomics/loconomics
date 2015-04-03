@@ -503,7 +503,7 @@ $.fn.datepicker = function ( option ) {
         if (typeof option === 'string') {
             returned = data[option].apply(data, vals);
             // There is a value returned by the method?
-            if (typeof(returned !== 'undefined')) {
+            if (typeof(returned) !== 'undefined') {
                 // Go out the loop to return the value from the first
                 // element-method execution
                 return false;
