@@ -56,6 +56,7 @@ module.exports = function(/*grunt*/) {
             'external': styleguidelibsModules,
             'alias': [
                 'moment',
+                'numeral',
                 'knockout',
                 'knockout.mapping',
                 'lodash',
@@ -69,6 +70,11 @@ module.exports = function(/*grunt*/) {
                 './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent'
             ],
             'shim': {
+                'jquery-ui':  {
+                    'path': './vendor/jquery-ui/jquery-ui.js',
+                    'exports': null,
+                    'depends': { 'jquery': null }
+                },
                 'jquery-mobile':  {
                     'path': './vendor/jquerymobile/jquery.mobile.custom.js',
                     'exports': null,

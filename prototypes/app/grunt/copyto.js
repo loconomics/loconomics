@@ -1,6 +1,13 @@
 'use strict';
 
 module.exports = {
+    jqueryuiimages: {
+        expand: true,
+        cwd: 'vendor/jquery-ui/images',
+        src: ['*.png'],
+        dest: 'build/assets/css/images',
+        filter: 'isFile'
+    },
     html: {
         expand: true,
         cwd: 'source/html/',

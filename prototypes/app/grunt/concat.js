@@ -16,7 +16,8 @@ module.exports ={
     'css-libs': {
         src: [
             './vendor/bootstrap/css/bootstrap.css',
-            './vendor/bootstrap-switch/custom-css/bootstrap-switch.css'
+            './vendor/bootstrap-switch/custom-css/bootstrap-switch.css',
+            './vendor/jquery-ui/jquery-ui.css'
         ],
         dest: './build/assets/css/libs.css'
     }

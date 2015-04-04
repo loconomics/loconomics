@@ -25,6 +25,9 @@ module.exports = {
 		'cssmin',//'newer:cssmin'
         'notify:css'
 	],
+    'build-images': [
+        'copyto:jqueryuiimages'
+    ],
     'build-html': [
         //'copyto:html', // Now, html files are bundled with bliss
         'bliss:app',
