@@ -62,4 +62,19 @@ exports.registerAll = function() {
         template: { element: 'time-slot-tile-template' },
         viewModel: require('./viewmodels/TimeSlot')
     });
+    
+    /// loading-spinner
+    ko.components.register('app-loading-spinner', {
+        template: { element: 'loading-spinner-template' },
+        viewModel: function(params) {
+            var base = 'loadingSpinner';
+            this.mod = getObservable(params.mod || '');
+            this.cssClass = ko.pureComputed(function() {
+                var c = base;
+                if (this.mod())
+                    c += ' ' + base + '--' + this.mod();
+                return c;
+            }, this);
+        }
+    });
 };

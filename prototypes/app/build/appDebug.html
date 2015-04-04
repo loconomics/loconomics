@@ -220,9 +220,7 @@
       <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
-            <div class="loadingSpinner loadingSpinner--onRight">
-                <span class="glyphicon glyphicon-refresh"></span>
-            </div>
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
         </h2>
 
         <fieldset class="isolated" data-bind="with: address()">
@@ -272,7 +270,7 @@
 
              <h2 data-bind="text: currentAppointment().summary()"></h2>
 
-            <div class="loadingSpinner pull-right"></div>
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
           </div>
           <ul class="list-unstyled" data-bind="visible: currentAppointment().id() > 0">
             <li data-bind="event: { tap: editMode() && pickDateTime }"> <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
@@ -458,11 +456,12 @@
     <div class="container-fluid" data-activity="calendar" data-bind="css: { 'is-loading': isLoading }">
        <h1 id="calendarDateHeader" class="CalendarDateHeader ActivityTitle">
       <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
-      <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time> <span class="caret"></span></a>
+      <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center">
+          <time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
+          <span class="caret"></span>
+          <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+      </a>
       <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
-      <span class="loadingSpinner loadingSpinner--floating">
-        <span class="glyphicon glyphicon-refresh"></span>
-      </span>
   </h1>
 
       <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
@@ -774,10 +773,9 @@
         </div>
         <div data-bind="visible: !nextBooking()" class="isolated"> <span>You have no bookings!</span>
  <span>
-            <span class="loadingSpinner loadingSpinner--floating">
-                <span class="glyphicon glyphicon-refresh"></span>
-</span>
-          </span>
+            <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        </span>
+
         </div>
       </div>
        <h1 class="SectionTitle has-HelpPoint">Upcoming bookings</h1>
@@ -902,9 +900,7 @@
     <div class="container-fluid" data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
        <h2 class="SectionTitle">
       <span data-bind="text: jobTitleName">Job Title</span>
-    <div class="loadingSpinner loadingSpinner--onRight">
-        <span class="glyphicon glyphicon-refresh"></span>
-    </div>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
   </h2>
 
       <div class="ListView ListView--twolines ListView--textualmarker">
@@ -1156,10 +1152,9 @@
     <!-- Pricing Activity -->
     <div class="container-fluid" data-activity="pricing">
       <div>
-        <div class="loadingSpinner loadingSpinner--floating"> <span class="glyphicon glyphicon-refresh"></span>
-
-        </div>
-        <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedPricing">
+        <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        <div class="ListView ListView--twolines ListView--textualmarker"
+        data-bind="foreach: groupedPricing">
           <div class="ListView-divider SectionTitle"> <span data-bind="text: group"></span>
 
           </div>
@@ -1258,9 +1253,7 @@
     <!-- Scheduling activity -->
     <div class="container-fluid" data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }">
        <h2 class="SectionTitle">Services, Pricing, &amp; Locations
-        <div class="loadingSpinner loadingSpinner--onRight">
-            <span class="glyphicon glyphicon-refresh"></span>
-        </div>
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
 
       <div class="ListView ListView--twolines ListView--textualmarker">
@@ -1410,9 +1403,7 @@
       <span data-bind="visible: headerText, text: headerText">
         Locations
       </span>
-      <div class="loadingSpinner loadingSpinner--onRight">
-        <span class="glyphicon glyphicon-refresh"></span>
-      </div>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
   </h2>
 
       <div id="addressesListView">
@@ -1662,6 +1653,12 @@
             </a>
             <a href="/feedback" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
           </div>
+      </div>
+    </script>
+    <!-- Component Template loading-spinner -->
+    <script type="text/html" id="loading-spinner-template">
+      <div class="loadingSpinner" data-bind="attr: { 'class': cssClass() }">
+          <span class="glyphicon glyphicon-refresh"></span>
       </div>
     </script>
     <!-- Component Template navbar-action -->

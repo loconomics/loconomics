@@ -19,9 +19,7 @@
     <div data-bind="visible: !nextBooking()" class="isolated">
         <span>You have no bookings!</span>
         <span>
-            <span class="loadingSpinner loadingSpinner--floating">
-                <span class="glyphicon glyphicon-refresh"></span>
-            </span>
+            <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
         </span>
     </div>
   </div>

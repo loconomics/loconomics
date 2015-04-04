@@ -2,9 +2,7 @@
 <div class="container-fluid" data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
   <h2 class="SectionTitle">
       <span data-bind="text: jobTitleName">Job Title</span>
-    <div class="loadingSpinner loadingSpinner--onRight">
-        <span class="glyphicon glyphicon-refresh"></span>
-    </div>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
   </h2>
   <div class="ListView ListView--twolines ListView--textualmarker">
     <div class="ListView-item">

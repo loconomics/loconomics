@@ -1,9 +1,7 @@
 <!-- Pricing Activity -->
 <div class="container-fluid" data-activity="pricing">
   <div>
-      <div class="loadingSpinner loadingSpinner--floating">
-        <span class="glyphicon glyphicon-refresh"></span>
-      </div>
+      <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
     <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedPricing">
       <div class="ListView-divider SectionTitle">
         <span data-bind="text: group"></span>

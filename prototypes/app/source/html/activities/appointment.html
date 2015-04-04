@@ -6,9 +6,9 @@
        data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
     <div class="Card AppointmentCard">
       <div class="Card-title">
-        <h3><span data-bind="text: currentAppointment().id() > 0 ? currentAppointment().stateHeader() : ''"></span>&nbsp;</h3>
-        <h2 data-bind="text: currentAppointment().summary()"></h2>
-        <div class="loadingSpinner pull-right"></div>
+          <h3><span data-bind="text: currentAppointment().id() > 0 ? currentAppointment().stateHeader() : ''"></span>&nbsp;</h3>
+          <h2 data-bind="text: currentAppointment().summary()"></h2>
+          <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
       </div>
       <ul class="list-unstyled" data-bind="visible: currentAppointment().id() > 0">
         <li data-bind="event: { tap: editMode() && pickDateTime }">
