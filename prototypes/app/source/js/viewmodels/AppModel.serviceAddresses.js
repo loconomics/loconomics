@@ -5,17 +5,7 @@
 var Address = require('../models/Address'),
     ko = require('knockout'),
     localforage = require('localforage'),
-    CacheControl = require('../utils/CacheControl');
-
-function createIndex(list, byField) {
-    var index = {};
-    
-    list.forEach(function(item, itemIndex) {
-        index[item[byField]] = itemIndex;
-    });
-
-    return index;
-}
+    IndexedGroupListCache = require('../utils/IndexedGroupListCache');
 
 exports.create = function create(appModel) {
     var api = {
@@ -25,83 +15,20 @@ exports.create = function create(appModel) {
             isSaving: ko.observable(false)
         }
     };
-    var cache = {};
-    
+    var cache = new IndexedGroupListCache({
+        // Conservative cache, just 1 minute
+        listTtl: { minutes: 1 },
+        groupIdField: 'jobTitleID',
+        itemIdField: 'addressID'
+    });
+
     api.state.isLocked = ko.pureComputed(function() {
         return this.isLoading() || this.isSaving();
     }, api.state);
-    
-    function newCacheEntry(list) {
-        return {
-            control: new CacheControl({ ttl: { minutes: 1 } }),
-            list: list || null,
-            index: list && createIndex(list, 'addressID') || {}
-        };
-    }
 
-    function setJobTitleCache(jobTitleID, list) {
-        var cacheEntry = cache[jobTitleID];
-        if (cacheEntry) {
-            cacheEntry.list = list || [];
-            cacheEntry.index = createIndex(list || [], 'addressID');
-        }
-        else {
-            cacheEntry = cache[jobTitleID] = newCacheEntry(list);
-        }
-        cacheEntry.control.latest = new Date();
-    }
-    
-    function getJobTitleCache(jobTitleID) {
-        var cacheEntry = cache[jobTitleID];
-        return cacheEntry || newCacheEntry();
-    }
-    
-    function getItemFromCache(groupID, itemID) {
-        var cacheEntry = cache[groupID];
-        if (cacheEntry) {
-            return cacheEntry.list[cacheEntry.index[itemID]] || null;
-        }
-        else {
-            return null;
-        }
-    }
-    
-    function setItemCache(groupID, itemID, item) {
-        var cacheEntry = cache[groupID] || newCacheEntry([]),
-            itemIndex = -1;
-        
-        // Check if exists, so is update or insertion
-        var exists = cacheEntry.index[itemID] >= 0;
-        if (exists) {
-            // Update entry
-            itemIndex = cacheEntry.index[itemID];
-            cacheEntry.list[itemIndex] = item;
-        }
-        else {
-            // Add to the list
-            itemIndex = cacheEntry.list.push(item) - 1;
-            cacheEntry.index[itemID] = itemIndex;
-        }
-    }
-    
-    function delItemCache(groupID, itemID) {
-        var cacheEntry = cache[groupID] || null;
-        if (cacheEntry) {
-            var itemIndex = cacheEntry.index[itemID];
-            // Update list removing the element in place, without holes
-            cacheEntry.list.splice(itemIndex, 1);
-            // Update index by:
-            // - Remove itemID entry
-            delete cacheEntry.index[itemID];
-            // - Update every entry with an ID greater than the updated,
-            // since they are now one position less in the updated list
-            Object.keys(cacheEntry.index).forEach(function(key) {
-                if (cacheEntry.index[key] > itemIndex)
-                    cacheEntry.index[key]--;
-            });
-        }
-    }
-    
+
+    /** Data Stores Management **/
+
     function fetchFromLocal(jobTitleID) {
         return localforage.getItem('addresses/service/' + jobTitleID);
     }
@@ -110,8 +37,24 @@ exports.create = function create(appModel) {
         return appModel.rest.get('addresses/service/' + jobTitleID);
     }
 
+    function pushToLocal(jobTitleID, data) {
+        return localforage.setItem('addresses/service/' + jobTitleID, data);
+    }
+    
+    function pushToRemote(data) {
+        
+        var method = data.addressID ? 'put' : 'post';
+        var url = 'addresses/service/' + data.jobTitleID + (
+            data.addressID ? '/' + data.addressID : ''
+        );
+        return appModel.rest[method](url, data);
+    }
+
+
+    /** API definition **/
+
     api.getList = function getList(jobTitleID) {
-        var cacheEntry = getJobTitleCache(jobTitleID);
+        var cacheEntry = cache.getGroupCache(jobTitleID);
 
         if (cacheEntry.control.mustRevalidate()) {
             // No cache data, is first load, try from local
@@ -124,7 +67,7 @@ exports.create = function create(appModel) {
                     api.state.isSyncing(true);
                     var remotePromise = fetchFromRemote(jobTitleID)
                     .then(function(serverData) {
-                        setJobTitleCache(jobTitleID, serverData);
+                        cache.setGroupCache(jobTitleID, serverData);
                         pushToLocal(jobTitleID, serverData);
                         api.state.isSyncing(false);
                     });
@@ -132,7 +75,7 @@ exports.create = function create(appModel) {
                     return data ? data : remotePromise;
                 })
                 .then(function(data) {
-                    setJobTitleCache(jobTitleID, data);
+                    cache.setGroupCache(jobTitleID, data);
                     pushToLocal(jobTitleID, data);
                     api.state.isLoading(false);
                     
@@ -149,7 +92,7 @@ exports.create = function create(appModel) {
                 // From remote
                 return fetchFromRemote(jobTitleID)
                 .then(function(data) {
-                    setJobTitleCache(jobTitleID, data);
+                    cache.setGroupCache(jobTitleID, data);
                     pushToLocal(jobTitleID, data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
@@ -178,7 +121,7 @@ exports.create = function create(appModel) {
         return api.getList(jobTitleID)
         .then(function() {
             // Get from cached index
-            var cacheItem = getItemFromCache(jobTitleID, addressID);
+            var cacheItem = cache.getItemCache(jobTitleID, addressID);
 
             // TODO: Enhance on future with actual look-up by API addressID
             // if not cached, throwing not found from the server (just to avoid
@@ -186,22 +129,9 @@ exports.create = function create(appModel) {
             // from other app data). And keep updated list cache with that
             // items lookup
             if (!cacheItem) throw new Error('Not Found');
-            return cacheItem;
+            return cacheItem.item;
         });
     };
-    
-    function pushToLocal(jobTitleID, data) {
-        return localforage.setItem('addresses/service/' + jobTitleID, data);
-    }
-    
-    function pushToRemote(data) {
-        
-        var method = data.addressID ? 'put' : 'post';
-        var url = 'addresses/service/' + data.jobTitleID + (
-            data.addressID ? '/' + data.addressID : ''
-        );
-        return appModel.rest[method](url, data);
-    }
 
     /**
         Save an item in cache, local and remote.
@@ -222,12 +152,12 @@ exports.create = function create(appModel) {
             // a new address.
             if (serverData) {
                 // Save in cache
-                setItemCache(serverData.jobTitleID, serverData.addressID, serverData);
+                cache.setItemCache(serverData.jobTitleID, serverData.addressID, serverData);
                 // Save in local storage
                 // In local need to be saved all the grouped data, not just
                 // the item; since we have the cache list updated, use that
                 // full list to save local
-                pushToLocal(serverData.jobTitleID, getJobTitleCache(serverData.jobTitleID).list);
+                pushToLocal(serverData.jobTitleID, cache.getGroupCache(serverData.jobTitleID).list);
             }
             api.state.isSaving(false);
 
@@ -249,12 +179,12 @@ exports.create = function create(appModel) {
         return removeFromRemote(jobTitleID, addressID)
         .then(function(removedData) {
             // Update cache
-            delItemCache(jobTitleID, addressID);
+            cache.delItemCache(jobTitleID, addressID);
             // Save in local storage
             // In local need to be saved all the grouped data;
             // since we have the cache list updated, use that
             // full list to save local
-            pushToLocal(jobTitleID, getJobTitleCache(jobTitleID).list);
+            pushToLocal(jobTitleID, cache.getGroupCache(jobTitleID).list);
             
             return removedData;
         });
