@@ -153,7 +153,7 @@ app.getActivityControllerByRoute = function getActivityControllerByRoute(route) 
 app.shell.accessControl = require('./utils/accessControl')(app);
 
 // Shortcut to UserType enumeration used to set permissions
-app.UserType = app.model.user().constructor.UserType;
+app.UserType = require('./models/User').UserType;
 
 /** App Init **/
 var appInit = function appInit() {

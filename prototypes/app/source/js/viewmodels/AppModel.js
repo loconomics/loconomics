@@ -9,29 +9,8 @@ var ko = require('knockout'),
     localforage = require('localforage');
 
 function AppModel() {
-
+    // TODO Really needed?
     Model(this);
-    
-    this.userProfile = require('./AppModel.userProfile').create(this);
-    // NOTE: Alias for the user data
-    // TODO:TOREVIEW if continue to makes sense to keep this 'user()' alias, document
-    // where is used and why is preferred to the canonical way.
-    this.user = ko.computed(function() {
-        return this.userProfile.data;
-    }, this);
-
-    this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
-    this.calendarSyncing = require('./AppModel.calendarSyncing').create(this);
-    this.simplifiedWeeklySchedule = require('./AppModel.simplifiedWeeklySchedule').create(this);
-    this.marketplaceProfile = require('./AppModel.marketplaceProfile').create(this);
-    this.homeAddress = require('./AppModel.homeAddress').create(this);
-    this.privacySettings = require('./AppModel.privacySettings').create(this);
-    this.bookings = require('./AppModel.bookings').create(this);
-    this.calendarEvents = require('./AppModel.calendarEvents').create(this);
-    this.jobTitles = require('./AppModel.jobTitles').create(this);
-    this.userJobProfile = require('./AppModel.userJobProfile').create(this);
-    this.appointments = require('./AppModel.appointments').create(this);
-    this.serviceAddresses = require('./AppModel.serviceAddresses').create(this);
 }
 
 require('./AppModel-account').plugIn(AppModel);
@@ -139,17 +118,46 @@ AppModel.prototype.init = function init() {
             });
         }.bind(this);
         
+        // With config loaded and REST ready, load all modules
+        this.loadModules();
+        
         // Initialize: check the user has login data and needed
         // cached data, return its promise
         return this.loadLocalCredentials();
     }.bind(this));
 };
 
+AppModel.prototype.loadModules = function loadModules() {
+
+    this.userProfile = require('./AppModel.userProfile').create(this);
+    // NOTE: Alias for the user data
+    // TODO:TOREVIEW if continue to makes sense to keep this 'user()' alias, document
+    // where is used and why is preferred to the canonical way.
+    this.user = ko.computed(function() {
+        return this.userProfile.data;
+    }, this);
+
+    this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
+    this.calendarSyncing = require('./AppModel.calendarSyncing').create(this);
+    this.simplifiedWeeklySchedule = require('./AppModel.simplifiedWeeklySchedule').create(this);
+    this.marketplaceProfile = require('./AppModel.marketplaceProfile').create(this);
+    this.homeAddress = require('./AppModel.homeAddress').create(this);
+    this.privacySettings = require('./AppModel.privacySettings').create(this);
+    this.bookings = require('./AppModel.bookings').create(this);
+    this.calendarEvents = require('./AppModel.calendarEvents').create(this);
+    this.jobTitles = require('./AppModel.jobTitles').create(this);
+    this.userJobProfile = require('./AppModel.userJobProfile').create(this);
+    this.appointments = require('./AppModel.appointments').create(this);
+    this.serviceAddresses = require('./AppModel.serviceAddresses').create(this);
+};
+
 module.exports = AppModel;
 
+// TODO Review removal, maybe too the utility internally used, since now there
+// is an (incomplete still) AppModel.calendarEvents
 // Class splited in different files to mitigate size and organization
 // but keeping access to the common set of methods and objects easy with
 // the same class.
 // Loading extensions:
-require('./AppModel-events').plugIn(AppModel);
+//require('./AppModel-events').plugIn(AppModel);
 
