@@ -43,7 +43,8 @@
 
       <div class="navbar navbar-default ActivityNavbarDISABLED">
         <div>
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked"></button>
+            <button type="submit" class="btn btn-primary btn-block"
+                    data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
             <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
         </div>
       </div>

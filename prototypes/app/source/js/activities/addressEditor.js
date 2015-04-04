@@ -112,12 +112,12 @@ function ViewModel(app) {
     }, this);
     this.isLoading = app.model.serviceAddresses.state.isLoading;
     this.isSaving = app.model.serviceAddresses.state.isSaving;
-    
-    this.isRemoving = ko.observable(false);
+    this.isDeleting = app.model.serviceAddresses.state.isDeleting;
+
     this.wasRemoved = ko.observable(false);
     
     this.isLocked = ko.computed(function() {
-        return this.isRemoving() || app.model.serviceAddresses.state.isLocked();
+        return this.isDeleting() || app.model.serviceAddresses.state.isLocked();
     }, this);
     
     this.isNew = ko.pureComputed(function() {
@@ -128,19 +128,24 @@ function ViewModel(app) {
         var v = this.addressVersion();
         return (
             this.isLoading() ? 
-                'loading...' : 
+                'Loading...' : 
                 this.isSaving() ? 
-                    'saving...' : 
+                    'Saving changes' : 
                     v && v.areDifferent() ?
-                        'Save' :
+                        'Save changes' :
                         'Saved'
         );
+    }, this);
+
+    this.unsavedChanges = ko.pureComputed(function() {
+        var v = this.addressVersion();
+        return v && v.areDifferent();
     }, this);
     
     this.deleteText = ko.pureComputed(function() {
         return (
-            this.isRemoving() ? 
-                'deleting...' : 
+            this.isDeleting() ? 
+                'Deleting...' : 
                 'Delete'
         );
     }, this);
@@ -176,7 +181,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.remove = function() {
-        this.isRemoving(true);
+
         app.model.serviceAddresses.delItem(this.jobTitleID(), this.addressID())
         .then(function() {
             this.wasRemoved(true);
@@ -188,11 +193,7 @@ function ViewModel(app) {
                 title: 'There was an error while deleting.',
                 error: err
             });
-        })
-        .then(function(){
-            // Always:
-            this.isRemoving(false);
-        }.bind(this));
+        });
     }.bind(this);
     
     /**

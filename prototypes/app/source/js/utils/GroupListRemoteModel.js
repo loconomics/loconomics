@@ -174,6 +174,9 @@ function GroupListRemoteModel(settings) {
     };
     
     api.delItem = function delItem(groupID, itemID) {
+        
+        api.state.isDeleting(true);
+        
         // Remove in remote first
         return this.removeItemFromRemote(groupID, itemID)
         .then(function(removedData) {
@@ -185,8 +188,15 @@ function GroupListRemoteModel(settings) {
             // full list to save local
             this.pushGroupToLocal(groupID, cache.getGroupCache(groupID).list);
             
+            api.state.isDeleting(false);
+            
             return removedData;
-        }.bind(this));
+        }.bind(this))
+        .catch(function(err) {
+            api.state.isDeleting(false);
+            // Rethrow error
+            return err;
+        });
     };
     
     /** Some Utils **/
