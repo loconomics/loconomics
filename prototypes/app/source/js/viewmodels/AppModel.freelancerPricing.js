@@ -15,8 +15,8 @@ exports.create = function create(appModel) {
         Model: FreelancerPricing
     });
 
-    api.addLocalforageSupport('frelancer-pricing/');
-    api.addRestSupport(appModel.rest, 'frelancer-pricing/');
+    api.addLocalforageSupport('freelancer-pricing/');
+    api.addRestSupport(appModel.rest, 'freelancer-pricing/');
     
     return api;
 };

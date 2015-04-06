@@ -9,7 +9,7 @@ module.exports = {
     'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),
-    'pricing': require('./activities/pricing'),
+    'freelancerPricing': require('./activities/freelancerPricing'),
     'serviceAddresses': require('./activities/serviceAddresses'),
     'textEditor': require('./activities/textEditor'),
     'home': require('./activities/home'),

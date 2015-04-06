@@ -787,6 +787,43 @@
         <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: wasSent() ? 'Sent' : 'Send'">Send</button>
       </div>
     </div>
+    <!-- FreelancerPricing activity -->
+    <div class="container-fluid" data-activity="freelancerPricing" data-bind="css: { 'is-loading': isLoading }">
+      <div>
+        <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        <div class="ListView ListView--twolines ListView--textualmarker"
+        data-bind="foreach: groupedPricing">
+          <div class="ListView-divider SectionTitle"> <span data-bind="text: group"></span>
+
+          </div>
+          <!-- ko foreach: pricing -->
+          <div class="ListView-item">
+            <div class="ListView-item-marker">
+              <p data-bind="text: price, format: { type: 'number', format: '$0,0' }"></p>
+            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.togglePricingSelection }">
+                <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
+                <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
+              </a>
+ <a href="#" class="ListView-item-action btn btn-link"
+            data-bind="visible: $root.isSelectionMode, event: { tap: $root.togglePricingSelection }, attr: { 'aria-pressed': isSelected }"
+            role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
+
+            <a
+            href="#" class="ListView-item-action btn btn-link" data-bind="visible: !$root.isSelectionMode()"
+            role="button"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Edit</span>
+              </a>
+          </div>
+          <!-- /ko -->
+          <div class="ListView-item">
+            <button type="button" class="btn btn-default btn-block" data-href="#!pricingEditor/"
+            data-bind="attr: {'data-href': '#!pricingEditor/' + jobTitleID(), text: config.addNewLabel()"></button>
+          </div>
+        </div>
+      </div>
+      <div class="isolated" data-bind="visible: isSelectionMode">
+        <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }, text: submitText, disable: isLocked">Save</button>
+      </div>
+    </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
        <h1 class="SectionTitle has-HelpPoint">Your next booking</h1>
@@ -942,13 +979,13 @@
           <div class="ListView-item-marker">
             <p><span class="glyphicon glyphicon-tag"></span>
             </p>
-          </div> <a href="/pricing" class="btn btn-link btn-block ListView-item-content"
-          data-bind="attr: { href: '/pricing/' + jobTitleID() }">
+          </div> <a href="/freelancerPricing" class="btn btn-link btn-block ListView-item-content"
+          data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }">
         <div>Pricing and services</div>
         <div class="text-muted">7 services</div>
       </a>
- <a href="/pricing" class="btn btn-link ListView-item-action"
-          data-bind="attr: { href: '/pricing/' + jobTitleID() }"><span class="glyphicon glyphicon-edit"></span></a>
+ <a href="/freelancerPricing" class="btn btn-link ListView-item-action"
+          data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }"><span class="glyphicon glyphicon-edit"></span></a>
 
         </div>
         <div class="ListView-item">
@@ -1181,38 +1218,6 @@
       </a>
 
         </div>
-      </div>
-    </div>
-    <!-- Pricing Activity -->
-    <div class="container-fluid" data-activity="pricing">
-      <div>
-        <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
-        <div class="ListView ListView--twolines ListView--textualmarker"
-        data-bind="foreach: groupedPricing">
-          <div class="ListView-divider SectionTitle"> <span data-bind="text: group"></span>
-
-          </div>
-          <!-- ko foreach: pricing -->
-          <div class="ListView-item">
-            <div class="ListView-item-marker">
-              <p data-bind="text: price, format: { type: 'number', format: '$0,0' }"></p>
-            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.togglePricingSelection }">
-            <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
-            <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
-          </a>
- <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: $root.isSelectionMode, event: { tap: $root.togglePricingSelection }, attr: { 'aria-pressed': isSelected }"
-            role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
-
-            <a
-            href="#" class="ListView-item-action btn btn-link" data-bind="visible: !$root.isSelectionMode()"
-            role="button"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Edit</span>
-              </a>
-          </div>
-          <!-- /ko -->
-        </div>
-      </div>
-      <div class="isolated" data-bind="visible: isSelectionMode">
-        <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }, text: submitText, disable: isLocked">Save</button>
       </div>
     </div>
     <!-- PrivacySettings activity -->
@@ -1458,36 +1463,6 @@
         data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceLocation'}">Add a service location</button>
         <button type="button" class="btn btn-default btn-block"
         data-href="#!addressEditor/service/" data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceArea'}">Add a service area</button>
-      </div>
-    </div>
-    <!-- Activity services -->
-    <div class="container-fluid" data-activity="services">
-      <div id="servicesListView">
-        <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedServices">
-          <div class="ListView-divider SectionTitle"> <strong data-bind="text: group"></strong>
-
-          </div>
-          <!-- ko foreach: services -->
-          <div class="ListView-item">
-            <div class="ListView-item-marker">
-              <p data-bind="text: price, format: { type: 'number', format: '$0,0' }"></p>
-            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.toggleServiceSelection }">
-            <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
-            <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
-          </a>
- <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: $root.isSelectionMode, event: { tap: $root.toggleServiceSelection }, attr: { 'aria-pressed': isSelected }"
-            role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
-
-            <a
-            href="#" class="ListView-item-action btn btn-link" data-bind="visible: !$root.isSelectionMode()"
-            role="button"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Edit</span>
-              </a>
-          </div>
-          <!-- /ko -->
-        </div>
-      </div>
-      <div class="isolated" data-bind="visible: isSelectionMode">
-        <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }">Save and continue</button>
       </div>
     </div>
     <!-- Activity Signup -->

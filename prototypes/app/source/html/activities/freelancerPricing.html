@@ -1,0 +1,30 @@
+<!-- FreelancerPricing activity -->
+<div class="container-fluid" data-activity="freelancerPricing"
+     data-bind="css: { 'is-loading': isLoading }">
+    <div>
+        <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedPricing">
+          <div class="ListView-divider SectionTitle">
+            <span data-bind="text: group"></span>
+          </div>
+          <!-- ko foreach: pricing -->
+          <div class="ListView-item">
+              <div class="ListView-item-marker"><p data-bind="text: price, format: { type: 'number', format: '$0,0' }"></p></div>
+              <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.togglePricingSelection }">
+                <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
+                <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
+              </a>
+              <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: $root.isSelectionMode, event: { tap: $root.togglePricingSelection }, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
+              <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: !$root.isSelectionMode()" role="button"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Edit</span></a>
+          </div>
+          <!-- /ko -->
+            <div class="ListView-item">
+                <button type="button" class="btn btn-default btn-block" data-href="#!pricingEditor/" data-bind="attr: {'data-href': '#!pricingEditor/' + jobTitleID(), text: config.addNewLabel()"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="isolated" data-bind="visible: isSelectionMode">
+        <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }, text: submitText, disable: isLocked">Save</button>
+    </div>
+</div>

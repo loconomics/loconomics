@@ -1,45 +1,43 @@
 /**
-    Pricing activity
+    Freelancer Pricing activity
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
 var ko = require('knockout'),
-    _ = require('lodash');
-    
-var A = Activity.extends(function PricingActivity() {
+    _ = require('lodash'),
+    Activity = require('../components/Activity'),
+    PricingType = require('../models/PricingType');
+
+var A = Activity.extends(function FreelancerPricingActivity() {
 
     Activity.apply(this, arguments);
-    
-    this.accessLevel = this.app.UserType.Frelancer;
-    
-    // On show, will be updated with the JobTitle name
-    this.navBar = Activity.createSubsectionNavBar('Job title');
 
-    this.viewModel = new ViewModel();
-    
+    this.accessLevel = this.app.UserType.Freelancer;
+    this.viewModel = new ViewModel(this.app);
+    this.navBar = Activity.createSubsectionNavBar('Job Title');
+
     // On changing jobTitleID:
     // - load pricing
     this.registerHandler({
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
-            
             if (jobTitleID) {
                 // Get data for the Job title ID
                 this.app.model.jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
                     // Fill in job title name
                     this.navBar.leftAction().text(jobTitle.singularName());
-                    
+
                     // Get pricing
-                    return null; //this.viewModel.services(userJobtitle.services());
+                    return this.app.model.freelancerPricing.getList(jobTitleID);
                 }.bind(this))
-                .then(function(pricing) {
-                    // TODO Load job title pricing on this activity:
-                    //this.viewModel.services(userJobtitle.services());
-                    console.log('Job Title Pricing/Services load not supported still', pricing);
-                })
-                .catch(function(err) {
+                .then(function(list) {
+
+                    list = this.app.model.freelancerPricing.asModel(list);
+                    this.viewModel.list(list);
+
+                }.bind(this))
+                .catch(function (err) {
                     this.app.modals.showError({
                         title: 'There was an error while loading.',
                         error: err
@@ -47,13 +45,32 @@ var A = Activity.extends(function PricingActivity() {
                 }.bind(this));
             }
             else {
-                this.viewModel.pricing([]);
+                this.viewModel.list([]);
                 this.navBar.leftAction().text('Job Title');
             }
         }.bind(this)
     });
     
-    // Handler to go back with the selected service when 
+    // Handler to update header based on a mode change:
+    this.registerHandler({
+        target: this.viewModel.isSelectionMode,
+        handler: function (itIs) {
+            this.viewModel.headerText(itIs ? 'Select services' : 'Services');
+
+            // Update navbar too
+            // TODO: Can be other than 'scheduling', like marketplace profile or the job-title?
+            this.navBar.leftAction().text(itIs ? 'Booking' : 'Scheduling');
+            // Title must be empty
+            this.navBar.title('');
+
+            // TODO Replaced by a progress bar on booking creation
+            // TODO Or leftAction().text(..) on booking edition (return to booking)
+            // or coming from Jobtitle/schedule (return to schedule/job title)?
+
+        }.bind(this)
+    });
+    
+    // Handler to go back with the selected services when 
     // selection mode goes off and requestData is for
     // 'select mode'
     this.registerHandler({
@@ -80,18 +97,24 @@ var A = Activity.extends(function PricingActivity() {
 exports.init = A.init;
 
 A.prototype.show = function show(options) {
-
     Activity.prototype.show.call(this, options);
     
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
     this.viewModel.jobTitleID(0);
+    this.viewModel.selectedPricing.removeAll();
     
-    var params = options && options.route && options.route.segments || [];
+    if (options.selectAddress === true) {
+        this.viewModel.isSelectionMode(true);
+        // preset:
+        this.viewModel.selectedAddress(options.selectedAddress);
+    }
     
-    // Get jobTitleID
-    this.viewModel.jobTitleID(params[0] |0);
-
+    var params = options && options.route && options.route.segments;
+    var jobTitleID = params[0] |0;
+    
+    this.viewModel.jobTitleID(jobTitleID);
+    
     if (this.requestData.selectPricing === true) {
         this.viewModel.isSelectionMode(true);
         
@@ -113,42 +136,39 @@ A.prototype.show = function show(options) {
     }
 };
 
-/*function Selectable(obj) {
-    obj.isSelected = ko.observable(false);
-    return obj;
-}*/
+function ViewModel(app) {
 
-function ViewModel() {
-
-    // Full list of services
-    this.pricing = ko.observableArray([]);
+    this.headerText = ko.observable('Services');
+    
     this.jobTitleID = ko.observable(0);
-    this.isLoading = ko.observable(false);
+
+    this.list = ko.observableArray([]);
+
+    this.isLoading = app.model.freelancerPricing.state.isLoading;
     this.isLocked = this.isLoading;
 
     // Especial mode when instead of pick and edit we are just selecting
-    // (when editing an appointment)
     this.isSelectionMode = ko.observable(false);
-    
+
     this.submitText = ko.pureComputed(function() {
         return (
             this.isLoading() ? 
                 'loading...' : 
                 this.isSelectionMode() ? 
                     'Save and continue' :
-                    'Save'
+                    ''
         );
     }, this);
-
+    
     // Grouped list of pricings:
-    // Defined groups: regular services and add-ons
+    // Defined groups by pricing type
     this.groupedPricing = ko.computed(function(){
 
-        var pricing = this.pricing();
+        var list = this.list();
         var isSelection = this.isSelectionMode();
         var groupNamePrefix = isSelection ? 'Select ' : '';
 
-        var groups = _.groupBy(pricing, function(pricingItem) {
+        var groups = _.groupBy(list, function(pricingItem) {
             return pricingItem.pricingTypeID();
         });
         
@@ -157,7 +177,9 @@ function ViewModel() {
             return {
                 // TODO: Get group name from the PricingType.pluralName
                 group: groupNamePrefix + key,
-                pricing: groupsList[key]
+                pricing: groupsList[key],
+                // TODO Load the pricing information
+                type: new PricingType()
             };
         });
 
@@ -171,7 +193,7 @@ function ViewModel() {
         or removing it from the 'selectedPricing' array.
     **/
     this.togglePricingSelection = function(pricing) {
-        
+
         var inIndex = -1,
             isSelected = this.selectedPricing().some(function(selectedPricing, index) {
             if (selectedPricing === pricing) {
