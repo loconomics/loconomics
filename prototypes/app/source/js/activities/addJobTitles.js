@@ -93,9 +93,10 @@ function ViewModel(app) {
         var s = this.searchText();
         if (s) {
             this.addItem({
-                value: null,
+                value: 0,
                 label: s
             });
+            this.searchText('');
         }
     }.bind(this);
     
@@ -106,7 +107,9 @@ function ViewModel(app) {
     this.findItem = function findItem(jobTitle) {
         var foundIndex = -1;
         this.jobTitles().some(function(item, index) {
-            if (item.value === jobTitle.value) {
+            if (jobTitle.value !== 0 &&
+                item.value === jobTitle.value ||
+                item.label === jobTitle.label) {
                 foundIndex = index;
                 return true;
             }
@@ -136,6 +139,7 @@ function ViewModel(app) {
         }))
         .then(function(/*results*/) {
             this.submitText('Done');
+            this.searchText('');
             this.isSaving(false);
             // Reset list
             this.jobTitles.removeAll();
