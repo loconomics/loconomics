@@ -162,7 +162,7 @@
                     }
                     else {
                         //  Create a new job-title based on the given name #650
-                        var name = jobTitleName.Capitalize();
+                        var name = jobTitleName.ToTitleCase();
                         jobTitleID = LcData.JobTitle.CreateJobTitleByName(name, LcRestLocale.Current.languageID, LcRestLocale.Current.countryID);
                         // Check well know custom error codes
                         if (jobTitleID == -1) {
