@@ -43,33 +43,30 @@
     {
         public override dynamic Get()
         {
-            // Item ID
-            if (UrlData[0].IsInt())
-            {
-                return GetItem(UrlData[0].AsInt(0));
-            }
-            
             // Parameters
             // Required providerUserID
-            var freelancerUserID = Request["freelancerUserID"].AsInt(0);
-            if (freelancerUserID <= 0) {
-                ModelState.AddError("freelancerUserID", LcRessources.RequiredField("Freelancer"));
+            var userID = Request["freelancerUserID"].AsInt(WebSecurity.CurrentUserId);
+            
+            if (UrlData.Count == 0) {
+                return LcData.GetRestFreelancerPricing(userID, -1);
             }
-            if (!ModelState.IsValid) {
-                throw new HttpException(404, LcRessources.ValidationSummaryTitle);
+            else if (UrlData.Count == 1) {
+                // Route: /:jobTitleID
+                var jobTitleID = UrlData[0].AsInt(0);
+                return LcData.GetRestFreelancerPricing(userID, jobTitleID);
             }
-                
-            // Optional positionID
-            var jobTitleID = Request["jobTitleID"].AsInt(-1);
+            else if (UrlData.Count == 2) {
+                // Route: /:jobTitleID[/:freelancerPricingID]
+                var jobTitleID = UrlData[0].AsInt(0);
+                var itemID = UrlData[1].AsInt(0);
+                return GetItem(userID, jobTitleID, itemID);
+            }
 
-            return LcData.GetRestFreelancerPricing(freelancerUserID, jobTitleID);
+            throw new HttpException(404, "Not Found");
         }
 
-        public dynamic GetItem(int itemID)
+        public dynamic GetItem(int userID, int jobTitleID, int itemID)
         {
-            // Parameters
-            int userID = WebSecurity.CurrentUserId;
-
             if (itemID > 0)
             {
                 var item = LcData.GetRestFreelancerPricing(itemID);
@@ -80,18 +77,15 @@
 
             throw new HttpException(404, "Pricing not found.");
         }
-        
-        public dynamic SetItem(int itemID)
-        {
-            // Parameters
-            int freelancerUserID = WebSecurity.CurrentUserId;
-            
+
+        public dynamic SetItem(int userID, int jobTitleID, int itemID)
+        {           
             // NOTE: Using same logic and structures than in the edit form on dashboard, from the LcPricingModel classes
             var data = new LcPricingModel.PackageBaseData {
                 ID = itemID,
-                PositionID = Request["jobTitleID"].AsInt(),
+                PositionID = jobTitleID,
                 PricingTypeID = Request["pricingTypeID"].AsInt(),
-                ProviderUserID = freelancerUserID,
+                ProviderUserID = userID,
                 // some defaults
                 NumberOfSessions = 1,
                 PriceRateUnit = "hour",
@@ -101,8 +95,6 @@
 
             Validation.RequireField("pricingTypeID", LcRessources.RequiredField("Pricing Type"));
             Validation.Add("pricingTypeID", Validator.Integer(LcRessources.RequiredField("Pricing Type")));
-            Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
-            Validation.Add("jobTitleID", Validator.Integer(LcRessources.RequiredField("Job Title")));
             Validation.RequireField("name", LcRessources.RequiredField("Name"));
             Validation.Add("name", Validator.StringLength(50, 0, "Name must be fewer than 50 characters."));
             Validation.RequireField("description", LcRessources.RequiredField("Description"));
@@ -174,28 +166,39 @@
             data.Save();
             itemID = data.ID;
             
-            return GetItem(itemID);
+            return GetItem(userID, jobTitleID, itemID);
         }
         
         public override dynamic Post()
         {
             RequiresUser(LcData.UserInfo.UserType.Provider);
-            if (UrlData.Count > 0)
-                throw new HttpException(405, "Method not allowed.");
+            var userID = WebSecurity.CurrentUserId;
 
-            return SetItem(0);
+            if (UrlData.Count == 1 &&
+                UrlData[0].IsInt()) {
+                var jobTitleID = UrlData[0].AsInt();
+                return SetItem(userID, jobTitleID, 0);
+            }
+
+            throw new HttpException(405, "Method not allowed.");
         }
         
         public override dynamic Put()
         {
             RequiresUser(LcData.UserInfo.UserType.Provider);
+            var userID = WebSecurity.CurrentUserId;
             
             dynamic updated = null;
-            if (UrlData.Count == 1)
-                updated = SetItem(UrlData[0].AsInt(0));
+            if (UrlData.Count == 2 &&
+                UrlData[0].IsInt() &&
+                UrlData[1].IsInt()) {
+                var jobTitleID = UrlData[0].AsInt();
+                var itemID = UrlData[1].AsInt();
+                updated = SetItem(userID, jobTitleID, itemID);
+            }
 
             if (updated == null) {
-                if (UrlData.Count == 0)
+                if (UrlData.Count != 2)
                     throw new HttpException(405, "Method not allowed.");
                 else
                     throw new HttpException(404, "Pricing not found.");
@@ -204,15 +207,13 @@
             return updated;
         }
         
-        public dynamic DelItem(int itemID)
+        public dynamic DelItem(int userID, int jobTitleID, int itemID)
         {
-            var freelancerUserID = WebSecurity.CurrentUserId;
-            
-            var item = GetItem(itemID);
+            var item = GetItem(userID, jobTitleID, itemID);
             
             if (item != null) {
                 
-                LcPricingModel.PackageBaseData.Delete(itemID, freelancerUserID, item.jobTitleID);
+                LcPricingModel.PackageBaseData.Delete(itemID, userID, jobTitleID);
 
                 return item;
             }
@@ -223,13 +224,19 @@
         public override dynamic Delete()
         {
             RequiresUser(LcData.UserInfo.UserType.Provider);
-            
+            var userID = WebSecurity.CurrentUserId;
+
             dynamic deleted = null;
-            if (UrlData.Count == 1)
-                deleted = DelItem(UrlData[0].AsInt(0));
+            if (UrlData.Count == 2 &&
+                UrlData[0].IsInt() &&
+                UrlData[1].IsInt()) {
+                var jobTitleID = UrlData[0].AsInt();
+                var itemID = UrlData[1].AsInt();
+                deleted = DelItem(userID, jobTitleID, itemID);
+            }
 
             if (deleted == null) {
-                if (UrlData.Count == 0)
+                if (UrlData.Count != 2)
                     throw new HttpException(405, "Method not allowed.");
                 else
                     throw new HttpException(404, "Pricing not found.");

@@ -236,17 +236,21 @@
                     'Optional starnt and end dates to reduce the results, accepting ISO strings.'
             }
         },
-        'Freelancer Pricing': {
+        'Freelancer Pricing - All user pricing': {
             url: '/api/v1/en-US/freelancer-pricing',
             get: {
                 "freelancerUserID": 141,
-                "jobTitleID": -1,
-                'api comment': 'The jobTitleID is optional (the same as value -1).'
+                'api comment': 'Avoid the freelancerUserID parameter to get the own pricing.'
+            }
+        },
+        'Freelancer Pricing - Per Job Title': {
+            url: '/api/v1/en-US/freelancer-pricing/106',
+            get: {
+                "freelancerUserID": 141,
+                'api comment': 'Avoid the freelancerUserID parameter to get the own pricing.'
             },
             post: {
                 "pricingTypeID": 3,
-                "freelancerUserID": 141,
-                "jobTitleID": 106,
                 "name": "Testing 2",
                 "description": "Testing 2",
                 "price": 20,
@@ -262,16 +266,15 @@
                     501
                 ],
                 "noPriceRate": false,
-                'api comment': 'serviceDurationMinutes as an integer. Different validation rules apply depending on the pricing type'
+                'api comment': 'Pricing is assigned to the logged user, cannot be added to other user so no user parameter is needed. ' +
+                    'serviceDurationMinutes parameter as an integer. Different validation rules apply depending on the pricing type'
             }
         },
-        'Freelancer Pricing (item)': {
-            url: '/api/v1/en-US/freelancer-pricing/73',
+        'Freelancer Pricing - Job Title - Pricing item': {
+            url: '/api/v1/en-US/freelancer-pricing/106/73',
             get: { },
             put: {
                 "pricingTypeID": 3,
-                "freelancerUserID": 141,
-                "jobTitleID": 106,
                 "name": "Testing 2",
                 "description": "Testing 2",
                 "price": 20,
@@ -287,7 +290,8 @@
                     501
                 ],
                 "noPriceRate": false,
-                'api comment': 'serviceDurationMinutes as an integer. Different validation rules apply depending on the pricing type'
+                'api comment': 'Pricing is assigned to the logged user, cannot be added to other user so no user parameter is needed. ' +
+                    'serviceDurationMinutes parameter as an integer. Different validation rules apply depending on the pricing type'
             },
             delete: {}
         },
