@@ -162,11 +162,13 @@
                     }
                     else {
                         //  Create a new job-title based on the given name #650
-                        jobTitleID = LcData.JobTitle.CreateJobTitleByName(jobTitleName.Capitalize(), LcRestLocale.Current.languageID, LcRestLocale.Current.countryID);
+                        var name = jobTitleName.Capitalize();
+                        jobTitleID = LcData.JobTitle.CreateJobTitleByName(name, LcRestLocale.Current.languageID, LcRestLocale.Current.countryID);
                         // Check well know custom error codes
                         if (jobTitleID == -1) {
                             throw new HttpException(400, String.Format("The Job Title '{0}' is not allowed.", jobTitleName));
                         }
+                        LcMessaging.NotifyNewJobTitle(name, jobTitleID);
                         jobTitleExists = true;
                     }
                 }

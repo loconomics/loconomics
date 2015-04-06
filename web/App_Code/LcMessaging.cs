@@ -1273,7 +1273,7 @@ public class LcMessaging
     }
     #endregion
 
-    #region Type:Request provider payment to Loconomics Stuff Users
+    #region Notification to Loconomics Stuff/Support
     /// <summary>
     /// OBSOLETE.
     /// This email was used before the integration of Braintree Marketplace, to report about the
@@ -1291,6 +1291,18 @@ public class LcMessaging
                 { "BookingID", bookingID },
                 { "EmailTo", "support@loconomics.com" }
          }));
+    }
+    public static void NotifyNewJobTitle(string jobTitleName, int jobTitleID)
+    {
+        try
+        {
+            var channel = LcHelpers.Channel == "live" ? "" : " at" + LcHelpers.Channel;
+            SendMail("support@loconomics.com",
+                "New job title" + channel + ": " + jobTitleName,
+                "Generated new job title with name '" + jobTitleName + "', assigned ID: " + jobTitleID
+            );
+        }
+        catch { }
     }
     #endregion
 
