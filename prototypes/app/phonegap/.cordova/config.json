@@ -1,2 +1,2 @@
-{ "lib": { "www": { "id": "com.loconomics.app", "version": "0.3.5" } },
+{ "lib": { "www": { "id": "com.loconomics.app", "version": "0.3.6" } },
 "phonegap": { "id": 1266913 } }
