@@ -60,7 +60,22 @@ public static class LcExtensions
 
         // Format the string to Proper Case
         return textInfo.ToTitleCase(stringToFormat.ToLower());
-    }   
+    }
+
+    /// <summary>
+    /// Reduce every duplicated appeareance of white space characters
+    /// to a single, standard, space.
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    public static string CollapseSpaces(this String str)
+    {
+        if (String.IsNullOrWhiteSpace(str))
+            return "";
+
+        var reg = new System.Text.RegularExpressions.Regex(@"\s{2,}");
+        return reg.Replace(str, " ");
+    }
 
     public static IEnumerable TopElements(this IEnumerable list, double limit)
     {
