@@ -6,7 +6,9 @@
 
 var UserJobTitle = require('../models/UserJobTitle'),
     CacheControl = require('../utils/CacheControl'),
-    localforage = require('localforage');
+    localforage = require('localforage'),
+    ko = require('knockout'),
+    $ = require('jquery');
 
 exports.create = function create(appModel) {
 
@@ -21,9 +23,21 @@ exports.create = function create(appModel) {
             },
             // Indexed list by jobTitleID to the user job titles models
             // in the list and cache information
-            userJobTitles: {}
+            userJobTitles: {/*
+                jobTitleID: { model: object, cache: CacheControl }
+            */}
         };
     
+    // Observable list
+    api.list = ko.observableArray([]);
+    // NOTE: Basic implementation, to enhance
+    api.syncList = function syncList() {
+        return api.getUserJobProfile().then(function(list) {
+            api.list(list);
+            return list;
+        });
+    };
+
     /**
         Convert raw array of job titles records into
         an indexed array of models, actually an object
@@ -42,6 +56,8 @@ exports.create = function create(appModel) {
                 setGetUserJobTitleToCache(rawItem);
             });
         }
+        // Update observable
+        api.list(cache.userJobProfile.list);
 
         // Update cache state
         cache.userJobProfile.cache.latest = new Date();
@@ -86,6 +102,24 @@ exports.create = function create(appModel) {
         }
         else {
             c.cache = new CacheControl({ ttl: defaultTtl });
+        }
+        
+        // If there is a profile list, add or update:
+        var fullList =  cache.userJobProfile.list;
+        if (fullList) {
+            var found = null;
+            fullList.some(function(it) {
+                if (it.jobTitleID() === rawItem.jobTitleID) {
+                    found = it;
+                    return true;
+                }
+            });
+            if (found) {
+                found.model.updateWith(rawItem);
+            }
+            else {
+                fullList.push(c.model);
+            }
         }
         
         // Return the model, updated or just created
@@ -167,6 +201,31 @@ exports.create = function create(appModel) {
         });
     };
     
+    var pushNewUserJobTitle = function(values) {
+        // Create job title in remote
+        return appModel.rest.post('user-job-profile', $.extend({
+            jobTitleID: 0,
+            jobTitleName: '',
+            intro: '',
+            cancellationPolicyID: null,
+            instantBooking: false
+        }, values))
+        .then(function(raw) {
+            // Save to cache and get model
+            var m = setGetUserJobTitleToCache(raw);
+            
+            // TODO implement cache saving for single job-titles, currently
+            // it needs to save the profile cache, that may not exists if
+            // the first request is for a single job title.
+            // Next lines are to save full profile, not valid here.
+            // Save in local
+            //saveCacheInLocal();
+            
+            // Return model
+            return m;
+        });
+    };
+    
     /**
         Public API
         Get a UserJobTitle record for the given
@@ -201,6 +260,10 @@ exports.create = function create(appModel) {
                 .catch(fetchUserJobTitle.bind(null, jobTitleID));
             }
         }
+    };
+    
+    api.createUserJobTitle = function (values) {
+        return pushNewUserJobTitle(values);
     };
     
     /*************************/

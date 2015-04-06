@@ -129,12 +129,9 @@ function ViewModel(app) {
         this.submitText('Saving');
 
         Promise.all(this.jobTitles().map(function(jobTitle) {
-            return app.model.rest.post('user-job-profile', {
+            return app.model.userJobProfile.createUserJobTitle({
                 jobTitleID: jobTitle.value,
-                jobTitleName: jobTitle.label,
-                intro: '',
-                cancellationPolicyID: null,
-                instantBooking: false
+                jobTitleName: jobTitle.label
             });
         }))
         .then(function(/*results*/) {
@@ -146,6 +143,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(error) {
             this.submitText('Save');
+            this.searchText('');
             this.isSaving(false);
             app.modals.showError({
                 title: 'Impossible to add one or more job titles',

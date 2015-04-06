@@ -9,13 +9,6 @@ var ko = require('knockout');
 
 function UserJobProfileViewModel(app) {
     
-    this.userJobProfile = ko.observableArray([]);
-
-    this.isFirstTime = ko.observable(true);
-    this.isLoading = ko.observable(false);
-    this.isSyncing = ko.observable(false);
-    this.thereIsError = ko.observable(false);
-    
     // Load and save job title info
     var jobTitlesIndex = {};
     function syncJobTitle(jobTitleID) {
@@ -33,6 +26,32 @@ function UserJobProfileViewModel(app) {
             return jobTitlesIndex[this.jobTitleID()];
         }, userJobTitle);
     }
+    
+    this.userJobProfile = ko.observableArray([]);
+    // Updated using the live list, for background updates
+    app.model.userJobProfile.list.subscribe(function(list) {
+        // We need the job titles info before end
+        Promise.all(list.map(function(userJobTitle) {
+            return syncJobTitle(userJobTitle.jobTitleID());
+        }))
+        .then(function() {
+            // Create jobTitle property before update
+            // observable with the profile
+            list.forEach(attachJobTitle);
+
+            this.userJobProfile(list);
+
+            this.isLoading(false);
+            this.isSyncing(false);
+            this.thereIsError(false);
+        }.bind(this))
+        .catch(showLoadingError);
+    }, this);
+
+    this.isFirstTime = ko.observable(true);
+    this.isLoading = ko.observable(false);
+    this.isSyncing = ko.observable(false);
+    this.thereIsError = ko.observable(false);
     
     var showLoadingError = function showLoadingError(err) {
         app.modals.showError({
@@ -58,27 +77,7 @@ function UserJobProfileViewModel(app) {
         }
 
         // Keep data updated:
-        app.model.userJobProfile.getUserJobProfile()
-        .then(function(userJobProfile) {
-            
-            // We need the job titles info before end
-            Promise.all(userJobProfile.map(function(userJobTitle) {
-                return syncJobTitle(userJobTitle.jobTitleID());
-            }))
-            .then(function() {
-
-                // Create jobTitle property before update
-                // observable with the profile
-                userJobProfile.forEach(attachJobTitle);
-                
-                this.userJobProfile(userJobProfile);
-
-                this.isLoading(false);
-                this.isSyncing(false);
-                this.thereIsError(false);
-            }.bind(this))
-            .catch(showLoadingError);
-        }.bind(this))
+        app.model.userJobProfile.syncList()
         .catch(showLoadingError);
 
     }.bind(this);
