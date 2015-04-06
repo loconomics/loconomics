@@ -12,7 +12,7 @@
       <a href="/freelancerPricing" class="btn btn-link btn-block ListView-item-content"
          data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }">
         <div>Pricing and services</div>
-        <div class="text-muted">7 services</div>
+        <div class="text-muted" data-bind="text: pricingCount"></div>
       </a>
       <a href="/freelancerPricing" class="btn btn-link ListView-item-action"
          data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }"><span class="glyphicon glyphicon-edit"></span></a>

@@ -34,7 +34,23 @@ var A = Activity.extends(function JobtitlesActivity() {
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
-                        title: 'There was an error while loading.',
+                        title: 'There was an error while loading addresses.',
+                        error: err
+                    });
+                }.bind(this));
+                
+                ////////////
+                // Pricing/Services
+                this.app.model.freelancerPricing.getList(jobTitleID)
+                .then(function(list) {
+
+                    list = this.app.model.freelancerPricing.asModel(list);
+                    this.viewModel.pricing(list);
+
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading services.',
                         error: err
                     });
                 }.bind(this));
@@ -50,13 +66,14 @@ var A = Activity.extends(function JobtitlesActivity() {
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({
-                        title: 'There was an error while loading.',
+                        title: 'There was an error while loading the job title.',
                         error: err
                     });
                 }.bind(this));
             }
             else {
                 this.viewModel.addresses([]);
+                this.viewModel.pricing([]);
                 this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
@@ -86,12 +103,14 @@ function ViewModel(app) {
     this.jobTitleName = ko.observable('Job Title');
     
     this.addresses = ko.observable([]);
+    this.pricing = ko.observable([]);
 
     // Computed since it can check several externa loadings
     this.isLoading = ko.pureComputed(function() {
-
-        // TODO: On services support, add the services loading
-        return app.model.serviceAddresses.state.isLoading();
+        return (
+            app.model.serviceAddresses.state.isLoading() ||
+            app.model.freelancerPricing.state.isLoading()
+        );
         
     }, this);
     
@@ -102,6 +121,22 @@ function ViewModel(app) {
         var count = this.addresses().length,
             one = '1 location',
             more = ' locations';
+        
+        if (count === 1)
+            return one;
+        else
+            // Small numbers, no need for formatting
+            return count + more;
+
+    }, this);
+    
+    this.pricingCount = ko.pureComputed(function() {
+        
+        // TODO l10n.
+        // Use i18next plural localization support rather than this manual.
+        var count = this.pricing().length,
+            one = '1 service',
+            more = ' services';
         
         if (count === 1)
             return one;
