@@ -77,6 +77,8 @@ function GroupListRemoteModel(settings) {
                     return data ? data : remotePromise;
                 }.bind(this))
                 .then(function(data) {
+                    // Ever a list, even if empty
+                    data = data || [];
                     cache.setGroupCache(groupID, data);
                     this.pushGroupToLocal(groupID, data);
                     api.state.isLoading(false);
@@ -94,6 +96,8 @@ function GroupListRemoteModel(settings) {
                 // From remote
                 return this.fetchGroupFromRemote(groupID)
                 .then(function(data) {
+                    // Ever a list, even if empty
+                    data = data || [];
                     cache.setGroupCache(groupID, data);
                     this.pushGroupToLocal(groupID, data);
                     api.state.isLoading(false);
