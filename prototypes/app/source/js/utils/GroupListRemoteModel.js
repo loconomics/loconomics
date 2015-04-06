@@ -72,6 +72,7 @@ function GroupListRemoteModel(settings) {
                         cache.setGroupCache(groupID, serverData);
                         this.pushGroupToLocal(groupID, serverData);
                         api.state.isSyncing(false);
+                        return serverData;
                     }.bind(this));
                     // Remote fallback: If no local, wait for remote
                     return data ? data : remotePromise;
