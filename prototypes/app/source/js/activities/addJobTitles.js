@@ -128,6 +128,7 @@ function ViewModel(app) {
         Promise.all(this.jobTitles().map(function(jobTitle) {
             return app.model.rest.post('user-job-profile', {
                 jobTitleID: jobTitle.value,
+                jobTitleName: jobTitle.label,
                 intro: '',
                 cancellationPolicyID: null,
                 instantBooking: false
