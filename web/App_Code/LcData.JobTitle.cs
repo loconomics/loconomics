@@ -79,13 +79,13 @@ public static partial class LcData
         /// <param name="searchText"></param>
         /// <param name="locale"></param>
         /// <returns></returns>
-        public static IEnumerable<dynamic> SearchJobTitles(string searchText, LcRestLocale locale)
+        public static IEnumerable<AutocompleteResult> SearchJobTitles(string searchText, LcRestLocale locale)
         {
             using (var db = Database.Open("sqlloco"))
             {
                 var sql = "EXEC SearchPositions @0, @1, @2";
                 return db.Query(sql, "%" + searchText + "%", locale.languageID, locale.countryID)
-                    .Select(job => new {
+                    .Select(job => new AutocompleteResult {
                         value = job.PositionID,
                         label = job.PositionSingular
                     });
