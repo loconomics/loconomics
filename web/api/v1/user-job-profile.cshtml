@@ -148,13 +148,12 @@
                     
                     // Name for the job title is required, if there is no one (more than three letters, to avoid excesive generic names/searchs),
                     // throw error of job title required
-                    var jobTitleName = Request.Form["jobTitleName"];
-                    if (String.IsNullOrWhiteSpace(jobTitleName) || jobTitleName.Length < 4) {
-                        throw new HttpException(400, "A Job Title is required");
-                    }
-                    
+                    var jobTitleName = Request.Form["jobTitleName"] ?? "";
                     // Normalize name
                     jobTitleName = jobTitleName.Trim().CollapseSpaces().ToTitleCase();
+                    if (jobTitleName.Length < 4) {
+                        throw new HttpException(400, "A Job Title is required");
+                    }
 
                     // Search
                     var jobTitle = LcData.JobTitle.SearchJobTitles(jobTitleName, LcRestLocale.Current).FirstOrDefault();
