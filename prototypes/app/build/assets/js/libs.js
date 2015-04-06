@@ -20034,8 +20034,6 @@ module.exports=require('qye9jK');
 
 },{}],"numeral":[function(require,module,exports){
 module.exports=require('5zL6jn');
-},{}],"ko/formatBinding":[function(require,module,exports){
-module.exports=require('ESswgh');
 },{}],"ESswgh":[function(require,module,exports){
 /* jshint maxcomplexity:14 */
 /**
@@ -20072,7 +20070,7 @@ function applyFormat(value, element, options, dataContext) {
 
     var type = ko.unwrap(options.type);
 
-    if (type && value && type in exports.types) {
+    if (type && type in exports.types) {
 
         var typeFormatter = exports.types[type];
         var str = typeFormatter.format(value, options, ko.dataFor(element));
@@ -20169,7 +20167,9 @@ exports.types.bool = {
     }
 };
 
-},{"knockout":"cXaNJa","moment":"qye9jK","numeral":"5zL6jn"}],"0Z47Gp":[function(require,module,exports){
+},{"knockout":"cXaNJa","moment":"qye9jK","numeral":"5zL6jn"}],"ko/formatBinding":[function(require,module,exports){
+module.exports=require('ESswgh');
+},{}],"0Z47Gp":[function(require,module,exports){
 /**
     Layout update event
 **/

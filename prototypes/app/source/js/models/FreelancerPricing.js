@@ -4,7 +4,8 @@
 **/
 'use strict';
 
-var Model = require('./Model');
+var Model = require('./Model'),
+    ko = require('knockout');
 
 function FreelancerPricing(values) {
     
@@ -31,6 +32,12 @@ function FreelancerPricing(values) {
     }, values);
     
     this.model.defID(['freelancerPricingID']);
+    
+    this.durationText = ko.computed(function() {
+        var minutes = this.serviceDurationMinutes() || 0;
+        // TODO: Formatting, localization
+        return minutes ? minutes + ' minutes' : '';
+    }, this);
 }
 
 module.exports = FreelancerPricing;

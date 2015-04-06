@@ -34,6 +34,10 @@ var A = Activity.extends(function FreelancerPricingActivity() {
                 .then(function(list) {
 
                     list = this.app.model.freelancerPricing.asModel(list);
+                    // Add the isSelected property to each item
+                    list.forEach(function(item) {
+                        item.isSelected = ko.observable(false);
+                    });
                     this.viewModel.list(list);
 
                 }.bind(this))
@@ -103,13 +107,8 @@ A.prototype.show = function show(options) {
     // or outdated info forcing update
     this.viewModel.jobTitleID(0);
     this.viewModel.selectedPricing.removeAll();
-    
-    if (options.selectAddress === true) {
-        this.viewModel.isSelectionMode(true);
-        // preset:
-        this.viewModel.selectedAddress(options.selectedAddress);
-    }
-    
+
+    // Params
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
     
@@ -177,9 +176,9 @@ function ViewModel(app) {
             return {
                 // TODO: Get group name from the PricingType.pluralName
                 group: groupNamePrefix + key,
-                pricing: groupsList[key],
+                pricing: groups[key],
                 // TODO Load the pricing information
-                type: new PricingType()
+                type: new PricingType({ addNewLabel: 'add new' })
             };
         });
 

@@ -9,7 +9,7 @@
           </div>
           <!-- ko foreach: pricing -->
           <div class="ListView-item">
-              <div class="ListView-item-marker"><p data-bind="text: price, format: { type: 'number', format: '$0,0' }"></p></div>
+              <div class="ListView-item-marker"><p data-bind="text: price, format: { type: 'number', format: '$0' }"></p></div>
               <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.togglePricingSelection }">
                 <div data-bind="visible: durationText()"><strong data-bind="text: name"></strong></div><div data-bind="text: durationText"></div>
                 <p data-bind="visible: !durationText()"><strong data-bind="text: name"></strong></p>
@@ -19,7 +19,7 @@
           </div>
           <!-- /ko -->
             <div class="ListView-item">
-                <button type="button" class="btn btn-default btn-block" data-href="#!pricingEditor/" data-bind="attr: {'data-href': '#!pricingEditor/' + jobTitleID(), text: config.addNewLabel()"></button>
+                <button type="button" class="btn btn-default btn-block" data-href="#!pricingEditor/" data-bind="attr: { 'data-href': '#!pricingEditor/' + $root.jobTitleID() }, text: type.addNewLabel()"></button>
             </div>
         </div>
     </div>

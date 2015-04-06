@@ -33,7 +33,7 @@ function applyFormat(value, element, options, dataContext) {
 
     var type = ko.unwrap(options.type);
 
-    if (type && value && type in exports.types) {
+    if (type && type in exports.types) {
 
         var typeFormatter = exports.types[type];
         var str = typeFormatter.format(value, options, ko.dataFor(element));
