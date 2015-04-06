@@ -148,7 +148,8 @@
                     
                     // Name for the job title is required, if there is no one (more than three letters, to avoid excesive generic names/searchs),
                     // throw error of job title required
-                    if (Request.Form["jobTitleName"].IsEmpty() || Request.Form["jobTitleName"].Length < 4) {
+                    var jobTitleName = Request.Form["jobTitleName"];
+                    if (jobTitleName.IsEmpty() || jobTitleName.Length < 4) {
                         throw new HttpException(400, "A Job Title is required");
                     }
 
@@ -160,8 +161,13 @@
                         jobTitleExists = true;
                     }
                     else {
-                        // TODO: Create a new job-title based on the given name #650
-                        // jobTitleExists = true;
+                        //  Create a new job-title based on the given name #650
+                        jobTitleID = LcData.JobTitle.CreateJobTitleByName(jobTitleName.Capitalize(), LcRestLocale.Current.languageID, LcRestLocale.Current.countryID);
+                        // Check well know custom error codes
+                        if (jobTitleID == -1) {
+                            throw new HttpException(400, String.Format("The Job Title '{0}' is not allowed.", jobTitleName));
+                        }
+                        jobTitleExists = true;
                     }
                 }
                 else {
@@ -173,16 +179,18 @@
                     // Read data; It stops on not valid:
                     var data = GetValidatedItemBodyInput();
                 
-                    LcData.UserInfo.InsProviderPosition(
+                    LcData.JobTitle.InsertUserJobTitle(
                         userID,
                         jobTitleID,
                         data.policyID,
                         data.intro,
-                        data.instantBooking
+                        data.instantBooking,
+                        LcRestLocale.Current.languageID,
+                        LcRestLocale.Current.countryID
                     );
                 }
                 else {
-                    throw new HttpException(404, "Job Title not found");
+                    throw new HttpException(404, "Job Title not found or disapproved");
                 }
                 
                 return GetItem(jobTitleID);
@@ -272,7 +280,9 @@
                 jobTitleID,
                 data.policyID,
                 data.intro,
-                data.instantBooking
+                data.instantBooking,
+                LcRestLocale.Current.languageID,
+                LcRestLocale.Current.countryID
             );
 
             // Return the updated item

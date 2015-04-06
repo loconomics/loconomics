@@ -32,6 +32,7 @@ public static partial class LcData
                          AND LanguageID = @1
                          AND CountryID = @2
                          AND Active = 1
+                         AND (Approved = 1 Or Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
                 ", jobTitleID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
 
                 if (job == null)
@@ -99,23 +100,28 @@ public static partial class LcData
             {
                 return db.Query(@"
                     SELECT
-                        UserID As userID,
-                        PositionID As jobTitleID,
-                        PositionIntro As intro,
-                        StatusID As statusID,
-                        CancellationPolicyID As cancellationPolicyID,
-                        InstantBooking As instantBooking,
-                        CreateDate As createdDate,
-                        UpdatedDate As updatedDate
+                        u.UserID As userID,
+                        u.PositionID As jobTitleID,
+                        u.PositionIntro As intro,
+                        u.StatusID As statusID,
+                        u.CancellationPolicyID As cancellationPolicyID,
+                        u.InstantBooking As instantBooking,
+                        u.CreateDate As createdDate,
+                        u.UpdatedDate As updatedDate
                     FROM
-                        userprofilepositions
+                        userprofilepositions as u
+                         INNER JOIN
+                        positions on u.positionID = positions.positionID AND positions.languageID = @1 and positions.countryID = @2
                     WHERE
-                        UserID = @0
-                         AND LanguageID = @1
-                         AND CountryID = @2
-                         AND Active = 1
-                         AND StatusID > 0
-                         AND (@3 = -1 OR @3 = PositionID)
+                        u.UserID = @0
+                         AND u.LanguageID = @1
+                         AND u.CountryID = @2
+                         AND u.Active = 1
+                         AND u.StatusID > 0
+                         AND (@3 = -1 OR @3 = u.PositionID)
+                         -- Double check for approved positions
+                         AND positions.Active = 1
+                         AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
                 ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), jobTitleID);
             }
         }
@@ -138,12 +144,41 @@ public static partial class LcData
             }
         }
 
+        public static void InsertUserJobTitle(
+            int userID,
+            int jobTitleID,
+            int cancellationPolicyID,
+            string intro,
+            bool instantBooking,
+            int languageID,
+            int countryID
+            )
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                // Create position for the provider
+                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6",
+                    userID,
+                    jobTitleID,
+                    languageID,
+                    countryID,
+                    cancellationPolicyID,
+                    intro,
+                    instantBooking);
+                if (results.Result != "Success") {
+                    throw new Exception("We're sorry, there was an error creating your job title: " + results.Result);
+                }
+            }
+        }
+
         public static bool UpdateUserJobTitle(
             int userID,
             int jobTitleID,
             int policyID,
             string intro,
-            bool instantBooking)
+            bool instantBooking,
+            int languageID,
+            int countryID)
         {
             var sqlUpdate = @"
                 UPDATE  UserProfilePositions
@@ -160,7 +195,8 @@ public static partial class LcData
                 var affected = db.Execute(sqlUpdate,
                     userID,
                     jobTitleID,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    languageID,
+                    countryID,
                     intro,
                     policyID,
                     instantBooking
@@ -261,6 +297,143 @@ public static partial class LcData
 
                     return false;
                 }
+            }
+        }
+        #endregion
+
+        #region Autogenerate Job Title
+        /// <summary>
+        /// Allows users to create a new job title with basic and default information. #650
+        /// </summary>
+        /// <param name="singularName"></param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public static int CreateJobTitleByName(string singularName, int languageID, int countryID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return (int)db.QueryValue(@"
+                    DECLARE @PositionID int
+
+                    -- Check that the job title does not exists for the exact name
+                    -- With error if dissaproved
+                    DECLARE @Approved bit
+                    SELECT TOP 1 @PositionID = PositionID, @Approved = Approved
+                    FROM positions
+                    WHERE PositionSingular like @2
+                    
+                    IF @PositionID is not null
+                    BEGIN
+                        IF @Approved = 0 BEGIN
+                            -- The Job Title is not allowed
+                            SELECT -1 As ErrorNumber
+                            RETURN
+                        END
+                        ELSE
+                            -- Exists and valid, return that ID:
+                            SELECT @PositionID
+                    END
+                    
+                    -- Create Position with new ID
+
+                    BEGIN TRANSACTION
+
+                    SELECT TOP 1 @PositionID = PositionID + 1 FROM positions WITH (TABLOCKX) ORDER BY PositionID DESC
+
+                    INSERT INTO positions
+                       ([PositionID]
+                       ,[LanguageID]
+                       ,[CountryID]
+                       ,[PositionSingular]
+                       ,[PositionPlural]
+                       ,[Aliases]
+                       ,[PositionDescription]
+                       ,[CreatedDate]
+                       ,[UpdatedDate]
+                       ,[ModifiedBy]
+                       ,[GovID]
+                       ,[GovPosition]
+                       ,[GovPositionDescription]
+                       ,[Active]
+                       ,[DisplayRank]
+                       ,[PositionSearchDescription]
+                       ,[AttributesComplete]
+                       ,[StarRatingsComplete]
+                       ,[PricingTypeComplete]
+                       ,[EnteredByUserID]
+                       ,[Approved])
+                    VALUES
+                       (@PositionID
+                       ,@0
+                       ,@1
+                       ,@2
+                       ,@2
+                       ,''
+                       ,''
+                       ,getdate()
+                       ,getdate()
+                       ,'ur'
+                       ,null
+                       ,null
+                       ,null
+                       ,1
+                       ,null
+                       ,''
+                       ,0
+                       ,0
+                       ,0
+                       ,1
+                        -- pre-approval: not approved, not disallowed, just null
+                       ,null)
+
+                    -- Add attributes category for the new position
+                    DECLARE @ServiceAttributeCategoryID int
+                    SELECT TOP 1 @ServiceAttributeCategoryID = ServiceAttributeCategoryID + 1 FROM ServiceAttributeCategory WITH (TABLOCKX) ORDER BY ServiceAttributeCategoryID DESC
+
+                    INSERT INTO [serviceattributecategory]
+                               ([ServiceAttributeCategoryID]
+                               ,[LanguageID]
+                               ,[CountryID]
+                               ,[ServiceAttributeCategory]
+                               ,[CreateDate]
+                               ,[UpdatedDate]
+                               ,[ModifiedBy]
+                               ,[Active]
+                               ,[SourceID]
+                               ,[PricingOptionCategory]
+                               ,[ServiceAttributeCategoryDescription]
+                               ,[RequiredInput]
+                               ,[SideBarCategory]
+                               ,[EligibleForPackages]
+                               ,[DisplayRank]
+                               ,[PositionReference]
+                               ,[BookingPathSelection])
+                         VALUES
+                               (@ServiceAttributeCategoryID
+                               ,@0
+                               ,@1
+                               ,@3
+                               ,getdate()
+                               ,getdate()
+                               ,'ur'
+                               ,1
+                               ,null
+                               ,null
+                               ,''
+                               ,0
+                               ,0
+                               ,0
+                               ,1
+                               ,@PositionID
+                               ,0)
+
+                    COMMIT
+
+                    SELECT @PositionID As PositionID
+                ", languageID, countryID, singularName,
+                 // L10N
+                 "I specialize in");
             }
         }
         #endregion

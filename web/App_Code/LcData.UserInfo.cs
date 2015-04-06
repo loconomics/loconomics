@@ -525,26 +525,27 @@ public static partial class LcData
         #endregion
 
         #region Create
-        private const string sqlInsProviderPosition = @"
-            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6
-        ";
         public static void InsProviderPosition(int userID, int positionID,
             int cancellationPolicyID = LcData.Booking.DefaultCancellationPolicyID,
             string intro = null,
             bool instantBooking = false)
         {
-            using (var db = Database.Open("sqlloco"))
+            var jobTitleExists = LcData.JobTitle.GetJobTitle(positionID) != null;
+            if (jobTitleExists)
             {
-                // Create position for the provider
-                var Results = db.QuerySingle(LcData.UserInfo.sqlInsProviderPosition,
-                    userID, positionID,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                LcData.JobTitle.InsertUserJobTitle(
+                    userID,
+                    positionID,
                     cancellationPolicyID,
                     intro,
-                    instantBooking);
-                if (Results.Result != "Success") {
-                    throw new Exception("We're sorry, there was an error creating your job title: " + Results.Result);
-                }
+                    instantBooking,
+                    LcData.GetCurrentLanguageID(),
+                    LcData.GetCurrentCountryID()
+                );
+            }
+            else
+            {
+                throw new Exception("The job title does not exists or is disapproved");
             }
         }
         #endregion
@@ -596,6 +597,7 @@ public static partial class LcData
                         WHERE a.UserID = @0 and c.LanguageID = @2 and c.CountryID = @3
                             AND c.Active = 1
                             AND a.Active = 1 AND ((@1 = 0 AND a.StatusID > 0) OR a.StatusID = 1)
+                            AND (c.Approved = 1 Or c.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
                     ";
                     poss = db.Query(sqlpositions, userId, onlyActivePositions ? 1 : 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 }
