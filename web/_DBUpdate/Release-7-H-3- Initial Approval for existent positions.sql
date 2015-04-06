@@ -1,0 +1,1 @@
+UPDATE positions set Approved = 1 where Approved is null
