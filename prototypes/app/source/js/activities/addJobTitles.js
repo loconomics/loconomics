@@ -146,6 +146,6 @@ function ViewModel(app) {
                 title: 'Impossible to add one or more job titles',
                 error: error
             });
-        });
+        }.bind(this));
     }.bind(this);
 }

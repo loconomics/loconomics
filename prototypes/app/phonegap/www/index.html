@@ -97,6 +97,29 @@
         </div>
       </div>
     </nav>
+    <!-- confirmModal -->
+    <div id="confirmModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="confirmModal-label"
+    aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+             <h4 class="modal-title" id="confirmModal-label" data-default-text="Confirmation">Confirmation</h4>
+
+          </div>
+          <div class="modal-body">
+            <p id="confirmModal-body" data-default-text="Are you sure?"></p>
+          </div>
+          <div class="modal-footer">
+            <button id="confirmModal-noBtn" type="button" class="btn btn-default"
+            data-default-text="No" data-dismiss="modal">No</button>
+            <button id="confirmModal-yesBtn" type="button" class="btn btn-default"
+            data-default-text="Yes" data-dismiss="modal">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- errorModal -->
     <div id="errorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="errorModal-label"
     aria-hidden="true" data-backdrop="static">
@@ -192,15 +215,47 @@
         </div>
       </div>
     </div>
+    <!-- AddJobTitles activity -->
+    <div class="container-fluid" data-activity="addJobTitles">
+       <h2 class="SectionTitle">
+        <span>Add one or more job title(s)</span>
+    </h2>
+
+      <div class="isolated">
+        <div class="input-group"> <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+          <span
+          class="sr-only">Search</span>
+            </span>
+            <input id="addJobTitles-search" type="text" class="form-control" placeholder="search"
+            data-bind="textInput: searchText"> <span class="input-group-btn">
+                <button type="button" class="btn btn-secondary" data-bind="event: { tap: add }">Add</button>
+            </span>
+
+        </div>
+        <!-- /input-group -->
+      </div>
+      <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: jobTitles">
+        <div class="ListView-item"> <a href="#" class="btn btn-link btn-block ListView-item-content">
+        <p data-bind="text: label"></p>
+      </a>
+ <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { tap: $root.remove }"><span class="glyphicon glyphicon-trash"></span></a>
+
+        </div>
+      </div>
+      <div class="navbar navbar-default ActivityNavbar">
+        <div class="container">
+          <button type="button" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { tap: save }"></button>
+        </div>
+      </div>
+    </div>
     <!-- Activity addressEditor -->
     <div class="container-fluid has-navbar" data-activity="addressEditor"
     data-bind="css: { 'is-loading': isLoading }">
-      <form role="form">
+      <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
-            <div class="loadingSpinner loadingSpinner--onRight">
-                <span class="glyphicon glyphicon-refresh"></span>
-            </div>
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
         </h2>
 
         <fieldset class="isolated" data-bind="with: address()">
@@ -231,12 +286,13 @@
             </div>
           </div>
         </fieldset>
-      </form>
-      <div class="navbar navbar-default ActivityNavbar">
-        <div class="container">
-          <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }, text: submitText, disable: $root.isLocked"></button>
+        <div class="navbar navbar-default ActivityNavbarDISABLED">
+          <div>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
     <!-- Activity appointment -->
     <div class="container-fluid" data-activity="appointment">
@@ -249,7 +305,7 @@
 
              <h2 data-bind="text: currentAppointment().summary()"></h2>
 
-            <div class="loadingSpinner pull-right"></div>
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
           </div>
           <ul class="list-unstyled" data-bind="visible: currentAppointment().id() > 0">
             <li data-bind="event: { tap: editMode() && pickDateTime }"> <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
@@ -435,11 +491,12 @@
     <div class="container-fluid" data-activity="calendar" data-bind="css: { 'is-loading': isLoading }">
        <h1 id="calendarDateHeader" class="CalendarDateHeader ActivityTitle">
       <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
-      <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center"><time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time> <span class="caret"></span></a>
+      <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center">
+          <time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
+          <span class="caret"></span>
+          <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+      </a>
       <a href="#next" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next date</span></a>
-      <span class="loadingSpinner loadingSpinner--floating">
-        <span class="glyphicon glyphicon-refresh"></span>
-      </span>
   </h1>
 
       <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
@@ -751,10 +808,9 @@
         </div>
         <div data-bind="visible: !nextBooking()" class="isolated"> <span>You have no bookings!</span>
  <span>
-            <span class="loadingSpinner loadingSpinner--floating">
-                <span class="glyphicon glyphicon-refresh"></span>
-</span>
-          </span>
+            <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        </span>
+
         </div>
       </div>
        <h1 class="SectionTitle has-HelpPoint">Upcoming bookings</h1>
@@ -879,9 +935,7 @@
     <div class="container-fluid" data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
        <h2 class="SectionTitle">
       <span data-bind="text: jobTitleName">Job Title</span>
-    <div class="loadingSpinner loadingSpinner--onRight">
-        <span class="glyphicon glyphicon-refresh"></span>
-    </div>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
   </h2>
 
       <div class="ListView ListView--twolines ListView--textualmarker">
@@ -1133,10 +1187,9 @@
     <!-- Pricing Activity -->
     <div class="container-fluid" data-activity="pricing">
       <div>
-        <div class="loadingSpinner loadingSpinner--floating"> <span class="glyphicon glyphicon-refresh"></span>
-
-        </div>
-        <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: groupedPricing">
+        <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        <div class="ListView ListView--twolines ListView--textualmarker"
+        data-bind="foreach: groupedPricing">
           <div class="ListView-divider SectionTitle"> <span data-bind="text: group"></span>
 
           </div>
@@ -1235,9 +1288,7 @@
     <!-- Scheduling activity -->
     <div class="container-fluid" data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }">
        <h2 class="SectionTitle">Services, Pricing, &amp; Locations
-        <div class="loadingSpinner loadingSpinner--onRight">
-            <span class="glyphicon glyphicon-refresh"></span>
-        </div>
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
 
       <div class="ListView ListView--twolines ListView--textualmarker">
@@ -1257,10 +1308,10 @@
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
-          </div> <a href="/jobtitles/0" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="/addJobTitles" class="btn btn-link btn-block ListView-item-content">
                 <p>Add a job title</p>
             </a>
- <a href="/jobtitles/0" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+ <a href="/addJobTitles" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
 
         </div>
       </div>
@@ -1387,9 +1438,7 @@
       <span data-bind="visible: headerText, text: headerText">
         Locations
       </span>
-      <div class="loadingSpinner loadingSpinner--onRight">
-        <span class="glyphicon glyphicon-refresh"></span>
-      </div>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
   </h2>
 
       <div id="addressesListView">
@@ -1639,6 +1688,12 @@
             </a>
             <a href="/feedback" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
           </div>
+      </div>
+    </script>
+    <!-- Component Template loading-spinner -->
+    <script type="text/html" id="loading-spinner-template">
+      <div class="loadingSpinner" data-bind="attr: { 'class': cssClass() }">
+          <span class="glyphicon glyphicon-refresh"></span>
       </div>
     </script>
     <!-- Component Template navbar-action -->
