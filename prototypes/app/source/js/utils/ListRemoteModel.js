@@ -16,6 +16,7 @@ function required(val, msg) {
 }
 
 function ListRemoteModel(settings) {
+    /*jshint maxstatements:50*/
 
     settings = settings || {};
     settings.listTtl = required(settings.listTtl, 'listTtl is required');
@@ -31,10 +32,35 @@ function ListRemoteModel(settings) {
         isSaving: ko.observable(false),
         isDeleting: ko.observable(false)
     };
-
+    
+    // Items are managed as plain object by default, but as permanent, updated
+    // model instances if the Model class was specified.
+    // This adapter is passed to the cache constructor too keep the in-memory
+    // objects up to date with the correct structure.
+    function itemAdapter(oldItem, newItem) {
+        if (settings.Model) {
+            // If the model item already exists, update with new values
+            if (oldItem && oldItem instanceof settings.Model) {
+                oldItem.model.updateWith(newItem);
+                return oldItem;
+            }
+            else {
+                // New created item.
+                // If there was a previous, no-model, value, they are discarded
+                // (that situation can only happens if there are irregular modifications
+                // of the internal behavior).
+                return new settings.Model(newItem);
+            }
+        }
+        else {
+            return newItem;
+        }
+    }
+    
     var cache = new IndexedListCache({
         listTtl: settings.listTtl,
-        itemIdField: settings.itemIdField
+        itemIdField: settings.itemIdField,
+        itemAdapter: itemAdapter
     });
 
     this.state.isLocked = ko.pureComputed(function() {
@@ -50,15 +76,43 @@ function ListRemoteModel(settings) {
     this.pushToLocal = notImplemented;
     this.pushToRemote = notImplemented;
     this.removeItemFromRemote = notImplemented;
+    
+    /**
+        Retrieves a plain array-objects from the cached list
+    **/
+    function getPlainCachedList() {
+        var arr = cache.list();
+        return arr.map(function(item) {
+            if (item && settings.Model && item instanceof settings.Model) {
+                return item.model.toPlainObject();
+            }
+            else {
+                return item;
+            }
+        });
+    }
 
     /** API definition **/
     var api = this;
+    
+    // Direct access to the observable cached list.
+    api.list = cache.list;
+    
+    api.sync = function sync() {
+        api.getList();
+    };
 
+    /**
+        Promise based request to get the list (from cache, local or remote).
+        It updates the observable list if new data is fetched.
+        A general approach is to use the observable list and call the 'sync' method
+        rather than wait this promise to finish ('sync' performs this load really).
+    **/
     api.getList = function getList() {
 
         if (cache.control.mustRevalidate()) {
-            // No cache data, is first load, try from local
-            if (!cache.list) {
+            // Cache still not used, then is first load, try load from local
+            if (cache.unused) {
                 api.state.isLoading(true);
                 // From local
                 return this.fetchFromLocal()
@@ -157,12 +211,12 @@ function ListRemoteModel(settings) {
             // a new item.
             if (serverData) {
                 // Save in cache
-                cache.setItemCache(serverData[settings.itemIdField], serverData);
+                cache.setItemCache(serverData);
                 // Save in local storage
                 // In local need to be saved all the list, not just
                 // the item; since we have the cache list updated, use that
                 // full list to save local
-                this.pushToLocal(cache.list);
+                this.pushToLocal(getPlainCachedList());
             }
             api.state.isSaving(false);
 
@@ -188,7 +242,7 @@ function ListRemoteModel(settings) {
             // In local need to be saved all the list;
             // since we have the cache list updated, use that
             // full list to save local
-            this.pushToLocal(cache.list);
+            this.pushToLocal(getPlainCachedList());
 
             api.state.isDeleting(false);
             
@@ -202,38 +256,34 @@ function ListRemoteModel(settings) {
     };
     
     /** Some Utils **/
-    
-    api.asModel = function asModel(object) {
-        var Model = this.settings.Model;
-        // if is an array, return a list of models
-        if (Array.isArray(object)) {
-            return object.map(function(item) {
-                return new Model(item);
-            });
-        }
-        else {
-            return new Model(object);
-        }
-    };
-    
-    api.getItemModel = function getItemModel(itemID) {
-        return api.getItem(itemID)
-        .then(function(data) {
-            return data ? api.asModel(data) : null;
-        });
-    };
-    
+
     var ModelVersion = require('../utils/ModelVersion');
-    api.getItemVersion = function getItemVersion(itemID) {
-        return api.getItemModel(itemID)
+    /**
+        It creates a new ModelVersion for the requested item ID
+        after load the item.
+        The promise returns the ModelVersion ready, or null
+        if the item does not exists.
+    **/
+    api.createItemVersion = function createItemVersion(itemID) {
+        return api.getItem(itemID)
         .then(function(model) {
             return model ? new ModelVersion(model) : null;
         });
     };
-    
-    api.newItemVersion = function newItemVersion(values) {
+
+    /**
+        It creates a new Model instance with the given initial values,
+        returning a ModelVersion object.
+        The versioning allows to track the initial
+        state (if comes from a set of defaults or clone) with
+        the changes done; the internal version notifies itself
+        as 'unsaved' ever.
+        Its useful to keep the same ModelVersion aware code for
+        editions and additions.
+    **/
+    api.newItem = function newItem(values) {
         // New original and version for the model
-        var version = new ModelVersion(new this.settings.Model(values));
+        var version = new ModelVersion(new settings.Model(values));
         // To be sure that the version appear as something 'new', unsaved,
         // we update its timestamp to be different to the original.
         version.version.model.touch();

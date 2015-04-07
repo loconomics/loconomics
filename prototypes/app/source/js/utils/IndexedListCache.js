@@ -15,7 +15,8 @@
 'use strict';
 
 var CacheControl = require('./CacheControl'),
-    jsPropertiesTools = require('./jsPropertiesTools');
+    jsPropertiesTools = require('./jsPropertiesTools'),
+    ko = require('knockout');
 
 function createItemIndexEntry(list, itemIndex) {
     return {
@@ -30,7 +31,7 @@ function createIndex(list, byField) {
     var index = {};
     
     list.forEach(function(item, itemIndex) {
-        index[item[byField]] = createItemIndexEntry(list, itemIndex);
+        index[ko.unwrap(item[byField])] = createItemIndexEntry(list, itemIndex);
     });
 
     return index;
@@ -41,6 +42,21 @@ function required(val, msg) {
     else return val;
 }
 
+/**
+    An item adapter receives the old and the new item data and returns
+    the item to hold in the list. The returning object can be a reference
+    to the same existent object (oldItem) that gets updated with the 
+    new values (newItem), or just the newItem or any conversion over the
+    raw newItem data.
+    This allows to perform changes, add properties, or keep references,
+    like creating observables, Models.
+    
+    This default implementation just returns the newItem.
+**/
+function defaultItemAdapter(oldItem, newItem) {
+    return newItem;
+}
+
 function IndexedListCache(settings) {
     
     settings = settings || {};
@@ -48,11 +64,15 @@ function IndexedListCache(settings) {
     settings.listTtl = settings.listTtl || settings.ttl || 0;
     //FUTURE: settings.itemTtl = settings.itemTtl || settings.ttl || 0;
     settings.itemIdField = required(settings.itemIdField, 'itemIdField is required');
-    //FUTURE: settings.Model = settings.Model || throw new Error('A Model is required');
-    
+    settings.itemAdapter = typeof(settings.itemAdapter) === 'function' ? settings.itemAdapter : defaultItemAdapter;
+
+    // Internal flag to notify if the cache was not used still (no data set)
+    // since its instantiation. On first setList will change to false and keep in that state.
+    var unused = true;
+    // Internal cache management
     var cache = {
         control: new CacheControl({ ttl: settings.listTtl }),
-        list: [],
+        list: ko.observableArray([]),
         index: {/*
             itemIdField: {
                 index: Integer (index in the list array),
@@ -63,10 +83,33 @@ function IndexedListCache(settings) {
         */}
     };
 
+    /**
+        Get the cache entry from the Item
+    **/
+    function getItemCache(itemID) {
+        return cache.index[itemID] || null;
+    }
+
+    this.getItemCache = getItemCache;
+
+    // Adapt a new item using the itemAdapter and getting the old reference.
+    function adaptItem(newItem) {
+        var oldItem = getItemCache(ko.unwrap(newItem[settings.itemIdField]));
+        return settings.itemAdapter(oldItem, newItem);
+    }
+    
+    // Adapt the each element in the list with the itemAdapter,
+    // passing an old reference and the new item on each, and ensuring
+    // to return ever an array, even if empty.
+    function adaptList(list) {
+        return (list || []).map(adaptItem);
+    }
+
     function setList(list) {
-        cache.list = list || [];
-        cache.index = createIndex(list || [], settings.itemIdField);
+        cache.list(adaptList(list));
+        cache.index = createIndex(cache.list(), settings.itemIdField);
         cache.control.latest = new Date();
+        unused = false;
     }
 
     // Public, read-only, access to cache info (objects are mutable, but almost the reference
@@ -75,27 +118,20 @@ function IndexedListCache(settings) {
     jsPropertiesTools.defineGetter(this, 'list', function() { return cache.list; });
     jsPropertiesTools.defineSetter(this, 'list', function(list) { return setList(list); });
     jsPropertiesTools.defineGetter(this, 'index', function() { return cache.index; });
+    jsPropertiesTools.defineGetter(this, 'unused', function() { return unused; });
 
-    /**
-        Get the cache entry from the Item
-    **/
-    function getItemCache(itemID) {
-        return cache.index[itemID] || null;
-    }
-    
-    this.getItemCache = getItemCache;
-
-    function setItemCache(itemID, item) {
+    function setItemCache(item) {
+        var itemID = ko.unwrap(item[settings.itemIdField]);
         // Look for the entry, to update or insert a new one
         var itemEntry = cache.index[itemID];
         if (itemEntry) {
             // Update entry
-            cache.list[itemEntry.index] = item;
+            cache.list()[itemEntry.index] = adaptItem(item);
         }
         else {
             // Add to the list
-            var itemIndex = cache.list.push(item) - 1;
-            cache.index[itemID] = createItemIndexEntry(cache.list, itemIndex);
+            var itemIndex = cache.list.push(adaptItem(item)) - 1;
+            cache.index[itemID] = createItemIndexEntry(cache.list(), itemIndex);
         }
     }
 
