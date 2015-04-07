@@ -71,10 +71,10 @@ function ListRemoteModel(settings) {
         the helpers added to the class (see addXxSupport prototype methods).
     **/
     function notImplemented() { throw new Error('Not Implemented'); }
-    this.fetchFromLocal = notImplemented;
-    this.fetchFromRemote = notImplemented;
-    this.pushToLocal = notImplemented;
-    this.pushToRemote = notImplemented;
+    this.fetchListFromLocal = notImplemented;
+    this.fetchListFromRemote = notImplemented;
+    this.pushListToLocal = notImplemented;
+    this.pushListToRemote = notImplemented;
     this.removeItemFromRemote = notImplemented;
     
     /**
@@ -115,16 +115,16 @@ function ListRemoteModel(settings) {
             if (cache.unused) {
                 api.state.isLoading(true);
                 // From local
-                return this.fetchFromLocal()
+                return this.fetchListFromLocal()
                 .then(function(data) {
                     // launch remote for sync
                     api.state.isSyncing(true);
-                    var remotePromise = this.fetchFromRemote()
+                    var remotePromise = this.fetchListFromRemote()
                     .then(function(serverData) {
                         cache.list = serverData;
-                        this.pushToLocal(serverData);
+                        this.pushListToLocal(serverData);
                         api.state.isSyncing(false);
-                        return serverData;
+                        return data;
                     }.bind(this));
                     // Remote fallback: If no local, wait for remote
                     return data ? data : remotePromise;
@@ -133,10 +133,10 @@ function ListRemoteModel(settings) {
                     // Ever a list, even if empty
                     data = data || [];
                     cache.list = data;
-                    this.pushToLocal(data);
+                    this.pushListToLocal(data);
                     api.state.isLoading(false);
 
-                    return data;
+                    return cache.list;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
@@ -147,16 +147,16 @@ function ListRemoteModel(settings) {
             } else {
                 api.state.isSyncing(true);
                 // From remote
-                return this.fetchFromRemote()
+                return this.fetchListFromRemote()
                 .then(function(data) {
                     // Ever a list, even if empty
                     data = data || [];
                     cache.list = data;
-                    this.pushToLocal(data);
+                    this.pushListToLocal(data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
 
-                    return data;
+                    return cache.list;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
@@ -191,6 +191,20 @@ function ListRemoteModel(settings) {
             return cacheItem.item;
         });
     };
+    
+    /**
+        Generates and returns an observable inmediately,
+        launching an item load that will update the observable
+        on ready.
+    **/
+    api.getObservableItem = function getObservableItem(itemID) {
+        var obs = ko.observable(undefined);
+        api.getItem(itemID)
+        .then(function(itemModel) {
+            obs(itemModel);
+        });
+        return obs;
+    };
 
     /**
         Save an item in cache, local and remote.
@@ -203,7 +217,7 @@ function ListRemoteModel(settings) {
     api.setItem = function setItem(data) {
         api.state.isSaving(true);
         // Send to remote first
-        return this.pushToRemote(data)
+        return this.pushListToRemote(data)
         .then(function(serverData) {
             // Success! update local copy with returned data
             // IMPORTANT: to use server data here so we get values set
@@ -216,7 +230,7 @@ function ListRemoteModel(settings) {
                 // In local need to be saved all the list, not just
                 // the item; since we have the cache list updated, use that
                 // full list to save local
-                this.pushToLocal(getPlainCachedList());
+                this.pushListToLocal(getPlainCachedList());
             }
             api.state.isSaving(false);
 
@@ -242,7 +256,7 @@ function ListRemoteModel(settings) {
             // In local need to be saved all the list;
             // since we have the cache list updated, use that
             // full list to save local
-            this.pushToLocal(getPlainCachedList());
+            this.pushListToLocal(getPlainCachedList());
 
             api.state.isDeleting(false);
             
@@ -296,20 +310,20 @@ module.exports = ListRemoteModel;
 ListRemoteModel.prototype.addLocalforageSupport = function addLocalforageSupport(baseName) {
     var localforage = require('localforage');
 
-    this.fetchFromLocal = function fetchFromLocal() {
+    this.fetchListFromLocal = function fetchListFromLocal() {
         return localforage.getItem(baseName);
     };
-    this.pushToLocal = function pushToLocal(data) {
+    this.pushListToLocal = function pushListToLocal(data) {
         return localforage.setItem(baseName, data);
     };
 };
 
 ListRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, baseUrl) {
     
-    this.fetchFromRemote = function fetchFromRemote() {
+    this.fetchListFromRemote = function fetchListFromRemote() {
         return restClient.get(baseUrl);
     };
-    this.pushToRemote = function pushToRemote(data) {
+    this.pushListToRemote = function pushListToRemote(data) {
 
         var itemID = data[this.settings.itemIdField],
             method = itemID ? 'put' : 'post';

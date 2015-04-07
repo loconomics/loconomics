@@ -19,7 +19,7 @@
           </div>
           <!-- /ko -->
             <div class="ListView-item">
-                <button type="button" class="btn btn-default btn-block" data-href="#!pricingEditor/" data-bind="attr: { 'data-href': '#!pricingEditor/' + $root.jobTitleID() }, text: type.addNewLabel()"></button>
+                <button type="button" class="btn btn-default btn-block" data-href="#!pricingEditor/" data-bind="attr: { 'data-href': '#!pricingEditor/' + $root.jobTitleID() }, text: type() && type().addNewLabel()"></button>
             </div>
         </div>
     </div>

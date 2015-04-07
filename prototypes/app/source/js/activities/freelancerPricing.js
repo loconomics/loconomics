@@ -5,8 +5,7 @@
 
 var ko = require('knockout'),
     _ = require('lodash'),
-    Activity = require('../components/Activity'),
-    PricingType = require('../models/PricingType');
+    Activity = require('../components/Activity');
 
 var A = Activity.extends(function FreelancerPricingActivity() {
 
@@ -27,6 +26,10 @@ var A = Activity.extends(function FreelancerPricingActivity() {
                 .then(function(jobTitle) {
                     // Fill in job title name
                     this.navBar.leftAction().text(jobTitle.singularName());
+                    
+                    // Ask to sync the pricing types in advance (used in the ViewModel,
+                    // they are heavely cached)
+                    this.app.model.pricingTypes.sync();
 
                     // Get pricing
                     return this.app.model.freelancerPricing.getList(jobTitleID);
@@ -173,13 +176,18 @@ function ViewModel(app) {
         
         // Convert the indexed object into an array with some meta-data
         var groupsList = Object.keys(groups).map(function(key) {
-            return {
-                // TODO: Get group name from the PricingType.pluralName
-                group: groupNamePrefix + key,
+            var gr = {
                 pricing: groups[key],
-                // TODO Load the pricing information
-                type: new PricingType({ addNewLabel: 'add new' })
+                // Load the pricing information
+                type: app.model.pricingTypes.getObservableItem(key)
             };
+            gr.group = ko.computed(function() {
+                return groupNamePrefix + (
+                    this.type() && this.type().pluralName() ||
+                    'Services'
+                );
+            }, gr);
+            return gr;
         });
 
         return groupsList;
