@@ -42,5 +42,6 @@ module.exports = {
     'bookMeButton': require('./activities/bookMeButton'),
     'ownerInfo': require('./activities/ownerInfo'),
     'privacySettings': require('./activities/privacySettings'),
-    'addJobTitles': require('./activities/addJobTitles')
+    'addJobTitles': require('./activities/addJobTitles'),
+    'freelancerPricingEditor': require('./activities/freelancerPricingEditor')
 };

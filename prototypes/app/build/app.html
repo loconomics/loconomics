@@ -824,6 +824,31 @@
         <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }, text: submitText, disable: isLocked">Save</button>
       </div>
     </div>
+    <!-- Activity freelancerPricingEditor -->
+    <div class="container-fluid has-navbar" data-activity="freelancerPricingEditor"
+    data-bind="css: { 'is-loading': isLoading }">
+      <form role="form" data-bind="submit: save">
+         <h2 class="SectionTitle">
+            <span data-bind="text: header"></span>
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+        </h2>
+
+        <fieldset class="isolated" data-bind="with: current">
+          <app-unlabeled-input params="placeholder: type.namePlaceHolder(), value: pricing.name, disable: $root.isLocked() || !!type.fixedName()"></app-unlabeled-input>
+          <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
+            <label for="freelancerPricingEditor-numberOfSessions" data-bind="text: type.numberOfSessionsLabel()"></label>
+            <input id="freelancerPricingEditor-numberOfSessions" type="number"
+            data-bind="value: pricing.numberOfSessions, disable: $root.isLocked" />
+          </div>
+        </fieldset>
+        <div class="navbar navbar-default ActivityNavbarDISABLED">
+          <div>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
+          </div>
+        </div>
+      </form>
+    </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
        <h1 class="SectionTitle has-HelpPoint">Your next booking</h1>
@@ -1699,7 +1724,7 @@
     <!-- Component Template unlabeled-input -->
     <script type="text/html" id="unlabeled-input-template">
       <div class="form-group">
-        <input type="text" class="form-control" data-bind="textInput: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder, type: type }, disable: disable">
+        <input type="text" class="form-control" data-bind="textInput: value, attr: { 'aria-label': placeholder, 'placeholder': placeholder, type: type }, disable: disable, attr: attr">
       </div>
     </script>
   </body>

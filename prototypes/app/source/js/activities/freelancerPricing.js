@@ -229,8 +229,8 @@ function ViewModel(app) {
     }.bind(this);
     
     this.editPricing = function(pricing) {
-        app.shell.go('freelancerPricingEditor/' + pricing.freelancerPricingID());
-    };
+        app.shell.go('freelancerPricingEditor/' + this.jobTitleID() + '/' + pricing.freelancerPricingID());
+    }.bind(this);
     
     /**
         Handler for the listview items, managing edition and selection depending on current mode
