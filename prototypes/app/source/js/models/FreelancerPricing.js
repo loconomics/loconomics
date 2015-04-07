@@ -5,7 +5,8 @@
 'use strict';
 
 var Model = require('./Model'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    numeral = require('numeral');
 
 function FreelancerPricing(values) {
     
@@ -33,10 +34,33 @@ function FreelancerPricing(values) {
     
     this.model.defID(['freelancerPricingID']);
     
-    this.durationText = ko.computed(function() {
+    this.durationText = ko.pureComputed(function() {
         var minutes = this.serviceDurationMinutes() || 0;
-        // TODO: Formatting, localization
-        return minutes ? minutes + ' minutes' : '';
+        // TODO: l10n
+        return minutes ? numeral(minutes).format('0,0') + ' minutes' : '';
+    }, this);
+    
+    this.sessionsAndDuration = ko.pureComputed(function() {
+        var sessions = this.numberOfSessions(),
+            dur = this.durationText();
+        if (sessions > 1)
+            return sessions + ', ' + dur;
+        else
+            return dur;
+    }, this);
+
+    this.displayedPrice = ko.pureComputed(function() {
+        var price = this.price(),
+            rate = this.priceRate(),
+            unit = this.priceRateUnit(),
+            result = price || rate;
+        // Formatting
+        result = numeral(result).format('$0,0');
+        // If is not price but rate, add unit
+        if (!price && rate && unit) {
+            result += '/' + unit;
+        }
+        return result;
     }, this);
 }
 
