@@ -800,12 +800,12 @@
           <div class="ListView-item">
             <div class="ListView-item-marker">
               <p data-bind="text: displayedPrice"></p>
-            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.togglePricingSelection }">
+            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.tapPricing }">
                 <div data-bind="visible: sessionsAndDuration()"><strong data-bind="text: name"></strong></div><div data-bind="text: sessionsAndDuration"></div>
                 <p data-bind="visible: !sessionsAndDuration()"><strong data-bind="text: name"></strong></p>
               </a>
  <a href="#" class="ListView-item-action btn btn-link"
-            data-bind="visible: $root.isSelectionMode, event: { tap: $root.togglePricingSelection }, attr: { 'aria-pressed': isSelected }"
+            data-bind="visible: $root.isSelectionMode, event: { tap: $root.tapPricing }, attr: { 'aria-pressed': isSelected }"
             role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
 
             <a
@@ -814,9 +814,9 @@
               </a>
           </div>
           <!-- /ko -->
-          <div class="ListView-item">
-            <button type="button" class="btn btn-default btn-block" data-href="#!pricingEditor/"
-            data-bind="attr: { 'data-href': '#!pricingEditor/' + $root.jobTitleID() }, text: type() && type().addNewLabel()"></button>
+          <div class="ListView-item isolated">
+            <button type="button" class="btn btn-default btn-block" data-href="#!freelancerPricingEditor/"
+            data-bind="attr: { 'data-href': '#!freelancerPricingEditor/' + $root.jobTitleID() }, text: type() && type().addNewLabel()"></button>
           </div>
         </div>
       </div>

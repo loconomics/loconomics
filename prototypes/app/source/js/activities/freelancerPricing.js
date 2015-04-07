@@ -227,4 +227,20 @@ function ViewModel(app) {
         this.isSelectionMode(false);
         
     }.bind(this);
+    
+    this.editPricing = function(pricing) {
+        app.shell.go('freelancerPricingEditor/' + pricing.freelancerPricingID());
+    };
+    
+    /**
+        Handler for the listview items, managing edition and selection depending on current mode
+    **/
+    this.tapPricing = function(pricing) {
+        if (this.isSelectionMode()) {
+            this.togglePricingSelection(pricing);
+        }
+        else {
+            this.editPricing(pricing);
+        }
+    }.bind(this);
 }
