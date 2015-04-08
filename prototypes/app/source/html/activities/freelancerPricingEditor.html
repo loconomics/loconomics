@@ -10,19 +10,23 @@
 
             <app-unlabeled-input params="placeholder: type.namePlaceHolder, value: pricing.name, disable: $root.isLocked() || !!type.fixedName()"></app-unlabeled-input>
             
-            <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
-                <label for="freelancerPricingEditor-numberOfSessions" class="control-label" data-bind="text: type.numberOfSessionsLabel()"></label>
-                <input id="freelancerPricingEditor-numberOfSessions" class="form-control" type="number" data-bind="value: pricing.numberOfSessions, disable: $root.isLocked" />
-            </div>
-            
-            <div class="form-group" data-bind="visible: type.priceLabel">
-                <label for="freelancerPricingEditor-price" class="control-label" data-bind="text: type.priceLabel"></label>
-                <div class="input-group">
-                    <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
-                    <input id="freelancerPricingEditor-price" type="number" class="form-control" data-bind="value: pricing.price, disable: $root.isLocked" />
+            <div class="form-inline isolated">
+                <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
+                    <label for="freelancerPricingEditor-numberOfSessions" class="control-label" data-bind="text: type.numberOfSessionsLabel()"></label>
+                    <input id="freelancerPricingEditor-numberOfSessions" class="form-control" type="number" data-bind="value: pricing.numberOfSessions, disable: $root.isLocked" />
                 </div>
             </div>
             
+            <div class="form-inline isolated">
+                <div class="form-group" data-bind="visible: type.priceLabel">
+                    <label for="freelancerPricingEditor-price" class="control-label" data-bind="text: type.priceLabel"></label>
+                    <div class="input-group">
+                        <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
+                        <input id="freelancerPricingEditor-price" type="number" class="form-control" data-bind="value: pricing.price, disable: $root.isLocked" />
+                    </div>
+                </div>
+            </div>
+
             <div class="checkbox" data-bind="visible: type.firstTimeClientsOnlyLabel">
                 <label>
                     <input type="checkbox" data-bind="checked: pricing.firstTimeClientsOnly, disable: $root.isLocked" />
@@ -50,7 +54,7 @@
                 </div>
             </div>
             
-            <div data-bind="visible: type.inPersonPhoneLabel">
+            <div class="isolated" data-bind="visible: type.inPersonPhoneLabel">
                 <label data-bind="text: type.inPersonPhoneLabel"></label>
                 <div>
                     <label class="radio-inline">
@@ -63,7 +67,7 @@
             </div>
             
             <div class="form-group" data-bind="visible: type.freelancerDescription">
-                <label for="freelancerPricingEditor-description" class="control-label"><span class="sr-only" data-bind="text: type.freelancerDescription"></span></label>
+                <label for="freelancerPricingEditor-description" class="control-label sr-only"><span data-bind="text: type.freelancerDescription"></span></label>
                 <textarea class="form-control" id="freelancerPricingEditor-description" type="number" data-bind="value: pricing.description, disable: $root.isLocked, attr: { placeholder: type.descriptionPlaceHolder }">
                 </textarea>
             </div>
