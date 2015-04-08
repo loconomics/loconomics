@@ -242,9 +242,10 @@ function ViewModel(app) {
     }.bind(this);
     
     this.confirmRemoval = function() {
-        // TODO Type
+        // TODO Better l10n or replace by a new preset field on pricingType.deleteLabel
+        var p = this.pricingType();
         app.modals.confirm({
-            title: 'Delete service',
+            title: 'Delete ' + (p && p.singularName()),
             message: 'Are you sure? The operation cannot be undone.',
             yes: 'Delete',
             no: 'Keep'

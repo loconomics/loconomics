@@ -85,7 +85,8 @@ function FreelancerPricing(values) {
         var sessions = this.numberOfSessions(),
             dur = this.durationText();
         if (sessions > 1)
-            return sessions + ', ' + dur;
+            // TODO: l10n
+            return sessions + ' sessions, ' + dur;
         else
             return dur;
     }, this);
