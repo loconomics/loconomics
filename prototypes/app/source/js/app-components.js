@@ -10,6 +10,7 @@
 'use strict';
 
 var ko = require('knockout'),
+    $ = require('jquery'),
     propTools = require('./utils/jsPropertiesTools'),
     getObservable = require('./utils/getObservable');
 
@@ -38,8 +39,18 @@ exports.registerAll = function() {
             this.value = getObservable(params.value);
             this.placeholder = getObservable(params.placeholder);
             this.disable = getObservable(params.disable);
-            this.attr = getObservable(params.attr);
-            var type = getObservable(params.type);
+            
+            var userAttr = getObservable(params.attr);
+            this.attr = ko.pureComputed(function() {
+                var attr = userAttr() || {};
+                return $.extend({}, attr, {
+                    'aria-label': this.placeholder(),
+                    placeholder: this.placeholder(),
+                    type: this.type()
+                });
+            }, this);
+            
+            var type = getObservable(params.type);            
             this.type = ko.computed(function() {
                 return type() || 'text';
             }, this);
