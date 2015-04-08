@@ -86,6 +86,8 @@ exports.stringifyErrorsList = function (errors) {
         title:string Optional. The text to show in the modal's header,
             with fallback to the Modal's default title.
     }
+    @returns Promise. It resolves when the modal is dismissed/closed.
+    No formal rejection happens.
 **/
 exports.showError = function showErrorModal(options) {
     
@@ -106,7 +108,12 @@ exports.showError = function showErrorModal(options) {
 
     header.text(options.title || header.data('default-text'));
     
-    modal.modal('show');
+    return new Promise(function(resolve) {
+        modal.modal('show');
+        modal.on('hide.bs.modal', function() {
+            resolve();
+        });
+    });
 };
 
 /**

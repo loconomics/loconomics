@@ -29,17 +29,73 @@ A.prototype.show = function show(options) {
     // Reset
     this.viewModel.wasRemoved(false);
     this.viewModel.freelancerPricingVersion(null);
+    this.viewModel.pricingType(null);
 
     // Params
     var params = options && options.route && options.route.segments || [];
 
     var jobTitleID = params[0] |0,
+        // Parameter [1] can be 'new' followed by a pricingTypeID as [2]
+        pricingTypeID = params[1] === 'new' ? params[2] |0 : 0,
+        // Or a pricingID
         freelancerPricingID = params[1] |0;
 
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.freelancerPricingID(freelancerPricingID);
+    
+    /**
+        The pricing record needs some special set-up after creation/loading and before
+        being presented to the user, because special value-rules.
+    **/
+    var pricingSetup = function pricingSetup() {
+        // Pricing fields that has a special initial value
+        var c = this.viewModel.current();
+        if (c) {
+            // Name: must be the PricingType.fixedName ever if any, or
+            //   the name saved in the pricing or
+            //   the suggestedName as last fallback
+            c.pricing.name(c.type.fixedName() || c.pricing.name() || c.type.suggestedName());
+            
+            // Not To State Price Rate: if is a saved pricing, mark the noPriceRate if price rate is
+            // null or 0; cannot be done with a subscription on priceRate changes because will have
+            // the bad side effect of auto mark noPriceRate on setting 0 on priceRate, breaking the
+            // explicit purpose of the noPriceRate checkbox:
+            if (c.pricing.freelancerPricingID() && (c.pricing.priceRate() |0) <= 0) {
+                c.pricing.noPriceRate(true);
+            }
+        }
+    }.bind(this);
+    
+    var showInvalidRequestError = function() {
+        this.app.modals.showError({
+            title: 'Invalid request',
+            error: { jobTitleID: jobTitleID, pricingTypeID: pricingTypeID, freelancerPricingID: freelancerPricingID }
+        })
+        .then(function() {
+            // On close modal, go back
+            this.app.shell.goBack();
+        }.bind(this));
+    }.bind(this);
 
-    if (freelancerPricingID) {
+    if (pricingTypeID) {
+        // Load the pricing Type
+        this.app.model.pricingTypes.getItem(pricingTypeID)
+        .then(function(type) {
+            if (type) {
+                this.viewModel.pricingType(type);
+                // New pricing
+                this.viewModel.freelancerPricingVersion(this.app.model.freelancerPricing.newItemVersion({
+                    jobTitleID: jobTitleID,
+                    pricingTypeID: pricingTypeID
+                }));
+                pricingSetup();
+            }
+            else {
+                showInvalidRequestError();
+            }
+        }.bind(this));
+    }
+    else if (freelancerPricingID) {
         // Get the pricing
         this.app.model.freelancerPricing.getItemVersion(jobTitleID, freelancerPricingID)
         .then(function (freelancerPricingVersion) {
@@ -48,11 +104,17 @@ A.prototype.show = function show(options) {
                 // returns to let the 'catch' to get any error
                 return this.app.model.pricingTypes.getItem(freelancerPricingVersion.version.pricingTypeID())
                 .then(function(type) {
-                    this.viewModel.pricingType(type);
-                    this.viewModel.freelancerPricingVersion(freelancerPricingVersion);
+                    if (type) {
+                        this.viewModel.pricingType(type);
+                        this.viewModel.freelancerPricingVersion(freelancerPricingVersion);
+                        pricingSetup();
+                    }
+                    else {
+                        showInvalidRequestError();
+                    }
                 }.bind(this));
             } else {
-                this.viewModel.freelancerPricingVersion(null);
+                showInvalidRequestError();
             }
 
         }.bind(this))
@@ -60,14 +122,15 @@ A.prototype.show = function show(options) {
             this.app.modals.showError({
                 title: 'There was an error while loading.',
                 error: err
-            });
+            })
+            .then(function() {
+                // On close modal, go back
+                this.app.shell.goBack();
+            }.bind(this));
         }.bind(this));
     }
     else {
-        // New pricing
-        this.viewModel.freelancerPricingVersion(this.app.model.freelancerPricing.newItemVersion({
-            jobTitleID: jobTitleID
-        }));
+        showInvalidRequestError();
     }
 };
 
@@ -162,6 +225,10 @@ function ViewModel(app) {
             this.freelancerPricing().model.updateWith(serverData);
             // Push version so it appears as saved
             this.freelancerPricingVersion().push({ evenIfObsolete: true });
+            
+            // On save, auto go back
+            // NOTE: if auto go back is disabled, the URL must update to match the new ID
+            app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({

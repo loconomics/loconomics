@@ -8,16 +8,82 @@
 
         <fieldset class="isolated" data-bind="with: current">
 
-            <app-unlabeled-input params="placeholder: type.namePlaceHolder(), value: pricing.name, disable: $root.isLocked() || !!type.fixedName()"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: type.namePlaceHolder, value: pricing.name, disable: $root.isLocked() || !!type.fixedName()"></app-unlabeled-input>
             
             <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
                 <label for="freelancerPricingEditor-numberOfSessions" data-bind="text: type.numberOfSessionsLabel()"></label>
                 <input id="freelancerPricingEditor-numberOfSessions" type="number" data-bind="value: pricing.numberOfSessions, disable: $root.isLocked" />
             </div>
+            
+            <div class="form-group" data-bind="visible: type.priceLabel">
+                <label for="freelancerPricingEditor-price" data-bind="text: type.priceLabel"></label>
+                <input id="freelancerPricingEditor-price" type="number" data-bind="value: pricing.price, disable: $root.isLocked" />
+            </div>
+            
+            <div class="" data-bind="visible: type.durationLabel">
+                <p data-bind="text: type.durationLabel"></p>
+                <span>
+                    <label for="freelancerPricingEditor-durationHours">Hours</label>
+                    <input id="freelancerPricingEditor-durationHours" type="number" data-bind="value: pricing.durationHoursPart, disable: $root.isLocked" />
+                </span>
+                <span>
+                    <label for="freelancerPricingEditor-durationMinutes">Minutes</label>
+                    <input id="freelancerPricingEditor-durationMinutes" type="number" data-bind="value: pricing.durationMinutesPart, disable: $root.isLocked" />
+                </span>
+                <p>Minutes: <span data-bind="text: pricing.serviceDurationMinutes"></span></p>
+            </div>
+            
+            <div data-bind="visible: type.inPersonPhoneLabel">
+                <p data-bind="text: type.inPersonPhoneLabel"></p>
+                <label class="radio-inline">
+                    <input type="radio" data-bind="checked: pricing.isPhone, checkedValue: false, disable: $root.isLocked()"> <span>in-person</span>
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" data-bind="checked: pricing.isPhone, checkedValue: true, disable: $root.isLocked()"> <span>phone</span>
+                </label>
+            </div>
+            
+            <div class="checkbox" data-bind="visible: type.firstTimeClientsOnlyLabel">
+                <label>
+                    <input type="checkbox" data-bind="checked: pricing.firstTimeClientsOnly, disable: $root.isLocked" />
+                    <span data-bind="text: type.firstTimeClientsOnlyLabel"></span>
+                </label>
+            </div>
+            
+            <div class="form-group" data-bind="visible: type.freelancerDescription">
+                <label for="freelancerPricingEditor-description" class="sr-only" data-bind="text: type.freelancerDescription"></label>
+                <textarea class="form-control" id="freelancerPricingEditor-description" type="number" data-bind="value: pricing.description, disable: $root.isLocked, attr: { placeholder: type.descriptionPlaceHolder }">
+                </textarea>
+            </div>
+            
+            <div data-bind="visible: type.priceRateQuantityLabel">
+                <div class="form-group">
+                    <label for="freelancerPricingEditor-priceRateQuantity" data-bind="text: type.priceRateQuantityLabel"></label>
+                    <input id="freelancerPricingEditor-priceRateQuantity" data-bind="value: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()" />
+                </div>
+                <div class="form-group" data-bind="visible: type.priceRateUnitLabel">
+                    <label for="freelancerPricingEditor-priceRateUnit" data-bind="text: type.priceRateUnitLabel"></label>
+                    <input id="freelancerPricingEditor-priceRateUnit" data-bind="value: pricing.priceRateUnit, disable: $root.isLocked() || pricing.noPriceRate()" />
+                </div>
+                <div data-bind="visible: type.priceRateLearnMoreLabel() && type.priceRateLearnMoreText()">
+                    <a href="#" data-bind="popover: { content: type.priceRateLearnMoreText(), trigger: 'hover', container: 'body', placement: 'top' }">(<span data-bind="text: type.priceRateLearnMoreLabel"></span>)</a>
+                </div>
+                <div data-bind="visible: type.noPriceRateLabel">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" data-bind="checked: pricing.noPriceRate, disable: $root.isLocked" />
+                            <span data-bind="text: type.noPriceRateLabel"></span>
+                            <div data-bind="visible: type.noPriceRateLearnMoreLabel() && type.noPriceRateLearnMoreText()">
+                                <a href="#" data-bind="popover: { content: type.noPriceRateLearnMoreText(), trigger: 'hover', container: 'body', placement: 'top' }">(<span data-bind="text: type.noPriceRateLearnMoreLabel"></span>)</a>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
 
         </fieldset>
 
-      <div class="navbar navbar-default ActivityNavbarDISABLED">
+      <div class="navbar_navbar-default_ActivityNavbar_DISABLED">
         <div>
             <button type="submit" class="btn btn-primary btn-block"
                     data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>

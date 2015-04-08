@@ -18,8 +18,8 @@
               <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: !$root.isSelectionMode()" role="button"><span class="glyphicon glyphicon-edit"></span><span class="sr-only">Edit</span></a>
           </div>
           <!-- /ko -->
-            <div class="ListView-item isolated">
-                <button type="button" class="btn btn-default btn-block" data-href="#!freelancerPricingEditor/" data-bind="attr: { 'data-href': '#!freelancerPricingEditor/' + $root.jobTitleID() }, text: type() && type().addNewLabel()"></button>
+            <div class="ListView-item">
+                <button type="button" class="btn btn-link btn-block ListView-item-content" data-href="#!freelancerPricingEditor/" data-bind="attr: { 'data-href': '#!freelancerPricingEditor/' + $root.jobTitleID() + '/new/' + (type() && type().pricingTypeID()) }, text: type() && type().addNewLabel()"></button>
             </div>
         </div>
     </div>

@@ -25,6 +25,9 @@ function FreelancerPricing(values) {
         numberOfSessions: 1,
         priceRate: null,
         priceRateUnit: null,
+        // Special property, not in source data just only an explicit
+        // way to avoid validation of priceRate if not explicit value set
+        noPriceRate: false,
         isPhone: false,
         // Array of integers, IDs of serviceAttributes
         serviceAttributes: [],
@@ -33,6 +36,44 @@ function FreelancerPricing(values) {
     }, values);
     
     this.model.defID(['freelancerPricingID']);
+    
+    // One way effect: set priceRate to null when setting on noPriceRate
+    // But nothing on of and no other relations to avoid bade side effects.
+    this.noPriceRate.subscribe(function(enabled) {
+        if (enabled === true) {
+            this.priceRate(null);
+        }
+    }, this);
+
+    // Alternative edition of the serviceDurationMinutes fields:
+    // Splited as hours and minutes
+    this.durationHoursPart = ko.pureComputed({
+        read: function() {
+            var fullMinutes = this.serviceDurationMinutes() |0;
+            return (fullMinutes / 60) |0;
+        },
+        write: function(hours) {
+            hours = hours |0;
+            var minutes = this.durationMinutesPart() |0;
+            this.serviceDurationMinutes(hours * 60 + minutes);
+        },
+        owner: this
+    });
+    this.durationMinutesPart = ko.pureComputed({
+        read: function() {
+            var fullMinutes = this.serviceDurationMinutes() |0;
+            return fullMinutes % 60;
+        },
+        write: function(minutes) {
+            minutes = minutes |0;
+            var hours = this.durationHoursPart() |0;
+            this.serviceDurationMinutes(hours * 60 + minutes);
+        },
+        owner: this
+    });
+    
+    
+    /// Visual representation of several fields
     
     this.durationText = ko.pureComputed(function() {
         var minutes = this.serviceDurationMinutes() || 0;
