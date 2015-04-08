@@ -22,6 +22,9 @@ function JobTitle(values) {
 
     this.model.defID(['jobTitleID']);
 
+    // TODO: review if, not registered as a property, the list is updated
+    // on syncs by using model.updateWith
+
     // Pricing Types relationship,
     // collection of JobTitlePricingType entities
     this.pricingTypes = ko.observableArray([]);

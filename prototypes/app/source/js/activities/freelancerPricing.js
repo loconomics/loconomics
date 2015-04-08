@@ -26,6 +26,8 @@ var A = Activity.extends(function FreelancerPricingActivity() {
                 .then(function(jobTitle) {
                     // Fill in job title name
                     this.navBar.leftAction().text(jobTitle.singularName());
+                    // Save for use in the view
+                    this.viewModel.jobTitle(jobTitle);
                     
                     // Ask to sync the pricing types in advance (used in the ViewModel,
                     // they are heavely cached)
@@ -53,6 +55,7 @@ var A = Activity.extends(function FreelancerPricingActivity() {
             }
             else {
                 this.viewModel.list([]);
+                this.viewModel.jobTitle(null);
                 this.navBar.leftAction().text('Job Title');
             }
         }.bind(this)
@@ -143,6 +146,7 @@ function ViewModel(app) {
     this.headerText = ko.observable('Services');
     
     this.jobTitleID = ko.observable(0);
+    this.jobTitle = ko.observable(null);
 
     this.list = ko.observableArray([]);
 
@@ -189,6 +193,36 @@ function ViewModel(app) {
             }, gr);
             return gr;
         });
+        
+        // Since the groupsList is built from the existent pricing items
+        // if there are no records for some pricing type (or nothing when
+        // just created the job title), that types/groups are not included,
+        // so review and include now.
+        // NOTE: as a good side effect of this approach, pricing types with
+        // some pricing will appear first in the list (nearest to the top)
+        var pricingTypes = this.jobTitle() && this.jobTitle().pricingTypes();
+        if (pricingTypes && pricingTypes.length) {
+            pricingTypes.forEach(function (jobType) {
+                
+                var typeID = jobType.pricingTypeID();
+                // Not if already in the list
+                if (groups.hasOwnProperty(typeID))
+                    return;
+
+                var gr = {
+                    pricing: [],
+                    type: app.model.pricingTypes.getObservableItem(typeID)
+                };
+                gr.group = ko.computed(function() {
+                    return groupNamePrefix + (
+                        this.type() && this.type().pluralName() ||
+                        'Services'
+                    );
+                }, gr);
+
+                groupsList.push(gr);
+            });
+        }
 
         return groupsList;
 
