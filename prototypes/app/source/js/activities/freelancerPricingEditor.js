@@ -138,6 +138,8 @@ function ViewModel(app) {
 
     this.jobTitleID = ko.observable(0);
     this.freelancerPricingID = ko.observable(0);
+    // L10N
+    this.moneySymbol = ko.observable('$');
     
     this.pricingType = ko.observable(new PricingType());
 

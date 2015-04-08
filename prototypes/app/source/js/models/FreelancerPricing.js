@@ -24,7 +24,7 @@ function FreelancerPricing(values) {
         firstTimeClientsOnly: false,
         numberOfSessions: 1,
         priceRate: null,
-        priceRateUnit: null,
+        priceRateUnit: 'hour',
         // Special property, not in source data just only an explicit
         // way to avoid validation of priceRate if not explicit value set
         noPriceRate: false,
