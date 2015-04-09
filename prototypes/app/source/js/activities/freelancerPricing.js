@@ -21,17 +21,18 @@ var A = Activity.extends(function FreelancerPricingActivity() {
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
             if (jobTitleID) {
-                // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
-                .then(function(jobTitle) {
+                // Get data for the Job title ID and pricing types.
+                // They are essential data
+                Promise.all([
+                    this.app.model.jobTitles.getJobTitle(jobTitleID),
+                    this.app.model.pricingTypes.getList()
+                ])
+                .then(function(data) {
+                    var jobTitle = data[0];
                     // Fill in job title name
                     this.navBar.leftAction().text(jobTitle.singularName());
                     // Save for use in the view
                     this.viewModel.jobTitle(jobTitle);
-                    
-                    // Ask to sync the pricing types in advance (used in the ViewModel,
-                    // they are heavely cached)
-                    this.app.model.pricingTypes.sync();
 
                     // Get pricing
                     return this.app.model.freelancerPricing.getList(jobTitleID);

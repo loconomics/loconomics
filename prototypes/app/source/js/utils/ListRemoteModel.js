@@ -124,7 +124,7 @@ function ListRemoteModel(settings) {
                         cache.list = serverData;
                         this.pushListToLocal(serverData);
                         api.state.isSyncing(false);
-                        return data;
+                        return serverData;
                     }.bind(this));
                     // Remote fallback: If no local, wait for remote
                     return data ? data : remotePromise;
