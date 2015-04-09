@@ -1,5 +1,5 @@
 /** Inbox test data **/
-var Message = require('../models/Message');
+var Message = require('../models/MessageView');
 
 var Time = require('../utils/Time');
 //var moment = require('moment');

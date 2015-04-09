@@ -35,8 +35,18 @@ A.prototype.show = function show(options) {
     var v = this.viewModel,
         appModel = this.app.model;
     
+    var preapareShowErrorFor = function preapareShowErrorFor(title) {
+        return function(err) {
+            this.app.modals.showError({
+                title: title,
+                error: err
+            });
+        }.bind(this);
+    }.bind(this);
+    
     // Update data
-    appModel.bookings.getUpcomingBookings().then(function(upcoming) {
+    appModel.bookings.getUpcomingBookings()
+    .then(function(upcoming) {
 
         if (upcoming.nextBookingID) {
             var previousID = v.nextBooking() && v.nextBooking().sourceBooking().bookingID();
@@ -62,6 +72,21 @@ A.prototype.show = function show(options) {
         v.upcomingBookings.tomorrow.time(upcoming.tomorrow.time && new Date(upcoming.tomorrow.time));
         v.upcomingBookings.nextWeek.quantity(upcoming.nextWeek.quantity);
         v.upcomingBookings.nextWeek.time(upcoming.nextWeek.time && new Date(upcoming.nextWeek.time));
+    })
+    .catch(preapareShowErrorFor('Error loading upcoming bookings'));
+    
+    // Messages
+    var MessageView = require('../models/MessageView');
+    v.isLoadingInbox(true);
+    appModel.messaging.getList()
+    .then(function(threads) {
+        v.inbox.messages(threads().map(MessageView.fromThread));
+        v.isLoadingInbox(false);
+    })
+    .catch(preapareShowErrorFor('Error loading latest messages'))
+    .then(function() {
+        // Finally
+        v.isLoadingInbox(false);
     });
 };
 
@@ -79,6 +104,7 @@ function ViewModel() {
     this.nextBooking = ko.observable(null);
     this.isLoadingNextBooking = ko.observable(false);
     
+    this.isLoadingInbox = ko.observable(false);
     this.inbox = new MailFolder({
         topNumber: 4
     });
@@ -90,8 +116,6 @@ function ViewModel() {
 
 /** TESTING DATA **/
 function setSomeTestingData(viewModel) {
-    
-    viewModel.inbox.messages(require('../testdata/messages').messages);
     
     viewModel.performance.earnings.currentAmount(2400);
     viewModel.performance.earnings.nextAmount(6200.54);
