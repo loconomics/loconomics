@@ -3,9 +3,10 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
-var ko = require('knockout');
-var MessageView = require('../models/MessageView');
+var Activity = require('../components/Activity'),
+    ko = require('knockout'),
+    MessageView = require('../models/MessageView'),
+    textSearch = require('../utils/textSearch');
 
 var A = Activity.extends(function InboxActivity() {
     
@@ -44,6 +45,10 @@ function ViewModel(app) {
     
     this.searchText = ko.observable('');
     
+    // NOTE: since current API-connection implementation only gets
+    // the latest message with getList, the search is done in the
+    // bodyText of the last message (additionally to the thread subject)
+    // even if this implementation try to iterate all messages.
     this.threads = ko.pureComputed(function() {
         var t = this.sourceThreads(),
             s = this.searchText();
@@ -53,9 +58,22 @@ function ViewModel(app) {
         else if (!s)
             return t.map(MessageView.fromThread);
         else        
-            return t.filter(function(/*thread*/) {
-                // TODO search filtering
-                return true;
+            return t.filter(function(thread) {
+                var found = false;
+                
+                // Check subject
+                found = textSearch(s, thread.subject());
+                
+                if (!found) {
+                    // Try content of messages
+                    // It stops on first 'true' result
+                    thread.messages().some(function(msg) {
+                        found = textSearch(s, msg.bodyText());
+                        return found;
+                    });
+                }
+                
+                return found;
             }).map(MessageView.fromThread);
     }, this);
 }
