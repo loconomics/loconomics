@@ -23,6 +23,7 @@ A.prototype.show = function show(state) {
 
     // Reset
     this.viewModel.threadID(0);
+    this.viewModel.thread(null);
 
     // Params
     var params = state && state.route && state.route.segments || [],
