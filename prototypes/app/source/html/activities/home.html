@@ -10,7 +10,8 @@
         <div data-bind="text: displayedDate"></div>
         <div><strong data-bind="text: displayedStartTime"></strong></div>
       </div>
-      <a href="#" class="btn btn-link btn-block ListView-item-content">
+      <a href="#" class="btn btn-link btn-block ListView-item-content"
+         data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
         <p data-bind="text: summary()"></p>
         <!--<div data-bind="text: servicesSummary"></div>-->
       </a>
