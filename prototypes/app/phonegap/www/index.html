@@ -682,16 +682,25 @@
     </div>
     <!-- Conversation activity -->
     <div class="container-fluid" data-activity="conversation">
-       <h2 class="SectionTitle" data-bind="text: subject"></h2>
+       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing() }">
+      <span data-bind="text: subject"></span>
+      <!-- ko component: {
+        name: 'app-loading-spinner',
+        params: { mod: 'onRight' }
+      } --><!-- /ko -->
+  </h2>
 
-      <div class="panel panel-default isolated" data-bind="foreach: conversation()">
+      <div data-bind="css: { 'is-loading': isLoading() }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div class="panel panel-default isolated" data-bind="foreach: thread() && thread().messages">
         <div class="panel-heading"> <span data-bind="text: displayedDate"></span>
  <span class="text-muted"
           data-bind="text: displayedTime"></span>
 
         </div>
         <div class="panel-body">
-          <div data-bind="text: content"></div>
+          <div data-bind="text: bodyText"></div>
         </div>
       </div>
     </div>
@@ -791,7 +800,7 @@
     <!-- FreelancerPricing activity -->
     <div class="container-fluid" data-activity="freelancerPricing" data-bind="css: { 'is-loading': isLoading }">
       <div>
-        <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
         <div class="ListView ListView--twolines ListView--textualmarker ListView--largemarker"
         data-bind="foreach: groupedPricing">
           <div class="ListView-divider SectionTitle"> <span data-bind="text: group"></span>
@@ -826,14 +835,16 @@
       </div>
     </div>
     <!-- Activity freelancerPricingEditor -->
-    <div class="container-fluid has-navbar" data-activity="freelancerPricingEditor"
-    data-bind="css: { 'is-loading': isLoading }">
+    <div class="container-fluid has-navbar" data-activity="freelancerPricingEditor">
       <form role="form" data-bind="submit: save">
-         <h2 class="SectionTitle">
+         <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
         </h2>
 
+        <div data-bind="css: { 'is-loading': isLoading }">
+          <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        </div>
         <fieldset class="isolated" data-bind="with: current">
           <app-unlabeled-input params="placeholder: type.namePlaceHolder, value: pricing.name, disable: $root.isLocked() || !!type.fixedName()"></app-unlabeled-input>
           <div class="form-inline isolated">
@@ -951,31 +962,45 @@
     </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
-       <h1 class="SectionTitle has-HelpPoint">Your next booking</h1>
+       <h1 class="SectionTitle" data-bind="css: { 'is-syncing': nextBooking.isSyncing() }">
+      Your next booking
+      <!-- ko component: {
+        name: 'app-loading-spinner',
+        params: { mod: 'onRight' }
+      } --><!-- /ko -->
+  </h1>
 
-      <div id="homeNextBooking" data-bind="css: { 'is-loading': isLoadingNextBooking() }"
+      <div id="homeNextBooking" data-bind="css: { 'is-loading': nextBooking.isLoading() }"
       class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
         <div class="ListView-item" data-bind="with: nextBooking">
           <div class="ListView-item-marker">
             <div data-bind="text: displayedDate"></div>
             <div><strong data-bind="text: displayedStartTime"></strong>
             </div>
-          </div> <a href="#" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
         <p data-bind="text: summary()"></p>
         <!--<div data-bind="text: servicesSummary"></div>-->
       </a>
  <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong data-bind="text: ptotalPrice, format: { type: 'number', format: '$0,0' }"></strong></a>
 
         </div>
-        <div data-bind="visible: !nextBooking()" class="isolated"> <span>You have no bookings!</span>
- <span>
-            <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
-        </span>
+        <div data-bind="visible: !nextBooking()" class="isolated"> <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
 
+          <app-loading-spinner
+          params="mod: 'row bigger'"></app-loading-spinner>
         </div>
       </div>
-       <h1 class="SectionTitle has-HelpPoint">Upcoming bookings</h1>
+       <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
+      Upcoming bookings
+      <!-- ko component: {
+        name: 'app-loading-spinner',
+        params: { mod: 'onRight' }
+      } --><!-- /ko -->
+  </h1>
 
+      <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
       <div id="homeUpcomingBookings" class="ListView ListView--textualmarker ListView--largemarker"
       data-bind="foreach: upcomingBookings.items">
         <div class="ListView-item">
@@ -989,24 +1014,22 @@
 
         </div>
       </div>
-       <h1 class="SectionTitle has-HelpPoint">Inbox</h1>
+      <div>
+         <h1 class="SectionTitle" data-bind="css: { 'is-syncing': inbox.isSyncing() }">
+          Inbox
+          <!-- ko component: {
+            name: 'app-loading-spinner',
+            params: { mod: 'onRight' }
+          } --><!-- /ko -->
+      </h1>
 
-      <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
-      data-bind="foreach: inbox.top()">
-        <div class="ListView-item" data-bind="css: classNames">
-          <div class="ListView-item-marker">
-            <div data-bind="text: displayedDate"></div>
-            <div><span class="text-muted" data-bind="text: displayedTime"></span>
-            </div>
-          </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !content()"></p><div data-bind="text: subject, visible: content()"></div><div data-bind="text: content, visible: content()"></div></a>
-
-          <a
-          href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"
-          data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span>
-            </a>
+        <div data-bind="css: { 'is-loading': inbox.isLoading() }">
+          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
+        <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
+        data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
       </div>
-       <h1 class="SectionTitle has-HelpPoint">Performance</h1>
+       <h1 class="SectionTitle">Performance</h1>
 
       <div id="homePerformance" class="ListView ListView--twolines ListView--textualmarker ListView--largemarker"
       data-bind="foreach: performance.items">
@@ -1028,7 +1051,7 @@
 
         </div>
       </div>
-       <h1 class="SectionTitle has-HelpPoint">Get more from Loconomics</h1>
+       <h1 class="SectionTitle">Get more from Loconomics</h1>
 
       <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
         <div class="ListView-item" data-bind="css: classNames">
@@ -1052,28 +1075,15 @@
         <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
 </span>
           <input
-          type="text" class="form-control" placeholder="search inbox" data-bind="value: searchText, valueUpdate: 'afterkeydown'"> <span class="input-group-btn">
+          type="text" class="form-control" placeholder="search inbox" data-bind="textInput: searchText"> <span class="input-group-btn">
             <button type="button" class="btn btn-secondary">New</button>
         </span>
 
         </div>
         <!-- /input-group -->
       </div>
-      <div id="inboxList" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
-      data-bind="foreach: inbox.top()">
-        <div class="ListView-item" data-bind="css: classNames">
-          <div class="ListView-item-marker">
-            <div data-bind="text: displayedDate"></div>
-            <div><span class="text-muted" data-bind="text: displayedTime"></span>
-            </div>
-          </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !content()"></p><div data-bind="text: subject, visible: content()"></div><div data-bind="text: content, visible: content()"></div></a>
-
-          <a
-          href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"
-          data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span>
-            </a>
-        </div>
-      </div>
+      <div class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
+      data-bind="template: { name: 'inbox-tile-template', foreach: threads() }"></div>
     </div>
     <!-- Activity index -->
     <div class="container" data-activity="index">
@@ -1789,6 +1799,17 @@
           </div>
       </div>
     </script>
+    <!-- Knockout Template inbox-tile -->
+    <script type="text/html" id="inbox-tile-template">
+      <div class="ListView-item" data-bind="css: classNames">
+        <div class="ListView-item-marker">
+          <div data-bind="text: displayedDate"></div>
+          <div><span class="text-muted" data-bind="text: displayedTime"></span></div>
+        </div>
+        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !content()"></p><div data-bind="text: subject, visible: content()"></div><div data-bind="text: content, visible: content()"></div></a>
+        <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+      </div>
+    </script>
     <!-- Component Template loading-spinner -->
     <script type="text/html" id="loading-spinner-template">
       <div class="loadingSpinner" data-bind="attr: { 'class': cssClass() }">
@@ -1813,7 +1834,7 @@
           </span>
       </button>
     </script>
-    <!-- Component Template time-slot-tile -->
+    <!-- Knockout Template time-slot-tile -->
     <script type="text/html" id="time-slot-tile-template">
       <div class="ListView-item" data-bind="css: classNames">
         <div class="ListView-item-marker"><div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div><div class="text-muted" data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></div></div>
