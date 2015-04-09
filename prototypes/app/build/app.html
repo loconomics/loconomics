@@ -681,16 +681,25 @@
     </div>
     <!-- Conversation activity -->
     <div class="container-fluid" data-activity="conversation">
-       <h2 class="SectionTitle" data-bind="text: subject"></h2>
+       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing() }">
+      <span data-bind="text: subject"></span>
+      <!-- ko component: {
+        name: 'app-loading-spinner',
+        params: { mod: 'onRight' }
+      } --><!-- /ko -->
+  </h2>
 
-      <div class="panel panel-default isolated" data-bind="foreach: conversation()">
+      <div data-bind="css: { 'is-loading': isLoading() }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div class="panel panel-default isolated" data-bind="foreach: thread() && thread().messages">
         <div class="panel-heading"> <span data-bind="text: displayedDate"></span>
  <span class="text-muted"
           data-bind="text: displayedTime"></span>
 
         </div>
         <div class="panel-body">
-          <div data-bind="text: content"></div>
+          <div data-bind="text: bodyText"></div>
         </div>
       </div>
     </div>
@@ -952,7 +961,7 @@
     </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
-       <h1 class="SectionTitle has-HelpPoint" data-bind="css: { 'is-syncing': nextBooking.isSyncing() }">
+       <h1 class="SectionTitle" data-bind="css: { 'is-syncing': nextBooking.isSyncing() }">
       Your next booking
       <!-- ko component: {
         name: 'app-loading-spinner',
@@ -980,7 +989,7 @@
           params="mod: 'row bigger'"></app-loading-spinner>
         </div>
       </div>
-       <h1 class="SectionTitle has-HelpPoint" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
+       <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
       Upcoming bookings
       <!-- ko component: {
         name: 'app-loading-spinner',
@@ -1005,7 +1014,7 @@
         </div>
       </div>
       <div>
-         <h1 class="SectionTitle has-HelpPoint" data-bind="css: { 'is-syncing': inbox.isSyncing() }">
+         <h1 class="SectionTitle" data-bind="css: { 'is-syncing': inbox.isSyncing() }">
           Inbox
           <!-- ko component: {
             name: 'app-loading-spinner',
@@ -1032,7 +1041,7 @@
           </div>
         </div>
       </div>
-       <h1 class="SectionTitle has-HelpPoint">Performance</h1>
+       <h1 class="SectionTitle">Performance</h1>
 
       <div id="homePerformance" class="ListView ListView--twolines ListView--textualmarker ListView--largemarker"
       data-bind="foreach: performance.items">
@@ -1054,7 +1063,7 @@
 
         </div>
       </div>
-       <h1 class="SectionTitle has-HelpPoint">Get more from Loconomics</h1>
+       <h1 class="SectionTitle">Get more from Loconomics</h1>
 
       <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
         <div class="ListView-item" data-bind="css: classNames">

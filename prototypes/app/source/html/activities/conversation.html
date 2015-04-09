@@ -1,15 +1,24 @@
 <!-- Conversation activity -->
 <div class="container-fluid" data-activity="conversation">
 
-  <h2 class="SectionTitle" data-bind="text: subject"></h2>
-  <div class="panel panel-default isolated" data-bind="foreach: conversation()">
-
+  <h2 class="SectionTitle"
+      data-bind="css: { 'is-syncing': isSyncing() }">
+      <span data-bind="text: subject"></span>
+      <!-- ko component: {
+        name: 'app-loading-spinner',
+        params: { mod: 'onRight' }
+      } --><!-- /ko -->
+  </h2>
+  <div data-bind="css: { 'is-loading': isLoading() }">
+      <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+  </div>
+  <div class="panel panel-default isolated" data-bind="foreach: thread() && thread().messages">
     <div class="panel-heading">
         <span data-bind="text: displayedDate"></span>
         <span class="text-muted" data-bind="text: displayedTime"></span>
     </div>
     <div class="panel-body">
-        <div data-bind="text: content"></div>
+        <div data-bind="text: bodyText"></div>
     </div>
   </div>
 </div>

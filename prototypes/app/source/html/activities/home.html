@@ -1,7 +1,7 @@
 <!-- Activity home -->
 <div class="container-fluid" data-activity="home">
 
-  <h1 class="SectionTitle has-HelpPoint"
+  <h1 class="SectionTitle"
       data-bind="css: { 'is-syncing': nextBooking.isSyncing() }">
       Your next booking
       <!-- ko component: {
@@ -30,7 +30,7 @@
     </div>
   </div>
 
-  <h1 class="SectionTitle has-HelpPoint"
+  <h1 class="SectionTitle"
       data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
       Upcoming bookings
       <!-- ko component: {
@@ -54,7 +54,7 @@
   </div>
 
   <div>
-      <h1 class="SectionTitle has-HelpPoint"
+      <h1 class="SectionTitle"
           data-bind="css: { 'is-syncing': inbox.isSyncing() }">
           Inbox
           <!-- ko component: {
@@ -77,7 +77,7 @@
       </div>
   </div>
 
-  <h1 class="SectionTitle has-HelpPoint">Performance</h1>
+  <h1 class="SectionTitle">Performance</h1>
   <div id="homePerformance" class="ListView ListView--twolines ListView--textualmarker ListView--largemarker" data-bind="foreach: performance.items">
     <div class="ListView-item" data-bind="css: classNames">
       <div class="ListView-item-marker">
@@ -94,7 +94,7 @@
     </div>
   </div>
 
-  <h1 class="SectionTitle has-HelpPoint">Get more from Loconomics</h1>
+  <h1 class="SectionTitle">Get more from Loconomics</h1>
   <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
     <div class="ListView-item" data-bind="css: classNames">
       <div class="ListView-item-marker">

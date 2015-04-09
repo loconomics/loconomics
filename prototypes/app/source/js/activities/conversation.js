@@ -9,57 +9,70 @@ var A = Activity.extends(function ConversationActivity() {
     
     Activity.apply(this, arguments);
     
-    this.viewModel = new ViewModel();
+    this.viewModel = new ViewModel(this.app);
     
     this.accessLevel = this.app.UserType.LoggedUser;
     
     this.navBar = Activity.createSubsectionNavBar('Inbox');
-    
-    // TestingData
-    setSomeTestingData(this.viewModel);
 });
 
 exports.init = A.init;
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
+
+    // Reset
+    this.viewModel.threadID(0);
+
+    // Params
+    var params = state && state.route && state.route.segments || [],
+        threadID = params[0] |0;
+
+    this.viewModel.threadID(threadID);
     
-    if (state && state.route && state.route.segments) {
-        this.viewModel.conversationID(parseInt(state.route.segments[0], 10) || 0);
+    // Load the data
+    if (threadID) {
+        this.app.model.messaging.getItem(threadID)
+        .then(function(thread) {
+            this.viewModel.thread(thread);
+        }.bind(this))
+        .catch(function(err) {
+            this.app.modals.showError({
+                title: 'Error loading conversation',
+                error: err
+            }).then(function() {
+                this.app.shell.goBack();
+            }.bind(this));
+        }.bind(this));
+    }
+    else {
+        this.app.modals.showError({
+            title: 'Conversation Not Found'
+        }).then(function() {
+            this.app.shell.goBack();
+        }.bind(this));
     }
 };
 
-var MailFolder = require('../models/MailFolder');
 var ko = require('knockout');
 
-function ViewModel() {
+function ViewModel(app) {
 
-    this.inbox = new MailFolder({
-        topNumber: 20
-    });
-    
-    this.conversationID = ko.observable(null);
-    
-    this.conversation = ko.pureComputed(function() {
-        var conID = this.conversationID();
-        return this.inbox.messages().filter(function(v) {
-            return v && v.id() === conID;
-        });
-    }, this);
-    
+    this.isLoading = app.model.messaging.state.isLoading;
+    this.isSyncing = app.model.messaging.state.isSyncing;
+    this.isSaving = app.model.messaging.state.isSaving;
+
+    this.threadID = ko.observable(null);
+    this.thread = ko.observable(null);
+
     this.subject = ko.pureComputed(function() {
-        var m = this.conversation()[0];
+        var m = this.thread();
         return (
-            m ?
-            m.subject() :
-            'Conversation w/o subject'
+            this.isLoading() ?
+                'Loading...' :
+                m ?
+                    m.subject() :
+                    'Conversation without subject'
         );
-        
     }, this);
-}
-
-/** TESTING DATA **/
-function setSomeTestingData(viewModel) {
-    
-    viewModel.inbox.messages(require('../testdata/messages').messages);
 }

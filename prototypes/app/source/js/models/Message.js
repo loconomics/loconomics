@@ -6,7 +6,9 @@
  **/
 'use strict';
 
-var Model = require('./Model');
+var ko = require('knockout'),
+    Model = require('./Model'),
+    moment = require('moment');
 
 function Message(values) {
     
@@ -24,6 +26,15 @@ function Message(values) {
         createdDate: null,
         updatedDate: null
     }, values);
+    
+    // Smart visualization of date and time
+    this.displayedDate = ko.pureComputed(function() {
+        return moment(this.createdDate()).locale('en-US-LC').calendar();
+    }, this);
+    
+    this.displayedTime = ko.pureComputed(function() {
+        return moment(this.createdDate()).locale('en-US-LC').format('LT');
+    }, this);
 }
 
 module.exports = Message;
