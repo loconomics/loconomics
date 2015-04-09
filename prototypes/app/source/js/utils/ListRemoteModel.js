@@ -194,15 +194,28 @@ function ListRemoteModel(settings) {
     
     /**
         Generates and returns an observable inmediately,
+        with the cached value or undefined,
         launching an item load that will update the observable
-        on ready.
+        on ready if there is no cached value.
+        A method 'sync' is added to the observable so can be requested
+        a data sync/reload on demand.
     **/
     api.getObservableItem = function getObservableItem(itemID) {
-        var obs = ko.observable(undefined);
-        api.getItem(itemID)
-        .then(function(itemModel) {
-            obs(itemModel);
-        });
+        // Get first value
+        var firstValue = cache.getItemCache(itemID);
+        firstValue = firstValue && firstValue.item || undefined;
+        var obs = ko.observable(firstValue);
+        // Create method 'sync'
+        obs.sync = function syncObservableItem() {
+            api.getItem(itemID)
+            .then(function(itemModel) {
+                obs(itemModel);
+            });
+        };
+        // First load if no cached value
+        if (!firstValue)
+            obs.sync();
+        // Return
         return obs;
     };
 
