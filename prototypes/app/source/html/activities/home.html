@@ -40,7 +40,7 @@
 
   <div data-bind="css: { 'is-loading': isLoadingInbox() }">
       <h1 class="SectionTitle has-HelpPoint">Inbox</h1>
-      <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+      <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
       <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags" data-bind="foreach: inbox.top()">
         <div class="ListView-item" data-bind="css: classNames">
           <div class="ListView-item-marker">

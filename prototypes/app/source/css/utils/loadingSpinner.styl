@@ -24,7 +24,9 @@
 
     &.btn
         opacity: 1;
-        
+
+    // It floats the spinner using positioning, centering it
+    // and with background so keeps on top of other things
     &.loadingSpinner--floating
         position: absolute
         z-index: 9000
@@ -33,15 +35,26 @@
         text-align: center
         background: white
         
+    // It places the spinner centered in a row
+    // for itself.
+    &.loadingSpinner--row
+        text-align: center
+        // In normal state, keeps absolute to not reserve space
+        // But in is-loading is changed to static
+        position: absolute
+        left: 0
+        right: 0
+
+    // It floats the spinner to the right
     &.loadingSpinner--onRight
         position: absolute
         top: 0
         right: 0
         z-index: 9000
-        
+
     &.loadingSpinner--bigger
         font-size: 21px; //1.5em
-        
+
     .glyphicon
         transition: color 1.5s;
 
@@ -54,6 +67,10 @@
 
         .glyphicon
             animation: spin 3s linear infinite;
+            
+        &.loadingSpinner--row
+            display: block;
+            position: static;
 
 .is-saving
     @extend .is-loading
