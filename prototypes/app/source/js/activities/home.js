@@ -45,6 +45,7 @@ A.prototype.show = function show(options) {
     }.bind(this);
     
     // Update data
+    v.isLoadingUpcomingBookings(true);
     appModel.bookings.getUpcomingBookings()
     .then(function(upcoming) {
 
@@ -55,9 +56,10 @@ A.prototype.show = function show(options) {
                 appModel.appointments.getAppointment({ bookingID: upcoming.nextBookingID })
                 .then(function(apt) {
                     v.nextBooking(apt);
-                    v.isLoadingNextBooking(false);
                 })
-                .catch(function() {
+                .catch(preapareShowErrorFor('Error loading next booking'))
+                .then(function() {
+                    // Finally
                     v.isLoadingNextBooking(false);
                 });
             }
@@ -73,7 +75,11 @@ A.prototype.show = function show(options) {
         v.upcomingBookings.nextWeek.quantity(upcoming.nextWeek.quantity);
         v.upcomingBookings.nextWeek.time(upcoming.nextWeek.time && new Date(upcoming.nextWeek.time));
     })
-    .catch(preapareShowErrorFor('Error loading upcoming bookings'));
+    .catch(preapareShowErrorFor('Error loading upcoming bookings'))
+    .then(function() {
+        // Finally
+        v.isLoadingUpcomingBookings(false);
+    });
     
     // Messages
     var MessageView = require('../models/MessageView');
@@ -81,7 +87,6 @@ A.prototype.show = function show(options) {
     appModel.messaging.getList()
     .then(function(threads) {
         v.inbox.messages(threads().map(MessageView.fromThread));
-        v.isLoadingInbox(false);
     })
     .catch(preapareShowErrorFor('Error loading latest messages'))
     .then(function() {
@@ -99,6 +104,7 @@ var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
 function ViewModel() {
 
     this.upcomingBookings = new UpcomingBookingsSummary();
+    this.isLoadingUpcomingBookings = ko.observable(false);
 
     // :Appointment
     this.nextBooking = ko.observable(null);
