@@ -13,7 +13,9 @@ var A = Activity.extends(function ConversationActivity() {
     
     this.accessLevel = this.app.UserType.LoggedUser;
     
-    this.navBar = Activity.createSubsectionNavBar('Inbox');
+    this.navBar = Activity.createSubsectionNavBar('Inbox', {
+        backLink: 'inbox'
+    });
 });
 
 exports.init = A.init;
