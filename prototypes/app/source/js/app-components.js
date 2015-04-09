@@ -82,9 +82,10 @@ exports.registerAll = function() {
             var base = 'loadingSpinner';
             this.mod = getObservable(params.mod || '');
             this.cssClass = ko.pureComputed(function() {
-                var c = base;
-                if (this.mod())
-                    c += ' ' + base + '--' + this.mod();
+                var c = base,
+                    mods = (this.mod() || '').split(' ');
+                if (mods.length)
+                    c += ' ' + base + '--' + mods.join(' ' + base + '--');
                 return c;
             }, this);
         }

@@ -4,11 +4,16 @@
 
 var localforage = require('localforage'),
     PricingType = require('../models/PricingType'),
-    JobTitle = require('../models/JobTitle');
+    JobTitle = require('../models/JobTitle'),
+    ko = require('knockout');
 
 exports.create = function create(appModel) {
 
-    var api = {},
+    var api = {
+            state:  {
+                isLoading: ko.observable(false)
+            }
+        },
         cache = {
             jobTitles: {},
             pricingTypes: null
@@ -88,12 +93,14 @@ exports.create = function create(appModel) {
             return Promise.resolve(cache.jobTitles[id]);
         }
         else {
+            api.state.isLoading(true);
             // Second, local storage
             return localforage.getItem('jobTitles/' + id)
             .then(function(jobTitle) {
                 if (jobTitle) {
                     // cache in memory as Model instance
                     cache.jobTitles[id] = new JobTitle(jobTitle);
+                    api.state.isLoading(false);
                     // return it
                     return cache.jobTitles[id];
                 }
@@ -105,10 +112,16 @@ exports.create = function create(appModel) {
                         localforage.setItem('jobTitles/' + id, raw);
                         // cache in memory as Model instance
                         cache.jobTitles[id] = new JobTitle(raw);
+                        api.state.isLoading(false);
                         // return it
                         return cache.jobTitles[id];
                     });
                 }
+            })
+            .catch(function(err) {
+                api.state.isLoading(false);
+                // Rethrow error
+                return err;
             });
         }
     };

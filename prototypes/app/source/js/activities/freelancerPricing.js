@@ -151,7 +151,13 @@ function ViewModel(app) {
 
     this.list = ko.observableArray([]);
 
-    this.isLoading = app.model.freelancerPricing.state.isLoading;
+    this.isLoading = ko.computed(function() {
+        return (
+            app.model.freelancerPricing.state.isLoading() ||
+            app.model.pricingTypes.state.isLoading() ||
+            app.model.jobTitles.state.isLoading()
+        );
+    });
     this.isLocked = this.isLoading;
 
     // Especial mode when instead of pick and edit we are just selecting
