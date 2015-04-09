@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-04-08
+/*! LoconomicsApp 2015-04-09
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -52,7 +52,7 @@
 
 /* line 16 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
-/* line 82 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 87 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
 /* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
@@ -616,24 +616,36 @@ body.use-backdrop:before {
 }
 
 /* line 42 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.loadingSpinner .glyphicon {
+  -webkit-transition: color 1.5s;
+  -moz-transition: color 1.5s;
+  -o-transition: color 1.5s;
+  -ms-transition: color 1.5s;
+  transition: color 1.5s;
+}
 
-/* line 43 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 45 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+
+/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner,
-.is-saving .loadingSpinner {
+.is-saving .loadingSpinner,
+.is-syncing .loadingSpinner {
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
 
-/* line 46 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 49 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner.loadingSpinner--collapsed,
-.is-saving .loadingSpinner.loadingSpinner--collapsed {
+.is-saving .loadingSpinner.loadingSpinner--collapsed,
+.is-syncing .loadingSpinner.loadingSpinner--collapsed {
   display: inline-block;
 }
 
-/* line 49 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner .glyphicon,
-.is-saving .loadingSpinner .glyphicon {
+.is-saving .loadingSpinner .glyphicon,
+.is-syncing .loadingSpinner .glyphicon {
   -webkit-animation: spin 3s linear infinite;
   -moz-animation: spin 3s linear infinite;
   -o-animation: spin 3s linear infinite;
@@ -641,16 +653,23 @@ body.use-backdrop:before {
   animation: spin 3s linear infinite;
 }
 
-/* line 52 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
-
 /* line 55 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+
+/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-saving .loadingSpinner .glyphicon {
   color: #f0ad4e;
 }
 
-/* line 58 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 
-/* line 59 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 64 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-syncing .loadingSpinner .glyphicon {
+  color: #5bc0de;
+}
+
+/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+
+/* line 68 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .SectionTitle .loadingSpinner--onRight {
   padding: 7px;
 }
@@ -713,7 +732,7 @@ body.use-backdrop:before {
 /* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 70 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {

@@ -64,9 +64,11 @@ A.prototype.show = function show(options) {
                 c.pricing.noPriceRate(true);
             }
         }
+        this.viewModel.isLoading(false);
     }.bind(this);
     
     var showInvalidRequestError = function() {
+        this.viewModel.isLoading(false);
         this.app.modals.showError({
             title: 'Invalid request',
             error: { jobTitleID: jobTitleID, pricingTypeID: pricingTypeID, freelancerPricingID: freelancerPricingID }
@@ -77,6 +79,7 @@ A.prototype.show = function show(options) {
         }.bind(this));
     }.bind(this);
 
+    this.viewModel.isLoading(true);
     if (pricingTypeID) {
         // Load the pricing Type
         this.app.model.pricingTypes.getItem(pricingTypeID)
@@ -136,6 +139,12 @@ A.prototype.show = function show(options) {
 
 function ViewModel(app) {
 
+    this.isLoading = ko.observable(false);
+    // managed manually instead of
+    //app.model.freelancerPricing.state.isLoading;
+    this.isSaving = app.model.freelancerPricing.state.isSaving;
+    this.isSyncing = app.model.freelancerPricing.state.isSyncing;
+    this.isDeleting = app.model.freelancerPricing.state.isDeleting;
     this.jobTitleID = ko.observable(0);
     this.freelancerPricingID = ko.observable(0);
     // L10N
@@ -153,8 +162,10 @@ function ViewModel(app) {
     }, this);
 
     this.header = ko.pureComputed(function() {
-        
-        if (this.freelancerPricingVersion()) {
+        if (this.isLoading()) {
+            return 'Loading...';
+        }
+        else if (this.freelancerPricingVersion()) {
             var t = this.pricingType();
             return t && t.singularName() || 'Service';
         }
@@ -177,10 +188,6 @@ function ViewModel(app) {
         }
         return null;
     }, this);
-    
-    this.isLoading = app.model.freelancerPricing.state.isLoading;
-    this.isSaving = app.model.freelancerPricing.state.isSaving;
-    this.isDeleting = app.model.freelancerPricing.state.isDeleting;
 
     this.wasRemoved = ko.observable(false);
     

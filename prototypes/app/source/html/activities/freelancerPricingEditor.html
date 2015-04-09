@@ -1,10 +1,13 @@
 <!-- Activity freelancerPricingEditor -->
-<div class="container-fluid has-navbar" data-activity="freelancerPricingEditor" data-bind="css: { 'is-loading': isLoading }">
+<div class="container-fluid has-navbar" data-activity="freelancerPricingEditor">
     <form role="form" data-bind="submit: save">
-        <h2 class="SectionTitle">
+        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
         </h2>
+        <div data-bind="css: { 'is-loading': isLoading }">
+            <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        </div>
 
         <fieldset class="isolated" data-bind="with: current">
 

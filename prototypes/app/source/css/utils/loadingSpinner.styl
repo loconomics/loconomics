@@ -38,6 +38,9 @@
         top: 0
         right: 0
         z-index: 9000
+        
+    .glyphicon
+        transition: color 1.5s;
 
 .is-loading
     .loadingSpinner
@@ -55,7 +58,12 @@
     .loadingSpinner .glyphicon
         color $state-warning-text
 
+.is-syncing
+    @extend .is-loading
+
+    .loadingSpinner .glyphicon
+        color $state-info-text
+
 .SectionTitle
     .loadingSpinner--onRight
         padding: 7px
-            
