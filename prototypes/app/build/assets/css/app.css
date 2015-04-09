@@ -638,8 +638,13 @@ body.use-backdrop:before {
 }
 
 /* line 61 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-loading,
+.is-saving,
+.is-syncing {
+  position: relative;
+}
 
-/* line 62 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 64 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner,
 .is-saving .loadingSpinner,
 .is-syncing .loadingSpinner {
@@ -648,14 +653,14 @@ body.use-backdrop:before {
   filter: none;
 }
 
-/* line 65 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner.loadingSpinner--collapsed,
 .is-saving .loadingSpinner.loadingSpinner--collapsed,
 .is-syncing .loadingSpinner.loadingSpinner--collapsed {
   display: inline-block;
 }
 
-/* line 68 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 70 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner .glyphicon,
 .is-saving .loadingSpinner .glyphicon,
 .is-syncing .loadingSpinner .glyphicon {
@@ -666,7 +671,7 @@ body.use-backdrop:before {
   animation: spin 3s linear infinite;
 }
 
-/* line 71 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 73 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner.loadingSpinner--row,
 .is-saving .loadingSpinner.loadingSpinner--row,
 .is-syncing .loadingSpinner.loadingSpinner--row {
@@ -674,23 +679,23 @@ body.use-backdrop:before {
   position: static;
 }
 
-/* line 75 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 77 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 
-/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 80 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-saving .loadingSpinner .glyphicon {
   color: #f0ad4e;
 }
 
-/* line 81 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 83 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 
-/* line 84 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-syncing .loadingSpinner .glyphicon {
   color: #5bc0de;
 }
 
-/* line 87 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 89 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 
-/* line 88 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 90 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .SectionTitle .loadingSpinner--onRight {
   padding: 7px;
 }
@@ -753,7 +758,7 @@ body.use-backdrop:before {
 /* line 22 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 90 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 92 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {
@@ -1120,6 +1125,7 @@ body.use-backdrop:before {
 
 /* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .SectionTitle {
+  position: relative;
   font-size: 17px;
   padding: 7px 14px;
   margin: 0;
@@ -1130,24 +1136,24 @@ body.use-backdrop:before {
   color: #333;
 }
 
-/* line 23 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+/* line 26 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .SectionTitle .HelpPoint {
   right: 7px;
 }
 
-/* line 28 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+/* line 31 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
   margin: 0 -10px 0 -10px;
 }
 
-/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .container .SectionTitle .HelpPoint,
 .container-fluid .SectionTitle .HelpPoint {
   right: 17px;
 }
 
-/* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 39 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Activity.styl */
 
 /* line 65 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\ActivityTitle.styl */
 

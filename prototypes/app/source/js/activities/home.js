@@ -45,14 +45,24 @@ A.prototype.show = function show(options) {
     }.bind(this);
     
     // Update data
-    v.isLoadingUpcomingBookings(true);
+    if (v.upcomingBookings.items().length) {
+        v.upcomingBookings.isSyncing(true);
+    }
+    else {
+        v.upcomingBookings.isLoading(true);
+    }
     appModel.bookings.getUpcomingBookings()
     .then(function(upcoming) {
 
         if (upcoming.nextBookingID) {
             var previousID = v.nextBooking() && v.nextBooking().sourceBooking().bookingID();
             if (upcoming.nextBookingID !== previousID) {
-                v.isLoadingNextBooking(true);
+                if (v.nextBooking()) {
+                    v.nextBooking.isSyncing(true);
+                }
+                else {
+                    v.nextBooking.isLoading(true);
+                }
                 appModel.appointments.getAppointment({ bookingID: upcoming.nextBookingID })
                 .then(function(apt) {
                     v.nextBooking(apt);
@@ -60,7 +70,8 @@ A.prototype.show = function show(options) {
                 .catch(preapareShowErrorFor('Error loading next booking'))
                 .then(function() {
                     // Finally
-                    v.isLoadingNextBooking(false);
+                    v.nextBooking.isLoading(false);
+                    v.nextBooking.isSyncing(false);
                 });
             }
         }
@@ -78,12 +89,16 @@ A.prototype.show = function show(options) {
     .catch(preapareShowErrorFor('Error loading upcoming bookings'))
     .then(function() {
         // Finally
-        v.isLoadingUpcomingBookings(false);
+        v.upcomingBookings.isLoading(false);
+        v.upcomingBookings.isSyncing(false);
     });
     
     // Messages
     var MessageView = require('../models/MessageView');
-    v.isLoadingInbox(true);
+    if (v.inbox.messages().length)
+        v.inbox.isSyncing(true);
+    else
+        v.inbox.isLoading(true);
     appModel.messaging.getList()
     .then(function(threads) {
         v.inbox.messages(threads().map(MessageView.fromThread));
@@ -91,7 +106,8 @@ A.prototype.show = function show(options) {
     .catch(preapareShowErrorFor('Error loading latest messages'))
     .then(function() {
         // Finally
-        v.isLoadingInbox(false);
+        v.inbox.isLoading(false);
+        v.inbox.isSyncing(false);
     });
 };
 
@@ -104,16 +120,18 @@ var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
 function ViewModel() {
 
     this.upcomingBookings = new UpcomingBookingsSummary();
-    this.isLoadingUpcomingBookings = ko.observable(false);
+    this.upcomingBookings.isLoading = ko.observable(false);
+    this.upcomingBookings.isSyncing = ko.observable(false);
 
-    // :Appointment
     this.nextBooking = ko.observable(null);
-    this.isLoadingNextBooking = ko.observable(false);
+    this.nextBooking.isLoading = ko.observable(false);
+    this.nextBooking.isSyncing = ko.observable(false);
     
-    this.isLoadingInbox = ko.observable(false);
     this.inbox = new MailFolder({
         topNumber: 4
     });
+    this.inbox.isLoading = ko.observable(false);
+    this.inbox.isSyncing = ko.observable(false);
     
     this.performance = new PerformanceSummary();
     

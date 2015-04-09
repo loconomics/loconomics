@@ -952,9 +952,15 @@
     </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
-       <h1 class="SectionTitle has-HelpPoint">Your next booking</h1>
+       <h1 class="SectionTitle has-HelpPoint" data-bind="css: { 'is-syncing': nextBooking.isSyncing() }">
+      Your next booking
+      <!-- ko component: {
+        name: 'app-loading-spinner',
+        params: { mod: 'onRight' }
+      } --><!-- /ko -->
+  </h1>
 
-      <div id="homeNextBooking" data-bind="css: { 'is-loading': isLoadingNextBooking() }"
+      <div id="homeNextBooking" data-bind="css: { 'is-loading': nextBooking.isLoading() }"
       class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
         <div class="ListView-item" data-bind="with: nextBooking">
           <div class="ListView-item-marker">
@@ -968,34 +974,48 @@
  <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong data-bind="text: ptotalPrice, format: { type: 'number', format: '$0,0' }"></strong></a>
 
         </div>
-        <div data-bind="visible: !nextBooking()" class="isolated"> <span data-bind="visible: !isLoadingNextBooking()">You have no bookings!</span>
+        <div data-bind="visible: !nextBooking()" class="isolated"> <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
 
           <app-loading-spinner
           params="mod: 'row bigger'"></app-loading-spinner>
         </div>
       </div>
-      <div data-bind="css: { 'is-loading': isLoadingUpcomingBookings() }">
-         <h1 class="SectionTitle has-HelpPoint">Upcoming bookings</h1>
+       <h1 class="SectionTitle has-HelpPoint" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
+      Upcoming bookings
+      <!-- ko component: {
+        name: 'app-loading-spinner',
+        params: { mod: 'onRight' }
+      } --><!-- /ko -->
+  </h1>
 
-        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
-        <div id="homeUpcomingBookings" class="ListView ListView--textualmarker ListView--largemarker"
-        data-bind="foreach: upcomingBookings.items">
-          <div class="ListView-item">
-            <div class="ListView-item-marker">
-              <p><strong data-bind="text: quantity"></strong>
-              </p>
-            </div> <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
-            <p data-bind="text: phrase"></p>
-          </a>
+      <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div id="homeUpcomingBookings" class="ListView ListView--textualmarker ListView--largemarker"
+      data-bind="foreach: upcomingBookings.items">
+        <div class="ListView-item">
+          <div class="ListView-item-marker">
+            <p><strong data-bind="text: quantity"></strong>
+            </p>
+          </div> <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
+        <p data-bind="text: phrase"></p>
+      </a>
  <a href="#" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
-          </div>
         </div>
       </div>
-      <div data-bind="css: { 'is-loading': isLoadingInbox() }">
-         <h1 class="SectionTitle has-HelpPoint">Inbox</h1>
+      <div>
+         <h1 class="SectionTitle has-HelpPoint" data-bind="css: { 'is-syncing': inbox.isSyncing() }">
+          Inbox
+          <!-- ko component: {
+            name: 'app-loading-spinner',
+            params: { mod: 'onRight' }
+          } --><!-- /ko -->
+      </h1>
 
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        <div data-bind="css: { 'is-loading': inbox.isLoading() }">
+          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
         <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
         data-bind="foreach: inbox.top()">
           <div class="ListView-item" data-bind="css: classNames">
