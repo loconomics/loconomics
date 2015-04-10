@@ -218,6 +218,68 @@ function ListRemoteModel(settings) {
         // Return
         return obs;
     };
+    
+    /**
+        Similar to getObservableItem, it allows to get
+        an observable to an item model synchronously that
+        it triggers an item load when its method 'sync'
+        is called. The itemID is passed to the sync item,
+        since the observable is meant to hold any item/itemID
+        (its a wildcard).
+        This way, a reference to an observable can be get on initialization
+        even if there is no data still, even no itemID, and load
+        it later lazily, on demand, while keeping the content of the
+        previous outdated or different item.
+
+        NOTE: API alternative names: getLazyItem, createMutableItem
+        NOTE: Maybe can get state observables (loading, syncing..)?
+        NOTE: On update a same itemID, maybe update the model with updateWith
+                rather than change the reference model?? (double check:
+                since the model is the same in cache, already updated
+                with 'updateWith', there is no need to re-apply and no
+                need to change the item observable because is the same
+                updated already, right?
+    **/
+    api.createWildcardItem = function createWildcardItem() {
+        // Utility for reuse in 'sync'
+        var hasID = function(id) {
+            return id !== null && typeof(id) !== 'undefined';
+        };
+        
+        // Create observable, with initial undefined value
+        var obs = ko.observable(undefined);
+
+        // Create method 'sync'
+        var lastID;
+        /**
+            Sync method to load an item, from cache ASAP and
+            from local or remote if required by the cache control.
+            It returns the Promise for fetching the value (getItem)
+            so load/sync ending and error can be catched.
+        **/
+        obs.sync = function syncObservableItem(itemID) {
+            
+            var idChanged = hasID(itemID) && itemID !== lastID;
+            lastID = hasID(itemID) ? itemID : lastID;
+            
+            // ASAP Get from cache if any and requested item changed
+            if (idChanged) {
+                var cachedItem = cache.getItemCache(lastID);
+                if (cachedItem && cachedItem.item)
+                    obs(cachedItem.item);
+            }
+
+            // Request updated value
+            return api.getItem(lastID)
+            .then(function(itemModel) {
+                obs(itemModel);
+                return itemModel;
+            });
+        };
+
+        // Return
+        return obs;
+    };
 
     /**
         Save an item in cache, local and remote.

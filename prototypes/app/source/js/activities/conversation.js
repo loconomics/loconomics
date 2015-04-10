@@ -35,10 +35,7 @@ A.prototype.show = function show(state) {
     
     // Load the data
     if (threadID) {
-        this.app.model.messaging.getItem(threadID)
-        .then(function(thread) {
-            this.viewModel.thread(thread);
-        }.bind(this))
+        this.viewModel.thread.sync(threadID)
         .catch(function(err) {
             this.app.modals.showError({
                 title: 'Error loading conversation',
@@ -66,16 +63,14 @@ function ViewModel(app) {
     this.isSaving = app.model.messaging.state.isSaving;
 
     this.threadID = ko.observable(null);
-    this.thread = ko.observable(null);
+    this.thread = app.model.messaging.createWildcardItem();
 
     this.subject = ko.pureComputed(function() {
         var m = this.thread();
         return (
             this.isLoading() ?
                 'Loading...' :
-                m ?
-                    m.subject() :
-                    'Conversation without subject'
+                m && (m.subject() || '').replace(/^\s+|\s+$/g, '') || 'Conversation without subject'
         );
     }, this);
 }
