@@ -702,6 +702,9 @@
           <div data-bind="text: bodyText"></div>
         </div>
       </div>
+      <div data-bind="if: bookingID">
+        <button type="button" class="btn btn-default btn-block" data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() }">Open Booking</button>
+      </div>
     </div>
     <!-- Activity datetimePicker -->
     <div class="container-fluid" data-activity="datetimePicker">

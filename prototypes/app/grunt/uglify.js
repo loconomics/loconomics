@@ -38,7 +38,7 @@ module.exports = {
                 warnings      : true,  // warn about potentially dangerous optimizations/code
                 global_defs   : {}     // global definitions
             },
-            report: 'gzip',
+            //report: 'gzip',
 
             // To look for compression warnings only:
             /*compress: {

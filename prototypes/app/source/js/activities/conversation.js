@@ -73,4 +73,18 @@ function ViewModel(app) {
                 m && (m.subject() || '').replace(/^\s+|\s+$/g, '') || 'Conversation without subject'
         );
     }, this);
+    
+    // If the last message reference a booking, is
+    // accessed with:
+    this.bookingID = ko.pureComputed(function() {
+        var msg = this.thread() && this.thread().messages()[0];
+        if (msg &&
+            (msg.auxT() || '').toLowerCase() === 'booking' &&
+            msg.auxID()) {
+            return msg.auxID();
+        }
+        else {
+            return null;
+        }
+    }, this);
 }
