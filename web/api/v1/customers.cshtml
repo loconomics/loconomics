@@ -1,0 +1,29 @@
+﻿@*
+    Accessing the current user (freelancer) customers list.
+
+    Options:
+    
+    - GET
+
+    - POST
+
+    - PUT /@customerUserID
+
+    - DELETE /@customerUserID
+
+    - @Result {
+        ...
+    }
+*@
+@functions{
+    public class RestCustomers : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            return null;
+        }
+    }
+}
+@{   
+    new RestCustomers().JsonResponse(this);
+}
