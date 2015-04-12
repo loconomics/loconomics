@@ -9,7 +9,7 @@ var A = Activity.extends(function ClientEditionActivity() {
     
     Activity.apply(this, arguments);
     
-    this.viewModel = new ViewModel();
+    this.viewModel = new ViewModel(this.app);
     
     this.accessLevel = this.app.UserType.LoggedUser;
     
@@ -19,14 +19,48 @@ var A = Activity.extends(function ClientEditionActivity() {
 exports.init = A.init;
 
 var ko = require('knockout');
-var Client = require('../models/Customer');
 
-function ViewModel() {
+A.prototype.show = function show(state) {
+    Activity.prototype.show.call(this, state);
     
-    this.client = ko.observable(new Client());
+    // reset
+    this.viewModel.clientID(0);
+
+    // params
+    var params = state && state.route && state.route.segments || [];
     
-    this.header = ko.observable('Edit Location');
+    var clientID = params[0] |0;
     
+    if (clientID) {
+        this.viewModel.clientID(clientID);
+        this.viewModel.client.sync(clientID)
+        .catch(function (err) {
+            this.app.modals.showError({
+                title: 'Error loading client data',
+                error: err
+            });
+        }.bind(this));
+    }
+};
+
+function ViewModel(app) {
+    
+    this.clientID = ko.observable(0);
+    this.client = app.model.customers.createWildcardItem();
+
+    this.header = ko.observable('Edit Client');
+    
+    this.isLoading = app.model.customers.state.isLoading;
+    this.isSyncing = app.model.customers.state.isSyncing;
+    this.isSaving = app.model.customers.state.isSaving;
+    this.isLocked = ko.pureComputed(function() {
+        var c = this.client();
+        return (
+            app.model.customers.state.isLocked() ||
+            c && !c.editable()
+        );
+    }, this);
+
     // TODO
     this.save = function() {};
     this.cancel = function() {};

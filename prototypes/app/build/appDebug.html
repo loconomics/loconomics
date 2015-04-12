@@ -536,24 +536,31 @@
     <!-- ClientEdition activity -->
     <div class="container-fluid has-navbar" data-activity="clientEdition">
       <form role="form">
-         <h2 class="SectionTitle" data-bind="visible: header, text: header"></h2>
+         <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+            <span data-bind="text: header"></span>
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+        </h2>
 
+        <div data-bind="css: { 'is-loading': isLoading }">
+          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
         <fieldset class="isolated" data-bind="with: client()">
-          <app-unlabeled-input params="placeholder: 'First name', value: firstName"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Last name', value: lastName"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Mobile phone', value: phoneNumber"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Mobile phone', value: phone, disable: $root.isLocked"></app-unlabeled-input>
           <div class="checkbox">
             <label>
-              <input type="checkbox" data-bind="checked: canReceiveSms" />Can receive SMS</label>
+              <input type="checkbox" data-bind="checked: canReceiveSms, disable: $root.isLocked"
+              />Can receive SMS</label>
           </div>
-          <app-unlabeled-input params="placeholder: 'Email', value: email, type: 'email'"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Birthday (mm/dd)', value: birthDay"></app-unlabeled-input>
-          <textarea class="form-control" data-bind="value: notesAboutClient"></textarea>
+          <app-unlabeled-input params="placeholder: 'Email', value: email, type: 'email', disable: $root.isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Birthday (mm/dd)', value: birthDay, disable: $root.isLocked"></app-unlabeled-input>
+          <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLocked"></textarea>
         </fieldset>
       </form>
       <div class="navbar navbar-default ActivityNavbar">
         <div class="container">
-          <button type="button" class="btn btn-primary btn-block">Save</button>
+          <button type="button" class="btn btn-primary btn-block" data-bind="disable: $root.isLocked">Save</button>
         </div>
       </div>
     </div>
