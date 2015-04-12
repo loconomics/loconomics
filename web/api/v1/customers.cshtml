@@ -1,26 +1,47 @@
-﻿@*
+﻿@using WebMatrix.WebData;
+@*
     Accessing the current user (freelancer) customers list.
 
     Options:
     
-    - GET
+    - GET: get all the customers of the freelancer user requesting the data
 
-    - POST
+    - GET /@customerUserID: get the customer information for the given userID and the freelancer user requesting the data
 
-    - PUT /@customerUserID
+    - POST: create a new customer. Pass in all fields of class LsRestCustomer less the control fields, 'freelancerUserID' and the 'editable' field.
+        A look up by email and phone are performed (exact macth) so not duplicated records can happens, throwing a Conflict HTTP error that provides the public
+        data for the customer that already exists (the data that can be extracted, default for others fields --like notesAboutCustomer field).
+
+    - PUT /@customerUserID: Update a customer record. customerUserID and freelancerUserID, additionally to control fields and 'editable' field, are not editable
+        so they are discarded if specified.
+        An bad requets HTTP error is throw if freelancer (current user) has no rights to modify the data (on client side, 
+        the 'editable' field can be checked before PUT the data, but even on extreme cases can happen than an initially editable customer becomes
+        not editable when attempting the request -user account status changes, as customer enabling its marketplace account from a freelancer record)
 
     - DELETE /@customerUserID
 
-    - @Result {
-        ...
-    }
+    - @Result list or item of type LcRestCustomer
 *@
 @functions{
     public class RestCustomers : RestWebPage
     {
         public override dynamic Get()
         {
-            return null;
+            if (UrlData.Count == 0) {
+                var freelancerUserID = WebSecurity.CurrentUserId;
+                return LcRestCustomer.GetFreelancerCustomers(freelancerUserID);
+            }
+            else if (UrlData.Count == 1 &&
+                UrlData[0].IsInt()) {
+                var freelancerUserID = WebSecurity.CurrentUserId;
+                var customerUserID = UrlData[0].AsInt();
+                var customer = LcRestCustomer.GetFreelancerCustomer(freelancerUserID, customerUserID);
+                if (customer != null) {
+                    return customer;
+                }
+            }
+            
+            throw new HttpException(404, "Not Found");
         }
     }
 }
