@@ -1,44 +1,44 @@
 /** Clients test data **/
-var Client = require('../models/Client');
+var Client = require('../models/Customer');
 
 var testData = [
     new Client ({
-        id: 1,
+        customerUserID: 1,
         firstName: 'Joshua',
         lastName: 'Danielson'
     }),
     new Client({
-        id: 2,
+        customerUserID: 2,
         firstName: 'Iago',
         lastName: 'Lorenzo'
     }),
     new Client({
-        id: 3,
+        customerUserID: 3,
         firstName: 'Fernando',
         lastName: 'Gago'
     }),
     new Client({
-        id: 4,
+        customerUserID: 4,
         firstName: 'Adam',
         lastName: 'Finch'
     }),
     new Client({
-        id: 5,
+        customerUserID: 5,
         firstName: 'Alan',
         lastName: 'Ferguson'
     }),
     new Client({
-        id: 6,
+        customerUserID: 6,
         firstName: 'Alex',
         lastName: 'Pena'
     }),
     new Client({
-        id: 7,
+        customerUserID: 7,
         firstName: 'Alexis',
         lastName: 'Peaca'
     }),
     new Client({
-        id: 8,
+        customerUserID: 8,
         firstName: 'Arthur',
         lastName: 'Miller'
     })

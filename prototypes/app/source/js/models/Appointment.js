@@ -3,7 +3,7 @@
 
 var ko = require('knockout'),
     Model = require('./Model'),
-    Client = require('./Client'),
+    Client = require('./Customer'),
     Location = require('./Location'),
     Service = require('./Service'),
     moment = require('moment');

@@ -19,7 +19,7 @@ var A = Activity.extends(function ClientEditionActivity() {
 exports.init = A.init;
 
 var ko = require('knockout');
-var Client = require('../models/Client');
+var Client = require('../models/Customer');
 
 function ViewModel() {
     

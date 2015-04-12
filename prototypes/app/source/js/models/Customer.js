@@ -1,29 +1,34 @@
-/** Client model **/
+/** Customer model **/
 'use strict';
 
 var ko = require('knockout'),
     Model = require('./Model');
 
-// TODO Double check User, must be the same or extended??
-
-function Client(values) {
+function Customer(values) {
     
     Model(this);
     
     this.model.defProperties({
-        id: 0,
+        customerUserID: 0,
+        
         firstName: '',
         lastName: '',
+        secondLastName: '',
         email: '',
         phone: null,
         canReceiveSms: false,
         birthMonthDay: null,
         birthMonth: null,
-        notesAboutClient: null
+        
+        notesAboutClient: null,
+        
+        createdDate: null,
+        updatedDate: null,
+        editable: false
     }, values);
 
     this.fullName = ko.pureComputed(function() {
-        return (this.firstName() + ' ' + this.lastName());
+        return ((this.firstName() || '') + ' ' + (this.lastName() || ''));
     }, this);
     
     this.birthDay = ko.pureComputed(function() {
@@ -39,4 +44,4 @@ function Client(values) {
     }, this);
 }
 
-module.exports = Client;
+module.exports = Customer;

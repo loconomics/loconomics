@@ -585,7 +585,7 @@
 
           </div>
           <!-- ko foreach: clients -->
-          <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEdition/' + id() }">
+          <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEdition/' + customerUserID() }">
             <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
           </a>
 
