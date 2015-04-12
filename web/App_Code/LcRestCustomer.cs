@@ -17,8 +17,8 @@ public class LcRestCustomer
     public string secondLastName;
     public string phone;
     public bool canReceiveSms;
-    public int birthMonthDay;
-    public int birthMonth;
+    public int? birthMonthDay;
+    public int? birthMonth;
     public string notesAboutCustomer;
     public DateTime createdDate;
     public DateTime updatedDate;
@@ -69,7 +69,7 @@ public class LcRestCustomer
                 ,pc.NotesAboutCustomer as notesAboutCustomer
                 ,pc.CreatedDate as createdDate
                 ,pc.UpdatedDate as updatedDate
-                ,(CASE WHEN uc.AccountStatusID = 6 AND uc.ReferredByUserID = @0 THEN Cast(1 as bit) ELSE Cast(0 as bit)) as editable
+                ,(CASE WHEN uc.AccountStatusID = 6 AND uc.ReferredByUserID = @0 THEN Cast(1 as bit) ELSE Cast(0 as bit) END) as editable
         FROM    ProviderCustomer As pc
                  INNER JOIN
                 Users As uc
@@ -79,7 +79,6 @@ public class LcRestCustomer
                   ON up.UserID = uc.UserID
         WHERE   pc.Active = 1
                  AND uc.Active = 1
-                 AND up.Active = 1
                  AND pc.ProviderUserID = @0
     ";
     private const string sqlAndCustomerUserID = @"
