@@ -18,9 +18,6 @@ var A = Activity.extends(function ClientsActivity() {
     this.$index = this.$activity.find('#clientsIndex');
     this.$listView = this.$activity.find('#clientsListView');
     
-    // TestingData
-    this.viewModel.clients(require('../testdata/clients').clients);
-    
     // Handler to update header based on a mode change:
     this.registerHandler({
         target: this.viewModel.isSelectionMode,
@@ -51,20 +48,6 @@ var A = Activity.extends(function ClientsActivity() {
             }
         }.bind(this)
     });
-    
-    // TODO: check errors from loading, will be RemoteModel??
-    /*this.registerHandler({
-        target: this.app.model.clients,
-        event: 'error',
-        handler: function(err) {
-            if (err.task === 'save') return;
-            var msg = 'Error loading clients.';
-            this.app.modals.showError({
-                title: msg,
-                error: err && err.task && err.error || err
-            });
-        }.bind(this)
-    });*/
 });
 
 exports.init = A.init;
@@ -79,11 +62,16 @@ A.prototype.show = function show(state) {
     this.viewModel.isSelectionMode(state.selectClient === true);
     
     // Keep data updated:
-    // TODO: as RemoteModel?
-    //this.app.model.clients.sync();
+    this.app.model.customers.sync()
+    .catch(function(err) {
+        this.app.modals.showError({
+            title: 'Error loading the clients list',
+            error: err
+        });
+    }.bind(this));
 };
 
-function ViewModel() {
+function ViewModel(app) {
 
     this.headerText = ko.observable('');
 
@@ -92,7 +80,7 @@ function ViewModel() {
     this.isSelectionMode = ko.observable(false);
 
     // Full list of clients
-    this.clients = ko.observableArray([]);
+    this.clients = app.model.customers.list;
     
     // Search text, used to filter 'clients'
     this.searchText = ko.observable('');

@@ -97,9 +97,10 @@ function ListRemoteModel(settings) {
     
     // Direct access to the observable cached list.
     api.list = cache.list;
-    
+
+    // Currently, just a wrapper for getList.
     api.sync = function sync() {
-        api.getList();
+        return api.getList();
     };
 
     /**
@@ -207,7 +208,7 @@ function ListRemoteModel(settings) {
         var obs = ko.observable(firstValue);
         // Create method 'sync'
         obs.sync = function syncObservableItem() {
-            api.getItem(itemID)
+            return api.getItem(itemID)
             .then(function(itemModel) {
                 obs(itemModel);
             });

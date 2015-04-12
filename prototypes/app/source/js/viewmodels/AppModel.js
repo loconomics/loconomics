@@ -152,6 +152,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.freelancerPricing = require('./AppModel.freelancerPricing').create(this);
     this.pricingTypes = require('./AppModel.pricingTypes').create(this);
     this.messaging = require('./AppModel.messaging').create(this);
+    this.customers = require('./AppModel.customers').create(this);
 };
 
 module.exports = AppModel;
