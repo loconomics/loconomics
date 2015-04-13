@@ -535,40 +535,54 @@
     </form>
     </div>
     <!-- ClientEdition activity -->
-    <div class="container-fluid has-navbar" data-activity="clientEdition">
+    <div class="container-fluid has-navbar" data-activity="clientEditor">
       <form role="form">
-         <h2 class="SectionTitle" data-bind="visible: header, text: header"></h2>
+         <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+            <span data-bind="text: header"></span>
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+        </h2>
 
+        <div data-bind="css: { 'is-loading': isLoading }">
+          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
         <fieldset class="isolated" data-bind="with: client()">
-          <app-unlabeled-input params="placeholder: 'First name', value: firstName"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Last name', value: lastName"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Mobile phone', value: phoneNumber"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Mobile phone', value: phone, disable: $root.isLocked"></app-unlabeled-input>
           <div class="checkbox">
             <label>
-              <input type="checkbox" data-bind="checked: canReceiveSms" />Can receive SMS</label>
+              <input type="checkbox" data-bind="checked: canReceiveSms, disable: $root.isLocked"
+              />Can receive SMS</label>
           </div>
-          <app-unlabeled-input params="placeholder: 'Email', value: email, type: 'email'"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Birthday (mm/dd)', value: birthDay"></app-unlabeled-input>
-          <textarea class="form-control" data-bind="value: notesAboutClient"></textarea>
+          <app-unlabeled-input params="placeholder: 'Email', value: email, type: 'email', disable: $root.isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Birthday (mm/dd)', value: birthDay, disable: $root.isLocked"></app-unlabeled-input>
+          <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLocked"></textarea>
         </fieldset>
       </form>
       <div class="navbar navbar-default ActivityNavbar">
         <div class="container">
-          <button type="button" class="btn btn-primary btn-block">Save</button>
+          <button type="button" class="btn btn-primary btn-block" data-bind="disable: $root.isLocked">Save</button>
         </div>
       </div>
     </div>
     <!-- Activity clients -->
     <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
-       <h2 class="SectionTitle" data-bind="visible: headerText"><span data-bind="text: headerText">Clients</span></h2>
+       <h2 class="SectionTitle" data-bind="visible: headerText">
+      <span data-bind="text: headerText">Clients</span>
+  </h2>
 
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
       <div class="isolated">
-        <div class="input-group"> <span class="input-group-addon">
-        <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+        <div class="input-group"> <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
+        <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+        <span class="glyphicon glyphicon-search"></span>
+ <span class="sr-only">Search</span>
 </span>
           <input
-          type="text" class="form-control" placeholder="search clients" data-bind="value: searchText, valueUpdate: 'afterkeydown'"> <span class="input-group-btn">
-            <button type="button" class="btn btn-secondary">Add</button>
+          type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText"> <span class="input-group-btn">
+            <a href="#!/clientEditor" class="btn btn-secondary">Add</a>
         </span>
 
         </div>
@@ -586,12 +600,26 @@
 
           </div>
           <!-- ko foreach: clients -->
-          <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEdition/' + id() }">
+          <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + customerUserID() }">
             <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
           </a>
 
           </div>
           <!-- /ko -->
+        </div>
+      </div>
+      <div data-bind="css: { 'is-loading': publicSearchRunning() !== null }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div data-bind="if: publicSearchResults().length > 0">
+         <h3 class="SectionTitle">Results from Loconomics.com</h3>
+
+        <div class="SimpleList" data-bind="foreach: publicSearchResults">
+          <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.addRemoteClient }">
+                <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
+              </a>
+
+          </div>
         </div>
       </div>
     </div>
@@ -702,6 +730,9 @@
         <div class="panel-body">
           <div data-bind="text: bodyText"></div>
         </div>
+      </div>
+      <div data-bind="if: bookingID">
+        <button type="button" class="btn btn-default btn-block" data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() }">Open Booking</button>
       </div>
     </div>
     <!-- Activity datetimePicker -->

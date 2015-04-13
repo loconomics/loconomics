@@ -29,6 +29,10 @@
     </ul>
   </div>
 
+    <div class="isolated" data-bind="visible: clients().length === 0 && !isLoading()">
+        You have no clients yet. Search for clients that may already be on Loconomics or add clients of your own.
+    </div>
+    
   <div id="clientsListView">
     <div class="SimpleList" data-bind="foreach: groupedClients">
       <div class="SimpleList-divider" data-bind="attr: { 'id': ('clientsListView-' + letter) }">
