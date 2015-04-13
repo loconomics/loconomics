@@ -41,6 +41,11 @@ A.prototype.show = function show(state) {
             });
         }.bind(this));
     }
+    else {
+        this.viewModel.client.newItem({
+            editable: true
+        });
+    }
 };
 
 function ViewModel(app) {
@@ -48,7 +53,9 @@ function ViewModel(app) {
     this.clientID = ko.observable(0);
     this.client = app.model.customers.createWildcardItem();
 
-    this.header = ko.observable('Edit Client');
+    this.header = ko.pureComputed(function() {
+        return this.clientID() ? 'Edit Client' : 'New Client';
+    }, this);
     
     this.isLoading = app.model.customers.state.isLoading;
     this.isSyncing = app.model.customers.state.isSyncing;

@@ -277,6 +277,16 @@ function ListRemoteModel(settings) {
                 return itemModel;
             });
         };
+        
+        /**
+            Sets the observable value to a new item instance
+        **/
+        obs.newItem = function newItem(defaults) {
+            if (settings.Model)
+                obs(new settings.Model(defaults));
+            else
+                obs(defaults || {});
+        };
 
         // Return
         return obs;
