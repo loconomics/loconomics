@@ -44,7 +44,7 @@
                 }
             }
             else if (UrlData.Count == 1 &&
-                UrlData[0] == "search") {
+                UrlData[0] == "public-search") {
                 var freelancerUserID = WebSecurity.CurrentUserId;
                 return LcRestCustomer.PublicSearch(freelancerUserID, Request.QueryString["fullName"], Request.QueryString["email"], Request.QueryString["phone"]);
             }
