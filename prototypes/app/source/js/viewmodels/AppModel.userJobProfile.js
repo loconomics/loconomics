@@ -37,6 +37,16 @@ exports.create = function create(appModel) {
             return list;
         });
     };
+    
+    api.clearCache = function clearCache() {
+        cache.userJobProfile.cache.latest = null;
+        cache.userJobProfile.list = [];
+        cache.userJobTitles = {};
+    };
+    
+    appModel.on('clearLocalData', function() {
+        api.clearCache();
+    });
 
     /**
         Convert raw array of job titles records into

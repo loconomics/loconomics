@@ -62,6 +62,8 @@ function ListRemoteModel(settings) {
         itemIdField: settings.itemIdField,
         itemAdapter: itemAdapter
     });
+    
+    this.clearCache = cache.clearCache;
 
     this.state.isLocked = ko.pureComputed(function() {
         return this.isLoading() || this.isSaving() || this.isDeleting();

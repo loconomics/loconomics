@@ -4,14 +4,18 @@
 **/
 var ko = require('knockout'),
     $ = require('jquery'),
-    Model = require('../models/Model'),
     Rest = require('../utils/Rest'),
-    localforage = require('localforage');
+    localforage = require('localforage'),
+    EventEmitter = require('events').EventEmitter;
 
 function AppModel() {
-    // TODO Really needed?
-    Model(this);
+    EventEmitter.call(this);
+    this.setMaxListeners(30);
 }
+
+AppModel._inherits(EventEmitter);
+
+module.exports = AppModel;
 
 require('./AppModel-account').plugIn(AppModel);
 
@@ -155,7 +159,28 @@ AppModel.prototype.loadModules = function loadModules() {
     this.customers = require('./AppModel.customers').create(this);
 };
 
-module.exports = AppModel;
+/**
+    Clear the local stored data, but with careful for the special
+    config data that is kept.
+**/
+AppModel.prototype.clearLocalData = function clearLocalData() {
+    // Get config
+    return localforage.getItem('config')
+    .then(function(config) {
+        // Clear all
+        localforage.clear();
+
+        if (config) {
+            // Set config again
+            localforage.setItem('config', config);
+        }
+        
+        // Trigger notification, so other components
+        // can make further clean-up or try synchronizations,
+        // for example to clean-up in-memory cache.
+        this.emit('clearLocalData');
+    }.bind(this));
+};
 
 // TODO Review removal, maybe too the utility internally used, since now there
 // is an (incomplete still) AppModel.calendarEvents

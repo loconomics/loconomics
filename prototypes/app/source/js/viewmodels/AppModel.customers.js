@@ -17,6 +17,10 @@ exports.create = function create(appModel) {
     api.addLocalforageSupport('customers');
     api.addRestSupport(appModel.rest, 'customers');
     
+    appModel.on('clearLocalData', function() {
+        api.clearCache();
+    });
+    
     /**
         Public search of users, possible customers by well
         know fields, with full value match.

@@ -17,6 +17,10 @@ exports.create = function create(appModel) {
 
     api.addLocalforageSupport('pricing-types');
     api.addRestSupport(appModel.rest, 'pricing-types');
+    
+    appModel.on('clearLocalData', function() {
+        api.clearCache();
+    });
 
     return api;
 };

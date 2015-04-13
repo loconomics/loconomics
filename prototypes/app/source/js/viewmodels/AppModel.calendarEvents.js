@@ -26,6 +26,14 @@ exports.create = function create(appModel) {
     var cache = {
         eventsByDate: {}
     };
+    
+    api.clearCache = function clearCache() {
+        cache.eventsByDate = {};
+    };
+    
+    appModel.on('clearLocalData', function() {
+        api.clearCache();
+    });
 
     /*apiHelper.defineCrudApiForRest({
         extendedObject: api.remote,

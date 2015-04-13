@@ -7,7 +7,7 @@ var SchedulingPreferences = require('../models/SchedulingPreferences');
 var RemoteModel = require('../utils/RemoteModel');
 
 exports.create = function create(appModel) {
-    return new RemoteModel({
+    var rem = new RemoteModel({
         data: new SchedulingPreferences(),
         ttl: { minutes: 1 },
         localStorageName: 'schedulingPreferences',
@@ -18,4 +18,10 @@ exports.create = function create(appModel) {
             return appModel.rest.put('scheduling-preferences', this.data.model.toPlainObject());
         }
     });
+    
+    appModel.on('clearLocalData', function() {
+        rem.clearCache();
+    });
+    
+    return rem;
 };

@@ -82,6 +82,13 @@ function IndexedListCache(settings) {
             ..
         */}
     };
+    
+    this.clearCache = function clearCache() {
+        cache.control.latest = null;
+        cache.list([]);
+        cache.index = {};
+        unused = true;
+    };
 
     /**
         Get the cache entry from the Item

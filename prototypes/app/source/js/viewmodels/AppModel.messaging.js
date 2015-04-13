@@ -23,6 +23,10 @@ exports.create = function create(appModel) {
     api.addLocalforageSupport('messaging');
     api.addRestSupport(appModel.rest, 'messaging');
     
+    appModel.on('clearLocalData', function() {
+        api.clearCache();
+    });
+    
     // Basic support is fetching all threads with the latest message of each one.
     // Replace getItem built-in to do non locally saved, fetch for all messages in
     // a thread (the thread is the item)

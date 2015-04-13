@@ -62,6 +62,10 @@ function IndexedGroupListCache(settings) {
         },
         ..
     */};
+    
+    this.clearCache = function clearCache() {
+        cache = {};
+    };
 
     function newCacheEntry(list) {
         return {

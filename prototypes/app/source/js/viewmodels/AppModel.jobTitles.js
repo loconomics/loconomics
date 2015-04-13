@@ -16,6 +16,14 @@ exports.create = function create(appModel) {
         cache = {
             jobTitles: {}
         };
+    
+    api.clearCache = function clearCache() {
+        cache.jobTitles = {};
+    };
+    
+    appModel.on('clearLocalData', function() {
+        api.clearCache();
+    });
 
     /**
         Public API

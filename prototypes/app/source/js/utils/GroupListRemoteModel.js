@@ -15,6 +15,7 @@ function required(val, msg) {
 }
 
 function GroupListRemoteModel(settings) {
+    /*jshint maxstatements:28*/
     
     settings = settings || {};
     settings.listTtl = required(settings.listTtl, 'listTtl is required');
@@ -37,6 +38,8 @@ function GroupListRemoteModel(settings) {
         groupIdField: settings.groupIdField,
         itemIdField: settings.itemIdField
     });
+    
+    this.clearCache = cache.clearCache;
 
     this.state.isLocked = ko.pureComputed(function() {
         return this.isLoading() || this.isSaving() || this.isDeleting();

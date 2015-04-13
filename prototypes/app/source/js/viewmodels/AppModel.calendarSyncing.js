@@ -34,6 +34,10 @@ exports.create = function create(appModel) {
             return updatedSyncSettings;
         });
     };
+    
+    appModel.on('clearLocalData', function() {
+        rem.clearCache();
+    });
 
     return rem;
 };

@@ -7,7 +7,7 @@ var User = require('../models/User');
 var RemoteModel = require('../utils/RemoteModel');
 
 exports.create = function create(appModel) {
-    return new RemoteModel({
+    var rem = new RemoteModel({
         data: User.newAnonymous(),
         ttl: { minutes: 1 },
         // IMPORTANT: Keep the name in sync with set-up at AppModel-account
@@ -19,4 +19,10 @@ exports.create = function create(appModel) {
             return appModel.rest.put('profile', this.data.model.toPlainObject());
         }
     });
+    
+    appModel.on('clearLocalData', function() {
+        rem.clearCache();
+    });
+    
+    return rem;
 };

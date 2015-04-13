@@ -52,6 +52,11 @@ function RemoteModel(options) {
         ttl: options.ttl
     });
     
+    this.clearCache = function clearCache() {
+        this.cache.latest = null;
+        this.data.model.reset();
+    };
+    
     // Optional name used to persist a copy of the data as plain object
     // in the local storage on every successfully load/save operation.
     // With no name, no saved (default).

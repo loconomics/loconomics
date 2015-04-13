@@ -320,3 +320,14 @@ Model.prototype.touch = function touch() {
     // We use the function way to get milliseconds, add 1 and create instance
     this.dataTimestamp(new Date(Date() + 1));
 };
+
+/**
+    Replaces all the properties and fields data in the model object
+    with the default ones of the constructor, plus optional new preset data.
+**/
+Model.prototype.reset = function reset(presets) {
+    
+    var newInstance = new this.modelObject.constructor(presets);
+
+    this.updateWith(newInstance, true);
+};

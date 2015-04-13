@@ -18,6 +18,14 @@ exports.create = function create(appModel) {
     var cache = {
         aptsByDate: {}
     };
+    
+    api.clearCache = function clearCache() {
+        cache.aptsByDate = {};
+    };
+    
+    appModel.on('clearLocalData', function() {
+        api.clearCache();
+    });
 
     /**
         Get a generic calendar appointment object, made of events and/or bookings,

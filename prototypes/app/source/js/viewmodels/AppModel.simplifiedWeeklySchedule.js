@@ -17,7 +17,7 @@ var defaultSlotSize = 15;
 var weekDayProperties = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 exports.create = function create(appModel) {
-    return new RemoteModel({
+    var rem = new RemoteModel({
         data: new SimplifiedWeeklySchedule(),
         ttl: { minutes: 1 },
         localStorageName: 'weeklySchedule',
@@ -41,6 +41,12 @@ exports.create = function create(appModel) {
             .then(fromWeeklySchedule);
         }
     });
+    
+    appModel.on('clearLocalData', function() {
+        rem.clearCache();
+    });
+    
+    return rem;
 };
 
 function fromWeeklySchedule(weeklySchedule) {

@@ -7,7 +7,7 @@ var Address = require('../models/Address');
 var RemoteModel = require('../utils/RemoteModel');
 
 exports.create = function create(appModel) {
-    return new RemoteModel({
+    var rem = new RemoteModel({
         data: new Address(),
         ttl: { minutes: 1 },
         localStorageName: 'homeAddress',
@@ -18,4 +18,10 @@ exports.create = function create(appModel) {
             return appModel.rest.put('addresses/home', this.data.model.toPlainObject());
         }
     });
+    
+    appModel.on('clearLocalData', function() {
+        rem.clearCache();
+    });
+    
+    return rem;
 };

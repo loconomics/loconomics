@@ -59,14 +59,15 @@ exports.plugIn = function (AppModel) {
         that may use it).
     **/
     // FUTURE: TOREVIEW if the /logout call can be removed.
-    // TODO: must remove all the locally saved/cached data
-    // related to the user?
     AppModel.prototype.logout = function logout() {
 
         // Local app close session
         this.rest.extraHeaders = null;
         localforage.removeItem('credentials');
         localforage.removeItem('profile');
+        
+        // Local data clean-up!
+        this.clearLocalData();
 
         // Don't need to wait the result of the REST operation
         this.rest.post('logout');
@@ -96,28 +97,34 @@ exports.plugIn = function (AppModel) {
 };
 
 function performLocalLogin(thisAppModel, username, password) {
-    
+
     return function(logged) {
-        // use authorization key for each
-        // new Rest request
-        thisAppModel.rest.extraHeaders = {
-            alu: logged.userID,
-            alk: logged.authKey
-        };
+        
+        // Remove any previous local data if any:
+        return thisAppModel.clearLocalData()
+        .then(function() {
 
-        // async local save, don't wait
-        localforage.setItem('credentials', {
-            userID: logged.userID,
-            username: username,
-            password: password,
-            authKey: logged.authKey
+            // use authorization key for each
+            // new Rest request
+            thisAppModel.rest.extraHeaders = {
+                alu: logged.userID,
+                alk: logged.authKey
+            };
+
+            // async local save, don't wait
+            localforage.setItem('credentials', {
+                userID: logged.userID,
+                username: username,
+                password: password,
+                authKey: logged.authKey
+            });
+            // IMPORTANT: Local name kept in sync with set-up at AppModel.userProfile
+            localforage.setItem('profile', logged.profile);
+
+            // Set user data
+            thisAppModel.user().model.updateWith(logged.profile);
+
+            return logged;
         });
-        // IMPORTANT: Local name kept in sync with set-up at AppModel.userProfile
-        localforage.setItem('profile', logged.profile);
-
-        // Set user data
-        thisAppModel.user().model.updateWith(logged.profile);
-
-        return logged;
     };
 }

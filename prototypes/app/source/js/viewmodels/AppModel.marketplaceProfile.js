@@ -7,7 +7,7 @@ var MarketplaceProfile = require('../models/MarketplaceProfile');
 var RemoteModel = require('../utils/RemoteModel');
 
 exports.create = function create(appModel) {
-    return new RemoteModel({
+    var rem = new RemoteModel({
         data: new MarketplaceProfile(),
         ttl: { minutes: 1 },
         localStorageName: 'marketplaceProfile',
@@ -18,4 +18,10 @@ exports.create = function create(appModel) {
             return appModel.rest.put('marketplace-profile', this.data.model.toPlainObject());
         }
     });
+    
+    appModel.on('clearLocalData', function() {
+        rem.clearCache();
+    });
+    
+    return rem;
 };

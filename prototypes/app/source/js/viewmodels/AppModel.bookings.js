@@ -33,6 +33,14 @@ exports.create = function create(appModel) {
     });*/
 
     var cacheByDate = {};
+    
+    api.clearCache = function clearCache() {
+        cacheByDate = {};
+    };
+    
+    appModel.on('clearLocalData', function() {
+        api.clearCache();
+    });
 
     api.getBookingsByDate = function getBookingsByDate(date) {
         var dateKey = moment(date).format('YYYYMMDD');
