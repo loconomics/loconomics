@@ -8,9 +8,9 @@ INSERT INTO [accountstatus]
    ,[Active])
 VALUES
    (@AccountStatusID
-   ,@AccountStatusName>
-   ,@AccountStatusDescription>
-   ,@CreatedDate>
-   ,@UpdatedDate>
-   ,@ModifiedBy>
+   ,@AccountStatusName
+   ,@AccountStatusDescription
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
    ,@Active)
