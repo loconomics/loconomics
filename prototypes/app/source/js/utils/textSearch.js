@@ -8,8 +8,8 @@ var removeAccent = require('./removeAccent');
 
 module.exports = function textSearch(search, text) {
 
-    var s = removeAccent(search).toLowerCase(),
-        t = removeAccent(text).toLowerCase();
+    var s = removeAccent(search || '').toLowerCase(),
+        t = removeAccent(text || '').toLowerCase();
 
     return t.indexOf(s) > -1;
 };

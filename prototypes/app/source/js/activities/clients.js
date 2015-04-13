@@ -4,7 +4,8 @@
 'use strict';
 
 var ko = require('knockout'),
-    Activity = require('../components/Activity');
+    Activity = require('../components/Activity'),
+    textSearch = require('../utils/textSearch');
 
 var A = Activity.extends(function ClientsActivity() {
     
@@ -88,11 +89,18 @@ function ViewModel(app) {
     // Utility to get a filtered list of clients based on clients
     this.getFilteredList = function getFilteredList() {
         var s = (this.searchText() || '').toLowerCase();
-
+        // Search the client by:
+        // - full name
+        // - (else) email
+        // - (else) phone
         return this.clients().filter(function(client) {
-            var n = client && client.fullName() || '';
-            n = n.toLowerCase();
-            return n.indexOf(s) > -1;
+            if (!client) return false;
+            var found = textSearch(s, client.fullName());
+            if (found) return true;
+            found = textSearch(s, client.email());
+            if (found) return true;
+            found = textSearch(s, client.phone());
+            return found;
         });
     };
 
