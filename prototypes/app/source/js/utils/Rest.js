@@ -64,7 +64,10 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
     var thisRest = this;
     var url = this.baseUrl + apiUrl;
 
-    return Promise.resolve($.ajax({
+    // Using a promise to avoid the differences and problems of the jQuery thenable
+    // object, but attaching its original value as a new property 'xhr' of the promise
+    // created for advanced use.
+    var xhr = $.ajax({
         url: url,
         // Avoid cache for data.
         cache: false,
@@ -79,7 +82,9 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
         // Alternate: JSON as input
         //data: JSON.stringify(data),
         //contentType: contentType || 'application/json'
-    }))
+    });
+
+    var promiseXhr = Promise.resolve(xhr)
     .then(lowerCamelizeObject)
     .catch(function(err) {
         // On authorization error, give oportunity to retry the operation
@@ -99,6 +104,9 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
         // by default, continue propagating the error
         return err;
     });
+    
+    promiseXhr.xhr = xhr;
+    return promiseXhr;
 };
 
 Rest.prototype.onAuthorizationRequired = function onAuthorizationRequired(/*retry*/) {

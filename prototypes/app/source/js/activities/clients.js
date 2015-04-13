@@ -82,6 +82,8 @@ function ViewModel(app) {
 
     // Full list of clients
     this.clients = app.model.customers.list;
+    this.isLoading = app.model.customers.state.isLoading;
+    this.isSyncing = app.model.customers.state.isSyncing;
     
     // Search text, used to filter 'clients'
     this.searchText = ko.observable('');
@@ -138,6 +140,68 @@ function ViewModel(app) {
         return groups;
 
     }, this);
+    
+    
+    /// Public search
+    this.publicSearchResults = ko.observableArray([]);
+    this.publicSearchRunning = ko.observable(null);
+    // When filering has no results:
+    ko.computed(function() {    
+        var filtered = this.filteredClients(),
+            searchText = this.searchText(),
+            request = null;
+
+        // If there is search text and no results from local filtering
+        if (filtered.length === 0 && searchText) {
+            
+            // Remove previous results
+            this.publicSearchResults([]);
+            
+            request = app.model.customers.publicSearch({
+                fullName: searchText,
+                email: searchText,
+                phone: searchText
+            });
+            this.publicSearchRunning(request);
+            request.then(function(r) {
+                this.publicSearchResults(r);
+            }.bind(this))
+            .catch(function(err) {
+                app.modals.showError({
+                    title: 'There was an error when on remote clients search',
+                    error: err
+                });
+            })
+            .then(function() {
+                // Always:
+                // if still the same, it ended then remove
+                if (this.publicSearchRunning() === request)
+                    this.publicSearchRunning(null);
+            }.bind(this));
+        }
+        else {
+            this.publicSearchResults([]);
+            // Cancelling any pending request, to avoid
+            // anwanted results when finish
+            request = this.publicSearchRunning();
+            if (request &&
+                request.xhr &&
+                request.xhr.abort) {
+                request.xhr.abort();
+                this.publicSearchRunning(null);
+            }
+        }
+    }, this);
+    
+    /**
+        Add a client from the public/remote search results
+    **/
+    this.addRemoteClient = function(/*client*/) {
+        // TODO
+    }.bind(this);
+    
+    
+    /// Selections
     
     this.selectedClient = ko.observable(null);
     
