@@ -534,7 +534,7 @@
     </form>
     </div>
     <!-- ClientEdition activity -->
-    <div class="container-fluid has-navbar" data-activity="clientEdition">
+    <div class="container-fluid has-navbar" data-activity="clientEditor">
       <form role="form">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
@@ -592,7 +592,7 @@
 
           </div>
           <!-- ko foreach: clients -->
-          <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEdition/' + customerUserID() }">
+          <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + customerUserID() }">
             <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
           </a>
 

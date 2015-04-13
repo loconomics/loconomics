@@ -35,7 +35,7 @@ module.exports = {
     'feedbackForm': require('./activities/feedbackForm'),
     'contactForm': require('./activities/contactForm'),
     'cms': require('./activities/cms'),
-    'clientEdition': require('./activities/clientEdition'),
+    'clientEditor': require('./activities/clientEditor'),
     'schedulingPreferences': require('./activities/schedulingPreferences'),
     'calendarSyncing': require('./activities/calendarSyncing'),
     'weeklySchedule': require('./activities/weeklySchedule'),
