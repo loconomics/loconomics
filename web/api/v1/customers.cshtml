@@ -8,6 +8,9 @@
 
     - GET /@customerUserID: get the customer information for the given userID and the freelancer user requesting the data
 
+    - GET /search: Public search of users know externally by the freelancer with exact match of one of the optional identifiable fields: fullName, email, phone.
+        The set of results does not exists as frelancer's customers, so control fields are null ever (createdDate, updatedDate) and Editable is false.
+
     - POST: create a new customer. Pass in all fields of class LsRestCustomer less the control fields, 'freelancerUserID' and the 'editable' field.
         A look up by email and phone are performed (exact macth) so not duplicated records can happens, throwing a Conflict HTTP error that provides the public
         data for the customer that already exists (the data that can be extracted, default for others fields --like notesAboutCustomer field).
@@ -40,11 +43,17 @@
                     return customer;
                 }
             }
-            
+            else if (UrlData.Count == 1 &&
+                UrlData[0] == "search") {
+                var freelancerUserID = WebSecurity.CurrentUserId;
+                return LcRestCustomer.PublicSearch(freelancerUserID, Request.QueryString["fullName"], Request.QueryString["email"], Request.QueryString["phone"]);
+            }
+
             throw new HttpException(404, "Not Found");
         }
     }
 }
-@{   
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
     new RestCustomers().JsonResponse(this);
 }

@@ -20,8 +20,8 @@ public class LcRestCustomer
     public int? birthMonthDay;
     public int? birthMonth;
     public string notesAboutCustomer;
-    public DateTime createdDate;
-    public DateTime updatedDate;
+    public DateTime? createdDate;
+    public DateTime? updatedDate;
     /// <summary>
     /// Editable is a special computed value, is true only
     /// when the customer account status is 6:Freelancer's Client (AKA 'client created and managed by a freelancer')
@@ -126,6 +126,87 @@ public class LcRestCustomer
             return null;
         else
             return add[0];
+    }
+    #endregion
+
+    #region Search
+    /// <summary>
+    /// A public search performs a search in all the database/marketplace users
+    /// for an exact match of full name OR email OR phone. Only if one of them
+    /// matches completely, the record is included in the results.
+    /// The given freelancerUserID is used to exclude results: if the match is
+    /// already a freelancer's customer, is excluded. The proposal of the search
+    /// if to look for people out of the freelancers agenda that are know by the
+    /// freelancer by a good identifier.
+    /// The LcRestCustomer class is used for the returned data,
+    /// and since the customer is not in the freelancer agend that means that
+    /// there is no data from [ProviderCustomer] table so some fields comes
+    /// with values as null/default, with the special Editable:false because
+    /// freelancer will clearly not be able to edit the record. The control
+    /// fields (createdDate, updatedDate) as null clearly state that the record
+    /// does not exists in the Freelancer customers agenda.
+    /// </summary>
+    /// <param name="fullName"></param>
+    /// <param name="email"></param>
+    /// <param name="phone"></param>
+    /// <returns></returns>
+    public static List<LcRestCustomer> PublicSearch(int excludedFreelancerUserID, string fullName, string email, string phone)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(@"
+                SELECT
+                        uc.UserID as customerUserID
+                        ,up.Email as email
+                        ,uc.FirstName as firstName
+                        ,uc.LastName as lastName
+                        ,uc.SecondLastName as secondLastName
+                        ,uc.MobilePhone as phone
+                        ,uc.CanReceiveSms as canReceiveSms
+                        ,uc.BirthMonthDay as birthMonthDay
+                        ,uc.BirthMonth as birthMonth
+                        -- Next ones will be null on matches
+                        -- so avoid processing the with fixed null
+                        -- except for CreatedDate that is used to filter
+                        -- existant records
+                        ,null as notesAboutCustomer
+                        ,pc.CreatedDate as createdDate
+                        ,null as updatedDate
+                        -- All records are no editable, because the editable ones will get
+                        -- filtered out on the Where
+                        ,cast(0 as bit) as editable
+                FROM    Users As uc
+                         INNER JOIN
+                        UserProfile As up
+                          ON up.UserID = uc.UserID
+                         LEFT JOIN
+                        -- left join relation only to exclude the ones already related to the freelancer
+                        ProviderCustomer As pc
+                          ON uc.UserID = pc.CustomerUserID
+                            AND pc.ProviderUserID = @0
+                WHERE   uc.Active = 1
+                         -- Exclude the freelancer user
+                         AND uc.UserID <> @0
+                         -- Exclude users related to the freelancer
+                         AND PC.createdDate is null
+                         -- Search by
+                         AND (
+                           -- Full name
+                           (dbo.fx_concat(dbo.fx_concat(coalesce(uc.FirstName, ''), coalesce(uc.LastName, ''), ' '), coalesce(uc.SecondLastName, ''), ' ')) like @1
+                            OR
+                           -- email
+                           up.Email like @2
+                            OR
+                           -- Phone
+                           uc.MobilePhone like @3
+                         )
+                ",
+                excludedFreelancerUserID,
+                fullName,
+                email,
+                phone
+            ).Select(FromDB).ToList();
+        }
     }
     #endregion
 }
