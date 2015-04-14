@@ -192,20 +192,216 @@ public class LcRestCustomer
                          -- Search by
                          AND (
                            -- Full name
-                           (dbo.fx_concat(dbo.fx_concat(coalesce(uc.FirstName, ''), coalesce(uc.LastName, ''), ' '), coalesce(uc.SecondLastName, ''), ' ')) like @1
+                           @1 is not null AND (dbo.fx_concat(dbo.fx_concat(coalesce(uc.FirstName, ''), coalesce(uc.LastName, ''), ' '), coalesce(uc.SecondLastName, ''), ' ')) like @1
                             OR
                            -- email
-                           up.Email like @2
+                           @2 is not null AND up.Email like @2
                             OR
                            -- Phone
-                           uc.MobilePhone like @3
+                           @3 is not null AND uc.MobilePhone like @3
                          )
                 ",
                 excludedFreelancerUserID,
-                fullName,
-                email,
-                phone
+                N.DW(fullName),
+                N.DW(email),
+                N.DW(phone)
             ).Select(FromDB).ToList();
+        }
+    }
+    #endregion
+
+    #region Create/Update
+    /// <summary>
+    /// It creates or updates a customer record for the freelancer and
+    /// returns the generated/updated customer.
+    /// In case the user cannot be created because the email already exists,
+    /// the existent user record is used and only the Freelancer fields are set
+    /// (automatically select and use the existant customer).
+    /// </summary>
+    /// <param name="freelancerUserID"></param>
+    /// <param name="customer"></param>
+    /// <returns></returns>
+    public static LcRestCustomer SetCustomer(int freelancerUserID, LcRestCustomer customer)
+    {
+        // If it has ID, we need to read it from database
+        // to ensure it can be edited, else only the freelancer fields
+        // can be saved.
+        if (customer.customerUserID > 0)
+        {
+            var savedCustomer = GetFreelancerCustomer(freelancerUserID, customer.customerUserID);
+
+            if (savedCustomer == null)
+            {
+                // Does not exists, return null to state user was not found.
+                // (a creation ever returns something, so it means ever a non found ID)
+                return null;
+            }
+
+            // Only set customer user if editable by the freelancer
+            if (savedCustomer.editable)
+            {
+                // Set Customer User
+                SetCustomerUser(customer);
+            }
+
+            // Set relationship data
+            SetFreelancerCustomer(freelancerUserID, customer);
+        }
+        else
+        {
+            // Request to create a new customer user,
+            // but requires double check that user can be created and not one
+            // with that email exists already.
+            var searchCustomer = PublicSearch(freelancerUserID, null, customer.email,  null).FirstOrDefault();
+            if (searchCustomer == null)
+            {
+                // Create new user, getting the generated ID
+                customer.customerUserID = SetCustomerUser(customer);
+                // Create link with freelancer
+                SetFreelancerCustomer(freelancerUserID, customer);
+            }
+            else
+            {
+                // It exists, cannot create duplicated, but link to freelancer with its info
+                // using its ID (the rest data provided by freelancer will be discarded, except
+                // freelancer fields).
+                customer.customerUserID = searchCustomer.customerUserID;
+                SetFreelancerCustomer(freelancerUserID, customer);
+            }
+        }
+
+        // Return new/updated record
+        return GetFreelancerCustomer(freelancerUserID, customer.customerUserID);
+    }
+
+    /// <summary>
+    /// Updates or creates a ProviderCustomer record with the given data
+    /// </summary>
+    /// <param name="freelancerUserID"></param>
+    /// <param name="customer"></param>
+    private static void SetFreelancerCustomer(int freelancerUserID, LcRestCustomer customer)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            db.Execute(@"
+                IF EXISTS (SELECT * FROM ProviderCustomer WHERE ProviderUserID = @0 AND CustomerUserID = @1)
+                    UPDATE ProviderCustomer SET
+                        NotesAboutCustomer = @2,
+                        UpdatedDate = getadate()
+                    WHERE
+                        ProviderUserID = @0
+                         AND CustomerUserID = @1
+                ELSE
+                    INSERT INTO ProviderCustomer (
+                        ProviderUserID,
+                        CustomerUserID,
+                        NotesAboutCustomer,
+                        ReferralSourceID,
+                        CreatedDate,
+                        UpdatedDate,
+                        Active
+                    ) VALUES (
+                        @0, @1, @2,
+                        12, -- source: created by freelancer (12:ProviderExistingClient)
+                        getdate(),
+                        getdate(),
+                        1 -- Active
+                    )
+            ", freelancerUserID,
+             customer.customerUserID,
+             customer.notesAboutCustomer);
+        }
+    }
+
+    /// <summary>
+    /// Create or updates a User account for the given customer information.
+    /// It DOES NOT check if the freelancer can update the customer or not,
+    /// that check must be done previously by checking the editable field
+    /// on GetFreelancerCustomer.
+    /// </summary>
+    /// <param name="customer"></param>
+    private static int SetCustomerUser(LcRestCustomer customer)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return (int)db.QueryValue(@"
+                DECLARE @UserID int
+                SET @UserID = @0
+
+                IF @UserID > 0 AND EXISTS (SELECT * FROM Users WHERE UserID = @UserID)
+                    UPDATE Users SET
+                        FirstName = @2,
+                        LastName = @3,
+                        SecondLastName = @4,
+                        MobilePhone = @5,
+                        CanReceiveSms = @6,
+                        BirthMonth = @7,
+                        BirthMontDay = @8,
+                        UpdatedDate = getdate()
+                    WHERE
+                        UserID = @0
+                ELSE
+                    -- Create UserProfile record to save email and generate UserID
+                    INSERT INTO UserProfile (
+                        UserID,
+                        Email
+                    ) VALUES (
+                        @0,
+                        @1
+                    )
+                    SET @UserID = @@Identity
+
+                    -- Create user account record, but account disabled
+                    INSERT INTO User (
+		                UserID,
+		                FirstName,
+		                LastName,
+		                MiddleIn,
+		                SecondLastName,
+		                GenderID,
+		                IsProvider,
+		                IsCustomer,
+                        MobilePhone,
+                        CanReceiveSms,
+                        BirthMonth,
+                        BirthMonthDay,
+		                CreatedDate,
+		                UpdatedDate,
+		                ModifiedBy,
+		                Active
+                    ) VALUES (
+                        @0,
+                        @2,
+                        @3,
+                        '', -- MiddleIn
+                        @4,
+                        -1, -- GenderID as 'unknow'
+                        0, -- No provider
+                        1, -- Is customer
+                        @5,
+                        @6,
+                        @7,
+                        @8,
+                        getdate(),
+                        getdate(),
+                        'sys',
+                        1 -- Active
+                    )
+
+                    -- NOTE: since there is no Membership record with password, is not an actual Loconomics User Account
+                    -- just what we need on this case
+
+                SELECT @UserID
+            ",
+             customer.customerUserID,
+             customer.email,
+             customer.firstName,
+             customer.lastName,
+             customer.secondLastName,
+             customer.phone,
+             customer.canReceiveSms,
+             customer.birthMonth,
+             customer.birthMonthDay);
         }
     }
     #endregion
