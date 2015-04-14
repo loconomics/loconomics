@@ -114,7 +114,7 @@
 
             Validation.RequireField("firstName", LcRessources.RequiredField("First Name"));
             Validation.RequireField("lastName", LcRessources.RequiredField("Last Name"));
-            Validation.RequireField("email", LcRessources.RequiredField("Last Name"));
+            Validation.RequireField("email", LcRessources.RequiredField("Email"));
             Validation.Add("birthMonth", Validator.Integer("Birth Month must be a number"));
             Validation.Add("birthMonth", Validator.Range(1, 12, "Birth Month must be a number between 1 and 12"));
             Validation.Add("birthMonthDay", Validator.Integer("Birth Month Day must be a number"));
