@@ -84,6 +84,31 @@
             // method not allowed
             return base.Put();
         }
+
+        public override dynamic Delete()
+        {
+            if (UrlData.Count == 1 &&
+                UrlData[0].IsInt()) {
+
+                var freelancerUserID = WebSecurity.CurrentUserId;
+                var itemID = UrlData[0].AsInt();
+                
+                // Get a copy before deletio to send later
+                var item = LcRestCustomer.GetFreelancerCustomer(freelancerUserID, itemID);
+
+                if (item == null) {
+                    throw new HttpException(404, "Not Found");
+                }
+
+                // Delete
+                LcRestCustomer.Delete(freelancerUserID, itemID);
+
+                return item;
+            }
+            
+            // method not allowed
+            return base.Delete();
+        }
         
         private bool IsValidCustomer() {
 

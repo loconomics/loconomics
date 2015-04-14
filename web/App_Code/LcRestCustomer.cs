@@ -415,4 +415,50 @@ public class LcRestCustomer
         }
     }
     #endregion
+
+    #region Delete
+    /// <summary>
+    /// Delete a freelancer customer, with care of:
+    /// - Delete relationship ([ProviderCustomer]) ever
+    /// - Delete customer user account only if the record is editable by the Freelancer
+    /// - and is not used by other Freelancers, in that case is left 'as is'.
+    /// </summary>
+    /// <param name="freelancerUserID"></param>
+    /// <param name="customerUserID"></param>
+    public static void Delete(int freelancerUserID, int customerUserID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            db.Execute(@"
+                DELETE FROM ProviderCustomer
+                WHERE ProviderUserID = @0
+                      AND CustomerUserID = @1
+
+                -- If there is no more providers linked to this customer
+                IF 0 = (
+                        SELECT count(*) FROM ProviderCustomer WHERE CustomerUserID = @1
+                    )
+                    -- And freelancer own this user record (is editable for him)
+                    AND EXISTS (
+                        SELECT * FROM users
+                        WHERE UserID = @1 -- The customer
+                            AND ReferredByUserID = @0 -- This freelancer
+                            AND AccountStatusID = 6 -- In 'editable by freelancer creator' state
+                ) BEGIN          
+                    -- Try to delete the User record, but only if
+                    -- is owned by the freelancer
+                    DELETE FROM users
+                    WHERE UserID = @1
+                        AND ReferredByUserID = @0
+                        AND AccountStatusID = 6 -- In 'editable by freelancer creator' state
+
+                    -- Delete the userprofile record
+                    DELETE FROM userprofile
+                    WHERE UserID = @1
+                END
+            ",
+            freelancerUserID, customerUserID);
+        }
+    }
+    #endregion
 }
