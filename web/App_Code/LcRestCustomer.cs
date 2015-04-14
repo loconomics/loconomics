@@ -250,9 +250,9 @@ public class LcRestCustomer
         else
         {
             // Request to create a new customer user,
-            // but requires double check that user can be created and not one
-            // with that email exists already.
-            var searchCustomer = PublicSearch(freelancerUserID, null, customer.email,  null).FirstOrDefault();
+            // but requires check if a user with that email already exists.
+            // Reusing the PublicSearch method with the email only and no freelancerUserID
+            var searchCustomer = PublicSearch(0, null, customer.email,  null).FirstOrDefault();
             if (searchCustomer == null)
             {
                 // Create new user, getting the generated ID
@@ -287,7 +287,7 @@ public class LcRestCustomer
                 IF EXISTS (SELECT * FROM ProviderCustomer WHERE ProviderUserID = @0 AND CustomerUserID = @1)
                     UPDATE ProviderCustomer SET
                         NotesAboutCustomer = @2,
-                        UpdatedDate = getadate()
+                        UpdatedDate = getdate()
                     WHERE
                         ProviderUserID = @0
                          AND CustomerUserID = @1
@@ -309,7 +309,7 @@ public class LcRestCustomer
                     )
             ", freelancerUserID,
              customer.customerUserID,
-             customer.notesAboutCustomer);
+             customer.notesAboutCustomer ?? "");
         }
     }
 
@@ -325,7 +325,9 @@ public class LcRestCustomer
                 DECLARE @UserID int
                 SET @UserID = @0
 
-                IF @UserID > 0 AND EXISTS (SELECT * FROM Users WHERE UserID = @UserID)
+                BEGIN TRANSACTION
+
+                IF @UserID > 0 AND EXISTS (SELECT * FROM Users WHERE UserID = @UserID) BEGIN
                     UPDATE Users SET
                         FirstName = @2,
                         LastName = @3,
@@ -333,26 +335,26 @@ public class LcRestCustomer
                         MobilePhone = @5,
                         CanReceiveSms = @6,
                         BirthMonth = @7,
-                        BirthMontDay = @8,
+                        BirthMonthDay = @8,
                         UpdatedDate = getdate()
                     WHERE
-                        UserID = @0
+                        UserID = @UserID
                         -- Extra check to avoid being edited without right
                          AND AccountStatusID = 6 -- Is editable by freelancer
                          AND ReferredByUserID <> @9 -- Is the owner freelancer
-                ELSE
+                
+                END ELSE BEGIN
+
                     -- Create UserProfile record to save email and generate UserID
                     INSERT INTO UserProfile (
-                        UserID,
                         Email
                     ) VALUES (
-                        @0,
                         @1
                     )
                     SET @UserID = @@Identity
 
                     -- Create user account record, but account disabled
-                    INSERT INTO User (
+                    INSERT INTO Users (
 		                UserID,
 		                FirstName,
 		                LastName,
@@ -372,7 +374,7 @@ public class LcRestCustomer
                         AccountStatusID,
                         ReferredByUserID
                     ) VALUES (
-                        @0,
+                        @UserID,
                         @2,
                         @3,
                         '', -- MiddleIn
@@ -394,6 +396,9 @@ public class LcRestCustomer
 
                     -- NOTE: since there is no Membership record with password, is not an actual Loconomics User Account
                     -- just what we need on this case
+                END
+
+                COMMIT TRANSACTION
 
                 SELECT @UserID
             ",
