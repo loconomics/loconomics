@@ -213,15 +213,15 @@ public class LcRestCustomer
     #region Create/Update
     /// <summary>
     /// It creates or updates a customer record for the freelancer and
-    /// returns the generated/updated customer.
+    /// returns the generated/updated ID.
     /// In case the user cannot be created because the email already exists,
     /// the existent user record is used and only the Freelancer fields are set
-    /// (automatically select and use the existant customer).
+    /// (automatically select and use the existent customer).
     /// </summary>
     /// <param name="freelancerUserID"></param>
     /// <param name="customer"></param>
     /// <returns></returns>
-    public static LcRestCustomer SetCustomer(int freelancerUserID, LcRestCustomer customer)
+    public static int SetCustomer(int freelancerUserID, LcRestCustomer customer)
     {
         // If it has ID, we need to read it from database
         // to ensure it can be edited, else only the freelancer fields
@@ -232,16 +232,16 @@ public class LcRestCustomer
 
             if (savedCustomer == null)
             {
-                // Does not exists, return null to state user was not found.
+                // Does not exists, return 0 to state user was not found.
                 // (a creation ever returns something, so it means ever a non found ID)
-                return null;
+                return 0;
             }
 
             // Only set customer user if editable by the freelancer
             if (savedCustomer.editable)
             {
                 // Set Customer User
-                SetCustomerUser(customer);
+                SetCustomerUser(freelancerUserID, customer);
             }
 
             // Set relationship data
@@ -256,7 +256,7 @@ public class LcRestCustomer
             if (searchCustomer == null)
             {
                 // Create new user, getting the generated ID
-                customer.customerUserID = SetCustomerUser(customer);
+                customer.customerUserID = SetCustomerUser(freelancerUserID, customer);
                 // Create link with freelancer
                 SetFreelancerCustomer(freelancerUserID, customer);
             }
@@ -271,7 +271,7 @@ public class LcRestCustomer
         }
 
         // Return new/updated record
-        return GetFreelancerCustomer(freelancerUserID, customer.customerUserID);
+        return customer.customerUserID;
     }
 
     /// <summary>
@@ -315,12 +315,9 @@ public class LcRestCustomer
 
     /// <summary>
     /// Create or updates a User account for the given customer information.
-    /// It DOES NOT check if the freelancer can update the customer or not,
-    /// that check must be done previously by checking the editable field
-    /// on GetFreelancerCustomer.
     /// </summary>
     /// <param name="customer"></param>
-    private static int SetCustomerUser(LcRestCustomer customer)
+    private static int SetCustomerUser(int freelancerUserID, LcRestCustomer customer)
     {
         using (var db = Database.Open("sqlloco"))
         {
@@ -340,6 +337,9 @@ public class LcRestCustomer
                         UpdatedDate = getdate()
                     WHERE
                         UserID = @0
+                        -- Extra check to avoid being edited without right
+                         AND AccountStatusID = 6 -- Is editable by freelancer
+                         AND ReferredByUserID <> @9 -- Is the owner freelancer
                 ELSE
                     -- Create UserProfile record to save email and generate UserID
                     INSERT INTO UserProfile (
@@ -368,7 +368,9 @@ public class LcRestCustomer
 		                CreatedDate,
 		                UpdatedDate,
 		                ModifiedBy,
-		                Active
+		                Active,
+                        AccountStatusID,
+                        ReferredByUserID
                     ) VALUES (
                         @0,
                         @2,
@@ -385,7 +387,9 @@ public class LcRestCustomer
                         getdate(),
                         getdate(),
                         'sys',
-                        1 -- Active
+                        1, -- Active
+                        6, -- Is a Freelancer's Client (it means is still editable by the freelancer that create it)
+                        @9 -- Freelancer's ID that create this
                     )
 
                     -- NOTE: since there is no Membership record with password, is not an actual Loconomics User Account
@@ -401,7 +405,8 @@ public class LcRestCustomer
              customer.phone,
              customer.canReceiveSms,
              customer.birthMonth,
-             customer.birthMonthDay);
+             customer.birthMonthDay,
+             freelancerUserID);
         }
     }
     #endregion

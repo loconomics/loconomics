@@ -503,22 +503,36 @@
             url: '/api/v1/en-US/customers',
             get: { },
             post: {
-                
+                firstName: 'John',
+                lastName: 'Smith',
+                secondLastName: '',
+                email: 'john@smith.net',
+                phone: '1234567',
+                canReceiveSms: true,
+                birthMonth: 2,
+                birthMonthDay: 29
             }
         },
         'Customers (item)': {
             url: '/api/v1/en-US/customers/141',
             get: { },
             put: {
-                
+                firstName: 'John',
+                lastName: 'Smith',
+                secondLastName: '',
+                email: 'john@smith.net',
+                phone: '1234567',
+                canReceiveSms: true,
+                birthMonth: 2,
+                birthMonthDay: 29
             },
             delete: { }
         },
         'Customers Public Search': {
             url: '/api/v1/en-US/customers/public-search',
             get: {
-                fullName: 'complete name',
-                email: 'or the email@com',
+                fullName: 'John Smith',
+                email: 'john@smith.net',
                 phone: '1234'
             }
         }
