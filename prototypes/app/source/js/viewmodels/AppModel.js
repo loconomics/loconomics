@@ -53,7 +53,15 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
                 
                 // It has credentials! Has basic profile data?
                 // NOTE: the userProfile will load from local storage on this first
-                // attempt, and lazily request updated data from remote
+                // attempt, and lazily request updated data from remote so we need
+                // to catch remote errors with events
+                this.userProfile.once('error', function(err) {
+                    this.emit('error', {
+                        message: 'Impossible to load your data. Please check your Internet connection',
+                        error: err
+                    });
+                }.bind(this));
+                
                 this.userProfile.load().then(function(profile) {
                     if (profile) {
                         // There is a profile cached
@@ -68,7 +76,10 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
                         // the profile to save it in the local copy)
                         this.tryLogin().then(resolve, resolveAnyway);
                     }
-                }.bind(this), resolveAnyway);
+                }.bind(this), resolveAnyway)
+                // The error event catch any error if happens, so avoid uncaught exceptions
+                // in the console by catching the promise error
+                .catch(function() { });
             }
             else {
                 // End successfully. Not loggin is not an error,

@@ -51,7 +51,7 @@ exports.getErrorMessageFrom = function getErrorMessageFrom(err, defaultText) {
                 // Avoiding that empty results (empty string or empty object when there
                 // is no details to show) makes us to show an annoying 'technical details'
                 if (jserr && jserr !== '{}')
-                    msg += '\nTechnical details: ' + jserr;
+                    msg += '\n\nTechnical details: ' + jserr;
             }
             catch (ex) {
                 console.log('Impossible to stringify JSON error', err, ex);

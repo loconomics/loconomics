@@ -203,8 +203,12 @@ function RemoteModel(options) {
                         this.isSyncing(false);
                         
                         // Local load done, do a background
-                        // remote load
-                        loadFromRemote();
+                        // remote load.
+                        loadFromRemote()
+                        // Catch any promise-error on the remote, to avoid
+                        // unexpected errors being uncatch, they still can be
+                        // catch using the 'error' event on the RemoteModel instance.
+                        .catch(function() { });
                         // just don't wait, return current
                         // data
                         return this.data;
@@ -231,7 +235,12 @@ function RemoteModel(options) {
             else {
                 // Background load: is loading still
                 // but we have cached data so we use
-                // that for now. If anything new from outside
+                // that for now.
+                // Catch any promise-error on the remote, to avoid
+                // unexpected errors being uncatch, they still can be
+                // catch using the 'error' event on the RemoteModel instance.
+                promise.catch(function() { });
+                // If anything new from outside
                 // versions will get notified with isObsolete()
                 return Promise.resolve(this.data);
             }

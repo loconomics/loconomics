@@ -128,7 +128,22 @@ function ListRemoteModel(settings) {
                         this.pushListToLocal(serverData);
                         api.state.isSyncing(false);
                         return serverData;
-                    }.bind(this));
+                    }.bind(this))
+                    .catch(function(err) {
+                        // If there was local data, catch error and
+                        // stop sync since this promise will not
+                        // be available to any consumer
+                        if (data) {
+                            api.state.isSyncing(false);
+                            // Log to console
+                            console.error('ListRemoteModel: remote synchronization failed', err);
+                        }
+                        else {
+                            // This promise is returned so will be consumed,
+                            // just rethrow and let the other catch-blocks do the common stuff
+                            return err;
+                        }
+                    });
                     // Remote fallback: If no local, wait for remote
                     return data ? data : remotePromise;
                 }.bind(this))

@@ -348,9 +348,19 @@ var appInit = function appInit() {
         }
     });
 
+    // Catch uncatch model errors
+    app.model.on('error', function(err) {
+        app.modals.showError({
+            error: err
+        });
+    });
+    
     // App init:
     var alertError = function(err) {
-        window.alert('There was an error loading: ' + err && err.message || err);
+        app.modals.showError({
+            title: 'There was an error loading',
+            error: err
+        });
     };
 
     app.model.init()
