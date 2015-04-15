@@ -285,11 +285,9 @@
             </div>
           </div>
         </fieldset>
-        <div class="navbar navbar-default ActivityNavbarDISABLED">
-          <div>
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-            <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
-          </div>
+        <div class="container">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
         </div>
       </form>
     </div>
@@ -535,7 +533,7 @@
     </div>
     <!-- ClientEdition activity -->
     <div class="container-fluid has-navbar" data-activity="clientEditor">
-      <form role="form">
+      <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -554,15 +552,19 @@
               />Can receive SMS</label>
           </div>
           <app-unlabeled-input params="placeholder: 'Email', value: email, type: 'email', disable: $root.isLocked"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Birthday (mm/dd)', value: birthDay, disable: $root.isLocked"></app-unlabeled-input>
-          <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLocked"></textarea>
+          <div class="form-group">
+            <select class="form-control" data-bind="value: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: $root.isLocked"></select>
+          </div>
+          <div class="form-group">
+            <select class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Birth Day (optional)', disable: $root.isLocked"></select>
+          </div>
+          <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLockedv, placeholder: 'Notes about customer (only seen by you)'"></textarea>
         </fieldset>
-      </form>
-      <div class="navbar navbar-default ActivityNavbar">
         <div class="container">
-          <button type="button" class="btn btn-primary btn-block" data-bind="disable: $root.isLocked">Save</button>
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
         </div>
-      </div>
+      </form>
     </div>
     <!-- Activity clients -->
     <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
