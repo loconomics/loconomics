@@ -198,8 +198,12 @@ function ViewModel(app) {
     /**
         Add a client from the public/remote search results
     **/
-    this.addRemoteClient = function(/*client*/) {
-        // TODO
+    this.addRemoteClient = function(client) {
+        var data = client.model && client.model.toPlainObject() || client;
+        app.shell.go('clientEditor', {
+            presetData: data
+        });
+        return false;
     }.bind(this);
     
     /**

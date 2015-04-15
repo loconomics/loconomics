@@ -22,6 +22,7 @@ exports.init = A.init;
 var ko = require('knockout');
 
 A.prototype.show = function show(state) {
+    /*jshint maxcomplexity: 8*/
     Activity.prototype.show.call(this, state);
     
     // reset
@@ -61,20 +62,28 @@ A.prototype.show = function show(state) {
         }.bind(this));
     }
     else {
-        /*this.viewModel.client.newItem({
-            editable: true
-        });*/
-        // New client
-        this.viewModel.clientVersion(this.app.model.customers.newItem({
-            editable: true
-        }));
-        this.viewModel.header('Add a Client');
         
         // Check request parameters that allow preset customer information
+        // (used when the customer is created based on an existent marketplace user)
+        var presetData = this.requestData.presetData || {};
+        // If there is not set an explicit 'false' value on editable
+        // field (as when there is not data given), set to true so can be edited
+        // NOTE: This is because a given marketplace user will come with editable:false
+        // and need to be preserved, while on regular 'new client' all data is set by 
+        // the freelancer.
+        if (presetData.editable !== false) {
+            presetData.editable = true;
+        }
+
+        /*this.viewModel.client.newItem(presetData);*/
+        // New client
+        this.viewModel.clientVersion(this.app.model.customers.newItem(presetData));
+        this.viewModel.header('Add a Client');
+        
+        // Extra preset data
         if (this.requestData.newForSearchText) {
             clientDataFromSearchText(this.requestData.newForSearchText || '', this.viewModel.client());
         }
-        
     }
 };
 
