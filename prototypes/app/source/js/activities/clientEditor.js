@@ -72,6 +72,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    /*jshint maxstatements:80 */
     
     this.clientID = ko.observable(0);
     
@@ -220,4 +221,23 @@ function ViewModel(app) {
     for (var iday = 1; iday <= 31; iday++) {
         this.monthDays.push(iday);
     }
+    
+    // Extra for button addons
+    var is = require('is_js');
+    this.validEmail = ko.pureComputed(function() {
+        var c = this.client();
+        if (c) {
+            var e = c.email();
+            return is.email(e) ? e : '';
+        }
+        return '';
+    }, this);
+    this.validPhone = ko.pureComputed(function() {
+        var c = this.client();
+        if (c) {
+            var e = c.phone();
+            return is.nanpPhone(e) || is.eppPhone(e) ? e : '';
+        }
+        return '';
+    }, this);
 }

@@ -286,11 +286,9 @@
             </div>
           </div>
         </fieldset>
-        <div class="navbar navbar-default ActivityNavbarDISABLED">
-          <div>
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-            <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
-          </div>
+        <div>
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
         </div>
       </form>
     </div>
@@ -536,7 +534,7 @@
     </div>
     <!-- ClientEdition activity -->
     <div class="container-fluid has-navbar" data-activity="clientEditor">
-      <form role="form">
+      <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -546,24 +544,49 @@
           <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
         <fieldset class="isolated" data-bind="with: client()">
-          <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Mobile phone', value: phone, disable: $root.isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
+          <div class="form-group">
+            <div class="input-group" data-bind="css: { 'input-group': $root.validPhone() }">
+              <input type="tel" class="form-control" data-bind="textInput: phone, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
+              placeholder="Mobile phone" aria-label="Mobile phone" /> <span class="input-group-btn" data-bind="visible: $root.validPhone()">
+                        <a href="#" data-bind="attr: { href: 'tel:' + $root.validPhone() }" class="btn btn-info"><span class="sr-only">Call to this phone</span>
+              <span
+              class="glyphicon glyphicon-phone"></span>
+                </a>
+                </span>
+            </div>
+          </div>
           <div class="checkbox">
             <label>
-              <input type="checkbox" data-bind="checked: canReceiveSms, disable: $root.isLocked"
+              <input type="checkbox" data-bind="checked: canReceiveSms, disable: $root.isLocked() || $root.isReadOnly()"
               />Can receive SMS</label>
           </div>
-          <app-unlabeled-input params="placeholder: 'Email', value: email, type: 'email', disable: $root.isLocked"></app-unlabeled-input>
-          <app-unlabeled-input params="placeholder: 'Birthday (mm/dd)', value: birthDay, disable: $root.isLocked"></app-unlabeled-input>
-          <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLocked"></textarea>
+          <div class="form-group">
+            <div class="input-group" data-bind="css: { 'input-group': $root.validEmail() }">
+              <input type="email" class="form-control" data-bind="textInput: email, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
+              placeholder="Email" aria-label="Email" /> <span class="input-group-btn" data-bind="visible: $root.validEmail()">
+                        <a href="#" data-bind="attr: { href: 'mailto:' + $root.validEmail() }" class="btn btn-info"><span class="sr-only">Write e-mail</span>
+              <span
+              class="glyphicon glyphicon-envelope"></span>
+                </a>
+                </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <select class="form-control" data-bind="value: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: $root.isLocked() || $root.isReadOnly()"></select>
+          </div>
+          <div class="form-group">
+            <select class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Birth Day (optional)', disable: $root.isLocked() || $root.isReadOnly()"></select>
+          </div>
+          <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
+          placeholder="Notes about customer (only seen by you)"></textarea>
         </fieldset>
-      </form>
-      <div class="navbar navbar-default ActivityNavbar">
-        <div class="container">
-          <button type="button" class="btn btn-primary btn-block" data-bind="disable: $root.isLocked">Save</button>
+        <div data-bind="visible: !$root.isReadOnly()">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges() || $root.isReadOnly(), css: { 'btn-danger': isSaving() }"></button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked() || $root.isReadOnly(), event: { tap: confirmRemoval }, visible: !isNew()"></button>
         </div>
-      </div>
+      </form>
     </div>
     <!-- Activity clients -->
     <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
@@ -594,6 +617,8 @@
           </li>
         </ul>
       </div>
+      <div class="isolated" data-bind="visible: clients().length === 0 && !isLoading()">You have no clients yet. Search for clients that may already be on Loconomics
+        or add clients of your own.</div>
       <div id="clientsListView">
         <div class="SimpleList" data-bind="foreach: groupedClients">
           <div class="SimpleList-divider" data-bind="attr: { 'id': ('clientsListView-' + letter) }"> <strong data-bind="text: letter"></strong>
@@ -633,7 +658,7 @@
             <p></p>
           </div> <a href="/clients" class="btn btn-link btn-block ListView-item-content">
         <div>My clients</div>
-        <div><span data-bind="text: clientsCount"></span> clients</div>
+        <div><span data-bind="text: clientsCount"></span></div>
       </a>
  <a href="/clients" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
@@ -641,10 +666,10 @@
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
-          </div> <a href="/clientEdition/0" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="/clientEditor" class="btn btn-link btn-block ListView-item-content">
         <p>Add a new client</p>
       </a>
- <a href="/clientsEdition/0" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+ <a href="/clientsEditor" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
 
         </div>
       </div>
