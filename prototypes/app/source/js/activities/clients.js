@@ -191,7 +191,9 @@ function ViewModel(app) {
                 this.publicSearchRunning(null);
             }
         }
-    }, this);
+    }, this)
+    // Avoid excessive request by setting a timeout since the latest change
+    .extend({ rateLimit: { timeout: 400, method: 'notifyWhenChangesStop' } });
     
     /**
         Add a client from the public/remote search results
