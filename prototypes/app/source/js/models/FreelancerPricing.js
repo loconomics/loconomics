@@ -38,36 +38,73 @@ function FreelancerPricing(values) {
     this.model.defID(['freelancerPricingID']);
     
     // One way effect: set priceRate to null when setting on noPriceRate
-    // But nothing on of and no other relations to avoid bade side effects.
+    // But nothing on off and no other relations to avoid bad side effects.
     this.noPriceRate.subscribe(function(enabled) {
         if (enabled === true) {
             this.priceRate(null);
         }
     }, this);
+    
+    /**
+        Ask for a refresh of the noPriceRate, that must be 'true' if the record exists and
+        has no priceRate (to remember the previous value set by the user about noPriceRate).
+        It ensure that the internal timestamp keep untouched.
+        Cannot be automatic, so need to be called manually after a data load that does not
+        want to reflect this change as a data change.
+    **/
+    this.refreshNoPriceRate = function refreshNoPriceRate() {
+        // Not To State Price Rate: if is a saved pricing, mark the noPriceRate if price rate is
+        // null or 0; cannot be done with a subscription on priceRate changes because will have
+        // the bad side effect of auto mark noPriceRate on setting 0 on priceRate, breaking the
+        // explicit purpose of the noPriceRate checkbox:
+        if (this.freelancerPricingID() && (this.priceRate() |0) <= 0) {
+            var ts = this.model.dataTimestamp();
+            this.noPriceRate(true);
+            // Set again timestamp so the model appear as untouched.
+            this.model.dataTimestamp(ts);
+        }
+    };
 
     // Alternative edition of the serviceDurationMinutes fields:
     // Splited as hours and minutes
+    var is = require('is_js');
     this.durationHoursPart = ko.pureComputed({
         read: function() {
-            var fullMinutes = this.serviceDurationMinutes() |0;
-            return (fullMinutes / 60) |0;
+            var fullMinutes = this.serviceDurationMinutes();
+            
+            if (is.not.number(fullMinutes))
+                return null;
+
+            return ((fullMinutes|0) / 60) |0;
         },
         write: function(hours) {
-            hours = hours |0;
             var minutes = this.durationMinutesPart() |0;
-            this.serviceDurationMinutes(hours * 60 + minutes);
+            // Value comes from text
+            hours = parseInt(hours, 10);
+            if (is.not.number(hours))
+                this.serviceDurationMinutes(null);
+            else
+                this.serviceDurationMinutes((hours|0) * 60 + minutes);
         },
         owner: this
     });
     this.durationMinutesPart = ko.pureComputed({
         read: function() {
-            var fullMinutes = this.serviceDurationMinutes() |0;
-            return fullMinutes % 60;
+            var fullMinutes = this.serviceDurationMinutes();
+
+            if (is.not.number(fullMinutes))
+                return null;
+
+            return (fullMinutes|0) % 60;
         },
         write: function(minutes) {
-            minutes = minutes |0;
             var hours = this.durationHoursPart() |0;
-            this.serviceDurationMinutes(hours * 60 + minutes);
+            // Value comes from text
+            minutes = parseInt(minutes, 10);
+            if (is.not.number(minutes))
+                this.serviceDurationMinutes(null);
+            else
+                this.serviceDurationMinutes(hours * 60 + (minutes|0));
         },
         owner: this
     });

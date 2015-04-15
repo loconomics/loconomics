@@ -55,14 +55,8 @@ A.prototype.show = function show(options) {
             //   the name saved in the pricing or
             //   the suggestedName as last fallback
             c.pricing.name(c.type.fixedName() || c.pricing.name() || c.type.suggestedName());
-            
-            // Not To State Price Rate: if is a saved pricing, mark the noPriceRate if price rate is
-            // null or 0; cannot be done with a subscription on priceRate changes because will have
-            // the bad side effect of auto mark noPriceRate on setting 0 on priceRate, breaking the
-            // explicit purpose of the noPriceRate checkbox:
-            if (c.pricing.freelancerPricingID() && (c.pricing.priceRate() |0) <= 0) {
-                c.pricing.noPriceRate(true);
-            }
+            // Required call after loading a pricing to reflect data correctly (cannot be automated)
+            c.pricing.refreshNoPriceRate();
         }
         this.viewModel.isLoading(false);
     }.bind(this);
