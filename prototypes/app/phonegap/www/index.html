@@ -264,7 +264,7 @@
             <div class="form-group">
               <label for="addressEditorRadius">Service radius</label>
               <select class="form-control" id="addressEditorRadius"
-              data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked"></select>
+              data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked, valueAllowUnset: true"></select>
             </div>
           </div>
           <div data-bind="visible: isServiceLocation">
@@ -574,17 +574,17 @@
             </div>
           </div>
           <div class="form-group">
-            <select class="form-control" data-bind="value: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: $root.isLocked() || $root.isReadOnly()"></select>
+            <select class="form-control" data-bind="value: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
           </div>
           <div class="form-group">
-            <select class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Birth Day (optional)', disable: $root.isLocked() || $root.isReadOnly()"></select>
+            <select class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Birth Day (optional)', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
           </div>
-          <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
+          <textarea class="form-control" data-bind="textInput: notesAboutCustomer, disable: $root.isLocked"
           placeholder="Notes about customer (only seen by you)"></textarea>
         </fieldset>
-        <div data-bind="visible: !$root.isReadOnly()">
-          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges() || $root.isReadOnly(), css: { 'btn-danger': isSaving() }"></button>
-          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked() || $root.isReadOnly(), event: { tap: confirmRemoval }, visible: !isNew()"></button>
+        <div>
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked(), event: { tap: confirmRemoval }, visible: !isNew()"></button>
         </div>
       </form>
     </div>
@@ -605,7 +605,7 @@
 </span>
           <input
           type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText"> <span class="input-group-btn">
-            <a href="#!/clientEditor" class="btn btn-secondary">Add</a>
+            <a href="#" class="btn btn-secondary" data-bind="event: { tap: addNew }">Add</a>
         </span>
 
         </div>
@@ -907,8 +907,8 @@
             <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
               <label for="freelancerPricingEditor-numberOfSessions" class="control-label"
               data-bind="text: type.numberOfSessionsLabel()"></label>
-              <input id="freelancerPricingEditor-numberOfSessions" class="form-control"
-              type="number" data-bind="value: pricing.numberOfSessions, disable: $root.isLocked"
+              <input data-autoselect="true" id="freelancerPricingEditor-numberOfSessions"
+              class="form-control" type="number" data-bind="value: pricing.numberOfSessions, disable: $root.isLocked"
               />
             </div>
           </div>
@@ -918,7 +918,8 @@
               <div class="input-group"> <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
 
                 <input
-                id="freelancerPricingEditor-price" type="number" class="form-control" data-bind="value: pricing.price, disable: $root.isLocked"
+                data-autoselect="true" id="freelancerPricingEditor-price" type="number"
+                class="form-control" data-bind="value: pricing.price, disable: $root.isLocked"
                 />
               </div>
             </div>
@@ -935,14 +936,14 @@
             <div class="row"> <span class="col-xs-12 col-sm-5 form-group">
                         <label for="freelancerPricingEditor-durationHours" class="control-label sr-only">Hours</label>
                         <div class="input-group">
-                            <input id="freelancerPricingEditor-durationHours" type="number" class="form-control" data-bind="value: pricing.durationHoursPart, disable: $root.isLocked" />
+                            <input data-autoselect="true" id="freelancerPricingEditor-durationHours" type="number" class="form-control" data-bind="value: pricing.durationHoursPart, disable: $root.isLocked" />
                             <span class="input-group-addon">hours</span>
 
             </div>
             </span> <span class="col-xs-12 col-sm-offset-1 col-sm-5 form-group">
                         <label for="freelancerPricingEditor-durationMinutes" class="control-label sr-only">Minutes</label>
                         <div class="input-group">
-                            <input id="freelancerPricingEditor-durationMinutes" type="number" class="form-control" data-bind="value: pricing.durationMinutesPart, disable: $root.isLocked" />
+                            <input data-autoselect="true" id="freelancerPricingEditor-durationMinutes" type="number" class="form-control" data-bind="value: pricing.durationMinutesPart, disable: $root.isLocked" />
                             <span class="input-group-addon">minutes</span>
 
           </div>
@@ -975,7 +976,8 @@
         <div class="input-group"> <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
 
           <input
-          id="freelancerPricingEditor-priceRateQuantity" class="form-control" data-bind="value: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()"
+          data-autoselect="true" id="freelancerPricingEditor-priceRateQuantity" class="form-control"
+          data-bind="value: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()"
           type="number" />
         </div>
       </div>
