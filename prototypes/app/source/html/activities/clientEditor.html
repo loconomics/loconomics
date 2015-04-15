@@ -33,11 +33,12 @@
                 <select class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Birth Day (optional)', disable: $root.isLocked"></select>
             </div>
             
-            <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLockedv, placeholder: 'Notes about customer (only seen by you)'"></textarea>
+            <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLocked"
+                      placeholder="Notes about customer (only seen by you)"></textarea>
 
         </fieldset>
 
-        <div class="container">
+        <div>
             <button type="submit" class="btn btn-primary btn-block"
                     data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
             <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
