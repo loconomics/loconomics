@@ -200,6 +200,17 @@ function ViewModel(app) {
         // TODO
     }.bind(this);
     
+    /**
+        Call the activity to add a new client, passing the current
+        search text so can be used as initial name/email/phone
+    **/
+    this.addNew = function() {
+        app.shell.go('clientEditor', {
+            newForSearchText: this.searchText()
+        });
+        return false;
+    }.bind(this);
+    
     
     /// Selections
     

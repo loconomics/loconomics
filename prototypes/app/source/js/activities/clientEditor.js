@@ -4,6 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var is = require('is_js');
 
 var A = Activity.extends(function ClientEditionActivity() {
     
@@ -68,8 +69,57 @@ A.prototype.show = function show(state) {
             editable: true
         }));
         this.viewModel.header('Add a Client');
+        
+        // Check request parameters that allow preset customer information
+        if (this.requestData.newForSearchText) {
+            clientDataFromSearchText(this.requestData.newForSearchText || '', this.viewModel.client());
+        }
+        
     }
 };
+
+/**
+    Small utility that just returns true if the given
+    string seems a possible phone number, false otherwise.
+    NOTE: Is NOT an exaustive phone validation check, just
+    checks is there are several numbers so there is a chance
+    to be a phone. There are stricker checks (annotated) but
+    can fail on some situations (switchboard numbers) or in
+    different locales.
+**/
+function seemsAPhoneNumber(str) {
+    // Possible stricker comparision
+    // return is.nanpPhone(str) || is.eppPhone(str);
+    
+    // Just if there are more than three consecutive numbers,
+    // then 'may' be a phone number (may be anything else, but
+    // since some special phone numbers can have letters or signs,
+    // this is just a very lax and conservative (to avoid false negatives) check.
+    return (/\d{3,}/).test(str || '');
+}
+
+/**
+    Use the provided search text as the initial value
+    for: name, email or phone (what fits better)
+**/
+function clientDataFromSearchText(txt, client) {
+    if (is.email(txt)) {
+        client.email(txt);
+    }
+    else if (seemsAPhoneNumber(txt)) {
+        client.phone(txt);
+    }
+    else {
+        // Otherwise, think is the fullname, spliting by white space
+        var nameParts = txt.split(' ', 2);
+        client.firstName(nameParts[0]);
+        if (nameParts.length > 1) {
+            client.lastName(nameParts[1]);
+            // TODO For spanish (or any locale with secondLastName)
+            // must try to detect the second last name?
+        }
+    }
+}
 
 function ViewModel(app) {
     /*jshint maxstatements:80 */
@@ -117,9 +167,11 @@ function ViewModel(app) {
                 'Loading...' : 
                 this.isSaving() ? 
                     'Saving changes' : 
-                    v && v.areDifferent() ?
-                        'Save changes' :
-                        'Saved'
+                    this.isNew() ?
+                        'Add client' :
+                        v && v.areDifferent() ?
+                            'Save changes' :
+                            'Saved'
         );
     }, this);
 
@@ -223,7 +275,6 @@ function ViewModel(app) {
     }
     
     // Extra for button addons
-    var is = require('is_js');
     this.validEmail = ko.pureComputed(function() {
         var c = this.client();
         if (c) {
@@ -232,11 +283,12 @@ function ViewModel(app) {
         }
         return '';
     }, this);
+
     this.validPhone = ko.pureComputed(function() {
         var c = this.client();
         if (c) {
             var e = c.phone();
-            return is.nanpPhone(e) || is.eppPhone(e) ? e : '';
+            return seemsAPhoneNumber(e) ? e : '';
         }
         return '';
     }, this);
