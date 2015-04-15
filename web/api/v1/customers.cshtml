@@ -115,10 +115,10 @@
             Validation.RequireField("firstName", LcRessources.RequiredField("First Name"));
             Validation.RequireField("lastName", LcRessources.RequiredField("Last Name"));
             Validation.RequireField("email", LcRessources.RequiredField("Email"));
-            Validation.Add("birthMonth", Validator.Integer("Birth Month must be a number"));
-            Validation.Add("birthMonth", Validator.Range(1, 12, "Birth Month must be a number between 1 and 12"));
-            Validation.Add("birthMonthDay", Validator.Integer("Birth Month Day must be a number"));
-            Validation.Add("birthMonthDay", Validator.Range(1, 31, "Birth Month Day must be a number between 1 and 31"));
+            // Allowing the 0 for unset values (is not a required field)
+            Validation.Add("birthMonth", Validator.Range(0, 12, "Birth Month must be a number between 1 and 12"));
+            // Allowing the 0 for unset values (is not a required field)
+            Validation.Add("birthMonthDay", Validator.Range(0, 31, "Birth Month Day must be a number between 1 and 31"));
             Validation.Add("firstName", Validator.StringLength(50, 0, "First Name must be fewer than 50 characters."));
             Validation.Add("lastName", Validator.StringLength(145, 0, "Last Name must be fewer than 145 characters."));
             Validation.Add("secondLastName", Validator.StringLength(145, 0, "Second Last Name must be fewer than 145 characters."));
@@ -135,18 +135,24 @@
 
             var customer = GetCustomerFromForm();
             customer.customerUserID = customerUserID;
-            var itemID = LcRestCustomer.SetCustomer(freelancerUserID, customer);
+            try {
+                var itemID = LcRestCustomer.SetCustomer(freelancerUserID, customer);
 
-            // If returned ID is zero rather than the provided one
-            // is because the requested ID was not found.
-            // (for cases of new, when passed ID is zero, the returned is the 
-            // new generated ID, so is not zero if created successfully).
-            if (itemID == 0) {
-                throw new HttpException(404, "Not Found");
-            }
+                // If returned ID is zero rather than the provided one
+                // is because the requested ID was not found.
+                // (for cases of new, when passed ID is zero, the returned is the 
+                // new generated ID, so is not zero if created successfully).
+                if (itemID == 0) {
+                    throw new HttpException(404, "Not Found");
+                }
                 
-            // Returns the updated customer data
-            return LcRestCustomer.GetFreelancerCustomer(freelancerUserID, itemID);
+                // Returns the updated customer data
+                return LcRestCustomer.GetFreelancerCustomer(freelancerUserID, itemID);
+            }
+            catch (ValidationException ex) {
+                ModelState.AddError(ex.ParamName, ex.Message);
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
         }
         
         private LcRestCustomer GetCustomerFromForm()

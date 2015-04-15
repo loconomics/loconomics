@@ -129,7 +129,7 @@ public class LcRestCustomer
     }
     #endregion
 
-    #region Search
+    #region Search and Checks
     /// <summary>
     /// A public search performs a search in all the database/marketplace users
     /// for an exact match of full name OR email OR phone. Only if one of them
@@ -208,6 +208,36 @@ public class LcRestCustomer
             ).Select(FromDB).ToList();
         }
     }
+
+    /// <summary>
+    /// Checks if an email is available and returns the userID that has already that email
+    /// or 0 in case the email is unused and so available.
+    /// It optionally allows to exclude from the check the userID passed as second optional parameter,
+    /// this allows to avoid false positive because the email to check is owned by the user that ask
+    /// for the check (important in data updates).
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="excludeUserID"></param>
+    /// <returns></returns>
+    public static int CheckEmailAvailability(string email, int excludeUserID = 0)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            var v = db.QueryValue(@"
+                SELECT
+                        up.UserID
+                FROM    UserProfile As up
+                WHERE   up.email like @0
+                        -- Exclude the user:
+                         AND up.UserID <> @1
+                ",
+                N.DW(email),
+                excludeUserID
+            );
+
+            return DataTypes.GetTypedValue<int>(v, 0);
+        }
+    }
     #endregion
 
     #region Create/Update
@@ -240,6 +270,17 @@ public class LcRestCustomer
             // Only set customer user if editable by the freelancer
             if (savedCustomer.editable)
             {
+                // Check first if the email to set is available
+                // (excluding the own customer record for false positives)
+                var emailOwnerID = CheckEmailAvailability(customer.email, customer.customerUserID);
+
+                if (emailOwnerID > 0)
+                {
+                    // Notify error
+                    throw new ValidationException("The given e-mail already exists for other customer at loconomics.com and cannot be saved." +
+                        " You can perform a search by that email and add it as your customer.", "email", "customer");
+                }
+
                 // Set Customer User
                 SetCustomerUser(freelancerUserID, customer);
             }
@@ -251,9 +292,8 @@ public class LcRestCustomer
         {
             // Request to create a new customer user,
             // but requires check if a user with that email already exists.
-            // Reusing the PublicSearch method with the email only and no freelancerUserID
-            var searchCustomer = PublicSearch(0, null, customer.email,  null).FirstOrDefault();
-            if (searchCustomer == null)
+            var emailOwnerID = CheckEmailAvailability(customer.email);
+            if (emailOwnerID == 0)
             {
                 // Create new user, getting the generated ID
                 customer.customerUserID = SetCustomerUser(freelancerUserID, customer);
@@ -265,7 +305,7 @@ public class LcRestCustomer
                 // It exists, cannot create duplicated, but link to freelancer with its info
                 // using its ID (the rest data provided by freelancer will be discarded, except
                 // freelancer fields).
-                customer.customerUserID = searchCustomer.customerUserID;
+                customer.customerUserID = emailOwnerID;
                 SetFreelancerCustomer(freelancerUserID, customer);
             }
         }
