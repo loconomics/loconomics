@@ -355,6 +355,13 @@ var appInit = function appInit() {
         });
     });
     
+    // Additional form elements attribute and behavior: data-autoselect=true
+    // sets to automatically select the text content of an input text control
+    // when gets the focus
+    $(document).on('focus', '[data-autoselect="true"]', function() {
+        $(this).select();
+    });
+    
     // App init:
     var alertError = function(err) {
         app.modals.showError({
