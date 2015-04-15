@@ -573,17 +573,17 @@
             </div>
           </div>
           <div class="form-group">
-            <select class="form-control" data-bind="value: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: $root.isLocked() || $root.isReadOnly()"></select>
+            <select class="form-control" data-bind="value: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
           </div>
           <div class="form-group">
-            <select class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Birth Day (optional)', disable: $root.isLocked() || $root.isReadOnly()"></select>
+            <select class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Birth Day (optional)', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
           </div>
-          <textarea class="form-control" data-bind="value: notesAboutClient, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
+          <textarea class="form-control" data-bind="textInput: notesAboutCustomer, disable: $root.isLocked"
           placeholder="Notes about customer (only seen by you)"></textarea>
         </fieldset>
-        <div data-bind="visible: !$root.isReadOnly()">
-          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges() || $root.isReadOnly(), css: { 'btn-danger': isSaving() }"></button>
-          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked() || $root.isReadOnly(), event: { tap: confirmRemoval }, visible: !isNew()"></button>
+        <div>
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked(), event: { tap: confirmRemoval }, visible: !isNew()"></button>
         </div>
       </form>
     </div>
