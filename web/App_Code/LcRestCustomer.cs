@@ -31,6 +31,29 @@ public class LcRestCustomer
     public bool editable;
     #endregion
 
+    /// <summary>
+    /// Only for internal checks
+    /// </summary>
+    /// <returns></returns>
+    private string GetFullName()
+    {
+        var f = this.firstName;
+        var l = this.lastName;
+        var s = this.secondLastName;
+        var r = "";
+        
+        if (!String.IsNullOrWhiteSpace(f))
+            r += f;
+        
+        if (!String.IsNullOrWhiteSpace(l))
+            r += (String.IsNullOrEmpty(r) ? "" : " ") + l;
+        
+        if (!String.IsNullOrWhiteSpace(s))
+            r += (String.IsNullOrEmpty(r) ? "" : " ") + s;
+
+        return r;
+    }
+
     #region Static Constructors
     public static LcRestCustomer FromDB(dynamic record)
     {
@@ -262,6 +285,22 @@ public class LcRestCustomer
 
             if (savedCustomer == null)
             {
+                // DOUBLE CHECK: If the customer was not found by ID for the given freelancer,
+                // can be a situation of customer added from a marketplace user, so
+                // perform a search by the given identificable data, confirming the ID in the
+                // results (if any), and create them the link with the provider
+                // On any other case, it's just a fake ID and must return 'not found'
+                var searchedCustomer = PublicSearch(freelancerUserID, customer.GetFullName(), customer.email, customer.phone);
+                if (searchedCustomer.Count > 0)
+                {
+                    // Get the one that matches the given ID.
+                    savedCustomer = searchedCustomer.Find(cust => cust.customerUserID == customer.customerUserID);
+
+                    // If was found, just set the link with the freelancer and that's all!!
+                    SetFreelancerCustomer(freelancerUserID, customer);
+                    return customer.customerUserID;
+                }
+
                 // Does not exists, return 0 to state user was not found.
                 // (a creation ever returns something, so it means ever a non found ID)
                 return 0;
