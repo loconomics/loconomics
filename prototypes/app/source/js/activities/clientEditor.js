@@ -91,12 +91,14 @@ function ViewModel(app) {
     this.isSyncing = app.model.customers.state.isSyncing;
     this.isSaving = app.model.customers.state.isSaving;
     this.isLocked = ko.pureComputed(function() {
-        var c = this.client();
         return (
             app.model.customers.state.isLocked() ||
-            this.isDeleting() ||
-            c && !c.editable()
+            this.isDeleting()
         );
+    }, this);
+    this.isReadOnly = ko.pureComputed(function() {
+        var c = this.client();
+        return c && !c.editable();
     }, this);
 
     this.isDeleting = app.model.customers.state.isDeleting;
