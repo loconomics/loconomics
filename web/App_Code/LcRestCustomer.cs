@@ -328,6 +328,7 @@ public class LcRestCustomer
                 BEGIN TRANSACTION
 
                 IF @UserID > 0 AND EXISTS (SELECT * FROM Users WHERE UserID = @UserID) BEGIN
+
                     UPDATE Users SET
                         FirstName = @2,
                         LastName = @3,
@@ -341,7 +342,16 @@ public class LcRestCustomer
                         UserID = @UserID
                         -- Extra check to avoid being edited without right
                          AND AccountStatusID = 6 -- Is editable by freelancer
-                         AND ReferredByUserID <> @9 -- Is the owner freelancer
+                         AND ReferredByUserID = @9 -- Is the owner freelancer
+
+                    -- If could be updated
+                    IF @@ROWCOUNT = 1 BEGIN
+                        -- Update email
+                        UPDATE UserProfile SET
+                            Email = @1
+                        WHERE
+                            userID = @UserID
+                    END
                 
                 END ELSE BEGIN
 
