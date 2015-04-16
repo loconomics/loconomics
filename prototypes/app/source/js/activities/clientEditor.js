@@ -301,4 +301,69 @@ function ViewModel(app) {
         }
         return '';
     }, this);
+    
+    // Public Search
+    
+    var foundPublicUser = function foundPublicUser(user) {
+        // Only if still matches current view data
+        var c = this.client();
+        if (!c) return;
+        
+        // Don't offer if is already that user!
+        if (c.customerUserID() === user.customerUserID) return;
+        
+        // NOTE: avoiding use fullName because it can make more than one conflicting
+        // results, being not enough the name to confirm the user (use the search for that)
+        //  c.fullName() === user.fullName ||
+        if (c.email() === user.email ||
+            c.phone() === user.phone) {
+
+            // Notify user
+            var msg = 'We`ve found an existing record for {0}. Would you like to add him to your clients?'.replace(/\{0\}/g, user.firstName);
+            app.modals.confirm({
+                title: 'Customer found at loconomics.com',
+                message: msg
+            })
+            .then(function() {
+                // Acepted
+                // Replace current user data
+                // but keep notesAboutCustomer
+                var notes = c.notesAboutCustomer();
+                c.model.updateWith(user);
+                c.notesAboutCustomer(notes);
+            })
+            .catch(function() {
+                // Discarded, do nothing
+            });
+        }
+        
+    }.bind(this);
+    
+    // When filering has no results:
+    ko.computed(function() {
+        var c = this.client();
+        if (!c) return;
+        
+        // NOTE: discarded the fullName because several results can be retrieved,
+        // better use the search for that and double check entries
+        
+        var email = c.email(),
+            //fullName = c.fullName(),
+            phone = c.phone();
+        if (!email && !phone /*!fullName && */) return;
+
+        app.model.customers.publicSearch({
+            //fullName: fullName,
+            email: email,
+            phone: phone
+        })
+        .then(function(r) {
+            if (r && r[0]) foundPublicUser(r[0]);
+        }.bind(this))
+        .catch(function() {
+            // Doesn't matters
+        });
+    }, this)
+    // Avoid excessive request by setting a timeout since the latest change
+    .extend({ rateLimit: { timeout: 400, method: 'notifyWhenChangesStop' } });
 }
