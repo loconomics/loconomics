@@ -309,7 +309,7 @@ public static partial class LcData
         /// <param name="languageID"></param>
         /// <param name="countryID"></param>
         /// <returns></returns>
-        public static int CreateJobTitleByName(string singularName, int languageID, int countryID)
+        public static int CreateJobTitleByName(string singularName, int languageID, int countryID, int enteredByUserID)
         {
             using (var db = Database.Open("sqlloco"))
             {
@@ -383,7 +383,7 @@ public static partial class LcData
                        ,0
                        ,0
                        ,0
-                       ,1
+                       ,@4
                         -- pre-approval: not approved, not disallowed, just null
                        ,null)
 
@@ -428,12 +428,60 @@ public static partial class LcData
                                ,@PositionID
                                ,0)
 
+                    -- Add basic pricing types for the new position
+                    -- Consultation:5
+                    INSERT INTO [PositionPricingType]
+                           ([PositionID]
+                           ,[PricingTypeID]
+                           ,[ClientTypeID]
+                           ,[LanguageID]
+                           ,[CountryID]
+                           ,[CreatedDate]
+                           ,[UpdatedDate]
+                           ,[ModifiedBy]
+                           ,[Active])
+                     VALUES
+                            (@PositionID
+                            ,5 -- Consultation
+                            ,1 -- Client Type fixed since is not used right now
+                            ,@0 -- language
+                            ,@1 -- country
+                            ,getdate()
+                            ,getdate()
+                            ,'sys'
+                            ,1
+                            )
+                    -- Service:6
+                    INSERT INTO [PositionPricingType]
+                           ([PositionID]
+                           ,[PricingTypeID]
+                           ,[ClientTypeID]
+                           ,[LanguageID]
+                           ,[CountryID]
+                           ,[CreatedDate]
+                           ,[UpdatedDate]
+                           ,[ModifiedBy]
+                           ,[Active])
+                     VALUES
+                            (@PositionID
+                            ,6 -- Service
+                            ,1 -- Client Type fixed since is not used right now
+                            ,@0 -- language
+                            ,@1 -- country
+                            ,getdate()
+                            ,getdate()
+                            ,'ur'
+                            ,1
+                            )
+
+                    -- DONE!
                     COMMIT
 
                     SELECT @PositionID As PositionID
                 ", languageID, countryID, singularName,
                  // L10N
-                 "I specialize in");
+                 "I specialize in",
+                 enteredByUserID);
             }
         }
         #endregion
