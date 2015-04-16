@@ -188,7 +188,8 @@ function ViewModel(app) {
     this.wasRemoved = ko.observable(false);
 
     this.isNew = ko.pureComputed(function() {
-        return !this.client().updatedDate();
+        var c = this.client();
+        return !c || !c.updatedDate();
     }, this);
 
     this.submitText = ko.pureComputed(function() {
