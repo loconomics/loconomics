@@ -14,7 +14,29 @@ var A = Activity.extends(function ClientEditionActivity() {
     
     this.accessLevel = this.app.UserType.LoggedUser;
     
-    this.navBar = Activity.createSubsectionNavBar('clients');
+    this.navBar = Activity.createSubsectionNavBar('clients', {
+        backLink: 'clients'
+    });
+    
+    // If there is a change on the clientID, the updates must match
+    // that (if is not already that)
+    this.registerHandler({
+        target: this.viewModel.clientID,
+        handler: function (clientID) {
+            if (!clientID)
+                return;
+
+            var found = /clientEditor\/(\-?\d+)/i.exec(window.location),
+                urlID = found && found[1] |0;
+
+            // If is different URL and current ID
+            if (!found ||
+                urlID !== clientID) {
+                // Replace URL
+                this.app.shell.history.replaceState(null, null, 'clientEditor/' + clientID);
+            }
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;
@@ -331,7 +353,8 @@ function ViewModel(app) {
                 var notes = c.notesAboutCustomer();
                 c.model.updateWith(user);
                 c.notesAboutCustomer(notes);
-            })
+                this.clientID(user.customerUserID);
+            }.bind(this))
             .catch(function() {
                 // Discarded, do nothing
             });
