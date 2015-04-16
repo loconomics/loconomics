@@ -83,7 +83,7 @@
               <ul class="nav">
                 <li class="go-booking-new"><a href="/appointment/-4">Booking</a>
                 </li>
-                <li class="go-client-new"><a href="/clientEdition/0">Client</a>
+                <li class="go-client-new"><a href="/clientEditor">Client</a>
                 </li>
                 <li class="go-calendar-new"><a href="/appointment/-3">Calendar block</a>
                 </li>
@@ -633,7 +633,9 @@
           <!-- /ko -->
         </div>
       </div>
-      <div data-bind="css: { 'is-loading': publicSearchRunning() !== null }">
+      <!-- NOTE: important the extra visible binding, to avoid some bad scrollbar
+      side effects on the page -->
+      <div data-bind="css: { 'is-loading': publicSearchRunning() !== null }, visible: publicSearchRunning() !== null">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
       </div>
       <div data-bind="if: publicSearchResults().length > 0">

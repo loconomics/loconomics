@@ -315,6 +315,32 @@ var appInit = function appInit() {
     app.shell.on('error', function(err) {
         app.modals.showError({ error: err });
     });
+    
+    // Attempt scroll on clicking a usual fragment link
+    // TODO: there is some kind of problem sometimes and
+    // does not get correclty aligned, investigate
+    // WORKAROUND a fixed value as offset to avoid for now
+    var scrollTo = function scrollTo(el) {
+        var parent = el.parent();
+
+        while(parent.get(0) !== document.documentElement) {
+            var t = el.offset().top - parent.offset().top;
+            var st = parent.scrollTop() + t;
+            // WORKAROUND CONSTANT OFFSET
+            st -= 45;
+            parent.scrollTop(st);
+            
+            parent = parent.parent();
+        }
+    };
+    app.shell.on('fragmentNavigation', function(href) {
+        // Locate target
+        // (href comes with the initial hash ever)
+        var target = $(href);
+        if (target.length) {
+            scrollTo(target);
+        }
+    });
 
     
     // Set model for the AppNav

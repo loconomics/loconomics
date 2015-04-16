@@ -312,6 +312,11 @@ Shell.prototype.run = function run() {
         else if (shell.forceHashbang && /^#([^!]|$)/.test(href)) {
             // Standard hash, but not hashbang: avoid routing and default behavior
             e.preventDefault();
+            // Trigger special event on the shell, so external scripts can do
+            // something, like trying to implement standard scroll behavior or any
+            // Pass in: source fragment link, element that receive the original event and
+            // the original event.
+            shell.emit('fragmentNavigation', href, this, e);
             return;
         }
 
