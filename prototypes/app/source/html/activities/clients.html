@@ -47,7 +47,8 @@
       <!-- /ko -->
     </div>
   </div>
-    <div data-bind="css: { 'is-loading': publicSearchRunning() !== null }">
+    <!-- NOTE: important the extra visible binding, to avoid some bad scrollbar side effects on the page -->
+    <div data-bind="css: { 'is-loading': publicSearchRunning() !== null }, visible: publicSearchRunning() !== null">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
     </div>
     <div data-bind="if: publicSearchResults().length > 0">
