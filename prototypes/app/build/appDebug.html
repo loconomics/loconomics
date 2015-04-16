@@ -908,8 +908,8 @@
             <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
               <label for="freelancerPricingEditor-numberOfSessions" class="control-label"
               data-bind="text: type.numberOfSessionsLabel()"></label>
-              <input data-autoselect="true" id="freelancerPricingEditor-numberOfSessions"
-              class="form-control" type="number" data-bind="value: pricing.numberOfSessions, disable: $root.isLocked"
+              <input id="freelancerPricingEditor-numberOfSessions" class="form-control"
+              type="number" data-bind="value: pricing.numberOfSessions, disable: $root.isLocked"
               />
             </div>
           </div>
@@ -919,8 +919,7 @@
               <div class="input-group"> <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
 
                 <input
-                data-autoselect="true" id="freelancerPricingEditor-price" type="number"
-                class="form-control" data-bind="value: pricing.price, disable: $root.isLocked"
+                id="freelancerPricingEditor-price" type="number" class="form-control" data-bind="value: pricing.price, disable: $root.isLocked"
                 />
               </div>
             </div>
@@ -937,14 +936,14 @@
             <div class="row"> <span class="col-xs-12 col-sm-5 form-group">
                         <label for="freelancerPricingEditor-durationHours" class="control-label sr-only">Hours</label>
                         <div class="input-group">
-                            <input data-autoselect="true" id="freelancerPricingEditor-durationHours" type="number" class="form-control" data-bind="value: pricing.durationHoursPart, disable: $root.isLocked" />
+                            <input id="freelancerPricingEditor-durationHours" type="number" class="form-control" data-bind="textInput: $root.hoursFromDuration, disable: $root.isLocked" />
                             <span class="input-group-addon">hours</span>
 
             </div>
             </span> <span class="col-xs-12 col-sm-offset-1 col-sm-5 form-group">
                         <label for="freelancerPricingEditor-durationMinutes" class="control-label sr-only">Minutes</label>
                         <div class="input-group">
-                            <input data-autoselect="true" id="freelancerPricingEditor-durationMinutes" type="number" class="form-control" data-bind="value: pricing.durationMinutesPart, disable: $root.isLocked" />
+                            <input id="freelancerPricingEditor-durationMinutes" type="number" class="form-control" data-bind="value: $root.minutesFromDuration, disable: $root.isLocked" />
                             <span class="input-group-addon">minutes</span>
 
           </div>
@@ -968,7 +967,7 @@
       <label for="freelancerPricingEditor-description" class="control-label sr-only"><span data-bind="text: type.freelancerDescription"></span>
       </label>
       <textarea class="form-control" id="freelancerPricingEditor-description"
-      type="number" data-bind="value: pricing.description, disable: $root.isLocked, attr: { placeholder: type.descriptionPlaceHolder }"></textarea>
+      type="number" data-bind="textInput: pricing.description, disable: $root.isLocked, attr: { placeholder: type.descriptionPlaceHolder }"></textarea>
     </div>
     <div data-bind="visible: type.priceRateQuantityLabel" class="row">
       <label for="freelancerPricingEditor-priceRateQuantity" class="control-label col-xs-12"
@@ -977,8 +976,7 @@
         <div class="input-group"> <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
 
           <input
-          data-autoselect="true" id="freelancerPricingEditor-priceRateQuantity" class="form-control"
-          data-bind="value: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()"
+          id="freelancerPricingEditor-priceRateQuantity" class="form-control" data-bind="value: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()"
           type="number" />
         </div>
       </div>

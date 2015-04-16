@@ -57,6 +57,9 @@ A.prototype.show = function show(options) {
             c.pricing.name(c.type.fixedName() || c.pricing.name() || c.type.suggestedName());
             // Required call after loading a pricing to reflect data correctly (cannot be automated)
             c.pricing.refreshNoPriceRate();
+            
+            // Bugfix with duration fields for iOS8+
+            this.viewModel.updateFormDuration();
         }
         this.viewModel.isLoading(false);
     }.bind(this);
@@ -132,6 +135,7 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
+    /*jshint maxstatements: 35*/
 
     this.isLoading = ko.observable(false);
     // managed manually instead of
@@ -182,7 +186,49 @@ function ViewModel(app) {
         }
         return null;
     }, this);
+    
+    // SPECIAL access for duration field:
+    // The UI uses two fields for this (hours + minutes)
+    // and special writable computes in the Model allow use that directly
+    // but they fall (without reason) in iPhone6-iOS8.x so changed by this
+    // new way: two basic observables, that are updated on item load
+    // and wrote only when saving the form (to avoid any in the middle changes
+    // because of use of computed observables that make create the iOS problem)
+    this.hoursFromDuration = ko.observable(null);
+    this.minutesFromDuration = ko.observable(null);
+    // Flag used to avoid false positives when marking changes (more later)
+    var dontNotifyDurationChanges = false;
+    this.updateFormDuration = function() {
+        dontNotifyDurationChanges = true;
+        var c = this.current();
+        if (c && c.pricing) {
+            this.hoursFromDuration(c.pricing.durationHoursPart());
+            this.minutesFromDuration(c.pricing.durationMinutesPart());
+        }
+        dontNotifyDurationChanges = false;
+    }.bind(this);
+    this.updateModelDuration = function() {
+        var c = this.current();
+        if (c && c.pricing) {
+            c.pricing.durationHoursPart(this.hoursFromDuration());
+            c.pricing.durationMinutesPart(this.minutesFromDuration());
+        }
+    }.bind(this);
+    // The form need to know when there are changes, so additional handler
+    // is needed on changes on this special duration fields
+    // With flag to avoid it during updateFormDuration
+    var notifyDurationChanges = function notifyDurationChanges() {
+        if (dontNotifyDurationChanges) return;
+        // Touch model so gets marked as changed
+        var c = this.current();
+        if (c && c.pricing) {
+            c.pricing.model.touch();
+        }
+    }.bind(this);
+    this.hoursFromDuration.subscribe(notifyDurationChanges);
+    this.minutesFromDuration.subscribe(notifyDurationChanges);
 
+    
     this.wasRemoved = ko.observable(false);
     
     this.isLocked = ko.computed(function() {
@@ -222,6 +268,9 @@ function ViewModel(app) {
 
     this.save = function() {
 
+        // Bugfix on duration fields for iOS8+
+        this.updateModelDuration();
+        
         app.model.freelancerPricing.setItem(this.freelancerPricing().model.toPlainObject())
         .then(function(serverData) {
             // Update version with server data.
