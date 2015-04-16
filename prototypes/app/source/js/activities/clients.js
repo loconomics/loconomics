@@ -117,7 +117,7 @@ function ViewModel(app) {
     this.groupedClients = ko.computed(function(){
 
         var clients = this.filteredClients().sort(function(clientA, clientB) {
-            return clientA.firstName() > clientB.firstName();
+            return clientA.firstName().toLowerCase() > clientB.firstName().toLowerCase();
         });
         
         var groups = [],
