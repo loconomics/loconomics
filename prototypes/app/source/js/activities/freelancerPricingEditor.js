@@ -210,8 +210,8 @@ function ViewModel(app) {
     this.updateModelDuration = function() {
         var c = this.current();
         if (c && c.pricing) {
-            c.pricing.durationHoursPart(this.hoursFromDuration());
-            c.pricing.durationMinutesPart(this.minutesFromDuration());
+            c.pricing.durationHoursPart(this.hoursFromDuration() |0);
+            c.pricing.durationMinutesPart(this.minutesFromDuration() |0);
         }
     }.bind(this);
     // The form need to know when there are changes, so additional handler
