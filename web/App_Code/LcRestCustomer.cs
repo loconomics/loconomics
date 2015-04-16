@@ -31,6 +31,7 @@ public class LcRestCustomer
     public bool editable;
     #endregion
 
+    #region Tools
     /// <summary>
     /// Only for internal checks
     /// </summary>
@@ -54,13 +55,38 @@ public class LcRestCustomer
         return r;
     }
 
+    private const string EmptyEmailPrefix = "EMPTY:";
+    private static string GetEmailForDb(string email)
+    {
+        if (String.IsNullOrWhiteSpace(email))
+        {
+            // Generate fake email, because database requires ever
+            // an email, and must be non a duplicated
+            return EmptyEmailPrefix + Guid.NewGuid().ToString();
+        }
+        else
+        {
+            return email;
+        }
+    }
+    private static string GetEmailFromDb(string email)
+    {
+        if (email == null)
+            return "";
+        else if (email.StartsWith(EmptyEmailPrefix))
+            return "";
+        else
+            return email;
+    }
+    #endregion
+
     #region Static Constructors
     public static LcRestCustomer FromDB(dynamic record)
     {
         if (record == null) return null;
         return new LcRestCustomer {
             customerUserID = record.customerUserID,
-            email = record.email,
+            email = GetEmailFromDb(record.email),
             firstName = record.firstName,
             lastName = record.lastName,
             secondLastName = record.secondLastName,
@@ -492,7 +518,7 @@ public class LcRestCustomer
                 SELECT @UserID
             ",
              customer.customerUserID,
-             customer.email,
+             GetEmailForDb(customer.email),
              customer.firstName,
              customer.lastName,
              customer.secondLastName,
