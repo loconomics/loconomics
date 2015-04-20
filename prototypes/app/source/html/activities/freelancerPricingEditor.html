@@ -16,7 +16,7 @@
             <div class="form-inline isolated">
                 <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
                     <label for="freelancerPricingEditor-numberOfSessions" class="control-label" data-bind="text: type.numberOfSessionsLabel()"></label>
-                    <input id="freelancerPricingEditor-numberOfSessions" class="form-control" type="number" data-bind="value: pricing.numberOfSessions, disable: $root.isLocked" />
+                    <input id="freelancerPricingEditor-numberOfSessions" class="form-control" type="number" data-bind="textInput: pricing.numberOfSessions, disable: $root.isLocked" />
                 </div>
             </div>
             
@@ -25,7 +25,7 @@
                     <label for="freelancerPricingEditor-price" class="control-label" data-bind="text: type.priceLabel"></label>
                     <div class="input-group">
                         <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
-                        <input id="freelancerPricingEditor-price" type="number" class="form-control" data-bind="value: pricing.price, disable: $root.isLocked" />
+                        <input id="freelancerPricingEditor-price" type="number" class="form-control" data-bind="textInput: pricing.price, disable: $root.isLocked" />
                     </div>
                 </div>
             </div>
@@ -43,14 +43,14 @@
                     <span class="col-xs-12 col-sm-5 form-group">
                         <label for="freelancerPricingEditor-durationHours" class="control-label sr-only">Hours</label>
                         <div class="input-group">
-                            <input id="freelancerPricingEditor-durationHours" type="number" class="form-control" data-bind="textInput: $root.hoursFromDuration, disable: $root.isLocked" />
+                            <input id="freelancerPricingEditor-durationHours" type="number" class="form-control" data-bind="textInput: pricing.durationHoursPart, disable: $root.isLocked" />
                             <span class="input-group-addon">hours</span>
                         </div>
                     </span>
                     <span class="col-xs-12 col-sm-offset-1 col-sm-5 form-group">
                         <label for="freelancerPricingEditor-durationMinutes" class="control-label sr-only">Minutes</label>
                         <div class="input-group">
-                            <input id="freelancerPricingEditor-durationMinutes" type="number" class="form-control" data-bind="value: $root.minutesFromDuration, disable: $root.isLocked" />
+                            <input id="freelancerPricingEditor-durationMinutes" type="number" class="form-control" data-bind="textInput: pricing.durationMinutesPart, disable: $root.isLocked" />
                             <span class="input-group-addon">minutes</span>
                         </div>
                     </span>
@@ -80,14 +80,14 @@
                 <div class="form-group col-xs-12 col-sm-5">
                     <div class="input-group">
                         <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
-                        <input id="freelancerPricingEditor-priceRateQuantity" class="form-control" data-bind="value: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()" type="number" />
+                        <input id="freelancerPricingEditor-priceRateQuantity" class="form-control" data-bind="textInput: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()" type="number" />
                     </div>
                 </div>
                 <div class="form-group col-xs-12 col-sm-5" data-bind="visible: type.priceRateUnitLabel">
                     <label for="freelancerPricingEditor-priceRateUnit" class="control-label sr-only" data-bind="text: type.priceRateUnitLabel"></label>
                     <div class="input-group">
                         <span class="input-group-addon" data-bind="text: type.priceRateUnitLabel"></span>
-                        <input id="freelancerPricingEditor-priceRateUnit" class="form-control" data-bind="value: pricing.priceRateUnit, disable: $root.isLocked() || pricing.noPriceRate()" />
+                        <input id="freelancerPricingEditor-priceRateUnit" class="form-control" data-bind="textInput: pricing.priceRateUnit, disable: $root.isLocked() || pricing.noPriceRate()" />
                     </div>
                 </div>
                 <div data-bind="visible: type.priceRateLearnMoreLabel() && type.priceRateLearnMoreText()" class="form-group col-xs-12 col-sm-2">
