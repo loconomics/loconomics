@@ -1,5 +1,5 @@
 <!-- Activity freelancerPricingEditor -->
-<div class="container-fluid has-navbar" data-activity="freelancerPricingEditor">
+<div class="container-fluid" data-activity="freelancerPricingEditor">
     <form role="form" data-bind="submit: save">
         <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
@@ -110,12 +110,10 @@
 
         </fieldset>
 
-      <div>
-        <div>
-            <button type="submit" class="btn btn-primary btn-block"
-                    data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-            <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
-        </div>
+      <div class="isolated">
+        <button type="submit" class="btn btn-primary btn-block"
+                data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+        <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
       </div>
         
   </form>

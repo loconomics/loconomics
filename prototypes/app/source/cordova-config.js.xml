@@ -39,6 +39,7 @@
     <preference name="fullscreen" value="false" />
     <!-- ios: control whether the screen 'bounces' when scrolled beyond the top -->
     <preference name="webviewbounce" value="false" />
+    <preference name="DisallowOverscroll" value="true" />
     <!-- ios: if icon is prerendered, iOS will not apply it's gloss to the app's icon on the user's home screen -->
     <preference name="prerendered-icon" value="true" />
     <!-- ios: external links should open in the default browser, 'true' would use the webview the app lives in -->

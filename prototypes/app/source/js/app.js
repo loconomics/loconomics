@@ -185,28 +185,6 @@ var appInit = function appInit() {
         window.StatusBar.overlaysWebView(false);
     }
 
-    var iOsWebview = false;
-    if (window.device && 
-        /iOS|iPad|iPhone|iPod/i.test(window.device.platform)) {
-        iOsWebview = true;
-    }
-    
-    // NOTE: Safari iOS bug workaround, min-height/height on html doesn't work as expected,
-    // getting bigger than viewport.
-    var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
-    if (iOS) {
-        var getHeight = function getHeight() {
-            return window.innerHeight;
-            // In case of enable transparent/overlay StatusBar:
-            // (window.innerHeight - (iOsWebview ? 20 : 0))
-        };
-        
-        $('html').height(getHeight() + 'px');        
-        $(window).on('layoutUpdate', function() {
-            $('html').height(getHeight() + 'px');
-        });
-    }
-
     // Because of the iOS7+8 bugs with height calculation,
     // a different way of apply content height to fill all the available height (as minimum)
     // is required.
@@ -226,8 +204,7 @@ var appInit = function appInit() {
             .css('height', function() {
                 // we use box-sizing:border-box, so needs to be outerHeight without margin:
                 return $(this).outerHeight(false);
-            })
-            ;
+            });
         };
         
         fullHeight();
@@ -251,7 +228,11 @@ var appInit = function appInit() {
     
     // Plugins setup
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-        window.cordova.plugins.Keyboard.disableScroll(true);
+        // Explicitely, we WANT auto scroll on keyboard show up.
+        // Can be disabled only if there is a javascript solution to autoscroll
+        // on input focus, else a bug will happen specially on iOS where input
+        // fields gets hidden by the on screen keyboard.
+        window.cordova.plugins.Keyboard.disableScroll(false);
     }
     
     // Easy links to shell actions, like goBack, in html elements

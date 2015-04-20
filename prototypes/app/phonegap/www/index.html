@@ -250,8 +250,7 @@
       </div>
     </div>
     <!-- Activity addressEditor -->
-    <div class="container-fluid has-navbar" data-activity="addressEditor"
-    data-bind="css: { 'is-loading': isLoading }">
+    <div class="container-fluid" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
       <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
@@ -286,7 +285,7 @@
             </div>
           </div>
         </fieldset>
-        <div>
+        <div class="isolated">
           <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
           <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
         </div>
@@ -533,7 +532,7 @@
     </form>
     </div>
     <!-- ClientEdition activity -->
-    <div class="container-fluid has-navbar" data-activity="clientEditor">
+    <div class="container-fluid" data-activity="clientEditor">
       <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
@@ -582,7 +581,7 @@
           <textarea class="form-control" data-bind="textInput: notesAboutCustomer, disable: $root.isLocked"
           placeholder="Notes about customer (only seen by you)"></textarea>
         </fieldset>
-        <div>
+        <div class="isolated">
           <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
           <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked(), event: { tap: confirmRemoval }, visible: !isNew()"></button>
         </div>
@@ -893,7 +892,7 @@
       </div>
     </div>
     <!-- Activity freelancerPricingEditor -->
-    <div class="container-fluid has-navbar" data-activity="freelancerPricingEditor">
+    <div class="container-fluid" data-activity="freelancerPricingEditor">
       <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
@@ -1010,11 +1009,9 @@
       </div>
     </div>
     </fieldset>
-    <div>
-      <div>
-        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-        <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
-      </div>
+    <div class="isolated">
+      <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+      <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
     </div>
     </form>
     </div>
