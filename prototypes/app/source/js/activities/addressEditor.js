@@ -26,6 +26,8 @@ var A = Activity.extends(function AddressEditorActivity() {
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Locations');
     
+    // Remote postal code look-up
+    // NOTE: copied the code inside the postalCode computed handler in contactInfo.js with slight changes
     var app = this.app,
         viewModel = this.viewModel;
     this.registerHandler({

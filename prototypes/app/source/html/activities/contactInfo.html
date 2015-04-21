@@ -18,7 +18,14 @@
             
             <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Zip code', value: address.postalCode, disable: isLocked"></app-unlabeled-input>
+            
+            <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
+              <input type="number" class="form-control"
+                     placeholder="Zip code" aria-label="Zip code"
+                     data-bind="textInput: address.postalCode, disable: $root.isLocked,
+                                popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+            </div>
+            
             <div class="form-group">
                 <p class="form-control-static">
                     <span data-bind="visible: address.city() || address.stateProvinceCode()">

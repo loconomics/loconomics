@@ -64,6 +64,48 @@ var A = Activity.extends(function ContactInfoActivity() {
             });
         }.bind(this)
     });
+    
+    // On change to a valid code, do remote look-up
+    // NOTE: using directly a computed rather than the registerHandler to use
+    // the rateLimit extender that avoids excesive request being performed on changes.
+    // NOTE: the code inside the handler is mostly the same as in addressEditor for the same look-up.
+    var app = this.app,
+        viewModel = this.viewModel;
+    ko.computed(function() {
+        var postalCode = this.postalCode(),
+            address = this;
+
+        if (postalCode && !/^\s*$/.test(postalCode)) {
+            app.model.postalCodes.getItem(postalCode)
+            .then(function(info) {
+                if (info) {
+                    address.city(info.city);
+                    address.stateProvinceCode(info.stateProvinceCode);
+                    address.stateProvinceName(info.stateProvinceName);
+                    viewModel.errorMessages.postalCode('');
+                }
+            })
+            .catch(function(err) {
+                address.city('');
+                address.stateProvinceCode('');
+                address.stateProvinceName('');
+                // Expected errors, a single message, set
+                // on the observable
+                var msg = typeof(err) === 'string' ? err : null;
+                if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
+                    viewModel.errorMessages.postalCode(msg || err.responseJSON.errorMessage);
+                }
+                else {
+                    // Log to console for debugging purposes, on regular use an error on the
+                    // postal code is not critical and can be transparent; if there are 
+                    // connectivity or authentification errors will throw on saving the address
+                    console.error('Server error validating Zip Code', err);
+                }
+            });
+        }
+    }, this.viewModel.address)
+    // Avoid excessive requests by setting a timeout since the latest change
+    .extend({ rateLimit: { timeout: 200, method: 'notifyWhenChangesStop' } });
 });
 
 exports.init = A.init;
@@ -85,6 +127,12 @@ function ViewModel(app) {
 
     this.headerText = ko.observable('Contact information');
     this.buttonText = ko.observable('Save');
+    
+    // List of possible error messages registered
+    // by name
+    this.errorMessages = {
+        postalCode: ko.observable('')
+    };
     
     // User Profile
     var userProfile = app.model.userProfile;
