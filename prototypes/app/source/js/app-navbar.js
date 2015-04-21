@@ -136,6 +136,15 @@ exports.extends = function (app) {
         $el.text(msg);
         $el.fadeIn(transitionDuration)
         .queue(function() {
+            
+            // Manual hide on tapping
+            $el
+            .off('tap.manualHide')
+            .on('tap.manualHide', function() {
+                $el.fadeOut(transitionDuration);
+            });
+            
+            // Auto hide after timeout
             clearTimeout(lastNotificationTimer);
             lastNotificationTimer = setTimeout(function() {
                 $el.fadeOut(transitionDuration);
