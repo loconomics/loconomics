@@ -160,7 +160,7 @@ app.UserType = require('./models/User').UserType;
 // and notifying with a temporary unobtrusive navbar notification
 app.successSave = function successSave(settings) {
     // defaults
-    $.extend({
+    settings = $.extend({
         message: 'Your changes have been saved'
     }, settings);
     // go back

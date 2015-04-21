@@ -129,17 +129,19 @@ exports.extends = function (app) {
     var lastNotificationTimer = null;
     app.showNavBarNotification = function showNavBarNotification(settings) {
         var msg = settings && settings.message || 'Hello World!',
-            duration = settings && settings.duration || 3000,
+            duration = settings && settings.duration || 2000,
+            transitionDuration = settings && settings.transitionDuration || 400,
             $el = $('.AppNav .SmartNavBar-notification');
 
         $el.text(msg);
-        $el.fadeIn('fast');
-        
-        clearTimeout(lastNotificationTimer);
-        lastNotificationTimer = setTimeout(function() {
+        $el.fadeIn(transitionDuration)
+        .queue(function() {
+            clearTimeout(lastNotificationTimer);
+            lastNotificationTimer = setTimeout(function() {
+                $el.fadeOut(transitionDuration);
+            }, duration);
             
-            $el.fadeOut('fast');
-            
-        }, duration);
+            $(this).dequeue();
+        });
     };
 };
