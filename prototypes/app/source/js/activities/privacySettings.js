@@ -13,7 +13,9 @@ var A = Activity.extends(function PrivacySettingsActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.LoggedUser;
 
-    this.navBar = Activity.createSubsectionNavBar('Account');
+    this.navBar = Activity.createSubsectionNavBar('Account', {
+        backLink: 'account'
+    });
     
     this.registerHandler({
         target: this.app.model.privacySettings,

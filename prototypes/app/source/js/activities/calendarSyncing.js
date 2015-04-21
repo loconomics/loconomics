@@ -14,7 +14,9 @@ var A = Activity.extends(function CalendarSyncingActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.Freelancer;
 
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
+    this.navBar = Activity.createSubsectionNavBar('Scheduling', {
+        backLink: 'scheduling'
+    });
     
     // Adding auto-select behavior to the export URL
     this.registerHandler({

@@ -12,7 +12,9 @@ var A = Activity.extends(function ContactInfoActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.LoggedUser;
     
-    this.navBar = Activity.createSubsectionNavBar('Owner information');
+    this.navBar = Activity.createSubsectionNavBar('Owner information', {
+        backLink: 'ownerInfo'
+    });
     
     // Update navBar for onboarding mode when the onboardingStep
     // in the current model changes:

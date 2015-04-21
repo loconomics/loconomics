@@ -13,7 +13,9 @@ var A = Activity.extends(function WeeklyScheduleActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.Freelancer;
 
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
+    this.navBar = Activity.createSubsectionNavBar('Scheduling', {
+        backLink: 'scheduling'
+    });
     
     this.registerHandler({
         target: this.app.model.simplifiedWeeklySchedule,
