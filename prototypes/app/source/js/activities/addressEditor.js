@@ -25,6 +25,54 @@ var A = Activity.extends(function AddressEditorActivity() {
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Locations');
+    
+    var app = this.app,
+        viewModel = this.viewModel;
+    this.registerHandler({
+        target: this.viewModel.address,
+        handler: function(address) {
+            if (address &&
+               !address.postalCode._hasLookup) {
+                address.postalCode._hasLookup = true;
+                
+                // On change to a valid code, do remote look-up
+                ko.computed(function() {
+                    var postalCode = this.postalCode();
+                    
+                    if (postalCode && !/^\s*$/.test(postalCode)) {
+                        app.model.postalCodes.getItem(postalCode)
+                        .then(function(info) {
+                            if (info) {
+                                address.city(info.city);
+                                address.stateProvinceCode(info.stateProvinceCode);
+                                address.stateProvinceName(info.stateProvinceName);
+                                viewModel.errorMessages.postalCode('');
+                            }
+                        })
+                        .catch(function(err) {
+                            address.city('');
+                            address.stateProvinceCode('');
+                            address.stateProvinceName('');
+                            // Expected errors, a single message, set
+                            // on the observable
+                            var msg = typeof(err) === 'string' ? err : null;
+                            if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
+                                viewModel.errorMessages.postalCode(msg || err.responseJSON.errorMessage);
+                            }
+                            else {
+                                // Log to console for debugging purposes, on regular use an error on the
+                                // postal code is not critical and can be transparent; if there are 
+                                // connectivity or authentification errors will throw on saving the address
+                                console.error('Server error validating Zip Code', err);
+                            }
+                        });
+                    }
+                }, address)
+                // Avoid excessive requests by setting a timeout since the latest change
+                .extend({ rateLimit: { timeout: 200, method: 'notifyWhenChangesStop' } });
+            }
+        }
+    });
 });
 
 exports.init = A.init;
@@ -98,6 +146,12 @@ A.prototype.show = function show(options) {
 function ViewModel(app) {
 
     this.header = ko.observable('Edit Location');
+    
+    // List of possible error messages registered
+    // by name
+    this.errorMessages = {
+        postalCode: ko.observable('')
+    };
     
     this.jobTitleID = ko.observable(0);
     this.addressID = ko.observable(0);

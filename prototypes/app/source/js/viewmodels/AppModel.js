@@ -168,6 +168,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.pricingTypes = require('./AppModel.pricingTypes').create(this);
     this.messaging = require('./AppModel.messaging').create(this);
     this.customers = require('./AppModel.customers').create(this);
+    this.postalCodes = require('./AppModel.postalCodes').create(this);
 };
 
 /**

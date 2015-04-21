@@ -18,7 +18,7 @@ function Address(values) {
         postalCode: null,
         city: null, // Autofilled by server
         stateProvinceCode: null, // Autofilled by server
-        stateProviceName: null, // Autofilled by server
+        stateProvinceName: null, // Autofilled by server
         countryCode: null, // ISO Alpha-2 code, Ex.: 'US'
         latitude: null,
         longitude: null,
