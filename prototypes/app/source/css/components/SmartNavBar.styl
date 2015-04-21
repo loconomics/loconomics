@@ -7,6 +7,12 @@
 
     Three areas: two buttons on both sides with optional labels
     and a centered title.
+    
+    Supports to have an overlapping notification for casual use, so the
+    full navbar area is used to display a short, timeout based, message.
+    The element SmartNavBar-notification can be included all the time and will
+    be hidden with display:none and the styles to make it fit the exact Navbar space,
+    use javascript to toggle visibility.
 
     Based on code from the project: https://github.com/c2prods/Project-Tyson
 **/
@@ -174,5 +180,20 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     // Support for Bootstrap menu button
     .navbar-toggle .icon-bar {
         background-color: $SmartNavBar-buttonColor;
+    }
+    
+    .SmartNavBar-notification {
+        // Initially hidden, toggle with javascript
+        display: none;
+        
+        // Fits the navbar space
+        position: absolute;
+        z-index: 100;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
+        text-align: center;
     }
 }

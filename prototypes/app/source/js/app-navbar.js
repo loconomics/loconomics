@@ -94,4 +94,52 @@ exports.extends = function (app) {
         .filter(':visible')
         .collapse('hide');
     };
+    
+    app.setupNavBarBinding = function setupNavBarBinding() {
+        // Set model for the AppNav
+        ko.applyBindings({
+            navBar: app.navBar
+        }, $('.AppNav').get(0));
+    };
+    
+    /**
+        Performs the 'back' task from the navbar link, if any.
+        That is, trigger the left action.
+        Fallback to shell goBack
+    **/
+    app.performsNavBarBack = function performsNavBarBack() {
+        var nav = this.navBar(),
+            left = nav && nav.leftAction(),
+            $btn = $('.SmartNavBar-edge.left > .SmartNavBar-btn');
+
+        // There is an action, trigger like a click so all the handlers
+        // attached on spare places do their work:
+        if (left) {
+            $btn.trigger('tap').trigger('click');
+        }
+        else if (this.shell) {
+            this.shell.goBack();
+        }
+    };
+    
+    /**
+        It shows an unobtrusive notification on the navbar place, that
+        hides after a short timeout
+    **/
+    var lastNotificationTimer = null;
+    app.showNavBarNotification = function showNavBarNotification(settings) {
+        var msg = settings && settings.message || 'Hello World!',
+            duration = settings && settings.duration || 3000,
+            $el = $('.AppNav .SmartNavBar-notification');
+
+        $el.text(msg);
+        $el.fadeIn('fast');
+        
+        clearTimeout(lastNotificationTimer);
+        lastNotificationTimer = setTimeout(function() {
+            
+            $el.fadeOut('fast');
+            
+        }, duration);
+    };
 };

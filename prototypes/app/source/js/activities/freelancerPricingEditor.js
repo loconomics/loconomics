@@ -232,7 +232,7 @@ function ViewModel(app) {
             
             // On save, auto go back
             // NOTE: if auto go back is disabled, the URL must update to match the new ID
-            app.shell.goBack();
+            app.successSave();
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({

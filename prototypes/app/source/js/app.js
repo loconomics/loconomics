@@ -155,6 +155,20 @@ app.shell.accessControl = require('./utils/accessControl')(app);
 // Shortcut to UserType enumeration used to set permissions
 app.UserType = require('./models/User').UserType;
 
+// New method for common forms behavior after a successful save operation,
+// the activity goes back (following the navbar back-link or shell.goBack())
+// and notifying with a temporary unobtrusive navbar notification
+app.successSave = function successSave(settings) {
+    // defaults
+    $.extend({
+        message: 'Your changes have been saved'
+    }, settings);
+    // go back
+    this.performsNavBarBack();
+    // show notification
+    this.showNavBarNotification(settings);
+};
+
 /** App Init **/
 var appInit = function appInit() {
     /*jshint maxstatements:50,maxcomplexity:16 */
@@ -322,12 +336,9 @@ var appInit = function appInit() {
             scrollTo(target);
         }
     });
-
     
-    // Set model for the AppNav
-    ko.applyBindings({
-        navBar: app.navBar
-    }, $('.AppNav').get(0));
+    // Navbar binding
+    app.setupNavBarBinding();
     
     var SmartNavBar = require('./components/SmartNavBar');
     var navBars = SmartNavBar.getAll();

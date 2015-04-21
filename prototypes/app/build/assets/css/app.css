@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-04-20
+/*! LoconomicsApp 2015-04-21
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1898,7 +1898,7 @@ body.use-backdrop:before {
 
 /* line 12 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
 
-/* line 29 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar {
   position: fixed;
   top: 0;
@@ -1933,7 +1933,7 @@ body.use-backdrop:before {
     **/
 }
 
-/* line 79 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 85 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-edge {
   display: inline-block;
   vertical-align: top;
@@ -1955,30 +1955,30 @@ body.use-backdrop:before {
   top: 0;
 }
 
-/* line 85 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-edge.left {
   left: 0;
 }
 
-/* line 88 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 94 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-edge.left.SmartNavBar-btn,
 .SmartNavBar .SmartNavBar-edge.left .SmartNavBar-btn {
   padding: 0 10px;
 }
 
-/* line 96 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 102 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-edge.right {
   right: 0;
 }
 
-/* line 99 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 105 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-edge.right.SmartNavBar-btn,
 .SmartNavBar .SmartNavBar-edge.right .SmartNavBar-btn {
   text-align: right;
   padding: 0 10px;
 }
 
-/* line 109 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 115 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn {
   display: inline-block;
   vertical-align: top;
@@ -2008,29 +2008,29 @@ body.use-backdrop:before {
         }*/
 }
 
-/* line 115 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 121 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn:focus {
   outline: 0;
 }
 
-/* line 129 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 135 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn.bold {
   font-weight: 500;
 }
 
-/* line 133 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 139 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn.disabled,
 .SmartNavBar .SmartNavBar-btn [disabled] {
   color: #777;
 }
 
-/* line 137 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 143 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn:hover,
 .SmartNavBar .SmartNavBar-btn:active {
   text-decoration: none;
 }
 
-/* line 144 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 150 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn h1 {
   color: #555;
   font-size: 15px;
@@ -2038,7 +2038,7 @@ body.use-backdrop:before {
   margin: 0 0.6em;
 }
 
-/* line 155 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 161 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar h1 {
   color: #555;
   display: block;
@@ -2055,9 +2055,22 @@ body.use-backdrop:before {
   line-height: 44px;
 }
 
-/* line 171 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 177 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .navbar-toggle .icon-bar {
   background-color: #e0004f;
+}
+
+/* line 181 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+.SmartNavBar .SmartNavBar-notification {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  text-align: center;
 }
 
 /* line 35 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\app.styl */
