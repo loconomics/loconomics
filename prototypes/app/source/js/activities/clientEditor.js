@@ -228,6 +228,10 @@ function ViewModel(app) {
             this.client().model.updateWith(serverData);
             // Push version so it appears as saved
             this.clientVersion().push({ evenIfObsolete: true });
+            
+            // On save, auto go back
+            // NOTE: if auto go back is disabled, the URL must update to match the new ID
+            app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
