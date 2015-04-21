@@ -9035,12 +9035,12 @@ module.exports = asap;
         keys: keys
     };
 
-    if (typeof define === 'function' && define.amd) {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = asyncStorage;
+    } else if (typeof define === 'function' && define.amd) {
         define('asyncStorage', function() {
             return asyncStorage;
         });
-    } else if (typeof module !== 'undefined' && module.exports) {
-        module.exports = asyncStorage;
     } else {
         this.asyncStorage = asyncStorage;
     }
@@ -9092,10 +9092,10 @@ module.exports = asap;
 
     // Find out what kind of module setup we have; if none, we'll just attach
     // localForage to the main window.
-    if (typeof define === 'function' && define.amd) {
-        moduleType = ModuleType.DEFINE;
-    } else if (typeof module !== 'undefined' && module.exports) {
+    if (typeof module !== 'undefined' && module.exports) {
         moduleType = ModuleType.EXPORT;
+    } else if (typeof define === 'function' && define.amd) {
+        moduleType = ModuleType.DEFINE;
     }
 
     // Config the localStorage backend, using options set in the config.
@@ -9366,12 +9366,12 @@ module.exports = asap;
         keys: keys
     };
 
-    if (moduleType === ModuleType.DEFINE) {
+    if (moduleType === ModuleType.EXPORT) {
+        module.exports = localStorageWrapper;
+    } else if (moduleType === ModuleType.DEFINE) {
         define('localStorageWrapper', function() {
             return localStorageWrapper;
         });
-    } else if (moduleType === ModuleType.EXPORT) {
-        module.exports = localStorageWrapper;
     } else {
         this.localStorageWrapper = localStorageWrapper;
     }
@@ -9415,10 +9415,10 @@ module.exports = asap;
 
     // Find out what kind of module setup we have; if none, we'll just attach
     // localForage to the main window.
-    if (typeof define === 'function' && define.amd) {
-        moduleType = ModuleType.DEFINE;
-    } else if (typeof module !== 'undefined' && module.exports) {
+    if (typeof module !== 'undefined' && module.exports) {
         moduleType = ModuleType.EXPORT;
+    } else if (typeof define === 'function' && define.amd) {
+        moduleType = ModuleType.DEFINE;
     }
 
     // Open the WebSQL database (automatically creates one if one didn't
@@ -9855,10 +9855,10 @@ module.exports=require('vZ1/n1');
 
     // Find out what kind of module setup we have; if none, we'll just attach
     // localForage to the main window.
-    if (typeof define === 'function' && define.amd) {
-        moduleType = ModuleType.DEFINE;
-    } else if (typeof module !== 'undefined' && module.exports) {
+    if (typeof module !== 'undefined' && module.exports) {
         moduleType = ModuleType.EXPORT;
+    } else if (typeof define === 'function' && define.amd) {
+        moduleType = ModuleType.DEFINE;
     }
 
     // Check to see if IndexedDB is available and if it is the latest
@@ -10440,12 +10440,12 @@ module.exports=require('vZ1/n1');
         bufferToString: bufferToString
     };
 
-    if (typeof define === 'function' && define.amd) {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = localforageSerializer;
+    } else if (typeof define === 'function' && define.amd) {
         define('localforageSerializer', function() {
             return localforageSerializer;
         });
-    } else if (typeof module !== 'undefined' && module.exports) {
-        module.exports = localforageSerializer;
     } else {
         this.localforageSerializer = localforageSerializer;
     }
