@@ -509,6 +509,38 @@ public class LcRestAddress
         }
 
         // Get the information by postal code and country from database
+        var data = GetPostalCodeData(address.postalCode, address.countryID, false);
+        if (data != null)
+        {
+            address.postalCodeID = data.PostalCodeID;
+            address.city = data.City;
+            address.stateProvinceID = data.StateProvinceID;
+            // Done:
+            return true;
+        }
+        else
+        {
+            // Failed look-up
+            return false;
+        }
+    }
+
+    public static dynamic GetPostalCodeData(string postalCode, int countryID, bool publicInterface)
+    {
+        // Get the information by postal code and country from database
+        var sqlGetPublicPostalCodeData = @"
+            SELECT  PC.City As city,
+                    SP.StateProvinceCode As stateProvinceCode,
+                    SP.StateProvinceName As stateProvinceName
+            FROM    PostalCode As PC
+                     INNER JOIN
+                    StateProvince As SP
+                      ON PC.StateProvinceID = SP.StateProvinceID
+                          AND PC.CountryID = SP.CountryID
+            WHERE   PC.PostalCode = @0
+                        AND
+                    PC.CountryID = @1
+        ";
         var sqlGetPostalCodeData = @"
             SELECT  PostalCodeID, City, StateProvinceID
             FROM    PostalCode
@@ -518,19 +550,15 @@ public class LcRestAddress
         ";
         using (var db = Database.Open("sqlloco"))
         {
-            var data = db.QuerySingle(sqlGetPostalCodeData, address.postalCode, address.countryID);
+            var data = db.QuerySingle(publicInterface ? sqlGetPublicPostalCodeData : sqlGetPostalCodeData, postalCode, countryID);
             if (data != null)
             {
-                address.postalCodeID = data.PostalCodeID;
-                address.city = data.City;
-                address.stateProvinceID = data.StateProvinceID;
-                // Done:
-                return true;
+                return data;
             }
             else
             {
                 // Failed look-up
-                return false;
+                return null;
             }
         }
     }
