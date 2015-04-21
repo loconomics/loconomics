@@ -100,6 +100,8 @@ function ViewModel(app) {
     this.save = function save() {
         // Force to save, even if there was remote updates
         syncVersion.push({ evenIfObsolete: true });
+        
+        app.successSave();
     };
     
     this.reset = function reset() {

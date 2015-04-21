@@ -81,6 +81,8 @@ function ViewModel(app) {
     this.save = function save() {
         // Force to save, even if there was remote updates
         prefsVersion.push({ evenIfObsolete: true });
+        
+        app.successSave();
     }.bind(this);
     
     this.incrementsExample = ko.pureComputed(function() {

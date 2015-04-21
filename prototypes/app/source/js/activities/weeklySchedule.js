@@ -80,5 +80,7 @@ function ViewModel(app) {
     this.save = function save() {
         // Force to save, even if there was remote updates
         scheduleVersion.push({ evenIfObsolete: true });
+        
+        app.successSave();
     };
 }

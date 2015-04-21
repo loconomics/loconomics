@@ -190,5 +190,7 @@ function ViewModel(app) {
         // Force to save, even if there was remote updates
         profileVersion.push({ evenIfObsolete: true });
         homeAddressVersion.push({ evenIfObsolete: true });
+        
+        app.successSave();
     }.bind(this);
 }
