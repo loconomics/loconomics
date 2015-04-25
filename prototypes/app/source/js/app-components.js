@@ -90,4 +90,10 @@ exports.registerAll = function() {
             }, this);
         }
     });
+    
+    /// appointment-card
+    ko.components.register('app-appointment-card', {
+        template: { element: 'appointment-card-template' },
+        viewModel: require('./viewmodels/AppointmentCard')
+    });
 };

@@ -92,71 +92,11 @@ var A = Activity.extends(function AppointmentActivity() {
         }.bind(this)._delayed(10)
         // IMPORTANT: delayed REQUIRED to avoid triple loading (activity.show) on first load triggered by a click/tap event.
     });
-    
-    var ModelVersion = require('../utils/ModelVersion');
 
-    var app = this.app;
     this.registerHandler({
         target: this.viewModel.editMode,
         handler: function(isEdit) {
             this.$activity.toggleClass('in-edit', isEdit);
-            this.$appointmentView.find('.AppointmentCard').toggleClass('in-edit', isEdit);
-
-            if (this.viewModel.currentID() <= 0) {
-                return;
-            }
-            
-            var version;
-            
-            if (isEdit) {
-                // Create and set a version to be edited
-                version = new ModelVersion(this.viewModel.currentAppointment());
-                this.viewModel.editedVersion(version);
-                this.viewModel.editedAppointment(version.version);
-                
-                // Setup auto-saving
-                var vw = this.viewModel;
-                version.on('push', function(success) {
-                    if (success) {
-                        vw.isSaving(true);
-                        app.model.appointments.setAppointment(version.version)
-                        .then(function(savedApt) {
-                            //var wasNew = version.original.id() < 1;
-                            // Update with remote data, the original appointment in the version,
-                            // not the currentAppointment or in the index in the list to avoid
-                            // race-conditions
-                            version.original.model.updateWith(savedApt);
-                            
-                            // TODO: wasNew:true: add to the list and sort it??
-                            // There is a wizard for bookings, so may be different on that case
-                        })
-                        .catch(function(err) {
-                            // Show error
-                            app.modals.showError({
-                                title: 'There was an error saving the data.',
-                                error: err && err.error || err
-                            });
-                            // Don't replicate error, allow always
-                        })
-                        .then(function() {
-                            // ALWAYS:
-                            vw.isSaving(false);
-                        });
-                    }
-                });
-            }
-            else {
-                // There is a version? Push changes!
-                version = this.viewModel.editedVersion();
-                
-                if (version && version.areDifferent()) {
-                    // Push version to original, will launch a remote update 
-                    // if anithing changed
-                    // TODO: ask for confirmation if version isObsolete
-                    version.push({ evenIfObsolete: true });
-                }
-            }
-
         }.bind(this)
     });
 });
@@ -185,7 +125,7 @@ A.prototype.show = function show(options) {
     .then(function() {
         // If the request includes an appointment plain object, that's an
         // in-editing appointment so put it in place (to restore a previous edition)
-        if (this.requestData.appointment) {
+        /*if (this.requestData.appointment) {
             this.viewModel.editMode(true);
             this.viewModel.editedAppointment().model.updateWith(this.requestData.appointment);
         }
@@ -193,7 +133,7 @@ A.prototype.show = function show(options) {
             // On any other case, and to prevent bad editMode on entering, 
             // do a discard taht sets editMode off
             this.viewModel.cancel();
-        }
+        }*/
 
         // If there are options (may not be on startup or
         // on cancelled edition).
@@ -236,21 +176,7 @@ A.prototype.show = function show(options) {
 
 var Appointment = require('../models/Appointment');
 
-function getDateWithoutTime(date) {
-    if (!date) {
-        date = new Date();
-    }
-    else if (!(date instanceof Date)) {
-        date = new Date(date);
-    }
-
-    return new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        0, 0, 0
-    );
-}
+var getDateWithoutTime = require('../utils/getDateWithoutTime');
 
 function findAppointmentInList(list, id) {
     var found = null,
@@ -272,8 +198,7 @@ var CalendarEvent = require('../models/CalendarEvent'),
     Booking = require('../models/Booking');
 
 function ViewModel(app) {
-    /*jshint maxstatements: 40 */
-
+    this.app = app;
     this.appointments = ko.observableArray([]);
     this.currentDate = ko.observable(new Date());
     this.currentID = ko.observable(0);
@@ -281,8 +206,6 @@ function ViewModel(app) {
     this.editMode = ko.observable(false);
     this.isLoading = ko.observable(false);
     this.isSaving = ko.observable(false);
-    this.editedVersion = ko.observable(null);
-    this.editedAppointment = ko.observable(new Appointment());
 
     var loadingAppointment = new Appointment({
         id: 0,
@@ -319,11 +242,7 @@ function ViewModel(app) {
             sourceBooking: new Booking()
         });
     };
-
-    this.isNew = ko.computed(function(){
-        return this.currentID() === -3 || this.currentID() === -4;
-    }, this);
-
+    
     this.currentAppointment = ko.observable(loadingAppointment);
 
     this.goPrevious = function goPrevious() {
@@ -374,90 +293,6 @@ function ViewModel(app) {
             // Complete load-double check: this.setCurrent(apt.startTime(), apt.id());
         }
     };
-
-    this.edit = function edit() {
-        // A subscribed handler ensure to do the needed tasks
-        this.editMode(true);
-    }.bind(this);
-    
-    this.save = function save() {
-        // A subscribed handler ensure to do the needed tasks
-        this.editMode(false);
-    }.bind(this);
-
-    this.cancel = function cancel() {
-
-        if (this.editedVersion()) {
-            // Discard previous version
-            this.editedVersion().pull({ evenIfNewer: true });
-        }
-        // Out of edit mode
-        this.editMode(false);
-    }.bind(this);
-
-    /**
-        External actions
-    **/
-    var editFieldOn = function editFieldOn(activity, data) {
-
-        // Include appointment to recover state on return:
-        data.appointment = this.currentAppointment().model.toPlainObject(true);
-
-        app.shell.go(activity, data);
-    };
-
-    this.pickDateTime = function pickDateTime() {
-
-        editFieldOn('datetimePicker', {
-            selectedDatetime: null
-        });
-    };
-
-    this.pickClient = function pickClient() {
-
-        editFieldOn('clients', {
-            selectClient: true,
-            selectedClient: null
-        });
-    };
-
-    this.pickService = function pickService() {
-
-        editFieldOn('services', {
-            selectServices: true,
-            selectedServices: this.currentAppointment().services()
-        });
-    }.bind(this);
-
-    this.changePrice = function changePrice() {
-        // TODO
-    };
-
-    this.pickLocation = function pickLocation() {
-
-        editFieldOn('locations', {
-            selectLocation: true,
-            selectedLocation: this.currentAppointment().location()
-        });
-    }.bind(this);
-
-    var textFieldsHeaders = {
-        preNotesToClient: 'Notes to client',
-        postNotesToClient: 'Notes to client (afterwards)',
-        preNotesToSelf: 'Notes to self',
-        postNotesToSelf: 'Booking summary'
-    };
-
-    this.editTextField = function editTextField(field) {
-
-        editFieldOn('textEditor', {
-            request: 'textEditor',
-            field: field,
-            title: this.isNew() ? 'New booking' : 'Booking',
-            header: textFieldsHeaders[field],
-            text: this.currentAppointment()[field]()
-        });
-    }.bind(this);
 
     /**
         Changing the current viewed data by date and id
@@ -607,4 +442,3 @@ function ViewModel(app) {
         return promiseSetCurrent;
     };
 }
-

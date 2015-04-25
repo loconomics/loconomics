@@ -1,0 +1,106 @@
+<!-- Component Template appointment-card -->
+<script type="text/html" id="appointment-card-template">
+    <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode }">
+        <div class="Card-title">
+            <h3><span data-bind="text: currentID() > 0 ? item().stateHeader() : ''"></span>&nbsp;</h3>
+            <h2 data-bind="text: item().summary()"></h2>
+            <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+        </div>
+        <ul class="list-unstyled" data-bind="visible: currentID() > 0">
+            <li data-bind="event: { tap: editMode() && pickDateTime }">
+                <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
+                <span class="AppointmentCard-data">
+                    <span data-bind="visible: item().startTime()">
+                        <span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
+                        <span data-bind="text: item().displayedTimeRange()"></span>
+                    </span>
+                    <span data-bind="visible: editMode() && !item().startTime()" class="AppointmentCard-placeholderLabel">Select date/time</span>
+                </span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
+            </li>
+        </ul>
+        <ul class="list-unstyled" data-bind="visible: currentID() === -2 || currentID() === -1">
+            <li>
+                <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-4"
+                   data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-4' }">Add new booking</a>
+            </li>
+            <li>
+                <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-3"
+                    data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-3' }">Add new calendar block</a>
+            </li>
+        </ul>
+        <ul class="list-unstyled" data-bind="visible: item().sourceBooking()">
+            <li data-bind="event: { tap: editMode() && pickClient }">
+                <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
+                <span class="AppointmentCard-data">
+                    <span data-bind="text: (item().client() && item().client().fullName())"></span>
+                    <span data-bind="visible: editMode() && !item().client()" class="AppointmentCard-placeholderLabel">Select/Add client</span>
+                </span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().client(), 'glyphicon-plus': !item().client()}"></span></span>
+            </li>
+            <li data-bind="event: { tap: editMode() && pickService }">
+                <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
+                <span class="AppointmentCard-data">
+                    <span data-bind="text: item().servicesSummary()"></span>
+                    <span data-bind="visible: editMode() && !item().servicesSummary()" class="AppointmentCard-placeholderLabel">Select/Add service(s)</span>
+                </span>
+            <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().servicesSummary(), 'glyphicon-plus': !item().servicesSummary()}"></span></span>
+            </li>
+            <li data-bind="visible: !isNew(), event: { tap: editMode() && changePrice }">
+                <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
+                <span class="AppointmentCard-data" data-bind="text: item().ptotalPrice, format: { type: 'number', format: '$0,0.00' }"></span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().ptotalPrice(), 'glyphicon-plus': !item().ptotalPrice()}"></span></span>
+            </li>
+            <li data-bind="event: { tap: editMode() && pickLocation }">
+                <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
+                <span class="AppointmentCard-data">
+                    <span data-bind="text: item().locationSummary"></span>
+                    <span data-bind="visible: editMode() && !item().locationSummary()" class="AppointmentCard-placeholderLabel">Select/Add location</span>
+                </span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().locationSummary(), 'glyphicon-plus': !item().locationSummary()}"></span></span>
+            </li>
+
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'preNotesToClient') }">
+                <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
+                <span class="AppointmentCard-data">
+                    <span data-bind="text: item().preNotesToClient"></span>
+                    <span data-bind="visible: !item().preNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client</span>
+                </span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToClient(), 'glyphicon-plus': !item().preNotesToClient()}"></span></span>
+            </li>
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'preNotesToSelf') }">
+                <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
+                <span class="AppointmentCard-data">
+                    <span data-bind="text: item().preNotesToSelf"></span>
+                    <span data-bind="visible: !item().preNotesToSelf()" class="AppointmentCard-placeholderLabel">Notes to self</span>
+                </span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToSelf(), 'glyphicon-plus': !item().preNotesToSelf()}"></span></span>
+            </li>
+
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: !isNew() && item().itStarted()">
+                <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
+                <span class="AppointmentCard-data">
+                    <span data-bind="text: item().postNotesToClient"></span>
+                    <span data-bind="visible: !item().postNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client (afterwards)</span>
+                </span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().postNotesToClient(), 'glyphicon-plus': !item().postNotesToClient()}"></span></span>
+            </li>
+            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: !isNew() && item().itStarted()">
+                <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
+                <span class="AppointmentCard-data">
+                    <span data-bind="text: item().postNotesToSelf"></span>
+                    <span data-bind="visible: !item().postNotesToSelf()" class="AppointmentCard-placeholderLabel">Booking summary (seen only by you)</span>
+                </span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().postNotesToSelf(), 'glyphicon-plus': !item().postNotesToSelf()}"></span></span>
+            </li>
+        </ul>
+        <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && !editMode()">
+            <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: edit }">Edit</button></div>
+            <div class="col-xs-6"><button type="button" class="btn btn-default btn-block">Contact client</button></div>
+        </div>
+        <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && editMode()">
+            <div class="col-xs-6"><button type="button" class="btn btn-danger btn-block" data-bind="event: { tap: cancel }">Cancel</button></div>
+            <div class="col-xs-6"><button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }">Save</button></div>
+        </div>
+    </div>
+</script>
