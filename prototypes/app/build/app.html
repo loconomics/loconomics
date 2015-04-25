@@ -306,7 +306,7 @@
 
              <h2 data-bind="text: currentAppointment().summary()"></h2>
 
-            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+            <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
           </div>
           <ul class="list-unstyled" data-bind="visible: currentAppointment().id() > 0">
             <li data-bind="event: { tap: editMode() && pickDateTime }"> <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
