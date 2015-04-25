@@ -63,42 +63,35 @@ var A = Activity.extends(function AppointmentActivity() {
     }, this);
     
     // Just update URL to match the appointment currently showed
-//    this.registerHandler({
-//        target: this.viewModel.currentAppointment,
-//        handler: function (apt) {
-//            
-//            if (!apt)
-//                return;
-//            
-//            // Update URL to match the appointment ID and
-//            // track it state
-//            // Get ID from URL, to avoid do anything if the same.
-//            var aptId = apt.id(),
-//                found = /appointment\/([^\/]+)\/(\-?\d+)/i.exec(window.location),
-//                urlId = found && found[2] |0,
-//                urlDate = found && found[1],
-//                curDateStr = getDateWithoutTime(this.viewModel.currentDate()).toISOString();
-//
-//            if (!found ||
-//                urlId !== aptId.toString() ||
-//                urlDate !== curDateStr) {
-//                
-//                // TODO save a useful state
-//                // Not for now, is failing, but something based on:
-//                /*
-//                var viewstate = {
-//                    appointment: apt.model.toPlainObject(true)
-//                };
-//                */
-//
-//                // If was a root URL, no ID, just replace current state
-//                if (urlId === '')
-//                    this.app.shell.history.replaceState(null, null, 'appointment/' + curDateStr + '/' + aptId);
-//                else
-//                    this.app.shell.history.pushState(null, null, 'appointment/' + curDateStr + '/' + aptId);
-//            }
-//        }.bind(this)
-//    });
+    this.registerHandler({
+        target: this.viewModel.currentAppointment,
+        handler: function (apt) {
+            
+            if (!apt)
+                return;
+            
+            // Update URL to match the appointment ID and
+            // track it state
+            // Get ID from URL, to avoid do anything if the same.
+            var aptId = apt.id(),
+                found = /appointment\/([^\/]+)\/(\-?\d+)/i.exec(window.location),
+                urlId = found && found[2] |0,
+                urlDate = found && found[1],
+                curDateStr = getDateWithoutTime(this.viewModel.currentDate()).toISOString();
+
+            if (!found ||
+                urlId !== aptId.toString() ||
+                urlDate !== curDateStr) {
+                
+                // If was an incomplete URL, just replace current state
+                if (urlId === '')
+                    this.app.shell.history.replaceState(null, null, 'appointment/' + curDateStr + '/' + aptId);
+                else
+                    this.app.shell.history.pushState(null, null, 'appointment/' + curDateStr + '/' + aptId);
+            }
+        }.bind(this)._delayed(10)
+        // IMPORTANT: delayed REQUIRED to avoid triple loading (activity.show) on first load triggered by a click/tap event.
+    });
     
     var ModelVersion = require('../utils/ModelVersion');
 
@@ -187,7 +180,7 @@ A.prototype.show = function show(options) {
         date = getDateWithoutTime(s1);
         id = s2 |0;
     }
-    console.log('apt show', date, id);
+
     this.viewModel.setCurrent(date, id)
     .then(function() {
         // If the request includes an appointment plain object, that's an
@@ -492,7 +485,6 @@ function ViewModel(app) {
         }
     };
     this.setItemFromCurrentList = function (id) {
-        console.log('setItemFromCurrentList', id);
         /*jshint maxdepth:6*/
         var list = this.appointments(),
             index,
@@ -505,7 +497,6 @@ function ViewModel(app) {
         }
         else if (list.length === 0) {
             // No item ID, empty list:
-            console.log('id', id);
             index = -1;
             item = newEmptyDateAppointment();
         }
@@ -606,13 +597,11 @@ function ViewModel(app) {
 
     var promiseSetCurrent = Promise.resolve();
     this.setCurrent = function setCurrent(date, id) {
-        console.log('setCurrent', date, id);
         // NOTE: Do nothing if is already in loading process
         // TODO: review if is better to cancel current and continue or
         // must be queued for when it's finish. If set as 'allow concurrent'
         // the isLoading may be not enough to control the several loadings
         promiseSetCurrent = promiseSetCurrent.then(function() {
-            console.log('__setCurrent', date, id);
             return _setCurrent(date, id);
         });
         return promiseSetCurrent;
