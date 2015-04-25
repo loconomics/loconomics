@@ -5,14 +5,70 @@
 
 [data-activity=calendar] {
 
+    $titleInnerHeight = 50px;
+    $titleGap = 10px;
+    $titleHeight = $titleInnerHeight + $titleGap;
+    
     #calendarDailyView {
-        padding-top: $activityTitleHeight;
+        padding-top: $titleHeight;
     }
 
-    #calendarDateHeader {
+    #calendarDateHeader {    
+        $lineHeight = 1.3em;
+        $padTop = 14px;
+        $padBottom = 8px;
+        
         position: fixed;
         z-index: 100;
         background: White;
+
+        font-size: 20px;    
+        margin: 0 0 $titleGap;
+        text-align: left;
+        font-weight: bold;
+        
+        /* Like a row, it use full width
+            but we enforce the internal gap
+        */
+        margin-left: 0 - $container-padding-left;
+        margin-right: 0 - $container-padding-right;
+        padding: 0 ($container-padding-right) 0 ($container-padding-left);
+
+        /* table layout for better management of the 
+            elements */
+        display: table;
+        width: 100%;
+        height: $titleInnerHeight;
+        box-sizing: content-box;
+
+        /* Decoration */
+        // NOTE: Respecting the $titleGap
+        box-shadow: 0px 1px 4px 0px black;
+
+        /* Only allowed 'span' elements as childs or link buttons */
+        > span {
+            padding: $padTop 0 $padBottom 0;
+            line-height: $lineHeight;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        /* Button link */
+        > a.btn {
+            margin: $padTop 0 $padBottom 0;
+            padding: 0;
+            font-size: 20px;
+            color: $gray-dark;
+            border: none;
+            line-height: $lineHeight;
+
+            &:active,
+            &:focus,
+            &:hover {
+                outline: none;
+                text-decoration: none;
+            }
+        }
     }
 
     #calendarDatePicker {
@@ -21,11 +77,11 @@
         left: 10px;
         right: 10px;
         z-index: 100;
-        top: $activityTitleInnerHeight + $app-navbar-height;
+        top: $titleInnerHeight + $app-navbar-height;
         
         /* pop-up decoration */
         background: white;
-        box-shadow: 0 0 6px 1px #000;
+        box-shadow: 0 0 4px 0 #000;
         border-radius: 4px;
 
         /* repositioning the pop-arrow */

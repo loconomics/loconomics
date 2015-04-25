@@ -259,7 +259,11 @@
         </h2>
 
         <fieldset class="isolated" data-bind="with: address()">
-          <app-unlabeled-input params="placeholder: 'Zip code', value: postalCode, disable: $root.isLocked, type: 'number'"></app-unlabeled-input>
+          <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
+            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code"
+            data-bind="textInput: postalCode, disable: $root.isLocked,
+                                popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+          </div>
           <div data-bind="visible: isServiceArea">
             <div class="form-group">
               <label for="addressEditorRadius">Service radius</label>
@@ -487,7 +491,7 @@
     </div>
     <!-- Activity calendar -->
     <div class="container-fluid" data-activity="calendar" data-bind="css: { 'is-loading': isLoading }">
-       <h1 id="calendarDateHeader" class="CalendarDateHeader ActivityTitle">
+       <h1 id="calendarDateHeader" class="CalendarDateHeader">
       <a href="#prev" class="CalendarDateHeader-switch btn btn-link col-xs-2 btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous date</span></a>
       <a href="#" class="CalendarDateHeader-date btn btn-link btn-default col-xs-8 text-center">
           <time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
@@ -709,7 +713,11 @@
             </div>
             <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Zip code', value: address.postalCode, disable: isLocked"></app-unlabeled-input>
+            <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
+              <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code"
+              data-bind="textInput: address.postalCode, disable: $root.isLocked,
+                                popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+            </div>
             <div class="form-group">
               <p class="form-control-static"> <span data-bind="visible: address.city() || address.stateProvinceCode()">
                         <span data-bind="text: address.city"></span>,

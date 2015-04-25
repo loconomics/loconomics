@@ -1,6 +1,5 @@
 /** Activity component **/
 
-@import 'ActivityTitle.styl';
 @import 'ActivityNavbar.styl';
 
 Activity() {
@@ -32,19 +31,6 @@ Activity() {
     &.has-navbar {
         padding-bottom: $activityNavbarHeight;
         height: auto;
-    }
-
-    /* activity can set its title as freeze,
-        will fix available space, and reuse
-        the mixims from the ActivityTitle component.
-    */
-    &.has-frozenTitle {
-        
-        padding-top: $activityTitleHeight;
-        
-        .ActivityTitle {
-            FreezeActivityTitle()
-        }
     }
 
     /* Hidden until active */
