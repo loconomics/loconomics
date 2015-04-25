@@ -45,6 +45,11 @@ function AppointmentCardViewModel(params) {
         this.item(sourceItem);
         this.editedVersion(null);
         this.editMode(false);
+        
+        // If the new item is a new one, set edit mode
+        if (this.isNew()) {
+            this.editMode(true);
+        }
     }, this);
 
     /**
@@ -177,7 +182,8 @@ function AppointmentCardViewModel(params) {
         preNotesToClient: 'Notes to client',
         postNotesToClient: 'Notes to client (afterwards)',
         preNotesToSelf: 'Notes to self',
-        postNotesToSelf: 'Booking summary'
+        postNotesToSelf: 'Booking summary',
+        summary: 'What?'
     };
 
     this.editTextField = function editTextField(field) {

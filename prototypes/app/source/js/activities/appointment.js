@@ -310,10 +310,8 @@ function ViewModel(app) {
             case -2:
                 return newFreeAppointment();
             case -3:
-                this.editMode(true);
                 return newEventAppointment();
             case -4:
-                this.editMode(true);
                 return newBookingAppointment();
             case -5:
                 return loadingAppointment;
