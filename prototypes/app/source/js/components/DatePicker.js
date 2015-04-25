@@ -48,9 +48,7 @@ var DatePicker = function(element, options) {
     this.picker = $(DPGlobal.template)
                         .appendTo(this.isPlaceholder ? this.element : 'body')
                         .on('click tap', $.proxy(this.click, this));
-    // TODO: to review if 'container' class can be avoided, so in placeholder mode gets optional
-    // if is wanted can be placed on the placeholder element (or container-fluid or nothing)
-    this.picker.addClass(this.isPlaceholder ? 'container' : 'dropdown-menu');
+    this.picker.addClass(this.isPlaceholder ? '' : 'dropdown-menu');
     
     if (this.isPlaceholder) {
         this.picker.show();

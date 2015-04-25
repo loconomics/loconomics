@@ -1993,8 +1993,8 @@ body.use-backdrop:before {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 /* Decoration */
-  -webkit-box-shadow: 0px 1px 4px 0px #000;
-  box-shadow: 0px 1px 4px 0px #000;
+  -webkit-box-shadow: 0 0 6px -1px #000;
+  box-shadow: 0 0 6px -1px #000;
 /* Only allowed 'span' elements as childs or link buttons */
 /* Button link */
 }
@@ -2033,10 +2033,13 @@ body.use-backdrop:before {
   right: 10px;
   z-index: 100;
   top: 94px;
+  min-width: 250px;
+  max-width: 500px;
+  margin: 0 auto;
 /* pop-up decoration */
   background: #fff;
-  -webkit-box-shadow: 0 0 4px 0 #000;
-  box-shadow: 0 0 4px 0 #000;
+  -webkit-box-shadow: 0 0 6px -1px #000;
+  box-shadow: 0 0 6px -1px #000;
   -webkit-border-radius: 4px;
   border-radius: 4px;
 /* repositioning the pop-arrow */
@@ -2057,18 +2060,18 @@ body.use-backdrop:before {
   pointer-events: none;
 }
 
-/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 91 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:after {
   left: 50%;
 }
 
-/* line 89 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 94 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:before {
   left: 50%;
   margin-left: -1px;
 }
 
-/* line 100 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 105 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker.is-visible {
   opacity: 1;
   -ms-filter: none;
@@ -2081,7 +2084,7 @@ body.use-backdrop:before {
   pointer-events: all;
 }
 
-/* line 107 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\appointment.styl */
+/* line 112 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\appointment.styl */
 
 /* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
