@@ -171,6 +171,13 @@ function ViewModel(app) {
 
     this.currentDate = ko.observable(getDateWithoutTime());
     var fullDayFree = [Appointment.newFreeSlot({ date: this.currentDate() })];
+    // The 'free' event must update with any change in currentDate
+    this.currentDate.subscribe(function(date) {
+        if (date) {
+            fullDayFree[0].startTime(date);
+            fullDayFree[0].endTime(date);
+        }
+    }, this);
 
     // slotsSource save the data as processed by a request of 
     // data because a date change.
