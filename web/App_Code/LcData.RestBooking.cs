@@ -26,6 +26,10 @@ public static partial class LcData
                 B.UpdatedDate,
                 B.BookingStatusID,
                 B.PricingAdjustmentApplied,
+                B.PreNotesToClient,
+                B.PreNotesToSelf,
+                B.PostNotesToClient,
+                B.PostNotesToSelf,
 
                 R.BookingTypeID,
                 R.ProviderUserID,
@@ -278,6 +282,10 @@ public static partial class LcData
             public DateTime updatedDate;
             public int bookingStatusID;
             public bool pricingAdjustmentApplied;
+            public string preNotesToClient;
+            public string preNotesToSelf;
+            public string postNotesToClient;
+            public string postNotesToSelf;
 
             public bool reviewedByFreelancer;
             public bool reviewedByCustomer;
@@ -286,7 +294,7 @@ public static partial class LcData
         }
         #endregion
 
-        private static RestBooking CreateRestBookingObject(dynamic booking, Database db)
+        private static RestBooking CreateRestBookingObject(dynamic booking, Database db, int forUserID = 0)
         {
             if (booking == null) return null;
 
@@ -320,6 +328,11 @@ public static partial class LcData
                 updatedDate = booking.UpdatedDate,
                 bookingStatusID = booking.BookingStatusID,
                 pricingAdjustmentApplied = booking.PricingAdjustmentApplied,
+
+                preNotesToClient = booking.PreNotesToClient,
+                preNotesToSelf = (forUserID > 0 && forUserID == booking.ProviderUserID ? booking.PreNotesToSelf : ""),
+                postNotesToClient = booking.PostNotesToClient,
+                postNotesToSelf = (forUserID > 0 && forUserID == booking.ProviderUserID ? booking.PostNotesToSelf : ""),
 
                 reviewedByFreelancer = booking.ReviewedByProvider,
                 reviewedByCustomer = booking.ReviewedByCustomer,
@@ -372,7 +385,7 @@ public static partial class LcData
                 return CreateRestBookingObject(db.QuerySingle(sqlRestSelectBooking + @"
                     WHERE B.BookingID = @0
                         AND (R.CustomerUserID = @1 OR R.ProviderUserID = @1)
-                ", BookingID, UserID), db);
+                ", BookingID, UserID), db, UserID);
             }
         }
         public static IEnumerable<RestBooking> GetRestBookings(int UserID, DateTime StartTime, DateTime EndTime)
@@ -387,7 +400,7 @@ public static partial class LcData
                          AND
                         E.StartTime < @2
                 ", UserID, StartTime, EndTime).Select<dynamic, RestBooking>(booking => {
-                     return CreateRestBookingObject(booking, db);
+                     return CreateRestBookingObject(booking, db, UserID);
                 }).ToList();
             }
         }
