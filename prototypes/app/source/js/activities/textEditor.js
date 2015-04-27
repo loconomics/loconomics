@@ -27,13 +27,10 @@ var A = Activity.extends(function TextEditorActivity() {
         target: this.viewModel,
         event: 'saved',
         handler: function() {
-            if (this.requestInfo) {
-                // Update the info with the new text
-                this.requestInfo.text = this.viewModel.text();
-            }
-
+            // Update the info with the new text
+            this.requestData.text = this.viewModel.text();
             // and pass it back
-            this.app.shell.goBack(this.requestInfo);
+            this.app.shell.goBack(this.requestData);
         }.bind(this)
     });
     
@@ -43,7 +40,7 @@ var A = Activity.extends(function TextEditorActivity() {
         event: 'cancel',
         handler: function() {
             // return, nothing changed
-            this.app.shell.goBack();
+            this.app.shell.goBack(this.requestData);
         }.bind(this)
     });
 });
@@ -54,13 +51,13 @@ A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     
     // Set navigation title or nothing
-    this.navBar.leftAction().text(options.title || '');
+    this.navBar.leftAction().text(this.requestData.title || '');
     
     // Field header
-    this.viewModel.headerText(options.header);
-    this.viewModel.text(options.text);
-    if (options.rowsNumber)
-        this.viewModel.rowsNumber(options.rowsNumber);
+    this.viewModel.headerText(this.requestData.header);
+    this.viewModel.text(this.requestData.text);
+    if (this.requestData.rowsNumber)
+        this.viewModel.rowsNumber(this.requestData.rowsNumber);
         
     // Inmediate focus to the textarea for better usability
     this.textarea.focus();

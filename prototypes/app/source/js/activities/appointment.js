@@ -123,29 +123,21 @@ A.prototype.show = function show(options) {
 
     this.viewModel.setCurrent(date, id)
     .then(function() {
-        // If the request includes an appointment plain object, that's an
-        // in-editing appointment so put it in place (to restore a previous edition)
-        /*if (this.requestData.appointment) {
-            this.viewModel.editMode(true);
-            this.viewModel.editedAppointment().model.updateWith(this.requestData.appointment);
+        // The card component needs to be updated on load
+        // with any option passed to the activity since the component
+        // is able to to interact with other activities it has requested
+        // (to request information edition)
+        var cardApi = this.viewModel.appointmentCardView();
+        if (cardApi) {
+            cardApi.passIn(this.requestData);
         }
-        else {
-            // On any other case, and to prevent bad editMode on entering, 
-            // do a discard taht sets editMode off
-            this.viewModel.cancel();
-        }*/
 
         // If there are options (may not be on startup or
         // on cancelled edition).
         /*if (options !== null) {
 
             var booking = this.viewModel.currentAppointment();
-            // It comes back from the textEditor.
-            if (options.request === 'textEditor' && booking) {
-
-                booking[options.field](options.text);
-            }
-            else if (options.selectClient === true && booking) {
+            if (options.selectClient === true && booking) {
 
                 booking.client(options.selectedClient);
             }
@@ -206,6 +198,10 @@ function ViewModel(app) {
     this.editMode = ko.observable(false);
     this.isLoading = ko.observable(false);
     this.isSaving = ko.observable(false);
+    
+    // To access the component API we use next observable,
+    // updated by the component with its view
+    this.appointmentCardView = ko.observable(null);
 
     var loadingAppointment = new Appointment({
         id: 0,

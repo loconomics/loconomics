@@ -4,8 +4,8 @@
     <div id="calendarAppointmentView" class="full-height row CardsDeck CardsDeck--dotsSlider"
        data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
         
-        <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isSaving: isSaving, app: app"></app-appointment-card>
-        
+        <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isSaving: isSaving, app: app, api: appointmentCardView"></app-appointment-card>
+
         <div class="CardsDeck-dots" data-bind="foreach: appointments">
             <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
         </div>

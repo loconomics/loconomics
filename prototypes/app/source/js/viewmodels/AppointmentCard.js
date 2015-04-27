@@ -11,6 +11,7 @@ var ko = require('knockout'),
     getDateWithoutTime = require('../utils/getDateWithoutTime');
 
 function AppointmentCardViewModel(params) {
+    /*jshint maxstatements: 30*/
 
     this.sourceItem = getObservable(params.sourceItem);
     var app = this.app = ko.unwrap(params.app);
@@ -207,6 +208,42 @@ function AppointmentCardViewModel(params) {
             text: this.item()[field]()
         });
     }.bind(this);
+    
+    // pass this ready model view as an API to the outside
+    if (typeof(params.api) === 'function') {
+        params.api(this);
+    }
 }
+
+/**
+    It manages incoming data provided by external activities given
+    the requestData received by the activity hosting this view instance.
+    Used to manage the data returned by calls to edit data in
+    external activities.
+**/
+AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
+    // If the request includes an appointment plain object, that's an
+    // in-editing appointment so put it in place (to restore a previous edition)
+    if (requestData.appointment) {
+        // Set the edit mode (it performs any required
+        // set-up if we are not still in edit mode).
+        this.editMode(true);
+        // Sets the data
+        this.item()
+        .model.updateWith(requestData.appointment);
+    }
+    else {
+        // On any other case, and to prevent a bad editMode state,
+        // set off edit mode discarding unsaved data:
+        this.cancel();
+    }
+    
+    /// Manage specific single data from externally provided
+    
+    // It comes back from the textEditor.
+    if (requestData.request === 'textEditor') {
+        this.item()[requestData.field](requestData.text);
+    }
+};
 
 module.exports = AppointmentCardViewModel;
