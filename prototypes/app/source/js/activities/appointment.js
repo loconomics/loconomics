@@ -131,38 +131,6 @@ A.prototype.show = function show(options) {
         if (cardApi) {
             cardApi.passIn(this.requestData);
         }
-
-        // If there are options (may not be on startup or
-        // on cancelled edition).
-        /*if (options !== null) {
-
-            var booking = this.viewModel.currentAppointment();
-            if (options.selectClient === true && booking) {
-
-                booking.client(options.selectedClient);
-            }
-            else if (typeof(options.selectedDatetime) !== 'undefined' && booking) {
-
-                booking.startTime(options.selectedDatetime);
-                // TODO Calculate the endTime given an appointment duration, retrieved from the
-                // selected service
-                //var duration = booking.pricing && booking.pricing.duration;
-                // Or by default (if no pricing selected or any) the user preferred
-                // time gap
-                //duration = duration || user.preferences.timeSlotsGap;
-                // PROTOTYPE:
-                var duration = 60; // minutes
-                booking.endTime(moment(booking.startTime()).add(duration, 'minutes').toDate());
-            }
-            else if (options.selectServices === true && booking) {
-
-                booking.services(options.selectedServices);
-            }
-            else if (options.selectLocation === true && booking) {
-
-                booking.location(options.selectedLocation);
-            }
-        }*/
     }.bind(this));
 };
 
@@ -428,7 +396,8 @@ function ViewModel(app) {
     this.setCurrent = function setCurrent(date, id) {
         // NOTE: Do nothing if is already in loading process
         // TODO: review if is better to cancel current and continue or
-        // must be queued for when it's finish. If set as 'allow concurrent'
+        // just the current queue for when it's finish.
+        // If set as 'allow concurrent'
         // the isLoading may be not enough to control the several loadings
         promiseSetCurrent = promiseSetCurrent.then(function() {
             return _setCurrent(date, id);

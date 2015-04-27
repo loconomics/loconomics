@@ -3,7 +3,8 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
+var $ = require('jquery'),
+    ko = require('knockout'),
     Activity = require('../components/Activity'),
     textSearch = require('../utils/textSearch');
 
@@ -43,7 +44,7 @@ var A = Activity.extends(function ClientsActivity() {
                 theSelectedClient) {
 
                 // Pass the selected client in the info
-                this.requestData.selectedClient = theSelectedClient;
+                this.requestData.selectedClientID = theSelectedClient.customerUserID();
                 // And go back
                 this.app.shell.goBack(this.requestData);
                 // Last, clear requestData
@@ -60,6 +61,26 @@ A.prototype.show = function show(state) {
     
     // On every show, search gets reseted
     this.viewModel.searchText('');
+    this.viewModel.requestData = this.requestData;
+    
+    // Check if it comes from a clientEditor that
+    // received the flag 'returnNewAsSelected' and a 
+    // clientID: we were in selection mode->creating client->must
+    // return the just created client to the previous page
+    if (state.returnNewAsSelected === true &&
+        state.clientID) {
+        
+        // perform an activity change but allow the current
+        // to stop first
+        setTimeout(function() {
+            this.requestData.selectedClientID = state.clientID;
+            // And go back
+            this.app.shell.goBack(this.requestData);
+        }.bind(this), 1);
+        
+        // avoid the rest operations
+        return;
+    }
     
     // Set selection:
     this.viewModel.isSelectionMode(state.selectClient === true);
@@ -202,9 +223,11 @@ function ViewModel(app) {
     **/
     this.addRemoteClient = function(client) {
         var data = client.model && client.model.toPlainObject() || client;
-        app.shell.go('clientEditor', {
-            presetData: data
+        var request = $.extend({}, this.requestData, {
+            presetData: data,
+            returnNewAsSelected: this.isSelectionMode()
         });
+        app.shell.go('clientEditor', request);
         return false;
     }.bind(this);
     
@@ -213,13 +236,14 @@ function ViewModel(app) {
         search text so can be used as initial name/email/phone
     **/
     this.addNew = function() {
-        app.shell.go('clientEditor', {
-            newForSearchText: this.searchText()
+        var request = $.extend({}, this.requestData, {
+            newForSearchText: this.searchText(),
+            returnNewAsSelected: this.isSelectionMode()
         });
+        app.shell.go('clientEditor', request);
         return false;
     }.bind(this);
-    
-    
+
     /// Selections
     
     this.selectedClient = ko.observable(null);

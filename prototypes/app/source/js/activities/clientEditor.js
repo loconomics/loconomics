@@ -37,6 +37,20 @@ var A = Activity.extends(function ClientEditionActivity() {
             }
         }.bind(this)
     });
+    
+    // Special treatment of the save operation
+    this.viewModel.onSave = function(clientID) {
+        if (this.requestData.returnNewAsSelected === true) {
+            // Go to previous activity that required
+            // to select a client
+            this.requestData.clientID = clientID;
+            this.app.shell.goBack(this.requestData);
+        }
+        else {
+            // Regular save
+            this.app.successSave();
+        }
+    }.bind(this);
 });
 
 exports.init = A.init;
@@ -228,10 +242,9 @@ function ViewModel(app) {
             this.client().model.updateWith(serverData);
             // Push version so it appears as saved
             this.clientVersion().push({ evenIfObsolete: true });
-            
-            // On save, auto go back
-            // NOTE: if auto go back is disabled, the URL must update to match the new ID
-            app.successSave();
+          
+            // Special save, function provided by the activity on set-up
+            this.onSave(serverData.customerUserID);
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({

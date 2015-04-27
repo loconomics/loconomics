@@ -13,7 +13,7 @@ module.exports = function AppointmentView(appointment, app) {
         var b = this.sourceBooking();
         if (!b) return null;
         
-        var cid = b.bookingRequest().customerUserID();
+        var cid = this.customerUserID();
         if (cid) {
             return app.model.customers.getObservableItem(cid, true)();
         }
@@ -24,7 +24,7 @@ module.exports = function AppointmentView(appointment, app) {
         var b = this.sourceBooking();
         if (!b) return null;
         
-        var aid = b.bookingRequest().addressID(),
+        var aid = this.addressID(),
             jid = b.bookingRequest().jobTitleID();
         if (aid && jid) {
             return app.model.serviceAddresses.getObservableItem(jid, aid, true)();
