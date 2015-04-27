@@ -47,15 +47,16 @@ var A = Activity.extends(function DatetimePickerActivity() {
     this.registerHandler({
         target: this.viewModel.selectedDatetime,
         handler: function (datetime) {
-            // We have a request
-            if (this.requestData) {
-                // Pass the selected datetime in the info
-                this.requestData.selectedDatetime = datetime;
-                // And go back
-                this.app.shell.goBack(this.requestData);
-                // Last, clear requestData
-                this.requestData = null;
+            if (!this.requestData ||
+                !datetime) {
+                return;
             }
+            // Pass the selected datetime in the info
+            this.requestData.selectedDatetime = datetime;
+            // And go back
+            this.app.shell.goBack(this.requestData);
+            // Last, clear requestData
+            this.requestData = null;
         }.bind(this)
     });
     
@@ -70,8 +71,8 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
-    // TODO: text from outside or depending on state?
-    this.viewModel.headerText('Select a start time');
+    var header = this.requestData.headerText;
+    this.viewModel.headerText(header || 'Select date and time');
 };
 
 A.prototype.bindDateData = function bindDateData(date) {
@@ -121,6 +122,8 @@ function ViewModel() {
                 ends: new Time(datePart, 24, 0)
             }
         ];
+        // TODO Empty slots must appear with
+        // 'empty' message rather than excluded
         var slots = this.slots().sort();
         slots.forEach(function(slot) {
             groups.forEach(function(group) {

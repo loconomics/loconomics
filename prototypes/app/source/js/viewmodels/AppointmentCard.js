@@ -5,6 +5,7 @@
 **/
 
 var ko = require('knockout'),
+    moment = require('moment'),
     getObservable = require('../utils/getObservable'),
     AppointmentView = require('../viewmodels/AppointmentView'),
     ModelVersion = require('../utils/ModelVersion'),
@@ -158,7 +159,8 @@ function AppointmentCardViewModel(params) {
     this.pickDateTime = function pickDateTime() {
 
         editFieldOn('datetimePicker', {
-            selectedDatetime: this.item().startTime()
+            selectedDatetime: this.item().startTime(),
+            headerText: 'Select the start time'
         });
     }.bind(this);
 
@@ -247,16 +249,29 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     if (requestData.selectClient === true) {
         this.item().customerUserID(requestData.selectedClientID);
     }
+    if (typeof(requestData.selectedDatetime) !== 'undefined') {
+        this.item().startTime(requestData.selectedDatetime);
+        // TODO Calculate the endTime given an appointment duration, retrieved
+        // from the selected service
+        var calculateEndTime = function calculateEndTime() {
+            var duration = this.item().serviceDurationMinutes();
+            this.item().endTime(
+                moment(this.item().startTime())
+                .add(duration, 'minutes').toDate()
+            );
+        }.bind(this);
+        // Calculate now
+        calculateEndTime();
+        // And every time duration changes
+        this.item().serviceDurationMinutes
+        .subscribe(calculateEndTime);
+    }
     
         // If there are options (may not be on startup or
         // on cancelled edition).
         /*
 
-            var booking = this.viewModel.currentAppointment();
-            if (options.selectClient === true && booking) {
 
-                booking.client(options.selectedClient);
-            }
             else if (typeof(options.selectedDatetime) !== 'undefined' && booking) {
 
                 booking.startTime(options.selectedDatetime);

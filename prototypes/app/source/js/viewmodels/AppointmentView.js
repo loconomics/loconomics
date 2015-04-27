@@ -59,6 +59,14 @@ module.exports = function AppointmentView(appointment, app) {
         }).join(', ');
     }, appointment);
     
+    // TODO Review for any change of compute the full service duration
+    appointment.serviceDurationMinutes = ko.computed(function() {
+        var pricing = this.pricingWithInfo();
+        return pricing.reduce(function(prev, service) {
+            return prev + service.freelancerPricing().serviceDurationMinutes();
+        }, 0);
+    }, appointment);
+    
     // Price update on services changes
     // TODO Is not complete for production, review with the
     // full pricingEstimate logic

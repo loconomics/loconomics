@@ -25,7 +25,7 @@ function Appointment(values) {
         // Fields specific for bookings
         price: 0,
         // Actual bookings fields to use on post/put
-        customerUserID: null,        
+        customerUserID: null,
         pricing: [],
         addressID: null,
         preNotesToClient: null,
