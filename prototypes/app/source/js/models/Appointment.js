@@ -3,10 +3,8 @@
 
 var ko = require('knockout'),
     Model = require('./Model'),
-    Client = require('./Customer'),
-    Location = require('./Location'),
-    Service = require('./Service'),
-    moment = require('moment');
+    moment = require('moment'),
+    PricingEstimateDetail = require('./PricingEstimateDetail');
    
 function Appointment(values) {
     
@@ -20,16 +18,16 @@ function Appointment(values) {
         startTime: null,
         endTime: null,
         
-        // Event summary:
+        // CommonEvent fields:
         summary: 'New booking',
         description: null,
-        
-        subtotalPrice: 0,
-        feePrice: 0,
-        pfeePrice: 0,
-        totalPrice: 0,
-        ptotalPrice: 0,
-        
+
+        // Fields specific for bookings
+        price: 0,
+        // Actual bookings fields to use on post/put
+        customerUserID: null,        
+        pricing: [],
+        addressID: null,
         preNotesToClient: null,
         postNotesToClient: null,
         preNotesToSelf: null,
@@ -40,32 +38,13 @@ function Appointment(values) {
         //sourceBookingRequest, maybe future?
     }, values);
     
-    values = values || {};
+    // Pricing is a list of PricingEstimateDetail models
+    if (values && Array.isArray(values.pricing)) {
+        this.pricing(values.pricing.map(function(detail) {
+            return new PricingEstimateDetail(detail);
+        }));
+    }
 
-    this.client = ko.observable(values.client ? new Client(values.client) : null);
-
-    this.location = ko.observable(new Location(values.location));
-    this.locationSummary = ko.computed(function() {
-        return this.location().singleLine();
-    }, this);
-    
-    this.services = ko.observableArray((values.services || []).map(function(service) {
-        return (service instanceof Service) ? service : new Service(service);
-    }));
-    this.servicesSummary = ko.computed(function() {
-        return this.services().map(function(service) {
-            return service.name();
-        }).join(', ');
-    }, this);
-    
-    // Price update on services changes
-    // TODO Is not complete for production
-    this.services.subscribe(function(services) {
-        this.ptotalPrice(services.reduce(function(prev, cur) {
-            return prev + cur.price();
-        }, 0));
-    }.bind(this));
-    
     // Smart visualization of date and time
     this.displayedDate = ko.pureComputed(function() {
         
@@ -151,17 +130,23 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     var apt = Appointment.fromCalendarEvent(event);
     
     // Include booking in apt
-    // TODO Needs review, maybe after redone appointment:
+    apt.customerUserID(booking.bookingRequest().customerUserID());
+    apt.addressID(booking.bookingRequest().addressID());
+    apt.pricing(booking.bookingRequest().pricingEstimate().details());
+    apt.preNotesToClient(booking.preNotesToClient());
+    apt.postNotesToClient(booking.postNotesToClient());
+    apt.preNotesToSelf(booking.preNotesToSelf());
+    apt.postNotesToSelf(booking.postNotesToSelf());
+
     var prices = booking.bookingRequest() && booking.bookingRequest().pricingEstimate();
     if (prices) {
-        apt.subtotalPrice(prices.subtotalPrice());
-        apt.feePrice(prices.feePrice());
-        apt.pfeePrice(prices.pFeePrice());
-        apt.totalPrice(prices.totalPrice());
-        apt.ptotalPrice(prices.totalPrice() - prices.pFeePrice());
+        // TODO Setting freelancer price, for customers must be
+        // just totalPrice()
+        apt.price(prices.totalPrice() - prices.pFeePrice());
     }
+
     apt.sourceBooking(booking);
-    
+
     return apt;
 };
 

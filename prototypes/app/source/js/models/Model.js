@@ -28,6 +28,48 @@ var ko = require('knockout');
 ko.mapping = require('knockout.mapping');
 var $ = require('jquery');
 var clone = function(obj) { return $.extend(true, {}, obj); };
+var cloneValue = function(val, deepCopy) {
+    /*jshint maxcomplexity: 10*/
+    if (typeof(val) === 'object') {
+        // A Date object is a special case: even being
+        // an object, treat as a basic type, being copied as
+        // a new instance independent of the deepCopy option
+        if (val instanceof Date) {
+            // A date clone
+            return new Date(val);
+        }
+        else if (deepCopy === true) {
+            if (val instanceof Array) {
+                return val.map(function(item) {
+                    return cloneValue(item, true);
+                });
+            }
+            else if (val === null) {
+                return null;
+            }
+            else if (val && val.model instanceof Model) {
+                // A model copy
+                return val.model.toPlainObject(deepCopy);
+            }
+            else {
+                // Plain 'standard' object clone
+                return clone(val);
+            }
+        }
+        else if (deepCopy === false) {
+            // Shallow copy
+            return val;
+        }
+        // On else, left undefined, no references, no clones,
+        // discarded value
+        return undefined;
+    }
+    else {
+        // A basic type value is already copied/cloned by javascript
+        // on every assignment
+        return val;
+    }
+};
 
 function Model(modelObject) {
     
@@ -211,34 +253,9 @@ Model.prototype.toPlainObject = function toPlainObject(deepCopy) {
         modelObj = this.modelObject;
 
     function setValue(property, val) {
-        /*jshint maxcomplexity: 10*/
-        
-        if (typeof(val) === 'object') {
-            if (deepCopy === true) {
-                if (val instanceof Date) {
-                    // A date clone
-                    plain[property] = new Date(val);
-                }
-                else if (val && val.model instanceof Model) {
-                    // A model copy
-                    plain[property] = val.model.toPlainObject(deepCopy);
-                }
-                else if (val === null) {
-                    plain[property] = null;
-                }
-                else {
-                    // Plain 'standard' object clone
-                    plain[property] = clone(val);
-                }
-            }
-            else if (deepCopy === false) {
-                // Shallow copy
-                plain[property] = val;
-            }
-            // On else, do nothing, no references, no clones
-        }
-        else {
-            plain[property] = val;
+        var clonedValue = cloneValue(val, deepCopy);
+        if (typeof(clonedValue) !== 'undefined') {
+            plain[property] = clonedValue;
         }
     }
 

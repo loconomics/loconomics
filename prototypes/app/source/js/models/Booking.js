@@ -5,7 +5,8 @@
  **/
 'use strict';
 
-var Model = require('./Model');
+var Model = require('./Model'),
+    BookingRequest = require('./BookingRequest');
 
 function Booking(values) {
     
@@ -22,6 +23,11 @@ function Booking(values) {
         bookingStatusID: null,
         pricingAdjustmentApplied: false,
         
+        preNotesToClient: null,
+        postNotesToClient: null,
+        preNotesToSelf: null,
+        postNotesToSelf: null,
+        
         reviewedByFreelancer: false,
         reviewedByCustomer: false,
         
@@ -35,84 +41,3 @@ function Booking(values) {
 }
 
 module.exports = Booking;
-
-function BookingRequest(values) {
-    
-    Model(this);
-
-    this.model.defProperties({
-        bookingRequestID: 0,
-        bookingTypeID: 0,
-        customerUserID: 0,
-        freelancerUserID: 0,
-        jobTitleID: 0,
-        pricingEstimateID: 0,
-        bookingRequestStatusID: 0,
-        
-        specialRequests: null,
-        preferredDateID: null,
-        alternativeDate1ID: null,
-        alternativeDate2ID: null,
-        addressID: null,
-        cancellationPolicyID: null,
-        instantBooking: false,
-        
-        createdDate: null,
-        updatedDate: null,
-        
-        pricingEstimate: null // PricingEstimate
-    }, values);
-    
-    this.pricingEstimate(new PricingEstimate(values && values.pricingEstimate || {}));
-}
-
-function PricingEstimate(values) {
-    
-    Model(this);
-
-    this.model.defProperties({
-        pricingEstimateID: 0,
-        pricingEstimateRevision: 0,
-        serviceDurationHours: null,
-        firstSessionDurationHours: null,
-        subtotalPrice: null,
-        feePrice: null,
-        totalPrice: null,
-        pFeePrice: null,
-        subtotalRefunded: null,
-        feeRefunded: null,
-        totalRefunded: null,
-        dateRefunded: null,
-        
-        createdDate: null,
-        updatedDate: null,
-        
-        details: []
-    }, values);
-    
-    if (values && Array.isArray(values.details)) {
-        this.details(values.details.map(function(detail) {
-            return new PricingEstimateDetail(detail);
-        }));
-    }
-}
-
-function PricingEstimateDetail(values) {
-    
-    Model(this);
-
-    this.model.defProperties({
-        freelancerPricingID: 0,
-        freelancerPricingDataInput: null,
-        customerPricingDataInput: null,
-        hourlyPrice: null,
-        subtotalPrice: null,
-        feePrice: null,
-        totalPrice: null,
-        serviceDurationHours: null,
-        firstSessionDurationHours: null,
-        
-        createdDate: null,
-        updatedDate: null
-    }, values);
-}

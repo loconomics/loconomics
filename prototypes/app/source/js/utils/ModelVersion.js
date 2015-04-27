@@ -22,7 +22,7 @@ function ModelVersion(original) {
     
     // Create version
     // (updateWith takes care to set the same dataTimestamp)
-    this.version = original.model.clone();
+    this.version = original.model.clone(null, true);
     
     // Computed that test equality, allowing being notified of changes
     // A rateLimit is used on each to avoid several syncrhonous notifications.

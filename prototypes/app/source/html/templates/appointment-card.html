@@ -30,7 +30,7 @@
             </li>
         </ul>
         
-        <ul class="list-unstyled" data-bind="visible: item().sourceEvent() && !item().sourceBooking()">
+        <ul class="list-unstyled" data-bind="visible: isEvent()">
             <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'summary') }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                 <span class="AppointmentCard-data">
@@ -41,14 +41,14 @@
             </li>
         </ul>
         
-        <ul class="list-unstyled" data-bind="visible: item().sourceBooking()">
+        <ul class="list-unstyled" data-bind="visible: isBooking()">
             <li data-bind="event: { tap: editMode() && pickClient }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
                 <span class="AppointmentCard-data">
-                    <span data-bind="text: (item().client() && item().client().fullName())"></span>
-                    <span data-bind="visible: editMode() && !item().client()" class="AppointmentCard-placeholderLabel">Select/Add client</span>
+                    <span data-bind="text: item().customer() && item().customer().fullName()"></span>
+                    <span data-bind="visible: editMode() && !item().customer()" class="AppointmentCard-placeholderLabel">Select/Add client</span>
                 </span>
-                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().client(), 'glyphicon-plus': !item().client()}"></span></span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().customer(), 'glyphicon-plus': !item().customer()}"></span></span>
             </li>
             <li data-bind="event: { tap: editMode() && pickService }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
@@ -60,16 +60,16 @@
             </li>
             <li data-bind="visible: !isNew(), event: { tap: editMode() && changePrice }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
-                <span class="AppointmentCard-data" data-bind="text: item().ptotalPrice, format: { type: 'number', format: '$0,0.00' }"></span>
-                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().ptotalPrice(), 'glyphicon-plus': !item().ptotalPrice()}"></span></span>
+                <span class="AppointmentCard-data" data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().price(), 'glyphicon-plus': !item().price()}"></span></span>
             </li>
             <li data-bind="event: { tap: editMode() && pickLocation }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
                 <span class="AppointmentCard-data">
-                    <span data-bind="text: item().locationSummary"></span>
-                    <span data-bind="visible: editMode() && !item().locationSummary()" class="AppointmentCard-placeholderLabel">Select/Add location</span>
+                    <span data-bind="text: item().addressSummary"></span>
+                    <span data-bind="visible: editMode() && !item().addressSummary()" class="AppointmentCard-placeholderLabel">Select/Add location</span>
                 </span>
-                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().locationSummary(), 'glyphicon-plus': !item().locationSummary()}"></span></span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().addressSummary(), 'glyphicon-plus': !item().addressSummary()}"></span></span>
             </li>
 
             <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'preNotesToClient') }">

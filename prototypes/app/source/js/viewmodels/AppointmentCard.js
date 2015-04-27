@@ -6,7 +6,7 @@
 
 var ko = require('knockout'),
     getObservable = require('../utils/getObservable'),
-    //Appointment = require('../models/Appointment'),
+    AppointmentView = require('../viewmodels/AppointmentView'),
     ModelVersion = require('../utils/ModelVersion'),
     getDateWithoutTime = require('../utils/getDateWithoutTime');
 
@@ -20,7 +20,7 @@ function AppointmentCardViewModel(params) {
     
     this.isSaving = ko.observable(false);
     
-    this.item = ko.observable(this.sourceItem());
+    this.item = ko.observable(AppointmentView(this.sourceItem(), app));
     
     this.currentID = ko.pureComputed(function() {
         var it = this.item();
@@ -35,6 +35,15 @@ function AppointmentCardViewModel(params) {
         var id = this.currentID();
         return id === -3 || id === -4;
     }, this);
+    
+    this.isBooking = ko.computed(function() {
+        return this.item() && this.item().sourceBooking();
+    }, this);
+    
+    /* Return true if is an event object but not a booking */
+    this.isEvent = ko.computed(function() {
+        return this.item() && this.item().sourceEvent() && !this.item().sourceBooking();
+    }, this);
 
     /**
         If the sourceItem changes, is set as the item value
@@ -42,10 +51,10 @@ function AppointmentCardViewModel(params) {
         editMode to false
     **/
     this.sourceItem.subscribe(function(sourceItem) {
-        this.item(sourceItem);
+        this.item(AppointmentView(sourceItem, app));
         this.editedVersion(null);
         this.editMode(false);
-        
+
         // If the new item is a new one, set edit mode
         if (this.isNew()) {
             this.editMode(true);
@@ -66,8 +75,10 @@ function AppointmentCardViewModel(params) {
         if (isEdit) {
             // Create and set a version to be edited
             version = new ModelVersion(this.sourceItem());
+            version.version.sourceEvent(this.sourceItem().sourceEvent());
+            version.version.sourceBooking(this.sourceItem().sourceBooking());
             this.editedVersion(version);
-            this.item(version.version);
+            this.item(AppointmentView(version.version, app));
 
             // Setup auto-saving
             version.on('push', function(success) {

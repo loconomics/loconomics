@@ -205,7 +205,10 @@ function ListRemoteModel(settings) {
             // minor cases when a new item is not still in the cache if linked
             // from other app data). And keep updated list cache with that
             // items lookup
-            if (!cacheItem) throw new Error('Not Found');
+            if (!cacheItem) {
+                console.warn('ListRemoteModel Not found', itemID, settings.Model);
+                throw new Error('Not Found');
+            }
             return cacheItem.item;
         });
     };
