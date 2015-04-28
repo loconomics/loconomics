@@ -1815,10 +1815,11 @@
                   </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().servicesSummary(), 'glyphicon-plus': !item().servicesSummary()}"></span></span>
               </li>
-              <li data-bind="visible: !isNew(), event: { tap: editMode() && changePrice }">
+              <li data-bind="event: { tap: editMode() && changePrice }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
                   <span class="AppointmentCard-data" data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().price(), 'glyphicon-plus': !item().price()}"></span></span>
+                  <!--<span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().price(), 'glyphicon-plus': !item().price()}"></span></span>
+                  -->
               </li>
               <li data-bind="event: { tap: editMode() && pickLocation }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
