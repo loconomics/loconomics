@@ -295,6 +295,32 @@
         </div>
       </form>
     </div>
+    <!-- Activity addresses -->
+    <div class="container-fluid" data-activity="addresses" data-bind="css: { 'is-loading': isLoading }">
+       <h2 class="SectionTitle">
+      <span data-bind="visible: headerText, text: headerText">
+        Addresses
+      </span>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+
+      <div class="ListView ListView--twolines ListView--textualmarker" data-bind="template: { name: 'job-title-tile-template', foreach: userJobProfile }"></div>
+      <div class="ListView ListView--twolines" data-bind="foreach: addresses">
+        <div class="ListView-item">
+          <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
+          data-bind="event: { tap: $root.selectAddress }">
+          <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
+        </a>
+ <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress }"
+          role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
+
+        </div>
+      </div>
+      <div class="isolated" data-bind="visible: !isSelectionMode()">
+        <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/customer/"
+        data-bind="attr: {'data-href': '#!addressEditor/customer/' + customerUserID()}">Add a client location</button>
+      </div>
+    </div>
     <!-- Activity appointment -->
     <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
@@ -1372,18 +1398,8 @@
     </h2>
 
       <div class="ListView ListView--twolines ListView--textualmarker">
-        <!-- ko foreach: userJobProfile -->
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/jobtitles/" data-bind="attr: { href: '/jobtitles/' + jobTitleID() }"
-          class="btn btn-link btn-block ListView-item-content">
-                    <p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p>
-                </a>
- <a href="/jobtitles/" data-bind="attr: { href: '/jobtitles/' + jobTitleID() }"
-          class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
+        <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile
+        } -->
         <!-- /ko -->
         <div class="ListView-item">
           <div class="ListView-item-marker">
@@ -1521,6 +1537,11 @@
       <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
   </h2>
 
+      <div class="ListView ListView--twolines ListView--textualmarker" data-bind="visible: jobTitleID() === 0, with: jobTitles">
+        <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile
+        } -->
+        <!-- /ko -->
+      </div>
       <div id="addressesListView">
         <div class="ListView ListView--twolines" data-bind="foreach: addresses">
           <div class="ListView-item">
@@ -1733,19 +1754,6 @@
               <h2 data-bind="text: item().summary()"></h2>
               <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
           </div>
-          <ul class="list-unstyled" data-bind="visible: currentID() > 0">
-              <li data-bind="event: { tap: editMode() && pickDateTime }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="visible: item().startTime()">
-                          <span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
-                          <span data-bind="text: item().displayedTimeRange()"></span>
-                      </span>
-                      <span data-bind="visible: editMode() && !item().startTime()" class="AppointmentCard-placeholderLabel">Select date/time</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
-              </li>
-          </ul>
           <ul class="list-unstyled" data-bind="visible: currentID() === -2 || currentID() === -1">
               <li>
                   <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-4"
@@ -1758,6 +1766,17 @@
           </ul>
           
           <ul class="list-unstyled" data-bind="visible: isEvent()">
+              <li data-bind="event: { tap: editMode() && pickDateTime }">
+                  <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
+                  <span class="AppointmentCard-data">
+                      <span data-bind="visible: item().startTime()">
+                          <span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
+                          <span data-bind="text: item().displayedTimeRange()"></span>
+                      </span>
+                      <span data-bind="visible: editMode() && !item().startTime()" class="AppointmentCard-placeholderLabel">Select date/time</span>
+                  </span>
+                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
+              </li>
               <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'summary') }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                   <span class="AppointmentCard-data">
@@ -1769,6 +1788,17 @@
           </ul>
           
           <ul class="list-unstyled" data-bind="visible: isBooking()">
+              <li data-bind="event: { tap: editMode() && pickDateTime }">
+                  <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
+                  <span class="AppointmentCard-data">
+                      <span data-bind="visible: item().startTime()">
+                          <span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
+                          <span data-bind="text: item().displayedTimeRange()"></span>
+                      </span>
+                      <span data-bind="visible: editMode() && !item().startTime()" class="AppointmentCard-placeholderLabel">Select date/time</span>
+                  </span>
+                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
+              </li>
               <li data-bind="event: { tap: editMode() && pickClient }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
                   <span class="AppointmentCard-data">
@@ -1867,6 +1897,22 @@
         </div>
         <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !content()"></p><div data-bind="text: subject, visible: content()"></div><div data-bind="text: content, visible: content()"></div></a>
         <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+      </div>
+    </script>
+    <!-- Knockout Template job-title-tile -->
+    <script type="text/html" id="job-title-tile-template">
+      <div class="ListView-item">
+          <div class="ListView-item-marker">
+              <p></p>
+          </div>
+          <a href="#"
+             data-bind="attr: { href: $parent.baseUrl() + '/' + jobTitleID() }, event: { tap: $parent.selectJobTitle }"
+             class="btn btn-link btn-block ListView-item-content">
+              <p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p>
+          </a>
+          <a href="#"
+             data-bind="attr: { href: $parent.baseUrl() + '/' + jobTitleID() }"
+             class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
       </div>
     </script>
     <!-- Component Template loading-spinner -->

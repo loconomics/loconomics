@@ -25,7 +25,7 @@ module.exports = function AppointmentView(appointment, app) {
         if (!b) return null;
         
         var aid = this.addressID(),
-            jid = b.bookingRequest().jobTitleID();
+            jid = this.jobTitleID();
         if (aid && jid) {
             return app.model.serviceAddresses.getObservableItem(jid, aid, true)();
         }
@@ -44,7 +44,7 @@ module.exports = function AppointmentView(appointment, app) {
         var b = this.sourceBooking();
         if (!b) return [];
 
-        var jid = b.bookingRequest().jobTitleID(),
+        var jid = this.jobTitleID(),
             details = this.pricing();
 
         return details.map(function(det) {

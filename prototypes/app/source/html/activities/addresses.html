@@ -1,21 +1,17 @@
-<!-- Activity locations -->
-<div class="container-fluid" data-activity="serviceAddresses"
+<!-- Activity addresses -->
+<div class="container-fluid" data-activity="addresses"
      data-bind="css: { 'is-loading': isLoading }">
 
   <h2 class="SectionTitle">
       <span data-bind="visible: headerText, text: headerText">
-        Locations
+        Addresses
       </span>
       <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
   </h2>
     
     <div class="ListView ListView--twolines ListView--textualmarker"
-         data-bind="visible: jobTitleID() === 0, with: jobTitles">
-        <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile } -->
-        <!-- /ko -->
-    </div>
-    
-  <div id="addressesListView">
+         data-bind="template: { name: 'job-title-tile-template', foreach: userJobProfile }"></div>
+
     <div class="ListView ListView--twolines" data-bind="foreach: addresses">
       <div class="ListView-item">
         <div class="ListView-item-marker"></div>
@@ -25,11 +21,9 @@
         <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
       </div>
     </div>
-  </div>
 
-  <div id="addressesAddNewButtons" class="isolated" data-bind="visible: !isSelectionMode()">
-      <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/service/" data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceLocation'}">Add a service location</button>
-      <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/service/" data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceArea'}">Add a service area</button>
+  <div class="isolated" data-bind="visible: !isSelectionMode()">
+      <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/customer/" data-bind="attr: {'data-href': '#!addressEditor/customer/' + customerUserID()}">Add a client location</button>
   </div>
 
 </div>

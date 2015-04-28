@@ -186,9 +186,9 @@ function AppointmentCardViewModel(params) {
 
     this.pickLocation = function pickLocation() {
 
-        editFieldOn('locations', {
-            selectLocation: true,
-            selectedLocation: this.item().location()
+        editFieldOn('serviceAddresses/' + this.item().jobTitleID(), {
+            selectAddress: true,
+            selectedAddressID: this.item().addressID()
         });
     }.bind(this);
 
@@ -224,6 +224,8 @@ function AppointmentCardViewModel(params) {
     external activities.
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
+    /*jshint maxcomplexity:9 */
+    
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)
     if (requestData.appointment) {
@@ -266,32 +268,19 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item().serviceDurationMinutes
         .subscribe(calculateEndTime);
     }
+    if (requestData.selectAddress === true) {
+        this.item().addressID(requestData.selectedAddressID);
+    }
+    if (requestData.selectedJobTitleID) {
+        this.item().jobTitleID(requestData.selectedJobTitleID);
+    }
     
         // If there are options (may not be on startup or
         // on cancelled edition).
         /*
-
-
-            else if (typeof(options.selectedDatetime) !== 'undefined' && booking) {
-
-                booking.startTime(options.selectedDatetime);
-                // TODO Calculate the endTime given an appointment duration, retrieved from the
-                // selected service
-                //var duration = booking.pricing && booking.pricing.duration;
-                // Or by default (if no pricing selected or any) the user preferred
-                // time gap
-                //duration = duration || user.preferences.timeSlotsGap;
-                // PROTOTYPE:
-                var duration = 60; // minutes
-                booking.endTime(moment(booking.startTime()).add(duration, 'minutes').toDate());
-            }
-            else if (options.selectServices === true && booking) {
+            if (options.selectServices === true && booking) {
 
                 booking.services(options.selectedServices);
-            }
-            else if (options.selectLocation === true && booking) {
-
-                booking.location(options.selectedLocation);
             }
         */
 };

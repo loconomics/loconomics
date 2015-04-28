@@ -4,20 +4,7 @@
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
     <div class="ListView ListView--twolines ListView--textualmarker">
-        <!-- ko foreach: userJobProfile -->
-            <div class="ListView-item">
-                <div class="ListView-item-marker">
-                    <p></p>
-                </div>
-                <a href="/jobtitles/"
-                   data-bind="attr: { href: '/jobtitles/' + jobTitleID() }"
-                   class="btn btn-link btn-block ListView-item-content">
-                    <p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p>
-                </a>
-                <a href="/jobtitles/"
-                   data-bind="attr: { href: '/jobtitles/' + jobTitleID() }"
-                   class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-            </div>
+        <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile } -->
         <!-- /ko -->
         <div class="ListView-item">
             <div class="ListView-item-marker">

@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-04-25
+/*! LoconomicsApp 2015-04-28
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -2088,7 +2088,7 @@ body.use-backdrop:before {
 
 /* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
-/* line 78 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 80 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Card.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card {
@@ -2189,6 +2189,9 @@ body.use-backdrop:before {
   background: White;
   padding: 6px 0 6px 5px;
   width: 15px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
   -webkit-transition: 300ms opacity;
   -moz-transition: 300ms opacity;
   -o-transition: 300ms opacity;
@@ -2196,19 +2199,20 @@ body.use-backdrop:before {
   transition: 300ms opacity;
 }
 
-/* line 63 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+/* line 64 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-placeholderLabel {
   color: #777;
 }
 
-/* line 67 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+/* line 68 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
-/* line 69 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+/* line 70 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard.in-edit li {
   cursor: pointer;
+  overflow: hidden;
 }
 
-/* line 72 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+/* line 74 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard.in-edit li .AppointmentCard-editIcon {
   opacity: 1;
   -ms-filter: none;

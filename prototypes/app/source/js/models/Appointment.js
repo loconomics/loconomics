@@ -33,6 +33,8 @@ function Appointment(values) {
         preNotesToSelf: null,
         postNotesToSelf: null,
         
+        jobTitleID: 0,
+        
         sourceEvent: null,
         sourceBooking: null
         //sourceBookingRequest, maybe future?
@@ -132,6 +134,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     // Include booking in apt
     apt.customerUserID(booking.bookingRequest().customerUserID());
     apt.addressID(booking.bookingRequest().addressID());
+    apt.jobTitleID(booking.bookingRequest().jobTitleID());
     apt.pricing(booking.bookingRequest().pricingEstimate().details());
     apt.preNotesToClient(booking.preNotesToClient());
     apt.postNotesToClient(booking.postNotesToClient());

@@ -52,6 +52,13 @@ function UserJobProfileViewModel(app) {
     this.isLoading = ko.observable(false);
     this.isSyncing = ko.observable(false);
     this.thereIsError = ko.observable(false);
+    this.baseUrl = ko.observable('/jobtitles');
+    
+    this.selectJobTitle = function() {
+        // Hook to allow for custom handler rather than follow
+        // the URL. On that cases, remember to return false
+        return true;
+    };
     
     var showLoadingError = function showLoadingError(err) {
         app.modals.showError({
