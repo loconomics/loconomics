@@ -67,16 +67,12 @@ module.exports = function AppointmentView(appointment, app) {
         }, 0);
     }, appointment);
     
-    // Price update on services changes
-    // TODO Is not complete for production, review with the
-    // full pricingEstimate logic
-    /*
-    appointment.services.subscribe(function(services) {
-        this.ptotalPrice(services.reduce(function(prev, cur) {
+    // TODO Review if calculation of fees and that is needed
+    appointment.pricing.subscribe(function(pricing) {
+        this.price(pricing.reduce(function(prev, cur) {
             return prev + cur.totalPrice();
         }, 0));
     }.bind(appointment));
-    */
 
     return appointment;
 };
