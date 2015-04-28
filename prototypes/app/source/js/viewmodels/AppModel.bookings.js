@@ -89,5 +89,67 @@ exports.create = function create(appModel) {
         });
     };
     
+    /**
+        Converts an Appointment model into a simplified
+        booking plain object, suitable to REST API for edition
+    **/
+    api.appointmentToSimplifiedBooking = function(apt) {
+        return {
+            bookingID: apt.sourceBooking().bookingID(),
+            customerUserID: apt.customerUserID(),
+            addressID: apt.addressID(),
+            startTime: apt.startTime(),
+            pricing: apt.pricing.map(function(pricing) {
+                return pricing.model.toPlainObject(true);
+            }),
+            preNotesToClient: apt.preNotesToClient(),
+            preNotesToSelf: apt.preNotesToSelf(),
+            postNotesToClient: apt.postNotesToClient(),
+            postNotesToSelf: apt.postNotesToSelf()
+        };
+    };
+    /**
+        Converst a Booking model into a simplified
+        booking plain object, suitable to REST API for edition
+    **/
+    api.bookingToSimplifiedBooking = function(booking) {
+        return {
+            bookingID: booking().bookingID(),
+            customerUserID: booking.customerUserID(),
+            addressID: booking.addressID(),
+            startTime: booking.startTime(),
+            pricing: booking.bookingRequest().pricingEstimate().details().pricing
+            .map(function(pricing) {
+                return pricing.model.toPlainObject(true);
+            }),
+            preNotesToClient: booking.preNotesToClient(),
+            preNotesToSelf: booking.preNotesToSelf(),
+            postNotesToClient: booking.postNotesToClient(),
+            postNotesToSelf: booking.postNotesToSelf()
+        };
+    };
+    
+    /**
+        Creates/updates a booking, given a simplified booking
+        object or an Appointment model or a Booking model
+    **/
+    api.setBooking = function setBooking(booking) {
+        
+        booking = booking.bookingID ?
+            api.bookingToSimplifiedBooking(booking) :
+            booking.sourceBooking ?
+                api.appointmentToSimplifiedBooking(booking) :
+                booking
+        ;
+
+        var id = booking.bookingID || '',
+            method = id ? 'put' : 'post';
+
+        return appModel.rest[method]('freelancer-bookings/' + id)
+        .then(function(serverBooking) {
+            return new Booking(serverBooking);
+        });
+    };
+
     return api;
 };

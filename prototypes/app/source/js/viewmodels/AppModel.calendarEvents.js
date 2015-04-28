@@ -84,6 +84,35 @@ exports.create = function create(appModel) {
             return new CalendarEvent(event);
         });
     };
+    
+    api.eventToSimplifiedEvent = function(/*event*/) {
+        throw new Error('Not Implemented');
+    };
+    api.appointmentToSimplifiedEvent = function(/*event*/) {
+        throw new Error('Not Implemented');
+    };
+    
+    /**
+        Creates/updates a booking, given a simplified booking
+        object or an Appointment model or a Booking model
+    **/
+    api.setEvent = function setEvent(event) {
+
+        event = event.calendarEventID ?
+            api.eventToSimplifiedEvent(event) :
+            event.sourceEvent ?
+                api.appointmentToSimplifiedEvent(event) :
+                event
+        ;
+
+        var id = event.calendarEventID || '',
+            method = id ? 'put' : 'post';
+
+        return appModel.rest[method]('events/' + id)
+        .then(function(serverEvent) {
+            return new CalendarEvent(serverEvent);
+        });
+    };
 
     return api;
 };

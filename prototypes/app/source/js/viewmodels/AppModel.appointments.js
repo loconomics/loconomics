@@ -55,6 +55,20 @@ exports.create = function create(appModel) {
         }
     };
     
+    api.setAppointment = function setAppointment(apt) {
+        
+        // If is a booking
+        if (apt.sourceBooking()) {
+            return appModel.bookings.setBooking(apt);
+        }
+        else if (apt.sourceEvent()) {
+            return appModel.calendarEvents.setEvent(apt);
+        }
+        else {
+            return Promise.reject(new Error('Unrecognized appointment object'));
+        }
+    };
+    
     /**
         Get a list of generic calendar appointment objects, made of events and/or bookings
         by Date.
