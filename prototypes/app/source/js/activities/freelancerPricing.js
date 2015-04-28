@@ -71,38 +71,27 @@ var A = Activity.extends(function FreelancerPricingActivity() {
             // Update navbar too
             // TODO: Can be other than 'scheduling', like marketplace profile or the job-title?
             this.navBar.leftAction().text(itIs ? 'Booking' : 'Scheduling');
-            // Title must be empty
-            this.navBar.title('');
 
-            // TODO Replaced by a progress bar on booking creation
-            // TODO Or leftAction().text(..) on booking edition (return to booking)
-            // or coming from Jobtitle/schedule (return to schedule/job title)?
-
-        }.bind(this)
-    });
-    
-    // Handler to go back with the selected services when 
-    // selection mode goes off and requestData is for
-    // 'select mode'
-    this.registerHandler({
-        target: this.viewModel.isSelectionMode,
-        handler: function (itIs) {
-            // We have a request and
-            // it requested to select a service
-            // and selection mode goes off
-            if (this.requestData &&
-                this.requestData.selectPricing === true &&
-                itIs === false) {
-
-                // Pass the selected client in the info
-                this.requestData.selectedPricing = this.viewModel.selectedPricing();
-                // And go back
-                this.app.shell.goBack(this.requestData);
-                // Last, clear requestData
-                this.requestData = {};
+            if (this.requestData.progressStep) {
+                // Replace title by process step if required
+                this.navBar.title(this.requestData.progressStep);
+                this.navBar.leftAction().text('');
             }
+            else {
+                // Title must be empty
+                this.navBar.title('');
+            }            
         }.bind(this)
     });
+
+    // Go back with the selected pricing when triggered in the form/view
+    this.viewModel.returnSelected = function(pricing, jobTitleID) {
+        // Pass the selected client in the info
+        this.requestData.selectedPricing = pricing;
+        this.requestData.selectedJobTitleID = jobTitleID;
+        // And go back
+        this.app.shell.goBack(this.requestData);
+    }.bind(this);
 });
 
 exports.init = A.init;
@@ -120,6 +109,10 @@ A.prototype.show = function show(options) {
     var jobTitleID = params[0] |0;
     
     this.viewModel.jobTitleID(jobTitleID);
+    
+    if (jobTitleID === 0) {
+        this.viewModel.jobTitles.sync();
+    }
     
     if (this.requestData.selectPricing === true) {
         this.viewModel.isSelectionMode(true);
@@ -142,12 +135,23 @@ A.prototype.show = function show(options) {
     }
 };
 
+var UserJobProfile = require('../viewmodels/UserJobProfile');
+
 function ViewModel(app) {
 
     this.headerText = ko.observable('Services');
     
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
+    
+    this.jobTitles = new UserJobProfile(app);
+    this.jobTitles.baseUrl('/freelancerPricing');
+    this.jobTitles.selectJobTitle = function(jobTitle) {
+        
+        this.jobTitleID(jobTitle.jobTitleID());
+        
+        return false;
+    }.bind(this);
 
     this.list = ko.observableArray([]);
 
@@ -266,7 +270,17 @@ function ViewModel(app) {
     this.endSelection = function() {
         
         this.isSelectionMode(false);
-        
+        // Run method injected by the activity to return a 
+        // selected address:
+        this.returnSelected(
+            this.selectedPricing().map(function(pricing) {
+                return {
+                    freelancerPricingID: ko.unwrap(pricing.freelancerPricingID),
+                    totalPrice: ko.unwrap(pricing.price)
+                };
+            }),
+            this.jobTitleID()
+        );
     }.bind(this);
     
     this.editPricing = function(pricing) {

@@ -77,9 +77,7 @@ var A = Activity.extends(function ServiceAddressesActivity() {
         }.bind(this)
     });
 
-    // Go back with the selected address when 
-    // selection mode goes off and request is for
-    // 'select mode'
+    // Go back with the selected address when triggered in the form/view
     this.viewModel.returnSelected = function(addressID, jobTitleID) {
         // Pass the selected client in the info
         this.requestData.selectedAddressID = addressID;
@@ -133,6 +131,7 @@ function ViewModel(app) {
     // List of addresses
     this.addresses = ko.observableArray([]);
     
+    this.isSyncing = app.model.serviceAddresses.state.isSyncing();
     this.isLoading = ko.computed(function() {
         var add = app.model.serviceAddresses.state.isLoading(),
             jobs = this.jobTitles.isLoading();

@@ -9,7 +9,8 @@ var ko = require('knockout'),
     getObservable = require('../utils/getObservable'),
     AppointmentView = require('../viewmodels/AppointmentView'),
     ModelVersion = require('../utils/ModelVersion'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime');
+    getDateWithoutTime = require('../utils/getDateWithoutTime'),
+    PricingEstimateDetail = require('../models/PricingEstimateDetail');
 
 function AppointmentCardViewModel(params) {
     /*jshint maxstatements: 30*/
@@ -174,9 +175,15 @@ function AppointmentCardViewModel(params) {
 
     this.pickService = function pickService() {
 
-        editFieldOn('services', {
-            selectServices: true,
-            selectedServices: this.item().services()
+        editFieldOn('freelancerPricing/' + this.item().jobTitleID(), {
+            selectPricing: true,
+            selectedPricing: this.item().pricing()
+            .map(function(pricing) {
+                return {
+                    freelancerPricingID: ko.unwrap(pricing.freelancerPricingID),
+                    totalPrice: ko.unwrap(pricing.totalPrice)
+                };
+            })
         });
     }.bind(this);
 
@@ -274,15 +281,13 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     if (requestData.selectedJobTitleID) {
         this.item().jobTitleID(requestData.selectedJobTitleID);
     }
-    
-        // If there are options (may not be on startup or
-        // on cancelled edition).
-        /*
-            if (options.selectServices === true && booking) {
-
-                booking.services(options.selectedServices);
-            }
-        */
+    if (requestData.selectPricing === true) {
+        this.item().pricing(
+            requestData.selectedPricing.map(function(pricing) {
+                return new PricingEstimateDetail(pricing);
+            })
+        );
+    }
 };
 
 module.exports = AppointmentCardViewModel;

@@ -1,13 +1,15 @@
 <!-- Activity locations -->
-<div class="container-fluid" data-activity="serviceAddresses"
-     data-bind="css: { 'is-loading': isLoading }">
+<div class="container-fluid" data-activity="serviceAddresses">
 
-  <h2 class="SectionTitle">
+  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span data-bind="visible: headerText, text: headerText">
         Locations
       </span>
       <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
   </h2>
+    <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+    </div>
     
     <div class="ListView ListView--twolines ListView--textualmarker"
          data-bind="visible: jobTitleID() === 0, with: jobTitles">
