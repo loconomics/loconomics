@@ -301,6 +301,8 @@ public static partial class LcData
             var detailsData = (IEnumerable<dynamic>)db.Query(sqlRestGetPricingEstimateDetail, booking.PricingEstimateID, booking.PricingEstimateRevision);
             var details = detailsData.Select(detail => {
                 return new RestPricingEstimateDetail {
+                    PricingEstimateID = booking.PricingEstimateID,
+                    EstimateRevision = booking.PricingEstimateRevision,
                     freelancerPricingID = detail.ProviderPackageID,
                     freelancerPricingDataInput = detail.ProviderPricingDataInput,
                     customerPricingDataInput = detail.customerPricingDataInput,

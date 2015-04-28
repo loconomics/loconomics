@@ -39,22 +39,26 @@
             Validation.Add("customerUserID", Validator.Integer("Choose a valid client"));
             Validation.Add("addressID", Validator.Integer("Choose a valid location"));
 
-            if (!Request.Form.AllKeys.Contains<string>("services[]")) {
-                ModelState.AddError("services", "Choose almost one service");
+            /* TODO: Update to receive an array of object like
+                * { freelancerPricingID: 0, totalPrice: 0, customerInputData: null,... }
+                * like the pricing estimate detail object.
+            */
+            if (!Request.Form.AllKeys.Contains<string>("pricing[]")) {
+                ModelState.AddError("pricing", "Choose almost one service");
             }
-            var services = Request.Form.GetValues("services[]");
-            var servicesIds = new List<int>();
-            if (services == null || services.Length < 1) {
-                ModelState.AddError("services", "Choose almost one service");
+            var pricing = Request.Form.GetValues("pricing[]");
+            var pricingIds = new List<int>();
+            if (pricing == null || pricing.Length < 1) {
+                ModelState.AddError("pricing", "Choose almost one service");
             }
             else {
-                foreach(var service in services) {
-                    var sid = service.AsInt(0);
+                foreach(var pricingItem in pricing) {
+                    var sid = pricingItem.AsInt(0);
                     if (sid == 0) {
-                        ModelState.AddError("services", "Some specified services are wrong");
+                        ModelState.AddError("pricing", "Some specified services are wrong");
                         break;
                     }
-                    servicesIds.Add(sid);
+                    pricingIds.Add(sid);
                 }
             }
             
@@ -75,7 +79,7 @@
                         Request["customerUserID"].AsInt(),
                         Request["addressID"].AsInt(),
                         startTime.Value,
-                        servicesIds,
+                        pricingIds,
                         Request["preNotesToClient"],
                         Request["preNotesToSelf"]
                     );
@@ -87,7 +91,7 @@
                         Request["customerUserID"].AsInt(),
                         Request["addressID"].AsInt(),
                         startTime.Value,
-                        servicesIds,
+                        pricingIds,
                         Request["preNotesToClient"],
                         Request["preNotesToSelf"],
                         Request["postNotesToClient"],
