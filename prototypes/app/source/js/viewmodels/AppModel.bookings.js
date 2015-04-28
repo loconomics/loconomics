@@ -99,8 +99,11 @@ exports.create = function create(appModel) {
             customerUserID: apt.customerUserID(),
             addressID: apt.addressID(),
             startTime: apt.startTime(),
-            pricing: apt.pricing.map(function(pricing) {
-                return pricing.model.toPlainObject(true);
+            pricing: apt.pricing().map(function(pricing) {
+                // TODO: for now, the REST API allow only a list of IDs,
+                // not objects, so next line is replaced:
+                //return pricing.model.toPlainObject(true);
+                return pricing.freelancerPricingID();
             }),
             preNotesToClient: apt.preNotesToClient(),
             preNotesToSelf: apt.preNotesToSelf(),
@@ -120,7 +123,10 @@ exports.create = function create(appModel) {
             startTime: booking.startTime(),
             pricing: booking.bookingRequest().pricingEstimate().details().pricing
             .map(function(pricing) {
-                return pricing.model.toPlainObject(true);
+                // TODO: for now, the REST API allow only a list of IDs,
+                // not objects, so next line is replaced:
+                //return pricing.model.toPlainObject(true);
+                return pricing.freelancerPricingID();
             }),
             preNotesToClient: booking.preNotesToClient(),
             preNotesToSelf: booking.preNotesToSelf(),
@@ -133,8 +139,7 @@ exports.create = function create(appModel) {
         Creates/updates a booking, given a simplified booking
         object or an Appointment model or a Booking model
     **/
-    api.setBooking = function setBooking(booking) {
-        
+    api.setBooking = function setBooking(booking) {    
         booking = booking.bookingID ?
             api.bookingToSimplifiedBooking(booking) :
             booking.sourceBooking ?
@@ -145,7 +150,7 @@ exports.create = function create(appModel) {
         var id = booking.bookingID || '',
             method = id ? 'put' : 'post';
 
-        return appModel.rest[method]('freelancer-bookings/' + id)
+        return appModel.rest[method]('freelancer-bookings/' + id, booking)
         .then(function(serverBooking) {
             return new Booking(serverBooking);
         });

@@ -109,7 +109,7 @@ function AppointmentCardViewModel(params) {
                     .then(function() {
                         // ALWAYS:
                         this.isSaving(false);
-                    });
+                    }.bind(this));
                 }
             }.bind(this));
         }

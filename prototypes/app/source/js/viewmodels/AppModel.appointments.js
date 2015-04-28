@@ -59,10 +59,16 @@ exports.create = function create(appModel) {
         
         // If is a booking
         if (apt.sourceBooking()) {
-            return appModel.bookings.setBooking(apt);
+            return appModel.bookings.setBooking(apt)
+            .then(function(booking) {
+                return Appointment.fromBooking(booking);
+            });
         }
         else if (apt.sourceEvent()) {
-            return appModel.calendarEvents.setEvent(apt);
+            return appModel.calendarEvents.setEvent(apt)
+            .then(function(event) {
+                return Appointment.fromEvent(event);
+            });
         }
         else {
             return Promise.reject(new Error('Unrecognized appointment object'));

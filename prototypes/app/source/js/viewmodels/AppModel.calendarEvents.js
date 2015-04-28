@@ -108,7 +108,7 @@ exports.create = function create(appModel) {
         var id = event.calendarEventID || '',
             method = id ? 'put' : 'post';
 
-        return appModel.rest[method]('events/' + id)
+        return appModel.rest[method]('events/' + id, event)
         .then(function(serverEvent) {
             return new CalendarEvent(serverEvent);
         });
