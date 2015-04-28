@@ -29,8 +29,10 @@ var A = Activity.extends(function FreelancerPricingActivity() {
                 ])
                 .then(function(data) {
                     var jobTitle = data[0];
-                    // Fill in job title name
-                    this.navBar.leftAction().text(jobTitle.singularName());
+                    if (!this.viewModel.isSelectionMode()) {
+                        // Fill in job title name
+                        this.navBar.leftAction().text(jobTitle.singularName());
+                    }
                     // Save for use in the view
                     this.viewModel.jobTitle(jobTitle);
 
@@ -40,9 +42,23 @@ var A = Activity.extends(function FreelancerPricingActivity() {
                 .then(function(list) {
 
                     list = this.app.model.freelancerPricing.asModel(list);
+                    
+                    // Read presets selection from requestData
+                    var preset = this.requestData.selectedPricing || [],
+                        selection = this.viewModel.selectedPricing;
+                    
                     // Add the isSelected property to each item
                     list.forEach(function(item) {
-                        item.isSelected = ko.observable(false);
+                        var preSelected = preset.some(function(pr) {
+                            if (pr.freelancerPricingID === item.freelancerPricingID())
+                                return true;
+                        }) || false;
+                        
+                        item.isSelected = ko.observable(preSelected);
+                        
+                        if (preSelected) {
+                            selection.push(item);
+                        }
                     });
                     this.viewModel.list(list);
 
@@ -102,8 +118,13 @@ A.prototype.show = function show(options) {
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
     this.viewModel.jobTitleID(0);
+    this.viewModel.isSelectionMode(false);
     this.viewModel.selectedPricing.removeAll();
 
+    if (this.requestData.selectPricing === true) {
+        this.viewModel.isSelectionMode(true);
+    }
+    
     // Params
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
@@ -112,26 +133,6 @@ A.prototype.show = function show(options) {
     
     if (jobTitleID === 0) {
         this.viewModel.jobTitles.sync();
-    }
-    
-    if (this.requestData.selectPricing === true) {
-        this.viewModel.isSelectionMode(true);
-        
-        /* Trials to presets the selected services, NOT WORKING
-        var services = (options.selectedServices || []);
-        var selectedServices = this.viewModel.selectedServices;
-        selectedServices.removeAll();
-        this.viewModel.services().forEach(function(service) {
-            services.forEach(function(selService) {
-                if (selService === service) {
-                    service.isSelected(true);
-                    selectedServices.push(service);
-                } else {
-                    service.isSelected(false);
-                }
-            });
-        });
-        */
     }
 };
 
