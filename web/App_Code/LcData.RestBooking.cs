@@ -452,11 +452,11 @@ public static partial class LcData
                 var customer = LcData.UserInfo.GetUserRow(customerUserID);
 
                 if (provider == null)
-                    throw new Exception("Impossible to retrieve the provider information. It exists?");
+                    throw new ConstraintException("Impossible to retrieve the provider information. It exists?");
                 if (customer == null)
-                    throw new Exception("Impossible to retrieve the customer information. It exists?");
+                    throw new ConstraintException("Impossible to retrieve the customer information. It exists?");
                 if (services == null)
-                    throw new Exception("Create a booking require select almost one service");
+                    throw new ConstraintException("Create a booking require select almost one service");
 
                 // 1º: calculating pricing and timing by checing services included
                 var pricingCalculations = CalculateSimplifiedBookingPricing(services, providerUserID, db);
@@ -468,13 +468,13 @@ public static partial class LcData
                 // 1-after Checks:
                 var position = LcData.UserInfo.GetUserPos(providerUserID, positionID);
                 if (position == null)
-                    throw new Exception("Impossible to create a booking for that Job Title.");
+                    throw new ConstraintException("Impossible to create a booking for that Job Title.");
 
                 // 2º: Creating event for the start date and calculated duration, checking availability
                 var endTime = startTime.AddMinutes((double)totalDuration);
                 var isAvailable = LcCalendar.CheckUserAvailability(providerUserID, startTime, endTime);
                 if (!isAvailable)
-                    throw new Exception("The choosen time is not available, it conflicts with a recent appointment!");
+                    throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
 
                 // Event data
                 var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
@@ -575,11 +575,11 @@ public static partial class LcData
                 var customer = LcData.UserInfo.GetUserRow(customerUserID);
 
                 if (booking.bookingRequest.freelancerUserID != providerUserID)
-                    throw new Exception("Forbidden. Attempt to edit the booking of another provider");
+                    throw new ConstraintException("Forbidden. Attempt to edit the booking of another provider");
                 if (provider == null)
-                    throw new Exception("Impossible to retrieve the provider information. It exists?");
+                    throw new ConstraintException("Impossible to retrieve the provider information. It exists?");
                 if (customer == null)
-                    throw new Exception("Impossible to retrieve the customer information. It exists?");
+                    throw new ConstraintException("Impossible to retrieve the customer information. It exists?");
 
                 // 1º: calculating pricing and timing by checing services included
                 var pricingCalculations = CalculateSimplifiedBookingPricing(services, providerUserID, db);
@@ -591,7 +591,7 @@ public static partial class LcData
                 // 1-after Checks:
                 var position = LcData.UserInfo.GetUserPos(providerUserID, positionID);
                 if (position == null)
-                    throw new Exception("Impossible to create a booking for that Job Title.");
+                    throw new ConstraintException("Impossible to create a booking for that Job Title.");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 var endTime = startTime.AddMinutes((double)totalDuration);
@@ -600,7 +600,7 @@ public static partial class LcData
                 if (eventInfo.StartTime != startTime && eventInfo.EndTime != endTime)
                 {
                     if (!DoubleCheckEventAvailability(booking.confirmedDateID.Value, startTime, endTime))
-                        throw new Exception("The choosen time is not available, it conflicts with a recent appointment!");
+                        throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
 
                     // Transaction begins
                     db.Execute("BEGIN TRANSACTION");
@@ -667,7 +667,7 @@ public static partial class LcData
                 ", providerUserID, serviceID);
 
                 if (pricing == null)
-                    throw new Exception("Impossible to retrieve information for the ServiceID: " + serviceID);
+                    throw new ConstraintException("Impossible to retrieve information for the ServiceID: " + serviceID);
 
                 // Get and double check position
                 if (positionID == 0)
@@ -677,7 +677,7 @@ public static partial class LcData
                 else if (positionID != pricing.PositionID)
                 {
                     // All services must be part of the same position
-                    throw new Exception("All choosen services must belong to the same Job Title");
+                    throw new ConstraintException("All choosen services must belong to the same Job Title");
                 }
 
                 totalPrice += (pricing.Price ?? 0);
