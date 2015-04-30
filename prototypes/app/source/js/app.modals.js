@@ -50,7 +50,22 @@ exports.getErrorMessageFrom = function getErrorMessageFrom(err, defaultText) {
                 var jserr = JSON.stringify(err);
                 // Avoiding that empty results (empty string or empty object when there
                 // is no details to show) makes us to show an annoying 'technical details'
-                if (jserr && jserr !== '{}')
+                var hasMoreInfo = jserr && jserr !== '{}';
+                // Too if there is no more information than the one extracted to build the
+                // message, since on that cases the 'technical details' will be just a 
+                // json formatted of the same displayed message
+                if (hasMoreInfo) {
+                    // Reset initially, re-enabled only if there are more properties
+                    // than the ones from the list
+                    hasMoreInfo = false;
+                    var messagePropertiesList = ['name', 'errorMessage', 'message', 'errors'];
+                    Object.keys(err).forEach(function(key) {
+                        if (messagePropertiesList.indexOf(key) === -1)
+                            hasMoreInfo = true;
+                    });
+                }
+
+                if (hasMoreInfo)
                     msg += '\n\nTechnical details: ' + jserr;
             }
             catch (ex) {

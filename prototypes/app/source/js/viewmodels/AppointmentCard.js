@@ -102,7 +102,7 @@ function AppointmentCardViewModel(params) {
                         // Show error
                         app.modals.showError({
                             title: 'There was an error saving the data.',
-                            error: err && err.error || err
+                            error: err
                         });
                         // Don't replicate error, allow always
                     })
