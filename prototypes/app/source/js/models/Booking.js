@@ -34,10 +34,8 @@ function Booking(values) {
         createdDate: null,
         updatedDate: null,
         
-        bookingRequest: null // BookingRequest
+        bookingRequest: new BookingRequest()
     }, values);
-    
-    this.bookingRequest(new BookingRequest(values && values.bookingRequest || {}));
 }
 
 module.exports = Booking;

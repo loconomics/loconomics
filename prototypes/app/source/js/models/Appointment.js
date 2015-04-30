@@ -4,7 +4,9 @@
 var ko = require('knockout'),
     Model = require('./Model'),
     moment = require('moment'),
-    PricingEstimateDetail = require('./PricingEstimateDetail');
+    PricingEstimateDetail = require('./PricingEstimateDetail'),
+    CalendarEvent = require('./CalendarEvent'),
+    Booking = require('./Booking');
    
 function Appointment(values) {
     
@@ -26,7 +28,10 @@ function Appointment(values) {
         price: 0,
         // Actual bookings fields to use on post/put
         customerUserID: null,
-        pricing: [],
+        pricing: {
+            Model: PricingEstimateDetail,
+            isArray: true
+        },
         addressID: null,
         preNotesToClient: null,
         postNotesToClient: null,
@@ -35,17 +40,16 @@ function Appointment(values) {
         
         jobTitleID: 0,
         
-        sourceEvent: null,
-        sourceBooking: null
+        sourceEvent: {
+            Model: CalendarEvent,
+            defaultValue: null
+        },
+        sourceBooking: {
+            Model: Booking,
+            defaultValue: null
+        }
         //sourceBookingRequest, maybe future?
     }, values);
-    
-    // Pricing is a list of PricingEstimateDetail models
-    if (values && Array.isArray(values.pricing)) {
-        this.pricing(values.pricing.map(function(detail) {
-            return new PricingEstimateDetail(detail);
-        }));
-    }
 
     // Smart visualization of date and time
     this.displayedDate = ko.pureComputed(function() {

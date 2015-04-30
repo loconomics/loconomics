@@ -90,6 +90,8 @@ function Model(modelObject) {
     // It maintains a list of properties and fields
     this.propertiesList = [];
     this.fieldsList = [];
+    this.propertiesDefs = {};
+    this.fieldsDefs = {};
     // It allow setting the 'ko.mapping.fromJS' mapping options
     // to control conversions from plain JS objects when 
     // 'updateWith'.
@@ -110,6 +112,68 @@ function Model(modelObject) {
 module.exports = Model;
 
 /**
+    Internal utility to map a value given its property/field
+    definition
+**/
+function prepareValueByDef(val, def) {
+    if (def.isArray && 
+        !Array.isArray(val)) {
+        if (typeof(val) !== 'undefined')
+            val = [val];
+        else
+            val = [];
+    }
+    if (def && def.Model) {
+        if (Array.isArray(val)) {
+            val = val.map(function(item) {
+                if (item instanceof def.Model ||
+                    item === null ||
+                    typeof(item) === 'undefined') {
+                    // 'as is'
+                    return item;
+                }
+                else {
+                    return new def.Model(item);
+                }
+            });
+        }
+        else {
+            if (!(val instanceof def.Model) &&
+                val !== null &&
+                typeof(val) !== 'undefined') {
+                val = new def.Model(val);
+            }
+        }
+    }
+    return val;
+}
+
+function createDef(givenVal, initialVal) {
+    
+    var def,
+        isModel = givenVal && givenVal.model instanceof Model,
+        isArray = Array.isArray(givenVal),
+        isObject = typeof(givenVal) === 'object' && !(givenVal instanceof Date);
+
+    if (givenVal !== null && !isModel && isObject && !isArray) {
+        def = givenVal;
+    }
+    else {
+        def = {
+            defaultValue: givenVal,
+            isArray: isArray
+        };
+        if (isModel)
+            def.Model = givenVal.constructor;
+    }
+    
+    initialVal = typeof(initialVal) === 'undefined' ? def.defaultValue : initialVal;
+    def.initialValue = prepareValueByDef(initialVal, def);
+    
+    return def;
+}
+
+/**
     Define observable properties using the given
     properties object definition that includes de default values,
     and some optional initialValues (normally that is provided externally
@@ -128,24 +192,24 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
 
     var modelObject = this.modelObject,
         propertiesList = this.propertiesList,
+        defs = this.propertiesDefs,
         dataTimestamp = this.dataTimestamp;
 
     Object.keys(properties).forEach(function(key) {
         
-        var defVal = properties[key];
-        // Create observable property with default value
-        modelObject[key] = Array.isArray(defVal) ?
-            ko.observableArray(defVal) :
-            ko.observable(defVal);
+        // Create and register definition
+        var def = createDef(properties[key], initialValues[key]);
+        defs[key] = def;
+
+        // Create the observable property
+        modelObject[key] = Array.isArray(def.initialValue) ?
+            ko.observableArray(def.initialValue) :
+            ko.observable(def.initialValue);
+
         // Remember default
-        modelObject[key]._defaultValue = defVal;
+        modelObject[key]._defaultValue = def.defaultValue;
         // remember initial
-        modelObject[key]._initialValue = initialValues[key];
-        
-        // If there is an initialValue, set it:
-        if (typeof(initialValues[key]) !== 'undefined') {
-            modelObject[key](initialValues[key]);
-        }
+        modelObject[key]._initialValue = def.initialValue;    
         
         // Add subscriber to update the timestamp on changes
         modelObject[key].subscribe(function() {
@@ -172,18 +236,17 @@ Model.prototype.defFields = function defFields(fields, initialValues) {
     initialValues = initialValues || {};
 
     var modelObject = this.modelObject,
+        defs = this.fieldsDefs,
         fieldsList = this.fieldsList;
 
     Object.keys(fields).each(function(key) {
         
-        var defVal = fields[key];
-        // Create field with default value
-        modelObject[key] = defVal;
+        // Create and register definition
+        var def = createDef(fields[key], initialValues[key]);
+        defs[key] = def;
         
-        // If there is an initialValue, set it:
-        if (typeof(initialValues[key]) !== 'undefined') {
-            modelObject[key] = initialValues[key];
-        }
+        // Create field with initial value
+        modelObject[key] = def.initialValue;
         
         // Add to the internal registry
         fieldsList.push(key);
@@ -293,10 +356,43 @@ Model.prototype.updateWith = function updateWith(data, deepCopy) {
         data = data.model.toPlainObject(deepCopy);
     }
 
-    ko.mapping.fromJS(data, this.mappingOptions, this.modelObject);
+    var target = this.modelObject,
+        defs = this.propertiesDefs;
+    this.propertiesList.forEach(function(property) {
+        var val = data[property],
+            def = defs[property];
+        if (typeof(val) !== 'undefined') {
+            target[property](prepareValueByDef(val, def));
+        }
+    });
+
+    defs = this.fieldsDefs;
+    this.fieldsList.forEach(function(field) {
+        var val = data[field],
+            def = defs[field];
+        if (typeof(val) !== 'undefined') {
+            target[field] = prepareValueByDef(val, def);
+        }
+    });
+
     // Same timestamp if any
     if (timestamp)
         this.modelObject.model.dataTimestamp(timestamp);
+};
+
+/**
+    Given a plain object in a accepted import structure
+    (never a Model instance), it maps
+    the data to the object following a set of mapping options
+    of ko.mapping.
+    If the data is a representation of the model by 'toPlainObject'
+    then use 'updateWith' better.
+    
+    TODO: Review, not used still, no sure if really useful to depend
+    on ko.mapping and this.
+**/
+Model.prototype.mapData = function mapData(data, optionalMapping) {
+    ko.mapping.fromJS(data, optionalMapping || this.mappingOptions, this.modelObject);
 };
 
 Model.prototype.clone = function clone(data, deepCopy) {

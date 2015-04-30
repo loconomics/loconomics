@@ -12,6 +12,8 @@ function PerformanceSummary(values) {
     Model(this);
 
     values = values || {};
+    
+    // TODO: define earnings and timeBooking as properties with def.Model?
 
     this.earnings = new Earnings(values.earnings);
     

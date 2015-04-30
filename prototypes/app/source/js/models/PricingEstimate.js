@@ -26,12 +26,9 @@ module.exports = function PricingEstimate(values) {
         createdDate: null,
         updatedDate: null,
         
-        details: []
+        details: {
+            Model: PricingEstimateDetail,
+            isArray: true
+        }
     }, values);
-    
-    if (values && Array.isArray(values.details)) {
-        this.details(values.details.map(function(detail) {
-            return new PricingEstimateDetail(detail);
-        }));
-    }
 };

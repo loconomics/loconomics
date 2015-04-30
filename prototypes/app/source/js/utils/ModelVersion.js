@@ -154,7 +154,7 @@ function createRollbackFunction(modelInstance) {
     // changes were done in the modelInstance.
     return function rollback() {
         // Set the backed data
-        modelInstance.model.updateWith(backedData);
+        modelInstance.model.updateWith(backedData, true);
         // And the timestamp
         modelInstance.model.dataTimestamp(backedTimestamp);
     };

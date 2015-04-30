@@ -4,8 +4,7 @@
  **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
+var Model = require('./Model'),
     Message = require('./Message');
 
 function Thread(values) {
@@ -21,16 +20,14 @@ function Thread(values) {
         statusID: null,
         subject: null,
         
+        messages: {
+            isArray: true,
+            Model: Message
+        },
+        
         createdDate: null,
         updatedDate: null        
     }, values);
-    
-    this.messages = ko.observableArray([]);
-    if (values && values.messages) {
-        this.messages(values.messages.map(function(msg) {
-            return new Message(msg);
-        }));
-    }
 }
 
 module.exports = Thread;

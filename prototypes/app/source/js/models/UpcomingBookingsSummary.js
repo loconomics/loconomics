@@ -8,6 +8,11 @@ var ko = require('knockout'),
 function UpcomingBookingsSummary() {
 
     Model(this);
+    
+    // TODO: define today, tomorrow and nextWeek as
+    // properties with default Model?
+    // Review how update happens on home/dashboard, it can helps
+    // to simplify that
 
     this.today = new BookingSummary({
         concept: 'more today',

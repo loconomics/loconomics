@@ -61,7 +61,11 @@ exports.create = function create(appModel) {
         if (apt.sourceBooking()) {
             return appModel.bookings.setBooking(apt)
             .then(function(booking) {
-                return Appointment.fromBooking(booking);
+                // We need the event information too
+                return appModel.calendarEvents.getEvent(booking.confirmedDateID())
+                .then(function(event) {
+                    return Appointment.fromBooking(booking, event);
+                });
             });
         }
         else if (apt.sourceEvent()) {

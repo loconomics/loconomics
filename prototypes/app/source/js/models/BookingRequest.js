@@ -29,8 +29,6 @@ module.exports = function BookingRequest(values) {
         createdDate: null,
         updatedDate: null,
         
-        pricingEstimate: null // PricingEstimate
+        pricingEstimate: new PricingEstimate()
     }, values);
-    
-    this.pricingEstimate(new PricingEstimate(values && values.pricingEstimate || {}));
 };

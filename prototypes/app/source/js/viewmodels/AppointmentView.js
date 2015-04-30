@@ -8,7 +8,9 @@
 var ko = require('knockout');
 
 module.exports = function AppointmentView(appointment, app) {
-    
+    if (appointment._isAppointmentView) return appointment;
+    appointment._isAppointmentView = true;
+
     appointment.customer = ko.computed(function() {
         var b = this.sourceBooking();
         if (!b) return null;
