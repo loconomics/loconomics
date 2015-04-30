@@ -249,6 +249,16 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.cancel();
     }
     
+    // Calculate the endTime given an appointment duration, retrieved
+    // from the selected service
+    var calculateEndTime = function calculateEndTime() {
+        var duration = this.item().serviceDurationMinutes();
+        this.item().endTime(
+            moment(this.item().startTime())
+            .add(duration, 'minutes').toDate()
+        );
+    }.bind(this);
+    
     /// Manage specific single data from externally provided
     
     // It comes back from the textEditor.
@@ -260,20 +270,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     }
     if (typeof(requestData.selectedDatetime) !== 'undefined') {
         this.item().startTime(requestData.selectedDatetime);
-        // TODO Calculate the endTime given an appointment duration, retrieved
-        // from the selected service
-        var calculateEndTime = function calculateEndTime() {
-            var duration = this.item().serviceDurationMinutes();
-            this.item().endTime(
-                moment(this.item().startTime())
-                .add(duration, 'minutes').toDate()
-            );
-        }.bind(this);
-        // Calculate now
         calculateEndTime();
-        // And every time duration changes
-        this.item().serviceDurationMinutes
-        .subscribe(calculateEndTime);
     }
     if (requestData.selectAddress === true) {
         this.item().addressID(requestData.selectedAddressID);
@@ -287,6 +284,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
                 return new PricingEstimateDetail(pricing);
             })
         );
+        calculateEndTime();
     }
 };
 
