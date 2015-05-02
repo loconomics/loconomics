@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-04-28
+/*! LoconomicsApp 2015-05-02
    Author: Loconomics Inc. */
 
 /* line 1 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -2088,7 +2088,7 @@ body.use-backdrop:before {
 
 /* line 19 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
-/* line 80 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 86 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Card.styl */
 
 /* line 6 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card {
@@ -2217,6 +2217,15 @@ body.use-backdrop:before {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+
+/* line 80 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+
+/* line 81 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard.is-locked li .AppointmentCard-editIcon {
+  opacity: 0.5 !important;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)" !important;
+  filter: alpha(opacity=50) !important;
 }
 
 /* line 5 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\activities\appointment.styl */

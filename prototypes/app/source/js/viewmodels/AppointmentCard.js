@@ -23,6 +23,9 @@ function AppointmentCardViewModel(params) {
     
     this.isSaving = ko.observable(false);
     this.isLoading = getObservable(params.isLoading);
+    this.isLocked = ko.computed(function() {
+        return this.isSaving() || this.isLoading();
+    }, this);
     
     this.item = ko.observable(AppointmentView(this.sourceItem(), app));
     
@@ -134,11 +137,15 @@ function AppointmentCardViewModel(params) {
     }, this);
 
     this.edit = function edit() {
+        if (this.isLocked()) return;
+
         // A subscribed handler ensure to do the needed tasks
         this.editMode(true);
     }.bind(this);
     
     this.save = function save() {
+        if (this.isLocked()) return;
+
         // There is a version? Push changes!
         var version = this.editedVersion();
 
@@ -151,6 +158,7 @@ function AppointmentCardViewModel(params) {
     }.bind(this);
 
     this.cancel = function cancel() {
+        if (this.isLocked()) return;
 
         if (this.editedVersion()) {
             // Discard previous version
@@ -172,6 +180,7 @@ function AppointmentCardViewModel(params) {
     }.bind(this);
 
     this.pickDateTime = function pickDateTime() {
+        if (this.isLocked()) return;
 
         editFieldOn('datetimePicker', {
             selectedDatetime: this.item().startTime(),
@@ -180,6 +189,7 @@ function AppointmentCardViewModel(params) {
     }.bind(this);
 
     this.pickClient = function pickClient() {
+        if (this.isLocked()) return;
 
         editFieldOn('clients', {
             selectClient: true,
@@ -188,6 +198,7 @@ function AppointmentCardViewModel(params) {
     }.bind(this);
 
     this.pickService = function pickService() {
+        if (this.isLocked()) return;
 
         editFieldOn('freelancerPricing/' + this.item().jobTitleID(), {
             selectPricing: true,
@@ -202,10 +213,12 @@ function AppointmentCardViewModel(params) {
     }.bind(this);
 
     this.changePrice = function changePrice() {
+        if (this.isLocked()) return;
         // TODO
     }.bind(this);
 
     this.pickLocation = function pickLocation() {
+        if (this.isLocked()) return;
 
         editFieldOn('serviceAddresses/' + this.item().jobTitleID(), {
             selectAddress: true,
@@ -222,6 +235,7 @@ function AppointmentCardViewModel(params) {
     };
 
     this.editTextField = function editTextField(field) {
+        if (this.isLocked()) return;
 
         editFieldOn('textEditor', {
             request: 'textEditor',
