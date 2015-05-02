@@ -86,7 +86,7 @@ function AppointmentCardViewModel(params) {
         Create version and save data
     **/
     this.editMode.subscribe(function(isEdit) {
-        if (this.currentID() <= 0) {
+        if (this.currentID() <= 0 && !this.isNew()) {
             return;
         }
         if (isEdit) {
@@ -271,7 +271,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item()
         .model.updateWith(requestData.appointment);
     }
-    else {
+    else if (!this.isNew()) {
         // On any other case, and to prevent a bad editMode state,
         // set off edit mode discarding unsaved data:
         this.cancel();

@@ -8,11 +8,14 @@ var Time = require('../utils/Time');
 var moment = require('moment');
 
 var today = new Date(),
-    tomorrow = new Date();
+    tomorrow = new Date(),
+    tomorrowPast2 = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
+tomorrowPast2.setDate(tomorrowPast2.getDate() + 2);
 
 var stoday = moment(today).format('YYYY-MM-DD'),
-    stomorrow = moment(tomorrow).format('YYYY-MM-DD');
+    stomorrow = moment(tomorrow).format('YYYY-MM-DD'),
+    stomorrowPast2 = moment(tomorrowPast2).format('YYYY-MM-DD');
 
 var testData1 = [
     Time(today, 9, 15),
@@ -42,6 +45,16 @@ var testData2 = [
     Time(tomorrow, 16, 30)
 ];
 
+var testData3 = [
+    Time(tomorrowPast2, 10, 0),
+    Time(tomorrowPast2, 11, 0),
+    Time(tomorrowPast2, 12, 30),
+    Time(tomorrowPast2, 13, 15),
+    Time(tomorrowPast2, 16, 0),
+    Time(tomorrowPast2, 17, 30),
+    Time(tomorrowPast2, 18, 0)
+];
+
 var testDataBusy = [
 ];
 
@@ -50,5 +63,6 @@ var testData = {
 };
 testData[stoday] = testData1;
 testData[stomorrow] = testData2;
+testData[stomorrowPast2] = testData3;
 
 exports.timeSlots = testData;
