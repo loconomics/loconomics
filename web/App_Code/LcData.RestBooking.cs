@@ -685,7 +685,7 @@ public static partial class LcData
                 totalDuration += (pricing.Duration ?? 0);
                 servicesData[serviceID] = new
                 {
-                    Price = pricing.Price == 0,
+                    Price = pricing.Price ?? 0,
                     Duration = pricing.Duration ?? 0,
                     DurationHours = Math.Round((decimal)(pricing.Duration ?? 0) / 60, 2)
                 };
