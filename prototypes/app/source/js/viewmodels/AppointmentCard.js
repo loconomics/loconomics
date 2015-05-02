@@ -22,6 +22,7 @@ function AppointmentCardViewModel(params) {
     this.editedVersion = ko.observable(null);
     
     this.isSaving = ko.observable(false);
+    this.isLoading = getObservable(params.isLoading);
     
     this.item = ko.observable(AppointmentView(this.sourceItem(), app));
     
@@ -46,6 +47,19 @@ function AppointmentCardViewModel(params) {
     /* Return true if is an event object but not a booking */
     this.isEvent = ko.computed(function() {
         return this.item() && this.item().sourceEvent() && !this.item().sourceBooking();
+    }, this);
+    
+    this.submitText = ko.pureComputed(function() {
+        var v = this.editedVersion();
+        return (
+            this.isLoading() ? 
+                'Loading...' : 
+                this.isSaving() ? 
+                    'Saving changes' : 
+                    v && v.areDifferent() ?
+                        'Save' :
+                        'Saved'
+        );
     }, this);
 
     /**
@@ -72,19 +86,16 @@ function AppointmentCardViewModel(params) {
         if (this.currentID() <= 0) {
             return;
         }
-
-        var version;
-
         if (isEdit) {
             // Create and set a version to be edited
-            version = new ModelVersion(this.sourceItem());
+            var version = new ModelVersion(this.sourceItem());
             version.version.sourceEvent(this.sourceItem().sourceEvent());
             version.version.sourceBooking(this.sourceItem().sourceBooking());
             this.editedVersion(version);
             this.item(AppointmentView(version.version, app));
 
             // Setup auto-saving
-            version.on('push', function(success) {
+            version.on('push', function(success, rollback) {
                 if (success) {
                     this.isSaving(true);
                     app.model.appointments.setAppointment(version.version)
@@ -97,8 +108,15 @@ function AppointmentCardViewModel(params) {
 
                         // TODO: wasNew:true: add to the list and sort it??
                         // There is a wizard for bookings, so may be different on that case
-                    })
+                        
+                        // Go out edit mode
+                        this.editMode(false);
+                    }.bind(this))
                     .catch(function(err) {
+                        // Performs a rollback of the original model
+                        rollback();
+                        // The version data keeps untouched, user may want to retry
+                        // or made changes on its un-saved data.
                         // Show error
                         app.modals.showError({
                             title: 'There was an error saving the data.',
@@ -113,17 +131,6 @@ function AppointmentCardViewModel(params) {
                 }
             }.bind(this));
         }
-        else {
-            // There is a version? Push changes!
-            version = this.editedVersion();
-
-            if (version && version.areDifferent()) {
-                // Push version to original, will launch a remote update 
-                // if anithing changed
-                // TODO: ask for confirmation if version isObsolete
-                version.push({ evenIfObsolete: true });
-            }
-        }
     }, this);
 
     this.edit = function edit() {
@@ -132,8 +139,15 @@ function AppointmentCardViewModel(params) {
     }.bind(this);
     
     this.save = function save() {
-        // A subscribed handler ensure to do the needed tasks
-        this.editMode(false);
+        // There is a version? Push changes!
+        var version = this.editedVersion();
+
+        if (version && version.areDifferent()) {
+            // Push version to original, will launch a remote update 
+            // if anithing changed
+            // TODO: ask for confirmation if version isObsolete
+            version.push({ evenIfObsolete: true });
+        }
     }.bind(this);
 
     this.cancel = function cancel() {

@@ -165,7 +165,6 @@ function ViewModel(app) {
     this.currentIndex = ko.observable(0);
     this.editMode = ko.observable(false);
     this.isLoading = ko.observable(false);
-    this.isSaving = ko.observable(false);
     
     // To access the component API we use next observable,
     // updated by the component with its view

@@ -326,7 +326,7 @@
       <!-- Appointment View (cards) -->
       <div id="calendarAppointmentView" class="full-height row CardsDeck CardsDeck--dotsSlider"
       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
-        <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isSaving: isSaving, app: app, api: appointmentCardView"></app-appointment-card>
+        <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
         <div class="CardsDeck-dots" data-bind="foreach: appointments"> <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
 
         </div>
@@ -1879,7 +1879,7 @@
           </div>
           <div class="AppointmentCard-actions row" data-bind="visible: editMode()">
               <div class="col-xs-6" data-bind="visible: currentID() > 0"><button type="button" class="btn btn-danger btn-block" data-bind="event: { tap: cancel }">Cancel</button></div>
-              <div class="col-xs-6" data-bind="css: { 'col-xs-6' : currentID() > 0 }"><button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }">Save</button></div>
+              <div class="col-xs-6" data-bind="css: { 'col-xs-6' : currentID() > 0 }"><button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }, text: submitText">Save</button></div>
           </div>
       </div>
     </script>
