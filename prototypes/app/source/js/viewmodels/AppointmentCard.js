@@ -96,43 +96,6 @@ function AppointmentCardViewModel(params) {
             version.version.sourceBooking(this.sourceItem().sourceBooking());
             this.editedVersion(version);
             this.item(AppointmentView(version.version, app));
-
-            // Setup auto-saving
-            version.on('push', function(success, rollback) {
-                if (success) {
-                    this.isSaving(true);
-                    app.model.appointments.setAppointment(version.version)
-                    .then(function(savedApt) {
-                        //var wasNew = version.original.id() < 1;
-                        // Update with remote data, the original appointment in the version,
-                        // not the currentAppointment or in the index in the list to avoid
-                        // race-conditions
-                        version.original.model.updateWith(savedApt);
-
-                        // TODO: wasNew:true: add to the list and sort it??
-                        // There is a wizard for bookings, so may be different on that case
-                        
-                        // Go out edit mode
-                        this.editMode(false);
-                    }.bind(this))
-                    .catch(function(err) {
-                        // Performs a rollback of the original model
-                        rollback();
-                        // The version data keeps untouched, user may want to retry
-                        // or made changes on its un-saved data.
-                        // Show error
-                        app.modals.showError({
-                            title: 'There was an error saving the data.',
-                            error: err
-                        });
-                        // Don't replicate error, allow always
-                    })
-                    .then(function() {
-                        // ALWAYS:
-                        this.isSaving(false);
-                    }.bind(this));
-                }
-            }.bind(this));
         }
     }, this);
 
@@ -150,10 +113,35 @@ function AppointmentCardViewModel(params) {
         var version = this.editedVersion();
 
         if (version && version.areDifferent()) {
-            // Push version to original, will launch a remote update 
-            // if anithing changed
-            // TODO: ask for confirmation if version isObsolete
-            version.push({ evenIfObsolete: true });
+            this.isSaving(true);
+            app.model.appointments.setAppointment(version.version)
+            .then(function(savedApt) {
+                // Do not do a version push, just update with remote
+                //version.push({ evenIfObsolete: true });
+                // Update with remote data, the original appointment in the version,
+                // not the currentAppointment or in the index in the list to avoid
+                // race-conditions
+                version.original.model.updateWith(savedApt);
+                // Do a pull so original and version gets the exact same data
+                version.pull({ evenIfNewer: true });
+
+                // Go out edit mode
+                this.editMode(false);
+            }.bind(this))
+            .catch(function(err) {
+                // The version data keeps untouched, user may want to retry
+                // or made changes on its un-saved data.
+                // Show error
+                app.modals.showError({
+                    title: 'There was an error saving the data.',
+                    error: err
+                });
+                // Don't replicate error, allow always
+            })
+            .then(function() {
+                // ALWAYS:
+                this.isSaving(false);
+            }.bind(this));
         }
     }.bind(this);
 
@@ -300,11 +288,11 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item().startTime(requestData.selectedDatetime);
         calculateEndTime();
     }
-    if (requestData.selectAddress === true) {
-        this.item().addressID(requestData.selectedAddressID);
-    }
     if (requestData.selectedJobTitleID) {
         this.item().jobTitleID(requestData.selectedJobTitleID);
+    }
+    if (requestData.selectAddress === true) {
+        this.item().addressID(requestData.selectedAddressID);
     }
     if (requestData.selectPricing === true) {
         this.item().pricing(

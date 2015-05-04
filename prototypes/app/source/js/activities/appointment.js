@@ -62,33 +62,69 @@ var A = Activity.extends(function AppointmentActivity() {
         return defLink + d.toISOString();
     }, this);
     
-    // Just update URL to match the appointment currently showed
+    // On changing the current appointment:
+    // - Update URL to match the appointment currently showed
+    // - Attach handlers to ID and StartTime so we load data for the new
+    //   date when it changes (ID changes on create a booking, StartTime on
+    //   edition).
     this.registerHandler({
         target: this.viewModel.currentAppointment,
         handler: function (apt) {
-            
+
             if (!apt)
                 return;
             
-            // Update URL to match the appointment ID and
-            // track it state
-            // Get ID from URL, to avoid do anything if the same.
-            var aptId = apt.id(),
-                found = /appointment\/([^\/]+)\/(\-?\d+)/i.exec(window.location),
-                urlId = found && found[2] |0,
-                urlDate = found && found[1],
-                curDateStr = getDateWithoutTime(this.viewModel.currentDate()).toISOString();
+            var updateUrl = function updateUrl() {
+                // Update URL to match the appointment ID and
+                // track it state
+                // Get ID from URL, to avoid do anything if the same.
+                var aptId = apt.id(),
+                    found = /appointment\/([^\/]+)\/(\-?\d+)/i.exec(window.location),
+                    urlId = found && found[2] |0,
+                    urlDate = found && found[1],
+                    curDateStr = getDateWithoutTime(this.viewModel.currentDate()).toISOString();
 
-            if (!found ||
-                urlId !== aptId.toString() ||
-                urlDate !== curDateStr) {
-                
-                // If was an incomplete URL, just replace current state
-                if (urlId === '')
-                    this.app.shell.history.replaceState(null, null, 'appointment/' + curDateStr + '/' + aptId);
-                else
-                    this.app.shell.history.pushState(null, null, 'appointment/' + curDateStr + '/' + aptId);
+                if (!found ||
+                    urlId !== aptId.toString() ||
+                    urlDate !== curDateStr) {
+
+                    // If was an incomplete URL, just replace current state
+                    if (urlId === '')
+                        this.app.shell.history.replaceState(null, null, 'appointment/' + curDateStr + '/' + aptId);
+                    else
+                        this.app.shell.history.pushState(null, null, 'appointment/' + curDateStr + '/' + aptId);
+                }
+            }.bind(this);
+            
+            // Update now
+            updateUrl();
+            
+            // Attach handlers to ID and StartTime
+            // if not attached already on the appointment
+            if (!apt.__idDateHandlersAttached) {
+                apt.__idDateHandlersAttached = true;
+                var relocateList = function relocateList() {
+                    var date = getDateWithoutTime(apt.startTime()),
+                        id = apt.id();
+                    
+                    // Current cache must be removed, otherwise the apt
+                    // will not appear in the new dated list, showing a strange
+                    // change and de-synced/corrupted data
+                    // TODO: enhance by discarding only the cache for the previous
+                    // and new date
+                    this.app.model.appointments.clearCache();
+                    this.app.model.bookings.clearCache();
+                    this.app.model.calendarEvents.clearCache();
+                    
+                    this.viewModel.setCurrent(date, id);
+                    updateUrl();
+                }.bind(this);
+                // With explicit subscribe and not a computed because we
+                // must avoid the first time execution (creates an infinite loop)
+                apt.startTime.subscribe(relocateList);
+                apt.id.subscribe(relocateList);
             }
+            
         }.bind(this)._delayed(10)
         // IMPORTANT: delayed REQUIRED to avoid triple loading (activity.show) on first load triggered by a click/tap event.
     });

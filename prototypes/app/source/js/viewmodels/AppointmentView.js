@@ -20,24 +20,27 @@ module.exports = function AppointmentView(appointment, app) {
             return app.model.customers.getObservableItem(cid, true)();
         }
         return null;
-    }, appointment);
+    }, appointment)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     appointment.address = ko.computed(function() {
         var b = this.sourceBooking();
         if (!b) return null;
-        
+
         var aid = this.addressID(),
             jid = this.jobTitleID();
         if (aid && jid) {
             return app.model.serviceAddresses.getObservableItem(jid, aid, true)();
         }
         return null;
-    }, appointment);
+    }, appointment)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
     appointment.addressSummary = ko.computed(function() {
         var add = this.address();
         return add && add.singleLine() || '';
-    }, appointment);
+    }, appointment)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     /* Property with the pricing array plus information about the
         freelancerPricing.
@@ -52,14 +55,16 @@ module.exports = function AppointmentView(appointment, app) {
         return details.map(function(det) {
             return PricingEstimateDetailView(det, jid, app);
         });
-    }, appointment);
+    }, appointment)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 60 } });
 
     appointment.servicesSummary = ko.computed(function() {
         return this.pricingWithInfo()
         .map(function(service) {
             return service.freelancerPricing().name();
         }).join(', ');
-    }, appointment);
+    }, appointment)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     // TODO Review for any change of compute the full service duration
     appointment.serviceDurationMinutes = ko.computed(function() {
@@ -67,14 +72,17 @@ module.exports = function AppointmentView(appointment, app) {
         return pricing.reduce(function(prev, service) {
             return prev + service.freelancerPricing().serviceDurationMinutes();
         }, 0);
-    }, appointment);
+    }, appointment)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     // TODO Review if calculation of fees and that is needed
-    appointment.pricing.subscribe(function(pricing) {
+    ko.computed(function() {
+        var pricing = appointment.pricing();
         this.price(pricing.reduce(function(prev, cur) {
             return prev + cur.totalPrice();
         }, 0));
-    }.bind(appointment));
+    }, appointment)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
     return appointment;
 };
@@ -85,7 +93,8 @@ function PricingEstimateDetailView(pricingEstimateDetail, jobTitleID, app) {
         var pid = this.freelancerPricingID();
         return app.model.freelancerPricing
             .getObservableItem(jobTitleID, pid, true)();
-    }, pricingEstimateDetail);
+    }, pricingEstimateDetail)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
     return pricingEstimateDetail;
 }
