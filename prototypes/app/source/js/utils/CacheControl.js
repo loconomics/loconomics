@@ -25,6 +25,10 @@ function CacheControl(options) {
         var tdiff = this.latest && new Date() - this.latest || Number.POSITIVE_INFINITY;
         return tdiff > this.ttl;
     };
+    
+    this.touch = function touch() {
+        this.latest = new Date();
+    };
 }
 
 module.exports = CacheControl;

@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var moment = require('moment'),
-    ko = require('knockout'),
+var ko = require('knockout'),
+    moment = require('moment'),
     Time = require('../utils/Time');
 require('../components/DatePicker');
 
@@ -60,9 +60,6 @@ var A = Activity.extends(function DatetimePickerActivity() {
         }.bind(this)
     });
     
-    // TestingData
-    this.viewModel.slotsData = require('../testdata/timeSlots').timeSlots;
-    
     this.bindDateData(new Date());
 });
 
@@ -77,21 +74,34 @@ A.prototype.show = function show(state) {
 
 A.prototype.bindDateData = function bindDateData(date) {
 
-    var sdate = moment(date).format('YYYY-MM-DD');
-    var slotsData = this.viewModel.slotsData;
-
-    if (slotsData.hasOwnProperty(sdate)) {
-        this.viewModel.slots(slotsData[sdate]);
-    } else {
-        this.viewModel.slots(slotsData['default']);
-    }
+    this.viewModel.isLoading(true);
+    this.app.model.availability.byDate(date)
+    .then(function(data) {
+        var sdate = moment(date).format('YYYY-MM-DD');
+        this.viewModel.slots(data.slots.map(function(slot) {
+            // From string to Date
+            var dateslot = new Date(sdate + 'T' + slot);
+            return dateslot;
+        }));
+    }.bind(this))
+    .catch(function(err) {
+        this.app.modals.showError({
+            title: 'Error loading availability',
+            error: err
+        });
+    }.bind(this))
+    .then(function() {
+        // Finally
+        this.viewModel.isLoading(false);
+    }.bind(this));
 };
 
 function ViewModel() {
 
     this.headerText = ko.observable('Select a time');
     this.selectedDate = ko.observable(new Date());
-    this.slotsData = {};
+    this.isLoading = ko.observable(false);
+
     this.slots = ko.observableArray([]);
     this.groupedSlots = ko.computed(function(){
         /*
@@ -122,14 +132,14 @@ function ViewModel() {
                 ends: new Time(datePart, 24, 0)
             }
         ];
-        // TODO Empty slots must appear with
-        // 'empty' message rather than excluded
+
         var slots = this.slots().sort();
         slots.forEach(function(slot) {
-            groups.forEach(function(group) {
+            groups.some(function(group) {
                 if (slot >= group.starts &&
                     slot < group.ends) {
                     group.slots.push(slot);
+                    return true;
                 }
             });
         });

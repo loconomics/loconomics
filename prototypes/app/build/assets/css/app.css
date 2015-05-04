@@ -1682,7 +1682,12 @@ body.use-backdrop:before {
   padding: 4px 8px;
 }
 
-/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SimpleList.styl */
+/* line 32 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\GroupedTimeSlots.styl */
+.GroupedTimeSlots .GroupedTimeSlots-slots-empty {
+  text-align: center;
+}
+
+/* line 36 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SimpleList.styl */
 
 /* line 13 : d:\Iago\Proxectos\Loconomics.com\styleguide\prototypes\app\source\css\components\SimpleList.styl */
 .SimpleList {

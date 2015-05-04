@@ -657,10 +657,15 @@
          <h2 class="SectionTitle" data-bind="text: selectedDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></h2>
 
         <div class="GroupedTimeSlots" data-bind="foreach: groupedSlots">
-          <div class="GroupedTimeSlots-group" data-bind="visible: slots.length">
+          <div class="GroupedTimeSlots-group">
             <div class="GroupedTimeSlots-groupName" data-bind="text: group"></div>
-            <div class="GroupedTimeSlots-slots" data-bind="foreach: { data: slots, as: 'item' }"> <a href="#" class="btn btn-link btn-default" data-bind="event: { tap: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
+            <div class="GroupedTimeSlots-slots">
+              <div class="GroupedTimeSlots-slots-empty" data-bind="visible: slots.length === 0">No available appointments</div>
+              <!-- ko foreach: { data: slots, as: 'item'
+              } --> <a href="#" class="btn btn-link btn-default" data-bind="event: { tap: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
 
+              <!--
+              /ko -->
             </div>
           </div>
         </div>
