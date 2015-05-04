@@ -1087,7 +1087,7 @@ public static partial class LcCalendar
     /// </summary>
     public static readonly int[] ReadOnlyEventTypes = new int[] { 1, 2, 4, 6 };
 
-    public static void SetSimplifiedEvent(int UserID, int CalendarEventID,
+    public static int SetSimplifiedEvent(int UserID, int CalendarEventID,
         int EventTypeID,
         int AvailabilityTypeID,
         string Summary,
@@ -1150,7 +1150,7 @@ public static partial class LcCalendar
             }
         }
 
-        SetUserAppointment(UserID,
+        return SetUserAppointment(UserID,
             CalendarEventID,
             EventTypeID,
             AvailabilityTypeID,
@@ -1401,7 +1401,7 @@ public static partial class LcCalendar
                 .Where(c => c.UserId == userID && c.Id == eventID).FirstOrDefault();
          }
     }
-    public static void SetUserAppointment(int userID, int CalendarEventID,
+    public static int SetUserAppointment(int userID, int CalendarEventID,
         int EventTypeID,
         int AvailabilityTypeID,
         string Summary,
@@ -1426,7 +1426,7 @@ public static partial class LcCalendar
             {
                 // Deleted or bad ID
                 if (CalendarEventID > 0)
-                    return;
+                    return -1;
 
                 // New one to be created:
                 dbevent = ent.CalendarEvents.Create();
@@ -1434,7 +1434,7 @@ public static partial class LcCalendar
                 dbevent.UserId = userID;
                 dbevent.CreatedDate = DateTime.Now;
             } else if (dbevent.UserId != userID)
-                return;
+                return -2;
 
             // Dates swap
             if (EndTime < StartTime){
@@ -1528,6 +1528,8 @@ public static partial class LcCalendar
                 }
             }
             ent.SaveChanges();
+
+            return dbevent.Id;
         }
     }
     public static void DelUserAppointment(int userID, int CalendarEventID)

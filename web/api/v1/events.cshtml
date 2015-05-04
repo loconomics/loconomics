@@ -190,18 +190,22 @@
 
             try
             {
-            LcCalendar.SetSimplifiedEvent(userID, eventID,
-                Request["EventTypeID"].AsInt(),
-                Request["AvailabilityTypeID"].AsInt(),
-                Request["Summary"],
-                Request["StartTime"].AsDateTime(),
-                Request["EndTime"].AsDateTime(),
-                Request["IsAllDay"].AsBool(),
-                Request["Location"],
-                Request["Description"],
-                Request["TimeZone"],
-                rrule
-            );
+                eventID = LcCalendar.SetSimplifiedEvent(userID, eventID,
+                    Request["EventTypeID"].AsInt(),
+                    Request["AvailabilityTypeID"].AsInt(),
+                    Request["Summary"],
+                    Request["StartTime"].AsDateTime(),
+                    Request["EndTime"].AsDateTime(),
+                    Request["IsAllDay"].AsBool(),
+                    Request["Location"],
+                    Request["Description"],
+                    Request["TimeZone"],
+                    rrule
+                );
+                
+                if (eventID < 0) {
+                    throw new HttpException(404, "Event not found.");
+                }
             }
             catch (ConstraintException delEx)
             {
