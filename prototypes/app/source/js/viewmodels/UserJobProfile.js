@@ -54,11 +54,13 @@ function UserJobProfileViewModel(app) {
     this.thereIsError = ko.observable(false);
     this.baseUrl = ko.observable('/jobtitles');
     
-    this.selectJobTitle = function() {
-        // Hook to allow for custom handler rather than follow
-        // the URL. On that cases, remember to return false
-        return true;
-    };
+    this.selectJobTitle = function(jobTitle) {
+        // Gollow the next link:
+        app.shell.go(this.baseUrl() + '/' + jobTitle.jobTitleID());
+        // This function can be replaced by custom handling.
+        // Stop events
+        return false;
+    }.bind(this);
     
     var showLoadingError = function showLoadingError(err) {
         app.modals.showError({

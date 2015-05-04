@@ -4,13 +4,13 @@
         <div class="ListView-item-marker">
             <p></p>
         </div>
-        <a href="#"
-           data-bind="attr: { href: $parent.baseUrl() + '/' + jobTitleID() }, event: { tap: $parent.selectJobTitle }"
+        <button
+           data-bind="event: { tap: $parent.selectJobTitle }"
            class="btn btn-link btn-block ListView-item-content">
             <p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p>
-        </a>
-        <a href="#"
-           data-bind="attr: { href: $parent.baseUrl() + '/' + jobTitleID() }"
-           class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+        </button>
+        <button
+           data-bind="event: { tap: $parent.selectJobTitle }"
+           class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></button>
     </div>
 </script>
