@@ -85,13 +85,34 @@ exports.create = function create(appModel) {
         });
     };
     
-    api.eventToSimplifiedEvent = function(/*event*/) {
-        throw new Error('Not Implemented');
+    api.appointmentToSimplifiedEvent = function(apt) {
+        
+        var rrule = apt.sourceEvent().recurrenceRule();
+        if (rrule)
+            rrule = apt.sourceEvent().recurrenceRule().model.toPlainObject();
+
+        var occs = apt.sourceEvent().recurrenceOccurrences();
+        if (occs)
+            occs = occs.map(function(occ) {
+                return occ && occ.model.toPlainObject() || null;
+            }).filter(function(occ) { return occ !== null; });
+        
+        return {
+            // The same as apt.sourceEvent().calendarEventID()
+            calendarEventID: apt.id() < 0 ? 0 : apt.id(),
+            eventTypeID: apt.sourceEvent().eventTypeID(),
+            summary: apt.summary(),
+            description: apt.description(),
+            availabilityTypeID: apt.sourceEvent().availabilityTypeID(),
+            location: apt.addressSummary(),
+            startTime: apt.startTime(),
+            endTime: apt.endTime(),
+            isAllDay: apt.sourceEvent().isAllDay(),
+            recurrenceRule: rrule,
+            recurrenceOccurrences: occs
+        };
     };
-    api.appointmentToSimplifiedEvent = function(/*event*/) {
-        throw new Error('Not Implemented');
-    };
-    
+
     /**
         Creates/updates a booking, given a simplified booking
         object or an Appointment model or a Booking model
@@ -99,7 +120,7 @@ exports.create = function create(appModel) {
     api.setEvent = function setEvent(event) {
 
         event = event.calendarEventID ?
-            api.eventToSimplifiedEvent(event) :
+            event.model.toPlainObject() :
             event.sourceEvent ?
                 api.appointmentToSimplifiedEvent(event) :
                 event
@@ -108,7 +129,7 @@ exports.create = function create(appModel) {
         var id = event.calendarEventID || '',
             method = id ? 'put' : 'post';
 
-        return appModel.rest[method]('events/' + id, event)
+        return appModel.rest[method]('events' + (id ? '/' : '') + id, event)
         .then(function(serverEvent) {
             return new CalendarEvent(serverEvent);
         });

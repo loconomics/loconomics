@@ -36,6 +36,8 @@
   "ReadOnly": false
 }*/
 
+var Model = require('./Model');
+
 function RecurrenceRule(values) {
     Model(this);
     
@@ -60,9 +62,6 @@ function RecurrenceOccurrence(values) {
         endTime: null //:Date
     }, values);
 }
-
-var ko = require('knockout'),
-    Model = require('./Model');
    
 function CalendarEvent(values) {
     
@@ -92,22 +91,15 @@ function CalendarEvent(values) {
         updatedDate: null,
         createdDate: null,
         description: '',
-        readOnly: false
+        readOnly: false,
+        recurrenceRule: {
+            Model: RecurrenceRule
+        },
+        recurrenceOccurrences: {
+            isArray: true,
+            Model: RecurrenceOccurrence
+        }
     }, values);
-
-    this.recurrenceRule = ko.observable(
-        values && 
-        values.recurrenceRule && 
-        new RecurrenceRule(values.recurrenceRule)
-    );
-    this.recurrenceOccurrences = ko.observableArray([]); //:RecurrenceOccurrence[]
-    if (values && values.recurrenceOccurrences) {
-        values.recurrenceOccurrences.forEach(function(occurrence) {
-            
-            this.RecurrenceOccurrences.push(new RecurrenceOccurrence(occurrence));
-            
-        }.bind(this));
-    }
 }
 
 module.exports = CalendarEvent;

@@ -23,6 +23,9 @@ function Appointment(values) {
         // CommonEvent fields:
         summary: 'New booking',
         description: null,
+        
+        // Event specific fields:
+        isAllDay: false,
 
         // Fields specific for bookings
         price: 0,
@@ -123,6 +126,7 @@ Appointment.fromCalendarEvent = function fromCalendarEvent(event) {
     apt.startTime(event.startTime());
     apt.endTime(event.endTime());
     apt.summary(event.summary());
+    apt.isAllDay(event.isAllDay());
     apt.sourceEvent(event);
     
     return apt;

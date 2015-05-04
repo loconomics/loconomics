@@ -96,6 +96,14 @@ function AppointmentCardViewModel(params) {
             version.version.sourceBooking(this.sourceItem().sourceBooking());
             this.editedVersion(version);
             this.item(AppointmentView(version.version, app));
+            
+            if (this.isNew() && this.isEvent()) {
+                // Some defaults for events
+                this.item().sourceEvent().availabilityTypeID(0); // Unavailable
+                this.item().isAllDay(false);
+                this.item().sourceEvent().eventTypeID(3); // Appointment/block-time
+                this.item().summary('');
+            }
         }
     }, this);
 
@@ -172,7 +180,18 @@ function AppointmentCardViewModel(params) {
 
         editFieldOn('datetimePicker', {
             selectedDatetime: this.item().startTime(),
+            datetimeField: 'startTime',
             headerText: 'Select the start time'
+        });
+    }.bind(this);
+
+    this.pickEndDateTime = function pickEndDateTime() {
+        if (this.isLocked()) return;
+
+        editFieldOn('datetimePicker', {
+            selectedDatetime: this.item().endTime(),
+            datetimeField: 'endTime',
+            headerText: 'Select the end time'
         });
     }.bind(this);
 
@@ -247,7 +266,7 @@ function AppointmentCardViewModel(params) {
     external activities.
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
-    /*jshint maxcomplexity:9 */
+    /*jshint maxcomplexity:12 */
     
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)
@@ -285,8 +304,10 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item().customerUserID(requestData.selectedClientID);
     }
     if (typeof(requestData.selectedDatetime) !== 'undefined') {
-        this.item().startTime(requestData.selectedDatetime);
-        calculateEndTime();
+        var field = requestData.datetimeField;
+        this.item()[field](requestData.selectedDatetime);
+        if (this.isBooking())
+            calculateEndTime();
     }
     if (requestData.selectedJobTitleID) {
         this.item().jobTitleID(requestData.selectedJobTitleID);

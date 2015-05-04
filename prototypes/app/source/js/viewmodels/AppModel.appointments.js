@@ -71,7 +71,7 @@ exports.create = function create(appModel) {
         else if (apt.sourceEvent()) {
             return appModel.calendarEvents.setEvent(apt)
             .then(function(event) {
-                return Appointment.fromEvent(event);
+                return Appointment.fromCalendarEvent(event);
             });
         }
         else {

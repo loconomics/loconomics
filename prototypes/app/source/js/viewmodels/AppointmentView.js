@@ -24,9 +24,6 @@ module.exports = function AppointmentView(appointment, app) {
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     appointment.address = ko.computed(function() {
-        var b = this.sourceBooking();
-        if (!b) return null;
-
         var aid = this.addressID(),
             jid = this.jobTitleID();
         if (aid && jid) {
@@ -37,8 +34,9 @@ module.exports = function AppointmentView(appointment, app) {
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
     appointment.addressSummary = ko.computed(function() {
+        var eventData = this.sourceEvent();
         var add = this.address();
-        return add && add.singleLine() || '';
+        return add && add.singleLine() || eventData && eventData.location() || '';
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
