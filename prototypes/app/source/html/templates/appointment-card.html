@@ -153,7 +153,7 @@
             </li>
         </ul>
         <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && !editMode()">
-            <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: edit }">Edit</button></div>
+            <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: edit }, disable: item().readOnly">Edit</button></div>
             <div class="col-xs-6"><button type="button" class="btn btn-default btn-block">Contact client</button></div>
         </div>
         <div class="AppointmentCard-actions row" data-bind="visible: editMode()">

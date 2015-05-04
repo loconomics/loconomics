@@ -43,6 +43,8 @@ function Appointment(values) {
         
         jobTitleID: 0,
         
+        readOnly: false,
+        
         sourceEvent: {
             Model: CalendarEvent,
             defaultValue: null
@@ -127,6 +129,7 @@ Appointment.fromCalendarEvent = function fromCalendarEvent(event) {
     apt.endTime(event.endTime());
     apt.summary(event.summary());
     apt.isAllDay(event.isAllDay());
+    apt.readOnly(event.readOnly());
     apt.sourceEvent(event);
     
     return apt;
