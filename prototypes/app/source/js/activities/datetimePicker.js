@@ -70,6 +70,9 @@ A.prototype.show = function show(state) {
 
     var header = this.requestData.headerText;
     this.viewModel.headerText(header || 'Select date and time');
+    
+    // Keep data updated:
+    this.app.model.schedulingPreferences.sync();
 };
 
 A.prototype.bindDateData = function bindDateData(date) {
@@ -96,7 +99,9 @@ A.prototype.bindDateData = function bindDateData(date) {
     }.bind(this));
 };
 
-function ViewModel() {
+function ViewModel(app) {
+    
+    this.schedulingPreferences = app.model.schedulingPreferences.data;
 
     this.headerText = ko.observable('Select a time');
     this.selectedDate = ko.observable(new Date());
@@ -104,6 +109,9 @@ function ViewModel() {
 
     this.slots = ko.observableArray([]);
     this.groupedSlots = ko.computed(function(){
+        
+        var incSize = this.schedulingPreferences.incrementsSizeInMinutes();
+        
         /*
           before 12:00pm (noon) = morning
           afternoon: 12:00pm until 5:00pm
@@ -133,9 +141,22 @@ function ViewModel() {
             }
         ];
 
+        // Populate groups with the time slots
+        // First, sort them
         var slots = this.slots().sort();
+        // Iterate to organize by group
         slots.forEach(function(slot) {
+
+            // Filter slots by the increment size preference
+            var totalMinutes = moment.duration(slot).asMinutes() |0;
+            if (totalMinutes % incSize !== 0) {
+                return;
+            }
+
+            // Check every group
             groups.some(function(group) {
+                // If matches the group, push to it
+                // and go out of groups iteration quickly
                 if (slot >= group.starts &&
                     slot < group.ends) {
                     group.slots.push(slot);
