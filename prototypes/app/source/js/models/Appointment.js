@@ -151,6 +151,11 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     apt.postNotesToClient(booking.postNotesToClient());
     apt.preNotesToSelf(booking.preNotesToSelf());
     apt.postNotesToSelf(booking.postNotesToSelf());
+    
+    // On bookings, readOnly must set to false (is sent as true ever from
+    // the server, to prevent direct manipulation of the event that is part of
+    // a booking
+    apt.readOnly(false);
 
     var prices = booking.bookingRequest() && booking.bookingRequest().pricingEstimate();
     if (prices) {
