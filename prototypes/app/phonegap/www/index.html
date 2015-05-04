@@ -296,32 +296,6 @@
         </div>
       </form>
     </div>
-    <!-- Activity addresses -->
-    <div class="container-fluid" data-activity="addresses" data-bind="css: { 'is-loading': isLoading }">
-       <h2 class="SectionTitle">
-      <span data-bind="visible: headerText, text: headerText">
-        Addresses
-      </span>
-      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-  </h2>
-
-      <div class="ListView ListView--twolines ListView--textualmarker" data-bind="template: { name: 'job-title-tile-template', foreach: userJobProfile }"></div>
-      <div class="ListView ListView--twolines" data-bind="foreach: addresses">
-        <div class="ListView-item">
-          <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
-          data-bind="event: { tap: $root.selectAddress }">
-          <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
-        </a>
- <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress }"
-          role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
-
-        </div>
-      </div>
-      <div class="isolated" data-bind="visible: !isSelectionMode()">
-        <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/customer/"
-        data-bind="attr: {'data-href': '#!addressEditor/customer/' + customerUserID()}">Add a client location</button>
-      </div>
-    </div>
     <!-- Activity appointment -->
     <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
@@ -684,10 +658,15 @@
          <h2 class="SectionTitle" data-bind="text: selectedDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></h2>
 
         <div class="GroupedTimeSlots" data-bind="foreach: groupedSlots">
-          <div class="GroupedTimeSlots-group" data-bind="visible: slots.length">
+          <div class="GroupedTimeSlots-group">
             <div class="GroupedTimeSlots-groupName" data-bind="text: group"></div>
-            <div class="GroupedTimeSlots-slots" data-bind="foreach: { data: slots, as: 'item' }"> <a href="#" class="btn btn-link btn-default" data-bind="event: { tap: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
+            <div class="GroupedTimeSlots-slots">
+              <div class="GroupedTimeSlots-slots-empty" data-bind="visible: slots.length === 0">No available appointments</div>
+              <!-- ko foreach: { data: slots, as: 'item'
+              } --> <a href="#" class="btn btn-link btn-default" data-bind="event: { tap: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
 
+              <!--
+              /ko -->
             </div>
           </div>
         </div>
@@ -1845,13 +1824,13 @@
                   </span>
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
               </li>
-              <li data-bind="event: { tap: editMode() && pickClient }">
+              <li data-bind="event: { tap: editMode() && isNew() && pickClient }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().customer() && item().customer().fullName()"></span>
                       <span data-bind="visible: editMode() && !item().customer()" class="AppointmentCard-placeholderLabel">Select/Add client</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().customer(), 'glyphicon-plus': !item().customer()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-plus': !item().customer()}"></span></span>
               </li>
               <li data-bind="event: { tap: editMode() && pickService }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
