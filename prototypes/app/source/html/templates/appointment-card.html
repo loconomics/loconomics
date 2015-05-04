@@ -87,13 +87,13 @@
                 </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && pickClient }">
+            <li data-bind="event: { tap: editMode() && isNew() && pickClient }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().customer() && item().customer().fullName()"></span>
                     <span data-bind="visible: editMode() && !item().customer()" class="AppointmentCard-placeholderLabel">Select/Add client</span>
                 </span>
-                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().customer(), 'glyphicon-plus': !item().customer()}"></span></span>
+                <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-plus': !item().customer()}"></span></span>
             </li>
             <li data-bind="event: { tap: editMode() && pickService }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
