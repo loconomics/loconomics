@@ -3,7 +3,6 @@
 'use strict';
 
 var Booking = require('../models/Booking'),
-//  apiHelper = require('../utils/apiHelper'),
     moment = require('moment'),
     ko = require('knockout');
 
@@ -22,15 +21,6 @@ exports.create = function create(appModel) {
             }
         }
     };
-/*
-    apiHelper.defineCrudApiForRest({
-        extendedObject: api.remote,
-        Model: Booking,
-        modelName: 'Booking',
-        modelListName: 'Bookings',
-        modelUrl: 'bookings',
-        idPropertyName: 'bookingID'
-    });*/
 
     var cacheByDate = {};
     

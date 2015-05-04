@@ -3,7 +3,6 @@
 'use strict';
 
 var CalendarEvent = require('../models/CalendarEvent'),
-//  apiHelper = require('../utils/apiHelper'),
     moment = require('moment'),
     ko = require('knockout');
 
@@ -34,15 +33,6 @@ exports.create = function create(appModel) {
     appModel.on('clearLocalData', function() {
         api.clearCache();
     });
-
-    /*apiHelper.defineCrudApiForRest({
-        extendedObject: api.remote,
-        Model: CalendarEvent,
-        modelName: 'CalendarEvent',
-        modelListName: 'CalendarEvents',
-        modelUrl: 'events',
-        idPropertyName: 'calendarEventID'
-    });*/
 
     api.getEventsByDate = function getEventsByDate(date) {
         var dateKey = moment(date).format('YYYYMMDD');
