@@ -111,8 +111,12 @@ public static partial class LcCalendar
             // We prepare the slots with every date in the range, no matter
             // if some dates ends up without data (empty value list) we need to be
             // explicit about the returned dates.
-            var fordate = startDate;
-            while (fordate <= endDate) {
+            // IMPORTANT: We MUST compare against the Date component (without hour) because the given datetime
+            // can include hours in the middle of the date and adding 1 day on each iteration will make that,
+            // by comparing date AND time fail to get all the involved natural dates, ending in a crash during
+            // the slots loop soon later (specially because of differences in time zones from requester and server).
+            var fordate = startDate.Date;
+            while (fordate <= endDate.Date) {
                 slots.Add(fordate.ToString(dateFormat), new List<string>());
                 // Next date
                 fordate = fordate.AddDays(1);
@@ -123,7 +127,6 @@ public static partial class LcCalendar
             result["defaultStatus"] = "unavailable";
             result["status"] = "available";
             foreach(var ev in data) {
-            
                 if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
                     // Result set is organized per dates,
                     var date = ev.DateSet.ToString(dateFormat);
