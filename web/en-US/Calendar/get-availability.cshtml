@@ -15,7 +15,7 @@
     try {
         var type = Request["type"] ?? "weekly";
         
-        var avail = new RestAvailability();
+        var avail = new RestAvailability(false);
         result = avail.GetFor(Request, type);
 
         //throw new Exception("Inside Test error");

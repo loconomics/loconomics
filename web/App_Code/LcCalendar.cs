@@ -143,6 +143,10 @@ public static partial class LcCalendar
         public DayOfWeek DayOfWeek;
         public TimeSpan StartTime;
         public TimeSpan EndTime;
+        /// <summary>
+        /// TimeZone name, expected an IANA Time Zone Name
+        /// </summary>
+        public string TimeZone;
     }
 
     private static TimeSpan LastMinute = new TimeSpan(23, 59, 59);
@@ -190,7 +194,8 @@ public static partial class LcCalendar
                         {
                             DayOfWeek = (DayOfWeek)evrf.DayOfWeek.Value,
                             StartTime = startTime,
-                            EndTime = endTime
+                            EndTime = endTime,
+                            TimeZone = ev.TimeZone
                         };
                     }
                 }
@@ -281,6 +286,7 @@ public static partial class LcCalendar
         newevent.StartTime = startDateTime;
         newevent.EndTime = endDateTime;
         newevent.IsAllDay = allDay;
+        newevent.TimeZone = workHoursDay.TimeZone;
         newevent.UpdatedDate = DateTime.Now;
         newevent.CreatedDate = DateTime.Now;
         newevent.ModifyBy = "UserID:" + userID;
@@ -311,7 +317,7 @@ public static partial class LcCalendar
     }
 
     /// <summary>
-    /// It expectes the Json structure parsed created by calendar/get-availability?type=workHours
+    /// It expectes the Json structure parsed created by LcCalendar.GetAvailability.WorkHours API
     /// and updated by the javascript availabilityCalendar.WorkHours component, its
     /// analized and saved into database reusing the other specific methods for save work hour events.
     /// 
@@ -329,6 +335,12 @@ public static partial class LcCalendar
 
         var slotsGap = TimeSpan.FromMinutes(15);
         var slotsRanges = new List<LcCalendar.WorkHoursDay>();
+
+        var timeZone = "America/Los_Angeles";
+        if (workhours.timeZone != null)
+        {
+            timeZone = workhours.timeZone.Value;
+        }
 
         foreach (DayOfWeek wk in Enum.GetValues(typeof(DayOfWeek))) {
             var wday = wk.ToString().ToLower();
@@ -389,7 +401,8 @@ public static partial class LcCalendar
                     slotsRanges.Add(new LcCalendar.WorkHoursDay {
                         DayOfWeek = wk,
                         StartTime = firstSlot,
-                        EndTime = finalEndTime
+                        EndTime = finalEndTime,
+                        TimeZone = timeZone
                     });
                 }
             }

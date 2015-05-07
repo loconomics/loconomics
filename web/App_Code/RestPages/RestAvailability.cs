@@ -46,6 +46,13 @@ using WebMatrix.Data;
 /// </summary>
 public class RestAvailability : RestWebPage
 {
+    private bool UseUtc = false;
+
+    public RestAvailability(bool useUtc)
+    {
+        UseUtc = useUtc;
+    }
+
     public override dynamic Get()
     {
         return GetFor(Request, UrlData[0].ToUpper());
@@ -86,7 +93,7 @@ public class RestAvailability : RestWebPage
                 startDate = Request["start"].AsDateTime(defStart);
                 endDate = Request["end"].AsDateTime(defEnd);
 
-                return LcCalendar.GetAvailability.Weekly(userId, startDate, endDate);
+                return LcCalendar.GetAvailability.Weekly(userId, startDate, endDate, UseUtc);
 
             default:
                 throw new HttpException(400, "Bad Request");

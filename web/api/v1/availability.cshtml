@@ -6,5 +6,5 @@
     if (Request.HttpMethod.ToUpper() == "PUT") {
         Response.RestRequiresUser(LcData.UserInfo.UserType.User);
     }
-    new RestAvailability().JsonResponse(this);
+    new RestAvailability(true).JsonResponse(this);
 }

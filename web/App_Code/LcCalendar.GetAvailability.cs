@@ -37,11 +37,22 @@ public static partial class LcCalendar
             // as the default state, then we only return 'available' (free on database) slots
             result["defaultStatus"] = "unavailable";
             result["status"] = "available";
-            
+            // Timezone shared by all (even if specified individually, is considered
+            // to be the same on all cases)
+            // By default:
+            result["timeZone"] = "America/Los_Angeles";
+
             foreach(var r in data) {
                 var wk = String.Format(systemCulture, "{0}", r.DayOfWeek).ToLower();
                 if (!slots.ContainsKey(wk)) {
                     slots.Add(wk, new List<string>());
+                }
+
+                // Set timeZone if any
+                // Since is a general setting, will get the last one
+                if (!String.IsNullOrEmpty(r.TimeZone))
+                {
+                    result["timeZone"] = r.TimeZone;
                 }
 
                 var forslot = r.StartTime;
@@ -96,7 +107,16 @@ public static partial class LcCalendar
             return result;
         }
 
-        static public Dictionary<string, object> Weekly(int userId, DateTime startDate, DateTime endDate)
+        /// <summary>
+        /// Input startDate and endDate must be in the server/database time zone.
+        /// The inUtc flag is only for the timezone of the returned data.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="inUtc"></param>
+        /// <returns></returns>
+        static public Dictionary<string, object> Weekly(int userId, DateTime startDate, DateTime endDate, bool inUtc)
         {
             var result = new Dictionary<string, object>();
 
@@ -104,6 +124,8 @@ public static partial class LcCalendar
             // Too, endDate is given as inclusive but is exclusive when querying the data.
             endDate = endDate.AddDays(1).AddSeconds(-1);
             
+            // TODO: change how availability works in the calendar so it respects the time part of the filter
+            // (right now is getting avail info for the full date of the given start-end)
             var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
 
             // Create result
@@ -116,7 +138,15 @@ public static partial class LcCalendar
             // by comparing date AND time fail to get all the involved natural dates, ending in a crash during
             // the slots loop soon later (specially because of differences in time zones from requester and server).
             var fordate = startDate.Date;
-            while (fordate <= endDate.Date) {
+            var lastdate = endDate.Date;
+
+            if (inUtc)
+            {
+                fordate = startDate.ToUniversalTime().Date;
+                lastdate = endDate.ToUniversalTime().Date;
+            }
+
+            while (fordate <= lastdate) {
                 slots.Add(fordate.ToString(dateFormat), new List<string>());
                 // Next date
                 fordate = fordate.AddDays(1);
@@ -128,10 +158,25 @@ public static partial class LcCalendar
             result["status"] = "available";
             foreach(var ev in data) {
                 if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
+                    
+                    var slotDT = ev.DT;
+                    // Ensure filter the time properly
+                    // (see note on getAvailability)
+                    if (slotDT < startDate ||
+                        slotDT > endDate)
+                    {
+                        continue;
+                    }
+
+                    if (inUtc)
+                    {
+                        slotDT = slotDT.ToUniversalTime();
+                    }
+
                     // Result set is organized per dates,
-                    var date = ev.DateSet.ToString(dateFormat);
+                    var date = slotDT.ToString(dateFormat);
                     // and inside, per time slot.
-                    var slot = ev.TimeBlock.ToString(timeFormat);
+                    var slot = slotDT.TimeOfDay.ToString(timeFormat);
                     // Added to the list
                     slots[date].Add(slot);
                 }
