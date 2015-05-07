@@ -177,6 +177,17 @@ function SimplifiedWeeklySchedule(values) {
         timeZone: ''
     }, values);
     
+    // Index access
+    this.weekDays = [
+        this.sunday,
+        this.monday,
+        this.tuesday,
+        this.wednesday,
+        this.thursday,
+        this.friday,
+        this.saturday
+    ];
+    
     this.timeZoneDisplayName = ko.computed(function() {
         var tzid = this.timeZone(),
             tz = moment.tz(tzid),

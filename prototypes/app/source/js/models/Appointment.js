@@ -219,3 +219,19 @@ Appointment.newFreeSlot = function newFreeSlot(options) {
         description: null
     });
 };
+
+Appointment.newUnavailableSlot = function newUnavailableSlot(options) {
+    
+    var start = options.start || new Time(options.date, 0, 0, 0),
+        end = options.end || new Time(options.date, 0, 0, 0);
+
+    return new Appointment({
+        id: -5,
+
+        startTime: start,
+        endTime: end,
+
+        summary: options.text || 'Unavailable',
+        description: null
+    });
+};

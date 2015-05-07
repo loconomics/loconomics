@@ -190,9 +190,7 @@ function ViewModel(app) {
     
         var slots = this.slotsSource();
         
-        return app.model.appointments
-            .fillWithFreeSlots(slots)
-            .map(TimeSlotViewModel.fromAppointment);
+        return slots.map(TimeSlotViewModel.fromAppointment);
 
     }, this);
     
@@ -215,7 +213,7 @@ function ViewModel(app) {
 
         this.isLoading(true);
         
-        app.model.appointments.getAppointmentsByDate(date)
+        app.model.appointments.getDateAvailability(date)
         .then(function(appointmentsList) {
             
             // IMPORTANT: First, we need to check that we are
@@ -235,15 +233,9 @@ function ViewModel(app) {
                 return;
             }
         
-            if (appointmentsList && appointmentsList.length) {
-                // Update the source:
-                this.slotsSource(appointmentsList);
-                this.isLoading(false);
-            }
-            else {
-                this.slotsSource(fullDayFree);
-                this.isLoading(false);
-            }
+            // Update the source:
+            this.slotsSource(appointmentsList);
+            this.isLoading(false);
 
         }.bind(this))
         .catch(function(err) {
