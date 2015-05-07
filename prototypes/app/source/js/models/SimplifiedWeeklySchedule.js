@@ -196,7 +196,7 @@ function SimplifiedWeeklySchedule(values) {
         }
 
         if (name)
-            return name + ' (' + tz.zoneAbbr() + ')';
+            return name; // + ' (' + tz.zoneAbbr() + ')';
         else
             return '';
     }, this);
