@@ -50,6 +50,7 @@
     "grunt-mkdir": "~0.1.2",
     "localforage": "~1.2.1",
     "grunt-zip": "~0.16.2",
-    "is_js": "~0.7.3"
+    "is_js": "~0.7.3",
+    "moment-timezone": "~0.3.1"
   }
 }

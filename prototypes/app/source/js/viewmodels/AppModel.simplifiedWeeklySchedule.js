@@ -58,7 +58,9 @@ function fromWeeklySchedule(weeklySchedule) {
     // operations, and later by an 'model.updateWith' operation,
     // so plain is simple and better on performance; can be
     // converted easily to the SimplifiedWeeklySchedule object.
-    var simpleWS = {};
+    var simpleWS = {
+        timeZone: weeklySchedule.timeZone || ''
+    };
     
     // Only supports 'available' status with default 'unavailable'
     if (weeklySchedule.defaultStatus !== 'unavailable' ||
@@ -169,7 +171,8 @@ function toWeeklySchedule(simplifiedWeeklySchedule) {
         status: 'available',
         defaultAvailability: 'unavailable',
         slots: {},
-        slotSize: slotSize
+        slotSize: slotSize,
+        timeZone: simplifiedWeeklySchedule.timeZone
     };
 
     // Per weekday

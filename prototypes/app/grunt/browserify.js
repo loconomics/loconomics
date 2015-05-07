@@ -63,6 +63,7 @@ module.exports = function(/*grunt*/) {
                 'es6-promise',
                 'localforage',
                 'is_js',
+                'moment-timezone',
                 // Using a specific browser version of events.EventEmitter, to avoid
                 // the extra load of NodeJS/Browserify 'events' module that has heavy-unneed
                 // dependencies as 'utils'.

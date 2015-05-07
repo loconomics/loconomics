@@ -1727,6 +1727,10 @@
           label: 'Sunday', isLocked: isLocked } } -->
           <!-- /ko -->
         </div>
+        <div class="form-group">
+          <label class="control-label">Time Zone:</label> <span class="form-control-static" data-bind="text: schedule.timeZoneDisplayName"></span>
+
+        </div>
         <div class="row">
           <div>
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
