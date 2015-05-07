@@ -28,6 +28,14 @@ var A = Activity.extends(function WeeklyScheduleActivity() {
             });
         }.bind(this)
     });
+    
+    this.registerHandler({
+        target: this.app.model.simplifiedWeeklySchedule,
+        event: 'saved',
+        handler: function() {
+            this.app.successSave();
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;
@@ -64,6 +72,7 @@ function ViewModel(app) {
     this.schedule = scheduleVersion.version;
 
     this.isLocked = simplifiedWeeklySchedule.isLocked;
+    this.isSaving = simplifiedWeeklySchedule.isSaving;
 
     this.submitText = ko.pureComputed(function() {
         return (
@@ -82,7 +91,5 @@ function ViewModel(app) {
     this.save = function save() {
         // Force to save, even if there was remote updates
         scheduleVersion.push({ evenIfObsolete: true });
-        
-        app.successSave();
     };
 }

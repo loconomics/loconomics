@@ -111,12 +111,13 @@
             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.friday, label: 'Friday', isLocked: isLocked } } --><!-- /ko -->
             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.saturday, label: 'Saturday', isLocked: isLocked } } --><!-- /ko -->
             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.sunday, label: 'Sunday', isLocked: isLocked } } --><!-- /ko -->
+            
+            <div class="form-group">
+                <label class="control-label">Time Zone:</label>
+                <span class="form-control-static" data-bind="text: schedule.timeZoneDisplayName"></span>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label class="control-label">Time Zone:</label>
-            <span class="form-control-static" data-bind="text: schedule.timeZoneDisplayName"></span>
-        </div>
         <div class="row">
             <div>
                 <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
