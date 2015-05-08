@@ -12,6 +12,31 @@
 var Appointment = require('../models/Appointment'),
     moment = require('moment');
 
+exports.sortAppointments = function(a, b) {
+    var as = a.startTime(),
+        ae = a.endTime(),
+        bs = b.startTime(),
+        be = b.endTime();
+
+    if (as === null)
+        return -1;
+    else if (bs === null)
+        return 1;
+
+    var eq = as.toISOString() === bs.toISOString();
+    if (eq) {
+        if (ae === null)
+            return -1;
+        else if (be === null)
+            return 1;
+        
+        return ae - be;
+    }
+    else {
+        return as - bs;
+    }
+};
+
 /**
     Introduce free or unavailable slots wherever needed in the given
     array of Appointments, to fill any gap in a natural day
@@ -32,9 +57,7 @@ var Appointment = require('../models/Appointment'),
 exports.fillDayAvailability = function fillDayAvailability(date, appointmentsList, weekDaySchedule) {
 
     // Shadow clone and sort the list
-    var slots = appointmentsList.slice(0).sort(function(a, b) {
-        return a.startTime() > b.startTime();
-    });
+    var slots = appointmentsList.slice(0).sort(exports.sortAppointments);
 
     var filledSlots = [],
         zeroTime = '00:00:00',
@@ -216,7 +239,5 @@ exports.createScheduleSlots = function createScheduleSlots(range, weekDaySchedul
     // In the complex cases, is easy that the 
     // order gets inversed because of the if-else natural order
     // so ensure goes correct
-    return list.sort(function(a, b) {
-        return a.startTime() > b.startTime();
-    });
+    return list.sort(exports.sortAppointments);
 };
