@@ -16,7 +16,9 @@ var A = Activity.extends(function DatetimePickerActivity() {
 
     this.accessLevel = this.app.UserType.LoggedUser;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('');
+    this.navBar = Activity.createSubsectionNavBar('', {
+        helpId: 'datetimePickerHelp'
+    });
     
     // Getting elements
     this.$datePicker = this.$activity.find('#datetimePickerDatePicker');
