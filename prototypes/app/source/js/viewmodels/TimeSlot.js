@@ -22,20 +22,35 @@ function TimeSlotViewModel(params) {
 
 module.exports = TimeSlotViewModel;
 
-var numeral = require('numeral');
+var numeral = require('numeral'),
+    Appointment = require('../models/Appointment');
 
 /**
     Static constructor to convert an Appointment model into 
     a TimeSlot instance following UI criteria for preset values/setup.
 **/
 TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
-    /*jshint maxcomplexity:8 */
+    /*jshint maxcomplexity:10 */
+    
+    var unavail = Appointment.specialIds.unavailable === apt.id();
+    var link = null;
+    if (!unavail)
+        link = '#!appointment/' + apt.startTime().toISOString() + '/' + apt.id();
+
+    var classNames = null;
+    if (Appointment.specialIds.free === apt.id()) {
+        classNames = 'ListView-item--tag-success';
+    }
+    else if (apt.id() > 0) {
+        classNames = 'ListView-item--tag-primary';
+    }
+    
     return new TimeSlotViewModel({
         startTime: apt.startTime,
         endTime: apt.endTime,
         subject: apt.summary,
         description: apt.description,
-        link: '#!appointment/' + apt.startTime().toISOString() + '/' + apt.id(),
+        link: link,
         actionIcon: (apt.sourceBooking() ? null : apt.sourceEvent() ? 'glyphicon glyphicon-chevron-right' : !apt.id() ? 'glyphicon glyphicon-plus' : null),
         actionText: (
             apt.sourceBooking() && 
@@ -44,6 +59,6 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
             numeral(apt.sourceBooking().bookingRequest().pricingEstimate().totalPrice() || 0).format('$0.00') :
             null
         ),
-        classNames: (apt.id() ? null : 'ListView-item--tag-success')
+        classNames: classNames
     });
 };
