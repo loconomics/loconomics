@@ -181,7 +181,8 @@ function AppointmentCardViewModel(params) {
         editFieldOn('datetimePicker', {
             selectedDatetime: this.item().startTime(),
             datetimeField: 'startTime',
-            headerText: 'Select the start time'
+            headerText: 'Select the start time',
+            navTitle: this.isBooking() ? 'Booking' : 'Event'
         });
     }.bind(this);
 
@@ -191,7 +192,8 @@ function AppointmentCardViewModel(params) {
         editFieldOn('datetimePicker', {
             selectedDatetime: this.item().endTime(),
             datetimeField: 'endTime',
-            headerText: 'Select the end time'
+            headerText: 'Select the end time',
+            navTitle: 'Event'
         });
     }.bind(this);
 

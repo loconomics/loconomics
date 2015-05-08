@@ -81,13 +81,6 @@ NavAction.goBack = new NavAction({
     isShell: true
 });
 
-// TODO TO REMOVE, Example of modal
-NavAction.newItem = new NavAction({
-    link: '#newItem',
-    icon: 'glyphicon glyphicon-plus',
-    isModal: true
-});
-
 NavAction.menuIn = new NavAction({
     link: 'menuIn',
     icon: 'menu',

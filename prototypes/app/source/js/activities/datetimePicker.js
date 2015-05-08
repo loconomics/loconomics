@@ -113,6 +113,8 @@ A.prototype.show = function show(state) {
     var header = this.requestData.headerText;
     this.viewModel.headerText(header || 'Select date and time');
     
+    this.navBar.leftAction().text(this.requestData.navTitle || '');
+    
     // Keep data updated:
     this.app.model.schedulingPreferences.sync();
 };

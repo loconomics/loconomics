@@ -14,9 +14,7 @@ var A = Activity.extends(function ClientsActivity() {
 
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);    
-    this.navBar = Activity.createSubsectionNavBar('Clients', {
-        backLink: 'cms'
-    });
+    this.navBar = Activity.createSubsectionNavBar('Clients');
     
     // Getting elements
     this.$index = this.$activity.find('#clientsIndex');
@@ -27,6 +25,18 @@ var A = Activity.extends(function ClientsActivity() {
         target: this.viewModel.isSelectionMode,
         handler: function (itIs) {
             this.viewModel.headerText(itIs ? 'Select a client' : '');
+            
+            this.navBar.leftAction().text(itIs ? 'Booking' : 'Clients');
+            
+            if (this.requestData.progressStep) {
+                // Replace title by process step if required
+                this.navBar.title(this.requestData.progressStep);
+                this.navBar.leftAction().text('');
+            }
+            else {
+                // Title must be empty
+                this.navBar.title('');
+            }          
         }.bind(this)
     });
 
