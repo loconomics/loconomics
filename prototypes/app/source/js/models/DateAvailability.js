@@ -94,6 +94,44 @@ function DateAvailability(values) {
         else // <= 0
             return 'none';
     }, this);
+    
+    /**
+        Retrieve a list of date-times that are free, available to be used,
+        in this date with a separation between each of the given slotSize
+        in minutes.
+    **/
+    this.getFreeTimeSlots = function getFreeTimeSlots(slotSizeMinutes) {
+        if (this.availableMinutes() <= 0) {
+            // No time, quick return with empty list
+            return [];
+        }
+        else {
+            var slots = [];
+            // Iterate every free appointment
+            this.list().forEach(function (apt) {
+                if (apt.id() === Appointment.specialIds.free) {
+                    slots.push.apply(slots, createTimeSlots(apt.startTime(), apt.endTime(), slotSizeMinutes));
+                }
+            });
+            return slots;
+        }
+    };
 }
 
 module.exports = DateAvailability;
+
+function createTimeSlots(from, to, size) {
+    var i = moment(from),
+        slots = [];
+
+    // Shortcut if bad 'to' (avoid infinite loop)
+    if (to <= from)
+        return slots;
+
+    while(i.toDate() < to) {
+        slots.push(i.clone().toDate());
+        i.add(size, 'minutes');
+    }
+    
+    return slots;
+}

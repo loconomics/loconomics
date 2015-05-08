@@ -4,7 +4,7 @@
 'use strict';
 
 var ko = require('knockout'),
-    moment = require('moment'),
+    //moment = require('moment'),
     Time = require('../utils/Time');
 require('../components/DatePicker');
 
@@ -78,14 +78,17 @@ A.prototype.show = function show(state) {
 A.prototype.bindDateData = function bindDateData(date) {
 
     this.viewModel.isLoading(true);
-    this.app.model.availability.byDate(date)
+    this.app.model.calendar.getDateAvailability(date)
     .then(function(data) {
-        var sdate = moment(date).format('YYYY-MM-DD');
+        
+        this.viewModel.dateAvail(data);
+        
+        /*var sdate = moment(date).format('YYYY-MM-DD');
         this.viewModel.slots(data.slots.map(function(slot) {
             // From string to Date
             var dateslot = new Date(sdate + 'T' + slot);
             return dateslot;
-        }));
+        }));*/
     }.bind(this))
     .catch(function(err) {
         this.app.modals.showError({
@@ -107,7 +110,7 @@ function ViewModel(app) {
     this.selectedDate = ko.observable(new Date());
     this.isLoading = ko.observable(false);
 
-    this.slots = ko.observableArray([]);
+    this.dateAvail = ko.observable();
     this.groupedSlots = ko.computed(function(){
         
         var incSize = this.schedulingPreferences.incrementsSizeInMinutes();
@@ -119,7 +122,7 @@ function ViewModel(app) {
         */
         // Since slots must be for the same date,
         // to define the groups ranges use the first date
-        var datePart = this.slots() && this.slots()[0] || new Date();
+        var datePart = this.dateAvail() && this.dateAvail().date() || new Date();
         var groups = [
             {
                 group: 'Morning',
@@ -142,16 +145,15 @@ function ViewModel(app) {
         ];
 
         // Populate groups with the time slots
-        // First, sort them
-        var slots = this.slots().sort();
+        var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(incSize) || [];
         // Iterate to organize by group
         slots.forEach(function(slot) {
 
             // Filter slots by the increment size preference
-            var totalMinutes = moment.duration(slot).asMinutes() |0;
+            /*var totalMinutes = moment.duration(slot).asMinutes() |0;
             if (totalMinutes % incSize !== 0) {
                 return;
-            }
+            }*/
 
             // Check every group
             groups.some(function(group) {
