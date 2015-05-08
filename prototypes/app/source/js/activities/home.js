@@ -63,7 +63,7 @@ A.prototype.show = function show(options) {
                 else {
                     v.nextBooking.isLoading(true);
                 }
-                appModel.appointments.getAppointment({ bookingID: upcoming.nextBookingID })
+                appModel.calendar.getAppointment({ bookingID: upcoming.nextBookingID })
                 .then(function(apt) {
                     v.nextBooking(apt);
                 })
