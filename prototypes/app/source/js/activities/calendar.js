@@ -4,7 +4,6 @@
 var $ = require('jquery'),
     moment = require('moment'),
     ko = require('knockout');
-    //CalendarSlot = require('../models/CalendarSlot');
 
 require('../components/DatePicker');
 
@@ -214,7 +213,7 @@ function ViewModel(app) {
         this.isLoading(true);
         
         app.model.appointments.getDateAvailability(date)
-        .then(function(appointmentsList) {
+        .then(function(dateAvail) {
             
             // IMPORTANT: First, we need to check that we are
             // in the same date still, because several loadings
@@ -234,7 +233,7 @@ function ViewModel(app) {
             }
         
             // Update the source:
-            this.slotsSource(appointmentsList);
+            this.slotsSource(dateAvail.list());
             this.isLoading(false);
 
         }.bind(this))

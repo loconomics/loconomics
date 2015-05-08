@@ -192,6 +192,11 @@ Appointment.listFromCalendarEventsBookings = function listFromCalendarEventsBook
     });
 };
 
+Appointment.specialIds = {
+    free: -2,
+    unavailable: -5
+};
+
 var Time = require('../utils/Time');
 /**
     Creates an Appointment instance that represents a calendar slot of
@@ -210,7 +215,7 @@ Appointment.newFreeSlot = function newFreeSlot(options) {
         end = options.end || new Time(options.date, 0, 0, 0);
 
     return new Appointment({
-        id: -2,
+        id: Appointment.specialIds.free,
 
         startTime: start,
         endTime: end,
@@ -226,7 +231,7 @@ Appointment.newUnavailableSlot = function newUnavailableSlot(options) {
         end = options.end || new Time(options.date, 0, 0, 0);
 
     return new Appointment({
-        id: -5,
+        id: Appointment.specialIds.unavailable,
 
         startTime: start,
         endTime: end,
