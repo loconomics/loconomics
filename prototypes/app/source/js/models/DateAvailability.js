@@ -74,7 +74,7 @@ function DateAvailability(values) {
         available time in the date (availableMinutes / workDayMinutes)
     **/
     this.availablePercent = ko.pureComputed(function() {
-        return Math.round(this.availableMinutes() / this.workDayMinutes());
+        return (Math.round((this.availableMinutes() / this.workDayMinutes()) * 100));
     }, this);
 
     /**

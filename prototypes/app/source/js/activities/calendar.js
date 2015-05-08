@@ -119,11 +119,43 @@ var A = Activity.extends(function CalendarActivity() {
     // Updating view date when picked another one
     this.registerHandler({
         target: this.$datepicker,
-        event: 'changeDate',
+        event: 'dateChanged',
         handler: function(e) {
             if (e.viewMode === 'days') {
                 this.viewModel.currentDate(getDateWithoutTime(e.date));
             }
+        }.bind(this)
+    });
+    
+    this.registerHandler({
+        target: this.$datepicker,
+        event: 'dayRendered',
+        handler: function(e, $dateTd) {
+            var id = $dateTd.data('date-time');
+            // Get availability info
+            this.app.model.calendar.getDateAvailability(new Date(id))
+            .then(function(dateAvail) {
+                /*jshint maxcomplexity:8*/
+                // If still the same (is async, could have changed)
+                if (id === $dateTd.data('date-time')) {
+                    var cls = '';
+                    switch(dateAvail.availableTag()) {
+                        case 'full':
+                            cls = 'text-success';
+                            break;
+                        case 'medium':
+                            cls = 'text-info';
+                            break;
+                        case 'low':
+                            cls = 'text-warning';
+                            break;
+                        case 'none':
+                            cls = 'text-danger';
+                            break;
+                    }
+                    if (cls) $dateTd.addClass(cls);
+                }
+            });
         }.bind(this)
     });
 

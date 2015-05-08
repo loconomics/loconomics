@@ -35,6 +35,13 @@ var classes = {
     years: 'DatePicker-years'
 };
 
+var events = {
+    dayRendered: 'dayRendered',
+    dateChanged: 'dateChanged',
+    show: 'show',
+    hide: 'hide'
+};
+
 // Picker object
 var DatePicker = function(element, options) {
     /*jshint maxstatements:32,maxcomplexity:24*/
@@ -57,7 +64,7 @@ var DatePicker = function(element, options) {
             this.set();
         }
         this.element.trigger({
-            type: 'show',
+            type: events.show,
             date: this.date
         });
     }
@@ -133,7 +140,7 @@ DatePicker.prototype = {
         this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
         this.place();
         $(window).on('resize', $.proxy(this.place, this));
-        if (e ) {
+        if (e) {
             e.stopPropagation();
             e.preventDefault();
         }
@@ -146,7 +153,7 @@ DatePicker.prototype = {
             }
         });
         this.element.trigger({
-            type: 'show',
+            type: events.show,
             date: this.date
         });
     },
@@ -161,7 +168,7 @@ DatePicker.prototype = {
         }
         //this.set();
         this.element.trigger({
-            type: 'hide',
+            type: events.hide,
             date: this.date
         });
     },
@@ -198,7 +205,7 @@ DatePicker.prototype = {
         if (dontNotify !== true) {
             // Notify:
             this.element.trigger({
-                type: 'changeDate',
+                type: events.dateChanged,
                 date: this.date,
                 viewMode: DPGlobal.modes[this.viewMode].clsName
             });
@@ -287,64 +294,51 @@ DatePicker.prototype = {
             prevM;
             
         if (this._daysCreated !== true) {
-            // Create html (first time only)
-       
-            while(prevMonth.valueOf() < nextMonth) {
-                if (prevMonth.getDay() === this.weekStart) {
-                    html.push('<tr>');
+            // Create base html (first time only)
+            // TODO: Move to constructor
+            for(var r = 0; r < 6; r++) {
+                html.push('<tr>');
+                for(var c = 0; c < 7; c++) {
+                    html.push('<td class="' + classes.monthDay + '">&nbsp;</td>');
                 }
-                clsName = this.onRender(prevMonth);
-                prevY = prevMonth.getFullYear();
-                prevM = prevMonth.getMonth();
-                if ((prevM < month &&  prevY === year) ||  prevY < year) {
-                    clsName += ' old';
-                } else if ((prevM > month && prevY === year) || prevY > year) {
-                    clsName += ' new';
-                }
-                if (prevMonth.valueOf() === currentDate) {
-                    clsName += ' active';
-                }
-                html.push('<td class="' + classes.monthDay + ' ' + clsName+'">'+prevMonth.getDate() + '</td>');
-                if (prevMonth.getDay() === this.weekEnd) {
-                    html.push('</tr>');
-                }
-                prevMonth.setDate(prevMonth.getDate()+1);
+                html.push('</tr>');
             }
-            
+
             this.picker.find('.' + classes.days + ' tbody').empty().append(html.join(''));
             this._daysCreated = true;
         }
-        else {
-            // Update days values
-            
-            var weekTr = this.picker.find('.' + classes.days + ' tbody tr:first-child()');
-            var dayTd = null;
-            while(prevMonth.valueOf() < nextMonth) {
-                var currentWeekDayIndex = prevMonth.getDay() - this.weekStart;
 
-                clsName = this.onRender(prevMonth);
-                prevY = prevMonth.getFullYear();
-                prevM = prevMonth.getMonth();
-                if ((prevM < month &&  prevY === year) ||  prevY < year) {
-                    clsName += ' old';
-                } else if ((prevM > month && prevY === year) || prevY > year) {
-                    clsName += ' new';
-                }
-                if (prevMonth.valueOf() === currentDate) {
-                    clsName += ' active';
-                }
-                //html.push('<td class="day '+clsName+'">'+prevMonth.getDate() + '</td>');
-                dayTd = weekTr.find('td:eq(' + currentWeekDayIndex + ')');
-                dayTd
-                .attr('class', 'day ' + clsName)
-                .text(prevMonth.getDate());
-                
-                // Next week?
-                if (prevMonth.getDay() === this.weekEnd) {
-                    weekTr = weekTr.next('tr');
-                }
-                prevMonth.setDate(prevMonth.getDate()+1);
+        // Update days values    
+        var weekTr = this.picker.find('.' + classes.days + ' tbody tr:first-child()');
+        var dayTd = null;
+        while(prevMonth.valueOf() < nextMonth) {
+            var currentWeekDayIndex = prevMonth.getDay() - this.weekStart;
+
+            clsName = this.onRender(prevMonth);
+            prevY = prevMonth.getFullYear();
+            prevM = prevMonth.getMonth();
+            if ((prevM < month &&  prevY === year) ||  prevY < year) {
+                clsName += ' old';
+            } else if ((prevM > month && prevY === year) || prevY > year) {
+                clsName += ' new';
             }
+            if (prevMonth.valueOf() === currentDate) {
+                clsName += ' active';
+            }
+
+            dayTd = weekTr.find('td:eq(' + currentWeekDayIndex + ')');
+            dayTd
+            .attr('class', classes.monthDay + ' ' + clsName)
+            .data('date-time', prevMonth.toISOString())
+            .text(prevMonth.getDate());
+            
+            this.picker.trigger(events.dayRendered, [dayTd]);
+
+            // Next week?
+            if (prevMonth.getDay() === this.weekEnd) {
+                weekTr = weekTr.next('tr');
+            }
+            prevMonth.setDate(prevMonth.getDate()+1);
         }
 
         var currentYear = this.date.getFullYear();
@@ -440,7 +434,7 @@ DatePicker.prototype = {
                     if (this.viewMode !== 0) {
                         this.date = new Date(this.viewDate);
                         this.element.trigger({
-                            type: 'changeDate',
+                            type: events.dateChanged,
                             date: this.date,
                             viewMode: DPGlobal.modes[this.viewMode].clsName
                         });
@@ -464,7 +458,7 @@ DatePicker.prototype = {
                         this.fill();
                         this.set();
                         this.element.trigger({
-                            type: 'changeDate',
+                            type: events.dateChanged,
                             date: this.date,
                             viewMode: DPGlobal.modes[this.viewMode].clsName
                         });
