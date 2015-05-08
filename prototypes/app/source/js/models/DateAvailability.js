@@ -2,7 +2,7 @@
     Keeps a date availability object that includes a list of appointments
     that fills all the times in the date (following the weekDaySchedule and free/unavailable
     times) and summary of the availability status of the date.
-    Updating the main properties: sourceList, date, weekDaySchedule, the complete
+    Updating the main properties: appointmentsList, date, weekDaySchedule, the complete
     list and summaries auto calculate to show the proper listing.
 **/
 'use strict';
@@ -23,7 +23,7 @@ function DateAvailability(values) {
         weekDaySchedule: {
             Model: WeekDaySchedule
         },
-        sourceList: {
+        appointmentsList: {
             isArray: true,
             Model: Appointment
         }
@@ -31,12 +31,12 @@ function DateAvailability(values) {
     
     /**
         :array<Appointment> List of appointments for all the times in the date.
-        It introduces free and unavailable appointments using sourceList as base
+        It introduces free and unavailable appointments using appointmentsList as base
         for actual *busy* appointments and the rules of weekDaySchedule
     **/
     this.list = ko.pureComputed(function() {
         return availabilityCalculation.fillDayAvailability(
-            this.date(), this.sourceList(), this.weekDaySchedule()
+            this.date(), this.appointmentsList(), this.weekDaySchedule()
         );
     }, this);
 

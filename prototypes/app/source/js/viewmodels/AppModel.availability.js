@@ -1,4 +1,10 @@
-/** Availability
+/**
+    It uses the server-side availability API.
+    IMPORTANT: DON'T USE, It's not aware of time-zones and computation
+    happens badly. Local calculation of availability level is wrong,
+    use AppModel.availability instead.
+    
+    NOTE: Preserved as base for future check with server.
 **/
 'use strict';
 
@@ -8,6 +14,8 @@ var CacheControl = require('../utils/CacheControl'),
 
 exports.create = function create(appModel) {
 
+    console.error('Do NOT use AppModel.availability for now');
+    
     var api = {};
     
     var cache = {

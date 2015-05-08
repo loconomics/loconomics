@@ -212,7 +212,7 @@ function ViewModel(app) {
 
         this.isLoading(true);
         
-        app.model.appointments.getDateAvailability(date)
+        app.model.calendar.getDateAvailability(date)
         .then(function(dateAvail) {
             
             // IMPORTANT: First, we need to check that we are

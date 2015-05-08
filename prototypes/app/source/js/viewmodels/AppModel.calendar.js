@@ -1,4 +1,6 @@
 /**
+    It offers access to calendar elements (appointments) and availability
+    
     Appointments is an abstraction around calendar events
     that behave as bookings or as events (where bookings are built
     on top of an event instance --a booking record must have ever a confirmedDateID event).
@@ -10,6 +12,7 @@
 
 var Appointment = require('../models/Appointment'),
     DateAvailability = require('../models/DateAvailability'),
+    CacheControl = require('../utils/CacheControl'),
     moment = require('moment');
 
 exports.create = function create(appModel) {
@@ -17,11 +20,14 @@ exports.create = function create(appModel) {
     var api = {};
     
     var cache = {
-        aptsByDate: {}
+        byDate: {/*
+            data: DateAvailability(),
+            control: CacheControl()
+        */}
     };
     
     api.clearCache = function clearCache() {
-        cache.aptsByDate = {};
+        cache.byDate = {};
     };
     
     appModel.on('clearLocalData', function() {
@@ -82,47 +88,36 @@ exports.create = function create(appModel) {
     
     /**
         Get a list of generic calendar appointment objects, made of events and/or bookings
-        by Date.
-        It's cached.
+        by Date, from the remote source directly.
+        Used internally only, to get appointments with and without free/unavailable
+        slots use getDateAvailability
     **/
-    api.getAppointmentsByDate = function getAppointmentsByDate(date) {
-        var dateKey = moment(date).format('YYYYMMDD');
-        if (cache.aptsByDate.hasOwnProperty(dateKey)) {
-            
-            return Promise.resolve(cache.aptsByDate[dateKey].data);
+    var getRemoteAppointmentsByDate = function getRemoteAppointmentsByDate(date) {
+        return Promise.all([
+            appModel.bookings.getBookingsByDate(date),
+            appModel.calendarEvents.getEventsByDate(date)
+        ]).then(function(group) {
 
-            // TODO lazy load, on background, for synchronization, depending on cache control
-        }
-        else {
-            // TODO check localforage copy first?
+            var events = group[1],
+                bookings = group[0],
+                apts = [];
 
-            // Remote loading data
-            return Promise.all([
-                appModel.bookings.getBookingsByDate(date),
-                appModel.calendarEvents.getEventsByDate(date)
-            ]).then(function(group) {
+            if (events && events().length) {
+                apts = Appointment.listFromCalendarEventsBookings(events(), bookings());
+            }
 
-                var events = group[1],
-                    bookings = group[0],
-                    apts = [];
-
-                if (events && events().length) {
-                    apts = Appointment.listFromCalendarEventsBookings(events(), bookings());
-                }
-                
-                // TODO localforage copy of [dateKey]=bookings
-                
-                // Put in cache
-                cache.aptsByDate[dateKey] = { data: apts };
-                // Return the array
-                return apts;
-            });
-        }
+            // Return the array
+            return apts;
+        });
     };
     
-    api.getDateAvailability = function getDateAvailability(date) {
+    /**
+        Fetch appointments and schedule information for the date from remote
+        in a convenient object to use with the DateAvailability model.
+    **/
+    var getRemoteDateAvailability = function getRemoteDateAvailability(date) {
         return Promise.all([
-            api.getAppointmentsByDate(date),
+            getRemoteAppointmentsByDate(date),
             appModel.simplifiedWeeklySchedule.load()
         ])
         .then(function(result) {
@@ -130,16 +125,53 @@ exports.create = function create(appModel) {
                 settings = result[1],
                 weekDaySchedule = settings.weekDays[date.getDay()]();
 
-            var dateAvail = new DateAvailability({
+            var dateInfo = {
                 date: date,
-                sourceList: apts || [],
+                appointmentsList: apts || [],
                 weekDaySchedule: weekDaySchedule
-            });
+            };
 
-            return dateAvail;
+            return dateInfo;
         });
     };
     
+    /**
+        Get the appointments and availability for the given date.
+        It has cache control, if there is a valid copy is returned
+        at the moment, if is reloaded and exists on cache, that copy is
+        updated so all previous instances get the updated data too.
+    **/
+    api.getDateAvailability = function getDateAvailability(date) {
+        
+        var dateKey = moment(date).format('YYYYMMDD');
+
+        if (cache.byDate.hasOwnProperty(dateKey) &&
+            !cache.byDate[dateKey].control.mustRevalidate()) {
+
+            return Promise.resolve(cache.byDate[dateKey].data);
+        }
+        else {
+            return getRemoteDateAvailability(date)
+            .then(function(dateInfo) {
+                // Update cache
+                var c = cache.byDate[dateKey];
+                if (c && c.data) {
+                    c.data.model.updateWith(dateInfo);
+                }
+                else {
+                    c = {
+                        data: new DateAvailability(dateInfo),
+                        control: new CacheControl({ ttl: { minutes: 1 } })
+                    };
+                    cache.byDate[dateKey] = c;
+                }
+                c.control.touch();
+                
+                return c.data;
+            });
+        }
+    };
+
     return api;
 };
 

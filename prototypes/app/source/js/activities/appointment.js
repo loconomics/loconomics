@@ -112,7 +112,7 @@ var A = Activity.extends(function AppointmentActivity() {
                     // change and de-synced/corrupted data
                     // TODO: enhance by discarding only the cache for the previous
                     // and new date
-                    this.app.model.appointments.clearCache();
+                    this.app.model.calendar.clearCache();
                     this.app.model.bookings.clearCache();
                     this.app.model.calendarEvents.clearCache();
                     
@@ -382,7 +382,7 @@ function ViewModel(app) {
                     return _setCurrent(new Date());
                 }.bind(this);
 
-                return app.model.appointments.getAppointment(id)
+                return app.model.calendar.getAppointment(id)
                 .then(function (item) {
                     if (item) {
                         // Force a load for the item date.
@@ -407,10 +407,10 @@ function ViewModel(app) {
         }
         else {
             this.isLoading(true);
-            return app.model.appointments.getAppointmentsByDate(date)
-            .then(function (list) {
+            return app.model.calendar.getDateAvailability(date)
+            .then(function (dateAvail) {
                 this.isLoading(false);
-                this.setList(list);
+                this.setList(dateAvail.appointmentsList());
                 this.setItemFromCurrentList(id);
             }.bind(this))
             .catch(function(err) {
