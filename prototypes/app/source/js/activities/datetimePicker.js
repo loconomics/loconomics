@@ -102,6 +102,13 @@ exports.init = A.init;
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
+    
+    if (!this.__firstShowDone) {
+        this.__firstShowDone = true;
+        // Force first refresh on datepicker to allow
+        // event handlers to get notified on first time:
+        this.$datePicker.datepicker('fill');
+    }
 
     var header = this.requestData.headerText;
     this.viewModel.headerText(header || 'Select date and time');

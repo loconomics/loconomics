@@ -139,7 +139,10 @@ DatePicker.prototype = {
         this.picker.show();
         this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
         this.place();
-        $(window).on('resize', $.proxy(this.place, this));
+        $(window)
+            .off('resize.datepicker')
+            .on('resize.datepicker', $.proxy(this.place, this));
+        
         if (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -147,7 +150,9 @@ DatePicker.prototype = {
         if (!this.isInput) {
         }
         var that = this;
-        $(document).on('mousedown', function(ev){
+        $(document)
+        .off('mousedown.datepicker')
+        .on('mousedown.datepicker', function(ev){
             if ($(ev.target).closest('.' + classes.component).length === 0) {
                 that.hide();
             }
@@ -160,11 +165,11 @@ DatePicker.prototype = {
     
     hide: function(){
         this.picker.hide();
-        $(window).off('resize', this.place);
+        $(window).off('resize.datepicker', this.place);
         this.viewMode = this.startViewMode;
         this.showMode();
         if (!this.isInput) {
-            $(document).off('mousedown', this.hide);
+            $(document).off('mousedown.datepicker', this.hide);
         }
         //this.set();
         this.element.trigger({
@@ -331,7 +336,7 @@ DatePicker.prototype = {
             .attr('class', classes.monthDay + ' ' + clsName)
             .data('date-time', prevMonth.toISOString())
             .text(prevMonth.getDate());
-            
+
             this.picker.trigger(events.dayRendered, [dayTd]);
 
             // Next week?
