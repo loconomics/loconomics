@@ -13,7 +13,7 @@ var ko = require('knockout'),
     PricingEstimateDetail = require('../models/PricingEstimateDetail');
 
 function AppointmentCardViewModel(params) {
-    /*jshint maxstatements: 30*/
+    /*jshint maxstatements: 40*/
 
     this.sourceItem = getObservable(params.sourceItem);
     var app = this.app = ko.unwrap(params.app);
@@ -122,7 +122,7 @@ function AppointmentCardViewModel(params) {
 
         if (version && version.areDifferent()) {
             this.isSaving(true);
-            app.model.appointments.setAppointment(version.version)
+            app.model.calendar.setAppointment(version.version)
             .then(function(savedApt) {
                 // Do not do a version push, just update with remote
                 //version.push({ evenIfObsolete: true });
@@ -257,6 +257,21 @@ function AppointmentCardViewModel(params) {
     if (typeof(params.api) === 'function') {
         params.api(this);
     }
+    
+    // Calculate the endTime given an appointment duration, retrieved
+    // from the selected service
+    ko.computed(function calculateEndTime() {
+        var duration = this.item().serviceDurationMinutes(),
+            start = moment(this.item().startTime()),
+            end;
+
+        if (this.isBooking() &&
+            start.isValid()) {
+            end = start.add(duration, 'minutes').toDate();
+            this.item().endTime(end);
+        }
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
 
 /**
@@ -283,17 +298,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         // set off edit mode discarding unsaved data:
         this.cancel();
     }
-    
-    // Calculate the endTime given an appointment duration, retrieved
-    // from the selected service
-    var calculateEndTime = function calculateEndTime() {
-        var duration = this.item().serviceDurationMinutes();
-        this.item().endTime(
-            moment(this.item().startTime())
-            .add(duration, 'minutes').toDate()
-        );
-    }.bind(this);
-    
+
     /// Manage specific single data from externally provided
     
     // It comes back from the textEditor.
@@ -306,8 +311,6 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     if (typeof(requestData.selectedDatetime) !== 'undefined') {
         var field = requestData.datetimeField;
         this.item()[field](requestData.selectedDatetime);
-        if (this.isBooking())
-            calculateEndTime();
     }
     if (requestData.selectedJobTitleID) {
         this.item().jobTitleID(requestData.selectedJobTitleID);
@@ -321,7 +324,6 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
                 return new PricingEstimateDetail(pricing);
             })
         );
-        calculateEndTime();
     }
 };
 
