@@ -7,6 +7,7 @@
 var ko = require('knockout'),
     moment = require('moment'),
     getObservable = require('../utils/getObservable'),
+    Appointment = require('../models/Appointment'),
     AppointmentView = require('../viewmodels/AppointmentView'),
     ModelVersion = require('../utils/ModelVersion'),
     getDateWithoutTime = require('../utils/getDateWithoutTime'),
@@ -171,6 +172,14 @@ function AppointmentCardViewModel(params) {
 
         // Include appointment to recover state on return:
         data.appointment = this.item().model.toPlainObject(true);
+        
+        if (this.progress) {
+            data.progress = this.progress;
+            var step = data.progress.step || 1,
+                total = data.progress.total || 1;
+            // TODO I18N
+            data.title = step + ' of ' + total;
+        }
 
         app.shell.go(activity, data);
     }.bind(this);
@@ -283,7 +292,7 @@ function AppointmentCardViewModel(params) {
     external activities.
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
-    /*jshint maxcomplexity:12 */
+    /*jshint maxcomplexity:20,maxstatements:40 */
     
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)
@@ -327,6 +336,39 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
             })
         );
     }
+    
+    // Special behavior for adding a booking: it requires a guided creation
+    // through a progress path
+    if (this.currentID() === Appointment.specialIds.newBooking) {
+        if (requestData.progress) {
+            this.progress = requestData.progress;
+            var step = this.progress.step || 1;
+            if (step < 2) {
+                // Second step
+                this.progress.step = 2;
+                this.pickService._delayed(50)();
+            }
+            else if (step < 3) {
+                // Thrid step
+                requestData.progress.step = 3;
+                this.pickDateTime._delayed(50)();
+            }
+            else if (step < 4) {
+                requestData.progress.step = 4;
+                this.pickLocation._delayed(50)();
+            }
+        }
+        else {
+            // Start!
+            this.progress = {
+                step: 1,
+                total: 4
+            };
+            // First step
+            this.pickClient._delayed(50)();
+        }
+    }
 };
+
 
 module.exports = AppointmentCardViewModel;

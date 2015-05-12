@@ -28,9 +28,9 @@ var A = Activity.extends(function ClientsActivity() {
             
             this.navBar.leftAction().text(itIs ? 'Booking' : 'Clients');
             
-            if (this.requestData.progressStep) {
-                // Replace title by process step if required
-                this.navBar.title(this.requestData.progressStep);
+            if (this.requestData.title) {
+                // Replace title by title if required
+                this.navBar.title(this.requestData.title);
                 this.navBar.leftAction().text('');
             }
             else {
@@ -71,6 +71,7 @@ A.prototype.show = function show(state) {
     
     // On every show, search gets reseted
     this.viewModel.searchText('');
+    this.viewModel.selectedClient(null);
     this.viewModel.requestData = this.requestData;
     
     // Check if it comes from a clientEditor that

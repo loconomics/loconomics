@@ -789,7 +789,7 @@
           </div>
         </div>
       </div>
-      <div class="isolated" data-bind="visible: isSelectionMode">
+      <div class="isolated" data-bind="visible: isSelectionMode() && jobTitleID() !== 0">
         <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }, text: submitText, disable: isLocked">Save</button>
       </div>
     </div>

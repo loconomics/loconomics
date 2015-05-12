@@ -3,6 +3,7 @@
 
 var $ = require('jquery'),
     moment = require('moment'),
+    Appointment = require('../models/Appointment'),
     ko = require('knockout');
 require('../components/DatePicker');
 
@@ -207,12 +208,12 @@ function ViewModel(app) {
     this.appointmentCardView = ko.observable(null);
 
     var loadingAppointment = new Appointment({
-        id: 0,
+        id: Appointment.specialIds.loading,
         summary: 'Loading...'
     });
     var newEmptyDateAppointment = function newEmptyDateAppointment() {
         return new Appointment({
-            id: -1,
+            id: Appointment.specialIds.emptyDate,
             summary: 'There are no appointments on this date',
             startTime: this.currentDate(),
             endTime: moment(this.currentDate()).add(1, 'days').toDate()
@@ -220,7 +221,7 @@ function ViewModel(app) {
     }.bind(this);
     var newFreeAppointment = function newFreeAppointment() {
         return new Appointment({
-            id: -2,
+            id: Appointment.specialIds.free,
             summary: 'Free',
             startTime: this.currentDate(),
             endTime: moment(this.currentDate()).add(1, 'days').toDate()
@@ -228,14 +229,14 @@ function ViewModel(app) {
     }.bind(this);
     var newEventAppointment = function newEventAppointment() {
         return new Appointment({
-            id: -3,
+            id: Appointment.specialIds.newEvent,
             summary: 'New event...',
             sourceEvent: new CalendarEvent()
         });
     };
     var newBookingAppointment = function newBookingAppointment() {
         return new Appointment({
-            id: -4,
+            id: Appointment.specialIds.newBooking,
             summary: 'New booking...',
             sourceEvent: new CalendarEvent(),
             sourceBooking: new Booking()

@@ -193,7 +193,11 @@ Appointment.listFromCalendarEventsBookings = function listFromCalendarEventsBook
 };
 
 Appointment.specialIds = {
+    loading: 0,
+    emptyDate: -1,
     free: -2,
+    newEvent: -3,
+    newBooking: -4,
     unavailable: -5
 };
 

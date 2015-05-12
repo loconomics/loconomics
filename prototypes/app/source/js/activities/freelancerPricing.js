@@ -88,9 +88,9 @@ var A = Activity.extends(function FreelancerPricingActivity() {
             // TODO: Can be other than 'scheduling', like marketplace profile or the job-title?
             this.navBar.leftAction().text(itIs ? 'Booking' : 'Scheduling');
 
-            if (this.requestData.progressStep) {
-                // Replace title by process step if required
-                this.navBar.title(this.requestData.progressStep);
+            if (this.requestData.title) {
+                // Replace title
+                this.navBar.title(this.requestData.title);
                 this.navBar.leftAction().text('');
             }
             else {
