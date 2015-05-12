@@ -36,15 +36,8 @@ function Activity($activity, app) {
         rightAction: null
     });
     
-    // Delayed bindings to allow for further constructor set-up 
-    // on subclasses.
-    setTimeout(function ActivityConstructorDelayed() {
-        // A view model and bindings being applied is ever required
-        // even on Activities without need for a view model, since
-        // the use of components and templates, or any other data-bind
-        // syntax, requires to be in a context with binding enabled:
-        ko.applyBindings(this.viewModel || {}, $activity.get(0));
-    }.bind(this), 1);
+    // Knockout binding of viewState delayed to first show
+    // to avoid problems with subclasses replacing the viewState
 }
 
 module.exports = Activity;
@@ -56,6 +49,14 @@ module.exports = Activity;
 **/
 Activity.prototype.show = function show(options) {
     // TODO: must keep viewState up to date using options/state.
+    if (!this.__bindingDone) {
+        // A view model and bindings being applied is ever required
+        // even on Activities without need for a view model, since
+        // the use of components and templates, or any other data-bind
+        // syntax, requires to be in a context with binding enabled:
+        ko.applyBindings(this.viewModel || {}, this.$activity.get(0));
+        this.__bindingDone = true;
+    }
     
     options = options || {};
     this.requestData = options;

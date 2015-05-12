@@ -15,14 +15,15 @@ function DomItemsManager(settings) {
 
     this.idAttributeName = settings.idAttributeName || 'id';
     this.allowDuplicates = !!settings.allowDuplicates || false;
+    this.root = settings.root || 'body';
     this.$root = null;
-    // On page ready, get the root element:
-    $(function() {
-        this.$root = $(settings.root || 'body');
-    }.bind(this));
 }
 
 module.exports = DomItemsManager;
+
+DomItemsManager.prototype.getAllItems = function getAllItems() {
+    return this.$root.children('[' + this.idAttributeName + ']');
+};
 
 DomItemsManager.prototype.find = function find(containerName, root) {
     var $root = $(root || this.$root);
@@ -83,30 +84,75 @@ DomItemsManager.prototype.inject = function inject(name, html) {
 **/
 DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, notification) {
 
-    if (!$to.is(':visible')) {
+    function hideit() {
+        var fromIsHidden = $from.is('[hidden]');
+        if ($from.length > 0 && !fromIsHidden) {
+            shell.emit(shell.events.willClose, $from, notification);
+            // Do 'unfocus' on the hidden element after notify 'willClose'
+            // for better UX: hidden elements are not reachable and has good
+            // side effects like hidding the on-screen keyboard if an input was
+            // focused
+            $from.find(':focus').blur();
+            // hide and notify it ended
+            $from
+            .attr('hidden', 'hidden')
+            // For browser that don't support attr
+            .css('display', 'none')
+            // Reset z-index to avoid overlapping effect
+            .css('z-index', '');
+
+            shell.emit(shell.events.closed, $from, notification);
+        }
+        else {
+            // Just unfocus to avoid keyboard problems
+            $from.find(':focus').blur();
+        }
+    }
+
+    var toIsHidden = $to.is('[hidden]'); // !$to.is(':visible')
+
+    if (toIsHidden) {
         shell.emit(shell.events.willOpen, $to, notification);
-        $to.show();
+        // Put outside screen
+        $to.css({
+            'position': 'absolute',
+            'z-índex': -1,
+            'left': 0,
+            'right': 0
+        });
+        // Show it:
+        $to
+        .removeAttr('hidden')
+        // For browser that don't support attr
+        .css('display', 'block');
+
         // Its enough visible and in DOM to perform initialization tasks
         // that may involve layout information
         shell.emit(shell.events.itemReady, $to, notification);
-        // When its completely opened
-        shell.emit(shell.events.opened, $to, notification);
+
+        // Finish in a small delay, enough to allow some initialization
+        // set-up that take some time to finish avoiding flickering effects
+        setTimeout(function() {
+            // Hide the from
+            hideit();
+            
+            // Ends opening, reset transitional styles
+            $to.css({
+                'position': '',
+                'left': '',
+                'right': '',
+                'z-index': 1
+            });
+
+            // When its completely opened
+            shell.emit(shell.events.opened, $to, notification);
+        }, 30);
     } else {
+        hideit();
+        
         // Its ready; maybe it was but sub-location
         // or state change need to be communicated
         shell.emit(shell.events.itemReady, $to, notification);
-    }
-
-    if ($from.is(':visible')) {
-        shell.emit(shell.events.willClose, $from, notification);
-        // Do 'unfocus' on the hidden element after notify 'willClose'
-        // for better UX: hidden elements are not reachable and has good
-        // side effects like hidding the on-screen keyboard if an input was
-        // focused
-        $from.find(':focus').blur();
-        // hide and notify it ended
-        $from.hide();
-        shell.emit(shell.events.closed, $from, notification);
     }
 };
 
@@ -115,7 +161,27 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
     must be opened/visible at the same time, so at the 
     init all the elements are closed waiting to set
     one as the active or the current one.
+    
+    Execute after DOM ready.
 **/
 DomItemsManager.prototype.init = function init() {
-    this.getActive().hide();
+    // On ready, get the root element:
+    this.$root = $(this.root || 'body');
+
+    this.getAllItems()
+    .attr('hidden', 'hidden')
+    // For browser that don't support attr
+    .css('display', 'none');
+    //this.getActive().hide();
+    
+    // A layer to visually hide an opening item while not completed opened
+    $('<div class="items-backstage"/>').css({
+        'background': this.$root.css('background-color') || 'white',
+        'position': 'absolute',
+        'top': 0,
+        'right': 0,
+        'bottom': 0,
+        'left': 0,
+        'z-index': 0
+    }).appendTo(this.$root);
 };
