@@ -221,6 +221,14 @@ function ViewModel(app) {
     
         var slots = this.slotsSource();
         
+        // Hide unavailable slots, except if there is only one slot (so there
+        // is ever something displayed)
+        if (slots.length > 1) {
+            slots = slots.filter(function(slot) {
+                return slot.id() !== Appointment.specialIds.unavailable;
+            });
+        }
+        
         return slots.map(TimeSlotViewModel.fromAppointment);
 
     }, this);
