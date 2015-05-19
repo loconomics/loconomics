@@ -32,10 +32,13 @@
     
     > body {
         height: 100%;
-        // Fix for iOS
-        overflow: auto;
         /* Space for app-nav on top */
         padding-top: $app-navbar-height;
+        
+        // Smooth scroll for iOS, NEED A DIFFERENT APPROACH OF SCROLLING-CONTAINER TO 
+        // AVOID THE PROBLEM WITH FIXED NAVBARS
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     /**

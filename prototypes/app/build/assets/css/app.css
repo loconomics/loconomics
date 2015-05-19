@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-05-12
+/*! LoconomicsApp 2015-05-19
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -137,7 +137,7 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 88 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\appVars.styl */
+/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\appVars.styl */
 
 /* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
@@ -456,28 +456,29 @@ fieldset[disabled] .btn-secondary.active {
 /* line 33 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App > body {
   height: 100%;
-  overflow: auto;
 /* Space for app-nav on top */
   padding-top: 44px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .btn-google {
   background-color: #c00;
   color: #fff;
   border: none;
 }
 
-/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 52 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .btn-facebook {
   background-color: #085394;
   color: #fff;
   border: none;
 }
 
-/* line 63 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 64 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 67 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal.bottom .modal-dialog {
   position: absolute;
   padding: 10px;
@@ -486,14 +487,14 @@ fieldset[disabled] .btn-secondary.active {
   bottom: 0;
 }
 
-/* line 77 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 80 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 78 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 81 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal .modal-dialog {
   padding-top: 44px;
 }
 
-/* line 84 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 87 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal {
   background: rgba(0,0,0,0.4);
 }
