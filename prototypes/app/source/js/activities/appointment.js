@@ -219,6 +219,14 @@ function ViewModel(app) {
             endTime: moment(this.currentDate()).add(1, 'days').toDate()
         });
     }.bind(this);
+    var newUnavailableAppointment = function newUnavailableAppointment() {
+        return new Appointment({
+            id: Appointment.specialIds.unavailable,
+            summary: 'You`re unavailable all day',
+            startTime: this.currentDate(),
+            endTime: moment(this.currentDate()).add(1, 'days').toDate()
+        });
+    }.bind(this);
     var newFreeAppointment = function newFreeAppointment() {
         return new Appointment({
             id: Appointment.specialIds.free,
@@ -307,14 +315,16 @@ function ViewModel(app) {
             default:
             //case -1:
                 return newEmptyDateAppointment();
-            case -2:
+            case Appointment.specialIds.free:
                 return newFreeAppointment();
-            case -3:
+            case Appointment.specialIds.newEvent:
                 return newEventAppointment();
-            case -4:
+            case Appointment.specialIds.newBooking:
                 return newBookingAppointment();
-            case -5:
+            case Appointment.specialIds.loading:
                 return loadingAppointment;
+            case Appointment.specialIds.unavailable:
+                return newUnavailableAppointment();
         }
     };
     this.setItemFromCurrentList = function (id) {

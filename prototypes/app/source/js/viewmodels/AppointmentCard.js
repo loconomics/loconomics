@@ -53,6 +53,15 @@ function AppointmentCardViewModel(params) {
         return this.item() && this.item().sourceEvent() && !this.item().sourceBooking();
     }, this);
     
+    this.newAppointmentVisible = ko.pureComputed(function() {
+        var id = this.currentID();
+        return id === Appointment.specialIds.free || id === Appointment.specialIds.emptyDate || id === Appointment.specialIds.unavailable;
+    }, this);
+    
+    this.editScheduleVisible = ko.pureComputed(function() {
+        return this.currentID() === Appointment.specialIds.unavailable;
+    }, this);
+    
     this.submitText = ko.pureComputed(function() {
         var v = this.editedVersion();
         return (

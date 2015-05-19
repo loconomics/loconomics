@@ -6,7 +6,7 @@
             <h2 data-bind="text: item().summary() || '..'"></h2>
             <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
         </div>
-        <ul class="list-unstyled" data-bind="visible: currentID() === -2 || currentID() === -1">
+        <ul class="list-unstyled" data-bind="visible: newAppointmentVisible()">
             <li>
                 <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-4"
                    data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-4' }">Add new booking</a>
@@ -14,6 +14,9 @@
             <li>
                 <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-3"
                     data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-3' }">Add new calendar block</a>
+            </li>
+            <li data-bind="visible: editScheduleVisible">
+                <a class="btn btn-link btn-block" style="text-align: left" href="#!/weeklySchedule">Adjust availability</a>
             </li>
         </ul>
         

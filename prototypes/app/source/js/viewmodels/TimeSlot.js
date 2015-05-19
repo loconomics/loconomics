@@ -32,10 +32,11 @@ var numeral = require('numeral'),
 TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
     /*jshint maxcomplexity:10 */
     
-    var unavail = Appointment.specialIds.unavailable === apt.id();
-    var link = null;
-    if (!unavail)
-        link = '#!appointment/' + apt.startTime().toISOString() + '/' + apt.id();
+    // Commented the option to detect and not link unavail slots:
+    //var unavail = Appointment.specialIds.unavailable === apt.id();
+    //var link = null;
+    //if (!unavail)
+    var link = '#!appointment/' + apt.startTime().toISOString() + '/' + apt.id();
 
     var classNames = null;
     if (Appointment.specialIds.free === apt.id()) {
