@@ -196,11 +196,11 @@
           <div class="ListView-item-marker">
             <p><span class="glyphicon glyphicon-file"></span>
             </p>
-          </div> <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_system"
+          </div> <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank"
           class="btn btn-link btn-block ListView-item-content">
         <p>Terms of Use</p>
       </a>
- <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_system"
+ <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank"
           class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
         </div>
@@ -413,7 +413,9 @@
         data-bind="value: sync.icalExportUrl" />
       </div>
     </div>
-    <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { tap: reset }">Reset Private URL</button>
+    <div class="isolated">
+      <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { tap: reset }">Reset Private URL</button>
+    </div>
     </form>
     </div>
     <!-- ClientEdition activity -->
@@ -555,7 +557,7 @@
           </div> <a href="/clientEditor" class="btn btn-link btn-block ListView-item-content">
         <p>Add a new client</p>
       </a>
- <a href="/clientsEditor" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+ <a href="/clientEditor" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
 
         </div>
       </div>
@@ -565,15 +567,15 @@
     <div class="container-fluid" data-activity="contactForm">
        <h2 class="SectionTitle">Contact us for help</h2>
 
-      <p class="isolated">If y ou've searched the <a href="/faqs">FAQs</a> and can't find the help
+      <p class="isolated">If you've searched the <a href="/faqs">FAQs</a> and can't find the help
         you need, send us a note.</p>
-      <textarea class="isolated form-control" data-bind="value: message, valueUpdate: 'afterkeydown'"></textarea>
+      <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
       <div>
-        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: wasSent() ? 'Sent' : 'Send'">Send</button>
+        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: submitText, disable: isSending">Send</button>
       </div>
     </div>
     <!-- Activity contactInfo -->
-    <div class="container-fluid has-navbar" data-activity="contactInfo">
+    <div class="container-fluid" data-activity="contactInfo">
       <form role="form" data-bind="submit: save">
         <div>
            <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
@@ -616,8 +618,8 @@
             </div>
           </fieldset>
         </div>
-        <div class="navbar navbar-default ActivityNavbar">
-          <div class="container-fluid">
+        <div class="isolated">
+          <div>
             <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText, disable: isLocked"></button>
           </div>
         </div>
@@ -720,19 +722,19 @@
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
-          </div> <a href="/feedbackForm" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="/feedbackForm/general" class="btn btn-link btn-block ListView-item-content">
         <p>Feedback and ideas</p>
       </a>
- <a href="/feedbackForm" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+ <a href="/feedbackForm/general" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
         </div>
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
-          </div> <a href="/contactForm" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="/contactForm/general" class="btn btn-link btn-block ListView-item-content">
         <p>Contact us</p>
       </a>
- <a href="/contactForm" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+ <a href="/contactForm/general" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
 
         </div>
       </div>
@@ -741,14 +743,15 @@
     <div class="container-fluid" data-activity="feedbackForm">
        <h2 class="SectionTitle">Send us ideas or feedback</h2>
 
-      <textarea class="isolated form-control" data-bind="value: message, valueUpdate: 'afterkeydown'"></textarea>
+      <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
       <div class="checkbox">
         <label>
-          <input type="checkbox" data-bind="checked: becomeCollaborator" />I'd like to become an Owner Collaborator and help develop new tools and
+          <input type="checkbox" data-bind="checked: becomeCollaborator, disable: isSending"
+          />I'd like to become an Owner Collaborator and help develop new tools and
           features for Owners! We'll folow up with detail.</label>
       </div>
       <div>
-        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: wasSent() ? 'Sent' : 'Send'">Send</button>
+        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: submitText, disable: isSending">Send</button>
       </div>
     </div>
     <!-- FreelancerPricing activity -->
@@ -1102,7 +1105,7 @@
 
         </div>
       </div>
-      <app-feedback-entry params="section: 'jobtitles'"></app-feedback-entry>
+      <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
     </div>
     <!-- Activity learnMoreFreelancers -->
     <div class="container-fluid" data-activity="learnMore">
@@ -1285,7 +1288,7 @@
           <div class="ListView-item-marker">
             <p><span class="glyphicon glyphicon-file"></span>
             </p>
-          </div> <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_system"
+          </div> <a href="https://loconomics.com/en-US/About/OwnerAcknowledgment/" target="_blank"
           class="btn btn-link btn-block ListView-item-content">
         <p>Owner acknowledgment</p>
       </a>
@@ -1295,8 +1298,7 @@
           <div class="ListView-item-marker">
             <p><span class="glyphicon glyphicon-file"></span>
             </p>
-          </div> <a href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank"
-          class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="https://loconomics.com/en-US/About/Bylaws/" target="_blank" class="btn btn-link btn-block ListView-item-content">
         <p>Cooperative Bylaws</p>
       </a>
 
@@ -1305,7 +1307,7 @@
           <div class="ListView-item-marker">
             <p><span class="glyphicon glyphicon-file"></span>
             </p>
-          </div> <a href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank"
+          </div> <a href="https://loconomics.com/en-US/About/BoardNominationForm/" target="_blank"
           class="btn btn-link btn-block ListView-item-content">
         <p>Board nominations</p>
       </a>
@@ -1375,7 +1377,7 @@
                             disable: isLocked
             } }"></div>
         </fieldset>
-        <div class="row">
+        <div class="isolated">
           <div>
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>
@@ -1443,7 +1445,7 @@
 
         </div>
       </div>
-      <app-feedback-entry></app-feedback-entry>
+      <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
     </div>
     <!-- SchedulingPreferences activity -->
     <div class="container-fluid" data-activity="schedulingPreferences">
@@ -1512,7 +1514,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row isolated">
           <div class="col-sm-4 col-sm-offset-4 col-lg-2 col-lg-offset-10">
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>
@@ -1737,7 +1739,7 @@
 
           </div>
         </div>
-        <div class="row">
+        <div class="isolated">
           <div>
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>
@@ -1752,7 +1754,7 @@
               <h2 data-bind="text: item().summary() || '..'"></h2>
               <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
           </div>
-          <ul class="list-unstyled" data-bind="visible: currentID() === -2 || currentID() === -1">
+          <ul class="list-unstyled" data-bind="visible: newAppointmentVisible()">
               <li>
                   <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-4"
                      data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-4' }">Add new booking</a>
@@ -1760,6 +1762,9 @@
               <li>
                   <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-3"
                       data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-3' }">Add new calendar block</a>
+              </li>
+              <li data-bind="visible: editScheduleVisible">
+                  <a class="btn btn-link btn-block" style="text-align: left" href="#!/weeklySchedule">Adjust availability</a>
               </li>
           </ul>
           
@@ -1916,10 +1921,10 @@
             <div class="ListView-item-marker">
               <p><span class="glyphicon glyphicon-lamp"></span></p>
             </div>
-            <a href="/feedback" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
+            <a href="/feedbackForm" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
               <p>Send us your ideas to improve this section</p>
             </a>
-            <a href="/feedback" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+            <a href="/feedbackForm" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
           </div>
       </div>
     </script>
