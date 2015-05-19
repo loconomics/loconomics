@@ -506,12 +506,13 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 .isolated {
-  margin: 14px 0;
+  margin-top: 14px;
+  margin-bottom: 14px;
   clear: both;
   display: block;
 }
 
-/* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 
 /* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 
@@ -2316,7 +2317,8 @@ body.use-backdrop:before {
 
 /* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
 [data-activity=weeklySchedule] .weeklySchedule-weekDay {
-  margin: 14px 0;
+  margin-top: 14px;
+  margin-bottom: 14px;
   clear: both;
   display: block;
 /* The element with the label text on 
@@ -2338,7 +2340,8 @@ body.use-backdrop:before {
 
 /* line 35 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
 [data-activity=weeklySchedule] .weeklySchedule-allTime {
-  margin: 14px 0;
+  margin-top: 14px;
+  margin-bottom: 14px;
   clear: both;
   display: block;
 }

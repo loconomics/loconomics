@@ -412,7 +412,9 @@
         data-bind="value: sync.icalExportUrl" />
       </div>
     </div>
-    <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { tap: reset }">Reset Private URL</button>
+    <div class="isolated">
+      <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { tap: reset }">Reset Private URL</button>
+    </div>
     </form>
     </div>
     <!-- ClientEdition activity -->
@@ -572,7 +574,7 @@
       </div>
     </div>
     <!-- Activity contactInfo -->
-    <div class="container-fluid has-navbar" data-activity="contactInfo">
+    <div class="container-fluid" data-activity="contactInfo">
       <form role="form" data-bind="submit: save">
         <div>
            <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
@@ -615,8 +617,8 @@
             </div>
           </fieldset>
         </div>
-        <div class="navbar navbar-default ActivityNavbar">
-          <div class="container-fluid">
+        <div class="isolated">
+          <div>
             <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText, disable: isLocked"></button>
           </div>
         </div>
@@ -1374,7 +1376,7 @@
                             disable: isLocked
             } }"></div>
         </fieldset>
-        <div class="row">
+        <div class="isolated">
           <div>
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>
@@ -1511,7 +1513,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row isolated">
           <div class="col-sm-4 col-sm-offset-4 col-lg-2 col-lg-offset-10">
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>
@@ -1736,7 +1738,7 @@
 
           </div>
         </div>
-        <div class="row">
+        <div class="isolated">
           <div>
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>

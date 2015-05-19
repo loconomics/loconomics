@@ -30,6 +30,8 @@
                        data-bind="value: sync.icalExportUrl" />
             </div>
         </div>
-        <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { tap: reset }">Reset Private URL</button>
+        <div class="isolated">
+            <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { tap: reset }">Reset Private URL</button>
+        </div>
     </form>
 </div>
