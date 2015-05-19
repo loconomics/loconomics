@@ -719,10 +719,10 @@
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
-          </div> <a href="/feedbackForm" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="/feedbackForm/general" class="btn btn-link btn-block ListView-item-content">
         <p>Feedback and ideas</p>
       </a>
- <a href="/feedbackForm" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+ <a href="/feedbackForm/general" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
 
         </div>
         <div class="ListView-item">
@@ -740,14 +740,15 @@
     <div class="container-fluid" data-activity="feedbackForm">
        <h2 class="SectionTitle">Send us ideas or feedback</h2>
 
-      <textarea class="isolated form-control" data-bind="value: message, valueUpdate: 'afterkeydown'"></textarea>
+      <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
       <div class="checkbox">
         <label>
-          <input type="checkbox" data-bind="checked: becomeCollaborator" />I'd like to become an Owner Collaborator and help develop new tools and
+          <input type="checkbox" data-bind="checked: becomeCollaborator, disable: isSending"
+          />I'd like to become an Owner Collaborator and help develop new tools and
           features for Owners! We'll folow up with detail.</label>
       </div>
       <div>
-        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: wasSent() ? 'Sent' : 'Send'">Send</button>
+        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: submitText, disable: isSending">Send</button>
       </div>
     </div>
     <!-- FreelancerPricing activity -->
@@ -1101,7 +1102,7 @@
 
         </div>
       </div>
-      <app-feedback-entry params="section: 'jobtitles'"></app-feedback-entry>
+      <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
     </div>
     <!-- Activity learnMoreFreelancers -->
     <div class="container-fluid" data-activity="learnMore">
@@ -1442,7 +1443,7 @@
 
         </div>
       </div>
-      <app-feedback-entry></app-feedback-entry>
+      <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
     </div>
     <!-- SchedulingPreferences activity -->
     <div class="container-fluid" data-activity="schedulingPreferences">
@@ -1915,10 +1916,10 @@
             <div class="ListView-item-marker">
               <p><span class="glyphicon glyphicon-lamp"></span></p>
             </div>
-            <a href="/feedback" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
+            <a href="/feedbackForm" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
               <p>Send us your ideas to improve this section</p>
             </a>
-            <a href="/feedback" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+            <a href="/feedbackForm" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
           </div>
       </div>
     </script>

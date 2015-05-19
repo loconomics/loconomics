@@ -64,7 +64,7 @@ exports.registerAll = function() {
 
             this.section = getObservable(params.section || '');
             this.url = ko.pureComputed(function() {
-                return '/feedback/' + this.section();
+                return '/feedbackForm/' + this.section();
             }, this);
         }
     });
