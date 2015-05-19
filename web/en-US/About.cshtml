@@ -15,6 +15,18 @@
         {
             @RenderPage("HelpCenter/$TermsOfUse.cshtml")
         }
+        else if (section == "BYLAWS")
+        {
+            @RenderPage("HelpCenter/$Bylaws.cshtml")
+        }
+        else if (section == "BOARDNOMINATIONFORM")
+        {
+            @RenderPage("HelpCenter/$BoardNominationForm.cshtml")
+        }
+        else if (section == "OWNERACKNOWLEDGMENT")
+        {
+            @RenderPage("HelpCenter/$OwnerAcknowledgment.cshtml")
+        }
         else
         {
         <div id="main" class="tabbed folders">
