@@ -1,0 +1,64 @@
+﻿@*
+    Allows users to send feedback to Loconomics.
+
+    Options:
+    
+    - POST
+        message:string
+        becomeAnOwner:bool (Only allowed on request to 'IDEAS')
+        vocElementID:int
+        userDevice:string A JSON object encoded as string with a userAgent property from the webview/browser and
+            additional optional fields like 'device' and 'model' from something like PhoneGap Device Plugin.
+
+    - @Result:LcRestFeedback object with the feedbackID filled automatically
+*@
+@functions{
+    public class RestFeedback : RestWebPage
+    {
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 1)
+            {
+                var vocExperienceCategoryID = 0;
+                switch (UrlData[0].ToUpper()) {
+                    case "IDEAS":
+                        vocExperienceCategoryID = 1;
+                        break;
+                    case "SUPPORT":
+                        vocExperienceCategoryID = 2;
+                        break;
+                    default:
+                        return base.Post();
+                }
+                
+                var feedback = new LcRestFeedback {
+                    vocExperienceCategoryID = vocExperienceCategoryID,
+                    userID = WebSecurity.CurrentUserId,
+                    message = Request["message"],
+                    becomeAnOwner = vocExperienceCategoryID == 1 ? Request["becomeAnOwner"].AsBool() : false,
+                    vocElementID = Request["vocElementID"].AsInt(),
+                    userDevice = Request["userDevice"]
+                };
+
+ 	            LcRestFeedback.PostFeedback(feedback);
+
+                // On support request, send an email too
+                if (vocExperienceCategoryID == 2) {
+                    LcMessaging.SendMail("help@loconomics.com", "Message to /feedback/support API", feedback.message, WebSecurity.CurrentUserName);
+                }
+
+                // User becomes an owner by its own request
+                if (feedback.becomeAnOwner) {
+                    LcData.UserInfo.BecomeAnOwner(feedback.userID);
+                }
+
+                return feedback;
+            }
+            return base.Post();
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestFeedback().JsonResponse(this);
+}

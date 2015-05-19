@@ -543,6 +543,23 @@
             url: '/api/v1/en-US/postal-codes/90001',
             get: {},
         },
+        'Feedback Support': {
+            url: '/api/v1/en-US/feedback/support',
+            post: {
+                message: 'A problem with that you know',
+                vocElementID: 1,
+                userDevice: '{ "userAgent": "Mozilla/5.0 Some Browser" }'
+            }
+        },
+        'Feedback Ideas': {
+            url: '/api/v1/en-US/feedback/ideas',
+            post: {
+                message: 'I have an idea!',
+                vocElementID: 1,
+                becomeAnOwner: true,
+                userDevice: '{ "userAgent": "Mozilla/5.0 Some Browser" }'
+            }
+        }
     };
 
     function useApi(name, method) {
