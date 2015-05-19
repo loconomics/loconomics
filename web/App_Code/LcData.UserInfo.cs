@@ -499,12 +499,12 @@ public static partial class LcData
             }
         }
 
-        public static void BecomeAnOwner(int userID)
+        public static void BecomeCollaborator(int userID)
         {
             using (var db = Database.Open("sqlloco"))
             {
                 db.Execute(@"
-                    UPDATE users SET IsMember=1 WHERE UserID = @0
+                    UPDATE users SET IsCollaborator=1 WHERE UserID = @0
                 ", userID);
             }
         }

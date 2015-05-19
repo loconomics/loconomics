@@ -5,7 +5,7 @@
     
     - POST
         message:string
-        becomeAnOwner:bool (Only allowed on request to 'IDEAS')
+        becomeACollaborator:bool (Only allowed on request to 'IDEAS')
         vocElementID:int
         userDevice:string A JSON object encoded as string with a userAgent property from the webview/browser and
             additional optional fields like 'device' and 'model' from something like PhoneGap Device Plugin.
@@ -35,21 +35,25 @@
                     vocExperienceCategoryID = vocExperienceCategoryID,
                     userID = WebSecurity.CurrentUserId,
                     message = Request["message"],
-                    becomeAnOwner = vocExperienceCategoryID == 1 ? Request["becomeAnOwner"].AsBool() : false,
+                    becomeACollaborator = vocExperienceCategoryID == 1 ? Request["becomeACollaborator"].AsBool() : false,
                     vocElementID = Request["vocElementID"].AsInt(),
                     userDevice = Request["userDevice"]
                 };
 
  	            LcRestFeedback.PostFeedback(feedback);
 
-                // On support request, send an email too
+                // On support request, send an email
                 if (vocExperienceCategoryID == 2) {
                     LcMessaging.SendMail("help@loconomics.com", "Message to /feedback/support API", feedback.message, WebSecurity.CurrentUserName);
                 }
+                else if (vocExperienceCategoryID == 1) {
+                    // On ideas request, send an email
+                    LcMessaging.SendMail("voc@loconomics.com", "Message to /feedback/ideas API", feedback.message, WebSecurity.CurrentUserName);
+                }
 
                 // User becomes an owner by its own request
-                if (feedback.becomeAnOwner) {
-                    LcData.UserInfo.BecomeAnOwner(feedback.userID);
+                if (feedback.becomeACollaborator) {
+                    LcData.UserInfo.BecomeCollaborator(feedback.userID);
                 }
 
                 return feedback;

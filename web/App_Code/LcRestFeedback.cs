@@ -15,7 +15,7 @@ public class LcRestFeedback
     public int userID;
     public string message;
     public int vocElementID;
-    public bool becomeAnOwner;
+    public bool becomeACollaborator;
     public string userDevice;
     #endregion
 
