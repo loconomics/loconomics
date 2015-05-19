@@ -59,7 +59,7 @@ function ViewModel(app) {
         this.isSending(true);
         app.model.feedback.postIdea({
             message: this.message(),
-            becomeAnOwner: this.becomeCollaborator(),
+            becomeCollaborator: this.becomeCollaborator(),
             vocElementID: this.vocElementID()
         })
         .then(function() {

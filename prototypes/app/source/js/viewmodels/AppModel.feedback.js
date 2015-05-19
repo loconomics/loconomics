@@ -26,7 +26,7 @@ exports.create = function create(appModel) {
             @param values:Object {
                 message:string,
                 vocElementID:int,
-                becomeAnOwner:boolean,
+                becomeCollaborator:boolean,
                 userDevice:string (automatic)
             }
         **/
