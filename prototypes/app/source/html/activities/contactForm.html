@@ -4,13 +4,13 @@
     <h2 class="SectionTitle">Contact us for help</h2>
     
     <p class="isolated">
-        If y ou've searched the <a href="/faqs">FAQs</a> and can't find the help you need,
+        If you've searched the <a href="/faqs">FAQs</a> and can't find the help you need,
         send us a note.
     </p>
 
-    <textarea class="isolated form-control" data-bind="value: message, valueUpdate: 'afterkeydown'"></textarea>
+    <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
 
     <div>
-        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: wasSent() ? 'Sent' : 'Send'">Send</button>
+        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: submitText, disable: isSending">Send</button>
     </div>
 </div>

@@ -564,11 +564,11 @@
     <div class="container-fluid" data-activity="contactForm">
        <h2 class="SectionTitle">Contact us for help</h2>
 
-      <p class="isolated">If y ou've searched the <a href="/faqs">FAQs</a> and can't find the help
+      <p class="isolated">If you've searched the <a href="/faqs">FAQs</a> and can't find the help
         you need, send us a note.</p>
-      <textarea class="isolated form-control" data-bind="value: message, valueUpdate: 'afterkeydown'"></textarea>
+      <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
       <div>
-        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: wasSent() ? 'Sent' : 'Send'">Send</button>
+        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: submitText, disable: isSending">Send</button>
       </div>
     </div>
     <!-- Activity contactInfo -->
@@ -728,10 +728,10 @@
         <div class="ListView-item">
           <div class="ListView-item-marker">
             <p></p>
-          </div> <a href="/contactForm" class="btn btn-link btn-block ListView-item-content">
+          </div> <a href="/contactForm/general" class="btn btn-link btn-block ListView-item-content">
         <p>Contact us</p>
       </a>
- <a href="/contactForm" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+ <a href="/contactForm/general" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
 
         </div>
       </div>
