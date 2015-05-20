@@ -1,6 +1,7 @@
 /**
     textEditor activity
 **/
+//global window
 'use strict';
 
 var ko = require('knockout'),
@@ -62,6 +63,13 @@ A.prototype.show = function show(options) {
     // Inmediate focus to the textarea for better usability
     this.textarea.focus();
     this.$textarea.click();
+    // IMPORTANT: WORKAROUND: for iOS: on iOS (checked up to 8.3, 2015-05-20), the opening of the virtual keyboard
+    // makes a scroll down of the viewport, hiding the text field, header, anything, and only the
+    // blank area gets showed. That bad autoscroll can be fixed on this single case with next trick
+    // without flickering or bad effects (and alternative, generic approach is do it on the keyboardShow
+    // event, but there a flickering happens and may affect cases where there is no need or can be worse
+    // if field visibility and actual scroll is not checked):
+    window.scrollTo(0, 0);
 };
 
 function ViewModel() {
