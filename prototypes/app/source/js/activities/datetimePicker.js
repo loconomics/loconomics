@@ -16,6 +16,8 @@ var A = Activity.extends(function DatetimePickerActivity() {
 
     this.accessLevel = this.app.UserType.LoggedUser;
     this.viewModel = new ViewModel(this.app);
+    // Defaults settings for navBar.
+    // NOTE Remember to update them at updateNavBarState() too
     this.navBar = Activity.createSubsectionNavBar('', {
         helpId: 'datetimePickerHelp'
     });
@@ -100,6 +102,34 @@ var A = Activity.extends(function DatetimePickerActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    var header = this.requestData.headerText;
+    this.viewModel.headerText(header || 'Select date and time');
+
+    if (this.requestData.title) {
+        // Replace title
+        this.navBar.title(this.requestData.title);
+    }
+    else {
+        // Title must be empty
+        this.navBar.title('');
+        this.navBar.leftAction().text(this.requestData.navTitle || '');
+    }
+    
+    if (this.requestData.cancelLink) {
+        this.navBar.leftAction().text('Cancel');
+        this.navBar.leftAction().link(this.requestData.cancelLink);
+        this.navBar.leftAction().isShell(false);
+    }
+    else {
+        // Reset to defaults, or given title:
+        this.navBar.leftAction().text(this.requestData.navTitle || 'Job Title');
+        this.navBar.leftAction().link('scheduling');
+        this.navBar.leftAction().isShell(true);
+    }
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
@@ -109,20 +139,8 @@ A.prototype.show = function show(state) {
         // event handlers to get notified on first time:
         this.$datePicker.datepicker('fill');
     }
-
-    var header = this.requestData.headerText;
-    this.viewModel.headerText(header || 'Select date and time');
-
-    if (this.requestData.title) {
-        // Replace title
-        this.navBar.title(this.requestData.title);
-        this.navBar.leftAction().text('');
-    }
-    else {
-        // Title must be empty
-        this.navBar.title('');
-        this.navBar.leftAction().text(this.requestData.navTitle || '');
-    }
+    
+    this.updateNavBarState();
     
     // Keep data updated:
     this.app.model.schedulingPreferences.sync();

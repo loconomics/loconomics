@@ -13,7 +13,9 @@ var A = Activity.extends(function ClientsActivity() {
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.Freelancer;
-    this.viewModel = new ViewModel(this.app);    
+    this.viewModel = new ViewModel(this.app);
+    // Defaults settings for navBar.
+    // NOTE Remember to update them at updateNavBarState() too
     this.navBar = Activity.createSubsectionNavBar('Clients', {
         backLink: 'cms'
     });
@@ -21,26 +23,6 @@ var A = Activity.extends(function ClientsActivity() {
     // Getting elements
     this.$index = this.$activity.find('#clientsIndex');
     this.$listView = this.$activity.find('#clientsListView');
-    
-    // Handler to update header based on a mode change:
-    this.registerHandler({
-        target: this.viewModel.isSelectionMode,
-        handler: function (itIs) {
-            this.viewModel.headerText(itIs ? 'Select a client' : '');
-            
-            this.navBar.leftAction().text(itIs ? 'Booking' : 'Clients');
-            
-            if (this.requestData.title) {
-                // Replace title by title if required
-                this.navBar.title(this.requestData.title);
-                this.navBar.leftAction().text('');
-            }
-            else {
-                // Title must be empty
-                this.navBar.title('');
-            }          
-        }.bind(this)
-    });
 
     // Handler to go back with the selected client when 
     // there is one selected and requestData is for
@@ -67,6 +49,32 @@ var A = Activity.extends(function ClientsActivity() {
 });
 
 exports.init = A.init;
+
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    var itIs = this.viewModel.isSelectionMode();
+    
+    this.viewModel.headerText(itIs ? 'Select a client' : '');
+
+    if (this.requestData.title) {
+        // Replace title by title if required
+        this.navBar.title(this.requestData.title);
+    }
+    else {
+        // Title must be empty
+        this.navBar.title('');
+    }
+
+    if (this.requestData.cancelLink) {
+        this.navBar.leftAction().text('Cancel');
+        this.navBar.leftAction().link(this.requestData.cancelLink);
+    }
+    else {
+        // Reset to defaults, or given title:
+        this.navBar.leftAction().text(this.requestData.navTitle || 'Clients');
+        this.navBar.leftAction().link('cms');
+    }
+};
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
@@ -97,6 +105,8 @@ A.prototype.show = function show(state) {
     
     // Set selection:
     this.viewModel.isSelectionMode(state.selectClient === true);
+    
+    this.updateNavBarState();
     
     // Keep data updated:
     this.app.model.customers.sync()

@@ -188,7 +188,10 @@ function AppointmentCardViewModel(params) {
                 total = data.progress.total || 1;
             // TODO I18N
             data.title = step + ' of ' + total;
+            data.cancelLink = data.progress.cancelLink;
         }
+        
+        data.navTitle = this.isBooking() ? 'Booking' : 'Event';
 
         app.shell.go(activity, data);
     }.bind(this);
@@ -199,8 +202,7 @@ function AppointmentCardViewModel(params) {
         editFieldOn('datetimePicker', {
             selectedDatetime: this.item().startTime(),
             datetimeField: 'startTime',
-            headerText: 'Select the start time',
-            navTitle: this.isBooking() ? 'Booking' : 'Event'
+            headerText: 'Select the start time'
         });
     }.bind(this);
 
@@ -210,8 +212,7 @@ function AppointmentCardViewModel(params) {
         editFieldOn('datetimePicker', {
             selectedDatetime: this.item().endTime(),
             datetimeField: 'endTime',
-            headerText: 'Select the end time',
-            navTitle: 'Event'
+            headerText: 'Select the end time'
         });
     }.bind(this);
 
@@ -371,7 +372,9 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
             // Start!
             this.progress = {
                 step: 1,
-                total: 4
+                total: 4,
+                // TODO: Look for a way to know the Referrer to put as the cancel link:
+                cancelLink: 'calendar'
             };
             // First step
             this.pickClient._delayed(50)();

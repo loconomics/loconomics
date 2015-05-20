@@ -12,6 +12,8 @@ var A = Activity.extends(function ServiceAddressesActivity() {
 
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);
+    // Defaults settings for navBar.
+    // NOTE Remember to update them at updateNavBarState() too
     this.navBar = Activity.createSubsectionNavBar('Job Title');
     
     // Getting elements
@@ -54,29 +56,6 @@ var A = Activity.extends(function ServiceAddressesActivity() {
         }.bind(this)
     });
     
-    // Handler to update header based on a mode change:
-    this.registerHandler({
-        target: this.viewModel.isSelectionMode,
-        handler: function (itIs) {
-            this.viewModel.headerText(itIs ? 'Select or add a service location' : 'Locations');
-
-            // Update navbar too
-            // TODO: Can be other than 'scheduling', like marketplace profile or the job-title?
-            this.navBar.leftAction().text(itIs ? 'Booking' : 'Scheduling');
-
-            if (this.requestData.title) {
-                // Replace title
-                this.navBar.title(this.requestData.title);
-                this.navBar.leftAction().text('');
-            }
-            else {
-                // Title must be empty
-                this.navBar.title('');
-            }
-
-        }.bind(this)
-    });
-
     // Go back with the selected address when triggered in the form/view
     this.viewModel.returnSelected = function(addressID, jobTitleID) {
         // Pass the selected client in the info
@@ -89,17 +68,44 @@ var A = Activity.extends(function ServiceAddressesActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+
+    var itIs = this.viewModel.isSelectionMode();
+    
+    this.viewModel.headerText(itIs ? 'Select or add a service location' : 'Locations');
+
+    if (this.requestData.title) {
+        // Replace title by title if required
+        this.navBar.title(this.requestData.title);
+    }
+    else {
+        // Title must be empty
+        this.navBar.title('');
+    }
+
+    if (this.requestData.cancelLink) {
+        this.navBar.leftAction().text('Cancel');
+        this.navBar.leftAction().link(this.requestData.cancelLink);
+        this.navBar.leftAction().isShell(false);
+    }
+    else {
+        // Reset to defaults, or given title:
+        this.navBar.leftAction().text(this.requestData.navTitle || 'Job Title');
+        this.navBar.leftAction().link('goBack');
+        this.navBar.leftAction().isShell(true);
+    }
+};
+
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
     this.viewModel.jobTitleID(0);
-    this.viewModel.isSelectionMode(false);
 
-    if (options.selectAddress === true) {
-        this.viewModel.isSelectionMode(true);
-    }
+    this.viewModel.isSelectionMode(options.selectAddress === true);
+    
+    this.updateNavBarState();
 
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
