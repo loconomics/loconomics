@@ -311,29 +311,15 @@ var appInit = function appInit() {
         app.modals.showError({ error: err });
     });
     
-    // Attempt scroll on clicking a usual fragment link
-    // TODO: there is some kind of problem sometimes and
-    // does not get correclty aligned, investigate
-    // WORKAROUND a fixed value as offset to avoid for now
-    var scrollTo = function scrollTo(el) {
-        var parent = el.parent();
-
-        while(parent.get(0) !== document.documentElement) {
-            var t = el.offset().top - parent.offset().top;
-            var st = parent.scrollTop() + t;
-            // WORKAROUND CONSTANT OFFSET
-            st -= 45;
-            parent.scrollTop(st);
-            
-            parent = parent.parent();
-        }
-    };
+    // Scroll to element when clicking a usual fragment link (not a page link)
+    var scrollToElement = require('./utils/scrollToElement');
     app.shell.on('fragmentNavigation', function(href) {
         // Locate target
         // (href comes with the initial hash ever)
         var target = $(href);
         if (target.length) {
-            scrollTo(target);
+            // Smooth scrolling with animation
+            scrollToElement(target, { animation: { duration: 300 } });
         }
     });
     
