@@ -25,17 +25,17 @@ module.exports = function(/*grunt*/) {
                 // it attachs itself to the global namespace (window) what let
                 // the plugins works fine.
                 jquery: {
-                    path: './vendor/jquery/jquery-2.1.3.min.js',
+                    path: './vendor/jquery/jquery-2.1.4.js',
                     exports: 'jQuery'
                 },
                 'bootstrap': {
                     // Using latest Bootstrap version:
-                    path: './vendor/bootstrap/js/bootstrap.min.js',
+                    path: './vendor/bootstrap/js/bootstrap.js',
                     exports: null,
                     depends: { 'jquery': 'jquery' }
                 },
                 'bootstrap-switch': {
-                    path: './vendor/bootstrap-switch/js/bootstrap-switch.min.js',
+                    path: './vendor/bootstrap-switch/js/bootstrap-switch.js',
                     exports: null,
                     depends: { 'jquery': 'jquery', 'bootstrap': 'bootstrap' }
                 }
