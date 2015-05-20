@@ -254,6 +254,10 @@ var appInit = function appInit() {
     // NOTE: Important, registered before the shell.run to be executed
     // before its 'catch all links' handler
     $(document).on('tap', '[data-shell]', function(e) {
+        // Touch 'tap' event as alias for click, enabling fast-click on iOS:
+        $(e.target).trigger('click', e);
+    });
+    $(document).on('click', '[data-shell]', function(e) {
         // Using attr rather than the 'data' API to get updated
         // DOM values
         var cmdline = $(this).attr('data-shell') || '',
@@ -318,8 +322,11 @@ var appInit = function appInit() {
         // (href comes with the initial hash ever, so empty is just '#')
         if (href === '#') {
             // Notify for debugging, because this may be unwanted
-            console.warn('Navigation to an empty fragment, this is not wanted. ' +
-                            'For root links, use "/"; on other cases, an event.preventDefault was forgotten.');
+            console.warn(
+                'Navigation to an empty fragment, this may be not wanted. ' +
+                'For root links, use "/"; on script handled links, call event.preventDefault; ' +
+                'A tap/touch event was listened on a link, but not the click event.'
+            );
         }
         else {
             // Locate target
