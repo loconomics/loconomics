@@ -14,7 +14,9 @@ var A = Activity.extends(function ClientsActivity() {
 
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);    
-    this.navBar = Activity.createSubsectionNavBar('Clients');
+    this.navBar = Activity.createSubsectionNavBar('Clients', {
+        backLink: 'cms'
+    });
     
     // Getting elements
     this.$index = this.$activity.find('#clientsIndex');
