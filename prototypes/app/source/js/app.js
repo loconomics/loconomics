@@ -314,12 +314,20 @@ var appInit = function appInit() {
     // Scroll to element when clicking a usual fragment link (not a page link)
     var scrollToElement = require('./utils/scrollToElement');
     app.shell.on('fragmentNavigation', function(href) {
-        // Locate target
-        // (href comes with the initial hash ever)
-        var target = $(href);
-        if (target.length) {
-            // Smooth scrolling with animation
-            scrollToElement(target, { animation: { duration: 300 } });
+        // Check link, avoiding empty links
+        // (href comes with the initial hash ever, so empty is just '#')
+        if (href === '#') {
+            // Notify for debugging, because this may be unwanted
+            console.warn('Navigation to an empty fragment, this is not wanted. ' +
+                            'For root links, use "/"; on other cases, an event.preventDefault was forgotten.');
+        }
+        else {
+            // Locate target
+            var target = $(href);
+            if (target.length) {
+                // Smooth scrolling with animation
+                scrollToElement(target, { animation: { duration: 300 } });
+            }
         }
     });
     
