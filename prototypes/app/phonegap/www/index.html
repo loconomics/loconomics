@@ -475,12 +475,12 @@
       </form>
     </div>
     <!-- Activity clients -->
-    <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
-      <div id="clientsContent">
-         <h2 class="SectionTitle" data-bind="visible: headerText">
-            <span data-bind="text: headerText">Clients</span>
-        </h2>
+    <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText(), 'has-SectionTitle': headerText }">
+       <h2 class="SectionTitle" data-bind="visible: headerText">
+        <span data-bind="text: headerText">Clients</span>
+    </h2>
 
+      <div id="clientsContent">
         <div data-bind="css: { 'is-loading': isLoading }">
           <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
@@ -1600,7 +1600,7 @@
        <h2 class="SectionTitle" id="textEditorTitle" data-bind="visible: headerText, text: headerText">Text</h2>
 
       <div class="isolated">
-        <textarea id="textEditorText" data-bind="value: text, valueUpdate: 'afterkeydown', attr: { rows: rowsNumber }"
+        <textarea id="textEditorText" data-bind="value: text, valueUpdate: 'afterkeydown'"
         aria-labelledby="textEditorTitle" class="form-control" rows="2"></textarea>
       </div>
       <div class="row isolated">
@@ -1966,7 +1966,7 @@
     </script>
     <!-- Component Template navbar-action -->
     <script type="text/html" id="navbar-action-template">
-      <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }">
+      <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }, event: { tap: action && action.runHandler }">
           <span data-bind="attr: { 'class': action && action.icon() }" class="glyphicon"></span>
           <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
       </a>
