@@ -15,10 +15,11 @@ var A = Activity.extends(function ClientsActivity() {
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    // NOTE Remember to update them at updateNavBarState() too
     this.navBar = Activity.createSubsectionNavBar('Clients', {
         backLink: 'cms'
     });
+    // Save defaults to restore on updateNavBarState when needed:
+    this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
     
     // Getting elements
     this.$index = this.$activity.find('#clientsIndex');
@@ -68,11 +69,14 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     if (this.requestData.cancelLink) {
         this.navBar.leftAction().text('Cancel');
         this.navBar.leftAction().link(this.requestData.cancelLink);
+        this.navBar.leftAction().icon('');
+        this.navBar.leftAction().isTitle(false);
     }
     else {
         // Reset to defaults, or given title:
-        this.navBar.leftAction().text(this.requestData.navTitle || 'Clients');
-        this.navBar.leftAction().link('cms');
+        this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
+        if (this.requestData.navTitle)
+            this.navBar.leftAction().text(this.requestData.navTitle);
     }
 };
 

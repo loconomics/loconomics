@@ -17,10 +17,11 @@ var A = Activity.extends(function DatetimePickerActivity() {
     this.accessLevel = this.app.UserType.LoggedUser;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    // NOTE Remember to update them at updateNavBarState() too
     this.navBar = Activity.createSubsectionNavBar('', {
         helpId: 'datetimePickerHelp'
     });
+    // Save defaults to restore on updateNavBarState when needed:
+    this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
     
     // Getting elements
     this.$datePicker = this.$activity.find('#datetimePickerDatePicker');
@@ -121,12 +122,14 @@ A.prototype.updateNavBarState = function updateNavBarState() {
         this.navBar.leftAction().text('Cancel');
         this.navBar.leftAction().link(this.requestData.cancelLink);
         this.navBar.leftAction().isShell(false);
+        this.navBar.leftAction().icon('');
+        this.navBar.leftAction().isTitle(false);
     }
     else {
         // Reset to defaults, or given title:
-        this.navBar.leftAction().text(this.requestData.navTitle || 'Job Title');
-        this.navBar.leftAction().link('scheduling');
-        this.navBar.leftAction().isShell(true);
+        this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
+        if (this.requestData.navTitle)
+            this.navBar.leftAction().text(this.requestData.navTitle);
     }
 };
 
