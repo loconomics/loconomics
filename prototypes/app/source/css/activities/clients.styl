@@ -1,31 +1,26 @@
 /**
     Clients activity styles
 **/
+@import '../components/SmartNavBar.styl';
+
 [data-activity=clients] {
     
     $indexWidth = 25px;
     $fullIndexWidth = 32px;
     
-    #clientsListView {
-        margin-right: $indexWidth - $container-padding-right;
-        margin-left: 0 - $container-padding-left;
-        
-        .SimpleList-divider {
-            text-transform: uppercase;
-        }
-    }
-    
     #clientsIndex {
         overflow: hidden;
         width: $fullIndexWidth;
         
-        position: fixed;
+        // Fixed has the problems of iOS with scrolling, and too the lack of scroll for itself
+        // Scroll context must be carefully placed in a sibling elements that acts as container for
+        // all the other parts of the Activity.
+        position: absolute;
         right: 0px;
+        top: 62px;
         z-index: 20;
-        
-        &.affix {
-            position: fixed;
-        }
+        overflow: auto;
+        bottom: 0;
         
         > .nav {
             border-bottom: none;
@@ -36,6 +31,19 @@
                 padding: 3px 6px 3px 15px;
                 border: none;
                 border-radius: 0;
+            }
+        }
+    }
+    
+    #clientsContent {
+        SmartViewContent();
+
+        #clientsListView {
+            margin-right: $indexWidth - $container-padding-right;
+            margin-left: 0 - $container-padding-left;
+
+            .SimpleList-divider {
+                text-transform: uppercase;
             }
         }
     }
