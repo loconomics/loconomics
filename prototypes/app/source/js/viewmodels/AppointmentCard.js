@@ -182,16 +182,23 @@ function AppointmentCardViewModel(params) {
         // Include appointment to recover state on return:
         data.appointment = this.item().model.toPlainObject(true);
         
-        if (this.progress) {
+        if (this.progress &&
+            !this.progress.ended) {
             data.progress = this.progress;
             var step = data.progress.step || 1,
                 total = data.progress.total || 1;
             // TODO I18N
-            data.title = step + ' of ' + total;
+            data.navTitle = step + ' of ' + total;
             data.cancelLink = data.progress.cancelLink;
+        } else {
+            // Reseting
+            data.cancelLink = null;
+            // keep data.progress so it does not restart the process after
+            // an edition. The passIn already resets that on new calls
+            data.progress = this.progress;
+            // Edition title:
+            data.navTitle = this.isBooking() ? 'Booking' : 'Event';
         }
-        
-        data.navTitle = this.isBooking() ? 'Booking' : 'Event';
 
         app.shell.go(activity, data);
     }.bind(this);
@@ -350,7 +357,19 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     // Special behavior for adding a booking: it requires a guided creation
     // through a progress path
     if (this.currentID() === Appointment.specialIds.newBooking) {
-        if (requestData.progress) {
+        if (!requestData.progress) {
+            // Start!
+            this.progress = {
+                step: 1,
+                total: 4,
+                ended: false,
+                // TODO: Look for a way to know the Referrer to put as the cancel link:
+                cancelLink: 'calendar'
+            };
+            // First step
+            this.pickClient._delayed(50)();
+        }
+        else if (requestData.progress) {
             this.progress = requestData.progress;
             var step = this.progress.step || 1;
             if (step < 2) {
@@ -367,18 +386,16 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
                 requestData.progress.step = 4;
                 this.pickLocation._delayed(50)();
             }
+            else {
+                // Steps finished, not it enters in revision mode before
+                // finally save/create the booking, but remove the progress info
+                // to avoid problems editing fields.
+                this.progress.ended = true;
+            }
         }
-        else {
-            // Start!
-            this.progress = {
-                step: 1,
-                total: 4,
-                // TODO: Look for a way to know the Referrer to put as the cancel link:
-                cancelLink: 'calendar'
-            };
-            // First step
-            this.pickClient._delayed(50)();
-        }
+    } else {
+        // Reset progress
+        this.progress = null;
     }
 };
 

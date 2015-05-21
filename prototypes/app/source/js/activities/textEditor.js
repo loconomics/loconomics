@@ -14,7 +14,7 @@ var A = Activity.extends(function TextEditorActivity() {
 
     this.accessLevel = this.app.UserType.LoggedUser;
     this.viewModel = new ViewModel(this.app);
-    // Title is empty ever, since we are in 'go back' mode all the time here
+    // Title is empty, since we are in 'go back' mode all the time here
     this.navBar = Activity.createSubsectionNavBar('');
     
     // Getting elements
@@ -52,13 +52,11 @@ A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     
     // Set navigation title or nothing
-    this.navBar.leftAction().text(this.requestData.title || '');
+    this.navBar.leftAction().text(this.requestData.navTitle || '');
     
     // Field header
     this.viewModel.headerText(this.requestData.header);
     this.viewModel.text(this.requestData.text);
-    if (this.requestData.rowsNumber)
-        this.viewModel.rowsNumber(this.requestData.rowsNumber);
         
     // Inmediate focus to the textarea for better usability
     this.textarea.focus();
@@ -78,9 +76,6 @@ function ViewModel() {
 
     // Text to edit
     this.text = ko.observable('');
-    
-    // Number of rows for the textarea
-    this.rowsNumber = ko.observable(2);
 
     this.cancel = function cancel() {
         this.emit('cancel');
