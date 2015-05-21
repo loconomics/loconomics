@@ -76,6 +76,9 @@ function Shell(settings) {
     this.accessControl = settings.accessControl || deps.accessControl;
     // What item load on non access
     this.nonAccessName = settings.nonAccessName || 'index';
+    
+    // Access to the current route
+    this.currentRoute = null;
 }
 
 // Shell inherits from EventEmitter
@@ -183,6 +186,9 @@ Shell.prototype.replace = function replace(state) {
         state.route = this.parseUrl(this.indexName);
     }
     
+    this.currentRoute = state.route;
+    //console.log('shell replace', state.route);
+
     // Access control
     var accessError = this.accessControl(state.route);
     if (accessError) {
@@ -201,6 +207,7 @@ Shell.prototype.replace = function replace(state) {
                 var $oldCont = shell.items.getActive();
                 $oldCont = $oldCont.not($cont);
                 shell.items.switch($oldCont, $cont, shell, state);
+                //console.log('shell replace after switch', state.route);
 
                 resolve(); //? resolve(act);
             }

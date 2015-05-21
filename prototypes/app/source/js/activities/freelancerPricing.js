@@ -292,7 +292,6 @@ function ViewModel(app) {
     **/
     this.endSelection = function() {
         
-        this.isSelectionMode(false);
         // Run method injected by the activity to return a 
         // selected address:
         this.returnSelected(

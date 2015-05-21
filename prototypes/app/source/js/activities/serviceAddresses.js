@@ -166,7 +166,6 @@ function ViewModel(app) {
     this.selectAddress = function(selectedAddress) {
         
         if (this.isSelectionMode() === true) {
-            this.isSelectionMode(false);
             // Run method injected by the activity to return a 
             // selected address:
             this.returnSelected(

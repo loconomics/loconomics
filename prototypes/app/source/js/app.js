@@ -291,17 +291,27 @@ var appInit = function appInit() {
     // When an activity is ready in the Shell:
     app.shell.on(app.shell.events.itemReady, function($act, state) {
         
-        // Connect the 'activities' controllers to their views
-        // Get initialized activity for the DOM element
+        // Must be the same:
+        var routeName = app.shell.currentRoute.name;
         var actName = $act.data('activity');
+        // If not, some race condition, not the same page go out
+        if (routeName !== actName)
+            return;
+
+        // Connect the 'activities' controllers to their views
         var activity = app.getActivity(actName);
         // Trigger the 'show' logic of the activity controller:
         activity.show(state);
+        
+        // The show logic may do a redirect, loading other activity, double check
+        routeName = app.shell.currentRoute.name;
+        if (routeName !== actName)
+            return;
 
         // Update menu
         var menuItem = activity.menuItem || actName;
         app.updateMenu(menuItem);
-        
+
         // Update app navigation
         app.updateAppNav(activity);
     });

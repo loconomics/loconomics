@@ -74,6 +74,10 @@ var A = Activity.extends(function AppointmentActivity() {
 
             if (!apt)
                 return;
+
+            if (apt.id() === Appointment.specialIds.newBooking ||
+                apt.id() === Appointment.specialIds.loading)
+                return;
             
             var updateUrl = function updateUrl() {
                 // Update URL to match the appointment ID and
@@ -84,7 +88,7 @@ var A = Activity.extends(function AppointmentActivity() {
                     urlId = found && found[2] |0,
                     urlDate = found && found[1],
                     curDateStr = getDateWithoutTime(this.viewModel.currentDate()).toISOString();
-
+                
                 if (!found ||
                     urlId !== aptId.toString() ||
                     urlDate !== curDateStr) {

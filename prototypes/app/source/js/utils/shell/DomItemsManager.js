@@ -82,12 +82,17 @@ DomItemsManager.prototype.inject = function inject(name, html) {
     It's designed to be able to manage transitions, but this default
     implementation is as simple as 'show the new and hide the old'.
 **/
-DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, notification) {
+DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, state) {
 
+    var toName = state.route.name;
+    //console.log('switch to', toName);
+    
+    this.disableAccess();
+    
     function hideit() {
         var fromIsHidden = $from.is('[hidden]');
         if ($from.length > 0 && !fromIsHidden) {
-            shell.emit(shell.events.willClose, $from, notification);
+            shell.emit(shell.events.willClose, $from, state);
             // Do 'unfocus' on the hidden element after notify 'willClose'
             // for better UX: hidden elements are not reachable and has good
             // side effects like hidding the on-screen keyboard if an input was
@@ -101,7 +106,7 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
             // Reset z-index to avoid overlapping effect
             .css('z-index', '');
 
-            shell.emit(shell.events.closed, $from, notification);
+            shell.emit(shell.events.closed, $from, state);
         }
         else {
             // Just unfocus to avoid keyboard problems
@@ -112,13 +117,15 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
     var toIsHidden = $to.is('[hidden]'); // !$to.is(':visible')
 
     if (toIsHidden) {
-        shell.emit(shell.events.willOpen, $to, notification);
+        shell.emit(shell.events.willOpen, $to, state);
         // Put outside screen
         $to.css({
-            'position': 'absolute',
-            'z-índex': -1,
-            'left': 0,
-            'right': 0
+            position: 'absolute',
+            zIndex: -1,
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0
         });
         // Show it:
         $to
@@ -128,31 +135,47 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
 
         // Its enough visible and in DOM to perform initialization tasks
         // that may involve layout information
-        shell.emit(shell.events.itemReady, $to, notification);
+        shell.emit(shell.events.itemReady, $to, state);
 
         // Finish in a small delay, enough to allow some initialization
         // set-up that take some time to finish avoiding flickering effects
         setTimeout(function() {
+            //console.log('ending switch to', toName, 'and current is', shell.currentRoute.name);
+            // Race condition, redirection in the middle, abort:
+            if (toName !== shell.currentRoute.name)
+                return;
+            
             // Hide the from
             hideit();
             
             // Ends opening, reset transitional styles
             $to.css({
-                'position': '',
-                'left': '',
-                'right': '',
-                'z-index': 1
+                position: '',
+                top: '',
+                bottom: '',
+                left: '',
+                right: '',
+                zIndex: 2
             });
+            
+            this.enableAccess();
 
             // When its completely opened
-            shell.emit(shell.events.opened, $to, notification);
-        }, 30);
+            shell.emit(shell.events.opened, $to, state);
+        }.bind(this), 80);
     } else {
-        hideit();
+        //console.log('ending switch to', toName, 'and current is', shell.currentRoute.name, 'INSTANT (to was visible)');
+        // Race condition, redirection in the middle, abort:
+        if (toName !== shell.currentRoute.name)
+            return;
         
         // Its ready; maybe it was but sub-location
         // or state change need to be communicated
-        shell.emit(shell.events.itemReady, $to, notification);
+        shell.emit(shell.events.itemReady, $to, state);
+        
+        this.enableAccess();
+        
+        hideit();
     }
 };
 
@@ -176,12 +199,32 @@ DomItemsManager.prototype.init = function init() {
     
     // A layer to visually hide an opening item while not completed opened
     $('<div class="items-backstage"/>').css({
-        'background': this.$root.css('background-color') || 'white',
-        'position': 'absolute',
-        'top': 0,
-        'right': 0,
-        'bottom': 0,
-        'left': 0,
-        'z-index': 0
+        background: this.$root.css('background-color') || 'white',
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        zIndex: 0
     }).appendTo(this.$root);
+    
+    // A layer to disable access to an item (disabling events)
+    // NOTE: Tried CSS pointer-events:none has some strange side-effects: auto scroll-up.
+    // TODO: After some testing with this, scroll-up happens again with this (??)
+    var $disableLayer = $('<div class="items-disable-layer"/>').css({
+        background: 'White',
+        opacity: 0,
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        zIndex: -1
+    }).appendTo(this.$root);
+    this.disableAccess = function() {
+        $disableLayer.css('zIndex', 90900);
+    };
+    this.enableAccess = function() {
+        $disableLayer.css('zIndex', -2);
+    };
 };

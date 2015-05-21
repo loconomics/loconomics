@@ -1,19 +1,18 @@
 /** Activity component **/
 
 @import 'ActivityNavbar.styl';
-@import 'SmartNavBar.styl';
 
 Activity() {
-    // Corretly getting space, scrolling context and fixing SmartNavBar:    
-    SmartViewContent();
+    // Corretly getting space, scrolling context and fixing SmartNavBar
+    overflow: auto;    
+    position: absolute;
+    top: $app-navbar-height;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
     
-    /* settings specially important for the use of navbar
-       but applied to all for consistent results
-       with/without navbar
-    */
-    min-height: 100%;
-    position: relative;
-
+    // TODO: still needed????
     // Set a full height with 100% is complicated, mainly because of iOS,
     // so a specific class is used that involve some javascript code to
     // fix iOS bugs using next class name.
@@ -32,19 +31,7 @@ Activity() {
        available space
     */
     &.has-navbar {
-        padding-bottom: $activityNavbarHeight;
-        height: auto;
-    }
-
-    /* Hidden until active */
-    display: none;
-    /*transition: 2000ms all;
-    opacity: 0;
-    z-index: 1;*/
-    &.is-active {
-        display: block;
-       /* opacity: 1;
-        z-index: 2;*/
+        bottom: $activityNavbarHeight;
     }
 }
 

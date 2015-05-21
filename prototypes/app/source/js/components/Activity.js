@@ -49,6 +49,7 @@ module.exports = Activity;
 **/
 Activity.prototype.show = function show(options) {
     // TODO: must keep viewState up to date using options/state.
+
     if (!this.__bindingDone) {
         // A view model and bindings being applied is ever required
         // even on Activities without need for a view model, since

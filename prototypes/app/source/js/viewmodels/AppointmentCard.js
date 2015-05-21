@@ -367,7 +367,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
                 cancelLink: 'calendar'
             };
             // First step
-            this.pickClient._delayed(50)();
+            this.pickClient(); //._delayed(50)();
         }
         else if (requestData.progress) {
             this.progress = requestData.progress;
@@ -375,16 +375,16 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
             if (step < 2) {
                 // Second step
                 this.progress.step = 2;
-                this.pickService._delayed(50)();
+                this.pickService();//._delayed(50)();
             }
             else if (step < 3) {
                 // Thrid step
                 requestData.progress.step = 3;
-                this.pickDateTime._delayed(50)();
+                this.pickDateTime();//._delayed(50)();
             }
             else if (step < 4) {
                 requestData.progress.step = 4;
-                this.pickLocation._delayed(50)();
+                this.pickLocation();//._delayed(50)();
             }
             else {
                 // Steps finished, not it enters in revision mode before

@@ -1386,7 +1386,7 @@ body.use-backdrop:before {
 
 /* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
 
-/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
+/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
 
 /* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
 .ActivityNavbar {
@@ -1405,253 +1405,22 @@ body.use-backdrop:before {
   border-color: transparent;
 }
 
-/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-
-/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
-
-/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\border.styl */
-
-/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
-
-/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\color-image.styl */
-
-/* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\flex.styl */
-
-/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\gradients.styl */
-
-/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
-
-/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\iconic.styl */
-
-/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\image.styl */
-
-/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\overflow.styl */
-
-/* line 3 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\positions.styl */
-
-/* line 3 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\reset.styl */
-
-/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\index.styl */
-
-/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\aliases.styl */
-
-/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\ellipsis.styl */
-
-/* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\hide-text.styl */
-
-/* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\replace-text.styl */
-
-/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
-
-/* line undefined : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
-
-/* line 578 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
-
-/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
-
-/* line 35 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar {
-  position: absolute;
-  top: 0;
-  height: 44px;
-  line-height: 44px;
-  width: 100%;
-  padding-top: 0;
-  background-color: White;
-/* Problematic, for now, before confirm any problemm, go with simple border
-    // Creating the bottom-border with a gradient to avoid
-    // problem with Retina screens doubling the 1px border.
-    background-image: linear-gradient(0deg, $SmartNavBar-borderColor, $SmartNavBar-borderColor 50%, transparent 50%);
-    background-size: 100% 1px;
-    background-repeat: no-repeat;
-    background-position: bottom;
-    */
-  border-bottom: 1px solid #eee;
-  z-index: 200;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
-/**
-        Scheme: a bar contains 2 edges (SmartNavBar-edge, .left and -right)
-        and a title (h1).
-        At the edges there are buttons (.SmartNavBar-btn).
-        An edge can contain only buttons or be the button itself at the same time.
-        Buttons can contain other elements or just text, but ensure are in-line.
-        A button can contain a title text inside a H1 element, used to replace
-        the title on the middle of the bar for some uses (like arrows).
-    **/
-}
-
-/* line 89 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-edge {
-  display: inline-block;
-  vertical-align: top;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  outline: 0;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  height: 44px;
-  line-height: 44px;
-  -o-text-overflow: ellipsis !important;
-  text-overflow: ellipsis !important;
-/* why so !important ? */
-  white-space: nowrap;
-  max-width: none;
-  position: absolute;
-  top: 0;
-}
-
-/* line 95 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-edge.left {
-  left: 0;
-}
-
-/* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-edge.left.SmartNavBar-btn,
-.SmartNavBar .SmartNavBar-edge.left .SmartNavBar-btn {
-  padding: 0 10px;
-}
-
-/* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-edge.right {
-  right: 0;
-}
-
-/* line 109 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-edge.right.SmartNavBar-btn,
-.SmartNavBar .SmartNavBar-edge.right .SmartNavBar-btn {
-  text-align: right;
-  padding: 0 10px;
-}
-
-/* line 119 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-btn {
-  display: inline-block;
-  vertical-align: top;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  outline: 0;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  height: 44px;
-  line-height: 44px;
-  -o-text-overflow: ellipsis !important;
-  text-overflow: ellipsis !important;
-/* why so !important ? */
-  white-space: nowrap;
-  max-width: none;
-/* Fix for Chrome and Firefox OS on button element */
-  background: transparent;
-  color: #e0004f;
-  font-weight: 300;
-  font-size: 15px;
-/* Makes problems on Android (persistent :active state
-            after being pushed)
-        &:active {
-            opacity: 0.3;
-        }*/
-}
-
-/* line 125 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-btn:focus {
-  outline: 0;
-}
-
-/* line 139 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-btn.bold {
-  font-weight: 500;
-}
-
-/* line 143 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-btn.disabled,
-.SmartNavBar .SmartNavBar-btn [disabled] {
-  color: #777;
-}
-
-/* line 147 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-btn:hover,
-.SmartNavBar .SmartNavBar-btn:active {
-  text-decoration: none;
-}
-
-/* line 154 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-btn h1 {
-  color: #555;
-  font-size: 15px;
-  display: inline;
-  margin: 0 0.6em;
-}
-
-/* line 165 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar h1 {
-  color: #555;
-  display: block;
-  padding: 0;
-  font-size: 17px;
-  white-space: nowrap;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  text-align: center;
-  overflow: hidden;
-  box-flex: 1;
-  margin: 0 65px;
-  font-weight: 500;
-  line-height: 44px;
-}
-
-/* line 181 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .navbar-toggle .icon-bar {
-  background-color: #e0004f;
-}
-
-/* line 185 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartNavBar .SmartNavBar-notification {
-  display: none;
-  position: absolute;
-  z-index: 100;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  overflow: hidden;
-  text-align: center;
-}
-
-/* line 212 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
-.SmartViewContent {
-  overflow: auto;
-  height: 100%;
-}
-
-/* line 51 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 38 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity,
 [data-activity] {
   overflow: auto;
-  height: 100%;
-/* settings specially important for the use of navbar
-       but applied to all for consistent results
-       with/without navbar
-    */
-  min-height: 100%;
-  position: relative;
+  position: absolute;
+  top: 44px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
 /* activity must be notified of the navbar to fix
        available space
     */
-/* Hidden until active */
-  display: none;
-/*transition: 2000ms all;
-    opacity: 0;
-    z-index: 1;*/
 }
 
-/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity .full-height,
 [data-activity] .full-height {
   height: 100%;
@@ -1660,22 +1429,13 @@ body.use-backdrop:before {
   box-sizing: border-box;
 }
 
-/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 33 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-navbar,
 [data-activity].has-navbar {
-  padding-bottom: 50px;
-  height: auto;
+  bottom: 50px;
 }
 
-/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
-.Activity.is-active,
-[data-activity].is-active {
-  display: block;
-/* opacity: 1;
-        z-index: 2;*/
-}
-
-/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadContent.styl */
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadContent.styl */
 
 /* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadContent.styl */
 .LeadContent {
