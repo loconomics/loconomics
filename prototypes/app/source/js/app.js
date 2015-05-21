@@ -255,7 +255,12 @@ var appInit = function appInit() {
     // before its 'catch all links' handler
     $(document).on('tap', '[data-shell]', function(e) {
         // Touch 'tap' event as alias for click, enabling fast-click on iOS:
-        $(e.target).trigger('click', e);
+        // NOTE: Currently, we don't need information from the event except the
+        // target, so this way works but may not apply on other cases
+        $(e.target).trigger('click');
+        // IMPORTANT: avoids Chrome (only) from triggering the default click
+        // handler, so effectively avoiding executing twice our handler.
+        e.preventDefault();
     });
     $(document).on('click', '[data-shell]', function(e) {
         // Using attr rather than the 'data' API to get updated
