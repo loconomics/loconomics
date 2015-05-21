@@ -177,7 +177,8 @@ function ViewModel(app) {
     }, this);
     
     this.isNew = ko.pureComputed(function() {
-        return !this.address().updatedDate();
+        var add = this.address();
+        return !add || !add.updatedDate();
     }, this);
 
     this.submitText = ko.pureComputed(function() {
