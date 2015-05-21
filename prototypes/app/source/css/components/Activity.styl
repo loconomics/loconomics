@@ -1,15 +1,18 @@
 /** Activity component **/
 
 @import 'ActivityNavbar.styl';
+@import 'SmartNavBar.styl';
 
 Activity() {
+    // Corretly getting space, scrolling context and fixing SmartNavBar:    
+    SmartViewContent();
+    
     /* settings specially important for the use of navbar
        but applied to all for consistent results
        with/without navbar
     */
     min-height: 100%;
     position: relative;
-    overflow: auto;
 
     // Set a full height with 100% is complicated, mainly because of iOS,
     // so a specific class is used that involve some javascript code to

@@ -33,8 +33,12 @@ $SmartNavBar-headerColor = $gray; //Black;
 $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
 
 .SmartNavBar {
-
-    position: fixed;
+    // IMPORTANT: A 'fixed' positioning will work perfect on Desktop, and even modern Android/Chrome (5.0+, maybe 4.4)
+    // but will break on iOS (almost up to 8.3, maybe future versions too) and old Android with strange effects, not
+    // fixed all the time (with keyboard open, on iOS gets moved out of screen).
+    // SO: using 'absolute', to ensure its permanently fixed on top, put the scrolling context on the content
+    // using the SmartViewContent mixim included in this file or its preset class name on elements
+    position: absolute; // fixed only good on Desktop, Android-5+
     top: 0;
     height: $SmartNavBar-height;
     line-height: $SmartNavBar-height;
@@ -196,4 +200,19 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
         overflow: hidden;
         text-align: center;
     }
+}
+
+// To fix positioning, scrolling and other behaviors, the use of a different
+// scrolling context than html/body is needed, use this EVER along the SmartNavBar
+SmartViewContent() {
+    // Scroll when needed
+    overflow: auto;
+    // Grow to all the available space (layout may need some adjustment)
+    // Check that document html/body and containers of this grow too.
+    height: 100%;
+}
+
+// Default class for scrolling areas
+.SmartViewContent {
+    SmartViewContent();
 }

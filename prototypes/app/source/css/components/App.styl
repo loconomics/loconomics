@@ -23,22 +23,28 @@
         &.SplashScreen {
             visibility: hidden;
         }
-    }    
+    }
 
     /** We use ever all the available screen **/
     height: 100%;
-    // Fix for iOS
+    // Fix for iOS smooth scrolling
     overflow: auto;
-    
+    // Smoother scrolling and inertia effect for iOS
+    // The property is inheret to every element with scroll enabled (overflow:auto|scroll)
+    // Be carefull since scrolling this way has a bug with fixed elements (typically navbar)
+    // on that cases is better to use 'absolute' positioning changing the scrolling to a
+    // content element rather than the document or the container of the absolute elements.
+    -webkit-overflow-scrolling: touch;
+
     > body {
         height: 100%;
         /* Space for app-nav on top */
         padding-top: $app-navbar-height;
-        
-        // Smooth scroll for iOS, NEED A DIFFERENT APPROACH OF SCROLLING-CONTAINER TO 
-        // AVOID THE PROBLEM WITH FIXED NAVBARS
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
+        // DO NEVER EVER EVER PUT THE NEXT LINE ON BODY,
+        // WILL BREAK Webkit/Blink (iOS, Android, Chrome, Opera).
+        // scrolling is auto on html/documentElement so no need for this.
+        // This is keep for documentation purpose preventing future bugs:
+        // overflow: auto; // value 'scroll' will break too
     }
 
     /**
