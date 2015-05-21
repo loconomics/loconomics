@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-05-20
+/*! LoconomicsApp 2015-05-21
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -712,6 +712,11 @@ body.use-backdrop:before {
   background-color: #ccc !important;
 }
 
+/* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.input-group-addon .loadingSpinner.loadingSpinner--floating {
+  top: 8px;
+}
+
 /* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 @-moz-keyframes spin {
   100% {
@@ -770,7 +775,7 @@ body.use-backdrop:before {
 /* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {

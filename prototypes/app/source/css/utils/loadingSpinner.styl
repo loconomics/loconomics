@@ -94,3 +94,7 @@
     position relative
     .loadingSpinner
         background-color $gray-lighter !important
+        
+        &.loadingSpinner--floating
+            // Fix position for Webkit/blink based browsers
+            top: 8px;
