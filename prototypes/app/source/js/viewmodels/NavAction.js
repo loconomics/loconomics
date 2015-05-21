@@ -21,8 +21,20 @@ function NavAction(values) {
         // will be the ID of the menu (contained in the page; without the hash), using
         // the text and icon but special meaning for the text value 'menu'
         // on icon property that will use the standard menu icon.
-        isMenu: false
+        isMenu: false,
+        // Custom function as event handler for button tap/click.
+        // The standard link gets disabled with this
+        handler: null
     }, values);
+    
+    this.runHandler = function runHandler(obj, event) {
+        var handler = this.handler();
+        if (handler) {
+            handler();
+            event.stopImmediatePropagation();
+            event.preventDefault();
+        }
+    }.bind(this);
 }
 
 module.exports = NavAction;
@@ -31,7 +43,7 @@ module.exports = NavAction;
 
 NavAction.prototype.getHref = function getHref() {
     return (
-        (this.isMenu() || this.isModal() || this.isShell()) ?
+        (this.handler() || this.isMenu() || this.isModal() || this.isShell()) ?
         '#' :
         this.link()
     );
@@ -39,7 +51,7 @@ NavAction.prototype.getHref = function getHref() {
 
 NavAction.prototype.getModalTarget = function getModalTarget() {
     return (
-        (this.isMenu() || !this.isModal() || this.isShell()) ?
+        (this.handler() || this.isMenu() || !this.isModal() || this.isShell()) ?
         '' :
         this.link()
     );
@@ -47,7 +59,7 @@ NavAction.prototype.getModalTarget = function getModalTarget() {
 
 NavAction.prototype.getShellCommand = function getShellCommand() {
     return (
-        (this.isMenu() || !this.isShell()) ?
+        (this.handler() || this.isMenu() || !this.isShell()) ?
         '' :
         this.link()
     );
@@ -55,7 +67,7 @@ NavAction.prototype.getShellCommand = function getShellCommand() {
 
 NavAction.prototype.getMenuID = function getMenuID() {
     return (
-        (!this.isMenu()) ?
+        (this.handler() || !this.isMenu()) ?
         '' :
         this.link()
     );
@@ -63,7 +75,7 @@ NavAction.prototype.getMenuID = function getMenuID() {
 
 NavAction.prototype.getMenuLink = function getMenuLink() {
     return (
-        (!this.isMenu()) ?
+        (this.handler() || !this.isMenu()) ?
         '' :
         '#' + this.link()
     );

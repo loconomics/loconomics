@@ -47,6 +47,10 @@ var A = Activity.extends(function ClientsActivity() {
             }
         }.bind(this)
     });
+    
+    this.returnRequest = function returnRequest() {
+        this.app.shell.goBack(this.requestData);
+    }.bind(this);
 });
 
 exports.init = A.init;
@@ -77,6 +81,14 @@ A.prototype.updateNavBarState = function updateNavBarState() {
         this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
         if (this.requestData.navTitle)
             this.navBar.leftAction().text(this.requestData.navTitle);
+    }
+    
+    if (itIs && !this.requestData.cancelLink) {
+        // Uses a custom handler so it returns keeping the given state:
+        this.navBar.leftAction().handler(this.returnRequest);
+    }
+    else {
+        this.navBar.leftAction().handler(null);
     }
 };
 

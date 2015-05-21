@@ -16,6 +16,9 @@ var A = Activity.extends(function TextEditorActivity() {
     this.viewModel = new ViewModel(this.app);
     // Title is empty, since we are in 'go back' mode all the time here
     this.navBar = Activity.createSubsectionNavBar('');
+    this.navBar.leftAction().handler(function() {
+        this.emit('cancel');
+    }.bind(this.viewModel));
     
     // Getting elements
     this.$textarea = this.$activity.find('textarea');
