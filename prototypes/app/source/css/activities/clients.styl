@@ -1,13 +1,22 @@
 /**
     Clients activity styles
 **/
-@import '../components/SmartNavBar.styl';
+@import '../components/SectionTitle.styl';
 
 [data-activity=clients] {
     
     $indexWidth = 25px;
     $fullIndexWidth = 32px;
-    
+    $indexTop = 62px;
+
+    .SectionTitle {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        z-index: 100;
+        margin: 0 !important;
+    }
+
     #clientsIndex {
         overflow: hidden;
         width: $fullIndexWidth;
@@ -17,10 +26,11 @@
         // all the other parts of the Activity.
         position: absolute;
         right: 0px;
-        top: 62px;
+        top: $indexTop;
         z-index: 20;
         overflow: auto;
         bottom: 0;
+        box-sizing: border-box;
         
         > .nav {
             border-bottom: none;
@@ -36,15 +46,29 @@
     }
     
     #clientsContent {
-        SmartViewContent();
+        // Using absolute positioning rather than SmartViewContent (height:100%)
+        // because the need to left space (sometimes) for the SectionTitle on top
+        overflow: auto;        
+        position: absolute;
+        top: 0;
+        left: $container-padding-left;
+        right: $fullIndexWidth;
+        bottom: 0;
 
         #clientsListView {
-            margin-right: $indexWidth - $container-padding-right;
-            margin-left: 0 - $container-padding-left;
-
             .SimpleList-divider {
                 text-transform: uppercase;
             }
+        }
+    }
+    
+    &.has-SectionTitle {
+        #clientsContent {
+            top: $SectionTitle-height;
+        }
+        
+        #clientsIndex {
+            top: $indexTop + $SectionTitle-height;
         }
     }
     

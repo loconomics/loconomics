@@ -474,12 +474,12 @@
       </form>
     </div>
     <!-- Activity clients -->
-    <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText() }">
-      <div id="clientsContent">
-         <h2 class="SectionTitle" data-bind="visible: headerText">
-            <span data-bind="text: headerText">Clients</span>
-        </h2>
+    <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText(), 'has-SectionTitle': headerText }">
+       <h2 class="SectionTitle" data-bind="visible: headerText">
+        <span data-bind="text: headerText">Clients</span>
+    </h2>
 
+      <div id="clientsContent">
         <div data-bind="css: { 'is-loading': isLoading }">
           <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>

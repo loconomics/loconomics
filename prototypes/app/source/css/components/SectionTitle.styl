@@ -2,38 +2,31 @@
     section-title text class
 **/
 
+$SectionTitle-height = 31px;
+$SectionTitle-fontSize = 17px;
+$SectionTitle-hGap = (($SectionTitle-height - $SectionTitle-fontSize) / 2);
+$SectionTitle-vGap = 7px;
+
 /*BSVAR*/
 $gray-lighter = lighten(#000, 93.5%);
 $gray = lighten(#000, 33.5%);
-
-/*Manually computed from some BSVARs*/
-$aligned-to-action-buttons-right = 7px; /* padding-right plus border */
 
 .SectionTitle {
     // Some content elements may need the positioning context:
     position: relative;
 
-    font-size: 17px;
-    padding: 7px 14px;
+    font-size: $SectionTitle-fontSize;
+    line-height: 1;
+    padding: $SectionTitle-vGap $SectionTitle-hGap;
     margin: 0;
     text-align: center;
     font-weight: normal;
     background: $gray-background;
     border: none;
     color: $gray-dark;
-    
-    // TOREVIEW: HelpPoint was deprecated on mobile, but under review for desktop
-    .HelpPoint {
-        right: $aligned-to-action-buttons-right;
-    }
 }
 /* Inside a container, remove the margin gap */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
     margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-right);
-    
-    // TOREVIEW: HelpPoint was deprecated on mobile, but under review for desktop
-    .HelpPoint {
-        right: $container-padding-right + $aligned-to-action-buttons-right;
-    }
 }
