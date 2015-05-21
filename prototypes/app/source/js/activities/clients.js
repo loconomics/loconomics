@@ -160,8 +160,16 @@ function ViewModel(app) {
     // Grouped list of filtered clients
     this.groupedClients = ko.computed(function(){
 
+        // Sorting list, in a cross browser way (in Firefox, just A > B works, but not on webkit/blink)
         var clients = this.filteredClients().sort(function(clientA, clientB) {
-            return clientA.firstName().toLowerCase() > clientB.firstName().toLowerCase();
+            var a = clientA.firstName().toLowerCase(),
+                b = clientB.firstName().toLowerCase();
+            if (a === b)
+                return 0;
+            else if (a > b)
+                return 1;
+            else
+                return -1;
         });
         
         var groups = [],
