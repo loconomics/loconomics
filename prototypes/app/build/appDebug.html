@@ -492,7 +492,7 @@
             class="sr-only">Search</span>
               </span>
               <input type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText"> <span class="input-group-btn">
-                    <a href="#" class="btn btn-secondary" data-bind="event: { tap: addNew }">Add</a>
+                    <a href="#" class="btn btn-secondary" data-bind="event: { tap: addNew, click: addNew }">Add</a>
                 </span>
 
           </div>
@@ -506,7 +506,7 @@
 
             </div>
             <!-- ko foreach: clients -->
-            <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + customerUserID() }">
+            <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient, click: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + customerUserID() }">
                         <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
                     </a>
 
@@ -672,7 +672,7 @@
             <div class="GroupedTimeSlots-slots">
               <div class="GroupedTimeSlots-slots-empty" data-bind="visible: slots.length === 0">No available appointments</div>
               <!-- ko foreach: { data: slots, as: 'item'
-              } --> <a href="#" class="btn btn-link btn-default" data-bind="event: { tap: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
+              } --> <a href="#" class="btn btn-link btn-default" data-bind="event: { tap: $root.selectDatetime, click: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
 
               <!--
               /ko -->
@@ -775,12 +775,12 @@
           <div class="ListView-item">
             <div class="ListView-item-marker">
               <p data-bind="text: displayedPrice"></p>
-            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.tapPricing }">
+            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.tapPricing, click: $root.tapPricing }">
                 <div data-bind="visible: sessionsAndDuration()"><strong data-bind="text: name"></strong></div><div data-bind="text: sessionsAndDuration"></div>
                 <p data-bind="visible: !sessionsAndDuration()"><strong data-bind="text: name"></strong></p>
               </a>
  <a href="#" class="ListView-item-action btn btn-link"
-            data-bind="visible: $root.isSelectionMode, event: { tap: $root.tapPricing }, attr: { 'aria-pressed': isSelected }"
+            data-bind="visible: $root.isSelectionMode, event: { tap: $root.tapPricing, click: $root.tapPricing }, attr: { 'aria-pressed': isSelected }"
             role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
 
             <a
@@ -1544,10 +1544,10 @@
         <div class="ListView ListView--twolines" data-bind="foreach: addresses">
           <div class="ListView-item">
             <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
-            data-bind="event: { tap: $root.selectAddress }">
+            data-bind="event: { tap: $root.selectAddress, click: $root.selectAddress }">
           <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
         </a>
- <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress }"
+ <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress, click: $root.selectAddress }"
             role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
 
           </div>

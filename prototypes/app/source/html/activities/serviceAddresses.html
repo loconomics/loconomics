@@ -21,10 +21,10 @@
     <div class="ListView ListView--twolines" data-bind="foreach: addresses">
       <div class="ListView-item">
         <div class="ListView-item-marker"></div>
-        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.selectAddress }">
+        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.selectAddress, click: $root.selectAddress }">
           <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
         </a>
-        <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
+        <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress, click: $root.selectAddress }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
       </div>
     </div>
   </div>

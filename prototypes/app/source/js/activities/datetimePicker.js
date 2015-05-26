@@ -254,9 +254,12 @@ function ViewModel(app) {
     
     this.selectedDatetime = ko.observable(null);
     
-    this.selectDatetime = function(selectedDatetime) {
+    this.selectDatetime = function(selectedDatetime, event) {
         
         this.selectedDatetime(selectedDatetime);
+        
+        event.preventDefault();
+        event.stopImmediatePropagation();
 
     }.bind(this);
 

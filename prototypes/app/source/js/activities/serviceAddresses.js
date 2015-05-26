@@ -163,7 +163,7 @@ function ViewModel(app) {
     // (when editing an appointment)
     this.isSelectionMode = ko.observable(false);
 
-    this.selectAddress = function(selectedAddress) {
+    this.selectAddress = function(selectedAddress, event) {
         
         if (this.isSelectionMode() === true) {
             // Run method injected by the activity to return a 
@@ -179,6 +179,9 @@ function ViewModel(app) {
                 '/' + selectedAddress.addressID()
             );
         }
+        
+        event.preventDefault();
+        event.stopImmediatePropagation();
 
     }.bind(this);
 }

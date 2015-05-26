@@ -268,35 +268,41 @@ function ViewModel(app) {
     /**
         Add a client from the public/remote search results
     **/
-    this.addRemoteClient = function(client) {
+    this.addRemoteClient = function(client, event) {
         var data = client.model && client.model.toPlainObject() || client;
         var request = $.extend({}, this.requestData, {
             presetData: data,
             returnNewAsSelected: this.isSelectionMode()
         });
         app.shell.go('clientEditor', request);
-        return false;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
     }.bind(this);
     
     /**
         Call the activity to add a new client, passing the current
         search text so can be used as initial name/email/phone
     **/
-    this.addNew = function() {
+    this.addNew = function(data, event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        
         var request = $.extend({}, this.requestData, {
             newForSearchText: this.searchText(),
             returnNewAsSelected: this.isSelectionMode()
         });
         app.shell.go('clientEditor', request);
-        return false;
     }.bind(this);
 
     /// Selections
     
     this.selectedClient = ko.observable(null);
     
-    this.selectClient = function(selectedClient) {
-        
+    this.selectClient = function(selectedClient, event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
         this.selectedClient(selectedClient);
     }.bind(this);
 }

@@ -283,14 +283,13 @@ function ViewModel(app) {
             this.selectedPricing.splice(inIndex, 1);
         else
             this.selectedPricing.push(pricing);
-
     }.bind(this);
     
     /**
         Ends the selection process, ready to collect selection
         and passing it to the requester activity
     **/
-    this.endSelection = function() {
+    this.endSelection = function(data, event) {
         
         // Run method injected by the activity to return a 
         // selected address:
@@ -303,6 +302,9 @@ function ViewModel(app) {
             }),
             this.jobTitleID()
         );
+        
+        event.preventDefault();
+        event.stopImmediatePropagation();
     }.bind(this);
     
     this.editPricing = function(pricing) {
@@ -312,12 +314,15 @@ function ViewModel(app) {
     /**
         Handler for the listview items, managing edition and selection depending on current mode
     **/
-    this.tapPricing = function(pricing) {
+    this.tapPricing = function(pricing, event) {
         if (this.isSelectionMode()) {
             this.togglePricingSelection(pricing);
         }
         else {
             this.editPricing(pricing);
         }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
     }.bind(this);
 }
