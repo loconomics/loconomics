@@ -79,6 +79,9 @@ var A = Activity.extends(function DatetimePickerActivity() {
                 if (id === $dateTd.data('date-time')) {
                     var cls = '';
                     switch(dateAvail.availableTag()) {
+                        case 'past':
+                            cls = 'text-muted';
+                            break;
                         case 'full':
                             cls = 'text-success';
                             break;

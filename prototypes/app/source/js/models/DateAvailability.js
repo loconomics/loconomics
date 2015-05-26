@@ -12,7 +12,8 @@ var Appointment = require('../models/Appointment'),
     WeekDaySchedule = require('../models/WeekDaySchedule'),
     moment = require('moment'),
     ko = require('knockout'),
-    availabilityCalculation = require('../utils/availabilityCalculation');
+    availabilityCalculation = require('../utils/availabilityCalculation'),
+    getDateWithoutTime = require('../utils/getDateWithoutTime');
 
 function DateAvailability(values) {
 
@@ -81,11 +82,18 @@ function DateAvailability(values) {
         :string
         A text value from an enumeration that represents
             ranges of availablePercent, suitable for high level use as CSS classes.
-            Can be: 'none', 'low', 'medium', 'full'
+            Special case on past date-time, when it returns 'past' rather than the
+            availability, since past times are not availabile for anything new (can't change the past! ;-)
+            Can be: 'none', 'low', 'medium', 'full', 'past'
     **/
     this.availableTag = ko.pureComputed(function() {
-        var perc = this.availablePercent();
-        if (perc >= 100)
+        var perc = this.availablePercent(),
+            date = this.date(),
+            today = getDateWithoutTime();
+
+        if (date < today)
+            return 'past';
+        else if (perc >= 100)
             return 'full';
         else if (perc >= 50)
             return 'medium';
@@ -99,10 +107,22 @@ function DateAvailability(values) {
         Retrieve a list of date-times that are free, available to be used,
         in this date with a separation between each of the given slotSize
         in minutes.
+        
+        TODO: Implement a second parameter 'duration' so the returned slots
+                are free almost for the given duration. This fix the current problem
+                of show slots that don't fit the needed service duration (because ends in an
+                unavailable slot).
     **/
     this.getFreeTimeSlots = function getFreeTimeSlots(slotSizeMinutes) {
-        if (this.availableMinutes() <= 0) {
-            // No time, quick return with empty list
+        
+        var date = this.date(),
+            today = getDateWithoutTime();
+    
+        // Quick return if with empty list when
+        // - past date (no time)
+        // - no available time (already computed)
+        if (date < today ||
+            this.availableMinutes() <= 0) {
             return [];
         }
         else {
@@ -120,16 +140,24 @@ function DateAvailability(values) {
 
 module.exports = DateAvailability;
 
+/**
+    It creates slots between the given times and size for each one.
+    Past times are avoided, because are not available
+**/
 function createTimeSlots(from, to, size) {
     var i = moment(from),
-        slots = [];
+        d,
+        slots = [],
+        now = new Date();
 
     // Shortcut if bad 'to' (avoid infinite loop)
     if (to <= from)
         return slots;
 
     while(i.toDate() < to) {
-        slots.push(i.clone().toDate());
+        d = i.clone().toDate();
+        if (d >= now)
+            slots.push(d);
         i.add(size, 'minutes');
     }
     
