@@ -16,7 +16,7 @@ require('./utils/Function.prototype.name-polyfill');
 require('es6-promise').polyfill();
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
-var AppModel = require('./viewmodels/AppModel');
+var AppModel = require('./appmodel/AppModel');
 
 // Register the special locale
 require('./locales/en-US-LC');
