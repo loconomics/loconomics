@@ -145,6 +145,18 @@ function AppointmentCardViewModel(params) {
 
                 // Go out edit mode
                 this.editMode(false);
+                
+                // Notify
+                if (this.isBooking()) {
+                    
+                    var msg = this.item().customer().firstName() + ' will receive an e-mail confirmation.';
+                    
+                    app.modals.showNotification({
+                        title: 'Confirmed!',
+                        message: msg
+                    });
+                }
+                
             }.bind(this))
             .catch(function(err) {
                 // The version data keeps untouched, user may want to retry

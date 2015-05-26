@@ -166,6 +166,26 @@
         </div>
       </div>
     </div>
+    <!-- notificationModal -->
+    <div id="notificationModal" class="modal" tabindex="-1" role="dialog"
+    aria-labelledby="notificationModal-label" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+             <h4 class="modal-title" id="notificationModal-label" data-default-text="Notification"></h4>
+
+          </div>
+          <div class="modal-body">
+            <p id="notificationModal-body" data-default-text="Done!"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-block btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Activity account -->
     <div class="container-fluid" data-activity="account">
        <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
@@ -353,20 +373,6 @@
         </div>
         -->
       </form>
-    </div>
-    <!-- Activity bookingConfirmation -->
-    <div class="container-fluid app-complete" data-activity="bookingConfirmation">
-      <div class="LeadContent LeadContent--success"> <span class="glyphicon glyphicon-ok text-success success-icon" aria-hidden="true"></span>
-
-         <h2>Congratulations!</h2>
-
-        <p class="lead" data-bind="with: booking">Your booking with <span data-bind="text: client && client() && client().fullName()"></span> is
-          all set and ready to go. Both you and <span data-bind="text: client && client() && client().firstName()"></span> will
-          receive an e-mail confirmation shortly.</p>
-        <div> <a href="#" data-shell="goBack" class="btn btn-success btn-block">Got it, thanks!</a>
-
-        </div>
-      </div>
     </div>
     <!-- Activity calendar -->
     <div class="container-fluid" data-activity="calendar" data-bind="css: { 'is-loading': isLoading }">

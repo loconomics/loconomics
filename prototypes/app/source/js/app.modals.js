@@ -177,3 +177,35 @@ exports.confirm = function confirm(options) {
     });
 };
 
+/**
+    Show an information modal to notify the user about something.
+    @param options:Object {
+        message:string. Informative message.
+        title:string Optional. The text to show in the modal's header,
+            with fallback to the Modal's default title.
+    }
+    @returns Promise. It resolves when the modal is dismissed/closed.
+    No formal rejection happens.
+**/
+exports.showNotification = function showNotification(options) {
+    
+    var modal = $('#notificationModal'),
+        header = modal.find('#notificationModal-label'),
+        body = modal.find('#notificationModal-body');
+
+    options = options || {};
+    
+    // Fallback message
+    var msg = options.message || body.data('default-text');
+
+    body.multiline(msg);
+
+    header.text(options.title || header.data('default-text'));
+    
+    return new Promise(function(resolve) {
+        modal.modal('show');
+        modal.on('hide.bs.modal', function() {
+            resolve();
+        });
+    });
+};
