@@ -10,7 +10,6 @@
 
 var $ = require('jquery');
 var escapeSelector = require('../escapeSelector');
-window.ttlSwitch = 150;
 
 function DomItemsManager(settings) {
 
@@ -18,6 +17,14 @@ function DomItemsManager(settings) {
     this.allowDuplicates = !!settings.allowDuplicates || false;
     this.root = settings.root || 'body';
     this.$root = null;
+    // Define in ms the delay in a switch of items (prepare next ->delay-> hide current, show next)
+    // NOTE: as of testing in iOS 8.3 iPad2 (slow), 140ms ended being a good default
+    // to avoid some flickering effects, enough to let initialization logic to finish before
+    // being showed, allow some common async redirects when executing an item logic but
+    // enough quick to not being visually perceived the delay.
+    // NOTE: on tests on Nexus 5 Android 5.1 with Chrome engine, 40ms was enought to have all the previous
+    // benefits, but was too quick for iOS (even 100ms was too quick for iOS 8.3).
+    this.switchDelay = settings.switchDelay || 140;
 }
 
 module.exports = DomItemsManager;
@@ -141,12 +148,12 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
         // that may involve layout information
         shell.emit(shell.events.itemReady, $to, state);
         
-        console.log('SWITCH ready done, wait', toName);
+        //console.log('SWITCH ready done, wait', toName);
 
         // Finish in a small delay, enough to allow some initialization
         // set-up that take some time to finish avoiding flickering effects
         setTimeout(function() {
-            console.log('SWITCH entering hide-show for', toName, shell.currentRoute.name);
+            //console.log('SWITCH entering hide-show for', toName, shell.currentRoute.name);
             //console.log('ending switch to', toName, 'and current is', shell.currentRoute.name);
             // Race condition, redirection in the middle, abort:
             if (toName !== shell.currentRoute.name)
@@ -170,11 +177,11 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
             
             this.enableAccess();
             
-            console.log('SWITCH ended for', toName);
+            //console.log('SWITCH ended for', toName);
 
             // When its completely opened
             shell.emit(shell.events.opened, $to, state);
-        }.bind(this), window.ttlSwitch);
+        }.bind(this), this.switchDelay);
     } else {
         //console.log('ending switch to', toName, 'and current is', shell.currentRoute.name, 'INSTANT (to was visible)');
         // Race condition, redirection in the middle, abort:
@@ -207,7 +214,6 @@ DomItemsManager.prototype.init = function init() {
     .attr('hidden', 'hidden')
     // For browser that don't support attr
     .css('display', 'none');
-    //this.getActive().hide();
     
     // A layer to visually hide an opening item while not completed opened
     $('<div class="items-backstage"/>').css({
