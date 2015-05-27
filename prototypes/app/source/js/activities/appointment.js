@@ -44,10 +44,11 @@ var A = Activity.extends(function AppointmentActivity() {
 
         if (editMode) {
             // Is cancel action
+
             var cancelLink = this.viewModel.appointmentCardView();
             cancelLink = cancelLink && cancelLink.progress && cancelLink.progress.cancelLink;
 
-            this.convertToCancelAction(this.navBar.leftAction(), cancelLink || null);
+            this.convertToCancelAction(this.navBar.leftAction(), cancelLink || this.requestData.cancelLink);
         }
         else {
             // Is go to calendar/date action
@@ -151,6 +152,17 @@ exports.init = A.init;
 A.prototype.show = function show(options) {
     /* jshint maxcomplexity:10 */
     Activity.prototype.show.call(this, options);
+    
+    // Prepare cancelLink, before any attempt of internal URL rewriting
+    if (!this.requestData.cancelLink) {
+        var referrer = this.app.shell.referrerRoute;
+        referrer = referrer && referrer.url;
+        // Set a default and avoid links to this same page, preventing infinite loops
+        if (referrer && /\/?appointment\//i.test(referrer))
+            referrer = '/calendar';
+        
+        this.requestData.cancelLink = referrer;
+    }
     
     var s1 = options && options.route && options.route.segments[0],
         s2 = options && options.route && options.route.segments[1],
