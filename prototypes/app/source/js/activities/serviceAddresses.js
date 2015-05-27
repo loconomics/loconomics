@@ -13,7 +13,9 @@ var A = Activity.extends(function ServiceAddressesActivity() {
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('Job Title');
+    this.navBar = Activity.createSubsectionNavBar('Job Title', {
+        backLink: '/scheduling'
+    });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
 
@@ -26,10 +28,10 @@ var A = Activity.extends(function ServiceAddressesActivity() {
                 // Get data for the Job title ID
                 this.app.model.jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
-                    if (!this.viewModel.isSelectionMode()) {
-                        // Fill in job title name
-                        this.navBar.leftAction().text(jobTitle.singularName());
-                    }
+                    // Save for use in the view
+                    this.viewModel.jobTitle(jobTitle);
+                    // Update navbar (may indicate the jobTitle name)
+                    this.updateNavBarState();
                     
                     // Get addresses
                     return this.app.model.serviceAddresses.getList(jobTitleID);
@@ -49,7 +51,8 @@ var A = Activity.extends(function ServiceAddressesActivity() {
             }
             else {
                 this.viewModel.sourceAddresses([]);
-                this.navBar.leftAction().text('Job Title');
+                this.viewModel.jobTitle(null);
+                this.updateNavBarState();
             }
         }.bind(this)
     });
@@ -71,7 +74,7 @@ var A = Activity.extends(function ServiceAddressesActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    //jshint maxcomplexity:8
+    //jshint maxcomplexity:10
 
     var itIs = this.viewModel.isSelectionMode();
     
@@ -94,13 +97,19 @@ A.prototype.updateNavBarState = function updateNavBarState() {
         this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
         if (this.requestData.navTitle)
             this.navBar.leftAction().text(this.requestData.navTitle);
+        
+        var jid = this.viewModel.jobTitleID(),
+            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling';
+        
+        this.navBar.leftAction().link(jid ? '/jobtitles/' + jid : '/scheduling');
+        this.navBar.leftAction().text(jname);
     }
     
     if (itIs && !this.requestData.cancelLink) {
         // Uses a custom handler so it returns keeping the given state:
         this.navBar.leftAction().handler(this.returnRequest);
     }
-    else if (!itIs) {
+    else if (!this.requestData.cancelLink) {
         this.navBar.leftAction().handler(null);
     }
 };
@@ -113,13 +122,13 @@ A.prototype.show = function show(options) {
     this.viewModel.jobTitleID(0);
 
     this.viewModel.isSelectionMode(options.selectAddress === true);
-    
-    this.updateNavBarState();
 
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
 
     this.viewModel.jobTitleID(jobTitleID);
+    
+    this.updateNavBarState();
     
     if (jobTitleID === 0) {
         this.viewModel.jobTitles.sync();
@@ -133,6 +142,7 @@ function ViewModel(app) {
     this.headerText = ko.observable('Locations');
     
     this.jobTitleID = ko.observable(0);
+    this.jobTitle = ko.observable(null);
     // Especial mode when instead of pick and edit we are just selecting
     // (when editing an appointment)
     this.isSelectionMode = ko.observable(false);

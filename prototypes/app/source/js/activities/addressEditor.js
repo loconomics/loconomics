@@ -79,6 +79,13 @@ var A = Activity.extends(function AddressEditorActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+
+    var link = this.requestData.cancelLink || '/serviceAddresses/' + this.viewModel.jobTitleID();
+    
+    this.convertToCancelAction(this.navBar.leftAction(), link);
+};
+
 A.prototype.show = function show(options) {
     //jshint maxcomplexity:10    
     Activity.prototype.show.call(this, options);
@@ -99,6 +106,8 @@ A.prototype.show = function show(options) {
     
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.addressID(addressID);
+    
+    this.updateNavBarState();
 
     if (addressID) {
         // Get the address
