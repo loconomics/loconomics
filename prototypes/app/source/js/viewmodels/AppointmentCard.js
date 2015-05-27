@@ -200,7 +200,8 @@ function AppointmentCardViewModel(params) {
             var step = data.progress.step || 1,
                 total = data.progress.total || 1;
             // TODO I18N
-            data.navTitle = step + ' of ' + total;
+            data.title = step + ' of ' + total;
+            data.navTitle = null;
             data.cancelLink = data.progress.cancelLink;
         } else {
             // Reseting
@@ -209,6 +210,7 @@ function AppointmentCardViewModel(params) {
             // an edition. The passIn already resets that on new calls
             data.progress = this.progress;
             // Edition title:
+            data.title = null;
             data.navTitle = this.isBooking() ? 'Booking' : 'Event';
         }
 
