@@ -79,6 +79,8 @@ function Shell(settings) {
     
     // Access to the current route
     this.currentRoute = null;
+    // Access to referrer/previous route
+    this.referrerRoute = null;
 }
 
 // Shell inherits from EventEmitter
@@ -186,6 +188,7 @@ Shell.prototype.replace = function replace(state) {
         state.route = this.parseUrl(this.indexName);
     }
     
+    this.referrerRoute = this.currentRoute;
     this.currentRoute = state.route;
     //console.log('shell replace', state.route);
 

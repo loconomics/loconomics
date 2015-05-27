@@ -370,13 +370,15 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     // through a progress path
     if (this.currentID() === Appointment.specialIds.newBooking) {
         if (!requestData.progress) {
+            // Using the Referrer URL as the link when cancelling the task
+            var referrerUrl = this.app.shell.referrerRoute;
+            referrerUrl = referrerUrl && referrerUrl.url || 'calendar';
             // Start!
             this.progress = {
                 step: 1,
                 total: 4,
                 ended: false,
-                // TODO: Look for a way to know the Referrer to put as the cancel link:
-                cancelLink: 'calendar'
+                cancelLink: referrerUrl
             };
             // First step
             this.pickClient(); //._delayed(50)();
