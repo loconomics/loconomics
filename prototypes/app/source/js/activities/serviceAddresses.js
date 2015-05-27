@@ -16,9 +16,6 @@ var A = Activity.extends(function ServiceAddressesActivity() {
     this.navBar = Activity.createSubsectionNavBar('Job Title');
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
-    
-    // Getting elements
-    this.$listView = this.$activity.find('#addressesListView');
 
     // On changing jobTitleID:
     // - load addresses
@@ -40,7 +37,7 @@ var A = Activity.extends(function ServiceAddressesActivity() {
                 .then(function(list) {
 
                     list = this.app.model.serviceAddresses.asModel(list);
-                    this.viewModel.addresses(list);
+                    this.viewModel.sourceAddresses(list);
 
                 }.bind(this))
                 .catch(function (err) {
@@ -51,7 +48,7 @@ var A = Activity.extends(function ServiceAddressesActivity() {
                 }.bind(this));
             }
             else {
-                this.viewModel.addresses([]);
+                this.viewModel.sourceAddresses([]);
                 this.navBar.leftAction().text('Job Title');
             }
         }.bind(this)
@@ -136,6 +133,9 @@ function ViewModel(app) {
     this.headerText = ko.observable('Locations');
     
     this.jobTitleID = ko.observable(0);
+    // Especial mode when instead of pick and edit we are just selecting
+    // (when editing an appointment)
+    this.isSelectionMode = ko.observable(false);
     
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceAddress');
@@ -147,7 +147,17 @@ function ViewModel(app) {
     }.bind(this);
 
     // List of addresses
-    this.addresses = ko.observableArray([]);
+    this.sourceAddresses = ko.observableArray([]);
+    this.addresses = ko.computed(function() {
+        var list = this.sourceAddresses();
+        if (this.isSelectionMode()) {
+            // Filter by service addresses (excluding service area)
+            list = list.filter(function(add) {
+                return add.isServiceLocation();
+            });
+        }
+        return list;
+    }, this);
     
     this.isSyncing = app.model.serviceAddresses.state.isSyncing();
     this.isLoading = ko.computed(function() {
@@ -155,10 +165,6 @@ function ViewModel(app) {
             jobs = this.jobTitles.isLoading();
         return add || jobs;
     }, this);
-
-    // Especial mode when instead of pick and edit we are just selecting
-    // (when editing an appointment)
-    this.isSelectionMode = ko.observable(false);
 
     this.selectAddress = function(selectedAddress, event) {
         
