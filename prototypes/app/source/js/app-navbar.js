@@ -107,7 +107,7 @@ exports.extends = function (app) {
         That is, trigger the left action.
         Fallback to shell goBack
     **/
-    app.performsNavBarBack = function performsNavBarBack() {
+    app.performsNavBarBack = function performsNavBarBack(options) {
         var nav = this.navBar(),
             left = nav && nav.leftAction(),
             $btn = $('.SmartNavBar-edge.left > .SmartNavBar-btn');
@@ -115,7 +115,9 @@ exports.extends = function (app) {
         // There is an action, trigger like a click so all the handlers
         // attached on spare places do their work:
         if (left) {
-            $btn.trigger('tap').trigger('click');
+            var event = $.Event('click');
+            event.options = options || {};
+            $btn.trigger(event);
         }
         else if (this.shell) {
             this.shell.goBack();

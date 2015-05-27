@@ -14,7 +14,9 @@ var A = Activity.extends(function FreelancerPricingActivity() {
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('Job Title');
+    this.navBar = Activity.createSubsectionNavBar('Job Title', {
+        backLink: '/scheduling'
+    });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
 
@@ -32,13 +34,10 @@ var A = Activity.extends(function FreelancerPricingActivity() {
                 ])
                 .then(function(data) {
                     var jobTitle = data[0];
-                    if (!this.viewModel.isSelectionMode()) {
-                        // Fill in job title name
-                        this.navBar.leftAction().text(jobTitle.singularName());
-                    }
                     // Save for use in the view
                     this.viewModel.jobTitle(jobTitle);
-
+                    // Update navbar (may indicate the jobTitle name)
+                    this.updateNavBarState();
                     // Get pricing
                     return this.app.model.freelancerPricing.getList(jobTitleID);
                 }.bind(this))
@@ -76,7 +75,7 @@ var A = Activity.extends(function FreelancerPricingActivity() {
             else {
                 this.viewModel.list([]);
                 this.viewModel.jobTitle(null);
-                this.navBar.leftAction().text('Job Title');
+                this.updateNavBarState();
             }
         }.bind(this)
     });
@@ -98,7 +97,7 @@ var A = Activity.extends(function FreelancerPricingActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    //jshint maxcomplexity:8
+    //jshint maxcomplexity:10
     
     var itIs = this.viewModel.isSelectionMode();
     
@@ -121,13 +120,19 @@ A.prototype.updateNavBarState = function updateNavBarState() {
         this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
         if (this.requestData.navTitle)
             this.navBar.leftAction().text(this.requestData.navTitle);
+        
+        var jid = this.viewModel.jobTitleID(),
+            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling';
+        
+        this.navBar.leftAction().link(jid ? '/jobtitles/' + jid : '/scheduling');
+        this.navBar.leftAction().text(jname);
     }
     
     if (itIs && !this.requestData.cancelLink) {
         // Uses a custom handler so it returns keeping the given state:
         this.navBar.leftAction().handler(this.returnRequest);
     }
-    else if (!itIs) {
+    else if (!this.requestData.cancelLink) {
         this.navBar.leftAction().handler(null);
     }
 };
@@ -142,12 +147,28 @@ A.prototype.show = function show(options) {
 
     this.viewModel.isSelectionMode(this.requestData.selectPricing === true);
     
-    this.updateNavBarState();
-    
     // Params
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
+
+    var isAdditionMode = params[0] === 'new' || params[1] === 'new';
+    if (isAdditionMode) {
+        // Sets referrer as cancelLink
+        var ref = this.app.shell.referrerRoute;
+        ref = ref && ref.url || '/';
+        this.requestData.cancelLink = ref;
+        // Set for editor links in the view
+        this.viewModel.cancelLink(ref);
+    }
+    else {
+        // Set this page as cancelLink for editor links in the view
+        this.viewModel.cancelLink('/freelancerPricing/' + this.viewModel.jobTitleID());
+    }
+
+    this.viewModel.isAdditionMode(isAdditionMode);
     
+    this.updateNavBarState();
+
     this.viewModel.jobTitleID(jobTitleID);
     
     if (jobTitleID === 0) {
@@ -163,12 +184,21 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
+    this.isAdditionMode = ko.observable(false);
+    this.cancelLink = ko.observable(null);
     
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/freelancerPricing');
     this.jobTitles.selectJobTitle = function(jobTitle) {
         
         this.jobTitleID(jobTitle.jobTitleID());
+        var url = 'freelancerPricing/' + jobTitle.jobTitleID();
+        if (this.isAdditionMode())
+            url += '/new';
+        // pushState cannot be used because it conflicts with the 
+        // selection logic (on new-booking progress)
+        // TODO: commented until the bug with replaceState in HashbangHistory is fixed
+        //app.shell.history.replaceState(null, null, url);
         
         return false;
     }.bind(this);
@@ -205,25 +235,29 @@ function ViewModel(app) {
         var isSelection = this.isSelectionMode();
         var groupNamePrefix = isSelection ? 'Select ' : '';
 
-        var groups = _.groupBy(list, function(pricingItem) {
-            return pricingItem.pricingTypeID();
-        });
-        
-        // Convert the indexed object into an array with some meta-data
-        var groupsList = Object.keys(groups).map(function(key) {
-            var gr = {
-                pricing: groups[key],
-                // Load the pricing information
-                type: app.model.pricingTypes.getObservableItem(key)
-            };
-            gr.group = ko.computed(function() {
-                return groupNamePrefix + (
-                    this.type() && this.type().pluralName() ||
-                    'Services'
-                );
-            }, gr);
-            return gr;
-        });
+        var groups = [],
+            groupsList = [];
+        if (!this.isAdditionMode()) {
+            groups = _.groupBy(list, function(pricingItem) {
+                return pricingItem.pricingTypeID();
+            });
+
+            // Convert the indexed object into an array with some meta-data
+            groupsList = Object.keys(groups).map(function(key) {
+                var gr = {
+                    pricing: groups[key],
+                    // Load the pricing information
+                    type: app.model.pricingTypes.getObservableItem(key)
+                };
+                gr.group = ko.computed(function() {
+                    return groupNamePrefix + (
+                        this.type() && this.type().pluralName() ||
+                        'Services'
+                    );
+                }, gr);
+                return gr;
+            });
+        }
         
         // Since the groupsList is built from the existent pricing items
         // if there are no records for some pricing type (or nothing when
@@ -318,6 +352,18 @@ function ViewModel(app) {
         else {
             this.editPricing(pricing);
         }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    }.bind(this);
+    
+    this.tapNewPricing = function(group, event) {
+        
+        var url = '#!freelancerPricingEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
+
+        app.shell.go(url, {
+            cancelLink: this.cancelLink()
+        });
 
         event.preventDefault();
         event.stopImmediatePropagation();

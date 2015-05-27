@@ -222,22 +222,35 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink) 
     var action = new NavAction({
         link: cancelLink,
         text: 'Cancel',
-        handler: function() {
-            var link = this.link();
-            // TODO L18N
-            app.modals.confirm({
-                title: 'Cancel',
-                message: 'Are you sure?',
-                yes: 'Yes',
-                no: 'No'
-            })
-            .then(function() {
-                // Confirmed cancellation:
+        handler: function(event) {
+            var link = this.link(),
+                eoptions = event && event.options || {};
+            
+            var goLink = function() {
                 if (link)
                     app.shell.go(link);
                 else
                     app.shell.goBack();
-            });
+            };
+            
+            // A silentMode passed to the event requires
+            // avoid the modal (used when executing a saving task for example)
+            if (eoptions.silentMode) {
+                goLink();
+            }
+            else {
+                // TODO L18N
+                app.modals.confirm({
+                    title: 'Cancel',
+                    message: 'Are you sure?',
+                    yes: 'Yes',
+                    no: 'No'
+                })
+                .then(function() {
+                    // Confirmed cancellation:
+                    goLink();
+                });
+            }
         }
     });
 

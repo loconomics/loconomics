@@ -12,7 +12,9 @@ var A = Activity.extends(function JobtitlesActivity() {
     
     this.accessLevel = this.app.UserType.LoggedUser;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
+    this.navBar = Activity.createSubsectionNavBar('Scheduling', {
+        backLink: '/scheduling'
+    });
     
     // On changing jobTitleID:
     // - load addresses

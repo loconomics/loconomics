@@ -12,7 +12,7 @@
         </div>
         
         <div class="ListView ListView--twolines ListView--textualmarker ListView--largemarker" data-bind="foreach: groupedPricing">
-          <div class="ListView-divider SectionTitle">
+          <div class="ListView-divider SectionTitle" data-bind="visible: !$root.isAdditionMode()">
             <span data-bind="text: group"></span>
           </div>
           <!-- ko foreach: pricing -->
@@ -27,7 +27,7 @@
           </div>
           <!-- /ko -->
             <div class="ListView-item">
-                <button type="button" class="btn btn-link btn-block ListView-item-content" data-href="#!freelancerPricingEditor/" data-bind="attr: { 'data-href': '#!freelancerPricingEditor/' + $root.jobTitleID() + '/new/' + (type() && type().pricingTypeID()) }, text: type() && type().addNewLabel()"></button>
+                <button type="button" class="btn btn-link btn-block ListView-item-content" data-href="#!freelancerPricingEditor/" data-bind="event: { tap: $root.tapNewPricing, click: $root.tapNewPricing }, text: type() && type().addNewLabel()"></button>
             </div>
         </div>
     </div>

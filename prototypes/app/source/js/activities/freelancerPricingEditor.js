@@ -22,6 +22,13 @@ var A = Activity.extends(function FreelancerPricingEditorActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+
+    var link = this.requestData.cancelLink || '/freelancerPricing/' + this.viewModel.jobTitleID();
+    
+    this.convertToCancelAction(this.navBar.leftAction(), link);
+};
+
 A.prototype.show = function show(options) {
     //jshint maxcomplexity:10    
     Activity.prototype.show.call(this, options);
@@ -42,6 +49,8 @@ A.prototype.show = function show(options) {
 
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.freelancerPricingID(freelancerPricingID);
+    
+    this.updateNavBarState();
     
     /**
         The pricing record needs some special set-up after creation/loading and before

@@ -164,7 +164,7 @@ app.successSave = function successSave(settings) {
         message: 'Your changes have been saved'
     }, settings);
     // go back
-    this.performsNavBarBack();
+    this.performsNavBarBack({ silentMode: true });
     // show notification
     this.showNavBarNotification(settings);
 };

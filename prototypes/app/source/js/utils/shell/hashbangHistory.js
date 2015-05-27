@@ -17,6 +17,10 @@
     - For simplification, only the state is persisted, the 'title' parameter is not
       used at all (the same as major browsers do, so is not a problem); in this line,
       only history entries with state are persisted.
+      
+    TODO replaceState does not work as expected, it creates a history entry rather than replace it
+        A solution idea is to perform a browser go(-1) and the then hash change (push), but the go back
+        must bypass the events notification.
 **/
 //global location
 'use strict';
