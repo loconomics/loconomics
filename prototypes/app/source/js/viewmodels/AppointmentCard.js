@@ -70,8 +70,10 @@ function AppointmentCardViewModel(params) {
                 this.isSaving() ? 
                     'Saving changes' : 
                     v && v.areDifferent() ?
-                        'Save' :
-                        'Saved'
+                        this.isNew() && this.isBooking() ?
+                            'Book' :
+                            'Save'
+                        : 'Saved'
         );
     }, this);
 
