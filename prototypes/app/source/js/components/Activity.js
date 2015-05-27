@@ -233,7 +233,10 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink) 
             })
             .then(function() {
                 // Confirmed cancellation:
-                app.shell.go(link);
+                if (link)
+                    app.shell.go(link);
+                else
+                    app.shell.goBack();
             });
         }
     });

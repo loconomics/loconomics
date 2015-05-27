@@ -16,52 +16,56 @@ var A = Activity.extends(function AppointmentActivity() {
     this.accessLevel = this.app.UserType.Freelancer;    
     this.menuItem = 'calendar';
     
-    // Create a specific backAction that shows current date
-    // and return to calendar in current date.
-    // Later some more changes are applied, with viewmodel ready
-    var backAction = new Activity.NavAction({
-        link: 'calendar/', // Preserve last slash, for later use
-        icon: Activity.NavAction.goBack.icon(),
-        isTitle: true,
-        text: 'Calendar'
-    });
-    this.navBar = new Activity.NavBar({
-        title: '',
-        leftAction: backAction,
-        rightAction: Activity.NavAction.goHelpIndex
-    });
-    
     this.$appointmentView = this.$activity.find('#calendarAppointmentView');
     this.$chooseNew = $('#calendarChooseNew');
     
     this.viewModel = new ViewModel(this.app);
     
-    // This title text is dynamic, we need to replace it by a computed observable
-    // showing the current date
-    var defBackText = backAction.text._initialValue;
-    backAction.text = ko.computed(function() {
+    // Create default leftAction/backAction settings
+    // later used to instantiate a new NavAction that will
+    // dynamically change depending on viewModel data.
+    var backActionSettings = {
+        link: 'calendar/', // Preserve last slash, for later use
+        icon: Activity.NavAction.goBack.icon(),
+        isTitle: true,
+        text: 'Calendar'
+    };
+    this.navBar = new Activity.NavBar({
+        title: '',
+        leftAction: new Activity.NavAction(backActionSettings),
+        rightAction: Activity.NavAction.goHelpIndex
+    });
 
-        var d = this.viewModel.currentDate();
-        if (!d)
-            // Fallback to the default title
-            return defBackText;
+    // NavBar must update depending on editMode state (to allow cancel and goBack)
+    // and appointment date (on read-only, to go back to calendar on current date)
+    ko.computed(function() {
+        var editMode = this.viewModel.editMode(),
+            date = this.viewModel.currentDate();
 
-        var m = moment(d);
-        var t = m.format('dddd [(]M/D[)]');
-        return t;
+        if (editMode) {
+            // Is cancel action
+            var cancelLink = this.viewModel.appointmentCardView();
+            cancelLink = cancelLink && cancelLink.progress && cancelLink.progress.cancelLink;
+
+            this.convertToCancelAction(this.navBar.leftAction(), cancelLink || null);
+        }
+        else {
+            // Is go to calendar/date action
+            var defLink = backActionSettings.link,
+                defBackText = backActionSettings.text;
+            
+            var link = date ? defLink + date.toISOString() : defLink;
+            var text = date ? moment(date).format('dddd [(]M/D[)]') : defBackText;
+            
+            this.navBar.leftAction().model.updateWith($.extend({}, backActionSettings, {
+                link: link,
+                text: text,
+                handler: null
+            }));
+        }
+
     }, this);
-    // And the link is dynamic too, to allow return to the date
-    // that matches current appointment
-    var defLink = backAction.link._initialValue;
-    backAction.link = ko.computed(function() {
 
-        var d = this.viewModel.currentDate();
-        if (!d)
-            // Fallback to the default link
-            return defLink;
-
-        return defLink + d.toISOString();
-    }, this);
     
     // On changing the current appointment:
     // - Update URL to match the appointment currently showed
