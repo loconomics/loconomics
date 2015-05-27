@@ -57,12 +57,23 @@ exports.init = A.init;
 
 var ko = require('knockout');
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+
+    var referrer = this.app.shell.referrerRoute;
+    referrer = referrer && referrer.url || '/clients';
+    var link = this.requestData.cancelLink || referrer;
+    
+    this.convertToCancelAction(this.navBar.leftAction(), link);
+};
+
 A.prototype.show = function show(state) {
     /*jshint maxcomplexity: 8*/
     Activity.prototype.show.call(this, state);
     
     // reset
     this.viewModel.clientID(0);
+    
+    this.updateNavBarState();
 
     // params
     var params = state && state.route && state.route.segments || [];
