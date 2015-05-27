@@ -196,6 +196,8 @@ function AppointmentCardViewModel(params) {
         // Include appointment to recover state on return:
         data.appointment = this.item().model.toPlainObject(true);
         
+        data.cancelLink = this.cancelLink;
+        
         if (this.progress &&
             !this.progress.ended) {
             data.progress = this.progress;
@@ -204,10 +206,7 @@ function AppointmentCardViewModel(params) {
             // TODO I18N
             data.title = step + ' of ' + total;
             data.navTitle = null;
-            data.cancelLink = data.progress.cancelLink;
         } else {
-            // Reseting
-            data.cancelLink = null;
             // keep data.progress so it does not restart the process after
             // an edition. The passIn already resets that on new calls
             data.progress = this.progress;
@@ -370,19 +369,28 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         );
     }
     
+    if (this.isNew()) {
+        if (requestData && requestData.cancelLink) {
+            this.cancelLink = requestData.cancelLink;
+        }
+        else {
+            // Using the Referrer URL as the link when cancelling the task
+            var referrerUrl = this.app.shell.referrerRoute;
+            referrerUrl = referrerUrl && referrerUrl.url || 'calendar';
+
+            this.cancelLink = referrerUrl;
+        }
+    }
+
     // Special behavior for adding a booking: it requires a guided creation
     // through a progress path
     if (this.currentID() === Appointment.specialIds.newBooking) {
         if (!requestData.progress) {
-            // Using the Referrer URL as the link when cancelling the task
-            var referrerUrl = this.app.shell.referrerRoute;
-            referrerUrl = referrerUrl && referrerUrl.url || 'calendar';
             // Start!
             this.progress = {
                 step: 1,
                 total: 4,
-                ended: false,
-                cancelLink: referrerUrl
+                ended: false
             };
             // First step
             this.pickClient(); //._delayed(50)();
