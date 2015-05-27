@@ -126,12 +126,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     }
     
     if (this.requestData.cancelLink) {
-        this.navBar.leftAction().text('Cancel');
-        this.navBar.leftAction().link(this.requestData.cancelLink);
-        this.navBar.leftAction().isShell(false);
-        this.navBar.leftAction().icon('');
-        this.navBar.leftAction().isTitle(false);
-        this.navBar.leftAction().handler(null);
+        this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink);
     }
     else {
         // Reset to defaults, or given title:

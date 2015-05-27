@@ -30,9 +30,9 @@ function NavAction(values) {
     this.runHandler = function runHandler(obj, event) {
         var handler = this.handler();
         if (handler) {
-            handler();
             event.stopImmediatePropagation();
             event.preventDefault();
+            handler.call(this, event, obj);
         }
     }.bind(this);
 }

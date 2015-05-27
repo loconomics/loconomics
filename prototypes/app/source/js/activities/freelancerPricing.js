@@ -98,6 +98,7 @@ var A = Activity.extends(function FreelancerPricingActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
+    //jshint maxcomplexity:8
     
     var itIs = this.viewModel.isSelectionMode();
     
@@ -113,11 +114,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     }
 
     if (this.requestData.cancelLink) {
-        this.navBar.leftAction().text('Cancel');
-        this.navBar.leftAction().link(this.requestData.cancelLink);
-        this.navBar.leftAction().isShell(false);
-        this.navBar.leftAction().icon('');
-        this.navBar.leftAction().isTitle(false);
+        this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink);
     }
     else {
         // Reset to defaults, or given title:
@@ -130,7 +127,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
         // Uses a custom handler so it returns keeping the given state:
         this.navBar.leftAction().handler(this.returnRequest);
     }
-    else {
+    else if (!itIs) {
         this.navBar.leftAction().handler(null);
     }
 };

@@ -215,6 +215,39 @@ Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options
     });
 };
 
+Activity.prototype.createCancelAction = function createCancelAction(cancelLink) {
+    
+    var app = this.app;
+    
+    var action = new NavAction({
+        link: cancelLink,
+        text: 'Cancel',
+        handler: function() {
+            var link = this.link();
+            // TODO L18N
+            app.modals.confirm({
+                title: 'Cancel',
+                message: 'Are you sure?',
+                yes: 'Yes',
+                no: 'No'
+            })
+            .then(function() {
+                // Confirmed cancellation:
+                app.shell.go(link);
+            });
+        }
+    });
+
+    return action;
+};
+
+Activity.prototype.convertToCancelAction = function convertToCancelAction(actionModel, cancelLink) {
+    var cancel = this.createCancelAction(cancelLink);
+    actionModel.model.updateWith(cancel);
+    // DUDE: handler is cpied by updateWith?
+    actionModel.handler(cancel.handler());
+};
+
 /**
     Singleton helper
 **/
