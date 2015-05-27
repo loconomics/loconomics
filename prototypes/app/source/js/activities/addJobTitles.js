@@ -47,6 +47,15 @@ var A = Activity.extends(function AddJobTitlesActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+
+    var referrer = this.app.shell.referrerRoute;
+    referrer = referrer && referrer.url || '/scheduling';
+    var link = this.requestData.cancelLink || referrer;
+    
+    this.convertToCancelAction(this.navBar.leftAction(), link);
+};
+
 A.prototype.show = function show(options) {
 
     Activity.prototype.show.call(this, options);
@@ -54,6 +63,8 @@ A.prototype.show = function show(options) {
     // Reset
     this.viewModel.searchText('');
     this.viewModel.jobTitles.removeAll();
+    
+    this.updateNavBarState();
 };
 
 var ko = require('knockout');
