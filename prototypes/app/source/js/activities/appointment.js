@@ -166,19 +166,24 @@ A.prototype.show = function show(options) {
     
     var s1 = options && options.route && options.route.segments[0],
         s2 = options && options.route && options.route.segments[1],
+        s3 = options && options.route && options.route.segments[2],
         date,
-        id;
+        id,
+        type;
 
-    if (/^\-?\d+$/.test(s1)) {
+    var isNumber = /^\-?\d+$/;
+    if (isNumber.test(s1)) {
         // first parameter is an ID
         id = s1 |0;
+        type = s2;
     }
     else {
         date = getDateWithoutTime(s1);
         id = s2 |0;
+        type = s3;
     }
 
-    this.viewModel.setCurrent(date, id)
+    this.viewModel.setCurrent(date, id, type)
     .then(function() {
         // The card component needs to be updated on load
         // with any option passed to the activity since the component
@@ -393,7 +398,8 @@ function ViewModel(app) {
         this.currentAppointment(item);
     };
     
-    var _setCurrent = function setCurrent(date, id) {    
+    var _setCurrent = function setCurrent(date, id, type) {
+        //jshint maxcomplexity:8
         // IMPORTANT: the date to use must be ever
         // a new object rather than the referenced one to
         // avoid some edge cases where the same object is mutated
@@ -413,7 +419,13 @@ function ViewModel(app) {
                     return _setCurrent(new Date());
                 }.bind(this);
 
-                return app.model.calendar.getAppointment(id)
+                var ids = {};
+                if (type === 'booking')
+                    ids.bookingID = id;
+                else
+                    ids.calendarEventID = id;
+                
+                return app.model.calendar.getAppointment(ids)
                 .then(function (item) {
                     if (item) {
                         // Force a load for the item date.
@@ -459,14 +471,14 @@ function ViewModel(app) {
     }.bind(this);
 
     var promiseSetCurrent = Promise.resolve();
-    this.setCurrent = function setCurrent(date, id) {
+    this.setCurrent = function setCurrent(date, id, type) {
         // NOTE: Do nothing if is already in loading process
         // TODO: review if is better to cancel current and continue or
         // just the current queue for when it's finish.
         // If set as 'allow concurrent'
         // the isLoading may be not enough to control the several loadings
         promiseSetCurrent = promiseSetCurrent.then(function() {
-            return _setCurrent(date, id);
+            return _setCurrent(date, id, type);
         });
         return promiseSetCurrent;
     };
