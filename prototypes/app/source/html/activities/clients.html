@@ -7,10 +7,6 @@
     </h2>
     
     <div id="clientsContent">
-        <div data-bind="css: { 'is-loading': isLoading }">
-            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-        </div>
-
         <div class="isolated">
             <div class="input-group">
                 <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
@@ -23,6 +19,10 @@
                     <a href="#" class="btn btn-secondary" data-bind="event: { click: addNew }">Add</a>
                 </span>
             </div><!-- /input-group -->
+        </div>
+        
+        <div data-bind="css: { 'is-loading': isLoading }">
+            <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
         </div>
 
         <div class="isolated" data-bind="visible: clients().length === 0 && !isLoading()">

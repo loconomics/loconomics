@@ -486,9 +486,6 @@
     </h2>
 
       <div id="clientsContent">
-        <div data-bind="css: { 'is-loading': isLoading }">
-          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-        </div>
         <div class="isolated">
           <div class="input-group"> <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
                     <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
@@ -503,6 +500,9 @@
 
           </div>
           <!-- /input-group -->
+        </div>
+        <div data-bind="css: { 'is-loading': isLoading }">
+          <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
         </div>
         <div class="isolated" data-bind="visible: clients().length === 0 && !isLoading()">You have no clients yet. Search for clients that may already be on Loconomics
           or add clients of your own.</div>
@@ -654,7 +654,7 @@
           <div data-bind="text: bodyText"></div>
         </div>
       </div>
-      <div data-bind="if: bookingID">
+      <div data-bind="if: bookingID" class="isolated">
         <button type="button" class="btn btn-default btn-block" data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() }">Open Booking</button>
       </div>
     </div>
@@ -1038,8 +1038,10 @@
     <!-- Inbox activity -->
     <div class="container-fluid" data-activity="inbox">
       <div class="isolated">
-        <div class="input-group"> <span class="input-group-addon">
-        <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+        <div class="input-group"> <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
+            <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+            <span class="glyphicon glyphicon-search"></span>
+ <span class="sr-only">Search</span>
 </span>
           <input
           type="text" class="form-control" placeholder="search inbox" data-bind="textInput: searchText"> <span class="input-group-btn">
@@ -1048,6 +1050,9 @@
 
         </div>
         <!-- /input-group -->
+      </div>
+      <div data-bind="css: { 'is-loading': isLoading() }">
+        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
       </div>
       <div class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
       data-bind="template: { name: 'inbox-tile-template', foreach: threads() }"></div>

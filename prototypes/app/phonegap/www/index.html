@@ -88,7 +88,7 @@
                 </li>
                 <li class="go-calendar-new"><a href="/appointment/-3">Calendar block</a>
                 </li>
-                <li class="go-pricing-new"><a href="/freelancerPricing">Pricing</a>
+                <li class="go-pricing-new"><a href="/freelancerPricing/new">Pricing</a>
                 </li>
                 <li class="go-jobtitle-new"><a href="/addJobTitles">Job title</a>
                 </li>
@@ -252,7 +252,7 @@
             </span>
             <input id="addJobTitles-search" type="text" class="form-control" placeholder="search"
             data-bind="textInput: searchText"> <span class="input-group-btn">
-                <button type="button" class="btn btn-secondary" data-bind="event: { tap: add }">Add</button>
+                <button type="button" class="btn btn-secondary" data-bind="event: { click: add }">Add</button>
             </span>
 
         </div>
@@ -262,13 +262,13 @@
         <div class="ListView-item"> <a href="#" class="btn btn-link btn-block ListView-item-content">
         <p data-bind="text: label"></p>
       </a>
- <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { tap: $root.remove }"><span class="glyphicon glyphicon-trash"></span></a>
+ <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="glyphicon glyphicon-trash"></span></a>
 
         </div>
       </div>
       <div class="navbar navbar-default ActivityNavbar">
         <div class="container">
-          <button type="button" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { tap: save }"></button>
+          <button type="button" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { click: save }"></button>
         </div>
       </div>
     </div>
@@ -314,7 +314,7 @@
         </fieldset>
         <div class="isolated">
           <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
         </div>
       </form>
     </div>
@@ -369,8 +369,8 @@
           </label>
         </div>
         <!-- TODO Unhide when implemented the handlers <div class="row">
-            <button type="button" class="btn btn-default btn-block" data-bind="event: { tap: copyCode }, disable: isLocked">Copy</button>
-            <button type="button" class="btn btn-default btn-block" data-bind="event: { tap: sendByEmail }, disable: isLocked">E-mail to your tech person</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked">Copy</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="event: { click: sendByEmail }, disable: isLocked">E-mail to your tech person</button>
         </div>
         -->
       </form>
@@ -420,7 +420,7 @@
       </div>
     </div>
     <div class="isolated">
-      <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { tap: reset }">Reset Private URL</button>
+      <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { click: reset }">Reset Private URL</button>
     </div>
     </form>
     </div>
@@ -476,7 +476,7 @@
         </fieldset>
         <div class="isolated">
           <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked(), event: { tap: confirmRemoval }, visible: !isNew()"></button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked(), event: { click: confirmRemoval }, visible: !isNew()"></button>
         </div>
       </form>
     </div>
@@ -499,7 +499,7 @@
             class="sr-only">Search</span>
               </span>
               <input type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText"> <span class="input-group-btn">
-                    <a href="#" class="btn btn-secondary" data-bind="event: { tap: addNew, click: addNew }">Add</a>
+                    <a href="#" class="btn btn-secondary" data-bind="event: { click: addNew }">Add</a>
                 </span>
 
           </div>
@@ -513,7 +513,7 @@
 
             </div>
             <!-- ko foreach: clients -->
-            <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient, click: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + customerUserID() }">
+            <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { click: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + customerUserID() }">
                         <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
                     </a>
 
@@ -530,7 +530,7 @@
            <h3 class="SectionTitle">Results from Loconomics.com</h3>
 
           <div class="SimpleList" data-bind="foreach: publicSearchResults">
-            <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.addRemoteClient }">
+            <div class="SimpleList-item"> <a href="#" class="btn btn-link btn-block" data-bind="event: { click: $root.addRemoteClient }">
                     <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
                   </a>
 
@@ -580,7 +580,7 @@
         you need, send us a note.</p>
       <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
       <div>
-        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: submitText, disable: isSending">Send</button>
+        <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending">Send</button>
       </div>
     </div>
     <!-- Activity contactInfo -->
@@ -598,9 +598,7 @@
             <div class="checkbox">
               <label>
                 <input type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked"
-                /> <span>Can receive SMS</span>
-
-              </label>
+                />Can receive SMS</label>
             </div>
             <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
@@ -679,7 +677,7 @@
             <div class="GroupedTimeSlots-slots">
               <div class="GroupedTimeSlots-slots-empty" data-bind="visible: slots.length === 0">No available appointments</div>
               <!-- ko foreach: { data: slots, as: 'item'
-              } --> <a href="#" class="btn btn-link btn-default" data-bind="event: { tap: $root.selectDatetime, click: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
+              } --> <a href="#" class="btn btn-link btn-default" data-bind="event: { click: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
 
               <!--
               /ko -->
@@ -760,7 +758,7 @@
           features for Owners! We'll folow up with detail.</label>
       </div>
       <div>
-        <button class="btn btn-primary btn-block" data-bind="event: { tap: send }, text: submitText, disable: isSending">Send</button>
+        <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending">Send</button>
       </div>
     </div>
     <!-- FreelancerPricing activity -->
@@ -775,19 +773,19 @@
         </div>
         <div class="ListView ListView--twolines ListView--textualmarker ListView--largemarker"
         data-bind="foreach: groupedPricing">
-          <div class="ListView-divider SectionTitle"> <span data-bind="text: group"></span>
+          <div class="ListView-divider SectionTitle" data-bind="visible: !$root.isAdditionMode()"> <span data-bind="text: group"></span>
 
           </div>
           <!-- ko foreach: pricing -->
           <div class="ListView-item">
             <div class="ListView-item-marker">
               <p data-bind="text: displayedPrice"></p>
-            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.tapPricing, click: $root.tapPricing }">
+            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { click: $root.tapPricing }">
                 <div data-bind="visible: sessionsAndDuration()"><strong data-bind="text: name"></strong></div><div data-bind="text: sessionsAndDuration"></div>
                 <p data-bind="visible: !sessionsAndDuration()"><strong data-bind="text: name"></strong></p>
               </a>
  <a href="#" class="ListView-item-action btn btn-link"
-            data-bind="visible: $root.isSelectionMode, event: { tap: $root.tapPricing, click: $root.tapPricing }, attr: { 'aria-pressed': isSelected }"
+            data-bind="visible: $root.isSelectionMode, event: { click: $root.tapPricing }, attr: { 'aria-pressed': isSelected }"
             role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
 
             <a
@@ -798,12 +796,12 @@
           <!-- /ko -->
           <div class="ListView-item">
             <button type="button" class="btn btn-link btn-block ListView-item-content"
-            data-href="#!freelancerPricingEditor/" data-bind="attr: { 'data-href': '#!freelancerPricingEditor/' + $root.jobTitleID() + '/new/' + (type() && type().pricingTypeID()) }, text: type() && type().addNewLabel()"></button>
+            data-href="#!freelancerPricingEditor/" data-bind="event: { click: $root.tapNewPricing }, text: type() && type().addNewLabel()"></button>
           </div>
         </div>
       </div>
       <div class="isolated" data-bind="visible: isSelectionMode() && jobTitleID() !== 0">
-        <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }, text: submitText, disable: isLocked">Save</button>
+        <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
       </div>
     </div>
     <!-- Activity freelancerPricingEditor -->
@@ -926,7 +924,7 @@
     </fieldset>
     <div class="isolated">
       <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-      <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { tap: confirmRemoval }, visible: !isNew()"></button>
+      <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
     </div>
     </form>
     </div>
@@ -1332,7 +1330,7 @@
         <div class="checkbox">
             <label>
                 <input type="checkbox" data-bind="checked: value, disable: disable">
-                <span data-bind="text: label"></span>
+                <!-- ko text: label --><!-- /ko -->
             </label>
         </div>
       </script>
@@ -1551,20 +1549,21 @@
         <div class="ListView ListView--twolines" data-bind="foreach: addresses">
           <div class="ListView-item">
             <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
-            data-bind="event: { tap: $root.selectAddress, click: $root.selectAddress }">
+            data-bind="event: { click: $root.selectAddress }">
           <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
         </a>
- <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress, click: $root.selectAddress }"
+ <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { click: $root.selectAddress }"
             role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
 
           </div>
         </div>
       </div>
-      <div id="addressesAddNewButtons" class="isolated" data-bind="visible: !isSelectionMode()">
-        <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/service/"
-        data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceLocation'}">Add a service location</button>
+      <div id="addressesAddNewButtons" class="isolated" data-bind="visible: jobTitleID()">
+        <button type="button" class="btn btn-default btn-block" data-bind="event: { click: addServiceLocation }">Add a service location</button>
         <button type="button" class="btn btn-default btn-block"
-        data-href="#!addressEditor/service/" data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceArea'}">Add a service area</button>
+        data-bind="event: { click: addServiceArea }, visible: !isSelectionMode()">Add a service area</button>
+        <button type="button" class="btn btn-default btn-block"
+        data-bind="event: { click: addClientLocation }, visible: isSelectionMode() && clientID()">Add a client location</button>
       </div>
     </div>
     <!-- Activity Signup -->
@@ -1611,10 +1610,10 @@
       </div>
       <div class="row isolated">
         <div class="col-xs-6">
-          <button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: cancel }">Cancel</button>
+          <button type="button" class="btn btn-warning btn-block" data-bind="event: { click: cancel }">Cancel</button>
         </div>
         <div class="col-xs-6">
-          <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }">Save</button>
+          <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }">Save</button>
         </div>
       </div>
     </div>
@@ -1778,7 +1777,7 @@
           </ul>
           
           <ul class="list-unstyled" data-bind="visible: isEvent()">
-              <li data-bind="event: { tap: editMode() && pickDateTime }">
+              <li data-bind="event: { click: editMode() && pickDateTime }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="visible: item().startTime()">
@@ -1789,7 +1788,7 @@
                   </span>
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
               </li>
-              <li data-bind="event: { tap: editMode() && pickEndDateTime }">
+              <li data-bind="event: { click: editMode() && pickEndDateTime }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="visible: item().endTime()">
@@ -1809,7 +1808,7 @@
                       </label>
                   </span>
               </li>-->
-              <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'summary') }">
+              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'summary') }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().summary"></span>
@@ -1817,7 +1816,7 @@
                   </span>
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().summary(), 'glyphicon-plus': !item().summary()}"></span></span>
               </li>
-              <li data-bind="event: { tap: editMode() && pickLocation }">
+              <li data-bind="event: { click: editMode() && pickLocation }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().addressSummary"></span>
@@ -1825,7 +1824,7 @@
                   </span>
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().addressSummary(), 'glyphicon-plus': !item().addressSummary()}"></span></span>
               </li>
-              <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'description') }">
+              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'description') }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().description"></span>
@@ -1836,7 +1835,7 @@
           </ul>
           
           <ul class="list-unstyled" data-bind="visible: isBooking()">
-              <li data-bind="event: { tap: editMode() && pickDateTime }">
+              <li data-bind="event: { click: editMode() && pickDateTime }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="visible: item().startTime()">
@@ -1847,7 +1846,7 @@
                   </span>
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
               </li>
-              <li data-bind="event: { tap: editMode() && isNew() && pickClient }">
+              <li data-bind="event: { click: editMode() && isNew() && pickClient }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().customer() && item().customer().fullName()"></span>
@@ -1855,7 +1854,7 @@
                   </span>
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-plus': !item().customer()}"></span></span>
               </li>
-              <li data-bind="event: { tap: editMode() && pickService }">
+              <li data-bind="event: { click: editMode() && pickService }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().servicesSummary()"></span>
@@ -1863,13 +1862,13 @@
                   </span>
               <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().servicesSummary(), 'glyphicon-plus': !item().servicesSummary()}"></span></span>
               </li>
-              <li data-bind="event: { tap: editMode() && changePrice }">
+              <li data-bind="event: { click: editMode() && changePrice }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
                   <span class="AppointmentCard-data" data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></span>
                   <!--<span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().price(), 'glyphicon-plus': !item().price()}"></span></span>
                   -->
               </li>
-              <li data-bind="event: { tap: editMode() && pickLocation }">
+              <li data-bind="event: { click: editMode() && pickLocation }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().addressSummary"></span>
@@ -1878,7 +1877,7 @@
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().addressSummary(), 'glyphicon-plus': !item().addressSummary()}"></span></span>
               </li>
   
-              <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'preNotesToClient') }">
+              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'preNotesToClient') }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().preNotesToClient"></span>
@@ -1886,7 +1885,7 @@
                   </span>
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToClient(), 'glyphicon-plus': !item().preNotesToClient()}"></span></span>
               </li>
-              <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'preNotesToSelf') }">
+              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'preNotesToSelf') }">
                   <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().preNotesToSelf"></span>
@@ -1895,7 +1894,7 @@
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToSelf(), 'glyphicon-plus': !item().preNotesToSelf()}"></span></span>
               </li>
   
-              <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: !isNew() && item().itStarted()">
+              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: !isNew() && item().itStarted()">
                   <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().postNotesToClient"></span>
@@ -1903,7 +1902,7 @@
                   </span>
                   <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().postNotesToClient(), 'glyphicon-plus': !item().postNotesToClient()}"></span></span>
               </li>
-              <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: !isNew() && item().itStarted()">
+              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: !isNew() && item().itStarted()">
                   <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().postNotesToSelf"></span>
@@ -1913,12 +1912,12 @@
               </li>
           </ul>
           <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && !editMode()">
-              <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: edit }, disable: item().readOnly">Edit</button></div>
+              <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { click: edit }, disable: item().readOnly">Edit</button></div>
               <div class="col-xs-6"><button type="button" class="btn btn-default btn-block">Contact client</button></div>
           </div>
           <div class="AppointmentCard-actions row" data-bind="visible: editMode()">
-              <div class="col-xs-6" data-bind="visible: currentID() > 0"><button type="button" class="btn btn-danger btn-block" data-bind="event: { tap: cancel }, disable: isLocked">Cancel</button></div>
-              <div class="col-xs-6" data-bind="css: { 'col-xs-6' : currentID() > 0 }"><button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }, text: submitText, disable: isLocked">Save</button></div>
+              <div class="col-xs-6" data-bind="visible: currentID() > 0"><button type="button" class="btn btn-danger btn-block" data-bind="event: { click: cancel }, disable: isLocked">Cancel</button></div>
+              <div class="col-xs-6" data-bind="css: { 'col-xs-6' : currentID() > 0 }"><button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save</button></div>
           </div>
       </div>
     </script>
@@ -1955,12 +1954,12 @@
               <p></p>
           </div>
           <button
-             data-bind="event: { tap: $parent.selectJobTitle }"
+             data-bind="event: { click: $parent.selectJobTitle }"
              class="btn btn-link btn-block ListView-item-content">
               <p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p>
           </button>
           <button
-             data-bind="event: { tap: $parent.selectJobTitle }"
+             data-bind="event: { click: $parent.selectJobTitle }"
              class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></button>
       </div>
     </script>
@@ -1972,7 +1971,7 @@
     </script>
     <!-- Component Template navbar-action -->
     <script type="text/html" id="navbar-action-template">
-      <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }, event: { tap: action && action.runHandler }">
+      <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }, event: { click: action && action.runHandler }">
           <span data-bind="attr: { 'class': action && action.icon() }" class="glyphicon"></span>
           <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
       </a>

@@ -21,7 +21,7 @@
         <div data-bind="text: bodyText"></div>
     </div>
   </div>
-  <div data-bind="if: bookingID">
+  <div data-bind="if: bookingID" class="isolated">
       <button type="button" class="btn btn-default btn-block"
               data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() }">
           Open Booking
