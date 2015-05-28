@@ -108,6 +108,7 @@ A.prototype.show = function show(state) {
         // perform an activity change but allow the current
         // to stop first
         setTimeout(function() {
+            delete state.returnNewAsSelected;
             this.requestData.selectedClientID = state.clientID;
             // And go back
             this.app.shell.goBack(this.requestData);

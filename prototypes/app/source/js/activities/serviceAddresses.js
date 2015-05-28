@@ -4,6 +4,7 @@
 'use strict';
 
 var ko = require('knockout'),
+    $ = require('jquery'),
     Activity = require('../components/Activity');
 
 var A = Activity.extends(function ServiceAddressesActivity() {
@@ -120,14 +121,31 @@ A.prototype.show = function show(options) {
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
     this.viewModel.jobTitleID(0);
+    this.viewModel.requestData = this.requestData;
 
     this.viewModel.isSelectionMode(options.selectAddress === true);
+    this.viewModel.clientID(options.clientID || null);
 
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
+    
+    // Check if it comes from an addressEditor that
+    // received the flag 'returnNewAsSelected' and an
+    // addressID: we were in selection mode->creating address->must
+    // return the just created address to the previous page
+    if (options.returnNewAsSelected === true &&
+        options.addressID) {
+        
+        setTimeout(function() {
+            delete options.returnNewAsSelected;
+            this.viewModel.returnSelected(options.addressID, jobTitleID);
+        }.bind(this), 1);
+        // quick return
+        return;
+    }
 
     this.viewModel.jobTitleID(jobTitleID);
-    
+
     this.updateNavBarState();
     
     if (jobTitleID === 0) {
@@ -146,6 +164,9 @@ function ViewModel(app) {
     // Especial mode when instead of pick and edit we are just selecting
     // (when editing an appointment)
     this.isSelectionMode = ko.observable(false);
+    // Optionally, some times a clientID can be passed in order to create
+    // a location for that client where perform a work.
+    this.clientID = ko.observable(null);
     
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceAddress');
@@ -196,5 +217,29 @@ function ViewModel(app) {
         event.preventDefault();
         event.stopImmediatePropagation();
 
+    }.bind(this);
+    
+    this.addServiceLocation = function() {
+        var url = '#!addressEditor/service/' + this.jobTitleID() + '/serviceLocation';
+        var request = $.extend({}, this.requestData, {
+            returnNewAsSelected: this.isSelectionMode()
+        });
+        app.shell.go(url, request);
+    }.bind(this);
+    
+    this.addServiceArea = function() {
+        var url = '#!addressEditor/service/' + this.jobTitleID() + '/serviceArea';
+        var request = $.extend({}, this.requestData, {
+            returnNewAsSelected: this.isSelectionMode()
+        });
+        app.shell.go(url, request);
+    }.bind(this);
+    
+    this.addClientLocation = function() {
+        var url = '#!addressEditor/service/' + this.jobTitleID() + '/clientLocation/' + this.clientID();
+        var request = $.extend({}, this.requestData, {
+            returnNewAsSelected: this.isSelectionMode()
+        });
+        app.shell.go(url, request);
     }.bind(this);
 }

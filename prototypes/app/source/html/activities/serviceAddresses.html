@@ -29,9 +29,19 @@
     </div>
   </div>
 
-  <div id="addressesAddNewButtons" class="isolated" data-bind="visible: !isSelectionMode()">
-      <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/service/" data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceLocation'}">Add a service location</button>
-      <button type="button" class="btn btn-default btn-block" data-href="#!addressEditor/service/" data-bind="attr: {'data-href': '#!addressEditor/service/' + jobTitleID() + '/serviceArea'}">Add a service area</button>
+  <div id="addressesAddNewButtons" class="isolated" data-bind="visible: jobTitleID()">
+      <button type="button" class="btn btn-default btn-block"
+              data-bind="event: { tap: addServiceLocation }">
+          Add a service location
+      </button>
+      <button type="button" class="btn btn-default btn-block"
+              data-bind="event: { tap: addServiceArea }, visible: !isSelectionMode()">
+          Add a service area
+      </button>
+      <button type="button" class="btn btn-default btn-block"
+              data-bind="event: { tap: addClientLocation }, visible: isSelectionMode() && clientID()">
+          Add a client location
+      </button>
   </div>
 
 </div>

@@ -5,6 +5,7 @@
 
 var ko = require('knockout'),
     _ = require('lodash'),
+    $ = require('jquery'),
     Activity = require('../components/Activity');
 
 var A = Activity.extends(function FreelancerPricingActivity() {
@@ -144,6 +145,7 @@ A.prototype.show = function show(options) {
     // or outdated info forcing update
     this.viewModel.jobTitleID(0);
     this.viewModel.selectedPricing.removeAll();
+    this.viewModel.requestData = this.requestData;
 
     this.viewModel.isSelectionMode(this.requestData.selectPricing === true);
     
@@ -361,9 +363,13 @@ function ViewModel(app) {
         
         var url = '#!freelancerPricingEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
 
-        app.shell.go(url, {
-            cancelLink: this.cancelLink()
-        });
+        var request = $.extend({}, this.requestData);
+        if (!request.cancelLink)
+            $.extend(request, {
+                cancelLink: this.cancelLink()
+            });
+
+        app.shell.go(url, request);
 
         event.preventDefault();
         event.stopImmediatePropagation();
