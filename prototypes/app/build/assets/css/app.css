@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-05-26
+/*! LoconomicsApp 2015-05-28
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1964,7 +1964,7 @@ body.use-backdrop:before {
 
 /* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDateHeader {
-  position: fixed;
+  position: absolute;
   z-index: 100;
   background: White;
   font-size: 20px;
@@ -1992,7 +1992,7 @@ body.use-backdrop:before {
 /* Button link */
 }
 
-/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDateHeader > span {
   padding: 14px 0 8px 0;
   line-height: 1.3em;
@@ -2000,17 +2000,17 @@ body.use-backdrop:before {
   vertical-align: middle;
 }
 
-/* line 57 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 58 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDateHeader > a.btn {
-  margin: 14px 0 8px 0;
-  padding: 0;
+  padding: 14px 0 8px 0;
+  margin: 0;
   font-size: 20px;
   color: #333;
   border: none;
   line-height: 1.3em;
 }
 
-/* line 65 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDateHeader > a.btn:active,
 [data-activity=calendar] #calendarDateHeader > a.btn:focus,
 [data-activity=calendar] #calendarDateHeader > a.btn:hover {
@@ -2018,14 +2018,14 @@ body.use-backdrop:before {
   text-decoration: none;
 }
 
-/* line 72 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 73 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker {
 /* positioning */
-  position: fixed;
+  position: absolute;
   left: 10px;
   right: 10px;
   z-index: 100;
-  top: 94px;
+  top: 50px;
   min-width: 250px;
   max-width: 500px;
   margin: 0 auto;
@@ -2053,18 +2053,18 @@ body.use-backdrop:before {
   pointer-events: none;
 }
 
-/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:after {
   left: 50%;
 }
 
-/* line 94 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 96 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:before {
   left: 50%;
   margin-left: -1px;
 }
 
-/* line 105 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 107 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker.is-visible {
   opacity: 1;
   -ms-filter: none;
@@ -2077,7 +2077,7 @@ body.use-backdrop:before {
   pointer-events: all;
 }
 
-/* line 112 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\appointment.styl */
+/* line 114 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\appointment.styl */
 
 /* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
