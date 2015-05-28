@@ -165,10 +165,10 @@ exports.confirm = function confirm(options) {
 
     return new Promise(function(resolve, reject) {
         modal.modal('show');
-        yesBtn.on('tap click', function() {
+        yesBtn.on('click', function() {
             resolve();
         });
-        noBtn.on('tap click', function() {
+        noBtn.on('click', function() {
             reject();
         });
         modal.on('hide.bs.modal', function() {

@@ -21,25 +21,25 @@
     <div class="ListView ListView--twolines" data-bind="foreach: addresses">
       <div class="ListView-item">
         <div class="ListView-item-marker"></div>
-        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.selectAddress, click: $root.selectAddress }">
+        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { click: $root.selectAddress }">
           <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
         </a>
-        <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { tap: $root.selectAddress, click: $root.selectAddress }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
+        <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { click: $root.selectAddress }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
       </div>
     </div>
   </div>
 
   <div id="addressesAddNewButtons" class="isolated" data-bind="visible: jobTitleID()">
       <button type="button" class="btn btn-default btn-block"
-              data-bind="event: { tap: addServiceLocation }">
+              data-bind="event: { click: addServiceLocation }">
           Add a service location
       </button>
       <button type="button" class="btn btn-default btn-block"
-              data-bind="event: { tap: addServiceArea }, visible: !isSelectionMode()">
+              data-bind="event: { click: addServiceArea }, visible: !isSelectionMode()">
           Add a service area
       </button>
       <button type="button" class="btn btn-default btn-block"
-              data-bind="event: { tap: addClientLocation }, visible: isSelectionMode() && clientID()">
+              data-bind="event: { click: addClientLocation }, visible: isSelectionMode() && clientID()">
           Add a client location
       </button>
   </div>

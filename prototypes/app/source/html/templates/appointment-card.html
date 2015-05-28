@@ -21,7 +21,7 @@
         </ul>
         
         <ul class="list-unstyled" data-bind="visible: isEvent()">
-            <li data-bind="event: { tap: editMode() && pickDateTime }">
+            <li data-bind="event: { click: editMode() && pickDateTime }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="visible: item().startTime()">
@@ -32,7 +32,7 @@
                 </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && pickEndDateTime }">
+            <li data-bind="event: { click: editMode() && pickEndDateTime }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="visible: item().endTime()">
@@ -52,7 +52,7 @@
                     </label>
                 </span>
             </li>-->
-            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'summary') }">
+            <li data-bind="event: { click: editMode() && editTextField.bind(this, 'summary') }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().summary"></span>
@@ -60,7 +60,7 @@
                 </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().summary(), 'glyphicon-plus': !item().summary()}"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && pickLocation }">
+            <li data-bind="event: { click: editMode() && pickLocation }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().addressSummary"></span>
@@ -68,7 +68,7 @@
                 </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().addressSummary(), 'glyphicon-plus': !item().addressSummary()}"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'description') }">
+            <li data-bind="event: { click: editMode() && editTextField.bind(this, 'description') }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().description"></span>
@@ -79,7 +79,7 @@
         </ul>
         
         <ul class="list-unstyled" data-bind="visible: isBooking()">
-            <li data-bind="event: { tap: editMode() && pickDateTime }">
+            <li data-bind="event: { click: editMode() && pickDateTime }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="visible: item().startTime()">
@@ -90,7 +90,7 @@
                 </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && isNew() && pickClient }">
+            <li data-bind="event: { click: editMode() && isNew() && pickClient }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().customer() && item().customer().fullName()"></span>
@@ -98,7 +98,7 @@
                 </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-plus': !item().customer()}"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && pickService }">
+            <li data-bind="event: { click: editMode() && pickService }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().servicesSummary()"></span>
@@ -106,13 +106,13 @@
                 </span>
             <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().servicesSummary(), 'glyphicon-plus': !item().servicesSummary()}"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && changePrice }">
+            <li data-bind="event: { click: editMode() && changePrice }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
                 <span class="AppointmentCard-data" data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></span>
                 <!--<span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().price(), 'glyphicon-plus': !item().price()}"></span></span>
                 -->
             </li>
-            <li data-bind="event: { tap: editMode() && pickLocation }">
+            <li data-bind="event: { click: editMode() && pickLocation }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().addressSummary"></span>
@@ -121,7 +121,7 @@
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().addressSummary(), 'glyphicon-plus': !item().addressSummary()}"></span></span>
             </li>
 
-            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'preNotesToClient') }">
+            <li data-bind="event: { click: editMode() && editTextField.bind(this, 'preNotesToClient') }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().preNotesToClient"></span>
@@ -129,7 +129,7 @@
                 </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToClient(), 'glyphicon-plus': !item().preNotesToClient()}"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'preNotesToSelf') }">
+            <li data-bind="event: { click: editMode() && editTextField.bind(this, 'preNotesToSelf') }">
                 <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().preNotesToSelf"></span>
@@ -138,7 +138,7 @@
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToSelf(), 'glyphicon-plus': !item().preNotesToSelf()}"></span></span>
             </li>
 
-            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: !isNew() && item().itStarted()">
+            <li data-bind="event: { click: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: !isNew() && item().itStarted()">
                 <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().postNotesToClient"></span>
@@ -146,7 +146,7 @@
                 </span>
                 <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().postNotesToClient(), 'glyphicon-plus': !item().postNotesToClient()}"></span></span>
             </li>
-            <li data-bind="event: { tap: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: !isNew() && item().itStarted()">
+            <li data-bind="event: { click: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: !isNew() && item().itStarted()">
                 <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
                 <span class="AppointmentCard-data">
                     <span data-bind="text: item().postNotesToSelf"></span>
@@ -156,12 +156,12 @@
             </li>
         </ul>
         <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && !editMode()">
-            <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { tap: edit }, disable: item().readOnly">Edit</button></div>
+            <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { click: edit }, disable: item().readOnly">Edit</button></div>
             <div class="col-xs-6"><button type="button" class="btn btn-default btn-block">Contact client</button></div>
         </div>
         <div class="AppointmentCard-actions row" data-bind="visible: editMode()">
-            <div class="col-xs-6" data-bind="visible: currentID() > 0"><button type="button" class="btn btn-danger btn-block" data-bind="event: { tap: cancel }, disable: isLocked">Cancel</button></div>
-            <div class="col-xs-6" data-bind="css: { 'col-xs-6' : currentID() > 0 }"><button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: save }, text: submitText, disable: isLocked">Save</button></div>
+            <div class="col-xs-6" data-bind="visible: currentID() > 0"><button type="button" class="btn btn-danger btn-block" data-bind="event: { click: cancel }, disable: isLocked">Cancel</button></div>
+            <div class="col-xs-6" data-bind="css: { 'col-xs-6' : currentID() > 0 }"><button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save</button></div>
         </div>
     </div>
 </script>

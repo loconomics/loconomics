@@ -18,7 +18,7 @@
         <div class="GroupedTimeSlots-slots">
             <div class="GroupedTimeSlots-slots-empty" data-bind="visible: slots.length === 0">No available appointments</div>
             <!-- ko foreach: { data: slots, as: 'item' } -->
-                <a href="#" class="btn btn-link btn-default" data-bind="event: { tap: $root.selectDatetime, click: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
+                <a href="#" class="btn btn-link btn-default" data-bind="event: { click: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
             <!-- /ko -->
         </div>
       </div>

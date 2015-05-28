@@ -28,8 +28,9 @@ Shell.deps.$(function() {
         // when requesting the root URL
         indexName: 'index', // index is the default value if not specified
         
-        // for better mobile experience, if the event is installed:
-        linkEvent: 'tap',
+        // for better mobile experience, try using a fastclick or replace this event by a touchend
+        // or syntetized tap event (like the one on jquerymobile):
+        linkEvent: 'click',
 
         // Set a different loader than the default one, an object like
         //   loader: { load: function(name) { return Promise(..); } }

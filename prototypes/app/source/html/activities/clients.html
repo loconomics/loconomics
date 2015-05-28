@@ -20,7 +20,7 @@
                 </span>
                 <input type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText">
                 <span class="input-group-btn">
-                    <a href="#" class="btn btn-secondary" data-bind="event: { tap: addNew, click: addNew }">Add</a>
+                    <a href="#" class="btn btn-secondary" data-bind="event: { click: addNew }">Add</a>
                 </span>
             </div><!-- /input-group -->
         </div>
@@ -36,7 +36,7 @@
                 </div>
                 <!-- ko foreach: clients -->
                 <div class="SimpleList-item">
-                    <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.isSelectionMode() && $root.selectClient, click: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + customerUserID() }">
+                    <a href="#" class="btn btn-link btn-block" data-bind="event: { click: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + customerUserID() }">
                         <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
                     </a>
                 </div>
@@ -52,7 +52,7 @@
             <h3 class="SectionTitle">Results from Loconomics.com</h3>
             <div class="SimpleList" data-bind="foreach: publicSearchResults">
                 <div class="SimpleList-item">
-                  <a href="#" class="btn btn-link btn-block" data-bind="event: { tap: $root.addRemoteClient }">
+                  <a href="#" class="btn btn-link btn-block" data-bind="event: { click: $root.addRemoteClient }">
                     <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
                   </a>
                 </div>

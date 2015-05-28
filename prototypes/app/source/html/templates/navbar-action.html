@@ -1,6 +1,6 @@
 <!-- Component Template navbar-action -->
 <script type="text/html" id="navbar-action-template">
-    <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }, event: { tap: action && action.runHandler, click: action && action.runHandler }">
+    <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }, event: { click: action && action.runHandler }">
         <span data-bind="attr: { 'class': action && action.icon() }" class="glyphicon"></span>
         <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
     </a>

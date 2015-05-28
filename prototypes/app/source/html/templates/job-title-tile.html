@@ -5,12 +5,12 @@
             <p></p>
         </div>
         <button
-           data-bind="event: { tap: $parent.selectJobTitle }"
+           data-bind="event: { click: $parent.selectJobTitle }"
            class="btn btn-link btn-block ListView-item-content">
             <p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p>
         </button>
         <button
-           data-bind="event: { tap: $parent.selectJobTitle }"
+           data-bind="event: { click: $parent.selectJobTitle }"
            class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></button>
     </div>
 </script>

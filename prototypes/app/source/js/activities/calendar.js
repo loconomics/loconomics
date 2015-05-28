@@ -86,7 +86,7 @@ var A = Activity.extends(function CalendarActivity() {
     // Changing date with buttons:
     this.registerHandler({
         target: this.$dateHeader,
-        event: 'tap click',
+        event: 'click',
         selector: '.CalendarDateHeader-switch',
         handler: function(e) {
             switch (e.currentTarget.getAttribute('href')) {
@@ -108,7 +108,7 @@ var A = Activity.extends(function CalendarActivity() {
     // Showing datepicker when pressing the title
     this.registerHandler({
         target: this.$dateTitle,
-        event: 'tap click',
+        event: 'click',
         handler: function(e) {
             this.$datepicker.toggleClass('is-visible');
             e.preventDefault();

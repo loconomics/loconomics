@@ -173,6 +173,9 @@ app.successSave = function successSave(settings) {
 var appInit = function appInit() {
     /*jshint maxstatements:50,maxcomplexity:16 */
     
+    var attachFastClick = require('fastclick');
+    attachFastClick(document.body);
+    
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that
     // may require adjustments on other scripts that listen to it.
@@ -253,15 +256,6 @@ var appInit = function appInit() {
     // Example: <button data-shell="goBack 2">Go 2 times back</button>
     // NOTE: Important, registered before the shell.run to be executed
     // before its 'catch all links' handler
-    $(document).on('tap', '[data-shell]', function(e) {
-        // Touch 'tap' event as alias for click, enabling fast-click on iOS:
-        // NOTE: Currently, we don't need information from the event except the
-        // target, so this way works but may not apply on other cases
-        $(e.target).trigger('click');
-        // IMPORTANT: avoids Chrome (only) from triggering the default click
-        // handler, so effectively avoiding executing twice our handler.
-        e.preventDefault();
-    });
     $(document).on('click', '[data-shell]', function(e) {
         // Using attr rather than the 'data' API to get updated
         // DOM values
@@ -282,7 +276,7 @@ var appInit = function appInit() {
     // API to ensure is correctly opened on the InAppBrowser (_blank) or system default
     // browser (_system).
     if (window.cordova) {
-        $(document).on('tap', '[target="_blank"], [target="_system"]', function(e) {
+        $(document).on('click', '[target="_blank"], [target="_system"]', function(e) {
             window.open(this.getAttribute('href'), this.getAttribute('target'));
             e.preventDefault();
         });
@@ -340,7 +334,7 @@ var appInit = function appInit() {
             console.warn(
                 'Navigation to an empty fragment, this may be not wanted. ' +
                 'For root links, use "/"; on script handled links, call event.preventDefault; ' +
-                'A tap/touch event was listened on a link, but not the click event.'
+                'A touch event was listened on a link, but not the click event.'
             );
         }
         else {

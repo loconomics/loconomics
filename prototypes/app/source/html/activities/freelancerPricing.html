@@ -18,21 +18,21 @@
           <!-- ko foreach: pricing -->
           <div class="ListView-item">
               <div class="ListView-item-marker"><p data-bind="text: displayedPrice"></p></div>
-              <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { tap: $root.tapPricing, click: $root.tapPricing }">
+              <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { click: $root.tapPricing }">
                 <div data-bind="visible: sessionsAndDuration()"><strong data-bind="text: name"></strong></div><div data-bind="text: sessionsAndDuration"></div>
                 <p data-bind="visible: !sessionsAndDuration()"><strong data-bind="text: name"></strong></p>
               </a>
-              <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: $root.isSelectionMode, event: { tap: $root.tapPricing, click: $root.tapPricing }, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
+              <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: $root.isSelectionMode, event: { click: $root.tapPricing }, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
               <a href="#" class="ListView-item-action btn btn-link" data-bind="visible: !$root.isSelectionMode()" role="button"><span class="glyphicon glyphicon-edit"></span><span class="sr-only">Edit</span></a>
           </div>
           <!-- /ko -->
             <div class="ListView-item">
-                <button type="button" class="btn btn-link btn-block ListView-item-content" data-href="#!freelancerPricingEditor/" data-bind="event: { tap: $root.tapNewPricing, click: $root.tapNewPricing }, text: type() && type().addNewLabel()"></button>
+                <button type="button" class="btn btn-link btn-block ListView-item-content" data-href="#!freelancerPricingEditor/" data-bind="event: { click: $root.tapNewPricing }, text: type() && type().addNewLabel()"></button>
             </div>
         </div>
     </div>
 
     <div class="isolated" data-bind="visible: isSelectionMode() && jobTitleID() !== 0">
-        <button type="button" class="btn btn-primary btn-block" data-bind="event: { tap: endSelection }, text: submitText, disable: isLocked">Save</button>
+        <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
     </div>
 </div>

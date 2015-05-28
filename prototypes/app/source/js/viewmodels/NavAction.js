@@ -22,7 +22,7 @@ function NavAction(values) {
         // the text and icon but special meaning for the text value 'menu'
         // on icon property that will use the standard menu icon.
         isMenu: false,
-        // Custom function as event handler for button tap/click.
+        // Custom function as event handler for button click.
         // The standard link gets disabled with this
         handler: null
     }, values);

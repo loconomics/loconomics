@@ -139,10 +139,10 @@ exports.extends = function (app) {
         $el.fadeIn(transitionDuration)
         .queue(function() {
             
-            // Manual hide on tapping
+            // Manual hide on clicking
             $el
-            .off('tap.manualHide')
-            .on('tap.manualHide', function() {
+            .off('click.manualHide')
+            .on('click.manualHide', function() {
                 $el.fadeOut(transitionDuration);
             });
             

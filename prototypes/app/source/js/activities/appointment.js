@@ -136,7 +136,7 @@ var A = Activity.extends(function AppointmentActivity() {
             }
             
         }.bind(this)._delayed(10)
-        // IMPORTANT: delayed REQUIRED to avoid triple loading (activity.show) on first load triggered by a click/tap event.
+        // IMPORTANT: delayed REQUIRED to avoid triple loading (activity.show) on first load triggered by a click event.
     });
 
     this.registerHandler({

@@ -11,7 +11,7 @@
             </span>
             <input id="addJobTitles-search" type="text" class="form-control" placeholder="search" data-bind="textInput: searchText">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-secondary" data-bind="event: { tap: add }">Add</button>
+                <button type="button" class="btn btn-secondary" data-bind="event: { click: add }">Add</button>
             </span>
         </div><!-- /input-group -->
     </div>
@@ -23,14 +23,14 @@
         <p data-bind="text: label"></p>
       </a>
       <a href="#" class="btn btn-link ListView-item-action"
-         data-bind="event: { tap: $root.remove }"><span class="glyphicon glyphicon-trash"></span></a>
+         data-bind="event: { click: $root.remove }"><span class="glyphicon glyphicon-trash"></span></a>
     </div>
   </div>
     
   <div class="navbar navbar-default ActivityNavbar">
     <div class="container">
         <button type="button" class="btn btn-primary btn-block"
-                data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { tap: save }"></button>
+                data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { click: save }"></button>
     </div>
   </div>
 </div>

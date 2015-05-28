@@ -17,7 +17,7 @@ var A = Activity.extends(function BookMeButtonActivity() {
     this.navBar = Activity.createSubsectionNavBar('Scheduling');
     
     // Auto select text on textarea, for better 'copy'
-    // NOTE: the 'select' must happen on click, not tap, not focus,
+    // NOTE: the 'select' must happen on click, no touch, not focus,
     // only 'click' is reliable and bug-free.
     this.registerHandler({
         target: this.$activity,
