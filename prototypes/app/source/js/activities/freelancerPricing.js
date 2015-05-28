@@ -152,6 +152,8 @@ A.prototype.show = function show(options) {
     // Params
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
+    if (jobTitleID === 0 && options.selectedJobTitleID > 0)
+        jobTitleID = options.selectedJobTitleID |0;
 
     var isAdditionMode = params[0] === 'new' || params[1] === 'new';
     if (isAdditionMode) {
@@ -363,11 +365,30 @@ function ViewModel(app) {
         
         var url = '#!freelancerPricingEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
 
-        var request = $.extend({}, this.requestData);
-        if (!request.cancelLink)
+        // Passing original data, for in-progress process (as new-booking)
+        // and the selected title since the URL could not be updated properly
+        // (see the anotated comment about replaceState bug on this file)
+        var request = $.extend({}, this.requestData, {
+            selectedJobTitleID: this.jobTitleID()
+        });
+        if (!request.cancelLink) {
             $.extend(request, {
                 cancelLink: this.cancelLink()
             });
+        }
+        
+        // When in selection mode:
+        // Add current selection as preselection, so can be recovered later and 
+        // the editor can add the new pricing to the list
+        if (this.isSelectionMode()) {
+            request.selectedPricing = this.selectedPricing()
+            .map(function(pricing) {
+                return {
+                    freelancerPricingID: ko.unwrap(pricing.freelancerPricingID),
+                    totalPrice: ko.unwrap(pricing.totalPrice)
+                };
+            });
+        }
 
         app.shell.go(url, request);
 

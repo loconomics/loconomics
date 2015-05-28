@@ -18,6 +18,27 @@ var A = Activity.extends(function FreelancerPricingEditorActivity() {
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Services');
+    
+    /// Go out after save succesfully an item.
+    /// Pricing is a plain object
+    this.viewModel.onSave = function(pricing) {
+        // Go back on save.
+        // If we comes with a selection of pricing, we must add the new one
+        // there and just go back (freelancerPricing is in selection mode) keeping
+        // any requestData for in-progress state.
+        if (this.requestData.selectedPricing) {
+            // Is an array of plain objects of just ID and totalPrice
+            this.requestData.selectedPricing.push({
+                freelancerPricingID: pricing.freelancerPricingID,
+                totalPrice: pricing.totalPrice
+            });
+            this.app.shell.goBack(this.requestData);
+        }
+        else {
+            // Just execute the standard save process
+            this.app.successSave();
+        }
+    }.bind(this);
 });
 
 exports.init = A.init;
@@ -239,9 +260,8 @@ function ViewModel(app) {
             // Push version so it appears as saved
             this.freelancerPricingVersion().push({ evenIfObsolete: true });
             
-            // On save, auto go back
-            // NOTE: if auto go back is disabled, the URL must update to match the new ID
-            app.successSave();
+            // After save logic provided by the activity, injected in the view:
+            this.onSave(serverData);
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
