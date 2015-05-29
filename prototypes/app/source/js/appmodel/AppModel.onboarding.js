@@ -60,16 +60,14 @@ exports.create = function create(appModel) {
 
         if (current >= this.totalSteps()) {
             // It ended!!
-            this.current(null);
-            appModel.userProfile.data.onboardingStep(null);
-            appModel.userProfile.save();
+            this.stepNumber(-1);
+            appModel.userProfile.saveOnboardingStep(null);
             app.shell.go('/');
         }
         else {
             // Get next step
             this.stepNumber(current);
-            appModel.userProfile.data.onboardingStep(this.stepReference());
-            //appModel.userProfile.save();
+            appModel.userProfile.saveOnboardingStep(this.stepReference());
             app.shell.go(this.stepUrl());
         }
     };

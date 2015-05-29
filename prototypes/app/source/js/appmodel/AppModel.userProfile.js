@@ -4,7 +4,8 @@
 
 var User = require('../models/User');
 
-var RemoteModel = require('../utils/RemoteModel');
+var RemoteModel = require('../utils/RemoteModel'),
+    localforage = require('localforage');
 
 exports.create = function create(appModel) {
     var rem = new RemoteModel({
@@ -23,6 +24,24 @@ exports.create = function create(appModel) {
     appModel.on('clearLocalData', function() {
         rem.clearCache();
     });
+    
+    rem.saveOnboardingStep = function saveOnboardingStep(stepReference) {
+        if (typeof(stepReference) === 'undefined') {
+            stepReference = rem.data.onboardingStep();
+        }
+        else {
+            rem.data.onboardingStep(stepReference);
+        }
+
+        return appModel.rest.put('profile/tracking', {
+            onboardingStep: stepReference
+        })
+        .then(function() {
+            // If success, save persistent local copy of the data to ensure the
+            // new onboardingStep is saved
+            localforage.setItem(rem.localStorageName, rem.data.model.toPlainObject());
+        });
+    };
     
     return rem;
 };
