@@ -56,6 +56,7 @@ public static class LcAuthHelper
         /// </summary>
         public string authKey;
         public dynamic profile;
+        public string onboardingStep;
     }
 
     public static LoginResult Login(WebPage page) {
@@ -100,7 +101,7 @@ public static class LcAuthHelper
     private static LoginResult GetLoginResultForID(int userID, bool returnProfile)
     {
         var authKey = LcAuth.GetAutologinKey(userID);
-        object profile = null;
+        LcRestUserProfile profile = null;
             
         if (returnProfile) {
             profile = LcRestUserProfile.GetUserProfile(userID);
@@ -110,7 +111,8 @@ public static class LcAuthHelper
             redirectUrl = getRedirectUrl(userID),
             userID = userID,
             authKey = authKey,
-            profile = profile
+            profile = profile,
+            onboardingStep = profile.onboardingStep
         };
     }
     #endregion

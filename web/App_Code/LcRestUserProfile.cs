@@ -31,7 +31,7 @@ public class LcRestUserProfile
     public bool isMember;
 
     /// <summary>
-    /// TOREVIEW if still needed, after implement the app.
+    /// Used in the app with a different set of names, but the first one is the same: 'welcome'.
     /// </summary>
     public string onboardingStep;
     public int accountStatusID;
