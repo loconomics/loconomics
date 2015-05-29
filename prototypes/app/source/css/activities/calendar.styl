@@ -20,6 +20,7 @@
         
         // absolute vs fixed because the iOS problem with scrolling
         position: absolute;
+        top: 0;
         z-index: 100;
         background: White;
 
@@ -33,11 +34,7 @@
         */
         margin-left: 0 - $container-padding-left;
         margin-right: 0 - $container-padding-right;
-        padding: 0 ($container-padding-right) 0 ($container-padding-left);
-
-        /* table layout for better management of the 
-            elements */
-        display: table;
+        padding: 0;
         width: 100%;
         height: $titleInnerHeight;
         box-sizing: content-box;
@@ -45,14 +42,6 @@
         /* Decoration */
         // NOTE: Respecting the $titleGap
         box-shadow: 0 0 6px -1px black;
-
-        /* Only allowed 'span' elements as childs or link buttons */
-        > span {
-            padding: $padTop 0 $padBottom 0;
-            line-height: $lineHeight;
-            display: table-cell;
-            vertical-align: middle;
-        }
 
         /* Button link */
         > a.btn {
