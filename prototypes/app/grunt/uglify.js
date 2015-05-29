@@ -11,7 +11,7 @@ module.exports = {
     'app': {
         'options': {
             // Custom optimizations to avoid bugs:
-            // - #709
+            // - #709: use of Function.name by Models/Activities;
             //compress: false,
             compress: {
                 sequences     : true,  // join consecutive statemets with the “comma operator”

@@ -51,7 +51,6 @@
     "localforage": "~1.2.1",
     "grunt-zip": "~0.16.2",
     "is_js": "~0.7.3",
-    "moment-timezone": "~0.3.1",
-    "fastclick": "~1.0.6"
+    "moment-timezone": "~0.3.1"
   }
 }

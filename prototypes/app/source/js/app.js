@@ -21,6 +21,8 @@ var AppModel = require('./appmodel/AppModel');
 // Register the special locale
 require('./locales/en-US-LC');
 
+//var attachFastClick = require('fastclick').attach;
+
 /**
     A set of fixes/workarounds for Bootstrap behavior/plugins
     to be executed before Bootstrap is included/executed.
@@ -173,8 +175,7 @@ app.successSave = function successSave(settings) {
 var appInit = function appInit() {
     /*jshint maxstatements:50,maxcomplexity:16 */
     
-    var attachFastClick = require('fastclick');
-    attachFastClick(document.body);
+    //attachFastClick(document.body);
     
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that

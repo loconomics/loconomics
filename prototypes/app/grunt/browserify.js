@@ -108,6 +108,12 @@ module.exports = function(/*grunt*/) {
                 styleguidelibsModules,
                 libsModules
             )
+//            'shim': {
+//                'fastclick': {
+//                    path: './vendor/fastclick-forked/fastclick.js',
+//                    exports: 'FastClick'
+//                }
+//            }
         }
     };
 
