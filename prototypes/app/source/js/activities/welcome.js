@@ -15,7 +15,7 @@ var A = Activity.extends(function WelcomeActivity() {
     
     this.viewModel = {
         startOnboarding: function startOnboarding() {
-            app.model.onboarding.goNext(app);
+            app.model.onboarding.goNext();
         }
     };
     

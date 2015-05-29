@@ -103,38 +103,41 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     var itIs = this.viewModel.isSelectionMode();
     
     this.viewModel.headerText(itIs ? 'Select services' : 'Services');
-
-    if (this.requestData.title) {
-        // Replace title by title if required
-        this.navBar.title(this.requestData.title);
-    }
-    else {
-        // Title must be empty
-        this.navBar.title('');
-    }
-
-    if (this.requestData.cancelLink) {
-        this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink);
-    }
-    else {
-        // Reset to defaults, or given title:
-        this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
-        if (this.requestData.navTitle)
-            this.navBar.leftAction().text(this.requestData.navTitle);
-        
-        var jid = this.viewModel.jobTitleID(),
-            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling';
-        
-        this.navBar.leftAction().link(jid ? '/jobtitles/' + jid : '/scheduling');
-        this.navBar.leftAction().text(jname);
-    }
     
-    if (itIs && !this.requestData.cancelLink) {
-        // Uses a custom handler so it returns keeping the given state:
-        this.navBar.leftAction().handler(this.returnRequest);
-    }
-    else if (!this.requestData.cancelLink) {
-        this.navBar.leftAction().handler(null);
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+
+        if (this.requestData.title) {
+            // Replace title by title if required
+            this.navBar.title(this.requestData.title);
+        }
+        else {
+            // Title must be empty
+            this.navBar.title('');
+        }
+    
+        if (this.requestData.cancelLink) {
+            this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink);
+        }
+        else {
+            // Reset to defaults, or given title:
+            this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
+            if (this.requestData.navTitle)
+                this.navBar.leftAction().text(this.requestData.navTitle);
+
+            var jid = this.viewModel.jobTitleID(),
+                jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling';
+
+            this.navBar.leftAction().link(jid ? '/jobtitles/' + jid : '/scheduling');
+            this.navBar.leftAction().text(jname);
+        }
+
+        if (itIs && !this.requestData.cancelLink) {
+            // Uses a custom handler so it returns keeping the given state:
+            this.navBar.leftAction().handler(this.returnRequest);
+        }
+        else if (!this.requestData.cancelLink) {
+            this.navBar.leftAction().handler(null);
+        }
     }
 };
 
@@ -225,9 +228,7 @@ function ViewModel(app) {
         return (
             this.isLoading() ? 
                 'loading...' : 
-                this.isSelectionMode() ? 
-                    'Save and continue' :
-                    ''
+                'Save and continue'
         );
     }, this);
     
@@ -320,24 +321,37 @@ function ViewModel(app) {
             this.selectedPricing.push(pricing);
     }.bind(this);
     
+    this.onboardingNextReady = ko.computed(function() {
+        var isin = app.model.onboarding.inProgress(),
+            hasPricing = this.list().length > 0;
+        
+        return isin && hasPricing;
+    }, this);
+    
     /**
         Ends the selection process, ready to collect selection
-        and passing it to the requester activity
+        and passing it to the requester activity.
+        Works too to pass to the next onboarding step
     **/
     this.endSelection = function(data, event) {
         
-        // Run method injected by the activity to return a 
-        // selected address:
-        this.returnSelected(
-            this.selectedPricing().map(function(pricing) {
-                return {
-                    freelancerPricingID: ko.unwrap(pricing.freelancerPricingID),
-                    totalPrice: ko.unwrap(pricing.price)
-                };
-            }),
-            this.jobTitleID()
-        );
-        
+        if (app.model.onboarding.inProgress()) {
+            app.model.onboarding.goNext(app);
+        }
+        else {
+            // Run method injected by the activity to return a 
+            // selected address:
+            this.returnSelected(
+                this.selectedPricing().map(function(pricing) {
+                    return {
+                        freelancerPricingID: ko.unwrap(pricing.freelancerPricingID),
+                        totalPrice: ko.unwrap(pricing.price)
+                    };
+                }),
+                this.jobTitleID()
+            );
+        }
+
         event.preventDefault();
         event.stopImmediatePropagation();
     }.bind(this);

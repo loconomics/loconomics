@@ -408,6 +408,9 @@ var appInit = function appInit() {
         if (window.navigator && window.navigator.splashscreen) {
             window.navigator.splashscreen.hide();
         }
+        
+        // Onboarding model needs initialization
+        app.model.onboarding.init(app);
 
         // Check onboarding step to redirect there on app start
         var step = app.model.user().onboardingStep();

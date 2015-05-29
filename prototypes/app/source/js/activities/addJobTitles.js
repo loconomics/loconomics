@@ -155,7 +155,7 @@ function ViewModel(app) {
             this.jobTitles.removeAll();
             
             if (app.model.onboarding.inProgress()) {
-                app.model.onboarding.goNext(app);
+                app.model.onboarding.goNext();
             }
             else {
                 app.successSave();

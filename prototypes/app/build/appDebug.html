@@ -799,7 +799,7 @@
           </div>
         </div>
       </div>
-      <div class="isolated" data-bind="visible: isSelectionMode() && jobTitleID() !== 0">
+      <div class="isolated" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
         <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
       </div>
     </div>

@@ -11,6 +11,11 @@ exports.create = function create(appModel) {
     // Onboarding management and state, initially empty so no progress
     var api = new OnboardingProgress();
     
+    // Requires initialization to receive and app instance
+    api.init = function init(app) {
+        api.app = app;
+    };
+    
     // Extended with new methods
 
     // Set the correct onboarding progress and step given a step reference
@@ -50,11 +55,15 @@ exports.create = function create(appModel) {
         if (yep) {
             navBar.leftAction(NavAction.goBack.model.clone());
             navBar.title(this.progressText());
+            navBar.leftAction().handler(function() {
+                api.goPrevious();
+                return false;
+            });
         }
         return yep;
     };
     
-    api.goNext = function goNext(app) {
+    api.goNext = function goNext() {
         var current = this.stepNumber();
 
         current++;
@@ -63,14 +72,31 @@ exports.create = function create(appModel) {
             // It ended!!
             this.stepNumber(-1);
             appModel.userProfile.saveOnboardingStep(null);
-            app.shell.go('/');
+            this.app.shell.go('/');
         }
         else {
             // Get next step
             this.stepNumber(current);
             appModel.userProfile.saveOnboardingStep(this.stepReference());
-            app.shell.go(this.stepUrl());
+            this.app.shell.go(this.stepUrl());
         }
+    };
+    
+    api.goPrevious = function goPrevious() {
+        var current = this.stepNumber();
+
+        current--;
+
+        if (current >= 0 && current < this.totalSteps()) {
+            // Get previous step
+            this.stepNumber(current);
+        }
+        else {
+            this.stepNumber(0);
+        }
+
+        appModel.userProfile.saveOnboardingStep(this.stepReference());
+        this.app.shell.go(this.stepUrl());
     };
     
     return api;
