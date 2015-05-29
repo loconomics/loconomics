@@ -502,7 +502,7 @@
           <!-- /input-group -->
         </div>
         <div data-bind="css: { 'is-loading': isLoading }">
-          <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
         <div class="isolated" data-bind="visible: clients().length === 0 && !isLoading()">You have no clients yet. Search for clients that may already be on Loconomics
           or add clients of your own.</div>
@@ -763,7 +763,7 @@
     <!-- FreelancerPricing activity -->
     <div class="container-fluid" data-activity="freelancerPricing" data-bind="css: { 'is-loading': isLoading }">
       <div>
-        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         <div class="ListView ListView--twolines ListView--textualmarker"
         data-bind="visible: jobTitleID() === 0, with: jobTitles">
           <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile
@@ -1052,7 +1052,7 @@
         <!-- /input-group -->
       </div>
       <div data-bind="css: { 'is-loading': isLoading() }">
-        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
       </div>
       <div class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
       data-bind="template: { name: 'inbox-tile-template', foreach: threads() }"></div>
@@ -1542,7 +1542,7 @@
   </h2>
 
       <div data-bind="css: { 'is-loading': isLoading }">
-        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
       </div>
       <div class="ListView ListView--twolines ListView--textualmarker" data-bind="visible: jobTitleID() === 0, with: jobTitles">
         <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile
