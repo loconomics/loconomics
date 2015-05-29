@@ -4,6 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var ko = require('knockout');
 
 var A = Activity.extends(function ContactInfoActivity() {
     
@@ -120,8 +121,6 @@ A.prototype.show = function show(state) {
     this.app.model.userProfile.sync();
     this.app.model.homeAddress.sync();
 };
-
-var ko = require('knockout');
 
 function ViewModel(app) {
 

@@ -73,7 +73,7 @@
     // `( function(){}() );`.
     "immed": true,
     // Whether use before define should be forbidden.
-    "latedef": false,
+    "latedef": "nofunc",
     // Whether functions should be allowed to be defined within loops.
     "loopfunc": false,
     // Whether arguments.caller and arguments.callee should be forbidden.

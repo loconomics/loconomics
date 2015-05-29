@@ -4,7 +4,9 @@
 var $ = require('jquery'),
     moment = require('moment'),
     Appointment = require('../models/Appointment'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    getDateWithoutTime = require('../utils/getDateWithoutTime');
+
 require('../components/DatePicker');
 
 var Activity = require('../components/Activity');
@@ -197,8 +199,6 @@ A.prototype.show = function show(options) {
 };
 
 var Appointment = require('../models/Appointment');
-
-var getDateWithoutTime = require('../utils/getDateWithoutTime');
 
 function findAppointmentInList(list, id) {
     var found = null,
