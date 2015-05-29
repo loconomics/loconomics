@@ -85,6 +85,10 @@ module.exports = function(/*grunt*/) {
                 'history': {
                     'path': './vendor/history/jquery.history.js',
                     'exports': 'History'
+                },
+                'fastclick': {
+                    path: './vendor/fastclick-forked/fastclick.js',
+                    exports: 'FastClick'
                 }
             }
         }
@@ -108,12 +112,6 @@ module.exports = function(/*grunt*/) {
                 styleguidelibsModules,
                 libsModules
             )
-//            'shim': {
-//                'fastclick': {
-//                    path: './vendor/fastclick-forked/fastclick.js',
-//                    exports: 'FastClick'
-//                }
-//            }
         }
     };
 
