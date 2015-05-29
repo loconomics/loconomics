@@ -24,15 +24,16 @@ exports.create = function create(appModel) {
                 // name with the group and only need to define the group name)
                 step = stepItems[1] || group;
 
-            // Try to set current step, follow to look for group if does not succes
+            // Try to set current step, follow to look for group if does not success
             if (this.setStepByName(step)) {
                 return true;
             }
             // else:
             // Look for a group that matches
-            group = OnboardingProgress.predefinedStepGroups[group];
-            if (group) {
-                this.steps(group);
+            var groupSteps = OnboardingProgress.predefinedStepGroups[group];
+            if (groupSteps) {
+                this.steps(groupSteps);
+                this.group(group);
                 if (this.setStepByName(step)) {
                     return true;
                 }

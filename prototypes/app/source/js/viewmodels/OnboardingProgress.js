@@ -42,7 +42,7 @@ function OnboardingProgress(values) {
     }, this);
 
     this.stepReference = ko.pureComputed(function() {
-        return this.group() + ':' + this.stepUrl();
+        return this.group() + ':' + this.stepName();
     }, this);
     
     this.progressText = ko.pureComputed(function() {
