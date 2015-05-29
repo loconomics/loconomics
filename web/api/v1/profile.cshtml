@@ -18,6 +18,10 @@
         birthMonthDay:int Editable. Day of the month of the birthday (the year is not wanted)
         birthMonth:int Editable. Month of the birthday (the year is not wanted)
 
+    - PUT /tracking: This URL is intented to be a differencial update of the profile tracking related fields, where
+            all values are optional from being specified. Right now there is only one possible value:
+        onboardingStep:string Editable
+
     - @Result {
         // ID
         userID:int Auto
@@ -64,11 +68,32 @@
             
  	        return GetData();
         }
+        
+        object PutTracking() {
+            
+            // IMPORTANT: When implementing other optional options on this API point,
+            // ensure to check first if the key was specified and avoid update if not
+            // (preventing setting an unwanted default value)
+            
+            var step = Request.Form["onboardingStep"];
+            
+            LcData.UserInfo.SetOnboardingStep(WebSecurity.CurrentUserId, step);
+            
+            return "OK";
+        }
 
         public override dynamic Put()
         {
-            if (UrlData.Count > 0) {
+            if (UrlData.Count > 1) {
                 throw new HttpException(404, "Not found");
+            }
+            else if (UrlData.Count == 1) {
+                if (UrlData[0] == "tracking") {
+                    return PutTracking();
+                }
+                else {
+                    throw new HttpException(404, "Not found");
+                }
             }
             
             // Validation

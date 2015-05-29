@@ -893,6 +893,17 @@ public static partial class LcData
                     ", userId);
             }
         }
+
+        public static void SetOnboardingStep(int userID, string onboardingStep)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
+                    userID,
+                    String.IsNullOrWhiteSpace(onboardingStep) ? null : onboardingStep
+                );
+            }
+        }
         #endregion
 
         #region Verifications
