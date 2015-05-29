@@ -11,8 +11,7 @@ var A = Activity.extends(function OnboardingHomeActivity() {
 
     this.accessLevel = this.app.UserType.LoggedUser;
     
-    // null for Logo
-    this.navBar = Activity.createSectionNavBar(null);
+    // No navbar, is empty with auto logo
 });
 
 exports.init = A.init;

@@ -9,10 +9,11 @@ var A = Activity.extends(function LearnMoreActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = null;
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.navBar.leftAction(null);
 });
 
 exports.init = A.init;

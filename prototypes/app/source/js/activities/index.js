@@ -14,6 +14,7 @@ var A = Activity.extends(function IndexActivity() {
     
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.navBar.leftAction(null);
 });
 
 exports.init = A.init;

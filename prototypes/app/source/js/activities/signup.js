@@ -14,6 +14,7 @@ var A = Activity.extends(function SignupActivity() {
     this.viewModel = new ViewModel(this.app);
     // null for Logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.navBar.leftAction(null);
     
     // Perform sign-up request when is requested by the form:
     this.registerHandler({
@@ -85,7 +86,7 @@ var A = Activity.extends(function SignupActivity() {
                 input.focus();
             else
                 input.blur();
-        }
+        }.bind(this)
     });
 });
 
