@@ -64,7 +64,7 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
                 
                 this.userProfile.load().then(function(profile) {
                     if (profile) {
-                        // There is a profile cached
+                        // There is a profile cached                    
                         // End succesfully
                         resolve();
                     }
@@ -151,6 +151,8 @@ AppModel.prototype.loadModules = function loadModules() {
     this.user = ko.computed(function() {
         return this.userProfile.data;
     }, this);
+
+    this.onboarding = require('./AppModel.onboarding').create(this);
 
     this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
     this.calendarSyncing = require('./AppModel.calendarSyncing').create(this);

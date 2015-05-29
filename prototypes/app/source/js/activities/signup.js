@@ -51,10 +51,13 @@ var A = Activity.extends(function SignupActivity() {
                     this.viewModel.username(),
                     this.viewModel.password(),
                     this.viewModel.profile()
-                ).then(function(/*signupData*/) {
+                ).then(function(signupData) {
 
                     this.viewModel.signupError('');
                     ended();
+                    
+                    // Start onboarding
+                    this.app.model.onboarding.setStep(signupData.onboardingStep);
 
                     // Remove form data
                     this.viewModel.username('');

@@ -53,7 +53,9 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     referrer = referrer && referrer.url || '/scheduling';
     var link = this.requestData.cancelLink || referrer;
     
-    this.convertToCancelAction(this.navBar.leftAction(), link);
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        this.convertToCancelAction(this.navBar.leftAction(), link);
+    }
 };
 
 A.prototype.show = function show(options) {
@@ -151,6 +153,14 @@ function ViewModel(app) {
             this.isSaving(false);
             // Reset list
             this.jobTitles.removeAll();
+            
+            if (app.model.onboarding.inProgress()) {
+                app.model.onboarding.goNext(app);
+            }
+            else {
+                app.successSave();
+            }
+            
         }.bind(this))
         .catch(function(error) {
             this.submitText('Save');

@@ -105,10 +105,10 @@ var app = {
         
                 goDashboard._going = true;
 
-                var onboarding = this.model.user().onboardingStep();
+                var onboarding = this.model.onboarding.stepUrl();
 
                 if (onboarding) {
-                    this.shell.go('onboardingHome/' + onboarding);
+                    this.shell.go(onboarding);
                 }
                 else {
                     this.shell.go('home');
@@ -408,6 +408,15 @@ var appInit = function appInit() {
         if (window.navigator && window.navigator.splashscreen) {
             window.navigator.splashscreen.hide();
         }
+
+        // Check onboarding step to redirect there on app start
+        var step = app.model.user().onboardingStep();
+        if (step && 
+            app.model.onboarding.setStep(step)) {
+            var url = app.model.onboarding.stepUrl();
+            app.shell.go(url);
+        }
+
     }, alertError);
 
     // DEBUG
