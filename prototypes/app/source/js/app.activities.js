@@ -20,7 +20,6 @@ module.exports = {
     'learnMore': require('./activities/learnMore'),
     'signup': require('./activities/signup'),
     'contactInfo': require('./activities/contactInfo'),
-    'onboardingPositions': require('./activities/onboardingPositions'),
     'welcome': require('./activities/welcome'),
     'addressEditor': require('./activities/addressEditor'),
     'onboardingComplete': require('./activities/onboardingComplete'),
