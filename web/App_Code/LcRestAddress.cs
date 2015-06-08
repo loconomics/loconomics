@@ -295,13 +295,21 @@ public class LcRestAddress
             // Parameter jobTitleID needs to be specified as 0 to avoid to join
             // the service-address table
             // Null value as 3th parameter since that placeholder is reserved for addressID
-            // NOTE: Home address must exists ever, created on sign-up (GetSingleFrom
-            // takes care to return null if not exists, but on this case is not possible
-            // --or must not if not corrupted user profile)
-            return GetSingleFrom(db.Query(
+            // NOTE: Home address must exists ever, if there is no one on databsae but
+            // user exists, just default/null values per field are returned but a record
+            // is returned.
+            var add = GetSingleFrom(db.Query(
                 sqlSelectOne + sqlFields + sqlAndJobTitleID + sqlAndTypeID,
                 LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, null, AddressType.Home
             ));
+
+            if (add == null)
+            {
+                add = new LcRestAddress {
+                    userID = userID
+                };
+            }
+            return add;
         }
     }
     #endregion
