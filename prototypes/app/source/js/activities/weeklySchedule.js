@@ -16,6 +16,7 @@ var A = Activity.extends(function WeeklyScheduleActivity() {
     this.navBar = Activity.createSubsectionNavBar('Scheduling', {
         backLink: 'scheduling'
     });
+    this.defaultNavBar = this.navBar.model.toPlainObject();
     
     this.registerHandler({
         target: this.app.model.simplifiedWeeklySchedule,
@@ -33,15 +34,29 @@ var A = Activity.extends(function WeeklyScheduleActivity() {
         target: this.app.model.simplifiedWeeklySchedule,
         event: 'saved',
         handler: function() {
-            this.app.successSave();
+            if (this.app.model.onboarding.inProgress()) {
+                this.app.model.onboarding.goNext();
+            } else {
+                this.app.successSave();
+            }
         }.bind(this)
     });
 });
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        this.navBar.model.updateWith(this.defaultNavBar);
+    }
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
+    
+    this.updateNavBarState();
     
     // Keep data updated:
     this.app.model.simplifiedWeeklySchedule.sync();
@@ -76,11 +91,13 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ? 
-                'loading...' : 
-                this.isSaving() ? 
-                    'saving...' : 
-                    'Save'
+            app.model.onboarding.inProgress() ?
+                'Save and continue' :
+                this.isLoading() ? 
+                    'loading...' : 
+                    this.isSaving() ? 
+                        'saving...' : 
+                        'Save'
         );
     }, simplifiedWeeklySchedule);
     

@@ -336,7 +336,7 @@ function ViewModel(app) {
     this.endSelection = function(data, event) {
         
         if (app.model.onboarding.inProgress()) {
-            app.model.onboarding.goNext(app);
+            app.model.onboarding.goNext();
         }
         else {
             // Run method injected by the activity to return a 

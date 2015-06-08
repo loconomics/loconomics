@@ -16,30 +16,8 @@ var A = Activity.extends(function ContactInfoActivity() {
     this.navBar = Activity.createSubsectionNavBar('Owner information', {
         backLink: 'ownerInfo'
     });
+    this.defaultNavBar = this.navBar.model.toPlainObject();
     
-    // Update navBar for onboarding mode when the onboardingStep
-    // in the current model changes:
-    this.registerHandler({
-        target: this.viewModel.profile.onboardingStep,
-        handler: function (step) {
-            if (step) {
-                // TODO Set navbar step index
-                // Setting navbar for Onboarding/wizard mode
-                this.navBar.leftAction().text('');
-                // Setting header
-                this.viewModel.headerText('How can we reach you?');
-                this.viewModel.buttonText('Save and continue');
-            }
-            else {
-                // TODO Remove step index
-                // Setting navbar to default
-                this.navBar.leftAction().text('Account');
-                // Setting header to default
-                this.viewModel.headerText('Contact information');
-                this.viewModel.buttonText('Save');
-            }
-        }.bind(this)
-    });
     //this.viewModel.profile.onboardingStep.subscribe();
     
     this.registerHandler({
@@ -49,7 +27,7 @@ var A = Activity.extends(function ContactInfoActivity() {
             var msg = err.task === 'save' ? 'Error saving contact data.' : 'Error loading contact data.';
             this.app.modals.showError({
                 title: msg,
-                error: err && err.task && err.error || err
+                error: err && err.error || err
             });
         }.bind(this)
     });
@@ -61,7 +39,7 @@ var A = Activity.extends(function ContactInfoActivity() {
             var msg = err.task === 'save' ? 'Error saving address details.' : 'Error loading address details.';
             this.app.modals.showError({
                 title: msg,
-                error: err && err.task && err.error || err
+                error: err && err.error || err
             });
         }.bind(this)
     });
@@ -111,11 +89,21 @@ var A = Activity.extends(function ContactInfoActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        this.navBar.model.updateWith(this.defaultNavBar);
+    }
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
     // Discard any previous unsaved edit
     this.viewModel.discard();
+    
+    this.updateNavBarState();
     
     // Keep data updated:
     this.app.model.userProfile.sync();
@@ -124,8 +112,11 @@ A.prototype.show = function show(state) {
 
 function ViewModel(app) {
 
-    this.headerText = ko.observable('Contact information');
-    this.buttonText = ko.observable('Save');
+    this.headerText = ko.pureComputed(function() {
+        return app.model.onboarding.inProgress() ?
+            'How can we reach you?' :
+            'Contact information';
+    });
     
     // List of possible error messages registered
     // by name
@@ -220,6 +211,8 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
+            app.model.onboarding.inProgress() ?
+                'Save and continue' :
             this.isLoading() ? 
                 'loading...' : 
                 this.isSaving() ? 
@@ -240,6 +233,11 @@ function ViewModel(app) {
         profileVersion.push({ evenIfObsolete: true });
         homeAddressVersion.push({ evenIfObsolete: true });
         
-        app.successSave();
+        if (app.model.onboarding.inProgress()) {
+            app.model.onboarding.goNext();
+        }
+        else {
+            app.successSave();
+        }
     }.bind(this);
 }

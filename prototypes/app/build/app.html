@@ -626,7 +626,7 @@
         </div>
         <div class="isolated">
           <div>
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText, disable: isLocked"></button>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
           </div>
         </div>
       </form>
@@ -1477,6 +1477,9 @@
         data-bind="event: { click: addServiceArea }, visible: !isSelectionMode()">Add a service area</button>
         <button type="button" class="btn btn-default btn-block"
         data-bind="event: { click: addClientLocation }, visible: isSelectionMode() && clientID()">Add a client location</button>
+      </div>
+      <div class="isolated" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
+        <button type="button" class="btn btn-primary btn-block" data-bind="click: selectAddress">Continue</button>
       </div>
     </div>
     <!-- Activity Signup -->

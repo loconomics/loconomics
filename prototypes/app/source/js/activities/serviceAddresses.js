@@ -81,37 +81,40 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     
     this.viewModel.headerText(itIs ? 'Select or add a service location' : 'Locations');
 
-    if (this.requestData.title) {
-        // Replace title by title if required
-        this.navBar.title(this.requestData.title);
-    }
-    else {
-        // Title must be empty
-        this.navBar.title('');
-    }
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
 
-    if (this.requestData.cancelLink) {
-        this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink);
-    }
-    else {
-        // Reset to defaults, or given title:
-        this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
-        if (this.requestData.navTitle)
-            this.navBar.leftAction().text(this.requestData.navTitle);
-        
-        var jid = this.viewModel.jobTitleID(),
-            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling';
-        
-        this.navBar.leftAction().link(jid ? '/jobtitles/' + jid : '/scheduling');
-        this.navBar.leftAction().text(jname);
-    }
-    
-    if (itIs && !this.requestData.cancelLink) {
-        // Uses a custom handler so it returns keeping the given state:
-        this.navBar.leftAction().handler(this.returnRequest);
-    }
-    else if (!this.requestData.cancelLink) {
-        this.navBar.leftAction().handler(null);
+        if (this.requestData.title) {
+            // Replace title by title if required
+            this.navBar.title(this.requestData.title);
+        }
+        else {
+            // Title must be empty
+            this.navBar.title('');
+        }
+
+        if (this.requestData.cancelLink) {
+            this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink);
+        }
+        else {
+            // Reset to defaults, or given title:
+            this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
+            if (this.requestData.navTitle)
+                this.navBar.leftAction().text(this.requestData.navTitle);
+
+            var jid = this.viewModel.jobTitleID(),
+                jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling';
+
+            this.navBar.leftAction().link(jid ? '/jobtitles/' + jid : '/scheduling');
+            this.navBar.leftAction().text(jname);
+        }
+
+        if (itIs && !this.requestData.cancelLink) {
+            // Uses a custom handler so it returns keeping the given state:
+            this.navBar.leftAction().handler(this.returnRequest);
+        }
+        else if (!this.requestData.cancelLink) {
+            this.navBar.leftAction().handler(null);
+        }
     }
 };
 
@@ -199,7 +202,10 @@ function ViewModel(app) {
 
     this.selectAddress = function(selectedAddress, event) {
         
-        if (this.isSelectionMode() === true) {
+        if (app.model.onboarding.inProgress()) {
+            app.model.onboarding.goNext();
+        }
+        else if (this.isSelectionMode() === true) {
             // Run method injected by the activity to return a 
             // selected address:
             this.returnSelected(
@@ -242,4 +248,11 @@ function ViewModel(app) {
         });
         app.shell.go(url, request);
     }.bind(this);
+    
+    this.onboardingNextReady = ko.computed(function() {
+        var isin = app.model.onboarding.inProgress(),
+            hasItems = this.sourceAddresses().length > 0;
+
+        return isin && hasItems;
+    }, this);
 }

@@ -16,12 +16,13 @@ function OnboardingProgress(values) {
     }, values);
     
     this.totalSteps = ko.pureComputed(function() {
-        return this.steps().length;
+        // 'Zero' step is a welcome, not accounted:
+        return this.steps().length - 1;
     }, this);
     
     this.stepName = ko.pureComputed(function() {
         var num = this.stepNumber(),
-            tot = this.totalSteps();
+            tot = this.steps().length;
 
         if (tot > 0 &&
             num > -1 &&

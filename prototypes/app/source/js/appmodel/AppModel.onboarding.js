@@ -68,7 +68,7 @@ exports.create = function create(appModel) {
 
         current++;
 
-        if (current >= this.totalSteps()) {
+        if (current > this.totalSteps()) {
             // It ended!!
             this.stepNumber(-1);
             appModel.userProfile.saveOnboardingStep(null);
@@ -87,7 +87,7 @@ exports.create = function create(appModel) {
 
         current--;
 
-        if (current >= 0 && current < this.totalSteps()) {
+        if (current >= 0 && current <= this.totalSteps()) {
             // Get previous step
             this.stepNumber(current);
         }
