@@ -35,11 +35,11 @@ DomItemsManager.prototype.getAllItems = function getAllItems() {
 
 DomItemsManager.prototype.find = function find(containerName, root) {
     var $root = $(root || this.$root);
-    return $root.find('[' + this.idAttributeName + '="' + escapeSelector(containerName) + '"]');
+    return $root.children('[' + this.idAttributeName + '="' + escapeSelector(containerName) + '"]');
 };
 
 DomItemsManager.prototype.getActive = function getActive() {
-    return this.$root.find('[' + this.idAttributeName + ']:visible');
+    return this.$root.children('[' + this.idAttributeName + ']:visible');
 };
 
 /**
