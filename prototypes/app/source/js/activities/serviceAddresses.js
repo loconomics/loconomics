@@ -199,13 +199,15 @@ function ViewModel(app) {
             jobs = this.jobTitles.isLoading();
         return add || jobs;
     }, this);
-
-    this.selectAddress = function(selectedAddress, event) {
-        
+    
+    this.goNext = function() {
         if (app.model.onboarding.inProgress()) {
             app.model.onboarding.goNext();
         }
-        else if (this.isSelectionMode() === true) {
+    };
+
+    this.selectAddress = function(selectedAddress, event) {
+        if (this.isSelectionMode() === true) {
             // Run method injected by the activity to return a 
             // selected address:
             this.returnSelected(

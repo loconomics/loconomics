@@ -77,7 +77,16 @@ function ViewModel(app) {
     this.isLocked = this.isSaving;
     this.searchText = ko.observable('');
     this.jobTitles = ko.observableArray([]);
-    this.submitText = ko.observable('Save');
+    
+    this.submitText = ko.pureComputed(function() {
+        return (
+            app.model.onboarding.inProgress() ?
+                'Save and continue' :
+                this.isSaving() ? 
+                    'saving...' : 
+                    'Save'
+        );
+    }, this);
     
     this.unsavedChanges = ko.pureComputed(function() {
         return !!this.jobTitles().length;
@@ -139,7 +148,6 @@ function ViewModel(app) {
     
     this.save = function save() {
         this.isSaving(true);
-        this.submitText('Saving');
 
         Promise.all(this.jobTitles().map(function(jobTitle) {
             return app.model.userJobProfile.createUserJobTitle({
@@ -148,7 +156,6 @@ function ViewModel(app) {
             });
         }))
         .then(function(/*results*/) {
-            this.submitText('Done');
             this.searchText('');
             this.isSaving(false);
             // Reset list
@@ -163,7 +170,6 @@ function ViewModel(app) {
             
         }.bind(this))
         .catch(function(error) {
-            this.submitText('Save');
             this.searchText('');
             this.isSaving(false);
             app.modals.showError({

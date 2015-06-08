@@ -163,12 +163,18 @@ app.UserType = require('./models/User').UserType;
 app.successSave = function successSave(settings) {
     // defaults
     settings = $.extend({
-        message: 'Your changes have been saved'
+        message: 'Your changes have been saved',
+        link: null
     }, settings);
-    // go back
-    this.performsNavBarBack({ silentMode: true });
+    
     // show notification
     this.showNavBarNotification(settings);
+    
+    // requested link or current activity go back
+    if (settings.link)
+        this.shell.go(settings.link);
+    else
+        this.performsNavBarBack({ silentMode: true });
 };
 
 /** App Init **/
