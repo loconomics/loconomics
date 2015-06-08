@@ -116,7 +116,7 @@ A.prototype.show = function show(options) {
         v.inbox.isLoading(true);
     appModel.messaging.getList()
     .then(function(threads) {
-        v.inbox.messages(threads().map(MessageView.fromThread));
+        v.inbox.messages(threads().map(MessageView.fromThread.bind(null, app)));
     })
     .catch(preapareShowErrorFor('Error loading latest messages'))
     .then(function() {

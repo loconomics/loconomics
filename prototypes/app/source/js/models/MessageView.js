@@ -10,7 +10,7 @@ var ko = require('knockout'),
     Model = require('./Model'),
     moment = require('moment');
 
-function MessageView(values) {
+function MessageView(values, app) {
     
     Model(this);
 
@@ -22,11 +22,12 @@ function MessageView(values) {
         subject: '',
         content: null,
         link: '#',
-
-        actionIcon: null,
-        actionText: null,
         
-        classNames: ''
+        tag: '',
+        classNames: '',
+        
+        sourceThread: null,
+        sourceMessage: null
 
     }, values);
     
@@ -40,8 +41,37 @@ function MessageView(values) {
     this.displayedTime = ko.pureComputed(function() {
         
         return moment(this.createdDate()).locale('en-US-LC').format('LT');
-        
+
     }, this);
+    
+    this.quickDateTime = ko.pureComputed(function() {
+        var date = this.createdDate();
+
+        var m = moment(date).locale('en-US-LC'),
+            t = moment().startOf('day');
+
+        if (m.isAfter(t)) {
+            return m.format('LT');
+        }
+        else {
+            return m.fromNow();
+        }
+    }, this);
+    
+    this.customer = ko.computed(function() {
+        var s = this.sourceMessage();
+        if (!s || !app) return null;
+
+        var cid = s.sentByUserID();
+        if (cid) {
+            if (cid === app.model.userProfile.data.userID())
+                return app.model.userProfile.data;
+            else
+                return app.model.customers.getObservableItem(cid, true)();
+        }
+        return null;
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
 
 module.exports = MessageView;
@@ -52,19 +82,32 @@ module.exports = MessageView;
     one first, or the one to highlight) to build a
     more detailed MessageView
 **/
-MessageView.fromThread = function(thread) {
+MessageView.fromThread = function(app, thread) {
     
     var msg = thread.messages();
     msg = msg && msg[0] || null;
     
+    // TODO: more different tag/classes depending on booking state as per design
+    // NOTE: That requires to load the booking or request by auxID and wait for it
+    var tag, classNames;
+    if (msg.auxT() === 'Booking') {
+        tag = 'Booking';
+        classNames = 'MessageTile--tag-success';
+    } else if (msg.auxT() === 'BookingRequest') {
+        tag = 'Booking request';
+        classNames = 'MessageTile--tag-warning';
+    }
+    
     return new MessageView({
+        sourceThread: thread,
+        sourceMessage: msg,
         id: thread.threadID(),
         createdDate: thread.createdDate(),
         updatedDate: thread.updatedDate(),
         subject: thread.subject(),
         content: msg && msg.bodyText() || '',
         link: '#!/conversation/' + thread.threadID(),
-        actionIcon: 'glyphicon glyphicon-share-alt',
-        actionText: '' // Example: 'ListView-item--tag-warning'
-    });
+        tag: tag,
+        classNames: classNames
+    }, app);
 };

@@ -1,0 +1,43 @@
+/**
+    MessageTile
+**/
+.MessageTile {
+    
+    padding: 16px 0;
+    border-bottom: 1px solid $gray-lighter;
+    
+    // Content can be wrapped in a link
+    > a {
+        color: $body-copy-color;
+        display: block;
+        text-decoration: none !important;
+    }
+    
+    .MessageTile-contact {
+        font-size: 1.1em;
+        font-weight: bold;
+        display: inline;
+    }
+    
+    .MessageTile-time {
+        color: $gray-light;
+        float: right;
+    }
+    
+    .MessageTile-body {
+        margin: .6em 0 0 0;
+    }
+    
+    strong {
+        font-weight: bold;
+    }
+    
+    //$colors = 'primary' 'success' 'info' 'warning' 'danger'
+    for $color in $brand-colors {
+        &.MessageTile--tag-{$color} {
+            strong {
+                color: $brand-colors[$color];
+            }
+        }
+    }
+}

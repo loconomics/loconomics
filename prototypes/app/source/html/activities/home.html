@@ -60,18 +60,18 @@
     </div>
   
     <div>
-      <h1 class="SectionTitle"
-          data-bind="css: { 'is-syncing': inbox.isSyncing() }">
-          Inbox
-          <!-- ko component: {
-            name: 'app-loading-spinner',
-            params: { mod: 'onRight' }
-          } --><!-- /ko -->
-      </h1>
-      <div data-bind="css: { 'is-loading': inbox.isLoading() }">
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-      </div>
-      <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }">
+        <h1 class="SectionTitle"
+            data-bind="css: { 'is-syncing': inbox.isSyncing() }">
+            Inbox
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>
+        <div data-bind="css: { 'is-loading': inbox.isLoading() }">
+            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
+        <div id="homeInbox" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }">
         </div>
     </div>
 

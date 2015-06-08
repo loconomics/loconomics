@@ -1997,7 +1997,87 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 36 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+
+/* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile {
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile > a {
+  color: #333;
+  display: block;
+  text-decoration: none !important;
+}
+
+/* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile .MessageTile-contact {
+  font-size: 1.1em;
+  font-weight: bold;
+  display: inline;
+}
+
+/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile .MessageTile-time {
+  color: #777;
+  float: right;
+}
+
+/* line 27 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile .MessageTile-body {
+  margin: 0.6em 0 0 0;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile strong {
+  font-weight: bold;
+}
+
+/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+
+/* line 38 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile.MessageTile--tag-primary strong {
+  color: #00989a;
+}
+
+/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+
+/* line 38 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile.MessageTile--tag-secondary strong {
+  color: #e0004f;
+}
+
+/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+
+/* line 38 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile.MessageTile--tag-success strong {
+  color: #47b347;
+}
+
+/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+
+/* line 38 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile.MessageTile--tag-info strong {
+  color: #5bc0de;
+}
+
+/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+
+/* line 38 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile.MessageTile--tag-warning strong {
+  color: #f0ad4e;
+}
+
+/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+
+/* line 38 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+.MessageTile.MessageTile--tag-danger strong {
+  color: #d9534f;
+}
+
+/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */

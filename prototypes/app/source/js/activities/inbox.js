@@ -56,7 +56,7 @@ function ViewModel(app) {
         if (!t)
             return [];
         else if (!s)
-            return t.map(MessageView.fromThread);
+            return t.map(MessageView.fromThread.bind(null, app));
         else        
             return t.filter(function(thread) {
                 var found = false;
@@ -74,6 +74,6 @@ function ViewModel(app) {
                 }
                 
                 return found;
-            }).map(MessageView.fromThread);
+            }).map(MessageView.fromThread.bind(null, app));
     }, this);
 }

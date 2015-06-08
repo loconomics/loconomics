@@ -985,18 +985,17 @@
       </div>
       <div>
          <h1 class="SectionTitle" data-bind="css: { 'is-syncing': inbox.isSyncing() }">
-          Inbox
-          <!-- ko component: {
-            name: 'app-loading-spinner',
-            params: { mod: 'onRight' }
-          } --><!-- /ko -->
-      </h1>
+            Inbox
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>
 
         <div data-bind="css: { 'is-loading': inbox.isLoading() }">
           <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-        <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
-        data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
+        <div id="homeInbox" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
       </div>
       <div>
          <h1 class="SectionTitle">Performance</h1>
@@ -1859,13 +1858,15 @@
     </script>
     <!-- Knockout Template inbox-tile -->
     <script type="text/html" id="inbox-tile-template">
-      <div class="ListView-item" data-bind="css: classNames">
-        <div class="ListView-item-marker">
-          <div data-bind="text: displayedDate"></div>
-          <div><span class="text-muted" data-bind="text: displayedTime"></span></div>
-        </div>
-        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !content()"></p><div data-bind="text: subject, visible: content()"></div><div data-bind="text: content, visible: content()"></div></a>
-        <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+      <div class="MessageTile" data-bind="css: classNames">
+          <a href="#" data-bind="attr: { href: link }">
+              <h4 class="MessageTile-contact" data-bind="text: customer() && customer().fullName() || '(no name)'"></h4>
+              <div class="MessageTile-time" data-bind="text: quickDateTime"></div>
+              <p class="MessageTile-body">
+                  <strong data-bind="visible: tag"><span data-bind="text: tag"></span> - </strong>
+                  <span data-bind="text: subject"></span>
+              </p>
+          </a>
       </div>
     </script>
     <!-- Knockout Template job-title-tile -->
