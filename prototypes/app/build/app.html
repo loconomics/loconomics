@@ -929,26 +929,29 @@
     </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
-       <h1 class="SectionTitle" data-bind="css: { 'is-syncing': nextBooking.isSyncing() }">
-      Your next booking
+       <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
+      Upcoming bookings
       <!-- ko component: {
         name: 'app-loading-spinner',
         params: { mod: 'onRight' }
       } --><!-- /ko -->
-  </h1>
-
-      <div id="homeNextBooking" data-bind="css: { 'is-loading': nextBooking.isLoading() }"
-      class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
-        <div class="ListView-item" data-bind="with: nextBooking">
-          <div class="ListView-item-marker">
-            <div data-bind="text: displayedDate"></div>
-            <div><strong data-bind="text: displayedStartTime"></strong>
-            </div>
-          </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
-        <p data-bind="text: summary()"></p>
-        <!--<div data-bind="text: servicesSummary"></div>-->
-      </a>
- <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong data-bind="text: price, format: { type: 'number', format: '$0,0' }"></strong></a>
+  </h1> 
+      <div id="homeNextBooking" data-bind="css: { 'is-loading': nextBooking.isLoading() }">
+        <div class="LeadTile" data-bind="with: nextBooking"> <a href="#" data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
+                <h3 class="LeadTile-title">
+                    <div data-bind="text: displayedDate"></div>
+                    <div>
+                        <span data-bind="text: displayedStartTime"></span>
+                        -
+                        <span data-bind="text: displayedEndTime"></span>
+                    </div>
+                </h3>
+                <h4 class="LeadTile-subtitle" data-bind="text: customer() && customer().fullName()"></h4>
+                <p class="LeadTile-content">
+                    <span data-bind="text: servicesSummary()"></span>
+                    <em data-bind="text: price, format: { type: 'number', format: '$0,0' }"></em>
+                </p>
+            </a>
 
         </div>
         <div data-bind="visible: !nextBooking()" class="isolated"> <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
@@ -957,14 +960,6 @@
           params="mod: 'row bigger'"></app-loading-spinner>
         </div>
       </div>
-       <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
-      Upcoming bookings
-      <!-- ko component: {
-        name: 'app-loading-spinner',
-        params: { mod: 'onRight' }
-      } --><!-- /ko -->
-  </h1>
-
       <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
       </div>

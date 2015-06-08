@@ -52,7 +52,7 @@
 
 /* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
-/* line 87 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 89 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
 /* line 46 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
@@ -1952,10 +1952,55 @@ body.use-backdrop:before {
   margin: 0 -10px 0 -10px;
 }
 
-/* line 35 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadTile.styl */
+
+/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadTile.styl */
+.LeadTile {
+  text-align: left;
+}
+
+/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadTile.styl */
+.LeadTile > a {
+  display: block;
+  color: #333;
+}
+
+/* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadTile.styl */
+.LeadTile > a:hover {
+  text-decoration: none;
+}
+
+/* line 21 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadTile.styl */
+.LeadTile .LeadTile-title {
+  font-size: 2.6em;
+  color: #00989a;
+  line-height: 1em;
+  margin: 0.6em 0;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadTile.styl */
+.LeadTile .LeadTile-subtitle {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #333;
+  line-height: 1em;
+  margin: 0.5em 0;
+}
+
+/* line 36 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadTile.styl */
+.LeadTile .LeadTile-content {
+  margin-bottom: 1em;
+}
+
+/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadTile.styl */
+.LeadTile .LeadTile-content em {
+  color: #777;
+}
+
+/* line 36 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

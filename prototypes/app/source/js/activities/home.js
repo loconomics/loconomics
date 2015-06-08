@@ -5,7 +5,8 @@
 
 var ko = require('knockout');
 
-var Activity = require('../components/Activity');
+var Activity = require('../components/Activity'),
+    AppointmentView = require('../viewmodels/AppointmentView');
 
 var A = Activity.extends(function HomeActivity() {
     
@@ -33,6 +34,7 @@ A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     
     var v = this.viewModel,
+        app = this.app,
         appModel = this.app.model;
     
     if (this.requestData.completedOnboarding) {
@@ -78,7 +80,7 @@ A.prototype.show = function show(options) {
                 }
                 appModel.calendar.getAppointment({ bookingID: upcoming.nextBookingID })
                 .then(function(apt) {
-                    v.nextBooking(apt);
+                    v.nextBooking(new AppointmentView(apt, app));
                 })
                 .catch(preapareShowErrorFor('Error loading next booking'))
                 .then(function() {
