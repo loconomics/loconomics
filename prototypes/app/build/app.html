@@ -963,16 +963,21 @@
       <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
       </div>
-      <div id="homeUpcomingBookings" class="ListView ListView--textualmarker ListView--largemarker"
-      data-bind="foreach: upcomingBookings.items">
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><strong data-bind="text: quantity"></strong>
-            </p>
-          </div> <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
-        <p data-bind="text: phrase"></p>
-      </a>
- <a href="#" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+      <div id="homeUpcomingBookings" class="SimpleList" data-bind="foreach: upcomingBookings.items">
+        <div class="SimpleList-item"> <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
+                <p>
+                    <strong data-bind="text: quantity"></strong>
+                    <span data-bind="text: phrase"></span>
+                </p>
+            </a>
+
+        </div>
+      </div>
+      <div class="ListView">
+        <div class="ListView-item"> <a href="/calendar" class="btn btn-link btn-block ListView-item-content">
+                <p>Go to calendar</p>
+            </a>
+ <a href="/calendar" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
 
         </div>
       </div>
