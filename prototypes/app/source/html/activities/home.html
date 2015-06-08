@@ -1,63 +1,65 @@
 <!-- Activity home -->
 <div class="container-fluid" data-activity="home">
 
-  <h1 class="SectionTitle"
-      data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
-      Upcoming bookings
-      <!-- ko component: {
-        name: 'app-loading-spinner',
-        params: { mod: 'onRight' }
-      } --><!-- /ko -->
-  </h1>    
-  <div id="homeNextBooking"
-       data-bind="css: { 'is-loading': nextBooking.isLoading() }">
-        <div class="LeadTile" data-bind="with: nextBooking">
-            <a href="#"
-               data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
-                <h3 class="LeadTile-title">
-                    <div data-bind="text: displayedDate"></div>
-                    <div>
-                        <span data-bind="text: displayedStartTime"></span>
-                        -
-                        <span data-bind="text: displayedEndTime"></span>
-                    </div>
-                </h3>
-                <h4 class="LeadTile-subtitle" data-bind="text: customer() && customer().fullName()"></h4>
-                <p class="LeadTile-content">
-                    <span data-bind="text: servicesSummary()"></span>
-                    <em data-bind="text: price, format: { type: 'number', format: '$0,0' }"></em>
-                </p>
-            </a>
+    <div>
+        <h1 class="SectionTitle"
+            data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
+            Upcoming bookings
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>    
+        <div id="homeNextBooking"
+           data-bind="css: { 'is-loading': nextBooking.isLoading() }">
+            <div class="LeadTile" data-bind="with: nextBooking">
+                <a href="#"
+                   data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
+                    <h3 class="LeadTile-title">
+                        <div data-bind="text: displayedDate"></div>
+                        <div>
+                            <span data-bind="text: displayedStartTime"></span>
+                            -
+                            <span data-bind="text: displayedEndTime"></span>
+                        </div>
+                    </h3>
+                    <h4 class="LeadTile-subtitle" data-bind="text: customer() && customer().fullName()"></h4>
+                    <p class="LeadTile-content">
+                        <span data-bind="text: servicesSummary()"></span>
+                        <em data-bind="text: price, format: { type: 'number', format: '$0,0' }"></em>
+                    </p>
+                </a>
+            </div>
+            <div data-bind="visible: !nextBooking()" class="isolated">
+                <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
+                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+            </div>
         </div>
-        <div data-bind="visible: !nextBooking()" class="isolated">
-            <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
+
+        <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-  </div>
-
-  <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
-      <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-  </div>
-    <div id="homeUpcomingBookings" class="SimpleList" data-bind="foreach: upcomingBookings.items">
-        <div class="SimpleList-item">
-            <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
-                <p>
-                    <strong data-bind="text: quantity"></strong>
-                    <span data-bind="text: phrase"></span>
-                </p>
-            </a>
+        <div id="homeUpcomingBookings" class="SimpleList" data-bind="foreach: upcomingBookings.items">
+            <div class="SimpleList-item">
+                <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
+                    <p>
+                        <strong data-bind="text: quantity"></strong>
+                        <span data-bind="text: phrase"></span>
+                    </p>
+                </a>
+            </div>
+        </div>
+        <div class="ListView">
+            <div class="ListView-item">
+                <a href="/calendar" class="btn btn-link btn-block ListView-item-content">
+                    <p>Go to calendar</p>
+                </a>
+                <a href="/calendar" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+            </div>
         </div>
     </div>
-    <div class="ListView">
-        <div class="ListView-item">
-            <a href="/calendar" class="btn btn-link btn-block ListView-item-content">
-                <p>Go to calendar</p>
-            </a>
-            <a href="/calendar" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-        </div>
-    </div>
-
-  <div>
+  
+    <div>
       <h1 class="SectionTitle"
           data-bind="css: { 'is-syncing': inbox.isSyncing() }">
           Inbox
@@ -70,39 +72,45 @@
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
       </div>
       <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }">
-      </div>
-  </div>
-
-  <h1 class="SectionTitle">Performance</h1>
-  <div id="homePerformance" class="ListView ListView--twolines ListView--textualmarker ListView--largemarker" data-bind="foreach: performance.items">
-    <div class="ListView-item" data-bind="css: classNames">
-      <div class="ListView-item-marker">
-        <p data-bind="visible: !markerLine2()"><strong data-bind="text: markerLine1()"></strong></p>
-        <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine1()"></strong></div>
-        <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine2()"></strong></div>
-      </div>
-      <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
-        <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
-        <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
-        <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
-      </a>
-      <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+        </div>
     </div>
-  </div>
 
-  <h1 class="SectionTitle">Get more from Loconomics</h1>
-  <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
-    <div class="ListView-item" data-bind="css: classNames">
-      <div class="ListView-item-marker">
-        <p><span data-bind="css: markerIcon"></span></p>
-      </div>
-      <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
-        <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
-        <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
-        <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
-      </a>
-      <a href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+    <div>
+        <h1 class="SectionTitle">Performance</h1>
+        <div id="homePerformance" class="SimpleList" data-bind="foreach: performance.items">
+            <div class="SimpleList-item">
+                <a href="#" data-bind="attr: { href: link }" class="btn btn-link btn-block ListView-item-content">
+                    <p>
+                        <strong data-bind="text: markerLine1"></strong>
+                        <span data-bind="text: contentLine1"></span>
+                    </p>
+                </a>
+            </div>
+        </div>
+        <div class="ListView">
+            <div class="ListView-item">
+                <a href="/performance" class="btn btn-link btn-block ListView-item-content">
+                    <p>Go to performance</p>
+                </a>
+                <a href="/performance" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+            </div>
+        </div>
     </div>
-  </div>
-
+    
+    <div>
+        <h1 class="SectionTitle">Get more from Loconomics</h1>
+        <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
+            <div class="ListView-item" data-bind="css: classNames">
+                <div class="ListView-item-marker">
+                    <p><span data-bind="css: markerIcon"></span></p>
+                </div>
+                <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
+                    <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
+                    <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
+                    <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
+                </a>
+                <a href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+            </div>
+        </div>
+    </div>
 </div>
