@@ -627,7 +627,7 @@
         </div>
         <div class="isolated">
           <div>
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: buttonText, disable: isLocked"></button>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
           </div>
         </div>
       </form>
@@ -800,7 +800,7 @@
           </div>
         </div>
       </div>
-      <div class="isolated" data-bind="visible: isSelectionMode() && jobTitleID() !== 0">
+      <div class="isolated" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
         <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
       </div>
     </div>
@@ -930,109 +930,113 @@
     </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
-       <h1 class="SectionTitle" data-bind="css: { 'is-syncing': nextBooking.isSyncing() }">
-      Your next booking
-      <!-- ko component: {
-        name: 'app-loading-spinner',
-        params: { mod: 'onRight' }
-      } --><!-- /ko -->
-  </h1>
+      <div>
+         <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
+            Upcoming bookings
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1> 
+        <div id="homeNextBooking" data-bind="css: { 'is-loading': nextBooking.isLoading() }">
+          <div class="LeadTile" data-bind="with: nextBooking"> <a href="#" data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
+                    <h3 class="LeadTile-title">
+                        <div data-bind="text: displayedDate"></div>
+                        <div>
+                            <span data-bind="text: displayedStartTime"></span>
+                            -
+                            <span data-bind="text: displayedEndTime"></span>
+                        </div>
+                    </h3>
+                    <h4 class="LeadTile-subtitle" data-bind="text: customer() && customer().fullName()"></h4>
+                    <p class="LeadTile-content">
+                        <span data-bind="text: servicesSummary()"></span>
+                        <em data-bind="text: price, format: { type: 'number', format: '$0,0' }"></em>
+                    </p>
+                </a>
 
-      <div id="homeNextBooking" data-bind="css: { 'is-loading': nextBooking.isLoading() }"
-      class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags">
-        <div class="ListView-item" data-bind="with: nextBooking">
-          <div class="ListView-item-marker">
-            <div data-bind="text: displayedDate"></div>
-            <div><strong data-bind="text: displayedStartTime"></strong>
-            </div>
-          </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
-        <p data-bind="text: summary()"></p>
-        <!--<div data-bind="text: servicesSummary"></div>-->
-      </a>
- <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"><strong data-bind="text: price, format: { type: 'number', format: '$0,0' }"></strong></a>
+          </div>
+          <div data-bind="visible: !nextBooking()" class="isolated"> <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
 
+            <app-loading-spinner
+            params="mod: 'row bigger'"></app-loading-spinner>
+          </div>
         </div>
-        <div data-bind="visible: !nextBooking()" class="isolated"> <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
-
-          <app-loading-spinner
-          params="mod: 'row bigger'"></app-loading-spinner>
+        <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
+          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-      </div>
-       <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
-      Upcoming bookings
-      <!-- ko component: {
-        name: 'app-loading-spinner',
-        params: { mod: 'onRight' }
-      } --><!-- /ko -->
-  </h1>
+        <div id="homeUpcomingBookings" class="SimpleList" data-bind="foreach: upcomingBookings.items">
+          <div class="SimpleList-item"> <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
+                    <p>
+                        <strong data-bind="text: quantity"></strong>
+                        <span data-bind="text: phrase"></span>
+                    </p>
+                </a>
 
-      <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-      </div>
-      <div id="homeUpcomingBookings" class="ListView ListView--textualmarker ListView--largemarker"
-      data-bind="foreach: upcomingBookings.items">
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><strong data-bind="text: quantity"></strong>
-            </p>
-          </div> <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
-        <p data-bind="text: phrase"></p>
-      </a>
- <a href="#" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          </div>
+        </div>
+        <div class="ListView">
+          <div class="ListView-item"> <a href="/calendar" class="btn btn-link btn-block ListView-item-content">
+                    <p>Go to calendar</p>
+                </a>
+ <a href="/calendar" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
 
+          </div>
         </div>
       </div>
       <div>
          <h1 class="SectionTitle" data-bind="css: { 'is-syncing': inbox.isSyncing() }">
-          Inbox
-          <!-- ko component: {
-            name: 'app-loading-spinner',
-            params: { mod: 'onRight' }
-          } --><!-- /ko -->
-      </h1>
+            Inbox
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>
 
         <div data-bind="css: { 'is-loading': inbox.isLoading() }">
           <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-        <div id="homeInbox" class="ListView ListView--twolines ListView--largemarker ListView--textualmarker ListView--colortags"
-        data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
+        <div id="homeInbox" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
       </div>
-       <h1 class="SectionTitle">Performance</h1>
+      <div>
+         <h1 class="SectionTitle">Performance</h1>
 
-      <div id="homePerformance" class="ListView ListView--twolines ListView--textualmarker ListView--largemarker"
-      data-bind="foreach: performance.items">
-        <div class="ListView-item" data-bind="css: classNames">
-          <div class="ListView-item-marker">
-            <p data-bind="visible: !markerLine2()"><strong data-bind="text: markerLine1()"></strong>
-            </p>
-            <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine1()"></strong>
-            </div>
-            <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine2()"></strong>
-            </div>
-          </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
-        <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
-        <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
-        <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
-      </a>
- <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible"
-          data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+        <div id="homePerformance" class="SimpleList" data-bind="foreach: performance.items">
+          <div class="SimpleList-item"> <a href="#" data-bind="attr: { href: link }" class="btn btn-link btn-block ListView-item-content">
+                    <p>
+                        <strong data-bind="text: markerLine1"></strong>
+                        <span data-bind="text: contentLine1"></span>
+                    </p>
+                </a>
 
+          </div>
+        </div>
+        <div class="ListView">
+          <div class="ListView-item"> <a href="/performance" class="btn btn-link btn-block ListView-item-content">
+                    <p>Go to performance</p>
+                </a>
+ <a href="/performance" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+
+          </div>
         </div>
       </div>
-       <h1 class="SectionTitle">Get more from Loconomics</h1>
+      <div>
+         <h1 class="SectionTitle">Get more from Loconomics</h1>
 
-      <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
-        <div class="ListView-item" data-bind="css: classNames">
-          <div class="ListView-item-marker">
-            <p><span data-bind="css: markerIcon"></span>
-            </p>
-          </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
-        <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
-        <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
-        <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
-      </a>
- <a href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+        <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
+          <div class="ListView-item" data-bind="css: classNames">
+            <div class="ListView-item-marker">
+              <p><span data-bind="css: markerIcon"></span>
+              </p>
+            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
+                    <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
+                    <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
+                    <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
+                </a>
+ <a href="#" class="btn btn-link ListView-item-action"
+            data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
 
+          </div>
         </div>
       </div>
     </div>
@@ -1169,110 +1173,6 @@
     </div>
     <!-- Activity logout -->
     <div class="container-fluid" data-activity="logout"></div>
-    <!-- Activity onboardingComplete -->
-    <div class="container-fluid" data-activity="onboardingComplete">
-      <div class="LeadContent LeadContent--success"> <span class="glyphicon glyphicon-ok text-success success-icon" aria-hidden="true"></span>
-
-         <h2>Congratulations!</h2>
-
-        <p class="lead">You're in! Confirm your account by clicking on the e-mail we just sent
-          you (Check your junk-mail).</p>
-        <div> <a href="#!/" class="btn btn-success btn-block">Got it, thanks!</a>
-
-        </div>
-      </div>
-    </div>
-    <!-- Activity onboardingHome -->
-    <div class="container-fluid" data-activity="onboardingHome">
-      <div class="LeadContent">
-         <h2>Welcome in!</h2>
-
-        <p class="lead">We're glad you're here. Complete these steps below to get you set up to
-          start scheduling clients immediately.</p>
-      </div>
-       <h1 class="SectionTitle has-HelpPoint">What kind of work do you do?</h1>
-
-      <div class="ListView">
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-user"></span>
-          </div> <a href="#!onboardingPositions" data-shell="pop" class="btn btn-link btn-block ListView-item-content">
-        Add a job title
-      </a>
- <a href="#!onboardingPositions" data-shell="pop" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-      </div>
-       <h1 class="SectionTitle has-HelpPoint">How do clients reach you?</h1>
-
-      <div class="ListView">
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-screenshot"></span>
-          </div> <a href="#!locations/new/serviceLocation" data-shell="pop" class="btn btn-link btn-block ListView-item-content">
-        Add a service location
-      </a>
- <a href="#!locations/new/serviceLocation" data-shell="pop" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-send"></span>
-          </div> <a href="#!locations/new/serviceRadius" data-shell="pop" class="btn btn-link btn-block ListView-item-content">
-        Add a service radius
-      </a>
- <a href="#!locations/new/serviceRadius" data-shell="pop" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-earphone"></span>
-          </div> <a href="#!contactInfo" data-shell="pop" class="btn btn-link btn-block ListView-item-content">
-        Add contact info
-      </a>
- <a href="#!contactInfo" data-shell="pop" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span class="glyphicon glyphicon-ok"></span>
-          </div> <a href="#!onboardingComplete" class="btn btn-link btn-block ListView-item-content">
-        See the complete page
-      </a>
- <a href="#!onboardingComplete" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-      </div>
-    </div>
-    <!-- Activity onboardingPositions -->
-    <div class="container-fluid has-navbar" data-activity="onboardingPositions">
-      <div>
-         <h2 class="SectionTitle">Add one or more job title(s)</h2>
-
-        <form role="form" class="isolated">
-          <div class="input-group"> <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-search"></span>
-            <span
-            class="sr-only">Search</span>
-              </span>
-              <label for="addPositionSearch" class="sr-only">Search</label>
-              <input type="text" class="form-control" id="addPositionSearch"
-              placeholder="search"> <span class="input-group-btn">
-                  <button type="button" class="btn btn-primary">Add</button>
-              </span>
-
-          </div>
-        </form>
-      </div>
-      <div class="ListView ListView--textualmarker isolated" data-bind="foreach: positions">
-        <div class="ListView-item">
-          <div class="ListView-item-marker"><span data-bind="text: ($index() + 1)">1</span>.</div> <a href="#" class="btn btn-link btn-block ListView-item-content"
-          data-bind="text: positionSingular"></a>
- <a href="#" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-trash text-danger"></span></a>
-
-        </div>
-      </div>
-      <div class="navbar navbar-default ActivityNavbar">
-        <div class="container">
-          <button type="button" class="btn btn-primary btn-block">Save and continue</button>
-        </div>
-      </div>
-    </div>
     <!-- OwnerInfo activity -->
     <div class="container-fluid" data-activity="ownerInfo">
        <h1 class="SectionTitle has-HelpPoint">Owner information</h1>
@@ -1570,6 +1470,9 @@
         <button type="button" class="btn btn-default btn-block"
         data-bind="event: { click: addClientLocation }, visible: isSelectionMode() && clientID()">Add a client location</button>
       </div>
+      <div class="isolated" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
+        <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
+      </div>
     </div>
     <!-- Activity Signup -->
     <div class="container-fluid" data-activity="signup">
@@ -1759,6 +1662,19 @@
         </div>
       </form>
     </div>
+    <!-- Activity welcome -->
+    <div class="container-fluid" data-activity="welcome">
+      <div class="LeadContent">
+         <h2>Welcome in!</h2>
+
+        <p class="lead">We're glad you're here. You'll need to complete a few easy steps to start
+          scheduling and managing clients inmediately. Later we'll help you set up
+          other tools like a book now button for your website, payment processing,
+          a marketplace profile and much more.</p>
+        <button type="button" class="btn btn-block btn-primary"
+        data-bind="click: startOnboarding">Set up scheduling</button>
+      </div>
+    </div>
     <!-- Component Template appointment-card -->
     <script type="text/html" id="appointment-card-template">
       <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked }">
@@ -1943,13 +1859,15 @@
     </script>
     <!-- Knockout Template inbox-tile -->
     <script type="text/html" id="inbox-tile-template">
-      <div class="ListView-item" data-bind="css: classNames">
-        <div class="ListView-item-marker">
-          <div data-bind="text: displayedDate"></div>
-          <div><span class="text-muted" data-bind="text: displayedTime"></span></div>
-        </div>
-        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !content()"></p><div data-bind="text: subject, visible: content()"></div><div data-bind="text: content, visible: content()"></div></a>
-        <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+      <div class="MessageTile" data-bind="css: classNames">
+          <a href="#" data-bind="attr: { href: link }">
+              <h4 class="MessageTile-contact" data-bind="text: customer() && customer().fullName() || '(no name)'"></h4>
+              <div class="MessageTile-time" data-bind="text: quickDateTime"></div>
+              <p class="MessageTile-body">
+                  <strong data-bind="visible: tag"><span data-bind="text: tag"></span> - </strong>
+                  <span data-bind="text: subject"></span>
+              </p>
+          </a>
       </div>
     </script>
     <!-- Knockout Template job-title-tile -->
@@ -1966,6 +1884,25 @@
           <button
              data-bind="event: { click: $parent.selectJobTitle }"
              class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></button>
+      </div>
+    </script>
+    <!-- Knockout Template list-view, for use with a generic ListView/Item
+    viewmodel, helps as doc reference for other uses too -->
+    <script type="text/html" id="list-view-template">
+      <div class="ListView ListView--twolines ListView--textualmarker ListView--largemarker" data-bind="foreach: items, css: mods">
+          <div class="ListView-item" data-bind="css: classNames">
+              <div class="ListView-item-marker">
+                  <p data-bind="visible: !markerLine2()"><strong data-bind="text: markerLine1()"></strong></p>
+                  <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine1()"></strong></div>
+                  <div data-bind="visible: markerLine2()"><strong data-bind="text: markerLine2()"></strong></div>
+              </div>
+              <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
+                  <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
+                  <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
+                  <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
+              </a>
+              <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
+          </div>
       </div>
     </script>
     <!-- Component Template loading-spinner -->
