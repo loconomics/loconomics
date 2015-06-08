@@ -2,10 +2,10 @@
     section-title text class
 **/
 
-$SectionTitle-height = 31px;
-$SectionTitle-fontSize = 17px;
-$SectionTitle-hGap = (($SectionTitle-height - $SectionTitle-fontSize) / 2);
-$SectionTitle-vGap = 7px;
+$SectionTitle-fontSize = 14px;
+$SectionTitle-topGap = 7px;
+$SectionTitle-bottomGap = 12px;
+$SectionTitle-height = $SectionTitle-fontSize + $SectionTitle-topGap + $SectionTitle-bottomGap
 
 /*BSVAR*/
 $gray-lighter = lighten(#000, 93.5%);
@@ -17,13 +17,14 @@ $gray = lighten(#000, 33.5%);
 
     font-size: $SectionTitle-fontSize;
     line-height: 1;
-    padding: $SectionTitle-vGap $SectionTitle-hGap;
+    padding: $SectionTitle-topGap $container-padding-left $SectionTitle-bottomGap $container-padding-right;
     margin: 0;
-    text-align: center;
+    text-align: left;
     font-weight: normal;
     background: $gray-background;
     border: none;
-    color: $gray-dark;
+    color: $gray;
+    text-transform: uppercase;
 }
 /* Inside a container, remove the margin gap */
 .container .SectionTitle,
