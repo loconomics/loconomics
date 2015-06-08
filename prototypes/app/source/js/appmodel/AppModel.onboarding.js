@@ -72,7 +72,7 @@ exports.create = function create(appModel) {
             // It ended!!
             this.stepNumber(-1);
             appModel.userProfile.saveOnboardingStep(null);
-            this.app.shell.go('/');
+            this.app.shell.go('/', { completedOnboarding: api.group() });
         }
         else {
             // Get next step

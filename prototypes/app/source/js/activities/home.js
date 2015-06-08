@@ -35,6 +35,19 @@ A.prototype.show = function show(options) {
     var v = this.viewModel,
         appModel = this.app.model;
     
+    if (this.requestData.completedOnboarding) {
+        switch (this.requestData.completedOnboarding) {
+            case 'welcome': // Schedule complete
+                this.app.modals.showNotification({
+                    title: 'Congrats',
+                    message: 'You\'re all ready to start scheduling ' +
+                        'clients. Click + to start adding bookings ' +
+                        'and clients.'
+                });
+                break;
+        }
+    }
+    
     var preapareShowErrorFor = function preapareShowErrorFor(title) {
         return function(err) {
             this.app.modals.showError({

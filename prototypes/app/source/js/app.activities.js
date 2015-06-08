@@ -22,7 +22,6 @@ module.exports = {
     'contactInfo': require('./activities/contactInfo'),
     'welcome': require('./activities/welcome'),
     'addressEditor': require('./activities/addressEditor'),
-    'onboardingComplete': require('./activities/onboardingComplete'),
     'account': require('./activities/account'),
     'inbox': require('./activities/inbox'),
     'conversation': require('./activities/conversation'),
