@@ -114,7 +114,7 @@ exports.extends = function (app) {
 
         // There is an action, trigger like a click so all the handlers
         // attached on spare places do their work:
-        if (left) {
+        if (left && !left.isMenu()) {
             var event = $.Event('click');
             event.options = options || {};
             $btn.trigger(event);

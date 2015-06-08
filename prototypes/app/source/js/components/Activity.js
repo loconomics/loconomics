@@ -186,8 +186,8 @@ Activity.NavAction = NavAction;
 Activity.createSectionNavBar = function createSectionNavBar(title) {
     return new NavBar({
         title: title,
-        leftAction: NavAction.menuNewItem,
-        rightAction: NavAction.menuIn
+        leftAction: NavAction.menuIn,
+        rightAction: NavAction.menuNewItem
     });
 };
 
