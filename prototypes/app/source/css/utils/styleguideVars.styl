@@ -1,16 +1,27 @@
 /**
     Variables from the styleguide, in Stylus format.
 
-    TODO: imcomplete manual list, most of them must be automatic from Bootstrap,
-    some elements are manual (collection of colors, new 'secondary' semantic, ...).
+    IMPORTANT: Bootstrap variables converted from Less are imported,
+    and following are a set of incomplete manual list used previously as copied manual values
+    now getting value from the Bootstrap original variable, better names and additions here.
+    
+    DESCRIPTION: Here a set of Styleguide specific variables are defined, with some values
+    coming from Bootstrap variables and new ones.
+    There are variables that are just aliases of Bootstrap and extra added variables
+    required to implement the Styleguide design additionally to the Bootstrap base.
 **/
+
+@import '../../../vendor/bootstrap/styl/variables.styl'
+
 /* Grayscale colors */
-$gray-darker = #222;
-$gray-dark = #333;
-$gray = #555;
-$gray-light = #777;
-$gray-lighter = #ccc;
+$gray-darker = gray-darker;
+$gray-dark = gray-dark;
+$gray = gray;
+$gray-light = gray-light;
+$gray-lighter = gray-lighter;
+// Special custom new color:
 $gray-background = #EEE;
+// Object of colors (to automate functions)
 $gray-colors = {
     darker: $gray-darker,
     dark: $gray-dark,
@@ -20,16 +31,15 @@ $gray-colors = {
     background: $gray-background
 };
 
-// Semantic alias for muted/disabled text
-$text-muted = $gray-light;
-
 /* Semantic colors */
-$brand-primary = #00989A;
+$brand-primary = brand-primary;
+// Additional color requested by Josh at design (double check after latest design if still in use)
 $brand-secondary = #e0004f;
-$brand-success = #47b347;
-$brand-info = #5bc0de;
-$brand-warning = #f0ad4e;
-$brand-danger = #d9534f;
+$brand-success = brand-success;
+$brand-info = brand-info;
+$brand-warning = brand-warning;
+$brand-danger = brand-danger;
+// Object of colors (to automate functions)
 $brand-colors = {
     primary: $brand-primary,
     secondary: $brand-secondary,
@@ -40,12 +50,16 @@ $brand-colors = {
 };
 
 /* Semantic colors used as background (lighter than the base) */
+// Bootstrap uses the brand colors as background sometimes, and on other
+// cases a modified version with the brand as base (through functions like 'lighter').
+// But this set of colours is from Josh design, specific pallette.
 $brand-primary-background = #e5f4f5;
 $brand-secondary-background = #fce5ed;
 $brand-success-background = #ecf7ec;
 $brand-info-background = #eef9fc;
 $brand-warning-background = #fdf7ed;
 $brand-danger-background = #fbeded;
+// Object of colors (to automate functions)
 $brand-colors-background = {
     primary: $brand-primary-background,
     secondary: $brand-secondary-background,
@@ -56,12 +70,15 @@ $brand-colors-background = {
 };
 
 /* Semantic dark colors (darker than base) */
+// Bootstrap uses some colors using brand as base and functions like 'darker' for some uses.
+// But this set of colours is from Josh design, specific pallette.
 $brand-primary-dark = #006c6c;
 $brand-secondary-dark = #9e0038;
 $brand-success-dark = #47b347;
 $brand-info-dark = #5bc0de;
 $brand-warning-dark = #c09853;
 $brand-danger-dark = #b94a48;
+// Object of colors (to automate functions)
 $brand-colors-dark = {
     primary: $brand-primary-dark,
     secondary: $brand-secondary-dark,
@@ -70,9 +87,14 @@ $brand-colors-dark = {
     warning: $brand-success-dark,
     danger: $brand-success-dark
 };
-    
+
+
+/* Color aliases for specific and semantic uses */
+// Semantic alias for muted/disabled text
+$text-muted = $gray-light;
+// General text color
 $body-copy-color = $gray-dark;
-    
+
 /** state color aliases **/
 $state-primary-text = $brand-primary;
 $state-secondary-text = $brand-secondary;
@@ -82,27 +104,23 @@ $state-warning-text = $brand-warning;
 $state-danger-text = $brand-danger;
 
 /** Typo **/
-$font-size-base = 14px;
+$font-size-base = font-size-base;
 
 /** Utilities **/
-$caret-width-base = 4px;
-
-/* Caret mixim
-    TODO: move to a better place
-*/
-$caret($margin-left = 2px) {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  margin-left: $margin-left;
-  vertical-align: middle;
-  border-top:   $caret-width-base solid;
-  border-right: $caret-width-base solid transparent;
-  border-left:  $caret-width-base solid transparent;
-}
+$caret-width-base = caret-width-base;
 
 /** Grids **/
-$grid-gutter-width = 20px;
+$grid-gutter-width = grid-gutter-width;
 
-// Basics of a navbar
-$navbar-height = 50px;
+// Bootstrap navbar
+// TODO: review if still used (maybe on non mobile sizes?)
+$navbar-height = navbar-height;
+
+/**
+    App variables
+**/
+$container-padding-left = round($grid-gutter-width / 2);
+$container-padding-right = round($grid-gutter-width / 2);
+// App/Mobile navbar (SmartNavBar)
+// 51px for Bootstrap default, 44px following iOS navbar size
+$app-navbar-height = 44px;

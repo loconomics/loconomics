@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-06-08
+/*! LoconomicsApp 2015-06-09
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -52,9 +52,13 @@
 
 /* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
-/* line 89 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
+
+/* line 378 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
 /* line 46 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+
+/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
 
@@ -133,13 +137,13 @@ fieldset[disabled] .btn-secondary.active {
 /* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /* app */
 
-/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\appVars.styl */
+/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
-/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\appVars.styl */
+/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
 
-/* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 378 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
 /* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
 
@@ -498,12 +502,12 @@ fieldset[disabled] .btn-secondary.active {
   background: rgba(0,0,0,0.4);
 }
 
-/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Utilities styles **/
 
 /* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 
-/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 .isolated {
   margin-top: 14px;
   margin-bottom: 14px;
@@ -513,7 +517,7 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 
-/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 
 /* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 body:before {
@@ -771,7 +775,7 @@ body.use-backdrop:before {
   }
 }
 
-/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 21 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
 /* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
@@ -928,7 +932,7 @@ body.use-backdrop:before {
 /* line 138 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ListView.styl */
 .container .ListView .ListView-divider,
 .container-fluid .ListView .ListView-divider {
-  margin: 0 -10px 0 -10px;
+  margin: 0 -15px 0 -15px;
 }
 
 /* line 144 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ListView.styl */
@@ -1145,7 +1149,7 @@ body.use-backdrop:before {
   position: relative;
   font-size: 14px;
   line-height: 1;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 15px 10px 15px;
   margin: 0;
   text-align: left;
   font-weight: normal;
@@ -1158,7 +1162,7 @@ body.use-backdrop:before {
 /* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
-  margin: 0 -10px 0 -10px;
+  margin: 0 -15px 0 -15px;
 }
 
 /* line 33 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
@@ -1270,7 +1274,7 @@ body.use-backdrop:before {
 /* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-edge.left.SmartNavBar-btn,
 .SmartNavBar .SmartNavBar-edge.left .SmartNavBar-btn {
-  padding: 0 10px;
+  padding: 0 15px;
 }
 
 /* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
@@ -1282,7 +1286,7 @@ body.use-backdrop:before {
 .SmartNavBar .SmartNavBar-edge.right.SmartNavBar-btn,
 .SmartNavBar .SmartNavBar-edge.right .SmartNavBar-btn {
   text-align: right;
-  padding: 0 10px;
+  padding: 0 15px;
 }
 
 /* line 119 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
@@ -1524,7 +1528,13 @@ body.use-backdrop:before {
 
 /* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
 
-/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\bs-mixims\caret.styl */
+
+/* line 15 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+
+/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker {
   top: 0;
   left: 0;
@@ -1538,7 +1548,7 @@ body.use-backdrop:before {
 /* Carets to visually notify 'clickable headers' */
 }
 
-/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 32 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker:before {
   content: '';
   display: inline-block;
@@ -1551,7 +1561,7 @@ body.use-backdrop:before {
   left: 6px;
 }
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 43 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker:after {
   content: '';
   display: inline-block;
@@ -1563,18 +1573,18 @@ body.use-backdrop:before {
   left: 7px;
 }
 
-/* line 52 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker > div {
   display: none;
 }
 
-/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 56 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker table {
   width: 100%;
   margin: 0;
 }
 
-/* line 59 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 60 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td,
 .DatePicker th {
   text-align: center;
@@ -1584,26 +1594,26 @@ body.use-backdrop:before {
   border-radius: 4px;
 }
 
-/* line 65 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-
 /* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 67 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td.day:hover {
-  background: #eee;
+  background: #ccc;
   cursor: pointer;
 }
 
-/* line 69 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 70 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td.day.disabled {
-  color: #eee;
+  color: #ccc;
 }
 
-/* line 71 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 72 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td.old,
 .DatePicker td.new {
   color: #777;
 }
 
-/* line 73 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td.active,
 .DatePicker td.active:hover {
   background-color: #006dcc;
@@ -1619,7 +1629,7 @@ body.use-backdrop:before {
   text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 }
 
-/* line 77 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 78 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td span {
   display: block;
   float: left;
@@ -1638,12 +1648,12 @@ body.use-backdrop:before {
   margin: 0;
 }
 
-/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td span:hover {
-  background: #eee;
+  background: #ccc;
 }
 
-/* line 94 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 95 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td span.active {
   background-color: #006dcc;
   background-image: -webkit-linear-gradient(top, #08c, #04c);
@@ -1658,47 +1668,47 @@ body.use-backdrop:before {
   text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 }
 
-/* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 99 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td span.old {
   color: #777;
 }
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-
 /* line 102 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 103 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker th.switch {
   width: 145px;
 }
 
-/* line 104 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 105 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker th.next,
 .DatePicker th.prev {
   font-size: 21px;
 }
 
-/* line 107 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 108 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker thead tr:first-child th {
   cursor: pointer;
 }
 
-/* line 109 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 110 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker thead tr:first-child th:hover {
-  background: #eee;
+  background: #ccc;
 }
 
-/* line 115 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-years tr > td,
 .DatePicker .DatePicker-months tr > td {
   padding: 0 !important;
 }
 
-/* line 118 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 119 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-months .switch,
 .DatePicker .DatePicker-years .switch {
   width: 72.4% !important;
 }
 
-/* line 121 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-months .prev,
 .DatePicker .DatePicker-months .next,
 .DatePicker .DatePicker-years .prev,
@@ -1706,9 +1716,9 @@ body.use-backdrop:before {
   width: 14% !important;
 }
 
-/* line 125 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 126 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 
-/* line 128 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 129 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-days th.switch:after,
 .DatePicker .DatePicker-months th.switch:after {
   content: '';
@@ -1722,11 +1732,11 @@ body.use-backdrop:before {
   border-left: 4px solid transparent;
 }
 
-/* line 132 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-
 /* line 133 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 
 /* line 134 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 135 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .input-append.date .add-on i,
 .input-prepend.date .add-on i {
   display: block;
@@ -1735,7 +1745,7 @@ body.use-backdrop:before {
   height: 16px;
 }
 
-/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
+/* line 378 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 
 /* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CardsDeck.styl */
 .CardsDeck {
@@ -1911,7 +1921,7 @@ body.use-backdrop:before {
 .SimpleList .SimpleList-item {
   position: relative;
   max-width: 100%;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ccc;
 /* Any row in the listview is expected to be a button/link, so color is reset */
 }
 
@@ -1943,13 +1953,13 @@ body.use-backdrop:before {
 .SimpleList .SimpleList-divider {
   text-align: left;
   padding: 3px 12px;
-  background-color: #eee;
+  background-color: #ccc;
 }
 
 /* line 51 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SimpleList.styl */
 .container .ListView .ListView-divider,
 .container-fluid .ListView .ListView-divider {
-  margin: 0 -10px 0 -10px;
+  margin: 0 -15px 0 -15px;
 }
 
 /* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadTile.styl */
@@ -2002,7 +2012,7 @@ body.use-backdrop:before {
 /* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
 .MessageTile {
   padding: 16px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ccc;
 }
 
 /* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
@@ -2077,7 +2087,7 @@ body.use-backdrop:before {
   color: #d9534f;
 }
 
-/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 36 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
@@ -2102,8 +2112,8 @@ body.use-backdrop:before {
 /* Like a row, it use full width
             but we enforce the internal gap
         */
-  margin-left: -10px;
-  margin-right: -10px;
+  margin-left: -15px;
+  margin-right: -15px;
   padding: 0;
   width: 100%;
   height: 50px;
@@ -2362,7 +2372,7 @@ body.use-backdrop:before {
   position: relative;
   font-size: 14px;
   line-height: 1;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 15px 10px 15px;
   margin: 0;
   text-align: left;
   font-weight: normal;
@@ -2375,7 +2385,7 @@ body.use-backdrop:before {
 /* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
-  margin: 0 -10px 0 -10px;
+  margin: 0 -15px 0 -15px;
 }
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
@@ -2424,7 +2434,7 @@ body.use-backdrop:before {
   overflow: auto;
   position: absolute;
   top: 0;
-  left: 10px;
+  left: 15px;
   right: 32px;
   bottom: 0;
 }
