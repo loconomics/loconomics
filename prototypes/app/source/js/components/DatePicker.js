@@ -68,7 +68,7 @@ var DPGlobal = {
     dates:{
         days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+        daysMin: ["S", "M", "Tu", "W", "Th", "F", "S", "S"],
         months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
         monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     },
@@ -177,7 +177,7 @@ DPGlobal.modesSet = {
 
 // Picker object
 var DatePicker = function(element, options) {
-    /*jshint maxstatements:32,maxcomplexity:24*/
+    /*jshint maxstatements:40,maxcomplexity:24*/
     this.element = $(element);
     this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
     
@@ -189,6 +189,8 @@ var DatePicker = function(element, options) {
                         .appendTo(this.isPlaceholder ? this.element : 'body')
                         .on('click', $.proxy(this.click, this));
     this.picker.addClass(this.isPlaceholder ? '' : 'dropdown-menu');
+    if (options.extraClasses)
+        this.picker.addClass(options.extraClasses);
     
     if (this.isPlaceholder) {
         this.picker.show();
@@ -437,7 +439,7 @@ DatePicker.prototype = {
             for(var r = 0; r < 6; r++) {
                 html.push('<tr>');
                 for(var c = 0; c < 7; c++) {
-                    html.push('<td class="' + classes.monthDay + '">&nbsp;</td>');
+                    html.push('<td class="' + classes.monthDay + '"><span>&nbsp;</span></td>');
                 }
                 html.push('</tr>');
             }
@@ -468,7 +470,7 @@ DatePicker.prototype = {
             dayTd
             .attr('class', classes.monthDay + ' ' + clsName)
             .data('date-time', prevMonth.toISOString())
-            .text(prevMonth.getDate());
+            .children('span').text(prevMonth.getDate());
 
             this.picker.trigger(events.dayRendered, [dayTd]);
 
@@ -546,62 +548,59 @@ DatePicker.prototype = {
         /*jshint maxcomplexity:16*/
         e.stopPropagation();
         e.preventDefault();
-        var target = $(e.target).closest('span, td, th');
+        var target = $(e.target).closest('span.month, span.year, td, th');
         if (target.length === 1) {
             var month, year;
-            switch(target[0].nodeName.toLowerCase()) {
-                case 'th':
-                    switch(target[0].className) {
-                        case 'switch':
-                            this.showMode(1);
-                            break;
-                        case 'prev':
-                        case 'next':
-                            this.moveDate(target[0].className);
-                            break;
-                    }
-                    break;
-                case 'span':
-                    if (target.is('.' + classes.month)) {
-                        month = target.parent().find('span').index(target);
-                        this.viewDate.setMonth(month);
-                    } else {
-                        year = parseInt(target.text(), 10)||0;
-                        this.viewDate.setFullYear(year);
-                    }
-                    if (this.viewMode !== 0) {
-                        this.date = new Date(this.viewDate);
-                        this.element.trigger({
-                            type: events.dateChanged,
-                            date: this.date,
-                            viewMode: DPGlobal.modes[this.viewMode].clsName
-                        });
-                    }
-                    this.showMode(-1);
+            
+            var completeMonthYear = function completeMonthYear() {
+                if (this.viewMode !== 0) {
+                    this.date = new Date(this.viewDate);
+                    this.element.trigger({
+                        type: events.dateChanged,
+                        date: this.date,
+                        viewMode: DPGlobal.modes[this.viewMode].clsName
+                    });
+                }
+                this.showMode(-1);
+                this.fill();
+                this.set();
+            }.bind(this);
+
+            if (target.hasClass('switch')) {
+                    this.showMode(1);
+            }
+            else if (target.hasClass('prev') ||
+                target.hasClass('next')) {
+                    this.moveDate(target[0].className);
+            }
+            else if (target.hasClass(classes.month)) {
+                month = target.parent().find('span').index(target);
+                this.viewDate.setMonth(month);
+                completeMonthYear();
+            }
+            else if (target.hasClass(classes.year)) {
+                year = parseInt(target.text(), 10)||0;
+                this.viewDate.setFullYear(year);
+                completeMonthYear();
+            }
+            else if (target.hasClass(classes.monthDay)) {
+                if (!target.is('.disabled')){
+                    var day = parseInt(target.text(), 10)||1;
+                    month = this.viewDate.getMonth();
+                    month += target.hasClass('old') ? -1 :
+                        target.hasClass('new') ? 1 : 0;
+
+                    year = this.viewDate.getFullYear();
+                    this.date = new Date(year, month, day,0,0,0,0);
+                    this.viewDate = new Date(year, month, Math.min(28, day),0,0,0,0);
                     this.fill();
                     this.set();
-                    break;
-                case 'td':
-                    if (target.is('.day') && !target.is('.disabled')){
-                        var day = parseInt(target.text(), 10)||1;
-                        month = this.viewDate.getMonth();
-                        if (target.is('.old')) {
-                            month -= 1;
-                        } else if (target.is('.new')) {
-                            month += 1;
-                        }
-                        year = this.viewDate.getFullYear();
-                        this.date = new Date(year, month, day,0,0,0,0);
-                        this.viewDate = new Date(year, month, Math.min(28, day),0,0,0,0);
-                        this.fill();
-                        this.set();
-                        this.element.trigger({
-                            type: events.dateChanged,
-                            date: this.date,
-                            viewMode: DPGlobal.modes[this.viewMode].clsName
-                        });
-                    }
-                    break;
+                    this.element.trigger({
+                        type: events.dateChanged,
+                        date: this.date,
+                        viewMode: DPGlobal.modes[this.viewMode].clsName
+                    });
+                }
             }
         }
     },

@@ -15,132 +15,209 @@
 @import '../bs-mixims/caret.styl';
  
 $datepickerButtonBackground() {
-    background-color: #006dcc;
-    background-image: linear-gradient(to bottom, #0088cc, #0044cc);
-    background-repeat: repeat-x;
-    border-color: #0044cc #0044cc #002a80;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    background-color: $brand-info-dark;
+    border-radius: 100%;
 }
  
 .DatePicker
-  top 0
-  left 0
-  padding 4px
-  margin-top 1px
-  border-radius 4px
-  
-  &:before
-    content ''
-    display inline-block
-    border-left 7px solid transparent
-    border-right 7px solid transparent
-    border-bottom 7px solid #ccc
-    border-bottom-color rgba(0, 0, 0, 0.2)
-    position absolute
-    top -7px
-    left 6px
-  
-  &:after
-    content ''
-    display inline-block
-    border-left 6px solid transparent
-    border-right 6px solid transparent
-    border-bottom 6px solid white
-    position absolute
-    top -6px
-    left 7px
-  
-  > div
-    display none
-  
-  table
-    width 100%
-    margin 0
-  
-  td, th
-    text-align center
-    width 20px
-    height 20px
+    top 0
+    left 0
+    padding 4px
+    margin-top 1px
     border-radius 4px
   
-  td
-    &.day:hover
-      background $gray-lighter
-      cursor pointer
-    &.day.disabled
-      color $gray-lighter
-    &.old, &.new
-      color $gray-light
-    &.active, &.active:hover
-      $datepickerButtonBackground()
-      color #fff
-      text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
-    span
-      display block
-      float left
-      cursor pointer
-      border-radius(4px)
+    &:before
+        content ''
+        display inline-block
+        border-left 7px solid transparent
+        border-right 7px solid transparent
+        border-bottom 7px solid #ccc
+        border-bottom-color rgba(0, 0, 0, 0.2)
+        position absolute
+        top -7px
+        left 6px
   
-      /* Percentual sizing to being responsive rather than the 
-        original fixed size
-      */
-      box-sizing border-box
-      width 25%
-      height 70px
-      line-height 70px
-      margin 0
-      
-      &:hover
-        background $gray-lighter
-      &.active
-        $datepickerButtonBackground()
-        color #fff
-        text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
-      &.old
-        color $gray-light
+    &:after
+        content ''
+        display inline-block
+        border-left 6px solid transparent
+        border-right 6px solid transparent
+        border-bottom 6px solid white
+        position absolute
+        top -6px
+        left 7px
   
-  th
-    font-weight normal
-    &.switch
-      width 145px
-    &.next, &.prev
-      font-size ($font-size-base * 1.5)
+    > div
+        display none
   
-  thead tr:first-child th
-    cursor pointer
-    &:hover
-      background $gray-lighter
+    table
+        width 100%
+        margin 0
 
-  /* Percentual sizing to being responsive rather than the 
+    // Because adding border
+    .DatePicker-days
+        tbody tr
+            border-bottom 1px solid $gray-lighter
+            // The addition of the border require us to remove that extra pixel
+            // from the padding:
+            td
+                padding: 5px 5px 4px 5px;
+  
+    td, th
+        text-align center
+        width 20px
+        height 20px
+        border-radius 4px
+
+        &.day
+            span
+                display inline-block
+                width 28px
+                line-height 28px
+                font-size 17px
+
+            &:hover
+                background $gray-lighter
+                cursor pointer
+            &.disabled
+                color $gray-lighter
+
+        &.old
+        &.new
+            color $gray-light
+
+        &.active
+        &.active:hover
+            color #fff
+            text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
+
+        &.active span
+            $datepickerButtonBackground()
+
+        &.active:hover
+            span
+                background none
+
+    span.month,
+    span.year
+        display block
+        float left
+        cursor pointer
+        border-radius(4px)
+
+        /* Percentual sizing to being responsive rather than the 
+           original fixed size
+        */
+        box-sizing border-box
+        width 25%
+        height 70px
+        line-height 70px
+        margin 0
+
+        &:hover
+            background $gray-lighter
+        &.active
+            $datepickerButtonBackground()
+            color #fff
+            text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
+        &.old
+            color $gray-light
+  
+    th
+        font-weight normal
+        &.switch
+            width 145px
+        &.next
+        &.prev
+            font-size ($font-size-base * 1.5)
+  
+    thead tr:first-child th
+        cursor pointer
+        &:hover
+            background $gray-lighter
+
+    /* Percentual sizing to being responsive rather than the 
     original fixed size
-  */
-  .DatePicker-years tr > td,
-  .DatePicker-months tr > td
-    padding 0 !important
-    
-  .DatePicker-months .switch,
-  .DatePicker-years .switch
-    width 72.4% !important
+    */
+    .DatePicker-years tr > td
+    .DatePicker-months tr > td
+        padding 0
 
-  .DatePicker-months .prev,
-  .DatePicker-months .next,
-  .DatePicker-years .prev,
-  .DatePicker-years .next
-    width 14% !important
-    
-  /* Carets to visually notify 'clickable headers' */
-  .DatePicker-days,
-  .DatePicker-months
-    th.switch:after
-      content: ''
-      $caret(6px)
+    .DatePicker-months .switch
+    .DatePicker-years .switch
+        width 72.4% !important
 
+    .DatePicker-months .prev
+    .DatePicker-months .next
+    .DatePicker-years .prev
+    .DatePicker-years .next
+        width 14% !important
+
+    /* Carets to visually notify 'clickable headers' */
+    .DatePicker-days
+    .DatePicker-months
+        th.switch:after
+            content: ''
+            $caret(6px)
+
+
+    /**
+        Enabling tags in the datepicker
+    **/
+    &.DatePicker--tagged
+        td.day
+            // General styles to be ready for tags
+            // IMPORTANT: changes to this sizing needs changes to months/years later
+            padding: 3px 5px 15px !important;
+            position: relative;
+
+            &:after
+              content ''
+              display block
+              margin auto
+              border-radius 100%
+              position absolute
+              left 0
+              right 0
+              bottom 7px
+              width 6px
+              height 6px
+          
+            // Possible tags
+            &.tag-muted
+              color $gray-lighter
+              &:after
+                  background $gray-lighter
+              
+            // This tag is empty: &.tag-blank
+            &.tag-dark
+                &:after
+                    background Black
+
+            for $color in $brand-colors
+                &.tag-{$color}
+                    &:after
+                        background $brand-colors[$color]
+
+        // Days of other months get muted
+        &.old
+        &.new
+            opacity .5
+            &:after
+                opacity .5
+
+        // IMPORTANT: Adapt size of months/years to keep the whole
+        // calendar in the same size independent of the view mode
+        span.month
+        span.year
+            height 102px
+            line-height 102px
 
 /* TOREVIEW: Addapt it with other name? */
 .input-append, .input-prepend
-  &.date
-    .add-on i
-      display block
-      cursor pointer
-      width 16px
-      height 16px
+    &.date
+        .add-on i
+            display block
+            cursor pointer
+            width 16px
+            height 16px

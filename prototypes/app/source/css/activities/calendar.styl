@@ -4,10 +4,6 @@
 // @require 'ActivityTitle.styl';
 
 [data-activity=calendar] {
-
-    $titleInnerHeight = 50px;
-    $titleGap = 10px;
-    $titleHeight = $titleInnerHeight + $titleGap;
     
     #calendarDailyView {
         padding-top: $SectionTitle-height;
@@ -32,7 +28,7 @@
         left: 10px;
         right: 10px;
         z-index: 100;
-        top: $titleInnerHeight;
+        top: $SectionTitle-height;
         // Set limits to avoid innusable full-width sizes:
         min-width: 250px;
         max-width: 500px;

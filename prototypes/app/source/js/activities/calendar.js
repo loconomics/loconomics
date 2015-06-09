@@ -24,7 +24,7 @@ var A = Activity.extends(function CalendarActivity() {
     this.$chooseNew = $('#calendarChooseNew');
     
     /* Init components */
-    this.$datepicker.show().datepicker();
+    this.$datepicker.show().datepicker({ extraClasses: 'DatePicker--tagged' });
     
     /* Event handlers */
     // Changes on currentDate
@@ -117,17 +117,20 @@ var A = Activity.extends(function CalendarActivity() {
                 if (id === $dateTd.data('date-time')) {
                     var cls = '';
                     switch(dateAvail.availableTag()) {
+                        case 'past':
+                            cls = 'tag-muted';
+                            break;
                         case 'full':
-                            cls = 'text-success';
+                            cls = 'tag-blank';
                             break;
                         case 'medium':
-                            cls = 'text-info';
+                            cls = 'tag-dark';
                             break;
                         case 'low':
-                            cls = 'text-warning';
+                            cls = 'tag-warning';
                             break;
                         case 'none':
-                            cls = 'text-danger';
+                            cls = 'tag-danger';
                             break;
                     }
                     if (cls) $dateTd.addClass(cls);

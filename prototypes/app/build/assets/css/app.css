@@ -1550,7 +1550,7 @@ body.use-backdrop:before {
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
 
-/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker {
   top: 0;
   left: 0;
@@ -1560,11 +1560,14 @@ body.use-backdrop:before {
   border-radius: 4px;
 /* Percentual sizing to being responsive rather than the 
     original fixed size
-  */
+    */
 /* Carets to visually notify 'clickable headers' */
+/**
+        Enabling tags in the datepicker
+    **/
 }
 
-/* line 32 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker:before {
   content: '';
   display: inline-block;
@@ -1577,7 +1580,7 @@ body.use-backdrop:before {
   left: 6px;
 }
 
-/* line 43 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 40 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker:after {
   content: '';
   display: inline-block;
@@ -1589,18 +1592,30 @@ body.use-backdrop:before {
   left: 7px;
 }
 
-/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker > div {
   display: none;
 }
 
-/* line 56 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker table {
   width: 100%;
   margin: 0;
 }
 
-/* line 60 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 58 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 59 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker .DatePicker-days tbody tr {
+  border-bottom: 1px solid #ccc;
+}
+
+/* line 63 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker .DatePicker-days tbody tr td {
+  padding: 5px 5px 4px 5px;
+}
+
+/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td,
 .DatePicker th {
   text-align: center;
@@ -1610,51 +1625,74 @@ body.use-backdrop:before {
   border-radius: 4px;
 }
 
-/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 72 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 
-/* line 67 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-.DatePicker td.day:hover {
+/* line 73 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker td.day span,
+.DatePicker th.day span {
+  display: inline-block;
+  width: 28px;
+  line-height: 28px;
+  font-size: 17px;
+}
+
+/* line 79 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker td.day:hover,
+.DatePicker th.day:hover {
   background: #ccc;
   cursor: pointer;
 }
 
-/* line 70 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-.DatePicker td.day.disabled {
+/* line 82 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker td.day.disabled,
+.DatePicker th.day.disabled {
   color: #ccc;
 }
 
-/* line 72 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 85 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td.old,
-.DatePicker td.new {
+.DatePicker th.old,
+.DatePicker td.new,
+.DatePicker th.new {
   color: #777;
 }
 
-/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 89 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker td.active,
-.DatePicker td.active:hover {
-  background-color: #006dcc;
-  background-image: -webkit-linear-gradient(top, #08c, #04c);
-  background-image: -moz-linear-gradient(top, #08c, #04c);
-  background-image: -o-linear-gradient(top, #08c, #04c);
-  background-image: -ms-linear-gradient(top, #08c, #04c);
-  background-image: linear-gradient(to bottom, #08c, #04c);
-  background-repeat: repeat-x;
-  border-color: #04c #04c #002a80;
-  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+.DatePicker th.active,
+.DatePicker td.active:hover,
+.DatePicker th.active:hover {
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 }
 
-/* line 78 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-.DatePicker td span {
+/* line 94 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker td.active span,
+.DatePicker th.active span {
+  background-color: #5bc0de;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+}
+
+/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker td.active:hover span,
+.DatePicker th.active:hover span {
+  background: none;
+}
+
+/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker span.month,
+.DatePicker span.year {
   display: block;
   float: left;
   cursor: pointer;
   -webkit-border-radius: 4px;
   border-radius: 4px;
 /* Percentual sizing to being responsive rather than the 
-        original fixed size
-      */
+           original fixed size
+        */
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -1664,70 +1702,67 @@ body.use-backdrop:before {
   margin: 0;
 }
 
-/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-.DatePicker td span:hover {
+/* line 133 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker span.month:hover,
+.DatePicker span.year:hover {
   background: #ccc;
 }
 
-/* line 95 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-.DatePicker td span.active {
-  background-color: #006dcc;
-  background-image: -webkit-linear-gradient(top, #08c, #04c);
-  background-image: -moz-linear-gradient(top, #08c, #04c);
-  background-image: -o-linear-gradient(top, #08c, #04c);
-  background-image: -ms-linear-gradient(top, #08c, #04c);
-  background-image: linear-gradient(to bottom, #08c, #04c);
-  background-repeat: repeat-x;
-  border-color: #04c #04c #002a80;
-  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+/* line 135 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker span.month.active,
+.DatePicker span.year.active {
+  background-color: #5bc0de;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 }
 
-/* line 99 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-.DatePicker td span.old {
+/* line 139 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker span.month.old,
+.DatePicker span.year.old {
   color: #777;
 }
 
-/* line 102 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 141 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker th {
   font-weight: normal;
 }
 
-/* line 104 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 143 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker th.switch {
   width: 145px;
 }
 
-/* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 145 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker th.next,
 .DatePicker th.prev {
   font-size: 21px;
 }
 
-/* line 109 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 148 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker thead tr:first-child th {
   cursor: pointer;
 }
 
-/* line 111 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 150 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker thead tr:first-child th:hover {
   background: #ccc;
 }
 
-/* line 117 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 153 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-years tr > td,
 .DatePicker .DatePicker-months tr > td {
-  padding: 0 !important;
+  padding: 0;
 }
 
-/* line 120 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 156 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-months .switch,
 .DatePicker .DatePicker-years .switch {
   width: 72.4% !important;
 }
 
-/* line 123 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 159 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-months .prev,
 .DatePicker .DatePicker-months .next,
 .DatePicker .DatePicker-years .prev,
@@ -1735,9 +1770,9 @@ body.use-backdrop:before {
   width: 14% !important;
 }
 
-/* line 127 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 165 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 
-/* line 130 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 167 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-days th.switch:after,
 .DatePicker .DatePicker-months th.switch:after {
   content: '';
@@ -1751,11 +1786,116 @@ body.use-backdrop:before {
   border-left: 4px solid transparent;
 }
 
-/* line 134 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 171 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 
-/* line 135 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 172 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day {
+  padding: 3px 5px 15px !important;
+  position: relative;
+}
 
-/* line 136 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+/* line 177 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day:after {
+  content: '';
+  display: block;
+  margin: auto;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 7px;
+  width: 6px;
+  height: 6px;
+}
+
+/* line 189 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day.tag-muted {
+  color: #ccc;
+}
+
+/* line 191 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day.tag-muted:after {
+  background: #ccc;
+}
+
+/* line 194 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 195 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day.tag-dark:after {
+  background: Black;
+}
+
+/* line 198 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 199 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day.tag-primary:after {
+  background: #00989a;
+}
+
+/* line 198 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 199 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day.tag-secondary:after {
+  background: #e0004f;
+}
+
+/* line 198 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 199 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day.tag-success:after {
+  background: #47b347;
+}
+
+/* line 198 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 199 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day.tag-info:after {
+  background: #5bc0de;
+}
+
+/* line 198 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 199 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day.tag-warning:after {
+  background: #f0ad4e;
+}
+
+/* line 198 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 199 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged td.day.tag-danger:after {
+  background: #d9534f;
+}
+
+/* line 202 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged.old,
+.DatePicker.DatePicker--tagged.new {
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+}
+
+/* line 205 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged.old:after,
+.DatePicker.DatePicker--tagged.new:after {
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+}
+
+/* line 211 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+.DatePicker.DatePicker--tagged span.month,
+.DatePicker.DatePicker--tagged span.year {
+  height: 102px;
+  line-height: 102px;
+}
+
+/* line 216 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 217 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
+
+/* line 218 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
 .input-append.date .add-on i,
 .input-prepend.date .add-on i {
   display: block;
@@ -2149,12 +2289,12 @@ body.use-backdrop:before {
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
-/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDailyView {
   padding-top: 34px;
 }
 
-/* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] .CalendarDateHeader {
   display: block;
   text-align: center;
@@ -2164,14 +2304,14 @@ body.use-backdrop:before {
   right: 0;
 }
 
-/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker {
 /* positioning */
   position: absolute;
   left: 10px;
   right: 10px;
   z-index: 100;
-  top: 50px;
+  top: 34px;
   min-width: 250px;
   max-width: 500px;
   margin: 0 auto;
@@ -2199,18 +2339,18 @@ body.use-backdrop:before {
   pointer-events: none;
 }
 
-/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:after {
   left: 50%;
 }
 
-/* line 51 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:before {
   left: 50%;
   margin-left: -1px;
 }
 
-/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 58 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker.is-visible {
   opacity: 1;
   -ms-filter: none;
@@ -2223,7 +2363,7 @@ body.use-backdrop:before {
   pointer-events: all;
 }
 
-/* line 69 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\appointment.styl */
+/* line 65 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\appointment.styl */
 
 /* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 

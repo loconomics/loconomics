@@ -28,7 +28,7 @@ var A = Activity.extends(function DatetimePickerActivity() {
     this.$timePicker = this.$activity.find('#datetimePickerTimePicker');
     
     /* Init components */
-    this.$datePicker.show().datepicker();
+    this.$datePicker.show().datepicker({ extraClasses: 'DatePicker--tagged' });
     
     this.registerHandler({
         target: this.$datePicker,
@@ -66,6 +66,8 @@ var A = Activity.extends(function DatetimePickerActivity() {
     });
     
     // Like in calendar:
+    // TODO Deduplicate
+    // TODO terrible performance, very click launchs this even if already done
     this.registerHandler({
         target: this.$datePicker,
         event: 'dayRendered',
@@ -80,19 +82,19 @@ var A = Activity.extends(function DatetimePickerActivity() {
                     var cls = '';
                     switch(dateAvail.availableTag()) {
                         case 'past':
-                            cls = 'text-muted';
+                            cls = 'tag-muted';
                             break;
                         case 'full':
-                            cls = 'text-success';
+                            cls = 'tag-blank';
                             break;
                         case 'medium':
-                            cls = 'text-info';
+                            cls = 'tag-dark';
                             break;
                         case 'low':
-                            cls = 'text-warning';
+                            cls = 'tag-warning';
                             break;
                         case 'none':
-                            cls = 'text-danger';
+                            cls = 'tag-danger';
                             break;
                     }
                     if (cls) $dateTd.addClass(cls);
