@@ -1,13 +1,12 @@
 <!-- Knockout Template inbox-tile -->
 <script type="text/html" id="inbox-tile-template">
-    <div class="MessageTile" data-bind="css: classNames">
-        <a href="#" data-bind="attr: { href: link }">
-            <h4 class="MessageTile-contact" data-bind="text: customer() && customer().fullName() || '(no name)'"></h4>
-            <div class="MessageTile-time" data-bind="text: quickDateTime"></div>
-            <p class="MessageTile-body">
-                <strong data-bind="visible: tag"><span data-bind="text: tag"></span> - </strong>
-                <span data-bind="text: subject"></span>
-            </p>
-        </a>
-    </div>
+    <a href="#" data-bind="attr: { href: link }, css: classNames"
+       class="MessageTile">
+        <h4 class="MessageTile-contact" data-bind="text: customer() && customer().fullName() || '(no name)'"></h4>
+        <div class="MessageTile-time" data-bind="text: quickDateTime"></div>
+        <p class="MessageTile-body">
+            <strong data-bind="visible: tag"><span data-bind="text: tag"></span> - </strong>
+            <span data-bind="text: subject"></span>
+        </p>
+    </a>
 </script>

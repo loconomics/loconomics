@@ -1030,16 +1030,16 @@
       <div>
          <h1 class="SectionTitle">Get more from Loconomics</h1>
 
-        <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
-          <div class="InfoTile"> <a href="#" class="ListView-item-content" data-bind="attr: { href: link }">
-                    <div class="InfoTile-icon" aria-hidden="true">
-                        <span data-bind="css: markerIcon"></span>
-                    </div>                
-                    <p class="InfoTile-content" data-bind="text: contentLine1()"></p>
-                </a>
-
-          </div>
-        </div>
+        <ul class="list-unstyled" id="homeGetMore" class="ListView ListView--twolines"
+        data-bind="foreach: getMore.items()">
+          <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
+                <div class="InfoTile-icon" aria-hidden="true">
+                    <span data-bind="css: markerIcon"></span>
+                </div>                
+                <p class="InfoTile-content" data-bind="text: contentLine1()"></p>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
     <!-- Inbox activity -->
@@ -1861,16 +1861,15 @@
     </script>
     <!-- Knockout Template inbox-tile -->
     <script type="text/html" id="inbox-tile-template">
-      <div class="MessageTile" data-bind="css: classNames">
-          <a href="#" data-bind="attr: { href: link }">
-              <h4 class="MessageTile-contact" data-bind="text: customer() && customer().fullName() || '(no name)'"></h4>
-              <div class="MessageTile-time" data-bind="text: quickDateTime"></div>
-              <p class="MessageTile-body">
-                  <strong data-bind="visible: tag"><span data-bind="text: tag"></span> - </strong>
-                  <span data-bind="text: subject"></span>
-              </p>
-          </a>
-      </div>
+      <a href="#" data-bind="attr: { href: link }, css: classNames"
+         class="MessageTile">
+          <h4 class="MessageTile-contact" data-bind="text: customer() && customer().fullName() || '(no name)'"></h4>
+          <div class="MessageTile-time" data-bind="text: quickDateTime"></div>
+          <p class="MessageTile-body">
+              <strong data-bind="visible: tag"><span data-bind="text: tag"></span> - </strong>
+              <span data-bind="text: subject"></span>
+          </p>
+      </a>
     </script>
     <!-- Knockout Template job-title-tile -->
     <script type="text/html" id="job-title-tile-template">

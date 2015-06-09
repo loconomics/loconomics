@@ -9,23 +9,18 @@
     $gap = 18px;    
     $heightLimit = $internalHeight + ($gap * 2);
     
+    // The tile can be a link, so ensure
+    // some details
+    color: $body-copy-color;
+    display: block;
+    text-decoration: none !important;
+    box-sizing: border-box;
+    padding: $gap 0;
+    
+    // Style
     border-bottom: 1px solid $gray-lighter;
     height: $heightLimit;
     overflow: hidden;
-    
-    // The link or just the content elements has
-    // the vertical padding, so links are bigger
-    > * {
-        box-sizing: border-box;
-        padding: $gap 0;
-    }
-    
-    // Content can be wrapped in a link
-    > a {
-        color: $body-copy-color;
-        display: block;
-        text-decoration: none !important;
-    }
     
     .InfoTile-icon {
         float: left;
@@ -42,5 +37,7 @@
         white-space: normal;
         word-wrap: break-word;
         margin: 0;
+        height: $internalHeight;
+        overflow: hidden;
     }
 }
