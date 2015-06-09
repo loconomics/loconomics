@@ -71,7 +71,14 @@
         <div data-bind="css: { 'is-loading': inbox.isLoading() }">
             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-        <div id="homeInbox" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }">
+        <div id="homeInbox" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
+        <div class="ListView">
+            <div class="ListView-item">
+                <a href="/inbox" class="btn btn-link btn-block ListView-item-content">
+                    <p>Go to inbox</p>
+                </a>
+                <a href="/inbox" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+            </div>
         </div>
     </div>
 
