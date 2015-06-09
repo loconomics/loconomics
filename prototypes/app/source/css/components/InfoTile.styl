@@ -1,0 +1,46 @@
+/**
+    InfoTile: a two lines tile with an icon and text
+    inside a link or not.
+**/
+.InfoTile {
+
+    // Two lines
+    $internalHeight = line-height-computed * 2;
+    $gap = 18px;    
+    $heightLimit = $internalHeight + ($gap * 2);
+    
+    border-bottom: 1px solid $gray-lighter;
+    height: $heightLimit;
+    overflow: hidden;
+    
+    // The link or just the content elements has
+    // the vertical padding, so links are bigger
+    > * {
+        box-sizing: border-box;
+        padding: $gap 0;
+    }
+    
+    // Content can be wrapped in a link
+    > a {
+        color: $body-copy-color;
+        display: block;
+        text-decoration: none !important;
+    }
+    
+    .InfoTile-icon {
+        float: left;
+        width: 70px;
+        text-align: center;
+        &, > * {
+            height: $internalHeight;
+            line-height: $internalHeight;        
+            font-size: 24px;
+        }
+    }
+
+    .InfoTile-content {
+        white-space: normal;
+        word-wrap: break-word;
+        margin: 0;
+    }
+}

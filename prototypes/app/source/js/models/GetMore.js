@@ -15,22 +15,19 @@ function GetMore(values) {
         profile: false,
         coop: true
     }, values);
-    
+
     var availableItems = {
         availability: new ListViewItem({
             contentLine1: 'Complete your availability to create a cleaner calendar',
-            markerIcon: 'glyphicon glyphicon-calendar',
-            actionIcon: 'glyphicon glyphicon-chevron-right'
+            markerIcon: 'glyphicon glyphicon-calendar'
         }),
         payments: new ListViewItem({
             contentLine1: 'Start accepting payments through Loconomics',
-            markerIcon: 'glyphicon glyphicon-usd',
-            actionIcon: 'glyphicon glyphicon-chevron-right'
+            markerIcon: 'glyphicon glyphicon-refresh'
         }),
         profile: new ListViewItem({
             contentLine1: 'Activate your profile in the marketplace',
-            markerIcon: 'glyphicon glyphicon-user',
-            actionIcon: 'glyphicon glyphicon-chevron-right'
+            markerIcon: 'glyphicon glyphicon-usd'
         }),
         coop: new ListViewItem({
             contentLine1: 'Learn more about our cooperative',

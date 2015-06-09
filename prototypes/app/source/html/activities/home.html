@@ -107,16 +107,13 @@
     <div>
         <h1 class="SectionTitle">Get more from Loconomics</h1>
         <div id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
-            <div class="ListView-item" data-bind="css: classNames">
-                <div class="ListView-item-marker">
-                    <p><span data-bind="css: markerIcon"></span></p>
-                </div>
-                <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }">
-                    <p data-bind="visible: !contentLine2(), text: contentLine1()"></p>
-                    <div data-bind="visible: contentLine2(), text: contentLine1()"></div>
-                    <div data-bind="visible: contentLine2(), text: contentLine2()"></div>
+            <div class="InfoTile">
+                <a href="#" class="ListView-item-content" data-bind="attr: { href: link }">
+                    <div class="InfoTile-icon" aria-hidden="true">
+                        <span data-bind="css: markerIcon"></span>
+                    </div>                
+                    <p class="InfoTile-content" data-bind="text: contentLine1()"></p>
                 </a>
-                <a href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
             </div>
         </div>
     </div>

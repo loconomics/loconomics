@@ -161,9 +161,9 @@ function setSomeTestingData(viewModel) {
     viewModel.performance.timeBooked.percent(0.93);
     
     viewModel.getMore.model.updateWith({
-        availability: true,
+        availability: false,
         payments: true,
         profile: true,
-        coop: true
+        coop: false
     });
 }
