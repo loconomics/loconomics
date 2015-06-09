@@ -20,8 +20,7 @@ var A = Activity.extends(function CalendarActivity() {
     /* Getting elements */
     this.$datepicker = this.$activity.find('#calendarDatePicker');
     this.$dailyView = this.$activity.find('#calendarDailyView');
-    this.$dateHeader = this.$activity.find('#calendarDateHeader');
-    this.$dateTitle = this.$dateHeader.children('.CalendarDateHeader-date');
+    this.$dateTitle = this.$activity.find('.CalendarDateHeader > .btn');
     this.$chooseNew = $('#calendarChooseNew');
     
     /* Init components */
@@ -80,28 +79,6 @@ var A = Activity.extends(function CalendarActivity() {
             // Change date
             this.$datepicker.datepicker('moveValue', dir, 'date');
 
-        }.bind(this)
-    });
-
-    // Changing date with buttons:
-    this.registerHandler({
-        target: this.$dateHeader,
-        event: 'click',
-        selector: '.CalendarDateHeader-switch',
-        handler: function(e) {
-            switch (e.currentTarget.getAttribute('href')) {
-                case '#prev':
-                    this.$datepicker.datepicker('moveValue', 'prev', 'date');
-                    break;
-                case '#next':
-                    this.$datepicker.datepicker('moveValue', 'next', 'date');
-                    break;
-                default:
-                    // Lets default:
-                    return;
-            }
-            e.preventDefault();
-            e.stopImmediatePropagation();
         }.bind(this)
     });
 

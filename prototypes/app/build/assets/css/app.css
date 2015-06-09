@@ -1159,13 +1159,28 @@ body.use-backdrop:before {
   text-transform: uppercase;
 }
 
-/* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+.SectionTitle.SectionTitle--withBtn {
+  padding: 0;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+.SectionTitle.SectionTitle--withBtn > .btn {
+  padding: 10px 15px 10px 15px;
+  width: 100%;
+  display: block;
+  color: #555;
+  border: none;
+  line-height: 14px;
+}
+
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
   margin: 0 -15px 0 -15px;
 }
 
-/* line 33 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
+/* line 45 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 
 /* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
 
@@ -1343,7 +1358,7 @@ body.use-backdrop:before {
 
 /* line 154 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar .SmartNavBar-btn h1 {
-  color: #555;
+  color: #00989a;
   font-size: 15px;
   display: inline;
   margin: 0 0.6em;
@@ -1351,10 +1366,10 @@ body.use-backdrop:before {
 
 /* line 165 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SmartNavBar.styl */
 .SmartNavBar h1 {
-  color: #555;
+  color: #00989a;
   display: block;
   padding: 0;
-  font-size: 17px;
+  font-size: 18px;
   white-space: nowrap;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
@@ -1362,7 +1377,7 @@ body.use-backdrop:before {
   overflow: hidden;
   box-flex: 1;
   margin: 0 65px;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 44px;
 }
 
@@ -2132,55 +2147,20 @@ body.use-backdrop:before {
 
 /* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDailyView {
-  padding-top: 60px;
+  padding-top: 34px;
 }
 
 /* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
-[data-activity=calendar] #calendarDateHeader {
+[data-activity=calendar] .CalendarDateHeader {
+  display: block;
+  text-align: center;
   position: absolute;
   top: 0;
-  z-index: 100;
-  background: White;
-  font-size: 20px;
-  margin: 0 0 10px;
-  text-align: left;
-  font-weight: bold;
-/* Like a row, it use full width
-            but we enforce the internal gap
-        */
-  margin-left: -15px;
-  margin-right: -15px;
-  padding: 0;
-  width: 100%;
-  height: 50px;
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-/* Decoration */
-  -webkit-box-shadow: 0 0 6px -1px #000;
-  box-shadow: 0 0 6px -1px #000;
-/* Button link */
+  left: 0;
+  right: 0;
 }
 
-/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
-[data-activity=calendar] #calendarDateHeader > a.btn {
-  padding: 14px 0 8px 0;
-  margin: 0;
-  font-size: 20px;
-  color: #333;
-  border: none;
-  line-height: 1.3em;
-}
-
-/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
-[data-activity=calendar] #calendarDateHeader > a.btn:active,
-[data-activity=calendar] #calendarDateHeader > a.btn:focus,
-[data-activity=calendar] #calendarDateHeader > a.btn:hover {
-  outline: none;
-  text-decoration: none;
-}
-
-/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker {
 /* positioning */
   position: absolute;
@@ -2215,18 +2195,18 @@ body.use-backdrop:before {
   pointer-events: none;
 }
 
-/* line 82 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:after {
   left: 50%;
 }
 
-/* line 85 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 51 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker .DatePicker:before {
   left: 50%;
   margin-left: -1px;
 }
 
-/* line 96 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 [data-activity=calendar] #calendarDatePicker.is-visible {
   opacity: 1;
   -ms-filter: none;
@@ -2239,7 +2219,7 @@ body.use-backdrop:before {
   pointer-events: all;
 }
 
-/* line 103 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\appointment.styl */
+/* line 69 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\appointment.styl */
 
 /* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
@@ -2418,7 +2398,22 @@ body.use-backdrop:before {
   text-transform: uppercase;
 }
 
-/* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+.SectionTitle.SectionTitle--withBtn {
+  padding: 0;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+.SectionTitle.SectionTitle--withBtn > .btn {
+  padding: 10px 15px 10px 15px;
+  width: 100%;
+  display: block;
+  color: #555;
+  border: none;
+  line-height: 14px;
+}
+
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
   margin: 0 -15px 0 -15px;
@@ -2506,7 +2501,7 @@ body.use-backdrop:before {
   display: none;
 }
 
-/* line 33 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
+/* line 45 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
 
 /* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 

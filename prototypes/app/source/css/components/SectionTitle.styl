@@ -25,6 +25,18 @@ $gray = lighten(#000, 33.5%);
     border: none;
     color: $gray;
     text-transform: uppercase;
+    
+    &.SectionTitle--withBtn {
+        padding: 0;
+        > .btn {
+            padding: $SectionTitle-topGap $container-padding-left $SectionTitle-bottomGap $container-padding-right;
+            width: 100%;
+            display: block;
+            color: $gray;
+            border: none;
+            line-height: $SectionTitle-fontSize;
+        }
+    }
 }
 /* Inside a container, remove the margin gap */
 .container .SectionTitle,

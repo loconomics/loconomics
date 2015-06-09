@@ -10,55 +10,19 @@
     $titleHeight = $titleInnerHeight + $titleGap;
     
     #calendarDailyView {
-        padding-top: $titleHeight;
+        padding-top: $SectionTitle-height;
     }
-
-    #calendarDateHeader {    
-        $lineHeight = 1.3em;
-        $padTop = 14px;
-        $padBottom = 8px;
+    
+    .CalendarDateHeader {
+        display: block;
+        text-align: center;
         
+        // We need full screen for the content
         // absolute vs fixed because the iOS problem with scrolling
         position: absolute;
         top: 0;
-        z-index: 100;
-        background: White;
-
-        font-size: 20px;    
-        margin: 0 0 $titleGap;
-        text-align: left;
-        font-weight: bold;
-        
-        /* Like a row, it use full width
-            but we enforce the internal gap
-        */
-        margin-left: 0 - $container-padding-left;
-        margin-right: 0 - $container-padding-right;
-        padding: 0;
-        width: 100%;
-        height: $titleInnerHeight;
-        box-sizing: content-box;
-
-        /* Decoration */
-        // NOTE: Respecting the $titleGap
-        box-shadow: 0 0 6px -1px black;
-
-        /* Button link */
-        > a.btn {
-            padding: $padTop 0 $padBottom 0;
-            margin: 0;
-            font-size: 20px;
-            color: $gray-dark;
-            border: none;
-            line-height: $lineHeight;
-
-            &:active,
-            &:focus,
-            &:hover {
-                outline: none;
-                text-decoration: none;
-            }
-        }
+        left: 0;
+        right: 0;
     }
 
     #calendarDatePicker {
