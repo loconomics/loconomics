@@ -199,12 +199,12 @@ $datepickerButtonBackground() {
                     &:after
                         background $brand-colors[$color]
 
-        // Days of other months get muted
-        &.old
-        &.new
-            opacity .5
-            &:after
+            // Days of other months get muted
+            &.old
+            &.new
                 opacity .5
+                &:after
+                    opacity .5
 
         // IMPORTANT: Adapt size of months/years to keep the whole
         // calendar in the same size independent of the view mode

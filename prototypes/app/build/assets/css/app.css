@@ -1869,16 +1869,16 @@ body.use-backdrop:before {
 }
 
 /* line 202 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-.DatePicker.DatePicker--tagged.old,
-.DatePicker.DatePicker--tagged.new {
+.DatePicker.DatePicker--tagged td.day.old,
+.DatePicker.DatePicker--tagged td.day.new {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
 
 /* line 205 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\DatePicker.styl */
-.DatePicker.DatePicker--tagged.old:after,
-.DatePicker.DatePicker--tagged.new:after {
+.DatePicker.DatePicker--tagged td.day.old:after,
+.DatePicker.DatePicker--tagged td.day.new:after {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
