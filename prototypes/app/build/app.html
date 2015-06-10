@@ -277,14 +277,38 @@
                 <em>Extra 'em' single line cut on single line large text test large text test large text test large text test large text test large text test</em>
             </div>
         </a>
-        </li> <a href="#" class="MessageTile">
+        </li>
+        <li><a class="ItemTile" href="#">
+            <div class="Tile-marker">
+                <p>$120</p>
+            </div>
+            <div class="Tile-content">
+                <div>ItemTile line one</div>
+                <em>More text.</em>
+            </div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="ItemTile" href="#">
+            <div class="Tile-marker">
+                <p>$15/hour</p>
+            </div>
+            <div class="Tile-content">
+                <div>ItemTile line one</div>
+                <em>More text. Cut on single line large text test large text test large text test large text test large text test large text test</em>
+            </div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a href="#" class="MessageTile">
             <h4 class="Tile-title">MessageTile title</h4>
             <div class="Tile-subtitle">some time ago</div>
             <p class="Tile-content">
                 <span>Message subject, Tile-content element here for multiline. Maybe need to be limited to 2 lines?</span>
             </p>
         </a>
- <a href="#" class="MessageTile">
+        </li>
+        <li><a href="#" class="MessageTile">
             <h4 class="Tile-title">Name lastname</h4>
             <div class="Tile-subtitle">today</div>
             <p class="Tile-content">
@@ -292,7 +316,8 @@
                 <span>Using a strong and a Bootstrap text-color class.</span>
             </p>
         </a>
- <a href="#" class="LeadTile">
+        </li>
+        <li><a href="#" class="LeadTile">
             <h3 class="Tile-title">
                 <div>LeadTile</div>
                 <div>
@@ -305,7 +330,8 @@
                 <em>emphasized in-line text</em>
             </p>
         </a>
- <a href="#" class="LeadTile">
+        </li>
+        <li><a href="#" class="LeadTile">
             <h3 class="Tile-title">
                 <div>6/21</div>
                 <div>
@@ -320,7 +346,7 @@
                 <em>$120</em>
             </p>
         </a>
-
+        </li>
       </ul>
     </div>
     <!-- Activity account -->
@@ -901,33 +927,26 @@
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle"
         data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
-        <div class="ListView ListView--twolines ListView--textualmarker ListView--largemarker"
-        data-bind="foreach: groupedPricing">
-          <div class="ListView-divider SectionTitle" data-bind="visible: !$root.isAdditionMode()"> <span data-bind="text: group"></span>
+        <div data-bind="foreach: groupedPricing">
+          <div class="SectionTitle" data-bind="visible: !$root.isAdditionMode()"> <span data-bind="text: group"></span>
 
           </div>
-          <!-- ko foreach: pricing -->
-          <div class="ListView-item">
-            <div class="ListView-item-marker">
-              <p data-bind="text: displayedPrice"></p>
-            </div> <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { click: $root.tapPricing }">
-                <div data-bind="visible: sessionsAndDuration()"><strong data-bind="text: name"></strong></div><div data-bind="text: sessionsAndDuration"></div>
-                <p data-bind="visible: !sessionsAndDuration()"><strong data-bind="text: name"></strong></p>
-              </a>
- <a href="#" class="ListView-item-action btn btn-link"
-            data-bind="visible: $root.isSelectionMode, event: { click: $root.tapPricing }, attr: { 'aria-pressed': isSelected }"
-            role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></a>
+          <ul class="TilesList TilesList--openEnd" data-bind="foreach: pricing">
+            <li><a href="#" class="ItemTile" data-bind="click: $root.tapPricing" role="button">
+                    <div class="Tile-marker"><p data-bind="text: displayedPrice"></p></div>
+                    <div class="Tile-content">
+                        <div data-bind="visible: sessionsAndDuration(), text: name"></div>
+                        <em data-bind="visible: sessionsAndDuration(), text: sessionsAndDuration"></em>
+                        <p data-bind="visible: !sessionsAndDuration(), text: name"></p>
+                    </div>
+                    <div class="Tile-icon">
+                      <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></span>
+                      <span data-bind="visible: !$root.isSelectionMode()"><span class="glyphicon glyphicon-edit"></span><span class="sr-only">Edit</span></span>
+                    </div>
+                </a>
+            </li>
+          </ul> <a class="LinkTile" type="button" href="#!freelancerPricingEditor/" data-bind="click: $root.tapNewPricing, text: type() && type().addNewLabel()"></a>
 
-            <a
-            href="#" class="ListView-item-action btn btn-link" data-bind="visible: !$root.isSelectionMode()"
-            role="button"><span class="glyphicon glyphicon-edit"></span><span class="sr-only">Edit</span>
-              </a>
-          </div>
-          <!-- /ko -->
-          <div class="ListView-item">
-            <button type="button" class="btn btn-link btn-block ListView-item-content"
-            data-href="#!freelancerPricingEditor/" data-bind="event: { click: $root.tapNewPricing }, text: type() && type().addNewLabel()"></button>
-          </div>
         </div>
       </div>
       <div class="isolated" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">

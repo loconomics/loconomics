@@ -44,35 +44,45 @@ Tile-singleLine($gap = 0) {
     overflow: hidden;
 }
 
+Tile-addP($height) {
+    > p {
+        display: table-cell;
+        height: $height;
+        vertical-align: middle;
+    }
+}
+
+Tile-addDiv() {
+    > div {
+        Tile-singleLine();
+        font-weight: normal;
+    }
+}
+
+Tile-addEm() {
+    > em {
+        Tile-singleLine();
+        font-style: normal;
+        color: $text-muted;
+    }
+}
+
 // Add style for a Tile-content child with multiline and single-line
 // sub-childs with common styles and the given number of lines as height limit.
 Tile-addContent($linesNumber) {
-    
+
     $internalHeight = line-height-computed * $linesNumber;
-    
+
     .Tile-content {
         white-space: normal;
         word-wrap: break-word;
         margin: 0;
         height: $internalHeight;
         overflow: hidden;
-        
-        > p {
-            display: table-cell;
-            height: $internalHeight;
-            vertical-align: middle;
-        }
-        
-        > div {
-            Tile-singleLine();
-            font-weight: normal;
-        }
 
-        > em {
-            Tile-singleLine();
-            font-style: normal;
-            color: $text-muted;
-        }
+        Tile-addP($internalHeight)
+        Tile-addDiv()
+        Tile-addEm()
     }
 }
 
