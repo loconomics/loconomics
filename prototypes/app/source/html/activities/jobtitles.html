@@ -1,44 +1,37 @@
 <!-- Jobtitles activity -->
 <div class="container-fluid" data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
-  <h2 class="SectionTitle">
-      <span data-bind="text: jobTitleName">Job Title</span>
-      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-  </h2>
-  <div class="ListView ListView--twolines ListView--textualmarker">
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p><span class="glyphicon glyphicon-tag"></span></p>
-      </div>
-      <a href="/freelancerPricing" class="btn btn-link btn-block ListView-item-content"
-         data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }">
-        <div>Pricing and services</div>
-        <div class="text-muted" data-bind="text: pricingCount"></div>
-      </a>
-      <a href="/freelancerPricing" class="btn btn-link ListView-item-action"
-         data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }"><span class="glyphicon glyphicon-edit"></span></a>
-    </div>
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p></p>
-      </div>
-      <a href="/serviceAddresses" class="btn btn-link btn-block ListView-item-content"
-         data-bind="attr: { href: '/serviceAddresses/' + jobTitleID() }">
-        <div>Service locations</div>
-        <div class="text-muted" data-bind="text: addressesCount"></div>
-      </a>
-      <a href="#" class="btn btn-link ListView-item-action"
-         data-bind="attr: { href: '/serviceAddresses/' + jobTitleID() }"><span class="glyphicon glyphicon-edit"></span></a>
-    </div>
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p></p>
-      </div>
-      <a href="/bookMeButton/106" class="btn btn-link btn-block ListView-item-content">
-        <p>Add a Book Now button to your website</p>
-      </a>
-      <a href="/bookMeButton/106" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-    </div>
-  </div>
+    <h2 class="SectionTitle">
+        <span data-bind="text: jobTitleName">Job Title</span>
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+    </h2>
+    <ul class="TilesList">
+        <li><a class="InfoTile" href="/freelancerPricing" data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Pricing and services</div>
+                <em data-bind="text: pricingCount"></em>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: '/serviceAddresses/' + jobTitleID() }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Service locations</div>
+                <em data-bind="text: addressesCount"></em>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: '/bookMeButton//' + jobTitleID() }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <p>Add Book Now button</p>
+            </div>
+        </a></li>
+    </ul>
 
-  <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
+    <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
 </div>
