@@ -2,27 +2,24 @@
     InfoTile: a two lines tile with an icon and text
     inside a link or not.
 **/
+@import 'Tile.styl'
+
 .InfoTile {
 
+    Tile()
+    
     // Two lines
     $internalHeight = line-height-computed * 2;
-    $gap = 18px;    
+    $gap = 18px;
     $heightLimit = $internalHeight + ($gap * 2);
     
-    // The tile can be a link, so ensure
-    // some details
-    color: $body-copy-color;
-    display: block;
-    text-decoration: none !important;
-    box-sizing: border-box;
     padding: $gap 0;
     
     // Style
-    border-bottom: 1px solid $gray-lighter;
     height: $heightLimit;
     overflow: hidden;
     
-    .InfoTile-icon {
+    .Tile-icon {
         float: left;
         width: 70px;
         text-align: center;
@@ -33,11 +30,28 @@
         }
     }
 
-    .InfoTile-content {
+    .Tile-content {
         white-space: normal;
         word-wrap: break-word;
         margin: 0;
         height: $internalHeight;
         overflow: hidden;
+        
+        > p {
+            display: table-cell;
+            height: $internalHeight;
+            vertical-align: middle;
+        }
+        
+        > div {
+            Tile-singleLine();
+            font-weight: normal;
+        }
+
+        > em {
+            Tile-singleLine();
+            font-style: normal;
+            color: $text-muted;
+        }
     }
 }

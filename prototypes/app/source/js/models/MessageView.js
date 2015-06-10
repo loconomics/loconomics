@@ -92,10 +92,10 @@ MessageView.fromThread = function(app, thread) {
     var tag, classNames;
     if (msg.auxT() === 'Booking') {
         tag = 'Booking';
-        classNames = 'MessageTile--tag-success';
+        classNames = 'Tile--tag-success';
     } else if (msg.auxT() === 'BookingRequest') {
         tag = 'Booking request';
-        classNames = 'MessageTile--tag-warning';
+        classNames = 'Tile--tag-warning';
     }
     
     return new MessageView({

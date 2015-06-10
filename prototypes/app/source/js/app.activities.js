@@ -5,7 +5,18 @@
 **/
 'use strict';
 
+var Activity = require('./components/Activity');
+var EmptyActivity = Activity.extends(function EmptyActivity() {
+
+    Activity.apply(this, arguments);
+
+    this.accessLevel = null;
+    this.viewModel = {};
+    this.navBar = Activity.createSectionNavBar();
+});
+
 module.exports = {
+    '_test': EmptyActivity,
     'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),

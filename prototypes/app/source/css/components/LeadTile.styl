@@ -5,27 +5,22 @@
     Used for the Upcoming Booking on dashboard, but made reusable.
 **/
 
-.LeadTile {
-    text-align: left;
-    
-    // Content can be wrapped in a link
-    > a {
-        display: block;
-        color: $body-copy-color;
-        
-        &:hover {
-            text-decoration: none;
-        }
-    }
+@import 'Tile.styl'
 
-    .LeadTile-title {
+.LeadTile {
+    
+    Tile();
+
+    text-align: left;
+
+    .Tile-title {
         font-size: 2.6em;
         color: $brand-primary;
         line-height: 1em;
         margin: .6em 0;
     }
     
-    .LeadTile-subtitle {
+    .Tile-subtitle {
         font-weight: bold;
         font-size: 1.2em;
         color: $body-copy-color;
@@ -33,7 +28,7 @@
         margin: .5em 0;
     }
     
-    .LeadTile-content {
+    .Tile-content {
         margin-bottom: 1em;
 
         em {

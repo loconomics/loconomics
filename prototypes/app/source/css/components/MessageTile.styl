@@ -1,29 +1,27 @@
 /**
     MessageTile
 **/
+
+@import 'Tile.styl'
+
 .MessageTile {
     
+    Tile();
+    
     padding: 16px 0;
-    border-bottom: 1px solid $gray-lighter;
     
-    // The tile can be a link, so ensure
-    // some details
-    color: $body-copy-color;
-    display: block;
-    text-decoration: none !important;
-    
-    .MessageTile-contact {
+    .Tile-title {
         font-size: 1.1em;
         font-weight: bold;
         display: inline;
     }
     
-    .MessageTile-time {
+    .Tile-subtitle {
         color: $gray-light;
         float: right;
     }
     
-    .MessageTile-body {
+    .Tile-content {
         margin: .6em 0 0 0;
     }
     
@@ -31,9 +29,8 @@
         font-weight: bold;
     }
     
-    //$colors = 'primary' 'success' 'info' 'warning' 'danger'
     for $color in $brand-colors {
-        &.MessageTile--tag-{$color} {
+        &.Tile--tag-{$color} {
             strong {
                 color: $brand-colors[$color];
             }

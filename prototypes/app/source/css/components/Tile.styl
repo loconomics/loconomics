@@ -1,0 +1,40 @@
+/**
+    Tile base class and mixim.
+    
+    'Tile-' works as namespace for generic children elements used in
+    based tile classes; names in use: Tile-title, Tile-content, Tile-icon,
+    Tile-subtitle.
+    
+    Modifiers using 'Tile-' as prefix, rather than subtiles names:
+    Tile--tag-** (one per each $brand-colors)
+**/
+
+Tile() {
+    // The tile can be a link, so ensure
+    // some details
+    color: $body-copy-color;
+    display: block;
+    text-decoration: none !important;
+    box-sizing: border-box;
+    position: relative;
+    
+    &:active,
+    &:hover {
+        &, * {
+            color: link-hover-color !important;
+        }
+    }
+}
+
+Tile-singleLine($gap = 0) {
+    display: block;
+    box-sizing: content-box;
+    height: line-height-computed;
+    padding-top: $gap;
+    padding-bottom: $gap;
+    
+    // Cut if out of single line
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

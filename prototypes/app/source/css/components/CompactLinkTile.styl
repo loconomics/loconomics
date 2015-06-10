@@ -1,0 +1,31 @@
+/**
+    CompactLinkTile: single line tile of indented text
+    and pointing icon on the right, minimum padding,
+    just for simple link blocks.
+**/
+@import 'Tile.styl'
+
+.CompactLinkTile {
+
+    Tile()
+    
+    $gap = 10px
+    
+    .Tile-content {
+        Tile-singleLine($gap);
+        box-sizing: content-box;
+
+        padding-left: 30px;
+        padding-right: 20px;
+    }
+
+    .Tile-icon {
+        position: absolute;
+        right: 0px;
+        top: $gap;
+        bottom: $gap;
+        max-width: 16px;
+        overflow: hidden;
+        height: line-height-computed;
+    }
+}

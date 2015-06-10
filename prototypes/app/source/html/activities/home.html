@@ -12,10 +12,10 @@
         </h1>    
         <div id="homeNextBooking"
            data-bind="css: { 'is-loading': nextBooking.isLoading() }">
-            <div class="LeadTile" data-bind="with: nextBooking">
-                <a href="#"
+            <div data-bind="with: nextBooking">
+                <a href="#" class="LeadTile"
                    data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
-                    <h3 class="LeadTile-title">
+                    <h3 class="Tile-title">
                         <div data-bind="text: displayedDate"></div>
                         <div>
                             <span data-bind="text: displayedStartTime"></span>
@@ -23,8 +23,8 @@
                             <span data-bind="text: displayedEndTime"></span>
                         </div>
                     </h3>
-                    <h4 class="LeadTile-subtitle" data-bind="text: customer() && customer().fullName()"></h4>
-                    <p class="LeadTile-content">
+                    <h4 class="Tile-subtitle" data-bind="text: customer() && customer().fullName()"></h4>
+                    <p class="Tile-content">
                         <span data-bind="text: servicesSummary()"></span>
                         <em data-bind="text: price, format: { type: 'number', format: '$0,0' }"></em>
                     </p>
@@ -39,24 +39,17 @@
         <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-        <div id="homeUpcomingBookings" class="SimpleList" data-bind="foreach: upcomingBookings.items">
-            <div class="SimpleList-item">
-                <a href="#" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
-                    <p>
-                        <strong data-bind="text: quantity"></strong>
-                        <span data-bind="text: phrase"></span>
-                    </p>
-                </a>
-            </div>
-        </div>
-        <div class="ListView">
-            <div class="ListView-item">
-                <a href="/calendar" class="btn btn-link btn-block ListView-item-content">
-                    <p>Go to calendar</p>
-                </a>
-                <a href="/calendar" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-            </div>
-        </div>
+        <ul id="homeUpcomingBookings" class="TilesList" data-bind="foreach: upcomingBookings.items">
+            <li><a href="#" class="LineTile"
+               data-bind="attr: { href: url }">
+                <strong data-bind="text: quantity"></strong>
+                <span data-bind="text: phrase"></span>
+            </a></li>
+        </ul>
+        <a class="CompactLinkTile" href="/calendar">
+            <div class="Tile-content">Go to calendar</div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+        </a>
     </div>
   
     <div>
@@ -71,47 +64,37 @@
         <div data-bind="css: { 'is-loading': inbox.isLoading() }">
             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-        <div id="homeInbox" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
-        <div class="ListView">
-            <div class="ListView-item">
-                <a href="/inbox" class="btn btn-link btn-block ListView-item-content">
-                    <p>Go to inbox</p>
-                </a>
-                <a href="/inbox" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-            </div>
-        </div>
+        <div id="homeInbox" class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
+        <a class="CompactLinkTile" href="/inbox">
+            <div class="Tile-content">Go to inbox</div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+        </a>
     </div>
 
     <div>
         <h1 class="SectionTitle">Performance</h1>
-        <div id="homePerformance" class="SimpleList" data-bind="foreach: performance.items">
-            <div class="SimpleList-item">
-                <a href="#" data-bind="attr: { href: link }" class="btn btn-link btn-block ListView-item-content">
-                    <p>
-                        <strong data-bind="text: markerLine1"></strong>
-                        <span data-bind="text: contentLine1"></span>
-                    </p>
+        <ul id="homePerformance" class="TilesList" data-bind="foreach: performance.items">
+            <li><a href="#" class="LineTile"
+                   data-bind="attr: { href: link }">
+                    <strong data-bind="text: markerLine1"></strong>
+                    <span data-bind="text: contentLine1"></span>
                 </a>
-            </div>
-        </div>
-        <div class="ListView">
-            <div class="ListView-item">
-                <a href="/performance" class="btn btn-link btn-block ListView-item-content">
-                    <p>Go to performance</p>
-                </a>
-                <a href="/performance" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-            </div>
-        </div>
+            </li>
+        </ul>
+        <a class="CompactLinkTile" href="/performance">
+            <div class="Tile-content">Go to performance</div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+        </a>
     </div>
     
     <div>
         <h1 class="SectionTitle">Get more from Loconomics</h1>
-        <ul class="list-unstyled" id="homeGetMore" class="ListView ListView--twolines" data-bind="foreach: getMore.items()">
+        <ul class="TilesList" id="homeGetMore" data-bind="foreach: getMore.items()">
             <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
-                <div class="InfoTile-icon" aria-hidden="true">
+                <div class="Tile-icon" aria-hidden="true">
                     <span data-bind="css: markerIcon"></span>
                 </div>                
-                <p class="InfoTile-content" data-bind="text: contentLine1()"></p>
+                <div class="Tile-content"><p data-bind="text: contentLine1()"></p></div>
             </a></li>
         </ul>
     </div>
