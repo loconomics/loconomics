@@ -10,12 +10,8 @@
     <div data-bind="css: { 'is-loading': isLoading }">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
     </div>
-    
-    <div class="ListView ListView--twolines ListView--textualmarker"
-         data-bind="visible: jobTitleID() === 0, with: jobTitles">
-        <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile } -->
-        <!-- /ko -->
-    </div>
+
+    <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
     
   <div id="addressesListView">
     <div class="ListView ListView--twolines" data-bind="foreach: addresses">

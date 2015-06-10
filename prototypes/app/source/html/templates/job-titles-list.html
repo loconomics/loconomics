@@ -1,0 +1,11 @@
+<!-- Knockout Template job-title-list -->
+<script type="text/html" id="job-titles-list-template">
+    <ul class="TilesList" data-bind="foreach: jobTitles">
+        <li>
+            <button class="LinkTile" type="button" data-bind="click: $parent.selectJobTitle">
+                <div class="Tile-content"><p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p></div>
+                <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right"></span></div>
+            </button>
+        </li>
+    </ul>
+</script>

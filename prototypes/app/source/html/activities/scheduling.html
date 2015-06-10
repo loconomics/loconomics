@@ -3,8 +3,7 @@
     <h2 class="SectionTitle">Services, Pricing, &amp; Locations
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
-    <ul class="TilesList" data-bind="template: { name: 'job-title-tile-template', foreach: userJobProfile }">
-    </ul>
+    <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle"></app-job-titles-list>
     <a class="CompactLinkTile" href="/addJobTitles">
         <div class="Tile-content text-muted">Add a job title</div>
         <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>

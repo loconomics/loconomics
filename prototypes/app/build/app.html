@@ -899,12 +899,8 @@
     <div class="container-fluid" data-activity="freelancerPricing" data-bind="css: { 'is-loading': isLoading }">
       <div>
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-        <div class="ListView ListView--twolines ListView--textualmarker"
-        data-bind="visible: jobTitleID() === 0, with: jobTitles">
-          <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile
-          } -->
-          <!-- /ko -->
-        </div>
+        <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle"
+        data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
         <div class="ListView ListView--twolines ListView--textualmarker ListView--largemarker"
         data-bind="foreach: groupedPricing">
           <div class="ListView-divider SectionTitle" data-bind="visible: !$root.isAdditionMode()"> <span data-bind="text: group"></span>
@@ -1420,7 +1416,7 @@
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
 
-      <ul class="TilesList" data-bind="template: { name: 'job-title-tile-template', foreach: userJobProfile }"></ul> <a class="CompactLinkTile" href="/addJobTitles">
+      <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle"></app-job-titles-list> <a class="CompactLinkTile" href="/addJobTitles">
         <div class="Tile-content text-muted">Add a job title</div>
         <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
     </a>
@@ -1553,11 +1549,8 @@
       <div data-bind="css: { 'is-loading': isLoading }">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
       </div>
-      <div class="ListView ListView--twolines ListView--textualmarker" data-bind="visible: jobTitleID() === 0, with: jobTitles">
-        <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile
-        } -->
-        <!-- /ko -->
-      </div>
+      <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle"
+      data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
       <div id="addressesListView">
         <div class="ListView ListView--twolines" data-bind="foreach: addresses">
           <div class="ListView-item">
@@ -1974,15 +1967,16 @@
           </p>
       </a>
     </script>
-    <!-- Knockout Template job-title-tile -->
-    <script type="text/html" id="job-title-tile-template">
-      <li>
-          <button class="LinkTile"
-             data-bind="event: { click: $parent.selectJobTitle }">
-              <div class="Tile-content"><p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p></div>
-              <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right"></span></div>
-          </button>
-      </li>
+    <!-- Knockout Template job-title-list -->
+    <script type="text/html" id="job-titles-list-template">
+      <ul class="TilesList" data-bind="foreach: jobTitles">
+          <li>
+              <button class="LinkTile" type="button" data-bind="click: $parent.selectJobTitle">
+                  <div class="Tile-content"><p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p></div>
+                  <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right"></span></div>
+              </button>
+          </li>
+      </ul>
     </script>
     <!-- Knockout Template list-view, for use with a generic ListView/Item
     viewmodel, helps as doc reference for other uses too -->
