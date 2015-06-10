@@ -3,6 +3,7 @@
 **/
 'use strict';
 var $ = require('jquery');
+require('jquery.ajaxQueue');
 
 function lowerFirstLetter(n) {
     return n && n[0] && n[0].toLowerCase && (n[0].toLowerCase() + n.slice(1)) || n;
@@ -67,7 +68,7 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
     // Using a promise to avoid the differences and problems of the jQuery thenable
     // object, but attaching its original value as a new property 'xhr' of the promise
     // created for advanced use.
-    var xhr = $.ajax({
+    var xhr = $.ajaxQueue({
         url: url,
         // Avoid cache for data.
         cache: false,

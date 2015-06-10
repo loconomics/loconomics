@@ -38,6 +38,11 @@ module.exports = function(/*grunt*/) {
                     path: './vendor/bootstrap-switch/js/bootstrap-switch.js',
                     exports: null,
                     depends: { 'jquery': 'jquery', 'bootstrap': 'bootstrap' }
+                },
+                'jquery.ajaxQueue': {
+                    path: './vendor/caoglish/jquery.ajaxQueue.js',
+                    exports: null,
+                    depends: { 'jquery': 'jquery' }
                 }
             }
         }
