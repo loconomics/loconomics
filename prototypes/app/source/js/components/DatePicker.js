@@ -32,7 +32,8 @@ var classes = {
     monthDay: 'day',
     month: 'month',
     year: 'year',
-    years: 'DatePicker-years'
+    years: 'DatePicker-years',
+    weekDays: 'DatePicker-weekDays'
 };
 
 var events = {
@@ -68,7 +69,7 @@ var DPGlobal = {
     dates:{
         days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        daysMin: ["S", "M", "Tu", "W", "Th", "F", "S", "S"],
+        daysMin: ["Su", "M", "Tu", "W", "Th", "F", "Sa", "Su"],
         months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
         monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     },
@@ -395,7 +396,7 @@ DatePicker.prototype = {
     
     fillDow: function(){
         var dowCnt = this.weekStart;
-        var html = '<tr>';
+        var html = '<tr class="' + classes.weekDays + '">';
         while (dowCnt < this.weekStart + 7) {
             html += '<th class="dow">'+DPGlobal.dates.daysMin[(dowCnt++)%7]+'</th>';
         }

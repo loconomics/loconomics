@@ -14,16 +14,11 @@
 @import 'nib';
 @import '../bs-mixims/caret.styl';
  
-$datepickerButtonBackground() {
-    background-color: $brand-info-dark;
-    border-radius: 100%;
-}
- 
 .DatePicker
     top 0
     left 0
-    padding 4px
-    margin-top 1px
+    padding 0 // There is enough cell padding and any extra make it strange with the new borders
+    margin 0
     border-radius 4px
   
     &:before
@@ -54,20 +49,21 @@ $datepickerButtonBackground() {
         width 100%
         margin 0
 
-    // Because adding border
     .DatePicker-days
         tbody tr
-            border-bottom 1px solid $gray-lighter
-            // The addition of the border require us to remove that extra pixel
-            // from the padding:
             td
-                padding: 5px 5px 4px 5px;
+                padding: 5px;
+
+    .DatePicker-weekDays th
+        height 30px
+        border-radius 4px
+        vertical-align bottom
+        padding-bottom 0 !important
   
     td, th
         text-align center
         width 20px
         height 20px
-        border-radius 4px
 
         &.day
             span
@@ -82,17 +78,20 @@ $datepickerButtonBackground() {
             &.disabled
                 color $gray-lighter
 
+        // Days of other months get muted
         &.old
         &.new
             color $gray-light
-
+            opacity .5
+            
         &.active
         &.active:hover
             color #fff
             text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
 
         &.active span
-            $datepickerButtonBackground()
+            background-color: $brand-info-dark;
+            border-radius: 100%;
 
         &.active:hover
             span
@@ -110,14 +109,14 @@ $datepickerButtonBackground() {
         */
         box-sizing border-box
         width 25%
-        height 70px
-        line-height 70px
+        height 86px
+        line-height 86px
         margin 0
 
         &:hover
             background $gray-lighter
         &.active
-            $datepickerButtonBackground()
+            background-color: $brand-info-dark;
             color #fff
             text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
         &.old
@@ -131,10 +130,12 @@ $datepickerButtonBackground() {
         &.prev
             font-size ($font-size-base * 1.5)
   
-    thead tr:first-child th
-        cursor pointer
-        &:hover
-            background $gray-lighter
+    thead tr:first-child
+        background $gray-background
+        th
+            cursor pointer
+            &:hover
+                background $gray-lighter
 
     /* Percentual sizing to being responsive rather than the 
     original fixed size
@@ -165,10 +166,15 @@ $datepickerButtonBackground() {
         Enabling tags in the datepicker
     **/
     &.DatePicker--tagged
+        // Border not in latest row
+        .DatePicker-days tr:last-child td
+            border-bottom-color transparent !important
+
         td.day
             // General styles to be ready for tags
             // IMPORTANT: changes to this sizing needs changes to months/years later
-            padding: 3px 5px 15px !important;
+            padding: 3px 5px 14px !important;
+            border-bottom 1px solid $gray-lighter
             position: relative;
 
             &:after
@@ -199,10 +205,9 @@ $datepickerButtonBackground() {
                     &:after
                         background $brand-colors[$color]
 
-            // Days of other months get muted
+            // Tag in days of other months get even more muted:
             &.old
             &.new
-                opacity .5
                 &:after
                     opacity .5
 
@@ -213,7 +218,12 @@ $datepickerButtonBackground() {
             height 102px
             line-height 102px
 
-/* TOREVIEW: Addapt it with other name? */
+    $.DatePicker-hasLegend
+        border-bottom 1px solid $gray-lighter
+            
+/*
+    TOREVIEW: Addapt it with other name?
+*/
 .input-append, .input-prepend
     &.date
         .add-on i
