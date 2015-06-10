@@ -30,28 +30,5 @@
         }
     }
 
-    .Tile-content {
-        white-space: normal;
-        word-wrap: break-word;
-        margin: 0;
-        height: $internalHeight;
-        overflow: hidden;
-        
-        > p {
-            display: table-cell;
-            height: $internalHeight;
-            vertical-align: middle;
-        }
-        
-        > div {
-            Tile-singleLine();
-            font-weight: normal;
-        }
-
-        > em {
-            Tile-singleLine();
-            font-style: normal;
-            color: $text-muted;
-        }
-    }
+    Tile-addContent(2);
 }

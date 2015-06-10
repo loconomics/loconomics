@@ -38,3 +38,49 @@ Tile-singleLine($gap = 0) {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+// Add style for a Tile-content child with multiline and single-line
+// sub-childs with common styles and the given number of lines as height limit.
+Tile-addContent($linesNumber) {
+    
+    $internalHeight = line-height-computed * $linesNumber;
+    
+    .Tile-content {
+        white-space: normal;
+        word-wrap: break-word;
+        margin: 0;
+        height: $internalHeight;
+        overflow: hidden;
+        
+        > p {
+            display: table-cell;
+            height: $internalHeight;
+            vertical-align: middle;
+        }
+        
+        > div {
+            Tile-singleLine();
+            font-weight: normal;
+        }
+
+        > em {
+            Tile-singleLine();
+            font-style: normal;
+            color: $text-muted;
+        }
+    }
+}
+
+/** Sample for future addition of aditional styling for tags.
+    Right now is not useful because the same can be done 
+    directly using Bootstrap text-color classes on desired text
+Tile-addTagSupport() {
+    for $color in $brand-colors {
+        &.Tile--tag-{$color} {
+            strong {
+                color: $brand-colors[$color];
+            }
+        }
+    }
+}
+**/

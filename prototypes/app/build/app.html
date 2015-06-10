@@ -194,42 +194,12 @@
        <h2 class="SectionTitle">Tiles styles (SectionTitle)</h2>
 
       <ul class="TilesList">
-        <li><a class="InfoTile" href="#">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh"></span>
-            </div>                
-            <div class="Tile-content"><p>
-                InfoTile p content
-            </p></div>
+        <li><a class="LineTile" href="#">
+            A very simple LineTile
         </a>
         </li>
-        <li><a class="InfoTile" href="#">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh"></span>
-            </div>                
-            <div class="Tile-content"><p>
-                InfoTile p content, allows from 1 to 2 lines that cut large text test large text test large text test large text test large text test
-            </p></div>
-        </a>
-        </li>
-        <li><a class="InfoTile" href="#">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh"></span>
-            </div>                
-            <div class="Tile-content">
-                <div>InfoTile single line</div>
-                <em>Extra 'em' single line</em>
-            </div>
-        </a>
-        </li>
-        <li><a class="InfoTile" href="#">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh"></span>
-            </div>                
-            <div class="Tile-content">
-                <div>InfoTile single line, cut on single line large text test large text test large text test large text test large text test large text test</div>
-                <em>Extra 'em' single line cut on single line large text test large text test large text test large text test large text test large text test</em>
-            </div>
+        <li><a class="LineTile" href="#">
+            LineTile. No need for 'content' wrappers.
         </a>
         </li>
         <li><a class="CompactLinkTile" href="#">
@@ -242,12 +212,68 @@
             <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
         </a>
         </li>
-        <li><a class="LineTile" href="#">
-            A very simple LineTile. No need for 'content' wrappers.
+        <li><a class="LinkTile" href="#">
+            <div class="Tile-content"><p>LinkTile for two lines links, 'p' content.</p></div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
         </a>
         </li>
-        <li><a class="LineTile" href="#">
-            LineTile. No need for 'content' wrappers.
+        <li><a class="LinkTile" href="#">
+            <div class="Tile-content">LinkTile for two lines links. Long text cut on second line. large text test large text test large text test large text test large text test large text test</div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="LinkTile" href="#">
+            <div class="Tile-content">
+                <div>LinkTile line one</div>
+                <em>Extra 'em' single line.</em>
+            </div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="LinkTile" href="#">
+            <div class="Tile-content">
+                <div>LinkTile line one</div>
+                <em>Using strong and <strong class="text-danger">a Bootstrap class-color</strong>. Cut on single line large text test large text test large text test large text test large text test large text test</em>
+            </div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="#">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content"><p>
+                InfoTile p content
+            </p></div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="#">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content"><p>
+                InfoTile p content, allows from 1 to 2 lines that cut large text test large text test large text test large text test large text test
+            </p></div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="#">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>InfoTile single line</div>
+                <em>Extra 'em' single line</em>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="#">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>InfoTile single line, cut on single line large text test large text test large text test large text test large text test large text test</div>
+                <em>Extra 'em' single line cut on single line large text test large text test large text test large text test large text test large text test</em>
+            </div>
         </a>
         </li> <a href="#" class="MessageTile">
             <h4 class="Tile-title">MessageTile title</h4>
@@ -256,12 +282,12 @@
                 <span>Message subject, Tile-content element here for multiline. Maybe need to be limited to 2 lines?</span>
             </p>
         </a>
- <a href="#" class="MessageTile Tile--tag-success">
+ <a href="#" class="MessageTile">
             <h4 class="Tile-title">Name lastname</h4>
             <div class="Tile-subtitle">today</div>
             <p class="Tile-content">
-                <strong><span>Tag text</span> - </strong>
-                <span>Content text can include a tagged text as a strong element, with a Tile--tag-sucess class on container, and similar class names based on the semantic colors</span>
+                <strong class="text-success"><span>Tag text</span> - </strong>
+                <span>Using a strong and a Bootstrap text-color class.</span>
             </p>
         </a>
  <a href="#" class="LeadTile">
@@ -1949,12 +1975,12 @@
     </script>
     <!-- Knockout Template inbox-tile -->
     <script type="text/html" id="inbox-tile-template">
-      <a href="#" data-bind="attr: { href: link }, css: classNames"
+      <a href="#" data-bind="attr: { href: link }"
          class="MessageTile">
           <h4 class="Tile-title" data-bind="text: customer() && customer().fullName() || '(no name)'"></h4>
           <div class="Tile-subtitle" data-bind="text: quickDateTime"></div>
           <p class="Tile-content">
-              <strong data-bind="visible: tag"><span data-bind="text: tag"></span> - </strong>
+              <strong data-bind="visible: tag, css: classNames"><span data-bind="text: tag"></span> - </strong>
               <span data-bind="text: subject"></span>
           </p>
       </a>
