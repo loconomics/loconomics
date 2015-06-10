@@ -10,12 +10,17 @@
 **/
 
 Tile() {
-    // The tile can be a link, so ensure
-    // some details
+    // The tile can be a link, a button
+    // or any other element, so ensure
+    // some details and resets
     color: $body-copy-color;
     display: block;
     text-decoration: none !important;
     box-sizing: border-box;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
     position: relative;
     
     &:active,

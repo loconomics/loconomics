@@ -193,7 +193,7 @@
       </div>
        <h2 class="SectionTitle">Tiles styles (SectionTitle)</h2>
 
-      <ul class="TilesList">
+      <ul class="TilesList TilesList--openEnd">
         <li><a class="LineTile" href="#">
             A very simple LineTile
         </a>
@@ -218,7 +218,9 @@
         </a>
         </li>
         <li><a class="LinkTile" href="#">
-            <div class="Tile-content">LinkTile for two lines links. Long text cut on second line. large text test large text test large text test large text test large text test large text test</div>
+            <div class="Tile-content">
+                <p>LinkTile for two lines links. Long text cut on second line. large text test large text test large text test large text test large text test large text test</p>
+            </div>
             <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
         </a>
         </li>
@@ -1418,61 +1420,51 @@
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
 
-      <div class="ListView ListView--twolines ListView--textualmarker">
-        <!-- ko template: { name: 'job-title-tile-template', foreach: userJobProfile
-        } -->
-        <!-- /ko -->
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/addJobTitles" class="btn btn-link btn-block ListView-item-content">
-                <p>Add a job title</p>
-            </a>
- <a href="/addJobTitles" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+      <ul class="TilesList" data-bind="template: { name: 'job-title-tile-template', foreach: userJobProfile }"></ul> <a class="CompactLinkTile" href="/addJobTitles">
+        <div class="Tile-content text-muted">Add a job title</div>
+        <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+    </a>
 
-        </div>
-      </div>
        <h2 class="SectionTitle">Availability</h2>
 
-      <div class="ListView ListView--twolines ListView--textualmarker">
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/weeklySchedule" class="btn btn-link btn-block ListView-item-content">
-        <p>Weekly schedule</p>
-      </a>
- <a href="/weeklySchedule" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/schedulingPreferences" class="btn btn-link btn-block ListView-item-content">
-        <p>Scheduling preferences</p>
-      </a>
- <a href="/schedulePreferences" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/appointment/-3" class="btn btn-link btn-block ListView-item-content">
-        <p>Block a time off my calendar</p>
-      </a>
- <a href="/appointment/-3" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-download-alt"></span>
-            </p>
-          </div> <a href="/calendarSyncing" class="btn btn-link btn-block ListView-item-content">
-        <p>Sync your existing calendars</p>
-      </a>
- <a href="/calendarSyncing" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-edit"></span></a>
-
-        </div>
-      </div>
+      <ul class="TilesList TilesList--openEnd">
+        <li><a class="InfoTile" href="/weeklySchedule">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Schedule</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/schedulingPreferences">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Scheduling preferences</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/appointment/-3">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Block time off calendar</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/calendarSyncing">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Sync existing calendars</p>
+            </div>
+        </a>
+        </li>
+      </ul>
       <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
     </div>
     <!-- SchedulingPreferences activity -->
@@ -1961,17 +1953,14 @@
     <!-- Component Template feedback-entry -->
     <script type="text/html" id="feedback-entry-template">
       <h2 class="SectionTitle">Talk to us</h2>
-      <div class="ListView ListView--twolines ListView--textualmarker">
-          <div class="ListView-item">
-            <div class="ListView-item-marker">
-              <p><span class="glyphicon glyphicon-lamp"></span></p>
-            </div>
-            <a href="/feedbackForm" data-bind="attr: { href: url }" class="btn btn-link btn-block ListView-item-content">
-              <p>Send us your ideas to improve this section</p>
-            </a>
-            <a href="/feedbackForm" data-bind="attr: { href: url }" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-          </div>
-      </div>
+      <a class="InfoTile" href="/feedbackForm" data-bind="attr: { href: url }">
+          <div class="Tile-icon" aria-hidden="true">
+              <span class="glyphicon glyphicon-lamp" aria-hidden="true"></span>
+          </div>                
+          <div class="Tile-content"><p>
+              Send us your ideas
+          </p></div>
+      </a>
     </script>
     <!-- Knockout Template inbox-tile -->
     <script type="text/html" id="inbox-tile-template">
@@ -1987,19 +1976,13 @@
     </script>
     <!-- Knockout Template job-title-tile -->
     <script type="text/html" id="job-title-tile-template">
-      <div class="ListView-item">
-          <div class="ListView-item-marker">
-              <p></p>
-          </div>
-          <button
-             data-bind="event: { click: $parent.selectJobTitle }"
-             class="btn btn-link btn-block ListView-item-content">
-              <p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p>
+      <li>
+          <button class="LinkTile"
+             data-bind="event: { click: $parent.selectJobTitle }">
+              <div class="Tile-content"><p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p></div>
+              <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right"></span></div>
           </button>
-          <button
-             data-bind="event: { click: $parent.selectJobTitle }"
-             class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></button>
-      </div>
+      </li>
     </script>
     <!-- Knockout Template list-view, for use with a generic ListView/Item
     viewmodel, helps as doc reference for other uses too -->

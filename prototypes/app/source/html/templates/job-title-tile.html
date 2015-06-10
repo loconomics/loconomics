@@ -1,16 +1,10 @@
 <!-- Knockout Template job-title-tile -->
 <script type="text/html" id="job-title-tile-template">
-    <div class="ListView-item">
-        <div class="ListView-item-marker">
-            <p></p>
-        </div>
-        <button
-           data-bind="event: { click: $parent.selectJobTitle }"
-           class="btn btn-link btn-block ListView-item-content">
-            <p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p>
+    <li>
+        <button class="LinkTile"
+           data-bind="event: { click: $parent.selectJobTitle }">
+            <div class="Tile-content"><p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p></div>
+            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right"></span></div>
         </button>
-        <button
-           data-bind="event: { click: $parent.selectJobTitle }"
-           class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></button>
-    </div>
+    </li>
 </script>
