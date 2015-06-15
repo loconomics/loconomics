@@ -18,7 +18,7 @@ var $ = require('jquery');
 //      topOffset:int  Offset scroll from the top
 // }
 module.exports = function scrollToElement(el, options) {
-    //jshint maxcomplexity:8
+    //jshint maxcomplexity:10
     var parent = $(el).parent();
 
     var topOffset = options && options.topOffset || 0;
@@ -27,6 +27,9 @@ module.exports = function scrollToElement(el, options) {
     var atRoot = false;
 
     do {
+        // Go out on detached elements:
+        if (!parent || !parent.length) return;
+        // Check if root element (ends loop and has different rules for scrolling)
         atRoot = parent.get(0) === document.documentElement;
         
         // Relative position of the element is calculated in a different way
