@@ -13,7 +13,7 @@ var A = Activity.extends(function LoginActivity() {
     this.accessLevel = this.app.UserType.Anonymous;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Log in');
-    this.navBar.leftAction(null);
+    this.navBar.rightAction(null);
     
     // Perform log-in request when is requested by the form:
     this.registerHandler({

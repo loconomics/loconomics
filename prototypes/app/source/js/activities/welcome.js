@@ -19,7 +19,11 @@ var A = Activity.extends(function WelcomeActivity() {
         }
     };
     
-    // No navbar, is empty with auto logo
+    this.navBar = new Activity.NavBar({
+        title: null,
+        leftAction: Activity.NavAction.goLogout,
+        rightAction: null
+    });
 });
 
 exports.init = A.init;

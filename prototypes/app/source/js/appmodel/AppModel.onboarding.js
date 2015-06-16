@@ -53,12 +53,17 @@ exports.create = function create(appModel) {
     api.updateNavBar = function(navBar) {
         var yep = this.inProgress();
         if (yep) {
-            navBar.leftAction(NavAction.goBack.model.clone());
-            navBar.title(this.progressText());
-            navBar.leftAction().handler(function() {
-                api.goPrevious();
-                return false;
-            });
+            // On 2015-06-16 #575, changed decission from use a 'go back' action
+            // (commented in following lines):
+//            navBar.leftAction(NavAction.goBack.model.clone());
+//            navBar.leftAction().handler(function() {
+//                api.goPrevious();
+//                return false;
+//            });
+            // to use the Log-out action
+            navBar.leftAction(NavAction.goLogout);
+
+            navBar.title(this.progressText());            
         }
         return yep;
     };

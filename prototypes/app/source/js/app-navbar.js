@@ -24,7 +24,7 @@ exports.extends = function (app) {
         var user = app.model.user();
 
         if (user.isAnonymous()) {
-            app.navBar().rightAction(NavAction.menuOut);
+            app.navBar().leftAction(NavAction.menuOut);
         }
     }
     // Commented lines, used previously but unused now, it must be enough with the update
