@@ -255,7 +255,7 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 71 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .nav {
-  background: White;
+  background: #4c4c4c;
   margin-top: 0;
   margin-bottom: 0;
   position: relative;
@@ -266,14 +266,14 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 82 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a {
-  color: #555;
+  color: #fff;
 }
 
 /* line 85 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a:hover,
 .AppNav .App-menus .navbar-nav a:active {
-  color: White;
-  background: #00989a;
+  color: #555;
+  background: #ccc;
   outline: none;
 }
 
