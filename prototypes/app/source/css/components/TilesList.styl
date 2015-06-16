@@ -12,7 +12,7 @@
     margin: 0;
     
     > * {
-        border-bottom: 1px solid $gray-background;
+        border-bottom: 1px solid $gray-background !important;
     }
     
     // openEnd modifier: remove border from last element
@@ -20,7 +20,7 @@
     // list in a page or next element has already a line or backgroud
     &.TilesList--openEnd {
         > *:last-child {
-            border-bottom: none;
+            border-bottom: none !important;
         }
     }
 }

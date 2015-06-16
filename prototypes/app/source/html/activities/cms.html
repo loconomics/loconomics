@@ -1,27 +1,21 @@
 <!-- CMS activity -->
 <div class="container-fluid" data-activity="cms">
-  <h2 class="SectionTitle">Clients</h2>
-  <div class="ListView ListView--twolines">
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p></p>
-      </div>
-      <a href="/clients" class="btn btn-link btn-block ListView-item-content">
-        <div>My clients</div>
-        <div><span data-bind="text: clientsCount"></span></div>
-      </a>
-      <a href="/clients" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p></p>
-      </div>
-      <a href="/clientEditor" class="btn btn-link btn-block ListView-item-content">
-        <p>Add a new client</p>
-      </a>
-      <a href="/clientEditor" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-    </div>
-  </div>
+    <h2 class="SectionTitle">Clients</h2>
+    <div>
+        <ul class="TilesList">
+            <li>
+                <a class="LinkTile" href="/clients">
+                    <div class="Tile-content"><p>My clients</p></div>
+                    <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right"></span></div>
+                </a>
+            </li>
+        </ul>
 
-  <app-feedback-entry params="section: 'cms'"></app-feedback-entry>
+        <a class="CompactLinkTile" href="/clientEditor">
+            <div class="Tile-content text-muted">Add a new client</div>
+            <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+        </a>
+    </div>
+
+    <app-feedback-entry params="section: 'cms'"></app-feedback-entry>
 </div>

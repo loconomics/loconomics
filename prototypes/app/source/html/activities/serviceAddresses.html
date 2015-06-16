@@ -13,32 +13,34 @@
 
     <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
     
-  <div id="addressesListView">
-    <div class="ListView ListView--twolines" data-bind="foreach: addresses">
-      <div class="ListView-item">
-        <div class="ListView-item-marker"></div>
-        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="event: { click: $root.selectAddress }">
-          <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
-        </a>
-        <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { click: $root.selectAddress }" role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
-      </div>
+    <div id="addressesListView">
+        <ul class="TilesList" data-bind="foreach: addresses">
+            <li><a class="InfoTile" href="#" data-bind="click: $root.selectAddress">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+                </div>
+                <div class="Tile-content">
+                    <div data-bind="text: addressName() || 'Service Area'"></div>
+                    <em data-bind="text: singleLine"></em>
+                </div>
+            </a></li>
+        </ul>
     </div>
-  </div>
 
-  <div id="addressesAddNewButtons" class="isolated" data-bind="visible: jobTitleID()">
-      <button type="button" class="btn btn-default btn-block"
-              data-bind="event: { click: addServiceLocation }">
-          Add a service location
-      </button>
-      <button type="button" class="btn btn-default btn-block"
-              data-bind="event: { click: addServiceArea }, visible: !isSelectionMode()">
-          Add a service area
-      </button>
-      <button type="button" class="btn btn-default btn-block"
-              data-bind="event: { click: addClientLocation }, visible: isSelectionMode() && clientID()">
-          Add a client location
-      </button>
-  </div>
+    <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
+        <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
+            <div class="Tile-content text-muted">Add a service location</div>
+            <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+        </button>
+        <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !isSelectionMode()">
+            <div class="Tile-content text-muted">Add a service area</div>
+            <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+        </button>
+        <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: isSelectionMode() && clientID()">
+            <div class="Tile-content text-muted">Add a client location</div>
+            <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+        </button>
+    </div>
     
     <div class="isolated" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
         <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>

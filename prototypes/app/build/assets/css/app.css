@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-06-15
+/*! LoconomicsApp 2015-06-16
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -2100,7 +2100,7 @@ body.use-backdrop:before {
 .SimpleList .SimpleList-item {
   position: relative;
   max-width: 100%;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #eee;
 /* Any row in the listview is expected to be a button/link, so color is reset */
 }
 
@@ -2132,7 +2132,7 @@ body.use-backdrop:before {
 .SimpleList .SimpleList-divider {
   text-align: left;
   padding: 3px 12px;
-  background-color: #ccc;
+  background-color: #eee;
 }
 
 /* line 51 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SimpleList.styl */
@@ -2563,14 +2563,14 @@ body.use-backdrop:before {
 
 /* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
 .TilesList > * {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #eee !important;
 }
 
 /* line 21 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
 
 /* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
 .TilesList.TilesList--openEnd > *:last-child {
-  border-bottom: none;
+  border-bottom: none !important;
 }
 
 /* line 27 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LineTile.styl */

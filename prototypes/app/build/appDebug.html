@@ -353,52 +353,46 @@
     <div class="container-fluid" data-activity="account">
        <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
 
-      <div class="ListView ListView--twolines ListView--textualmarker">
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-user"></span>
-            </p>
-          </div> <a href="#!ownerInfo" class="btn btn-link btn-block ListView-item-content">
-        <p>Owner information</p>
-      </a>
- <a href="#ownerInfo" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-lock"></span>
-            </p>
-          </div> <a href="#!privacySettings" class="btn btn-link btn-block ListView-item-content">
-        <p>Privacy settings</p>
-      </a>
- <a href="#privacySettings" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-file"></span>
-            </p>
-          </div> <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank"
-          class="btn btn-link btn-block ListView-item-content">
-        <p>Terms of Use</p>
-      </a>
- <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank"
-          class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-file"></span>
-            </p>
-          </div> <a href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank"
-          class="btn btn-link btn-block ListView-item-content">
-        <p>Privacy policy</p>
-      </a>
- <a href="https://loconomics.com/en-US/About/PrivacyPolicy/"
-          target="_blank" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-      </div>
+      <ul class="TilesList">
+        <li><a class="InfoTile" href="/ownerInfo">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Owner information</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/privacySettings">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Privacy settings</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/TermsOfUse/"
+          target="_blank">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Terms of Use</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/PrivacyPolicy/"
+          target="_blank">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Privacy policy</p>
+            </div>
+        </a>
+        </li>
+      </ul>
     </div>
     <!-- AddJobTitles activity -->
     <div class="container-fluid" data-activity="addJobTitles">
@@ -709,26 +703,19 @@
     <div class="container-fluid" data-activity="cms">
        <h2 class="SectionTitle">Clients</h2>
 
-      <div class="ListView ListView--twolines">
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/clients" class="btn btn-link btn-block ListView-item-content">
-        <div>My clients</div>
-        <div><span data-bind="text: clientsCount"></span></div>
-      </a>
- <a href="/clients" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
+      <div>
+        <ul class="TilesList">
+          <li> <a class="LinkTile" href="/clients">
+                    <div class="Tile-content"><p>My clients</p></div>
+                    <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right"></span></div>
+                </a>
 
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/clientEditor" class="btn btn-link btn-block ListView-item-content">
-        <p>Add a new client</p>
-      </a>
- <a href="/clientEditor" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
+          </li>
+        </ul> <a class="CompactLinkTile" href="/clientEditor">
+            <div class="Tile-content text-muted">Add a new client</div>
+            <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+        </a>
 
-        </div>
       </div>
       <app-feedback-entry params="section: 'cms'"></app-feedback-entry>
     </div>
@@ -823,7 +810,7 @@
     <div class="container-fluid" data-activity="datetimePicker">
        <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Select a start time</h2>
 
-      <div id="datetimePickerDatePicker" class="calendar-placeholder" data-date="today"></div>
+      <div id="datetimePickerDatePicker" class="calendar-placeholder row" data-date="today"></div>
       <!-- Daily View (appointments list) -->
       <div id="datetimePickerTimePicker">
          <h2 class="SectionTitle" data-bind="text: selectedDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></h2>
@@ -931,7 +918,7 @@
           <div class="SectionTitle" data-bind="visible: !$root.isAdditionMode()"> <span data-bind="text: group"></span>
 
           </div>
-          <ul class="TilesList TilesList--openEnd" data-bind="foreach: pricing">
+          <ul class="TilesList" data-bind="foreach: pricing">
             <li><a href="#" class="ItemTile" data-bind="click: $root.tapPricing" role="button">
                     <div class="Tile-marker"><p data-bind="text: displayedPrice"></p></div>
                     <div class="Tile-content">
@@ -1306,55 +1293,56 @@
     <div class="container-fluid" data-activity="ownerInfo">
        <h1 class="SectionTitle has-HelpPoint">Owner information</h1>
 
-      <div class="ListView ListView--twolines ListView--textualmarker">
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-user"></span>
-            </p>
-          </div> <a href="#!contactInfo" class="btn btn-link btn-block ListView-item-content">
-        <p>Contact information</p>
-      </a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-lock"></span>
-            </p>
-          </div> <a href="#!userFees" class="btn btn-link btn-block ListView-item-content">
-        <p>User fees</p>
-      </a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-file"></span>
-            </p>
-          </div> <a href="https://loconomics.com/en-US/About/OwnerAcknowledgment/" target="_blank"
-          class="btn btn-link btn-block ListView-item-content">
-        <p>Owner acknowledgment</p>
-      </a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-file"></span>
-            </p>
-          </div> <a href="https://loconomics.com/en-US/About/Bylaws/" target="_blank" class="btn btn-link btn-block ListView-item-content">
-        <p>Cooperative Bylaws</p>
-      </a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p><span class="glyphicon glyphicon-file"></span>
-            </p>
-          </div> <a href="https://loconomics.com/en-US/About/BoardNominationForm/" target="_blank"
-          class="btn btn-link btn-block ListView-item-content">
-        <p>Board nominations</p>
-      </a>
-
-        </div>
-      </div>
+      <ul class="TilesList">
+        <li><a class="InfoTile" href="/contactInfo">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Contact information</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/userFees">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>User fees</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/OwnerAcknowledgment/"
+          target="_blank">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Owner acknowledgment</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/Bylaws/"
+          target="_blank">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Cooperative Bylaws</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/BoardNominationForm/"
+          target="_blank">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Board nominations</p>
+            </div>
+        </a>
+        </li>
+      </ul>
     </div>
     <!-- PrivacySettings activity -->
     <div class="container-fluid" data-activity="privacySettings">
@@ -1567,24 +1555,35 @@
       <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle"
       data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
       <div id="addressesListView">
-        <div class="ListView ListView--twolines" data-bind="foreach: addresses">
-          <div class="ListView-item">
-            <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
-            data-bind="event: { click: $root.selectAddress }">
-          <div><strong data-bind="text: addressName() || 'Service Area'"></strong></div><div data-bind="text: singleLine"></div>
-        </a>
- <a href="#" class="ListView-item-action btn btn-link" data-bind="event: { click: $root.selectAddress }"
-            role="button"><span class="glyphicon glyphicon-plus-sign"></span><span class="sr-only">Select</span></a>
-
-          </div>
-        </div>
+        <ul class="TilesList" data-bind="foreach: addresses">
+          <li><a class="InfoTile" href="#" data-bind="click: $root.selectAddress">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+                </div>
+                <div class="Tile-content">
+                    <div data-bind="text: addressName() || 'Service Area'"></div>
+                    <em data-bind="text: singleLine"></em>
+                </div>
+            </a>
+          </li>
+        </ul>
       </div>
-      <div id="addressesAddNewButtons" class="isolated" data-bind="visible: jobTitleID()">
-        <button type="button" class="btn btn-default btn-block" data-bind="event: { click: addServiceLocation }">Add a service location</button>
-        <button type="button" class="btn btn-default btn-block"
-        data-bind="event: { click: addServiceArea }, visible: !isSelectionMode()">Add a service area</button>
-        <button type="button" class="btn btn-default btn-block"
-        data-bind="event: { click: addClientLocation }, visible: isSelectionMode() && clientID()">Add a client location</button>
+      <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">
+        <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
+          <div class="Tile-content text-muted">Add a service location</div>
+          <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span>
+          </div>
+        </button>
+        <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !isSelectionMode()">
+          <div class="Tile-content text-muted">Add a service area</div>
+          <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span>
+          </div>
+        </button>
+        <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: isSelectionMode() && clientID()">
+          <div class="Tile-content text-muted">Add a client location</div>
+          <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span>
+          </div>
+        </button>
       </div>
       <div class="isolated" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
         <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>

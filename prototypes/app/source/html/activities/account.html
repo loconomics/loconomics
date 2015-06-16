@@ -1,42 +1,39 @@
 <!-- Activity account -->
 <div class="container-fluid" data-activity="account">
-  <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
-  <div class="ListView ListView--twolines ListView--textualmarker">
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p><span class="glyphicon glyphicon-user"></span></p>
-      </div>
-      <a href="#!ownerInfo" class="btn btn-link btn-block ListView-item-content">
-        <p>Owner information</p>
-      </a>
-      <a href="#ownerInfo" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p><span class="glyphicon glyphicon-lock"></span></p>
-      </div>
-      <a href="#!privacySettings" class="btn btn-link btn-block ListView-item-content">
-        <p>Privacy settings</p>
-      </a>
-      <a href="#privacySettings" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p><span class="glyphicon glyphicon-file"></span></p>
-      </div>
-      <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank" class="btn btn-link btn-block ListView-item-content">
-        <p>Terms of Use</p>
-      </a>
-      <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-    <div class="ListView-item">
-      <div class="ListView-item-marker">
-        <p><span class="glyphicon glyphicon-file"></span></p>
-      </div>
-      <a href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank" class="btn btn-link btn-block ListView-item-content">
-        <p>Privacy policy</p>
-      </a>
-      <a href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-  </div>
+    <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
+    
+    <ul class="TilesList">
+        <li><a class="InfoTile" href="/ownerInfo">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Owner information</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/privacySettings">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Privacy settings</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Terms of Use</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Privacy policy</p>
+            </div>
+        </a></li>
+    </ul>
 </div>
