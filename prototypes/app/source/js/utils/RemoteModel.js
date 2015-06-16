@@ -85,30 +85,30 @@ function RemoteModel(options) {
                 v.pull({ evenIfNewer: true });
             }
         });
-        
-        // Save the remote when successfully pushed the new version
-        v.on('push', function(success, rollback) {
-            if (success) {
-                this.save()
-                .then(function() {
-                    // Update the version data with the new one
-                    // from the remote, that may include remote computed
-                    // values:
-                    v.pull({ evenIfNewer: true });
-                })
-                .catch(function() {
-                    // To catch the error is important 
-                    // to avoid 'unknow error's from being
-                    // logged on the console.
-                    // The error can be read by listening the 'error' event.
-                    
-                    // Performs a rollback of the original model
-                    rollback();
-                    // The version data keeps untouched, user may want to retry
-                    // or made changes on its un-saved data.
-                });
-            }
-        }.bind(this));
+
+        // new method for push and remote same returning
+        // the save promise to track immediate success or error,
+        // with error auto recovering original data.
+        v.pushSave = function pushSave() {
+            var rollback = v.getRollback('original');
+            v.push({ evenIfObsolete: true });
+
+            return this.save()
+            .then(function() {
+                // Update the version data with the new one
+                // from the remote, that may include remote computed
+                // values:
+                v.pull({ evenIfNewer: true });
+            })
+            .catch(function(error) {
+                // Performs a rollback of the original model
+                rollback();
+                // The version data keeps untouched, user may want to retry
+                // or made changes on its un-saved data.
+                // rethrow error
+                return error;
+            });
+        }.bind(this);
 
         return v;
     };

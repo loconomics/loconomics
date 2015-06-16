@@ -18,8 +18,6 @@ var A = Activity.extends(function ContactInfoActivity() {
     });
     this.defaultNavBar = this.navBar.model.toPlainObject();
     
-    //this.viewModel.profile.onboardingStep.subscribe();
-    
     this.registerHandler({
         target: this.app.model.userProfile,
         event: 'error',
@@ -229,15 +227,20 @@ function ViewModel(app) {
     }.bind(this);
 
     this.save = function save() {
-        // Force to save, even if there was remote updates
-        profileVersion.push({ evenIfObsolete: true });
-        homeAddressVersion.push({ evenIfObsolete: true });
-        
-        if (app.model.onboarding.inProgress()) {
-            app.model.onboarding.goNext();
-        }
-        else {
-            app.successSave();
-        }
+        Promise.all([
+            profileVersion.pushSave(),
+            homeAddressVersion.pushSave()
+        ])
+        .then(function() {
+            if (app.model.onboarding.inProgress()) {
+                app.model.onboarding.goNext();
+            }
+            else {
+                app.successSave();
+            }
+        })
+        .catch(function() {
+            // catch error, managed on event
+        });
     }.bind(this);
 }

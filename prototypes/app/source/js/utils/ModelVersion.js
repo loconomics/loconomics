@@ -62,6 +62,14 @@ module.exports = ModelVersion;
 
 ModelVersion._inherits(EventEmitter);
 
+ModelVersion.prototype.getRollback = function getRollback(from) {
+    if (from === 'version')
+        return createRollbackFunction(this.version);
+    else if (from === 'original')
+        return createRollbackFunction(this.original);
+    throw new Error('from value not valid');
+};
+
 /**
     Sends the version changes to the original
     

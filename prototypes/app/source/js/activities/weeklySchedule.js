@@ -29,18 +29,6 @@ var A = Activity.extends(function WeeklyScheduleActivity() {
             });
         }.bind(this)
     });
-    
-    this.registerHandler({
-        target: this.app.model.simplifiedWeeklySchedule,
-        event: 'saved',
-        handler: function() {
-            if (this.app.model.onboarding.inProgress()) {
-                this.app.model.onboarding.goNext();
-            } else {
-                this.app.successSave();
-            }
-        }.bind(this)
-    });
 });
 
 exports.init = A.init;
@@ -106,7 +94,16 @@ function ViewModel(app) {
     };
 
     this.save = function save() {
-        // Force to save, even if there was remote updates
-        scheduleVersion.push({ evenIfObsolete: true });
+        scheduleVersion.pushSave()
+        .then(function() {
+            if (app.model.onboarding.inProgress()) {
+                app.model.onboarding.goNext();
+            } else {
+                app.successSave();
+            }
+        })
+        .catch(function() {
+            // catch error, managed on event
+        });
     };
 }

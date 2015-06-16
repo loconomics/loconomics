@@ -80,9 +80,12 @@ function ViewModel(app) {
     }.bind(this);
 
     this.save = function save() {
-        // Force to save, even if there was remote updates
-        settingsVersion.push({ evenIfObsolete: true });
-        
-        app.successSave();
+        settingsVersion.pushSave()
+        .then(function() {
+            app.successSave();
+        })
+        .catch(function() {
+            // catch error, managed on event
+        });
     }.bind(this);
 }
