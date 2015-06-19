@@ -370,13 +370,14 @@ var appInit = function appInit() {
     });
     
     // Listen for menu events (collapse in SmartNavBar)
-    // to apply the backdrop
+    // to apply the backdrop; add another class, explicit for know the menu/nav is opened
     var togglingBackdrop = false;
     $(document).on('show.bs.collapse hide.bs.collapse', '.AppNav .navbar-collapse', function(e) {
         if (!togglingBackdrop) {
             togglingBackdrop = true;
             var enabled = e.type === 'show';
             $('body').toggleClass('use-backdrop', enabled);
+            $('body').toggleClass('has-appNav-open', enabled);
             // Hide any other opened collapse
             $('.collapsing, .collapse.in').collapse('hide');
             togglingBackdrop = false;
