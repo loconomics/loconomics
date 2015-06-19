@@ -17,7 +17,9 @@ module.exports ={
         src: [
             './vendor/bootstrap/css/bootstrap.css',
             './vendor/bootstrap-switch/custom-css/bootstrap-switch.css',
-            './vendor/jquery-ui/jquery-ui.css'
+            './vendor/jquery-ui/jquery-ui.css',
+            './vendor/font-awesome/css/font-awesome.css',
+            './vendor/ionicons/css/ionicons.css'
         ],
         dest: './build/assets/css/libs.css'
     }

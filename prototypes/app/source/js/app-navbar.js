@@ -98,7 +98,10 @@ exports.extends = function (app) {
     app.setupNavBarBinding = function setupNavBarBinding() {
         // Set model for the AppNav
         ko.applyBindings({
-            navBar: app.navBar
+            navBar: app.navBar,
+            // TODO Update URL
+            photoUrl: ko.observable('http://dev.loconomics.com/en-US/Profile/Photo/'),
+            userName: ko.observable('Me')
         }, $('.AppNav').get(0));
     };
     

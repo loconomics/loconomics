@@ -34,37 +34,37 @@
       </div>
       <div class="App-menus">
         <div id="menuIn" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a>tools</a>
+           <h4 class="App-menus-header">
+                        <div class="App-menus-header-photo"><img data-bind="attr: { src: photoUrl }" /></div>
+                        <span class="App-menus-header-user" data-bind="text: userName"></span>
+                    </h4>
 
-              <ul class="nav">
-                <li class="go-home"><a href="/home">Dashboard</a>
-                </li>
-                <li class="go-calendar"><a href="/calendar">Calendar</a>
-                </li>
-                <li class="go-inbox"><a href="/inbox">Inbox</a>
-                </li>
-                <li class="go-scheduling"><a href="/scheduling">Scheduling</a>
-                </li>
-                <li class="go-cms"><a href="/cms">Client management</a>
-                </li>
-                <li class="go-payments"><a href="/payments">Payment processing</a>
-                </li>
-                <li class="go-performance"><a href="/performance">Performance</a>
-                </li>
-                <li class="go-insurance"><a href="/insurance">Insurance</a>
-                </li>
-                <li class="go-marketplace"><a href="/marketplace">Marketplace</a>
-                </li>
-              </ul>
+          <ul class="nav navbar-nav">
+            <li class="go-home"><a href="/home"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a>
             </li>
-            <li class="go-marketplace-profile"><a href="/marketplace-profile">Marketplace profile</a>
+            <li class="go-calendar"><a href="/calendar"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Calendar</a>
             </li>
-            <li class="go-account"><a href="/account">Account</a>
+            <li class="go-inbox"><a href="/inbox"><i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i> Inbox</a>
             </li>
-            <li class="go-feedback"><a href="/feedback">Talk to us</a>
+            <li class="go-scheduling"><a href="/scheduling"><i class="fa fa-fw fa-calendar-o" aria-hidden="true"></i> Scheduling</a>
             </li>
-            <li class="go-logout"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+            <li class="go-cms"><a href="/cms"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Clients</a>
+            </li>
+            <li class="go-payments"><a href="/payments"><i class="fa fa-fw ion-card" aria-hidden="true"></i> Payments</a>
+            </li>
+            <li class="go-performance"><a href="/performance"><i class="fa fa-fw ion-ios-speedometer-outline" aria-hidden="true"></i> Performance</a>
+            </li>
+            <li class="go-performance"><a href="/insurance"><i class="fa fa-fw ion-umbrella" aria-hidden="true"></i> Insurance</a>
+            </li>
+            <li class="go-marketplace-profile"><a href="/marketplace-profile"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a>
+            </li>
+            <li class="go-insurance"><a href="/insurance"><i class="fa fa-fw ion-ios-cart-outline" aria-hidden="true"></i> Hire services</a>
+            </li>
+            <li class="go-account"><a href="/account"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Account</a>
+            </li>
+            <li class="go-feedback"><a href="/feedback"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Talk to us</a>
+            </li>
+            <li class="go-logout"><a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a>
             </li>
           </ul>
         </div>
@@ -77,21 +77,18 @@
           </ul>
         </div>
         <div id="menuNewItem" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a>Add new</a>
+           <h4 class="App-menus-header">ADD NEW</h4>
 
-              <ul class="nav">
-                <li class="go-booking-new"><a href="/appointment/-4">Booking</a>
-                </li>
-                <li class="go-client-new"><a href="/clientEditor">Client</a>
-                </li>
-                <li class="go-calendar-new"><a href="/appointment/-3">Calendar block</a>
-                </li>
-                <li class="go-pricing-new"><a href="/freelancerPricing/new">Pricing</a>
-                </li>
-                <li class="go-jobtitle-new"><a href="/addJobTitles">Job title</a>
-                </li>
-              </ul>
+          <ul class="nav navbar-nav">
+            <li class="go-booking-new"><a href="/appointment/-4"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Booking</a>
+            </li>
+            <li class="go-client-new"><a href="/clientEditor"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Client</a>
+            </li>
+            <li class="go-calendar-new"><a href="/appointment/-3"><i class="fa fa-fw fa-ban" aria-hidden="true"></i> Calendar block</a>
+            </li>
+            <li class="go-pricing-new"><a href="/freelancerPricing/new"><i class="fa fa-fw ion-ios-pricetag-outline" aria-hidden="true"></i> Pricing</a>
+            </li>
+            <li class="go-jobtitle-new"><a href="/addJobTitles"><i class="fa fa-fw ion-settings" aria-hidden="true"></i> Job title</a>
             </li>
           </ul>
         </div>

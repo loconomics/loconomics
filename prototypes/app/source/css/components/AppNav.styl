@@ -3,10 +3,10 @@
 **/
 @import "nib";
 
+$AppNav-backColor = #53474b;
+$AppNav-iconColor = #3d3232;
+
 .AppNav {
-    
-    // Per Styleguide, text must be lowercase
-    text-transform: lowercase;
     
     left: 0px;
     right: 0px;
@@ -69,18 +69,56 @@
         
         // Customization of Bootstrap navigation bar for use as menus
         .nav {
-            background: #4c4c4c;
+            background: $AppNav-backColor;
             margin-top: 0;
             margin-bottom: 0;
             position: relative;
             z-index: 200;
         }
+        
+        .App-menus-header {
+            margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-left);
+            padding: 15px;
+            border-bottom: 1px solid White;
+            background: $AppNav-backColor;
+            color: White;
+            
+            font-size: 1.1em;
+            
+            .App-menus-header-user {
+                text-align: center;
+                font-size: 1em;
+                display: block;
+                margin: 10px 0 0 0;
+            }
+            
+            .App-menus-header-photo {
+                display: block;
+                margin: auto;
+                text-align: center;
+                background: none;
+
+                img {
+                    width: 60px;
+                    height: 60px;
+                    display: inline-block;
+                    border: 3px solid White;
+                    border-radius: 100%;
+                    background: white;
+                    overflow: hidden;
+                }
+            }
+        }
 
         // Main nav and its content
         .navbar-nav {
 
+            padding-top: 10px;
+            
             a {
                 color: white;
+                
+                padding: 10px 15px 10px 40px;
 
                 &:hover,
                 &:active {
@@ -88,22 +126,15 @@
                     background: $gray-lighter;
                     outline: none;
                 }
+                
+                // icons
+                > i {
+                    color: $AppNav-iconColor;
+                    margin-right: 5px;
+                }
             }
             li.active > a {
-                color: White;
-                background: $brand-secondary;
-            }
-
-            > li + li,
-            > li > ul {
-                border-top: 1px solid $gray-light;
-            }
-
-            > li > ul.nav {
-                > li {
-                    text-indent: 1em;
-                    line-height: 1em;
-                }
+                color: $brand-primary;
             }
         }
     }

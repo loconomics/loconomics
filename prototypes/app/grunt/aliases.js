@@ -28,6 +28,10 @@ module.exports = {
     'build-images': [
         'copyto:jqueryuiimages'
     ],
+    'build-fonts': [
+        'copyto:font-awesome-fonts',
+        'copyto:ionicons-fonts'
+    ],
     'build-html': [
         //'copyto:html', // Now, html files are bundled with bliss
         'bliss:app',
@@ -58,6 +62,8 @@ module.exports = {
         'build-js',
 		'build-css',
         'build-html',
+        'build-images',
+        'build-fonts',
         'prepare-phonegap',
         'build-phonegapbuild',
         'notify:build'

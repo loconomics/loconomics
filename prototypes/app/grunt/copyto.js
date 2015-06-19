@@ -3,9 +3,9 @@
 module.exports = {
     jqueryuiimages: {
         expand: true,
-        cwd: 'vendor/jquery-ui/images',
+        cwd: 'vendor/jquery-ui/images/',
         src: ['*.png'],
-        dest: 'build/assets/css/images',
+        dest: 'build/assets/css/images/',
         filter: 'isFile'
     },
     html: {
@@ -26,6 +26,20 @@ module.exports = {
         expand: true,
         dest: './phonegap/platforms/',
         cwd: './phonegap/platform-merges',
-        src: '**'
+        src: '**/*.*'
+    },
+    'font-awesome-fonts': {
+        expand: true,
+        cwd: './vendor/font-awesome/fonts/',
+        src: '*.*',
+        dest: './build/assets/fonts/',
+        filter: 'isFile'
+    },
+    'ionicons-fonts': {
+        expand: true,
+        cwd: './vendor/ionicons/fonts/',
+        src: '*.*',
+        dest: './build/assets/fonts/',
+        filter: 'isFile'
     }
 };
