@@ -107,7 +107,7 @@ NavAction.menuOut = new NavAction({
 
 NavAction.menuNewItem = new NavAction({
     link: 'menuNewItem',
-    icon: 'glyphicon glyphicon-plus',
+    icon: 'fa ion ion-ios-plus-empty',
     isMenu: true
 });
 

@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-06-19
+/*! LoconomicsApp 2015-06-20
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -187,7 +187,7 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
 
-/* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav {
   left: 0px;
   right: 0px;
@@ -195,7 +195,7 @@ fieldset[disabled] .btn-secondary.active {
   position: absolute;
 }
 
-/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 18 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-brand {
   float: none;
   display: inline-block;
@@ -217,26 +217,26 @@ fieldset[disabled] .btn-secondary.active {
   }
 }
 
-/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 35 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 40 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 43 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar .SmartNavBar-btn h1 {
   color: #555;
   font-weight: normal;
 }
 
-/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus {
   background: #fff;
 }
 
-/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus > .navbar-collapse {
   position: fixed;
   left: 0px;
@@ -248,12 +248,12 @@ fieldset[disabled] .btn-secondary.active {
   border-top: none;
 }
 
-/* line 67 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 68 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus > .navbar-collapse.collapsing {
   overflow: hidden;
 }
 
-/* line 73 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .nav {
   background: #53474b;
   margin-top: 0;
@@ -262,7 +262,7 @@ fieldset[disabled] .btn-secondary.active {
   z-index: 200;
 }
 
-/* line 81 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 82 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .App-menus-header {
   margin: 0 -15px 0 -15px;
   padding: 15px;
@@ -272,7 +272,7 @@ fieldset[disabled] .btn-secondary.active {
   font-size: 1.1em;
 }
 
-/* line 90 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .App-menus-header .App-menus-header-user {
   text-align: center;
   font-size: 1em;
@@ -280,7 +280,7 @@ fieldset[disabled] .btn-secondary.active {
   margin: 10px 0 0 0;
 }
 
-/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .App-menus-header .App-menus-header-photo {
   display: block;
   margin: auto;
@@ -288,7 +288,7 @@ fieldset[disabled] .btn-secondary.active {
   background: none;
 }
 
-/* line 103 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 104 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .App-menus-header .App-menus-header-photo img {
   width: 60px;
   height: 60px;
@@ -300,18 +300,18 @@ fieldset[disabled] .btn-secondary.active {
   overflow: hidden;
 }
 
-/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 117 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav {
   padding-top: 10px;
 }
 
-/* line 120 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 121 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a {
   color: #fff;
   padding: 10px 15px 10px 40px;
 }
 
-/* line 125 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 126 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a:hover,
 .AppNav .App-menus .navbar-nav a:active {
   color: #555;
@@ -319,18 +319,18 @@ fieldset[disabled] .btn-secondary.active {
   outline: none;
 }
 
-/* line 132 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 133 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a > i {
   color: #3d3232;
   margin-right: 5px;
 }
 
-/* line 147 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 152 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav li.active > a {
   color: #00989a;
 }
 
-/* line 158 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 163 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle,
 .AppNav > .SmartNavBar > .SmartNavBar-edge {
   overflow: hidden;
@@ -338,7 +338,7 @@ fieldset[disabled] .btn-secondary.active {
   text-overflow: clip !important;
 }
 
-/* line 164 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 169 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle {
   -webkit-transition-property: -webkit-transform, opacity;
   -moz-transition-property: -moz-transform, opacity;
@@ -355,14 +355,9 @@ fieldset[disabled] .btn-secondary.active {
   -o-transition-timing-function: ease-in-out;
   -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  transform: rotate(0deg);
 }
 
-/* line 166 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 171 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle > * {
   -webkit-transition-property: -webkit-transform, opacity;
   -moz-transition-property: -moz-transform, opacity;
@@ -385,32 +380,40 @@ fieldset[disabled] .btn-secondary.active {
   display: block;
 }
 
-/* line 173 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 178 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle > * > .glyphicon,
 .AppNav .navbar-toggle > * > .icon {
   display: block;
 }
 
-/* line 179 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 183 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle > * > .ion {
+  font-size: 2em;
+  line-height: 44px;
+}
+
+/* line 190 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle > * > .ion-navicon {
+  font-size: 31px;
+}
+
+/* line 197 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle:before {
-  content: "";
+  font-family: "Ionicons";
+  content: "";
+  font-size: 2em;
+  line-height: 44px;
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  font-family: "Glyphicons Halflings";
   line-height: 44px;
   text-align: center;
   pointer-events: none;
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
   -webkit-transition-property: -webkit-transform, opacity;
   -moz-transition-property: -moz-transform, opacity;
   -o-transition-property: -o-transform, opacity;
@@ -428,81 +431,70 @@ fieldset[disabled] .btn-secondary.active {
   transition-timing-function: ease-in-out;
 }
 
-/* line 198 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .navbar-toggle[aria-expanded="true"] {
-  -webkit-transform: rotate(180deg);
-  -moz-transform: rotate(180deg);
-  -o-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  transform: rotate(180deg);
-}
+/* line 222 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 200 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 224 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"] > * {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
 }
 
-/* line 206 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 231 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"]:before {
   opacity: 1;
   -ms-filter: none;
   filter: none;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  transform: rotate(0deg);
 }
 
-/* line 219 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 245 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 220 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 246 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 body.has-appNav-open .SmartNavBar {
   background: #53474b;
   border-bottom-color: transparent;
 }
 
-/* line 223 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 249 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 body.has-appNav-open .SmartNavBar .SmartNavBar-btn {
   color: White;
 }
 
-/* line 226 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 252 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 body.has-appNav-open .SmartNavBar h1 {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
+  pointer-events: none;
 }
 
-/* line 232 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 259 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 233 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 260 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar {
-  -webkit-transition: background 0.4s cubic-bezier(0.65, 0.05, 0.36, 1), border 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  -moz-transition: background 0.4s cubic-bezier(0.65, 0.05, 0.36, 1), border 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  -o-transition: background 0.4s cubic-bezier(0.65, 0.05, 0.36, 1), border 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  -ms-transition: background 0.4s cubic-bezier(0.65, 0.05, 0.36, 1), border 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  transition: background 0.4s cubic-bezier(0.65, 0.05, 0.36, 1), border 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
+  -webkit-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
-/* line 235 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 262 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar .SmartNavBar-btn {
-  -webkit-transition: inherit, color 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  -moz-transition: inherit, color 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  -o-transition: inherit, color 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  -ms-transition: inherit, color 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  transition: inherit, color 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
+  -webkit-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
-/* line 238 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 265 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar h1 {
-  -webkit-transition: opacity 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  -moz-transition: opacity 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  -o-transition: opacity 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  -ms-transition: opacity 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-  transition: opacity 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
+  -webkit-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
   opacity: 1;
   -ms-filter: none;
   filter: none;
@@ -1420,7 +1412,7 @@ body.use-backdrop:before {
 /* Fix for Chrome and Firefox OS on button element */
   background: transparent;
   color: #555;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 15px;
 /* Makes problems on Android (persistent :active state
             after being pushed)

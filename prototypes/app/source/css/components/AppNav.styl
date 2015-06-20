@@ -5,6 +5,7 @@
 
 $AppNav-backColor = #53474b;
 $AppNav-iconColor = #3d3232;
+$AppNav-transitionDuration = 300ms;
 
 .AppNav {
     
@@ -144,7 +145,7 @@ $AppNav-iconColor = #3d3232;
     // Changing icon of menu togglers when opened
     transitionNavSetup() {
         transition-property: transform, opacity;
-        transition-duration: 300ms;
+        transition-duration: $AppNav-transitionDuration;
         transition-timing-function: ease-in-out;
     }
     
@@ -173,18 +174,39 @@ $AppNav-iconColor = #3d3232;
                 // Fixing alingment on Chrome/Webkit
                 display: block;
             }
+            
+            // NOTE: Fixing the ridiculous size of ion icons used on navbar
+            > .ion {
+                font-size: 2em;
+                line-height: $app-navbar-height;
+            }
+            
+            // NOTE: Fixing a bug on the menu icon of ionicons used right now, that with
+            // the general size (2em->30px) looks missaligned the bars, increasing a pixel
+            // looks fine
+            > .ion-navicon {
+                font-size: 31px;
+            }
         }
-        transform: rotate(0deg);
+        // DISABLED: with icons changes, rotation does not work as expected
+        //transform: rotate(0deg);
 
+        // Adding the 'close' icon
         &:before {
-            content: "";
+            //font-family: "Glyphicons Halflings";
+            //content: "";
+            font-family: "Ionicons";
+            content: "";
+            // NOTE: It requires to fix the ridiculous size of ion icons
+            font-size: 2em;
+            line-height: $app-navbar-height;
+
             position: absolute;
             top: 0;
             right: 0;
             bottom: 0;
             left: 0;
 
-            font-family: "Glyphicons Halflings";
             line-height: $app-navbar-height;
             text-align: center;
 
@@ -194,7 +216,9 @@ $AppNav-iconColor = #3d3232;
             // icon rotation is not required, BUT we
             // simulate better a plus icon becoming
             // a cross using this:
-            transform: rotate(45deg);
+            // DISABLED: with icons changes, rotation does not work as expected
+            //transform: rotate(45deg);
+
             transitionNavSetup();
         }
 
@@ -204,11 +228,13 @@ $AppNav-iconColor = #3d3232;
                 opacity: 0;
             }
 
-            transform: rotate(180deg);
+            // DISABLED: with icons changes, rotation does not work as expected
+            //transform: rotate(180deg);
 
             &:before {
                 opacity: 1;
-                transform: rotate(0deg);
+                // DISABLED: with icons changes, rotation does not work as expected
+                //transform: rotate(0deg);
             }
         }
     }
@@ -226,20 +252,21 @@ body.has-appNav-open {
         
         h1 {
             opacity: 0;
+            pointer-events: none;
         }
     }
 }
 // enable CSS transitions for 'open' style
 .AppNav {
     .SmartNavBar {
-        transition: background .4s $cubic-easing, border .4s $cubic-easing;
+        transition: background $AppNav-transitionDuration $cubic-easing, border $AppNav-transitionDuration $cubic-easing;
         
         .SmartNavBar-btn {
-            transition: inherit, color .4s $cubic-easing;
+            transition: color $AppNav-transitionDuration $cubic-easing;
         }
         
         h1 {
-            transition: opacity .4s $cubic-easing;
+            transition: opacity $AppNav-transitionDuration $cubic-easing;
             opacity: 1;
         }
     }
