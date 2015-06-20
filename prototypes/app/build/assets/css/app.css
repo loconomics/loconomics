@@ -139,7 +139,7 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+/* line 104 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
 
@@ -587,6 +587,13 @@ body.has-appNav-open .SmartNavBar h1 {
 /* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal {
   background: rgba(0,0,0,0.4);
+}
+
+/* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+
+/* line 99 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+.App app-feedback-entry .ion-lightbulb {
+  color: #f0ad4e;
 }
 
 /* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
@@ -2466,7 +2473,7 @@ body.use-backdrop:before {
   text-align: left;
   position: relative;
   padding-left: 30px;
-  padding-right: 20px;
+  padding-right: 24px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2500,7 +2507,7 @@ body.use-backdrop:before {
   right: 0px;
   top: 10px;
   bottom: 10px;
-  max-width: 16px;
+  max-width: 20px;
   overflow: hidden;
   height: 20px;
 }
@@ -2533,7 +2540,7 @@ body.use-backdrop:before {
   text-align: left;
   position: relative;
   padding-left: 30px;
-  padding-right: 20px;
+  padding-right: 24px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2567,7 +2574,7 @@ body.use-backdrop:before {
   right: 0px;
   top: 10px;
   bottom: 10px;
-  max-width: 16px;
+  max-width: 20px;
   overflow: hidden;
   height: 20px;
 }
@@ -2592,7 +2599,7 @@ body.use-backdrop:before {
   text-align: left;
   position: relative;
   padding: 18px 0 18px 30px;
-  padding-right: 20px;
+  padding-right: 24px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2660,7 +2667,7 @@ body.use-backdrop:before {
   right: 0px;
   top: 28px;
   bottom: 28px;
-  max-width: 16px;
+  max-width: 20px;
   overflow: hidden;
   height: 20px;
 }
@@ -2744,7 +2751,7 @@ body.use-backdrop:before {
   text-align: left;
   position: relative;
   padding-left: 30px;
-  padding-right: 20px;
+  padding-right: 24px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2778,7 +2785,7 @@ body.use-backdrop:before {
   right: 0px;
   top: 10px;
   bottom: 10px;
-  max-width: 16px;
+  max-width: 20px;
   overflow: hidden;
   height: 20px;
 }
@@ -2805,7 +2812,7 @@ body.use-backdrop:before {
   padding: 18px 0 18px 0;
   height: 76px;
   overflow: hidden;
-  padding-right: 20px;
+  padding-right: 24px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2920,7 +2927,7 @@ body.use-backdrop:before {
   right: 0px;
   top: 28px;
   bottom: 28px;
-  max-width: 16px;
+  max-width: 20px;
   overflow: hidden;
   height: 20px;
 }

@@ -222,7 +222,7 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink) 
     
     var action = new NavAction({
         link: cancelLink,
-        text: 'Cancel',
+        text: 'cancel',
         handler: function(event) {
             var link = this.link(),
                 eoptions = event && event.options || {};

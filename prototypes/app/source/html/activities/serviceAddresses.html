@@ -17,7 +17,7 @@
         <ul class="TilesList" data-bind="foreach: addresses">
             <li><a class="InfoTile" href="#" data-bind="click: $root.selectAddress">
                 <div class="Tile-icon" aria-hidden="true">
-                    <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+                    <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
                 </div>
                 <div class="Tile-content">
                     <div data-bind="text: addressName() || 'Service Area'"></div>
@@ -30,15 +30,15 @@
     <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
         <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
             <div class="Tile-content text-muted">Add a service location</div>
-            <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </button>
         <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !isSelectionMode()">
             <div class="Tile-content text-muted">Add a service area</div>
-            <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </button>
         <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: isSelectionMode() && clientID()">
             <div class="Tile-content text-muted">Add a client location</div>
-            <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </button>
     </div>
     
