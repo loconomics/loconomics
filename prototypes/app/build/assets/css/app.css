@@ -394,7 +394,6 @@ fieldset[disabled] .btn-secondary.active {
 }
 
 /* line 191 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
-.AppNav .navbar-toggle > * > .glyphicon,
 .AppNav .navbar-toggle > * > .icon {
   display: block;
 }
@@ -931,13 +930,15 @@ body.use-backdrop:before {
   left: 0px;
   text-align: center;
   padding: 0;
-/* If a Bootstrap glypicon is used, adjust to the best size */
+/* If a Bootstrap/FontAwesome/Ionicon glypicon is used, adjust to the best size */
 /* For one-line content with ellipsis, use a 'div' */
 /* Multiline content support -effective with modifiers like twolines- */
 }
 
 /* line 52 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ListView.styl */
-.ListView .ListView-item .ListView-item-marker .glyphicon {
+.ListView .ListView-item .ListView-item-marker .glyphicon,
+.ListView .ListView-item .ListView-item-marker .fa,
+.ListView .ListView-item .ListView-item-marker .ion {
   font-size: 24px;
   line-height: 33px;
 }
@@ -1005,7 +1006,9 @@ body.use-backdrop:before {
 }
 
 /* line 110 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ListView.styl */
-.ListView .ListView-item .ListView-item-action .glyphicon {
+.ListView .ListView-item .ListView-item-action .glyphicon,
+.ListView .ListView-item .ListView-item-action .fa,
+.ListView .ListView-item .ListView-item-action .ion {
   font-size: 1.3em;
 }
 
@@ -1053,7 +1056,9 @@ body.use-backdrop:before {
 }
 
 /* line 158 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ListView.styl */
-.ListView--twolines .ListView-item .ListView-item-marker .glyphicon {
+.ListView--twolines .ListView-item .ListView-item-marker .glyphicon,
+.ListView--twolines .ListView-item .ListView-item-marker .fa,
+.ListView--twolines .ListView-item .ListView-item-marker .ion {
   font-size: 24px;
   line-height: 40px;
 }

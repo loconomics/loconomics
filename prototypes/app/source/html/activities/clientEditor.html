@@ -22,7 +22,7 @@
                          data-bind="textInput: phone, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
                          placeholder="Mobile phone" aria-label="Mobile phone" />
                     <span class="input-group-btn" data-bind="visible: $root.validPhone()">
-                        <a href="#" data-bind="attr: { href: 'tel:' + $root.validPhone() }" class="btn btn-info"><span class="sr-only">Call to this phone</span><span class="glyphicon glyphicon-phone"></span></a>
+                        <a href="#" data-bind="attr: { href: 'tel:' + $root.validPhone() }" class="btn btn-info"><span class="sr-only">Call to this phone</span><span class="fa ion ion-ios-telephone-outline"></span></a>
                     </span>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                          data-bind="textInput: email, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
                          placeholder="Email" aria-label="Email" />
                     <span class="input-group-btn" data-bind="visible: $root.validEmail()">
-                        <a href="#" data-bind="attr: { href: 'mailto:' + $root.validEmail() }" class="btn btn-info"><span class="sr-only">Write e-mail</span><span class="glyphicon glyphicon-envelope"></span></a>
+                        <a href="#" data-bind="attr: { href: 'mailto:' + $root.validEmail() }" class="btn btn-info"><span class="sr-only">Write e-mail</span><span class="fa ion ion-ios-at-outline"></span></a>
                     </span>
                 </div>
             </div>

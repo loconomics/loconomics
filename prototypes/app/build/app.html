@@ -414,7 +414,7 @@
         <div class="ListView-item"> <a href="#" class="btn btn-link btn-block ListView-item-content">
         <p data-bind="text: label"></p>
       </a>
- <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="glyphicon glyphicon-trash"></span></a>
+ <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span></a>
 
         </div>
       </div>
@@ -594,7 +594,7 @@
               placeholder="Mobile phone" aria-label="Mobile phone" /> <span class="input-group-btn" data-bind="visible: $root.validPhone()">
                         <a href="#" data-bind="attr: { href: 'tel:' + $root.validPhone() }" class="btn btn-info"><span class="sr-only">Call to this phone</span>
               <span
-              class="glyphicon glyphicon-phone"></span>
+              class="fa ion ion-ios-telephone-outline"></span>
                 </a>
                 </span>
             </div>
@@ -610,7 +610,7 @@
               placeholder="Email" aria-label="Email" /> <span class="input-group-btn" data-bind="visible: $root.validEmail()">
                         <a href="#" data-bind="attr: { href: 'mailto:' + $root.validEmail() }" class="btn btn-info"><span class="sr-only">Write e-mail</span>
               <span
-              class="glyphicon glyphicon-envelope"></span>
+              class="fa ion ion-ios-at-outline"></span>
                 </a>
                 </span>
             </div>
@@ -907,7 +907,7 @@
                         <p data-bind="visible: !sessionsAndDuration(), text: name"></p>
                     </div>
                     <div class="Tile-icon">
-                      <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></span>
+                      <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button"><span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }"></span><span class="sr-only">Selected?</span></span>
                       <span data-bind="visible: !$root.isSelectionMode()"><span class="fa ion ion-edit"></span><span class="sr-only">Edit</span></span>
                     </div>
                 </a>
@@ -1802,7 +1802,7 @@
           
           <ul class="list-unstyled" data-bind="visible: isEvent()">
               <li data-bind="event: { click: editMode() && pickDateTime }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
+                  <span class="AppointmentCard-icon fa ion ion-ios-clock-outline"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="visible: item().startTime()">
                           <span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
@@ -1810,10 +1810,10 @@
                       </span>
                       <span data-bind="visible: editMode() && !item().startTime()" class="AppointmentCard-placeholderLabel">Select start date/time</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().startTime(), 'ion-ios-plus-empty': !item().startTime()}"></span></span>
               </li>
               <li data-bind="event: { click: editMode() && pickEndDateTime }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
+                  <span class="AppointmentCard-icon fa ion ion-ios-clock-outline"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="visible: item().endTime()">
                           <span data-bind="text: item().endTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
@@ -1821,7 +1821,7 @@
                       </span>
                       <span data-bind="visible: editMode() && !item().endTime()" class="AppointmentCard-placeholderLabel">Select end date/time</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().endTime(), 'glyphicon-plus': !item().endTime()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().endTime(), 'ion-ios-plus-empty': !item().endTime()}"></span></span>
               </li>
               <!--<li>
                   <span class="AppointmentCard-icon"></span>
@@ -1833,34 +1833,34 @@
                   </span>
               </li>-->
               <li data-bind="event: { click: editMode() && editTextField.bind(this, 'summary') }">
-                  <span class="AppointmentCard-icon fa ion ion-edit"></span>
+                  <span class="AppointmentCard-icon fa fa-file-text-o"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().summary"></span>
                       <span data-bind="visible: !item().summary()" class="AppointmentCard-placeholderLabel">What? (vacation, dentist, etc.)</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().summary(), 'glyphicon-plus': !item().summary()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().summary(), 'ion-ios-plus-empty': !item().summary()}"></span></span>
               </li>
               <li data-bind="event: { click: editMode() && pickLocation }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
+                  <span class="AppointmentCard-icon fa ion ion-ios-location-outline"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().addressSummary"></span>
                       <span data-bind="visible: editMode() && !item().addressSummary()" class="AppointmentCard-placeholderLabel">Select/Add location</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().addressSummary(), 'glyphicon-plus': !item().addressSummary()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().addressSummary(), 'ion-ios-plus-empty': !item().addressSummary()}"></span></span>
               </li>
               <li data-bind="event: { click: editMode() && editTextField.bind(this, 'description') }">
-                  <span class="AppointmentCard-icon fa ion ion-edit"></span>
+                  <span class="AppointmentCard-icon fa fa-file-text-o"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().description"></span>
                       <span data-bind="visible: !item().description()" class="AppointmentCard-placeholderLabel">Description/Notes</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().description(), 'glyphicon-plus': !item().description()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().description(), 'ion-ios-plus-empty': !item().description()}"></span></span>
               </li>
           </ul>
           
           <ul class="list-unstyled" data-bind="visible: isBooking()">
               <li data-bind="event: { click: editMode() && pickDateTime }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
+                  <span class="AppointmentCard-icon fa ion ion-ios-clock-outline"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="visible: item().startTime()">
                           <span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
@@ -1868,37 +1868,37 @@
                       </span>
                       <span data-bind="visible: editMode() && !item().startTime()" class="AppointmentCard-placeholderLabel">Select date/time</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().startTime(), 'ion-ios-plus-empty': !item().startTime()}"></span></span>
               </li>
               <li data-bind="event: { click: editMode() && isNew() && pickClient }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
+                  <span class="AppointmentCard-icon fa ion ion-android-contact"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().customer() && item().customer().fullName()"></span>
                       <span data-bind="visible: editMode() && !item().customer()" class="AppointmentCard-placeholderLabel">Select/Add client</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-plus': !item().customer()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-ios-plus-empty': !item().customer()}"></span></span>
               </li>
               <li data-bind="event: { click: editMode() && pickService }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
+                  <span class="AppointmentCard-icon fa ion ion-ios-pricetags-outline"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().servicesSummary()"></span>
                       <span data-bind="visible: editMode() && !item().servicesSummary()" class="AppointmentCard-placeholderLabel">Select/Add service(s)</span>
                   </span>
-              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().servicesSummary(), 'glyphicon-plus': !item().servicesSummary()}"></span></span>
+              <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().servicesSummary(), 'ion-ios-plus-empty': !item().servicesSummary()}"></span></span>
               </li>
               <li data-bind="event: { click: editMode() && changePrice }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
+                  <span class="AppointmentCard-icon fa ion ion-social-usd"></span>
                   <span class="AppointmentCard-data" data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></span>
-                  <!--<span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().price(), 'glyphicon-plus': !item().price()}"></span></span>
+                  <!--<span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().price(), 'ion-ios-plus-empty': !item().price()}"></span></span>
                   -->
               </li>
               <li data-bind="event: { click: editMode() && pickLocation }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
+                  <span class="AppointmentCard-icon fa ion ion-ios-location-outline"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().addressSummary"></span>
                       <span data-bind="visible: editMode() && !item().addressSummary()" class="AppointmentCard-placeholderLabel">Select/Add location</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().addressSummary(), 'glyphicon-plus': !item().addressSummary()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().addressSummary(), 'ion-ios-plus-empty': !item().addressSummary()}"></span></span>
               </li>
   
               <li data-bind="event: { click: editMode() && editTextField.bind(this, 'preNotesToClient') }">
@@ -1907,7 +1907,7 @@
                       <span data-bind="text: item().preNotesToClient"></span>
                       <span data-bind="visible: !item().preNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToClient(), 'glyphicon-plus': !item().preNotesToClient()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().preNotesToClient(), 'ion-ios-plus-empty': !item().preNotesToClient()}"></span></span>
               </li>
               <li data-bind="event: { click: editMode() && editTextField.bind(this, 'preNotesToSelf') }">
                   <span class="AppointmentCard-icon fa ion ion-edit"></span>
@@ -1915,24 +1915,24 @@
                       <span data-bind="text: item().preNotesToSelf"></span>
                       <span data-bind="visible: !item().preNotesToSelf()" class="AppointmentCard-placeholderLabel">Notes to self</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToSelf(), 'glyphicon-plus': !item().preNotesToSelf()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().preNotesToSelf(), 'ion-ios-plus-empty': !item().preNotesToSelf()}"></span></span>
               </li>
   
               <li data-bind="event: { click: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: !isNew() && item().itStarted()">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
+                  <span class="AppointmentCard-icon fa fa-file-text-o"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().postNotesToClient"></span>
                       <span data-bind="visible: !item().postNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client (afterwards)</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().postNotesToClient(), 'glyphicon-plus': !item().postNotesToClient()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().postNotesToClient(), 'ion-ios-plus-empty': !item().postNotesToClient()}"></span></span>
               </li>
               <li data-bind="event: { click: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: !isNew() && item().itStarted()">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
+                  <span class="AppointmentCard-icon fa fa-file-text-o"></span>
                   <span class="AppointmentCard-data">
                       <span data-bind="text: item().postNotesToSelf"></span>
                       <span data-bind="visible: !item().postNotesToSelf()" class="AppointmentCard-placeholderLabel">Booking summary (seen only by you)</span>
                   </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().postNotesToSelf(), 'glyphicon-plus': !item().postNotesToSelf()}"></span></span>
+                  <span class="AppointmentCard-editIcon"><span class="fa ion" data-bind="css: { 'ion-edit': item().postNotesToSelf(), 'ion-ios-plus-empty': !item().postNotesToSelf()}"></span></span>
               </li>
           </ul>
           <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && !editMode()">
@@ -2008,12 +2008,12 @@
     <!-- Component Template navbar-action -->
     <script type="text/html" id="navbar-action-template">
       <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }, event: { click: action && action.runHandler }">
-          <span data-bind="attr: { 'class': action && action.icon() }" class="glyphicon"></span>
+          <span data-bind="attr: { 'class': action && action.icon() }" class="icon"></span>
           <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
       </a>
       <button type="button" class="SmartNavBar-btn navbar-toggle collapsed" data-bind="visible: action && action.isMenu(), attr: { 'data-target': action && action.getMenuLink(), 'aria-controls': action && action.getMenuID() }" data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut">
           <span data-bind="visible: action && action.icon() === 'menu'">
-              <span class="fa ion-navicon ion"></span>
+              <span class="fa ion-navicon ion icon"></span>
               <!--<span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>-->

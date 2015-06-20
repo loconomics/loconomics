@@ -20,7 +20,7 @@
                         <p data-bind="visible: !sessionsAndDuration(), text: name"></p>
                     </div>
                     <div class="Tile-icon">
-                      <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></span>
+                      <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button"><span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }"></span><span class="sr-only">Selected?</span></span>
                       <span data-bind="visible: !$root.isSelectionMode()"><span class="fa ion ion-edit"></span><span class="sr-only">Edit</span></span>
                     </div>
                 </a></li>

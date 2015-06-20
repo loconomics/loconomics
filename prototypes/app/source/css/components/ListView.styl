@@ -50,8 +50,8 @@ $contentVGap = 6px;
             text-align: center;
             padding: 0;
 
-            /* If a Bootstrap glypicon is used, adjust to the best size */
-            .glyphicon {
+            /* If a Bootstrap/FontAwesome/Ionicon glypicon is used, adjust to the best size */
+            .glyphicon, .fa, .ion {
                 font-size: $markerIconSize;
                 line-height: $heightLimit;
             }
@@ -109,7 +109,7 @@ $contentVGap = 6px;
             right: 0px;
             padding: $contentVGap $contentHGap;
             
-            .glyphicon {
+            .glyphicon, .fa, .ion {
                 font-size: 1.3em;
             }
         }
@@ -160,7 +160,7 @@ $contentVGap = 6px;
     
         .ListView-item-marker {
             /* If a Bootstrap glypicon is used, adjust to the best size */
-            .glyphicon {
+            .glyphicon, .fa, .ion {
                 font-size: $markerIconSize;
                 line-height: $internalHeight;
             }
