@@ -19,19 +19,19 @@ function GetMore(values) {
     var availableItems = {
         availability: new ListViewItem({
             contentLine1: 'Complete your availability to create a cleaner calendar',
-            markerIcon: 'glyphicon glyphicon-calendar'
+            markerIcon: 'fa fa-fw fa-calendar'
         }),
         payments: new ListViewItem({
             contentLine1: 'Start accepting payments through Loconomics',
-            markerIcon: 'glyphicon glyphicon-refresh'
+            markerIcon: 'fa ion ion-card'
         }),
         profile: new ListViewItem({
             contentLine1: 'Activate your profile in the marketplace',
-            markerIcon: 'glyphicon glyphicon-usd'
+            markerIcon: 'fa ion ion-cash'
         }),
         coop: new ListViewItem({
             contentLine1: 'Learn more about our cooperative',
-            actionIcon: 'glyphicon glyphicon-chevron-right'
+            actionIcon: 'fa fa-gavel'
         })
     };
 

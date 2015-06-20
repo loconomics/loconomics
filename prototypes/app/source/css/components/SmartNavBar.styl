@@ -163,8 +163,14 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
             // Headers here are expected to go along
             // an icon, so give some space to avoid collision
             margin: 0 .6em;
+            vertical-align: middle;
         }
-
+        
+        // IMPORTANT: to fix missalignments, specially when icons needs a different
+        // base size, with the h1 alignment and icons alignment:
+        > span {
+            vertical-align: middle;
+        }
     }
         
     h1 {
@@ -185,6 +191,15 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     // Support for Bootstrap menu button
     .navbar-toggle .icon-bar {
         background-color: $SmartNavBar-buttonColor;
+    }
+    
+    // Icons well aligned (use of generic i, .icon, and Bootstrap, FontAwesone and Ion icons)
+    i,
+    .icon,
+    .glyphicon,
+    .fa,
+    .ion {
+        vertical-align: middle;
     }
     
     .SmartNavBar-notification {

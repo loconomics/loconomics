@@ -84,12 +84,12 @@ NavAction.prototype.getMenuLink = function getMenuLink() {
 /** Static, shared actions **/
 NavAction.goHome = new NavAction({
     link: '/',
-    icon: 'glyphicon glyphicon-home'
+    icon: 'fa ion ion-stats-bars'
 });
 
 NavAction.goBack = new NavAction({
     link: 'goBack',
-    icon: 'glyphicon glyphicon-arrow-left',
+    icon: 'fa ion ion-ios-arrow-left',
     isShell: true
 });
 

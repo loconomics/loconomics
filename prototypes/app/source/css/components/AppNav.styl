@@ -156,6 +156,21 @@ $AppNav-transitionDuration = 300ms;
         overflow: hidden;
         text-overflow: clip !important;
     }
+    
+    .SmartNavBar .SmartNavBar-btn {
+        // NOTE: Fixing the ridiculous size of ion icons used on navbar
+        .ion {
+            font-size: 2em;
+            line-height: $app-navbar-height;
+        }
+
+        // NOTE: Fixing a bug on the menu icon of ionicons used right now, that with
+        // the general size (2em->30px) looks missaligned the bars, increasing a pixel
+        // looks fine
+        .ion-navicon {
+            font-size: 31px;
+        }
+    }
 
     .navbar-toggle {
         transitionNavSetup();
@@ -173,19 +188,6 @@ $AppNav-transitionDuration = 300ms;
             > .icon {
                 // Fixing alingment on Chrome/Webkit
                 display: block;
-            }
-            
-            // NOTE: Fixing the ridiculous size of ion icons used on navbar
-            > .ion {
-                font-size: 2em;
-                line-height: $app-navbar-height;
-            }
-            
-            // NOTE: Fixing a bug on the menu icon of ionicons used right now, that with
-            // the general size (2em->30px) looks missaligned the bars, increasing a pixel
-            // looks fine
-            > .ion-navicon {
-                font-size: 31px;
             }
         }
         // DISABLED: with icons changes, rotation does not work as expected
