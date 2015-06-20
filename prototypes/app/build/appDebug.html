@@ -239,7 +239,7 @@
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content"><p>
                 InfoTile p content
@@ -248,7 +248,7 @@
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content"><p>
                 InfoTile p content, allows from 1 to 2 lines that cut large text test large text test large text test large text test large text test
@@ -257,7 +257,7 @@
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content">
                 <div>InfoTile single line</div>
@@ -267,7 +267,7 @@
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content">
                 <div>InfoTile single line, cut on single line large text test large text test large text test large text test large text test large text test</div>
@@ -399,12 +399,11 @@
 
       <div class="isolated">
         <div class="input-group"> <span class="input-group-addon">
-                <span class="glyphicon glyphicon-search"></span>
-          <span
-          class="sr-only">Search</span>
-            </span>
-            <input id="addJobTitles-search" type="text" class="form-control" placeholder="search"
-            data-bind="textInput: searchText"> <span class="input-group-btn">
+                <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
+</span>
+          <input
+          id="addJobTitles-search" type="text" class="form-control" placeholder="search"
+          data-bind="textInput: searchText"> <span class="input-group-btn">
                 <button type="button" class="btn btn-secondary" data-bind="event: { click: add }">Add</button>
             </span>
 
@@ -641,12 +640,11 @@
         <div class="isolated">
           <div class="input-group"> <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
                     <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
-                    <span class="glyphicon glyphicon-search"></span>
-
-            <span
-            class="sr-only">Search</span>
-              </span>
-              <input type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText"> <span class="input-group-btn">
+                    <span class="fa ion ion-ios-search"></span>
+ <span class="sr-only">Search</span>
+</span>
+            <input
+            type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText"> <span class="input-group-btn">
                     <a href="#" class="btn btn-secondary" data-bind="event: { click: addNew }">Add</a>
                 </span>
 
@@ -834,23 +832,20 @@
     <div class="container-fluid" data-activity="faqs">
       <div class="isolated">
         <div class="input-group"> <span class="input-group-addon">
-        <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+                <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
 </span>
           <input
           type="text" class="form-control" placeholder="search faqs" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
         </div>
         <!-- /input-group -->
       </div>
-      <div class="ListView ListView--twolines" data-bind="foreach: filteredFaqs">
-        <div class="ListView-item">
-          <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
-          data-bind="attr: { href: '/faqs/' + id() }"><p data-bind="text: title"></p></a>
-
-          <a
-          href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: '/faqs/' + id() }"><span class="fa ion ion-ios-arrow-right"></span>
-            </a>
-        </div>
-      </div>
+      <ul class="TilesList" data-bind="foreach: filteredFaqs">
+        <li><a class="LinkTile" href="/faqs/" data-bind="attr: { href: '/faqs/' + id() }">
+            <div class="Tile-content"><p data-bind="text: title"></p></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+      </ul>
       <div class="isolated text-center" data-bind="if: !filteredFaqs().length">
         <div>Nothing found :-(</div> <a href="/contactForm" class="btn btn-link">Contact us</a>
 
@@ -860,35 +855,23 @@
     <div class="container-fluid" data-activity="feedback">
        <h2 class="SectionTitle">We're here to help</h2>
 
-      <div class="ListView ListView--twolines ListView--textualmarker">
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/faqs" class="btn btn-link btn-block ListView-item-content">
-        <p>FAQs</p>
-      </a>
- <a href="/faqs" class="btn btn-link ListView-item-action"><span class="fa ion ion-ios-arrow-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/feedbackForm/general" class="btn btn-link btn-block ListView-item-content">
-        <p>Feedback and ideas</p>
-      </a>
- <a href="/feedbackForm/general" class="btn btn-link ListView-item-action"><span class="fa ion ion-ios-arrow-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/contactForm/general" class="btn btn-link btn-block ListView-item-content">
-        <p>Contact us</p>
-      </a>
- <a href="/contactForm/general" class="btn btn-link ListView-item-action"><span class="fa ion ion-plus"></span></a>
-
-        </div>
-      </div>
+      <ul class="TilesList">
+        <li><a class="LinkTile" href="/faqs">
+            <div class="Tile-content"><p>FAQs</p></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="LinkTile" href="/feedbackForm/general">
+            <div class="Tile-content"><p>Feedback and ideas</p></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="LinkTile" href="/contactForm/general">
+            <div class="Tile-content"><p>Contact us</p></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+    </div>
     </div>
     <!-- FeedbackForm activity -->
     <div class="container-fluid" data-activity="feedbackForm">
@@ -1163,7 +1146,7 @@
       <div class="isolated">
         <div class="input-group"> <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
             <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
-            <span class="glyphicon glyphicon-search"></span>
+            <span class="fa ion ion-ios-search"></span>
  <span class="sr-only">Search</span>
 </span>
           <input
@@ -2011,7 +1994,7 @@
     <!-- Component Template loading-spinner -->
     <script type="text/html" id="loading-spinner-template">
       <div class="loadingSpinner" data-bind="attr: { 'class': cssClass() }">
-          <span class="glyphicon glyphicon-refresh"></span>
+          <span class="icon fa ion ion-load-c"></span>
       </div>
     </script>
     <!-- Component Template navbar-action -->

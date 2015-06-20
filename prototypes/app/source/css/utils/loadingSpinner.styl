@@ -3,7 +3,7 @@
     
     The element to set the .loadingSpinner class is usually like:
       <span class="spinner text-info">
-        <span class="glyphicon glyphicon-refresh"></span>
+        <span class="fa ion ion-load-c"></span>
       </span>
 **/
 
@@ -55,8 +55,10 @@
     &.loadingSpinner--bigger
         font-size: 21px; //1.5em
 
-    .glyphicon
+    .icon
         transition: color 1.5s;
+        // Initial animation state, required to avoid problems on some cases
+        transform: rotate(0deg);
 
 .is-loading
     position: relative;
@@ -67,7 +69,7 @@
         &.loadingSpinner--collapsed
             display: inline-block;
 
-        .glyphicon
+        .icon
             animation: spin 3s linear infinite;
             
         &.loadingSpinner--row
@@ -77,13 +79,13 @@
 .is-saving
     @extend .is-loading
 
-    .loadingSpinner .glyphicon
+    .loadingSpinner .icon
         color $state-warning-text
 
 .is-syncing
     @extend .is-loading
 
-    .loadingSpinner .glyphicon
+    .loadingSpinner .icon
         color $state-info-text
 
 .SectionTitle

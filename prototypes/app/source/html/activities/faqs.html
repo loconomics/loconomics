@@ -2,23 +2,22 @@
 <div class="container-fluid" data-activity="faqs">
 
   <div class="isolated">
-    <div class="input-group">
-      <span class="input-group-addon">
-        <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
-      </span>
-      <input type="text" class="form-control" placeholder="search faqs" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
-    </div><!-- /input-group -->
-  </div>
-
-  <div class="ListView ListView--twolines" data-bind="foreach: filteredFaqs">
-    <div class="ListView-item">
-      <div class="ListView-item-marker"></div>
-      <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: '/faqs/' + id() }"><p data-bind="text: title"></p></a>
-      <a href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: '/faqs/' + id() }"><span class="fa ion ion-ios-arrow-right"></span></a>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
+            </span>
+            <input type="text" class="form-control" placeholder="search faqs" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+        </div><!-- /input-group -->
     </div>
-  </div>
-  <div class="isolated text-center" data-bind="if: !filteredFaqs().length">
-      <div>Nothing found :-(</div>
-      <a href="/contactForm" class="btn btn-link">Contact us</a>
-  </div>
+
+    <ul class="TilesList" data-bind="foreach: filteredFaqs">
+        <li><a class="LinkTile" href="/faqs/" data-bind="attr: { href: '/faqs/' + id() }">
+            <div class="Tile-content"><p data-bind="text: title"></p></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a></li>
+    </ul>
+    <div class="isolated text-center" data-bind="if: !filteredFaqs().length">
+        <div>Nothing found :-(</div>
+        <a href="/contactForm" class="btn btn-link">Contact us</a>
+    </div>
 </div>
