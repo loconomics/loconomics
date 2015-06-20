@@ -20,6 +20,12 @@ CompactLinkTile-addIcon($vgap) {
         max-width: $iconWidth;
         overflow: hidden;
         height: line-height-computed;
+
+        // Fix ionicons ridiculous size, setting the same as line-height
+        .ion {
+            line-height: line-height-computed;
+            font-size: line-height-computed;
+        }
     }
 }
 

@@ -2348,7 +2348,7 @@ body.use-backdrop:before {
 
 /* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
 
-/* line 35 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
 /* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
 .InfoTile {
@@ -2391,6 +2391,12 @@ body.use-backdrop:before {
   height: 40px;
   line-height: 40px;
   font-size: 24px;
+}
+
+/* line 33 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
+.InfoTile .Tile-icon .ion {
+  line-height: 20px;
+  font-size: $ine-height-computed;
 }
 
 /* line 75 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2444,9 +2450,9 @@ body.use-backdrop:before {
 
 /* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
   color: #333;
   display: block;
@@ -2473,7 +2479,7 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 36 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -2497,6 +2503,12 @@ body.use-backdrop:before {
   max-width: 16px;
   overflow: hidden;
   height: 20px;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.CompactLinkTile .Tile-icon .ion {
+  line-height: 20px;
+  font-size: 20px;
 }
 
 /* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LinkTile.styl */
@@ -2505,9 +2517,9 @@ body.use-backdrop:before {
 
 /* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
   color: #333;
   display: block;
@@ -2534,7 +2546,7 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 36 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -2558,6 +2570,12 @@ body.use-backdrop:before {
   max-width: 16px;
   overflow: hidden;
   height: 20px;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.CompactLinkTile .Tile-icon .ion {
+  line-height: 20px;
+  font-size: 20px;
 }
 
 /* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LinkTile.styl */
@@ -2647,6 +2665,12 @@ body.use-backdrop:before {
   height: 20px;
 }
 
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.LinkTile .Tile-icon .ion {
+  line-height: 20px;
+  font-size: 20px;
+}
+
 /* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
 
 /* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
@@ -2704,9 +2728,9 @@ body.use-backdrop:before {
 
 /* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
   color: #333;
   display: block;
@@ -2733,7 +2757,7 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 36 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -2757,6 +2781,12 @@ body.use-backdrop:before {
   max-width: 16px;
   overflow: hidden;
   height: 20px;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.CompactLinkTile .Tile-icon .ion {
+  line-height: 20px;
+  font-size: 20px;
 }
 
 /* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
@@ -2893,6 +2923,12 @@ body.use-backdrop:before {
   max-width: 16px;
   overflow: hidden;
   height: 20px;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.ItemTile .Tile-icon .ion {
+  line-height: 20px;
+  font-size: 20px;
 }
 
 /* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */

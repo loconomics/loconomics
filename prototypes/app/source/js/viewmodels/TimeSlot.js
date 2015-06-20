@@ -52,7 +52,7 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
         subject: apt.summary,
         description: apt.description,
         link: link,
-        actionIcon: (apt.sourceBooking() ? null : apt.sourceEvent() ? 'glyphicon glyphicon-chevron-right' : !apt.id() ? 'glyphicon glyphicon-plus' : null),
+        actionIcon: (apt.sourceBooking() ? null : apt.sourceEvent() ? 'fa ion ion-ios-arrow-right' : !apt.id() ? 'glyphicon glyphicon-plus' : null),
         actionText: (
             apt.sourceBooking() && 
             apt.sourceBooking().bookingRequest() && 
