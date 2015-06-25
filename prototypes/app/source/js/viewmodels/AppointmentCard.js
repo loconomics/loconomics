@@ -53,6 +53,14 @@ function AppointmentCardViewModel(params) {
         return this.item() && this.item().sourceEvent() && !this.item().sourceBooking();
     }, this);
     
+    this.headerClass = ko.pureComputed(function() {
+        return (
+            this.isBooking() ? 'Card-title--primary' :
+            this.isEvent() ? 'Card-title--danger' :
+            ''
+        );
+    }, this);
+    
     this.newAppointmentVisible = ko.pureComputed(function() {
         var id = this.currentID();
         return id === Appointment.specialIds.free || id === Appointment.specialIds.emptyDate || id === Appointment.specialIds.unavailable;

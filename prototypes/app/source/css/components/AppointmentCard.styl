@@ -7,6 +7,46 @@
 
 .AppointmentCard {
 
+    .Card-title {
+        /*h3 {
+            font-size: 1.1em;
+            font-weight: bold;
+        }*/
+        
+        > .LinkTile {
+            .Tile-icon {
+                transition: opacity 1.2s;
+                opacity: 1;
+                margin-right: 12px;
+                > * {
+                    font-size: 14px !important;
+                }
+            }
+        }
+
+        addColor($colorName, $color) {
+            &.Card-title--{$colorName} {
+                background: $color;
+
+                * {
+                    color: White !important;
+                }
+            }
+        }
+        for $color in $brand-colors {
+            addColor($color, $brand-colors[$color])
+        }
+    }
+    
+    &.in-edit,
+    &.is-readonly {
+        .Card-title > .LinkTile {
+            .Tile-icon {
+                opacity: 0;
+            }
+        }
+    }
+    
     .TilesList {
         padding: 0 6px;
         

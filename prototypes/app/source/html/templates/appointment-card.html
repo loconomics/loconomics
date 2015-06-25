@@ -1,7 +1,8 @@
 <!-- Component Template appointment-card -->
 <script type="text/html" id="appointment-card-template">
-    <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked }">
-        <div class="Card-title ItemTile">
+    <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
+        
+        <div class="Card-title ItemTile" data-bind="visible: currentID() <= 0">
             <i class="Tile-marker Tile-marker--fullIcon fa ion ion-ios-clock-outline" aria-hidden="true"></i>
             <div class="Tile-content">
                 <p class="text-muted" data-bind="visible: !item().summary(), text: item().stateHeader()"></p>
@@ -37,6 +38,18 @@
                 </a>
             </li>
         </ul>
+
+        <div class="Card-title" data-bind="visible: currentID() > 0, css: headerClass">
+            <button type="button" class="LinkTile" data-bind="click: currentID() > 0 && !editMode() && edit, disable: item().readOnly">
+                <div class="Tile-content">
+                    <div><small data-bind="text: editMode() ? 'Tap any section to edit' : item().stateHeader()"></small></div>
+                    <div><strong data-bind="text: item().summary()"></strong></div>
+                </div>
+                <div class="Tile-icon">
+                    <i class="fa ion ion-edit" aria-hidden="true"></i>
+                </div>
+            </button>
+        </div>
         
         <ul class="TilesList TilesList--opendEnd" data-bind="visible: isEvent()">
             <li>
@@ -178,10 +191,6 @@
             </li>
         </ul>
         
-        <div class="AppointmentCard-actions" data-bind="visible: currentID() > 0 && !editMode()">
-            <button type="button" class="btn btn-warning btn-block" data-bind="click: edit, disable: item().readOnly">Edit</button>
-            <button type="button" class="btn btn-default btn-block">Contact client</button>
-        </div>
         <div class="AppointmentCard-actions" data-bind="visible: editMode()">
             <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save changes</button>
             <!--<button type="button" class="btn btn-danger btn-block" data-bind="event: { click: remove }, disable: isLocked">Cancel booking</button>-->

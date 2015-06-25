@@ -4794,7 +4794,7 @@ body.use-backdrop:before {
 
 /* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
-/* line 27 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 
 /* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card {
@@ -4813,21 +4813,115 @@ body.use-backdrop:before {
 /* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
 /* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+
+/* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+
+/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title > .LinkTile .Tile-icon {
+  -webkit-transition: opacity 1.2s;
+  -moz-transition: opacity 1.2s;
+  -o-transition: opacity 1.2s;
+  -ms-transition: opacity 1.2s;
+  transition: opacity 1.2s;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  margin-right: 12px;
+}
+
+/* line 21 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title > .LinkTile .Tile-icon > * {
+  font-size: 14px !important;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--primary {
+  background: #00989a;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--primary * {
+  color: White !important;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--secondary {
+  background: #e0004f;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--secondary * {
+  color: White !important;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--success {
+  background: #47b347;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--success * {
+  color: White !important;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--info {
+  background: #5bc0de;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--info * {
+  color: White !important;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--warning {
+  background: #f0ad4e;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--warning * {
+  color: White !important;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--danger {
+  background: #d9534f;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .Card-title.Card-title--danger * {
+  color: White !important;
+}
+
+/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+
+/* line 43 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard.in-edit .Card-title > .LinkTile .Tile-icon,
+.AppointmentCard.is-readonly .Card-title > .LinkTile .Tile-icon {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+
+/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard .TilesList {
   padding: 0 6px;
 }
 
-/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+/* line 52 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard .TilesList > li {
   padding-right: 8px;
 }
 
-/* line 18 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+/* line 57 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-actions {
   margin: 14px 30px;
 }
 
-/* line 21 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+/* line 60 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-actions .btn {
   -webkit-border-radius: 0;
   border-radius: 0;

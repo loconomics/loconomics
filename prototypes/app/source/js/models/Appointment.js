@@ -99,14 +99,14 @@ function Appointment(values) {
         if (this.id() > 0) {
             if (this.itStarted()) {
                 if (this.itEnded()) {
-                    text = 'Completed:';
+                    text = 'Completed';
                 }
                 else {
-                    text = 'Now:';
+                    text = 'Now';
                 }
             }
             else {
-                text = 'Upcoming:';
+                text = 'Upcoming';
             }
         }
 
