@@ -112,7 +112,7 @@ public static class LcAuthHelper
             userID = userID,
             authKey = authKey,
             profile = profile,
-            onboardingStep = profile.onboardingStep
+            onboardingStep = profile == null ? null : profile.onboardingStep
         };
     }
     #endregion
