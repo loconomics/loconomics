@@ -35,37 +35,37 @@
       </div>
       <div class="App-menus">
         <div id="menuIn" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a>tools</a>
+           <h4 class="App-menus-header">
+                        <div class="App-menus-header-photo"><img data-bind="attr: { src: photoUrl }" /></div>
+                        <span class="App-menus-header-user" data-bind="text: userName"></span>
+                    </h4>
 
-              <ul class="nav">
-                <li class="go-home"><a href="/home">Dashboard</a>
-                </li>
-                <li class="go-calendar"><a href="/calendar">Calendar</a>
-                </li>
-                <li class="go-inbox"><a href="/inbox">Inbox</a>
-                </li>
-                <li class="go-scheduling"><a href="/scheduling">Scheduling</a>
-                </li>
-                <li class="go-cms"><a href="/cms">Client management</a>
-                </li>
-                <li class="go-payments"><a href="/payments">Payment processing</a>
-                </li>
-                <li class="go-performance"><a href="/performance">Performance</a>
-                </li>
-                <li class="go-insurance"><a href="/insurance">Insurance</a>
-                </li>
-                <li class="go-marketplace"><a href="/marketplace">Marketplace</a>
-                </li>
-              </ul>
+          <ul class="nav navbar-nav">
+            <li class="go-home"><a href="/home"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a>
             </li>
-            <li class="go-marketplace-profile"><a href="/marketplace-profile">Marketplace profile</a>
+            <li class="go-calendar"><a href="/calendar"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Calendar</a>
             </li>
-            <li class="go-account"><a href="/account">Account</a>
+            <li class="go-inbox"><a href="/inbox"><i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i> Inbox</a>
             </li>
-            <li class="go-feedback"><a href="/feedback">Talk to us</a>
+            <li class="go-scheduling"><a href="/scheduling"><i class="fa fa-fw fa-calendar-o" aria-hidden="true"></i> Scheduling</a>
             </li>
-            <li class="go-logout"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+            <li class="go-cms"><a href="/cms"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Clients</a>
+            </li>
+            <li class="go-payments"><a href="/payments"><i class="fa fa-fw ion-card" aria-hidden="true"></i> Payments</a>
+            </li>
+            <li class="go-performance"><a href="/performance"><i class="fa fa-fw ion-ios-speedometer-outline" aria-hidden="true"></i> Performance</a>
+            </li>
+            <li class="go-performance"><a href="/insurance"><i class="fa fa-fw ion-umbrella" aria-hidden="true"></i> Insurance</a>
+            </li>
+            <li class="go-marketplace-profile"><a href="/marketplace-profile"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a>
+            </li>
+            <li class="go-insurance"><a href="/insurance"><i class="fa fa-fw ion-ios-cart-outline" aria-hidden="true"></i> Hire services</a>
+            </li>
+            <li class="go-account"><a href="/account"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Account</a>
+            </li>
+            <li class="go-feedback"><a href="/feedback"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Talk to us</a>
+            </li>
+            <li class="go-logout"><a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a>
             </li>
           </ul>
         </div>
@@ -78,21 +78,18 @@
           </ul>
         </div>
         <div id="menuNewItem" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a>Add new</a>
+           <h4 class="App-menus-header">ADD NEW</h4>
 
-              <ul class="nav">
-                <li class="go-booking-new"><a href="/appointment/-4">Booking</a>
-                </li>
-                <li class="go-client-new"><a href="/clientEditor">Client</a>
-                </li>
-                <li class="go-calendar-new"><a href="/appointment/-3">Calendar block</a>
-                </li>
-                <li class="go-pricing-new"><a href="/freelancerPricing/new">Pricing</a>
-                </li>
-                <li class="go-jobtitle-new"><a href="/addJobTitles">Job title</a>
-                </li>
-              </ul>
+          <ul class="nav navbar-nav">
+            <li class="go-booking-new"><a href="/appointment/-4"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Booking</a>
+            </li>
+            <li class="go-client-new"><a href="/clientEditor"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Client</a>
+            </li>
+            <li class="go-calendar-new"><a href="/appointment/-3"><i class="fa fa-fw fa-ban" aria-hidden="true"></i> Calendar block</a>
+            </li>
+            <li class="go-pricing-new"><a href="/freelancerPricing/new"><i class="fa fa-fw ion-ios-pricetag-outline" aria-hidden="true"></i> Pricing</a>
+            </li>
+            <li class="go-jobtitle-new"><a href="/addJobTitles"><i class="fa fa-fw ion-settings" aria-hidden="true"></i> Job title</a>
             </li>
           </ul>
         </div>
@@ -205,24 +202,24 @@
         </li>
         <li><a class="CompactLinkTile" href="#">
             <div class="Tile-content">CompactLinkTile for simple one-line links. Long text cut on line ending.</div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
         </li>
         <li><a class="CompactLinkTile" href="#">
             <div class="Tile-content">Go there</div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
         </li>
         <li><a class="LinkTile" href="#">
             <div class="Tile-content"><p>LinkTile for two lines links, 'p' content.</p></div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
         </li>
         <li><a class="LinkTile" href="#">
             <div class="Tile-content">
                 <p>LinkTile for two lines links. Long text cut on second line. large text test large text test large text test large text test large text test large text test</p>
             </div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
         </li>
         <li><a class="LinkTile" href="#">
@@ -230,7 +227,7 @@
                 <div>LinkTile line one</div>
                 <em>Extra 'em' single line.</em>
             </div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
         </li>
         <li><a class="LinkTile" href="#">
@@ -238,12 +235,12 @@
                 <div>LinkTile line one</div>
                 <em>Using strong and <strong class="text-danger">a Bootstrap class-color</strong>. Cut on single line large text test large text test large text test large text test large text test large text test</em>
             </div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content"><p>
                 InfoTile p content
@@ -252,7 +249,7 @@
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa ion ion-load-c fa-spin" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content"><p>
                 InfoTile p content, allows from 1 to 2 lines that cut large text test large text test large text test large text test large text test
@@ -261,7 +258,7 @@
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content">
                 <div>InfoTile single line</div>
@@ -271,7 +268,7 @@
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content">
                 <div>InfoTile single line, cut on single line large text test large text test large text test large text test large text test large text test</div>
@@ -285,9 +282,9 @@
             </div>
             <div class="Tile-content">
                 <div>ItemTile line one</div>
-                <em>More text.</em>
+                <em>Marker on left.</em>
             </div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
         </a>
         </li>
         <li><a class="ItemTile" href="#">
@@ -296,9 +293,161 @@
             </div>
             <div class="Tile-content">
                 <div>ItemTile line one</div>
-                <em>More text. Cut on single line large text test large text test large text test large text test large text test large text test</em>
+                <em>Icon on right. Cut on single line large text test large text test large text test large text test large text test large text test</em>
             </div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="ItemTile" href="#">
+            <div class="Tile-marker">
+                <div>$120</div>
+                <em>First time</em>
+            </div>
+            <div class="Tile-content">
+                <div><strong>ItemTile line one</strong></div>
+                <em>Cut on single line large text test large text test large text test large text test large text test large text test</em>
+            </div>
+            <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="ItemTile" href="#">
+            <i class="Tile-marker fa ion ion-load-c fa-spin" aria-hidden="true"></i>
+            <div class="Tile-content">
+                <div><strong>ItemTile line one</strong></div>
+                <em>With an &lt;i&gt; icon on the left, centered</em>
+            </div>
+            <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile" href="#">
+            <div class="Tile-marker">
+                <div>8:00am</div>
+                <em>11:30am</em>
+            </div>
+            <div class="Tile-content">
+                <div><strong>ItemAddonTile line one</strong></div>
+                <div>Wider right side (addon)</div>
+            </div>
+            <div class="Tile-addon"><span class="fa fa-edit fa-2x" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile" href="#">
+            <div class="Tile-marker">
+                <div>8:00am</div>
+                <em>11:30am</em>
+            </div>
+            <div class="Tile-content">
+                <p><strong>ItemAddonTile single</strong></p>
+            </div>
+            <div class="Tile-addon"><div>One</div><em>Two</em></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile" href="#">
+            <div class="Tile-marker">
+                <div>8:00am</div>
+                <em>11:30am</em>
+            </div>
+            <div class="Tile-content">
+                <p><strong>ItemAddonTile multi line text example, example, example, example.</strong></p>
+            </div>
+            <div class="Tile-addon"><p>Addon text multiline</p></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
+            <div class="Tile-marker">
+                <div>8:00am</div>
+                <em>11:30am</em>
+            </div>
+            <div class="Tile-content">
+                <div><strong>ItemAddonTile larger</strong></div>
+                <div>Takes 3 lines</div>
+                <em>Less important</em>
+            </div>
+            <div class="Tile-addon"><span class="fa fa-edit fa-2x" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
+            <div class="Tile-marker">
+                <p>12:45pm</p>
+            </div>
+            <div class="Tile-content">
+                <div><strong>ItemAddonTile larger</strong></div>
+                <p>A paragraph for 2 lines after a one-line.</p>
+            </div>
+            <div class="Tile-addon"><p><strong>$155</strong></p></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
+            <div class="Tile-marker">
+                <p>12:45pm</p>
+            </div>
+            <div class="Tile-content">
+                <div><strong>ItemAddonTile larger</strong></div>
+                <p>Small text on larger</p>
+            </div>
+            <div class="Tile-addon"><p><strong>$20/hour</strong></p></div>
+        </a>
+        </li>
+        <li><a class="CompactLinkTile Tile--tag-danger" href="#">
+            <div class="Tile-content">Tag-danger on CompactLinkTile.</div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="ItemTile Tile--tag-success" href="#">
+            <div class="Tile-marker">
+                <p>$120</p>
+            </div>
+            <div class="Tile-content">
+                <div>Tag-success on ItemTile</div>
+                <em>Marker on left.</em>
+            </div>
+            <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile Tile--tag-gray-lighter" href="#">
+            <div class="Tile-marker">
+                <div>8:00am</div>
+                <em>11:30am</em>
+            </div>
+            <div class="Tile-content">
+                <p><strong>Tag-gray-lighter on ItemAddonTile.</strong></p>
+            </div>
+            <div class="Tile-addon"><p>Addon text multiline</p></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile Tile--tag-primary" href="#">
+            <div class="Tile-marker">
+                <div>8:00am</div>
+                <em>11:30am</em>
+            </div>
+            <div class="Tile-content">
+                <p>Tag-primary on ItemAddonTile.</p>
+            </div>
+            <div class="Tile-addon"><p>Addon text multiline</p></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile Tile--tag-info" href="#">
+            <div class="Tile-marker">
+                <div>8:00am</div>
+                <em>11:30am</em>
+            </div>
+            <div class="Tile-content">
+                <div><strong>Tag-info on ItemAddonTile</strong></div>
+                <div>Wider right side (addon)</div>
+            </div>
+            <div class="Tile-addon"><span class="fa fa-edit fa-2x" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="ItemAddonTile Tile--tag-warning ItemAddonTile--largerContent"
+          href="#">
+            <div class="Tile-marker">
+                <p>12:45pm</p>
+            </div>
+            <div class="Tile-content">
+                <div><strong>Tag-warning on ItemAddonTile larger</strong></div>
+                <p>More text. Cut on single line large text test large text test large text test large text test large text test large text test</p>
+            </div>
+            <div class="Tile-addon"><p><strong>$20/hour</strong></p></div>
         </a>
         </li>
         <li><a href="#" class="MessageTile">
@@ -357,7 +506,7 @@
       <ul class="TilesList">
         <li><a class="InfoTile" href="/ownerInfo">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                <span class="fa ion ion-ios-information-outline" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Owner information</p>
@@ -366,7 +515,7 @@
         </li>
         <li><a class="InfoTile" href="/privacySettings">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                <span class="fa ion ion-ios-eye-outline" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Privacy settings</p>
@@ -376,7 +525,7 @@
         <li><a class="InfoTile" href="https://loconomics.com/en-US/About/TermsOfUse/"
           target="_blank">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                <span class="fa fa-file-text-o" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Terms of Use</p>
@@ -386,7 +535,7 @@
         <li><a class="InfoTile" href="https://loconomics.com/en-US/About/PrivacyPolicy/"
           target="_blank">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                <span class="fa fa-file-text-o" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Privacy policy</p>
@@ -403,12 +552,11 @@
 
       <div class="isolated">
         <div class="input-group"> <span class="input-group-addon">
-                <span class="glyphicon glyphicon-search"></span>
-          <span
-          class="sr-only">Search</span>
-            </span>
-            <input id="addJobTitles-search" type="text" class="form-control" placeholder="search"
-            data-bind="textInput: searchText"> <span class="input-group-btn">
+                <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
+</span>
+          <input
+          id="addJobTitles-search" type="text" class="form-control" placeholder="search"
+          data-bind="textInput: searchText"> <span class="input-group-btn">
                 <button type="button" class="btn btn-secondary" data-bind="event: { click: add }">Add</button>
             </span>
 
@@ -419,7 +567,7 @@
         <div class="ListView-item"> <a href="#" class="btn btn-link btn-block ListView-item-content">
         <p data-bind="text: label"></p>
       </a>
- <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="glyphicon glyphicon-trash"></span></a>
+ <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span></a>
 
         </div>
       </div>
@@ -478,7 +626,7 @@
     <!-- Activity appointment -->
     <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
-      <div id="calendarAppointmentView" class="full-height row CardsDeck CardsDeck--dotsSlider"
+      <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
         <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
         <div class="CardsDeck-dots" data-bind="foreach: appointments"> <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
@@ -544,8 +692,7 @@
 
       <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
       <!-- Daily View (appointments list) -->
-      <div id="calendarDailyView" class="full-height ListView ListView--largemarker ListView--twolines ListView--textualmarker ListView--colortags"
-      data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
+      <div id="calendarDailyView" class="TilesList" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
     </div>
     <!-- CalendarSyncing activity -->
     <div class="container-fluid" data-activity="calendarSyncing">
@@ -599,7 +746,7 @@
               placeholder="Mobile phone" aria-label="Mobile phone" /> <span class="input-group-btn" data-bind="visible: $root.validPhone()">
                         <a href="#" data-bind="attr: { href: 'tel:' + $root.validPhone() }" class="btn btn-info"><span class="sr-only">Call to this phone</span>
               <span
-              class="glyphicon glyphicon-phone"></span>
+              class="fa ion ion-ios-telephone-outline"></span>
                 </a>
                 </span>
             </div>
@@ -615,7 +762,7 @@
               placeholder="Email" aria-label="Email" /> <span class="input-group-btn" data-bind="visible: $root.validEmail()">
                         <a href="#" data-bind="attr: { href: 'mailto:' + $root.validEmail() }" class="btn btn-info"><span class="sr-only">Write e-mail</span>
               <span
-              class="glyphicon glyphicon-envelope"></span>
+              class="fa ion ion-ios-at-outline"></span>
                 </a>
                 </span>
             </div>
@@ -645,12 +792,11 @@
         <div class="isolated">
           <div class="input-group"> <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
                     <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
-                    <span class="glyphicon glyphicon-search"></span>
-
-            <span
-            class="sr-only">Search</span>
-              </span>
-              <input type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText"> <span class="input-group-btn">
+                    <span class="fa ion ion-ios-search"></span>
+ <span class="sr-only">Search</span>
+</span>
+            <input
+            type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText"> <span class="input-group-btn">
                     <a href="#" class="btn btn-secondary" data-bind="event: { click: addNew }">Add</a>
                 </span>
 
@@ -708,13 +854,13 @@
         <ul class="TilesList">
           <li> <a class="LinkTile" href="/clients">
                     <div class="Tile-content"><p>My clients</p></div>
-                    <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right"></span></div>
+                    <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right"></span></div>
                 </a>
 
           </li>
         </ul> <a class="CompactLinkTile" href="/clientEditor">
             <div class="Tile-content text-muted">Add a new client</div>
-            <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </a>
 
       </div>
@@ -838,23 +984,20 @@
     <div class="container-fluid" data-activity="faqs">
       <div class="isolated">
         <div class="input-group"> <span class="input-group-addon">
-        <span class="glyphicon glyphicon-search"></span><span class="sr-only">Search</span>
+                <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
 </span>
           <input
           type="text" class="form-control" placeholder="search faqs" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
         </div>
         <!-- /input-group -->
       </div>
-      <div class="ListView ListView--twolines" data-bind="foreach: filteredFaqs">
-        <div class="ListView-item">
-          <div class="ListView-item-marker"></div> <a href="#" class="btn btn-link btn-block ListView-item-content"
-          data-bind="attr: { href: '/faqs/' + id() }"><p data-bind="text: title"></p></a>
-
-          <a
-          href="#" class="btn btn-link ListView-item-action" data-bind="attr: { href: '/faqs/' + id() }"><span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </div>
-      </div>
+      <ul class="TilesList" data-bind="foreach: filteredFaqs">
+        <li><a class="LinkTile" href="/faqs/" data-bind="attr: { href: '/faqs/' + id() }">
+            <div class="Tile-content"><p data-bind="text: title"></p></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+      </ul>
       <div class="isolated text-center" data-bind="if: !filteredFaqs().length">
         <div>Nothing found :-(</div> <a href="/contactForm" class="btn btn-link">Contact us</a>
 
@@ -864,35 +1007,23 @@
     <div class="container-fluid" data-activity="feedback">
        <h2 class="SectionTitle">We're here to help</h2>
 
-      <div class="ListView ListView--twolines ListView--textualmarker">
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/faqs" class="btn btn-link btn-block ListView-item-content">
-        <p>FAQs</p>
-      </a>
- <a href="/faqs" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/feedbackForm/general" class="btn btn-link btn-block ListView-item-content">
-        <p>Feedback and ideas</p>
-      </a>
- <a href="/feedbackForm/general" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-chevron-right"></span></a>
-
-        </div>
-        <div class="ListView-item">
-          <div class="ListView-item-marker">
-            <p></p>
-          </div> <a href="/contactForm/general" class="btn btn-link btn-block ListView-item-content">
-        <p>Contact us</p>
-      </a>
- <a href="/contactForm/general" class="btn btn-link ListView-item-action"><span class="glyphicon glyphicon-plus"></span></a>
-
-        </div>
-      </div>
+      <ul class="TilesList">
+        <li><a class="LinkTile" href="/faqs">
+            <div class="Tile-content"><p>FAQs</p></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="LinkTile" href="/feedbackForm/general">
+            <div class="Tile-content"><p>Feedback and ideas</p></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+        <li><a class="LinkTile" href="/contactForm/general">
+            <div class="Tile-content"><p>Contact us</p></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+        </li>
+    </div>
     </div>
     <!-- FeedbackForm activity -->
     <div class="container-fluid" data-activity="feedbackForm">
@@ -928,8 +1059,8 @@
                         <p data-bind="visible: !sessionsAndDuration(), text: name"></p>
                     </div>
                     <div class="Tile-icon">
-                      <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button"><span class="glyphicon" data-bind="css: { 'glyphicon-check': isSelected, 'glyphicon-unchecked': !isSelected() }"></span><span class="sr-only">Selected?</span></span>
-                      <span data-bind="visible: !$root.isSelectionMode()"><span class="glyphicon glyphicon-edit"></span><span class="sr-only">Edit</span></span>
+                      <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button"><span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }"></span><span class="sr-only">Selected?</span></span>
+                      <span data-bind="visible: !$root.isSelectionMode()"><span class="fa ion ion-edit"></span><span class="sr-only">Edit</span></span>
                     </div>
                 </a>
             </li>
@@ -1110,7 +1241,7 @@
           </li>
         </ul> <a class="CompactLinkTile" href="/calendar">
             <div class="Tile-content">Go to calendar</div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
 
       </div>
@@ -1128,7 +1259,7 @@
         </div>
         <div id="homeInbox" class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div> <a class="CompactLinkTile" href="/inbox">
             <div class="Tile-content">Go to inbox</div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
 
       </div>
@@ -1144,7 +1275,7 @@
           </li>
         </ul> <a class="CompactLinkTile" href="/performance">
             <div class="Tile-content">Go to performance</div>
-            <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
 
       </div>
@@ -1167,7 +1298,7 @@
       <div class="isolated">
         <div class="input-group"> <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
             <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
-            <span class="glyphicon glyphicon-search"></span>
+            <span class="fa ion ion-ios-search"></span>
  <span class="sr-only">Search</span>
 </span>
           <input
@@ -1210,7 +1341,7 @@
       <ul class="TilesList">
         <li><a class="InfoTile" href="/freelancerPricing" data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content">
                 <div>Pricing and services</div>
@@ -1220,7 +1351,7 @@
         </li>
         <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: '/serviceAddresses/' + jobTitleID() }">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+                <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content">
                 <div>Service locations</div>
@@ -1230,7 +1361,7 @@
         </li>
         <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: '/bookMeButton//' + jobTitleID() }">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
             </div>                
             <div class="Tile-content">
                 <p>Add Book Now button</p>
@@ -1297,7 +1428,7 @@
       <ul class="TilesList">
         <li><a class="InfoTile" href="/contactInfo">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Contact information</p>
@@ -1306,17 +1437,25 @@
         </li>
         <li><a class="InfoTile" href="/userFees">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                <span class="fa fa-dollar" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>User fees</p>
             </div>
         </a>
         </li>
+        <!--<li><a class="InfoTile" href="/payments/next">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-clock-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Next payment</p>
+            </div>
+        </a></li>-->
         <li><a class="InfoTile" href="https://loconomics.com/en-US/About/OwnerAcknowledgment/"
           target="_blank">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                <span class="fa fa-file-text-o" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Owner acknowledgment</p>
@@ -1326,7 +1465,7 @@
         <li><a class="InfoTile" href="https://loconomics.com/en-US/About/Bylaws/"
           target="_blank">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                <span class="fa fa-gavel" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Cooperative Bylaws</p>
@@ -1336,7 +1475,7 @@
         <li><a class="InfoTile" href="https://loconomics.com/en-US/About/BoardNominationForm/"
           target="_blank">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                <span class="fa ion ion-ios-compose" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Board nominations</p>
@@ -1422,7 +1561,7 @@
 
       <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle"></app-job-titles-list> <a class="CompactLinkTile" href="/addJobTitles">
         <div class="Tile-content text-muted">Add a job title</div>
-        <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span></div>
+        <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
     </a>
 
        <h2 class="SectionTitle">Availability</h2>
@@ -1430,7 +1569,7 @@
       <ul class="TilesList TilesList--openEnd">
         <li><a class="InfoTile" href="/weeklySchedule">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
+                <span class="fa fa-calendar" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Schedule</p>
@@ -1439,7 +1578,7 @@
         </li>
         <li><a class="InfoTile" href="/schedulingPreferences">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                <span class="fa ion ion-ios-settings" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Scheduling preferences</p>
@@ -1448,7 +1587,7 @@
         </li>
         <li><a class="InfoTile" href="/appointment/-3">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+                <span class="fa fa-ban" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Block time off calendar</p>
@@ -1457,7 +1596,7 @@
         </li>
         <li><a class="InfoTile" href="/calendarSyncing">
             <div class="Tile-icon" aria-hidden="true">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa ion ion-ios-loop" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
                 <p>Sync existing calendars</p>
@@ -1472,7 +1611,7 @@
        <h2 class="SectionTitle">Schedule preferences</h2>
 
       <script type="text/html" id="schedulingPrefs-radioButton">
-        <label class="btn btn-primary" data-bind="css: { 'active': value() === itemValue }">
+        <label class="btn btn-default" data-bind="css: { 'active btn-primary': value() === itemValue }">
             <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
             <span data-bind="text: labelText"></span>
         </label>
@@ -1559,7 +1698,7 @@
         <ul class="TilesList" data-bind="foreach: addresses">
           <li><a class="InfoTile" href="#" data-bind="click: $root.selectAddress">
                 <div class="Tile-icon" aria-hidden="true">
-                    <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+                    <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
                 </div>
                 <div class="Tile-content">
                     <div data-bind="text: addressName() || 'Service Area'"></div>
@@ -1572,17 +1711,17 @@
       <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">
         <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
           <div class="Tile-content text-muted">Add a service location</div>
-          <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span>
+          <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
           </div>
         </button>
         <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !isSelectionMode()">
           <div class="Tile-content text-muted">Add a service area</div>
-          <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span>
+          <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
           </div>
         </button>
         <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: isSelectionMode() && clientID()">
           <div class="Tile-content text-muted">Add a client location</div>
-          <div class="Tile-icon text-muted"><span class="glyphicon glyphicon-plus"></span>
+          <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
           </div>
         </button>
       </div>
@@ -1634,7 +1773,7 @@
       </div>
       <div class="row isolated">
         <div class="col-xs-6">
-          <button type="button" class="btn btn-warning btn-block" data-bind="event: { click: cancel }">Cancel</button>
+          <button type="button" class="btn btn-warning btn-block" data-bind="event: { click: cancel }">cancel</button>
         </div>
         <div class="col-xs-6">
           <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }">Save</button>
@@ -1793,48 +1932,81 @@
     </div>
     <!-- Component Template appointment-card -->
     <script type="text/html" id="appointment-card-template">
-      <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked }">
-          <div class="Card-title">
-              <h3><span data-bind="text: currentID() > 0 ? item().stateHeader() : ''"></span>&nbsp;</h3>
-              <h2 data-bind="text: item().summary() || '..'"></h2>
-              <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+      <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
+          
+          <div class="Card-title ItemTile" data-bind="visible: currentID() <= 0">
+              <i class="Tile-marker Tile-marker--fullIcon fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+              <div class="Tile-content">
+                  <p class="text-muted" data-bind="visible: !item().summary(), text: item().stateHeader()"></p>
+                  <em data-bind="visible: item().summary() && item().stateHeader()">
+                      <span data-bind="text: item().stateHeader()"></span>
+                  </em>
+                  <p class="text-muted" data-bind="visible: item().summary() && !item().stateHeader(), text: item().summary()"></p>
+                  <div data-bind="visible: item().summary() && item().stateHeader(), text: item().summary()"></div>
+              </div>
+              <div class="Tile-icon icon-loading icon-loading-spinner">
+                  <span class="icon fa ion ion-load-c"></span>
+              </div>
           </div>
-          <ul class="list-unstyled" data-bind="visible: newAppointmentVisible()">
+          <ul class="TilesList TilesList--opendEnd" data-bind="visible: newAppointmentVisible()">
               <li>
-                  <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-4"
-                     data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-4' }">Add new booking</a>
+                  <a class="LinkTile" href="#appointment/-4"
+                     data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-4' }">
+                      <div class="Tile-content"><p>Add new booking</p></div>
+                      <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
+                  </a>
               </li>
               <li>
-                  <a class="btn btn-link btn-block" style="text-align: left" href="#appointment/-3"
-                      data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-3' }">Add new calendar block</a>
+                  <a class="LinkTile" href="#appointment/-3"
+                      data-bind="attr: { href: '#!appointment/' + currentDate().toISOString() + '/-3' }">
+                      <div class="Tile-content"><p>Add new calendar block</p></div>
+                      <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
+                  </a>
               </li>
               <li data-bind="visible: editScheduleVisible">
-                  <a class="btn btn-link btn-block" style="text-align: left" href="#!/weeklySchedule">Adjust availability</a>
+                  <a class="LinkTile" href="#!/weeklySchedule">
+                      <div class="Tile-content"><p>Adjust availability</p></div>
+                      <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-settings"></span></div>
+                  </a>
               </li>
           </ul>
+  
+          <div class="Card-title" data-bind="visible: currentID() > 0, css: headerClass">
+              <button type="button" class="LinkTile" data-bind="click: currentID() > 0 && !editMode() && edit, disable: item().readOnly">
+                  <div class="Tile-content">
+                      <div><small data-bind="text: editMode() ? 'Tap any section to edit' : item().stateHeader()"></small></div>
+                      <div><strong data-bind="text: item().summary()"></strong></div>
+                  </div>
+                  <div class="Tile-icon">
+                      <i class="fa ion ion-edit" aria-hidden="true"></i>
+                  </div>
+              </button>
+          </div>
           
-          <ul class="list-unstyled" data-bind="visible: isEvent()">
-              <li data-bind="event: { click: editMode() && pickDateTime }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="visible: item().startTime()">
-                          <span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
-                          <span data-bind="text: item().displayedStartTime()"></span>
-                      </span>
-                      <span data-bind="visible: editMode() && !item().startTime()" class="AppointmentCard-placeholderLabel">Select start date/time</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
+          <ul class="TilesList TilesList--opendEnd" data-bind="visible: isEvent()">
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && pickDateTime">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <i class="fa ion ion-ios-clock-outline"></i>
+                      </div>
+                      <div class="Tile-content">
+                          <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                          <div data-bind="visible: item().startTime(), text: item().displayedStartTime()"></div>
+                          <p data-bind="visible: editMode() && !item().startTime()" class="text-mute">Select start date/time</p>
+                      </div>
+                  </button>
               </li>
-              <li data-bind="event: { click: editMode() && pickEndDateTime }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="visible: item().endTime()">
-                          <span data-bind="text: item().endTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
-                          <span data-bind="text: item().displayedEndTime()"></span>
-                      </span>
-                      <span data-bind="visible: editMode() && !item().endTime()" class="AppointmentCard-placeholderLabel">Select end date/time</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().endTime(), 'glyphicon-plus': !item().endTime()}"></span></span>
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && pickEndDateTime">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-ios-clock-outline"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <div data-bind="visible: item().endTime(), text: item().endTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                          <div data-bind="visible: item().endTime(), text: item().displayedEndTime()"></div>
+                          <p data-bind="visible: editMode() && !item().endTime()" class="text-mute">Select end date/time</p>
+                      </div>
+                  </button>
               </li>
               <!--<li>
                   <span class="AppointmentCard-icon"></span>
@@ -1845,116 +2017,147 @@
                       </label>
                   </span>
               </li>-->
-              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'summary') }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().summary"></span>
-                      <span data-bind="visible: !item().summary()" class="AppointmentCard-placeholderLabel">What? (vacation, dentist, etc.)</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().summary(), 'glyphicon-plus': !item().summary()}"></span></span>
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'summary')">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-ios-compose-outline"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().summary(), text: item().summary"></p>
+                          <p data-bind="visible: !item().summary()" class="text-mute">What? (vacation, dentist, etc.)</p>
+                      </div>
+                  </button>
               </li>
-              <li data-bind="event: { click: editMode() && pickLocation }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().addressSummary"></span>
-                      <span data-bind="visible: editMode() && !item().addressSummary()" class="AppointmentCard-placeholderLabel">Select/Add location</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().addressSummary(), 'glyphicon-plus': !item().addressSummary()}"></span></span>
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && pickLocation">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-ios-location-outline"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().addressSummary(), text: item().addressSummary"></p>
+                          <p data-bind="visible: editMode() && !item().addressSummary()" class="text-mute">Select/Add location</p>
+                      </div>
+                  </button>
               </li>
-              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'description') }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().description"></span>
-                      <span data-bind="visible: !item().description()" class="AppointmentCard-placeholderLabel">Description/Notes</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().description(), 'glyphicon-plus': !item().description()}"></span></span>
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'description')">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-ios-compose-outline"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().description, text: item().description"></p>
+                          <p data-bind="visible: !item().description()" class="text-mute">Description/Notes</p>
+                      </div>
+                  </button>
               </li>
           </ul>
           
-          <ul class="list-unstyled" data-bind="visible: isBooking()">
-              <li data-bind="event: { click: editMode() && pickDateTime }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-time"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="visible: item().startTime()">
-                          <span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>
-                          <span data-bind="text: item().displayedTimeRange()"></span>
-                      </span>
-                      <span data-bind="visible: editMode() && !item().startTime()" class="AppointmentCard-placeholderLabel">Select date/time</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().startTime(), 'glyphicon-plus': !item().startTime()}"></span></span>
+          <ul class="TilesList TilesList--opendEnd" data-bind="visible: isBooking()">
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && pickDateTime">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-ios-clock-outline"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                          <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
+                          <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select date/time</p>
+                      </div>
+                  </button>
               </li>
-              <li data-bind="event: { click: editMode() && isNew() && pickClient }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-user"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().customer() && item().customer().fullName()"></span>
-                      <span data-bind="visible: editMode() && !item().customer()" class="AppointmentCard-placeholderLabel">Select/Add client</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-plus': !item().customer()}"></span></span>
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && isNew() && pickClient">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-android-contact"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().customer() && item().customer().fullName(), text: item().customer() && item().customer().fullName()"></p>
+                          <p data-bind="visible: editMode() && !item().customer()" class="text-muted">Select/Add client</p>
+                      </div>
+                  </button>
               </li>
-              <li data-bind="event: { click: editMode() && pickService }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-tag"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().servicesSummary()"></span>
-                      <span data-bind="visible: editMode() && !item().servicesSummary()" class="AppointmentCard-placeholderLabel">Select/Add service(s)</span>
-                  </span>
-              <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().servicesSummary(), 'glyphicon-plus': !item().servicesSummary()}"></span></span>
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && pickService">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-ios-pricetags-outline"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().servicesSummary(), text: item().servicesSummary()"></p>
+                          <p data-bind="visible: editMode() && !item().servicesSummary()" class="text-muted">Select/Add service(s)</p>
+                      </div>
+                  </button>
               </li>
-              <li data-bind="event: { click: editMode() && changePrice }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-usd"></span>
-                  <span class="AppointmentCard-data" data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></span>
-                  <!--<span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().price(), 'glyphicon-plus': !item().price()}"></span></span>
-                  -->
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && changePrice">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-social-usd"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></p>
+                      </div>
+                  </button>
               </li>
-              <li data-bind="event: { click: editMode() && pickLocation }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-screenshot"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().addressSummary"></span>
-                      <span data-bind="visible: editMode() && !item().addressSummary()" class="AppointmentCard-placeholderLabel">Select/Add location</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().addressSummary(), 'glyphicon-plus': !item().addressSummary()}"></span></span>
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && pickLocation">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-ios-location-outline"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().addressSummary, text: item().addressSummary"></p>
+                          <p data-bind="visible: editMode() && !item().addressSummary()" class="text-muted">Select/Add location</p>
+                      </div>
+                  </button>
               </li>
-  
-              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'preNotesToClient') }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().preNotesToClient"></span>
-                      <span data-bind="visible: !item().preNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToClient(), 'glyphicon-plus': !item().preNotesToClient()}"></span></span>
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToClient')">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-edit"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().preNotesToClient(), text: item().preNotesToClient"></p>
+                          <p data-bind="visible: !item().preNotesToClient()" class="text-muted">Notes to client</p>
+                      </div>
+                  </button>
               </li>
-              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'preNotesToSelf') }">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-edit"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().preNotesToSelf"></span>
-                      <span data-bind="visible: !item().preNotesToSelf()" class="AppointmentCard-placeholderLabel">Notes to self</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().preNotesToSelf(), 'glyphicon-plus': !item().preNotesToSelf()}"></span></span>
+              <li>
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToSelf')">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-edit"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().preNotesToSelf, text: item().preNotesToSelf"></p>
+                          <p data-bind="visible: !item().preNotesToSelf()" class="text-muted">Notes to self</p>
+                      </div>
+                  </button>
               </li>
-  
-              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'postNotesToClient') }, visible: !isNew() && item().itStarted()">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().postNotesToClient"></span>
-                      <span data-bind="visible: !item().postNotesToClient()" class="AppointmentCard-placeholderLabel">Notes to client (afterwards)</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().postNotesToClient(), 'glyphicon-plus': !item().postNotesToClient()}"></span></span>
+              <li data-bind="visible: !isNew() && item().itStarted()">
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToClient')">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-ios-compose-outline"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().postNotesToClient(), text: item().postNotesToClient"></p>
+                          <p data-bind="visible: !item().postNotesToClient()" class="text-muted">Notes to client (afterwards)</p>
+                      </div>
+                  </button>
               </li>
-              <li data-bind="event: { click: editMode() && editTextField.bind(this, 'postNotesToSelf') }, visible: !isNew() && item().itStarted()">
-                  <span class="AppointmentCard-icon glyphicon glyphicon-file"></span>
-                  <span class="AppointmentCard-data">
-                      <span data-bind="text: item().postNotesToSelf"></span>
-                      <span data-bind="visible: !item().postNotesToSelf()" class="AppointmentCard-placeholderLabel">Booking summary (seen only by you)</span>
-                  </span>
-                  <span class="AppointmentCard-editIcon"><span class="glyphicon" data-bind="css: { 'glyphicon-pencil': item().postNotesToSelf(), 'glyphicon-plus': !item().postNotesToSelf()}"></span></span>
+              <li data-bind="visible: !isNew() && item().itStarted()">
+                  <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToSelf')">
+                      <div class="Tile-icon" aria-hidden="true">
+                          <span class="fa ion ion-ios-compose-outline"></span>
+                      </div>
+                      <div class="Tile-content">
+                          <p data-bind="visible: item().postNotesToSelf, text: item().postNotesToSelf"></p>
+                          <p data-bind="visible: !item().postNotesToSelf()" class="text-muted">Booking summary (seen only by you)</p>
+                      </div>
+                  </button>
               </li>
           </ul>
-          <div class="AppointmentCard-actions row" data-bind="visible: currentID() > 0 && !editMode()">
-              <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { click: edit }, disable: item().readOnly">Edit</button></div>
-              <div class="col-xs-6"><button type="button" class="btn btn-default btn-block">Contact client</button></div>
-          </div>
-          <div class="AppointmentCard-actions row" data-bind="visible: editMode()">
-              <div class="col-xs-6" data-bind="visible: currentID() > 0"><button type="button" class="btn btn-danger btn-block" data-bind="event: { click: cancel }, disable: isLocked">Cancel</button></div>
-              <div class="col-xs-6" data-bind="css: { 'col-xs-6' : currentID() > 0 }"><button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save</button></div>
+          
+          <div class="AppointmentCard-actions" data-bind="visible: editMode()">
+              <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save changes</button>
+              <!--<button type="button" class="btn btn-danger btn-block" data-bind="event: { click: remove }, disable: isLocked">Cancel booking</button>-->
+              <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: cancel, disable: isLocked">Don't save changes</button>
           </div>
       </div>
     </script>
@@ -1963,7 +2166,7 @@
       <h2 class="SectionTitle">Talk to us</h2>
       <a class="InfoTile" href="/feedbackForm" data-bind="attr: { href: url }">
           <div class="Tile-icon" aria-hidden="true">
-              <span class="glyphicon glyphicon-lamp" aria-hidden="true"></span>
+              <span class="fa ion ion-lightbulb" aria-hidden="true"></span>
           </div>                
           <div class="Tile-content"><p>
               Send us your ideas
@@ -1988,7 +2191,7 @@
           <li>
               <button class="LinkTile" type="button" data-bind="click: $parent.selectJobTitle">
                   <div class="Tile-content"><p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p></div>
-                  <div class="Tile-icon"><span class="glyphicon glyphicon-chevron-right"></span></div>
+                  <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right"></span></div>
               </button>
           </li>
       </ul>
@@ -2015,20 +2218,21 @@
     <!-- Component Template loading-spinner -->
     <script type="text/html" id="loading-spinner-template">
       <div class="loadingSpinner" data-bind="attr: { 'class': cssClass() }">
-          <span class="glyphicon glyphicon-refresh"></span>
+          <span class="icon fa ion ion-load-c"></span>
       </div>
     </script>
     <!-- Component Template navbar-action -->
     <script type="text/html" id="navbar-action-template">
       <a class="SmartNavBar-btn" href="#" data-bind="visible: action && !action.isMenu(), attr: { href: action && action.getHref(), 'data-target': action && action.getModalTarget(), 'data-toggle': action && action.isModal() ? 'modal' : '', 'data-shell': action && action.getShellCommand() }, event: { click: action && action.runHandler }">
-          <span data-bind="attr: { 'class': action && action.icon() }" class="glyphicon"></span>
+          <span data-bind="attr: { 'class': action && action.icon() }" class="icon"></span>
           <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
       </a>
       <button type="button" class="SmartNavBar-btn navbar-toggle collapsed" data-bind="visible: action && action.isMenu(), attr: { 'data-target': action && action.getMenuLink(), 'aria-controls': action && action.getMenuID() }" data-toggle="collapse" data-target="#menuOut" aria-expanded="false" aria-controls="menuOut">
           <span data-bind="visible: action && action.icon() === 'menu'">
+              <span class="fa ion-navicon ion icon"></span>
+              <!--<span class="icon-bar"></span>
               <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>-->
           </span>
           <span data-bind="visible: (action && action.icon()) !== 'menu'">
               <span data-bind="attr: { 'class': action && action.icon() }"></span>
@@ -2038,11 +2242,22 @@
     </script>
     <!-- Knockout Template time-slot-tile -->
     <script type="text/html" id="time-slot-tile-template">
-      <div class="ListView-item" data-bind="css: classNames">
-        <div class="ListView-item-marker"><div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div><div class="text-muted" data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></div></div>
-        <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !description()"></p><div data-bind="text: subject, visible: description()"></div><div data-bind="text: description, visible: description()"></div></a>
-        <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
-      </div>
+      <a class="ItemAddonTile" href="#" data-bind="css: classNames, attr: { href: link }">
+          <div class="Tile-marker">
+              <div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div>
+              <em data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></em>
+          </div>
+          <div class="Tile-content">
+              <p data-bind="visible: !description()"><strong data-bind="text: subject"></strong></p>
+              <div data-bind="visible: description()"><strong data-bind="text: subject"></strong></div>
+              <p data-bind="visible: classNames().indexOf('ItemAddonTile--largerContent') > -1 && description(), text: description"></p>
+              <div data-bind="visible: classNames().indexOf('ItemAddonTile--largerContent') === -1 && description(), text: description"></div>
+          </div>
+          <div class="Tile-addon">
+              <p data-bind="visible: actionText, text: actionText"></p>
+              <span class="fa fa-2x" aria-hidden="true" data-bind="css: actionIcon"></span>
+          </div>
+      </a>
     </script>
     <!-- Component Template unlabeled-input -->
     <script type="text/html" id="unlabeled-input-template">
