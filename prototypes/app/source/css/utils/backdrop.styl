@@ -15,7 +15,7 @@ backdrop() {
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: Black;
+        background-color: $AppNav-backColor; //black
         visibility: visible;
         display: block;
         overflow: hidden;
@@ -31,6 +31,6 @@ backdrop() {
 
     &.use-backdrop:before {
         pointer-events: all;
-        opacity: .4;
+        opacity: 1; //.4
     }
 }
