@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-06-20
+/*! LoconomicsApp 2015-06-25
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -2365,7 +2365,7 @@ body.use-backdrop:before {
 
 /* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
 
-/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 35 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
 /* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
 .InfoTile {
@@ -2408,12 +2408,6 @@ body.use-backdrop:before {
   height: 40px;
   line-height: 40px;
   font-size: 24px;
-}
-
-/* line 33 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
-.InfoTile .Tile-icon .ion {
-  line-height: 20px;
-  font-size: $ine-height-computed;
 }
 
 /* line 75 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2806,7 +2800,7 @@ body.use-backdrop:before {
   font-size: 20px;
 }
 
-/* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 .ItemTile {
   color: #333;
   display: block;
@@ -2835,7 +2829,7 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 .ItemTile .Tile-marker {
   float: left;
   width: 70px;
@@ -2845,13 +2839,7 @@ body.use-backdrop:before {
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-/* line 33 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
-.ItemTile .Tile-marker,
-.ItemTile .Tile-marker > * {
   height: 40px;
-  line-height: 40px;
 }
 
 /* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2870,6 +2858,23 @@ body.use-backdrop:before {
   font-weight: normal;
 }
 
+/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile .Tile-marker > em {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-style: normal;
+  color: #777;
+}
+
 /* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-marker > p {
   display: table-cell;
@@ -2877,7 +2882,7 @@ body.use-backdrop:before {
   vertical-align: middle;
 }
 
-/* line 43 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 .ItemTile .Tile-marker > p {
   width: 59px;
 }
@@ -2948,7 +2953,427 @@ body.use-backdrop:before {
   font-size: 20px;
 }
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+
+/* line 89 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+
+/* line 52 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+
+/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.CompactLinkTile {
+  color: #333;
+  display: block;
+  text-decoration: none !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+  position: relative;
+  padding-left: 30px;
+  padding-right: 24px;
+}
+
+/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 27 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile:active,
+.CompactLinkTile:hover,
+.CompactLinkTile:active *,
+.CompactLinkTile:hover * {
+  color: #2a6496 !important;
+}
+
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.CompactLinkTile .Tile-content {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* line 15 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.CompactLinkTile .Tile-icon {
+  position: absolute;
+  right: 0px;
+  top: 10px;
+  bottom: 10px;
+  max-width: 20px;
+  overflow: hidden;
+  height: 20px;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.CompactLinkTile .Tile-icon .ion {
+  line-height: 20px;
+  font-size: 20px;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemTile {
+  color: #333;
+  display: block;
+  text-decoration: none !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+  position: relative;
+  padding: 18px 0 18px 0;
+  height: 76px;
+  overflow: hidden;
+  padding-right: 24px;
+}
+
+/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 27 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile:active,
+.ItemTile:hover,
+.ItemTile:active *,
+.ItemTile:hover * {
+  color: #2a6496 !important;
+}
+
+/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemTile .Tile-marker {
+  float: left;
+  width: 70px;
+  text-align: right;
+  padding-right: 11px;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 40px;
+}
+
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile .Tile-marker > div {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: normal;
+}
+
+/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile .Tile-marker > em {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-style: normal;
+  color: #777;
+}
+
+/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile .Tile-marker > p {
+  display: table-cell;
+  height: 40px;
+  vertical-align: middle;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemTile .Tile-marker > p {
+  width: 59px;
+}
+
+/* line 75 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile .Tile-content {
+  white-space: normal;
+  word-wrap: break-word;
+  margin: 0;
+  height: 40px;
+  overflow: hidden;
+}
+
+/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile .Tile-content > p {
+  display: table-cell;
+  height: 40px;
+  vertical-align: middle;
+}
+
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile .Tile-content > div {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: normal;
+}
+
+/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile .Tile-content > em {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-style: normal;
+  color: #777;
+}
+
+/* line 15 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.ItemTile .Tile-icon {
+  position: absolute;
+  right: 0px;
+  top: 28px;
+  bottom: 28px;
+  max-width: 20px;
+  overflow: hidden;
+  height: 20px;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+.ItemTile .Tile-icon .ion {
+  line-height: 20px;
+  font-size: 20px;
+}
+
+/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+.ItemAddonTile {
+  color: #333;
+  display: block;
+  text-decoration: none !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+  position: relative;
+  padding: 18px 0 18px 0;
+  height: 76px;
+  overflow: hidden;
+  padding-right: 53px;
+}
+
+/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 27 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile:active,
+.ItemAddonTile:hover,
+.ItemAddonTile:active *,
+.ItemAddonTile:hover * {
+  color: #2a6496 !important;
+}
+
+/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemAddonTile .Tile-marker {
+  float: left;
+  width: 70px;
+  text-align: right;
+  padding-right: 11px;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 40px;
+}
+
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile .Tile-marker > div {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: normal;
+}
+
+/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile .Tile-marker > em {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-style: normal;
+  color: #777;
+}
+
+/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile .Tile-marker > p {
+  display: table-cell;
+  height: 40px;
+  vertical-align: middle;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemAddonTile .Tile-marker > p {
+  width: 59px;
+}
+
+/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+.ItemAddonTile .Tile-addon {
+  text-align: right;
+  position: absolute;
+  right: 0px;
+  top: 18px;
+  bottom: 18px;
+  width: 45px;
+  overflow: hidden;
+  height: 40px;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+.ItemAddonTile .Tile-addon > div,
+.ItemAddonTile .Tile-addon > em {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+.ItemAddonTile .Tile-addon > p,
+.ItemAddonTile .Tile-addon > .icon,
+.ItemAddonTile .Tile-addon > i,
+.ItemAddonTile .Tile-addon > .glyphicon,
+.ItemAddonTile .Tile-addon > .fa {
+  width: 45px;
+  display: table-cell;
+  height: 40px;
+  vertical-align: middle;
+  word-break: break-all;
+}
+
+/* line 61 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+.ItemAddonTile .Tile-content {
+  white-space: normal;
+  word-wrap: break-word;
+  margin: 0;
+  height: 40px;
+  overflow: hidden;
+}
+
+/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile .Tile-content > p {
+  display: table-cell;
+  height: 40px;
+  vertical-align: middle;
+}
+
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile .Tile-content > div {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: normal;
+}
+
+/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile .Tile-content > em {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-style: normal;
+  color: #777;
+}
+
+/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+.ItemAddonTile.ItemAddonTile--largerContent {
+  height: 96px;
+}
+
+/* line 80 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+.ItemAddonTile.ItemAddonTile--largerContent .Tile-content,
+.ItemAddonTile.ItemAddonTile--largerContent .Tile-marker,
+.ItemAddonTile.ItemAddonTile--largerContent .Tile-addon {
+  height: 60px;
+}
+
+/* line 84 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+.ItemAddonTile.ItemAddonTile--largerContent .Tile-marker,
+.ItemAddonTile.ItemAddonTile--largerContent .Tile-addon {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* line 43 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */

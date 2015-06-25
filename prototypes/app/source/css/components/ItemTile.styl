@@ -4,23 +4,7 @@
 @import 'Tile.styl'
 @import 'CompactLinkTile.styl'
 
-.ItemTile {
-
-    Tile()
-
-    // 2 lines:
-    $internalHeight = line-height-computed * 2;
-    $vgap = 18px;
-    $heightLimit = $internalHeight + ($vgap * 2);
-    $markerWidth = 70px;
-    $markerGap = 11px;
-
-    padding: $vgap 0 $vgap 0;
-
-    // Style
-    height: $heightLimit;
-    overflow: hidden;
-
+ItemTile-addMarker($internalHeight, $markerWidth = 70px, $markerGap = 11px) {
     .Tile-marker {
         float: left;
         width: $markerWidth;
@@ -30,12 +14,10 @@
         text-overflow: ellipsis;
         overflow: hidden;
 
-        &, > * {
-            height: $internalHeight;
-            line-height: $internalHeight;
-        }
+        height: $internalHeight;
 
         Tile-addDiv()
+        Tile-addEm()
         Tile-addP($internalHeight)
         
         // This explicit width is needed to make it fill the space
@@ -44,6 +26,24 @@
             width: $markerWidth - $markerGap;
         }
     }
+}
+
+.ItemTile {
+
+    Tile()
+
+    // 2 lines:
+    $internalHeight = line-height-computed * 2;
+    $vgap = 18px;
+    $heightLimit = $internalHeight + ($vgap * 2);
+
+    padding: $vgap 0 $vgap 0;
+
+    // Style
+    height: $heightLimit;
+    overflow: hidden;
+
+    ItemTile-addMarker($internalHeight);
 
     Tile-addContent(2);
     
