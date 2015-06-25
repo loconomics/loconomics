@@ -48,6 +48,8 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
         else
             // is a request:
             classNames = 'Tile--tag-warning';
+        
+        classNames += 'ItemAddonTile--largerContent';
     }
     else {
         // any block event

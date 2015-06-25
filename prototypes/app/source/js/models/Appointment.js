@@ -128,6 +128,7 @@ Appointment.fromCalendarEvent = function fromCalendarEvent(event) {
     apt.startTime(event.startTime());
     apt.endTime(event.endTime());
     apt.summary(event.summary());
+    apt.description(event.description());
     apt.isAllDay(event.isAllDay());
     apt.readOnly(event.readOnly());
     apt.sourceEvent(event);

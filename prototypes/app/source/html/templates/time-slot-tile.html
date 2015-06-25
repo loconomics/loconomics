@@ -6,9 +6,10 @@
             <em data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></em>
         </div>
         <div class="Tile-content">
-            <p><strong data-bind="text: subject, visible: !description()"></strong></p>
-            <div><strong data-bind="text: subject, visible: description()"></strong></div>
-            <p data-bind="text: description, visible: description()"></p>
+            <p data-bind="visible: !description()"><strong data-bind="text: subject"></strong></p>
+            <div data-bind="visible: description()"><strong data-bind="text: subject"></strong></div>
+            <p data-bind="visible: classNames().indexOf('ItemAddonTile--largerContent') > -1 && description(), text: description"></p>
+            <div data-bind="visible: classNames().indexOf('ItemAddonTile--largerContent') === -1 && description(), text: description"></div>
         </div>
         <div class="Tile-addon">
             <p data-bind="visible: actionText, text: actionText"></p>
