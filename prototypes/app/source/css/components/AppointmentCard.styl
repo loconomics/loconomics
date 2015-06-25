@@ -6,80 +6,12 @@
 @import 'Card.styl';
 
 .AppointmentCard {
-    
-    $editIconWidth = 15px;
-    
-    position: relative;
-    
-    .loadingSpinner {
-        top: 0;
-        bottom: 0;
-        
-        > span {
-            margin-top: 2em;
-        }
-    }
 
-    li {
-        clearfix()
-        position: relative;
-
-        /* The elements need a separation, but 
-           they behave as BUTTONS too when in edit mode
-           so need a good touch area */
-        padding: 8px 0;
-    }
-
-    .AppointmentCard-icon {
-        font-size: 1.8em;
-        position: absolute;
-    }
-
-    .AppointmentCard-data {
-        left: 40px;
-        position: relative;
-        display: inline-block;
-        margin-right: ($Card_gap + $editIconWidth);
-        /* centering vertically the first line with the icon */
-        top: -3px;
-    }
-    
-    .AppointmentCard-editIcon {
-        display: block;
-        opacity: 0;
-        pointer-events: none;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        z-index: 2;
-        background: White;
-        padding: 6px 0 6px 5px;
-        width: $editIconWidth;
-        box-sizing: content-box;
+    .TilesList {
+        padding: 0 6px;
         
-        transition: 300ms opacity;
-    }
-    
-    .AppointmentCard-placeholderLabel {
-        color: $gray-light;
-    }
-    
-    &.in-edit {
-        
-        li {
-            cursor: pointer;
-            overflow: hidden;
-        
-            .AppointmentCard-editIcon {
-                opacity: 1;
-            }
-        }
-    }
-    
-    &.is-locked {
-        li .AppointmentCard-editIcon {
-            opacity: .5 !important;
+        > li {
+            padding-right: 8px;
         }
     }
 }

@@ -96,7 +96,7 @@ function Appointment(values) {
     this.stateHeader = ko.pureComputed(function() {
         
         var text = '';
-        if (!this.isNew()) {
+        if (this.id() > 0) {
             if (this.itStarted()) {
                 if (this.itEnded()) {
                     text = 'Completed:';

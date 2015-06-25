@@ -7,7 +7,7 @@
 
 CompactLinkTile-addIcon($vgap) {
     
-    $iconWidth = 20px;
+    $iconWidth = 22px;
 
     // Left space for the icon and small gap:
     padding-right: ($iconWidth + 4px);
@@ -17,9 +17,14 @@ CompactLinkTile-addIcon($vgap) {
         right: 0px;
         top: $vgap;
         bottom: $vgap;
-        max-width: $iconWidth;
+        width: $iconWidth;
         overflow: hidden;
         height: line-height-computed;
+        // there are some problems with some icons (ionicons mainly) where
+        // even with enough space, gets cut on the edges; add a minimum gap
+        // to give them overflow space
+        padding: 0 1px;
+        text-align: right;
 
         // Fix ionicons ridiculous size, setting the same as line-height
         .ion {

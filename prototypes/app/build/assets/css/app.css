@@ -740,14 +740,37 @@ body.use-backdrop:before {
   transform: rotate(0deg);
 }
 
-/* line 63 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 64 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.icon-loading {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transition: opacity 1.5s, color 1.5s;
+  -moz-transition: opacity 1.5s, color 1.5s;
+  -o-transition: opacity 1.5s, color 1.5s;
+  -ms-transition: opacity 1.5s, color 1.5s;
+  transition: opacity 1.5s, color 1.5s;
+}
+
+/* line 68 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.icon-loading.icon-loading-spinner {
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  margin: 0 2px;
+  overflow: visible !important;
+}
+
+/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading,
 .is-saving,
 .is-syncing {
   position: relative;
 }
 
-/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 77 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner,
 .is-saving .loadingSpinner,
 .is-syncing .loadingSpinner {
@@ -756,14 +779,14 @@ body.use-backdrop:before {
   filter: none;
 }
 
-/* line 69 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 80 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner.loadingSpinner--collapsed,
 .is-saving .loadingSpinner.loadingSpinner--collapsed,
 .is-syncing .loadingSpinner.loadingSpinner--collapsed {
   display: inline-block;
 }
 
-/* line 72 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 83 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner .icon,
 .is-saving .loadingSpinner .icon,
 .is-syncing .loadingSpinner .icon {
@@ -774,7 +797,7 @@ body.use-backdrop:before {
   animation: spin 3s linear infinite;
 }
 
-/* line 75 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 86 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .is-loading .loadingSpinner.loadingSpinner--row,
 .is-saving .loadingSpinner.loadingSpinner--row,
 .is-syncing .loadingSpinner.loadingSpinner--row {
@@ -782,38 +805,60 @@ body.use-backdrop:before {
   position: static;
 }
 
-/* line 79 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-loading .icon-loading,
+.is-saving .icon-loading,
+.is-syncing .icon-loading {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
 
-/* line 82 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
-.is-saving .loadingSpinner .icon {
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-loading .icon-loading-spinner,
+.is-saving .icon-loading-spinner,
+.is-syncing .icon-loading-spinner {
+  -webkit-animation: spin 3s linear infinite;
+  -moz-animation: spin 3s linear infinite;
+  -o-animation: spin 3s linear infinite;
+  -ms-animation: spin 3s linear infinite;
+  animation: spin 3s linear infinite;
+}
+
+/* line 96 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+
+/* line 99 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-saving .loadingSpinner .icon,
+.is-saving .icon-loading {
   color: #f0ad4e;
 }
 
-/* line 85 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 103 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 
-/* line 88 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
-.is-syncing .loadingSpinner .icon {
+/* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+.is-syncing .loadingSpinner .icon,
+.is-syncing .icon-loading {
   color: #5bc0de;
 }
 
-/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 110 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 
-/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 111 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .SectionTitle .loadingSpinner--onRight {
   padding: 7px;
 }
 
-/* line 95 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 114 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .input-group-addon {
   position: relative;
 }
 
-/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .input-group-addon .loadingSpinner {
   background-color: #ccc !important;
 }
 
-/* line 100 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 119 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .input-group-addon .loadingSpinner.loadingSpinner--floating {
   top: 8px;
 }
@@ -876,7 +921,7 @@ body.use-backdrop:before {
 /* line 21 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 103 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {
@@ -2127,35 +2172,21 @@ body.use-backdrop:before {
 
 /* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 
-/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card {
   border-top: 1px solid #eee;
   border-bottom: 1px solid #ccc;
   margin: 4px;
   background-color: White;
-  padding: 16px;
+  padding: 0;
 }
 
-/* line 15 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card .Card-title {
   border-bottom: 1px solid #eee;
-  margin-bottom: 10px;
 }
 
-/* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
-.Card .Card-title h2 {
-  font-size: 16px;
-  margin: 0 0 10px;
-}
-
-/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
-.Card .Card-title h3 {
-  font-size: 1em;
-  margin: 2px 0 4px;
-  color: #777;
-}
-
-/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\GroupedTimeSlots.styl */
+/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\GroupedTimeSlots.styl */
 
 /* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\GroupedTimeSlots.styl */
 .GroupedTimeSlots {
@@ -2459,9 +2490,9 @@ body.use-backdrop:before {
 
 /* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
   color: #333;
   display: block;
@@ -2475,7 +2506,7 @@ body.use-backdrop:before {
   text-align: left;
   position: relative;
   padding-left: 30px;
-  padding-right: 24px;
+  padding-right: 26px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2644,7 +2675,7 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -2665,12 +2696,14 @@ body.use-backdrop:before {
   right: 0px;
   top: 10px;
   bottom: 10px;
-  max-width: 20px;
+  width: 22px;
   overflow: hidden;
   height: 20px;
+  padding: 0 1px;
+  text-align: right;
 }
 
-/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-icon .ion {
   line-height: 20px;
   font-size: 20px;
@@ -2682,9 +2715,9 @@ body.use-backdrop:before {
 
 /* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
   color: #333;
   display: block;
@@ -2698,7 +2731,7 @@ body.use-backdrop:before {
   text-align: left;
   position: relative;
   padding-left: 30px;
-  padding-right: 24px;
+  padding-right: 26px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -2867,7 +2900,7 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -2888,12 +2921,14 @@ body.use-backdrop:before {
   right: 0px;
   top: 10px;
   bottom: 10px;
-  max-width: 20px;
+  width: 22px;
   overflow: hidden;
   height: 20px;
+  padding: 0 1px;
+  text-align: right;
 }
 
-/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-icon .ion {
   line-height: 20px;
   font-size: 20px;
@@ -2913,7 +2948,7 @@ body.use-backdrop:before {
   text-align: left;
   position: relative;
   padding: 18px 0 18px 30px;
-  padding-right: 24px;
+  padding-right: 26px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -3137,12 +3172,14 @@ body.use-backdrop:before {
   right: 0px;
   top: 28px;
   bottom: 28px;
-  max-width: 20px;
+  width: 22px;
   overflow: hidden;
   height: 20px;
+  padding: 0 1px;
+  text-align: right;
 }
 
-/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .LinkTile .Tile-icon .ion {
   line-height: 20px;
   font-size: 20px;
@@ -3201,13 +3238,13 @@ body.use-backdrop:before {
 
 /* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 
-/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 68 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
 /* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
   color: #333;
   display: block;
@@ -3221,7 +3258,7 @@ body.use-backdrop:before {
   text-align: left;
   position: relative;
   padding-left: 30px;
-  padding-right: 24px;
+  padding-right: 26px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -3390,7 +3427,7 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -3411,18 +3448,20 @@ body.use-backdrop:before {
   right: 0px;
   top: 10px;
   bottom: 10px;
-  max-width: 20px;
+  width: 22px;
   overflow: hidden;
   height: 20px;
+  padding: 0 1px;
+  text-align: right;
 }
 
-/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-icon .ion {
   line-height: 20px;
   font-size: 20px;
 }
 
-/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 .ItemTile {
   color: #333;
   display: block;
@@ -3438,7 +3477,7 @@ body.use-backdrop:before {
   padding: 18px 0 18px 0;
   height: 76px;
   overflow: hidden;
-  padding-right: 24px;
+  padding-right: 26px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -3665,6 +3704,21 @@ body.use-backdrop:before {
   width: 59px;
 }
 
+/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemTile i.Tile-marker {
+  height: 40px;
+  line-height: 40px;
+  font-size: 24px;
+  text-align: center;
+  vertical-align: middle;
+  padding-left: 11px;
+}
+
+/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemTile i.Tile-marker.Tile-marker--fullIcon {
+  font-size: 40px;
+}
+
 /* line 75 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content {
   white-space: normal;
@@ -3720,12 +3774,14 @@ body.use-backdrop:before {
   right: 0px;
   top: 28px;
   bottom: 28px;
-  max-width: 20px;
+  width: 22px;
   overflow: hidden;
   height: 20px;
+  padding: 0 1px;
+  text-align: right;
 }
 
-/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .ItemTile .Tile-icon .ion {
   line-height: 20px;
   font-size: 20px;
@@ -3737,13 +3793,13 @@ body.use-backdrop:before {
 
 /* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 
-/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 68 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
 /* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
   color: #333;
   display: block;
@@ -3757,7 +3813,7 @@ body.use-backdrop:before {
   text-align: left;
   position: relative;
   padding-left: 30px;
-  padding-right: 24px;
+  padding-right: 26px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -3926,7 +3982,7 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -3947,18 +4003,20 @@ body.use-backdrop:before {
   right: 0px;
   top: 10px;
   bottom: 10px;
-  max-width: 20px;
+  width: 22px;
   overflow: hidden;
   height: 20px;
+  padding: 0 1px;
+  text-align: right;
 }
 
-/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-icon .ion {
   line-height: 20px;
   font-size: 20px;
 }
 
-/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 .ItemTile {
   color: #333;
   display: block;
@@ -3974,7 +4032,7 @@ body.use-backdrop:before {
   padding: 18px 0 18px 0;
   height: 76px;
   overflow: hidden;
-  padding-right: 24px;
+  padding-right: 26px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -4201,6 +4259,21 @@ body.use-backdrop:before {
   width: 59px;
 }
 
+/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemTile i.Tile-marker {
+  height: 40px;
+  line-height: 40px;
+  font-size: 24px;
+  text-align: center;
+  vertical-align: middle;
+  padding-left: 11px;
+}
+
+/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemTile i.Tile-marker.Tile-marker--fullIcon {
+  font-size: 40px;
+}
+
 /* line 75 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content {
   white-space: normal;
@@ -4256,12 +4329,14 @@ body.use-backdrop:before {
   right: 0px;
   top: 28px;
   bottom: 28px;
-  max-width: 20px;
+  width: 22px;
   overflow: hidden;
   height: 20px;
+  padding: 0 1px;
+  text-align: right;
 }
 
-/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 30 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .ItemTile .Tile-icon .ion {
   line-height: 20px;
   font-size: 20px;
@@ -4510,6 +4585,21 @@ body.use-backdrop:before {
   width: 59px;
 }
 
+/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemAddonTile i.Tile-marker {
+  height: 40px;
+  line-height: 40px;
+  font-size: 24px;
+  text-align: center;
+  vertical-align: middle;
+  padding-left: 11px;
+}
+
+/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+.ItemAddonTile i.Tile-marker.Tile-marker--fullIcon {
+  font-size: 40px;
+}
+
 /* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
 .ItemAddonTile .Tile-addon {
   text-align: right;
@@ -4704,142 +4794,32 @@ body.use-backdrop:before {
 
 /* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
-/* line 86 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 18 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 
-/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card {
   border-top: 1px solid #eee;
   border-bottom: 1px solid #ccc;
   margin: 4px;
   background-color: White;
-  padding: 16px;
+  padding: 0;
 }
 
-/* line 15 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card .Card-title {
   border-bottom: 1px solid #eee;
-  margin-bottom: 10px;
-}
-
-/* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
-.Card .Card-title h2 {
-  font-size: 16px;
-  margin: 0 0 10px;
-}
-
-/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
-.Card .Card-title h3 {
-  font-size: 1em;
-  margin: 2px 0 4px;
-  color: #777;
 }
 
 /* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard {
-  position: relative;
+
+/* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .TilesList {
+  padding: 0 6px;
 }
 
-/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard .loadingSpinner {
-  top: 0;
-  bottom: 0;
-}
-
-/* line 18 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard .loadingSpinner > span {
-  margin-top: 2em;
-}
-
-/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard li {
-  zoom: 1;
-  position: relative;
-/* The elements need a separation, but 
-           they behave as BUTTONS too when in edit mode
-           so need a good touch area */
-  padding: 8px 0;
-}
-
-/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
-.AppointmentCard li:before,
-.AppointmentCard li:after {
-  content: "";
-  display: table;
-}
-
-/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
-.AppointmentCard li:after {
-  clear: both;
-}
-
-/* line 33 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard .AppointmentCard-icon {
-  font-size: 1.8em;
-  position: absolute;
-}
-
-/* line 38 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard .AppointmentCard-data {
-  left: 40px;
-  position: relative;
-  display: inline-block;
-  margin-right: 31px;
-/* centering vertically the first line with the icon */
-  top: -3px;
-}
-
-/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard .AppointmentCard-editIcon {
-  display: block;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 2;
-  background: White;
-  padding: 6px 0 6px 5px;
-  width: 15px;
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  -webkit-transition: 300ms opacity;
-  -moz-transition: 300ms opacity;
-  -o-transition: 300ms opacity;
-  -ms-transition: 300ms opacity;
-  transition: 300ms opacity;
-}
-
-/* line 64 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard .AppointmentCard-placeholderLabel {
-  color: #777;
-}
-
-/* line 68 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-
-/* line 70 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard.in-edit li {
-  cursor: pointer;
-  overflow: hidden;
-}
-
-/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard.in-edit li .AppointmentCard-editIcon {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-}
-
-/* line 80 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-
-/* line 81 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard.is-locked li .AppointmentCard-editIcon {
-  opacity: 0.5 !important;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)" !important;
-  filter: alpha(opacity=50) !important;
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .TilesList > li {
+  padding-right: 8px;
 }
 
 /* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\appointment.styl */
@@ -4858,7 +4838,7 @@ body.use-backdrop:before {
   visibility: hidden;
 }
 
-/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
 
 /* line 85 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 

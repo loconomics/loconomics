@@ -239,7 +239,7 @@ function ViewModel(app) {
     var newEmptyDateAppointment = function newEmptyDateAppointment() {
         return new Appointment({
             id: Appointment.specialIds.emptyDate,
-            summary: 'There are no appointments on this date',
+            summary: 'You have nothing scheduled',
             startTime: this.currentDate(),
             endTime: moment(this.currentDate()).add(1, 'days').toDate()
         });

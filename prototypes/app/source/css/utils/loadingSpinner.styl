@@ -60,6 +60,17 @@
         // Initial animation state, required to avoid problems on some cases
         transform: rotate(0deg);
 
+// Support single loading icons, not inside the loadingSpinner structure (more versatil)
+.icon-loading
+    opacity 0
+    transition: opacity 1.5s, color 1.5s;
+    
+    &.icon-loading-spinner
+        transform: rotate(0deg);
+        // Avoiding clip problems when rotating
+        margin: 0 2px;
+        overflow: visible !important;
+        
 .is-loading
     position: relative;
 
@@ -75,17 +86,25 @@
         &.loadingSpinner--row
             display: block;
             position: static;
+            
+    // Support single loading icons, not inside the loadingSpinner structure (more versatil)
+    .icon-loading
+        opacity 1
+    .icon-loading-spinner 
+        animation: spin 3s linear infinite;
 
 .is-saving
     @extend .is-loading
 
     .loadingSpinner .icon
+    .icon-loading
         color $state-warning-text
 
 .is-syncing
     @extend .is-loading
 
     .loadingSpinner .icon
+    .icon-loading
         color $state-info-text
 
 .SectionTitle
