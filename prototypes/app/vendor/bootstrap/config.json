@@ -63,9 +63,9 @@
     "@table-bg-active": "@table-bg-hover",
     "@table-border-color": "#ddd",
     "@btn-font-weight": "normal",
-    "@btn-default-color": "#e0004f",
+    "@btn-default-color": "@brand-primary",
     "@btn-default-bg": "#fff",
-    "@btn-default-border": "#e0004f",
+    "@btn-default-border": "@brand-primary",
     "@btn-primary-color": "#fff",
     "@btn-primary-bg": "@brand-primary",
     "@btn-primary-border": "darken(@btn-primary-bg, 5%)",
@@ -82,6 +82,9 @@
     "@btn-danger-bg": "@brand-danger",
     "@btn-danger-border": "darken(@btn-danger-bg, 5%)",
     "@btn-link-disabled-color": "@gray-light",
+    "@btn-border-radius-base": "@border-radius-base",
+    "@btn-border-radius-large": "@border-radius-large",
+    "@btn-border-radius-small": "@border-radius-small",
     "@input-bg": "#fff",
     "@input-bg-disabled": "@gray-lighter",
     "@input-color": "@gray",
@@ -213,6 +216,7 @@
     "@jumbotron-bg": "@gray-lighter",
     "@jumbotron-heading-color": "inherit",
     "@jumbotron-font-size": "ceil((@font-size-base * 1.5))",
+    "@jumbotron-heading-font-size": "ceil((@font-size-base * 4.5))",
     "@state-success-text": "@brand-success",
     "@state-success-bg": "#ecf7ec",
     "@state-success-border": "#47b347",
@@ -417,5 +421,5 @@
     "collapse.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=da3e92af8422b523eb27"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=f846e2bf4a194a94e237"
 }
