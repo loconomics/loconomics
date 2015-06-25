@@ -82,8 +82,8 @@
                     </div>
                 </button>
             </li>
-            <li data-bind="event: { click: editMode() && pickLocation }">
-                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'summary')">
+            <li>
+                <button type="button" class="InfoTile" data-bind="click: editMode() && pickLocation">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-location-outline"></span>
                     </div>
@@ -93,8 +93,8 @@
                     </div>
                 </button>
             </li>
-            <li data-bind="event: { click: editMode() && editTextField.bind(this, 'description') }">
-                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'summary')">
+            <li>
+                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'description')">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa fa-file-text-o"></span>
                     </div>

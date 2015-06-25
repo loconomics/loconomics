@@ -4794,7 +4794,7 @@ body.use-backdrop:before {
 
 /* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
-/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 27 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 
 /* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card {
@@ -4825,6 +4825,13 @@ body.use-backdrop:before {
 /* line 18 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-actions {
   margin: 14px 30px;
+}
+
+/* line 21 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .AppointmentCard-actions .btn {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  font-weight: bold;
 }
 
 /* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\appointment.styl */
