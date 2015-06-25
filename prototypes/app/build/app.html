@@ -625,7 +625,7 @@
     <!-- Activity appointment -->
     <div class="container-fluid" data-activity="appointment">
       <!-- Appointment View (cards) -->
-      <div id="calendarAppointmentView" class="full-height row CardsDeck CardsDeck--dotsSlider"
+      <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
         <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
         <div class="CardsDeck-dots" data-bind="foreach: appointments"> <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
@@ -691,7 +691,7 @@
 
       <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
       <!-- Daily View (appointments list) -->
-      <div id="calendarDailyView" class="full-height TilesList" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
+      <div id="calendarDailyView" class="TilesList" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
     </div>
     <!-- CalendarSyncing activity -->
     <div class="container-fluid" data-activity="calendarSyncing">

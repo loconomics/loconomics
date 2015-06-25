@@ -31,8 +31,6 @@ var A = Activity.extends(function CalendarActivity() {
     this.registerHandler({
         target: this.viewModel.currentDate,
         handler: function(date) {
-            // Trigger a layout update, required by the full-height feature
-            $(window).trigger('layoutUpdate');
 
             if (date) {
                 var mdate = moment(date);

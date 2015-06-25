@@ -1,7 +1,7 @@
 <!-- Activity appointment -->
 <div class="container-fluid" data-activity="appointment">
     <!-- Appointment View (cards) -->
-    <div id="calendarAppointmentView" class="full-height row CardsDeck CardsDeck--dotsSlider"
+    <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
        data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
         
         <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>

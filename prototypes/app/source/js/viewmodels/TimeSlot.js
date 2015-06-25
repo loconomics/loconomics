@@ -40,20 +40,20 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
 
     var classNames = null;
     if (Appointment.specialIds.free === apt.id()) {
-        classNames = 'Tile--tag-gray-lighter';
+        classNames = 'Tile--tag-gray-lighter ';
     }
     else if (apt.id() > 0 && apt.sourceBooking()) {
         if (apt.sourceBooking().confirmedDateID())
-            classNames = 'Tile--tag-primary';
+            classNames = 'Tile--tag-primary ' ;
         else
             // is a request:
-            classNames = 'Tile--tag-warning';
+            classNames = 'Tile--tag-warning ';
         
-        classNames += 'ItemAddonTile--largerContent';
+        classNames += 'ItemAddonTile--largerContent ';
     }
     else {
         // any block event
-        classNames = 'Tile--tag-danger';
+        classNames = 'Tile--tag-danger ';
     }
 
     return new TimeSlotViewModel({

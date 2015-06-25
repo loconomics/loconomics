@@ -208,34 +208,6 @@ var appInit = function appInit() {
         // Is in config.xml too, but seems not to work without next call:
         window.StatusBar.overlaysWebView(false);
     }
-
-    // Because of the iOS7+8 bugs with height calculation,
-    // a different way of apply content height to fill all the available height (as minimum)
-    // is required.
-    // For that, the 'full-height' class was added, to be used in elements inside the 
-    // activity that needs all the available height, here the calculation is applied for
-    // all platforms for this homogeneous approach to solve the problemm.
-    (function() {
-        var $b = $('body');
-        var fullHeight = function fullHeight() {
-            var h = $b.height();
-            $('.full-height')
-            // Let browser to compute
-            .css('height', 'auto')
-            // As minimum
-            .css('min-height', h)
-            // Set explicit the automatic computed height
-            .css('height', function() {
-                // we use box-sizing:border-box, so needs to be outerHeight without margin:
-                return $(this).outerHeight(false);
-            });
-        };
-        
-        fullHeight();
-        $(window).on('layoutUpdate', function() {
-            fullHeight();
-        });
-    })();
     
     // Force an update delayed to ensure update after some things did additional work
     setTimeout(function() {

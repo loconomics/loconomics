@@ -12,21 +12,6 @@ Activity() {
     left: 0;
     z-index: 1;
     
-    // TODO: still needed????
-    // Set a full height with 100% is complicated, mainly because of iOS,
-    // so a specific class is used that involve some javascript code to
-    // fix iOS bugs using next class name.
-    // This is need additionally to the general min-height for cases where
-    // content children needs to expand to height:100% too,
-    // SO this must be applied only to child elements inside the Activity.
-    .full-height {
-        height: 100%;
-        // already applied by Bootstrap, but better to be explicit
-        // on the box-sizing to note that mode is required for how the
-        // script works and the wanted layouts.
-        box-sizing: border-box;
-    }
-
     /* activity must be notified of the navbar to fix
        available space
     */
