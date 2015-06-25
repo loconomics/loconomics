@@ -1610,7 +1610,7 @@
        <h2 class="SectionTitle">Schedule preferences</h2>
 
       <script type="text/html" id="schedulingPrefs-radioButton">
-        <label class="btn btn-primary" data-bind="css: { 'active': value() === itemValue }">
+        <label class="btn btn-default" data-bind="css: { 'active btn-primary': value() === itemValue }">
             <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
             <span data-bind="text: labelText"></span>
         </label>
