@@ -1,22 +1,24 @@
 /**
     Card component.
 **/
-$Card_gap = 20px;
+$Card_gap = 16px;
 
 .Card {
-    box-shadow: 0 3px 4px 1px $gray-dark;
+    //box-shadow: 0 3px 4px 1px $gray-dark;
+    border-top: 1px solid $gray-background;
+    border-bottom: 1px solid $gray-lighter;
     margin: 4px;
-    border-radius: 2px;
+    //border-radius: 2px;
     background-color: White;
     padding: $Card_gap;
     
     .Card-title {
-        border-bottom: 3px solid $gray;
+        border-bottom: 1px solid $gray-background;
         margin-bottom: 10px;
         
         h2 {
-            font-size: 1.2em;
-            margin: 0 0 4px;
+            font-size: 16px;
+            margin: 0 0 10px;
         }
         
         h3 {

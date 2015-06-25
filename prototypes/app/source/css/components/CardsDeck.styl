@@ -8,10 +8,10 @@
 .CardsDeck {
     $verticalGap = 4px
 
-    background-color: $gray-light;
+    background-color: $gray-background;
 
     .Card {
-        margin: 14px 0;
+        margin: 10px 0;
     }
     
     &.CardsDeck--slider {
@@ -54,7 +54,7 @@
     &.CardsDeck--dotsSlider {
     
         $gapWidth = 16px;
-        $dotsReservedHeight = 40px;
+        $dotsReservedHeight = 20px;
         $dotsColor = $gray; // #FFF;
     
         padding: $verticalGap $gapWidth $dotsReservedHeight $gapWidth;
@@ -65,13 +65,13 @@
             position: absolute;
             left: 0;
             right: 0;
-            bottom: 10px;
+            bottom: 6px;
             text-align: center;
            
             > * {                
                 display: inline-block;
-                width: 10px;
-                height: 10px;
+                width: 8px;
+                height: 8px;
                 margin: 1px;
                 text-indent: -999px;
                 border: 1px solid $dotsColor;
@@ -82,8 +82,8 @@
                 &.is-active {
                     margin: 0px;
                     background-color: $dotsColor;
-                    height: 12px;
-                    width: 12px;
+                    height: 8px;
+                    width: 8px;
                 }
             }
         }
