@@ -4938,7 +4938,7 @@ body.use-backdrop:before {
 
 /* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
 
-/* line 85 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
+/* line 90 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 
 /* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SectionTitle.styl */
 .SectionTitle {
@@ -5023,38 +5023,42 @@ body.use-backdrop:before {
   overflow: auto;
   position: absolute;
   top: 0;
-  left: 15px;
+  left: 0;
+  padding-left: 15px;
   right: 32px;
   bottom: 0;
 }
 
-/* line 58 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+/* line 60 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+[data-activity=clients] #clientsContent #clientsListView {
+  margin-left: -15px;
+}
 
-/* line 59 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+/* line 64 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
 [data-activity=clients] #clientsContent #clientsListView .SimpleList-divider {
   text-transform: uppercase;
 }
 
-/* line 65 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+/* line 70 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
 
-/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+/* line 71 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
 [data-activity=clients].has-SectionTitle #clientsContent {
   top: 34px;
 }
 
-/* line 70 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+/* line 75 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
 [data-activity=clients].has-SectionTitle #clientsIndex {
   top: 96px;
 }
 
-/* line 75 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+/* line 80 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
 
-/* line 76 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+/* line 81 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
 [data-activity=clients].is-searching #clientsAddNewButton {
   display: none;
 }
 
-/* line 80 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
+/* line 85 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\clients.styl */
 [data-activity=clients].is-searching .SimpleList-divider {
   display: none;
 }

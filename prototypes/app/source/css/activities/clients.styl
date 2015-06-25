@@ -51,11 +51,16 @@
         overflow: auto;        
         position: absolute;
         top: 0;
-        left: $container-padding-left;
+        // Using padding for left positioning to allow negative margin on the list
+        left: 0;
+        padding-left: $container-padding-left;
         right: $fullIndexWidth;
         bottom: 0;
 
         #clientsListView {
+            // List must start on the edge, per design
+            margin-left: (0 - $container-padding-left);
+            
             .SimpleList-divider {
                 text-transform: uppercase;
             }
