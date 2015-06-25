@@ -2310,7 +2310,7 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
 
 /* line 32 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
@@ -2363,7 +2363,7 @@ body.use-backdrop:before {
   font-weight: bold;
 }
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
 
 /* line 35 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
@@ -2459,9 +2459,9 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
 /* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
@@ -2490,7 +2490,163 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-primary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #00989a;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-secondary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #e0004f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-success .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #47b347;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-info .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #5bc0de;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-warning .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #f0ad4e;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-danger .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #d9534f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-darker .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #222;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-dark .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #333;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-gray .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #555;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-light .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #777;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-lighter .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #ccc;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-background .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #eee;
+  display: block;
+}
+
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -2522,13 +2678,13 @@ body.use-backdrop:before {
   font-size: 20px;
 }
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LinkTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LinkTile.styl */
 
-/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
 /* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
@@ -2557,7 +2713,163 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-primary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #00989a;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-secondary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #e0004f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-success .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #47b347;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-info .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #5bc0de;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-warning .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #f0ad4e;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-danger .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #d9534f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-darker .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #222;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-dark .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #333;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-gray .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #555;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-light .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #777;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-lighter .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #ccc;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-background .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #eee;
+  display: block;
+}
+
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -2665,6 +2977,162 @@ body.use-backdrop:before {
   color: #777;
 }
 
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-primary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #00989a;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-secondary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #e0004f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-success .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #47b347;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-info .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #5bc0de;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-warning .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #f0ad4e;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-danger .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #d9534f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-gray-darker .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #222;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-gray-dark .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #333;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-gray-gray .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #555;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-gray-light .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #777;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-gray-lighter .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #ccc;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.LinkTile.Tile--tag-gray-background .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #eee;
+  display: block;
+}
+
 /* line 15 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .LinkTile .Tile-icon {
   position: absolute;
@@ -2682,7 +3150,7 @@ body.use-backdrop:before {
   font-size: 20px;
 }
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
 
 /* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
 .TilesList {
@@ -2733,13 +3201,13 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 
-/* line 52 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
 /* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
@@ -2768,7 +3236,163 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-primary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #00989a;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-secondary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #e0004f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-success .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #47b347;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-info .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #5bc0de;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-warning .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #f0ad4e;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-danger .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #d9534f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-darker .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #222;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-dark .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #333;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-gray .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #555;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-light .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #777;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-lighter .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #ccc;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-background .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #eee;
+  display: block;
+}
+
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -2827,6 +3451,162 @@ body.use-backdrop:before {
 .ItemTile:active *,
 .ItemTile:hover * {
   color: #2a6496 !important;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-primary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #00989a;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-secondary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #e0004f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-success .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #47b347;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-info .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #5bc0de;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-warning .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #f0ad4e;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-danger .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #d9534f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-darker .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #222;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-dark .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #333;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-gray .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #555;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-light .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #777;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-lighter .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #ccc;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-background .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #eee;
+  display: block;
 }
 
 /* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
@@ -2953,17 +3733,17 @@ body.use-backdrop:before {
   font-size: 20px;
 }
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
 
-/* line 89 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 
-/* line 52 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
-/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
 /* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile {
@@ -2992,7 +3772,163 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-primary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #00989a;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-secondary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #e0004f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-success .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #47b347;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-info .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #5bc0de;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-warning .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #f0ad4e;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-danger .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #d9534f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-darker .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #222;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-dark .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #333;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-gray .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #555;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-light .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #777;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-lighter .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #ccc;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.CompactLinkTile.Tile--tag-gray-background .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  margin-left: -6px;
+  border-left: 2px solid #eee;
+  display: block;
+}
+
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-content {
   display: block;
   -webkit-box-sizing: content-box;
@@ -3051,6 +3987,162 @@ body.use-backdrop:before {
 .ItemTile:active *,
 .ItemTile:hover * {
   color: #2a6496 !important;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-primary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #00989a;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-secondary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #e0004f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-success .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #47b347;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-info .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #5bc0de;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-warning .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #f0ad4e;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-danger .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #d9534f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-darker .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #222;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-dark .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #333;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-gray .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #555;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-light .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #777;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-lighter .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #ccc;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemTile.Tile--tag-gray-background .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #eee;
+  display: block;
 }
 
 /* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
@@ -3206,6 +4298,162 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-primary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #00989a;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-secondary .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #e0004f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-success .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #47b347;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-info .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #5bc0de;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-warning .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #f0ad4e;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-danger .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #d9534f;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-gray-darker .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #222;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-gray-dark .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #333;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-gray-gray .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #555;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-gray-light .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #777;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-gray-lighter .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #ccc;
+  display: block;
+}
+
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+.ItemAddonTile.Tile--tag-gray-background .Tile-content:before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  margin-left: -6px;
+  border-left: 2px solid #eee;
+  display: block;
+}
+
 /* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 .ItemAddonTile .Tile-marker {
   float: left;
@@ -3305,7 +4553,7 @@ body.use-backdrop:before {
   word-break: break-all;
 }
 
-/* line 61 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+/* line 63 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
 .ItemAddonTile .Tile-content {
   white-space: normal;
   word-wrap: break-word;
@@ -3354,19 +4602,19 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+/* line 76 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
 .ItemAddonTile.ItemAddonTile--largerContent {
   height: 96px;
 }
 
-/* line 80 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+/* line 82 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
 .ItemAddonTile.ItemAddonTile--largerContent .Tile-content,
 .ItemAddonTile.ItemAddonTile--largerContent .Tile-marker,
 .ItemAddonTile.ItemAddonTile--largerContent .Tile-addon {
   height: 60px;
 }
 
-/* line 84 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+/* line 86 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
 .ItemAddonTile.ItemAddonTile--largerContent .Tile-marker,
 .ItemAddonTile.ItemAddonTile--largerContent .Tile-addon {
   padding-top: 10px;
@@ -3376,7 +4624,7 @@ body.use-backdrop:before {
 /* line 43 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

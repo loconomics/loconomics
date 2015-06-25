@@ -36,6 +36,8 @@ ItemTile-addMarker($internalHeight, $markerWidth = 70px, $markerGap = 11px) {
     $internalHeight = line-height-computed * 2;
     $vgap = 18px;
     $heightLimit = $internalHeight + ($vgap * 2);
+    
+    Tile-addTagContentSupport($vgap)
 
     padding: $vgap 0 $vgap 0;
 

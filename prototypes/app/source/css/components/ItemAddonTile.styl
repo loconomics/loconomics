@@ -44,13 +44,15 @@ ItemAddonTile-addAddon($internalHeight, $vgap) {
 .ItemAddonTile {
 
     Tile()
-
+    
     // 2 lines:
     $internalHeight = line-height-computed * 2;
     $vgap = 18px;
     $heightLimit = $internalHeight + ($vgap * 2);
     $markerWidth = 70px;
     $markerGap = 11px;
+    
+    Tile-addTagContentSupport($vgap)
 
     padding: $vgap 0 $vgap 0;
 

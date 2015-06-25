@@ -86,16 +86,31 @@ Tile-addContent($linesNumber) {
     }
 }
 
-/** Sample for future addition of aditional styling for tags.
-    Right now is not useful because the same can be done 
-    directly using Bootstrap text-color classes on desired text
-Tile-addTagSupport() {
-    for $color in $brand-colors {
-        &.Tile--tag-{$color} {
-            strong {
-                color: $brand-colors[$color];
+/** Add colored tags support, marking the content */
+Tile-addTagContentSupport($vgap, $left = -6px) {
+    
+    addTagFor($colorName, $color) { 
+        &.Tile--tag-{$colorName} {
+            .Tile-content:before {
+                content: '';
+                position: absolute;
+                top: $vgap;
+                bottom: $vgap;
+                // NO left, because this way it keeps
+                // relative to the content (that may vary on Tiles)
+                // and using margin as a relative measure
+                margin-left: $left;
+                border-left: 2px solid $color;
+                display: block;
             }
         }
     }
+    
+    for $color in $brand-colors {
+        addTagFor($color, $brand-colors[$color]);
+    }
+    
+    for $color in $gray-colors {
+        addTagFor('gray-' + $color, $gray-colors[$color]);
+    }
 }
-**/
