@@ -1,8 +1,18 @@
 <!-- Knockout Template time-slot-tile -->
 <script type="text/html" id="time-slot-tile-template">
-    <div class="ListView-item" data-bind="css: classNames">
-      <div class="ListView-item-marker"><div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div><div class="text-muted" data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></div></div>
-      <a href="#" class="btn btn-link btn-block ListView-item-content" data-bind="attr: { href: link }"><p data-bind="text: subject, visible: !description()"></p><div data-bind="text: subject, visible: description()"></div><div data-bind="text: description, visible: description()"></div></a>
-      <a href="#" class="btn btn-link ListView-item-action ListView-item-action--flexible" data-bind="attr: { href: link }"><span data-bind="css: actionIcon, text: actionText"></span></a>
-    </div>
+    <a class="ItemAddonTile" href="#" data-bind="css: classNames, attr: { href: link }">
+        <div class="Tile-marker">
+            <div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div>
+            <em data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></em>
+        </div>
+        <div class="Tile-content">
+            <p><strong data-bind="text: subject, visible: !description()"></strong></p>
+            <div><strong data-bind="text: subject, visible: description()"></strong></div>
+            <p data-bind="text: description, visible: description()"></p>
+        </div>
+        <div class="Tile-addon">
+            <p data-bind="visible: actionText, text: actionText"></p>
+            <span class="fa fa-2x" aria-hidden="true" data-bind="css: actionIcon"></span>
+        </div>
+    </a>
 </script>

@@ -40,12 +40,20 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
 
     var classNames = null;
     if (Appointment.specialIds.free === apt.id()) {
-        classNames = 'ListView-item--tag-success';
+        classNames = 'Tile--tag-gray-lighter';
     }
-    else if (apt.id() > 0) {
-        classNames = 'ListView-item--tag-primary';
+    else if (apt.id() > 0 && apt.sourceBooking()) {
+        if (apt.sourceBooking().confirmedDateID())
+            classNames = 'Tile--tag-primary';
+        else
+            // is a request:
+            classNames = 'Tile--tag-warning';
     }
-    
+    else {
+        // any block event
+        classNames = 'Tile--tag-danger';
+    }
+
     return new TimeSlotViewModel({
         startTime: apt.startTime,
         endTime: apt.endTime,
