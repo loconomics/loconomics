@@ -388,6 +388,12 @@ var appInit = function appInit() {
             window.navigator.splashscreen.hide();
         }
         
+        // Connect username in navbar
+        ko.computed(function() {
+            var n = app.model.userProfile.data.firstName();
+            app.navBarBinding.userName(n || 'Me');
+        });
+        
         // Onboarding model needs initialization
         app.model.onboarding.init(app);
 

@@ -96,13 +96,16 @@ exports.extends = function (app) {
     };
     
     app.setupNavBarBinding = function setupNavBarBinding() {
+        var siteUrl = $('html').attr('data-site-url');
         // Set model for the AppNav
-        ko.applyBindings({
+        app.navBarBinding = {
             navBar: app.navBar,
-            // TODO Update URL
-            photoUrl: ko.observable('http://dev.loconomics.com/en-US/Profile/Photo/'),
+            // URL, keep updated with any site change
+            photoUrl: ko.observable(siteUrl + '/en-US/Profile/Photo/'),
+            // It's later filled with a call to the model once loaded and ready
             userName: ko.observable('Me')
-        }, $('.AppNav').get(0));
+        };
+        ko.applyBindings(app.navBarBinding, $('.AppNav').get(0));
     };
     
     /**
