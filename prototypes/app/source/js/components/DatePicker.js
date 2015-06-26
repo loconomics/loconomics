@@ -33,14 +33,20 @@ var classes = {
     month: 'month',
     year: 'year',
     years: 'DatePicker-years',
-    weekDays: 'DatePicker-weekDays'
+    weekDays: 'DatePicker-weekDays',
+    active: 'active'
 };
 
 var events = {
     dayRendered: 'dayRendered',
     dateChanged: 'dateChanged',
     show: 'show',
-    hide: 'hide'
+    hide: 'hide',
+    dateSet: 'dateSet',
+    // IMPORTANT: Triggered after a value is set or updated in the viewDate property
+    // without check if the same or not (but operations updating it happens on a change)
+    // AND after is changed and calendar filled (fill method called, so DOM reflects the new viewDate).
+    viewDateChanged: 'viewDateChanged'
 };
 
 var DPGlobal = {
@@ -271,6 +277,11 @@ var DatePicker = function(element, options) {
 DatePicker.prototype = {
     constructor: DatePicker,
     
+    _triggerViewDateChange: function() {
+        var viewModeName = DPGlobal.modes[this.viewMode].clsName;
+        this.element.trigger(events.viewDateChanged, [{ viewDate: this.viewDate, viewMode: viewModeName }]);
+    },
+    
     show: function(e) {
         this.picker.show();
         this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
@@ -324,6 +335,7 @@ DatePicker.prototype = {
         } else {
             this.element.prop('value', formated);
         }
+        this.element.trigger(events.dateSet, [this.date, formated]);
     },
     
     /**
@@ -342,6 +354,8 @@ DatePicker.prototype = {
         this.set();
         this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
         this.fill();
+        // TODO Must check dontNotify?
+        this._triggerViewDateChange();
         
         if (dontNotify !== true) {
             // Notify:
@@ -392,6 +406,11 @@ DatePicker.prototype = {
         );
         this.viewDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1, 0, 0, 0, 0);
         this.fill();
+        this._triggerViewDateChange();
+    },
+    
+    getDaysElements: function() {
+        return this.picker.find('.' + classes.days + ' .' + classes.monthDay);
     },
     
     fillDow: function(){
@@ -414,18 +433,47 @@ DatePicker.prototype = {
     },
     
     fill: function() {
-        /*jshint maxstatements:66, maxcomplexity:28*/
+        /*jshint maxstatements:70, maxcomplexity:28*/
         var d = new Date(this.viewDate),
             year = d.getFullYear(),
             month = d.getMonth(),
             currentDate = this.date.valueOf();
+        
+        // Calculate first date to show, usually on previous month:
+        var prevMonth = new Date(year, month-1, 28,0,0,0,0),
+            lastDayPrevMonth = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
+        // L18N?
+        prevMonth.setDate(lastDayPrevMonth);
+        prevMonth.setDate(lastDayPrevMonth - (prevMonth.getDay() - this.weekStart + 7)%7);        
+
+        // IMPORTANT: Avoid duplicated work, by checking we are still showing the same month,
+        // so not need to 're-render' everything, only swap the active date
+        if (this._prevDate && this._prevDate.getMonth() === this.viewDate.getMonth()) {
+            var tbody = this.picker.find('.' + classes.days + ' tbody');
+            // Remove previous active date mark
+            // (viewDate has effectively the value of previous active date, but doing a class search woks too :-)
+            tbody.find('.' + classes.monthDay + '.' + classes.active)
+            .removeClass(classes.active);
+
+            // Add date mark to current
+            var diff = lastDayPrevMonth - prevMonth.getDate(),
+                index = diff + this.date.getDate(),
+                irow = (index / 7) |0,
+                icol = index % 7;
+            tbody.find('tr:eq(' + irow + ') td:eq(' + icol + ')').addClass(classes.active);        
+            
+            this._prevDate = new Date(this.viewDate);
+            // DONE:
+            return;
+        }
+        this._prevDate = new Date(this.viewDate);
+
+        // Header
         this.picker
         .find('.' + classes.days + ' th:eq(1)')
         .html(DPGlobal.dates.months[month] + ' ' + year);
-        var prevMonth = new Date(year, month-1, 28,0,0,0,0),
-            day = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
-        prevMonth.setDate(day);
-        prevMonth.setDate(day - (prevMonth.getDay() - this.weekStart + 7)%7);
+
+        // Calculate ending
         var nextMonth = new Date(prevMonth);
         nextMonth.setDate(nextMonth.getDate() + 42);
         nextMonth = nextMonth.valueOf();
@@ -464,7 +512,7 @@ DatePicker.prototype = {
                 clsName += ' new';
             }
             if (prevMonth.valueOf() === currentDate) {
-                clsName += ' active';
+                clsName += ' ' + classes.active;
             }
 
             dayTd = weekTr.find('td:eq(' + currentWeekDayIndex + ')');
@@ -488,9 +536,9 @@ DatePicker.prototype = {
                     .find('th:eq(1)')
                         .html(year)
                         .end()
-                    .find('span').removeClass('active');
+                    .find('span').removeClass(classes.active);
         if (currentYear === year) {
-            months.eq(this.date.getMonth()).addClass('active');
+            months.eq(this.date.getMonth()).addClass(classes.active);
         }
         
         html = '';
@@ -506,7 +554,7 @@ DatePicker.prototype = {
         if (this._yearsCreated !== true) {
 
             for (i = -1; i < 11; i++) {
-                html += '<span class="' + classes.year + (i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' active' : '')+'">'+year+'</span>';
+                html += '<span class="' + classes.year + (i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' ' + classes.active : '')+'">'+year+'</span>';
                 year += 1;
             }
             
@@ -517,10 +565,10 @@ DatePicker.prototype = {
             
             var yearSpan = yearCont.find('span:first-child()');
             for (i = -1; i < 11; i++) {
-                //html += '<span class="year'+(i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' active' : '')+'">'+year+'</span>';
+                //html += '<span class="year'+(i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' ' + classes.active : '')+'">'+year+'</span>';
                 yearSpan
                 .text(year)
-                .attr('class', 'year' + (i === -1 || i === 10 ? ' old' : '') + (currentYear === year ? ' active' : ''));
+                .attr('class', 'year' + (i === -1 || i === 10 ? ' old' : '') + (currentYear === year ? ' ' + classes.active : ''));
                 year += 1;
                 yearSpan = yearSpan.next();
             }
@@ -542,11 +590,12 @@ DatePicker.prototype = {
             DPGlobal.modes[mode].navStep * (dir === 'prev' ? -1 : 1)
         );
         this.fill();
+        this._triggerViewDateChange();
         this.set();
     },
 
     click: function(e) {
-        /*jshint maxcomplexity:16*/
+        /*jshint maxcomplexity:16, maxstatements:30*/
         e.stopPropagation();
         e.preventDefault();
         var target = $(e.target).closest('span.month, span.year, td, th');
@@ -578,11 +627,13 @@ DatePicker.prototype = {
                 month = target.parent().find('span').index(target);
                 this.viewDate.setMonth(month);
                 completeMonthYear();
+                this._triggerViewDateChange();
             }
             else if (target.hasClass(classes.year)) {
                 year = parseInt(target.text(), 10)||0;
                 this.viewDate.setFullYear(year);
                 completeMonthYear();
+                this._triggerViewDateChange();
             }
             else if (target.hasClass(classes.monthDay)) {
                 if (!target.is('.disabled')){
@@ -595,6 +646,7 @@ DatePicker.prototype = {
                     this.date = new Date(year, month, day,0,0,0,0);
                     this.viewDate = new Date(year, month, Math.min(28, day),0,0,0,0);
                     this.fill();
+                    this._triggerViewDateChange();
                     this.set();
                     this.element.trigger({
                         type: events.dateChanged,

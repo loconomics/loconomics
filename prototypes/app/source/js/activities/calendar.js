@@ -26,6 +26,54 @@ var A = Activity.extends(function CalendarActivity() {
     /* Init components */
     this.$datepicker.show().datepicker({ extraClasses: 'DatePicker--tagged' });
     
+    var daysElements = this.$datepicker.datepicker('getDaysElements');
+    var prevMonth = this.viewModel.currentDate().getMonth();
+    this.tagAvailability = function tagAvailability(date) {
+        var month = date.getMonth();
+        // Avoid dupes
+        if (month === prevMonth) return;
+        prevMonth = month;
+        
+        var app = this.app;
+
+        daysElements.each(function() {
+            var $dateTd = $(this);
+            var id = $dateTd.data('date-time');
+            // Get availability info
+            app.model.calendar.getDateAvailability(new Date(id))
+            .then(function(dateAvail) {
+                /*jshint maxcomplexity:8*/
+                // If still the same (is async, could have changed)
+                if (id === $dateTd.data('date-time')) {
+                    var cls = '';
+                    switch(dateAvail.availableTag()) {
+                        case 'past':
+                            cls = 'tag-muted';
+                            break;
+                        case 'full':
+                            cls = 'tag-blank';
+                            break;
+                        case 'medium':
+                            cls = 'tag-dark';
+                            break;
+                        case 'low':
+                            cls = 'tag-warning';
+                            break;
+                        case 'none':
+                            cls = 'tag-danger';
+                            break;
+                    }
+                    if (cls) $dateTd.addClass(cls);
+                }
+            });
+        });
+    };
+    this.$datepicker.on('viewDateChanged', function(e, d) {
+        if (d.viewMode === 'days') {
+            this.tagAvailability(d.viewDate);
+        }
+    }.bind(this));
+    
     /* Event handlers */
     // Changes on currentDate
     this.registerHandler({
@@ -101,44 +149,11 @@ var A = Activity.extends(function CalendarActivity() {
             }
         }.bind(this)
     });
-    
-    this.registerHandler({
-        target: this.$datepicker,
-        event: 'dayRendered',
-        handler: function(e, $dateTd) {
-            var id = $dateTd.data('date-time');
-            // Get availability info
-            this.app.model.calendar.getDateAvailability(new Date(id))
-            .then(function(dateAvail) {
-                /*jshint maxcomplexity:8*/
-                // If still the same (is async, could have changed)
-                if (id === $dateTd.data('date-time')) {
-                    var cls = '';
-                    switch(dateAvail.availableTag()) {
-                        case 'past':
-                            cls = 'tag-muted';
-                            break;
-                        case 'full':
-                            cls = 'tag-blank';
-                            break;
-                        case 'medium':
-                            cls = 'tag-dark';
-                            break;
-                        case 'low':
-                            cls = 'tag-warning';
-                            break;
-                        case 'none':
-                            cls = 'tag-danger';
-                            break;
-                    }
-                    if (cls) $dateTd.addClass(cls);
-                }
-            });
-        }.bind(this)
-    });
 
     // Set date to today
     this.viewModel.currentDate(getDateWithoutTime());
+    // First availability load
+    this.tagAvailability(this.viewModel.currentDate());
 });
 
 exports.init = A.init;
