@@ -251,7 +251,7 @@
             // address or is service location, thats excludes the service area addresses
             // from the need of that fields.
             var isServiceLocation = Request.Form["isServiceLocation"].AsBool(false);
-            if (jobTitleID == LcRestAddress.NotAJobTitleID || isServiceLocation) {
+            if (jobTitleID != LcRestAddress.NotAJobTitleID || isServiceLocation) {
                 Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
                 Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
             }
@@ -275,7 +275,7 @@
                 countryCode = locale.countryCode,
                 addressLine1 = Request.Form["addressLine1"],
                 addressLine2 = Request.Form["addressLine2"],
-                addressName = Request.Form["addressName"],
+                addressName = Request.Form["addressName"] ?? "Home",
                 postalCode = Request.Form["postalCode"],
                 latitude = Request.Form["latitude"].IsEmpty() ? null : DataTypes.GetTypedValue<double?>(Request.Form["latitude"], 0),
                 longitude = Request.Form["longitude"].IsEmpty() ? null : DataTypes.GetTypedValue<double?>(Request.Form["longitude"], 0),
