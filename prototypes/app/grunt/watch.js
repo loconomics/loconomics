@@ -36,6 +36,16 @@ module.exports = {
         tasks: ['build-html']
     },
     
+    configXml: {
+        files: ['./source/cordova-config.js.xml'],
+        tasks: ['bliss:cordovaConfigXml']
+    },
+    
+    configJson: {
+        files: ['./source/cordova-config.js.json'],
+        tasks: ['bliss:cordovaConfigJson']
+    },
+    
     package: {
         files: ['./package.json'],
         tasks: ['build']

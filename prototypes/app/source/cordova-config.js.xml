@@ -30,7 +30,8 @@
     <preference name="permissions"                value="none"/>
     
     <!-- Customize your app and platform with the preference element. -->
-    <preference name="phonegap-version" value="3.7.0" />
+    <preference name="phonegap-version" value="cli-5.1.1" />
+
     <!-- all: default means both landscape and portrait are enabled -->
     <preference name="orientation" value="default" />
     <!-- all: possible values handset, tablet, or universal -->
@@ -80,14 +81,16 @@
     -->
     
     <!-- fix problem with transparent overlay statusbar iOS 7 -->
-    <gap:plugin name="org.apache.cordova.statusbar" version="0.1.10" source="plugins.cordova.io" /> 
+    <gap:plugin name="cordova-plugin-statusbar" version="1.0.0" source="npm" />
     
     <!-- Control keyboard to fix some buggy default behaviors -->
-    <gap:plugin name="com.ionic.keyboard" version="1.0.4" source="plugins.cordova.io" />
+    <gap:plugin name="ionic-plugin-keyboard" version="1.0.4" source="npm" />
     <!-- Control the splash screen -->
-    <gap:plugin name="org.apache.cordova.splashscreen" version="1.0.0 " source="plugins.cordova.io" />
-    <gap:plugin name="org.apache.cordova.inappbrowser" version="0.6.0" source="plugins.cordova.io" />
-    <gap:plugin name="org.apache.cordova.device" version="0.3.0" source="plugins.cordova.io" />
+    <gap:plugin name="cordova-plugin-splashscreen" version="2.0.0 " source="npm" />
+    <gap:plugin name="cordova-plugin-inappbrowser" version="1.0.0" source="npm" />
+    <gap:plugin name="cordova-plugin-device" version="1.0.0" source="npm" />
+    <!--<gap:plugin name="cordova-plugin-wkwebview" version="0.3.9" source="npm" />-->
+    <gap:plugin name="cordova-plugin-whitelist" version="1.0.0" source="npm" />
 
     <!-- More official plugins examples -->
     <!--
@@ -127,12 +130,12 @@
     <access origin="http://127.0.0.1*"/>
     <access origin="https://loconomics.com" subdomains="true" />
     -->
-    <access origin="*"/>
-    <!--
-        <access origin="http://phonegap.com" />                    - allow any secure requests to http://phonegap.com/
-        <access origin="http://phonegap.com" subdomains="true" />  - same as above, but including subdomains, such as http://build.phonegap.com/
-        <access origin="http://phonegap.com" browserOnly="true" /> - only allows http://phonegap.com to be opened by the child browser.
-    -->
+    <!--<access origin="http://127.0.0.1*"/> allow local pages -->
+    <access origin="*" /><!-- Todo, para poder cargar Google calendar y maps -->
+    <!-- New in Cordova Android >=4.0, affects to iframes and links -->
+    <allow-intent href="*" />
+    <allow-navigation href="http://*/*" />
+    <allow-navigation href="https://*/*" />
     
 
     <!-- icons and splash screens -->
