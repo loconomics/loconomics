@@ -24,7 +24,7 @@ module.exports = function DateCache(settings) {
     this.getSingle = function(date) {
         var dateKey = date;
         if (date instanceof Date)
-            moment(date).format('YYYY-MM-DD');
+            dateKey = moment(date).format('YYYY-MM-DD');
         
         if (this.byDate.hasOwnProperty(dateKey) &&
             !this.byDate[dateKey].control.mustRevalidate()) {

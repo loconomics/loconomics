@@ -63,10 +63,12 @@ exports.create = function create(appModel) {
     
     api.setAppointment = function setAppointment(apt) {
         
-        // TODO IMPORTANT: Saving apt must invalidate the cache and force date
+        // TODO: Saving apt must invalidate the cache and force date
         // availability computation with UI update, when start time or start end changes 
         // (ever when inserting apt), for the previous date and the new one (if date changed)
         // and only date availability computation if date is the same but time changed.
+        // IT WORKS now, because on activities/appointment, in a id/startTime handler, the 
+        // whole calendar cache is removed on change/set, but is lot of cache invalidation.
         
         // If is a booking
         if (apt.sourceBooking()) {
