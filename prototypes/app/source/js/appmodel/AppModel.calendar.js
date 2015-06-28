@@ -22,7 +22,7 @@ exports.create = function create(appModel) {
     
     var cache = new DateCache({
         Model: DateAvailability,
-        ttl: { minutes: 1 }
+        ttl: { minutes: 10 }
     });
     
     api.clearCache = function clearCache() {
