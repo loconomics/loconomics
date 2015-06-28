@@ -12,22 +12,18 @@
 
 var Appointment = require('../models/Appointment'),
     DateAvailability = require('../models/DateAvailability'),
-    CacheControl = require('../utils/CacheControl'),
-    moment = require('moment');
+    DateCache = require('../utils/DateCache'),
+    moment = require('moment'),
+    _ = require('lodash');
 
 exports.create = function create(appModel) {
 
     var api = {};
     
-    var cache = {
-        byDate: {/*
-            data: DateAvailability(),
-            control: CacheControl()
-        */}
-    };
+    var cache = new DateCache({ Model: DateAvailability });
     
     api.clearCache = function clearCache() {
-        cache.byDate = {};
+        cache.clear();
     };
     
     appModel.on('clearLocalData', function() {
@@ -94,8 +90,8 @@ exports.create = function create(appModel) {
     **/
     var getRemoteAppointmentsByDate = function getRemoteAppointmentsByDate(date) {
         return Promise.all([
-            appModel.bookings.getBookingsByDate(date),
-            appModel.calendarEvents.getEventsByDate(date)
+            appModel.bookings.getBookingsByDates(date),
+            appModel.calendarEvents.getEventsByDates(date)
         ]).then(function(group) {
 
             var events = group[1],
@@ -143,33 +139,119 @@ exports.create = function create(appModel) {
     **/
     api.getDateAvailability = function getDateAvailability(date) {
         
-        var dateKey = moment(date).format('YYYYMMDD');
+        var cached = cache.getSingle(date);
 
-        if (cache.byDate.hasOwnProperty(dateKey) &&
-            !cache.byDate[dateKey].control.mustRevalidate()) {
-
-            return Promise.resolve(cache.byDate[dateKey].data);
+        if (cached) {
+            return Promise.resolve(cached);
         }
         else {
             return getRemoteDateAvailability(date)
             .then(function(dateInfo) {
-                // Update cache
-                var c = cache.byDate[dateKey];
-                if (c && c.data) {
-                    c.data.model.updateWith(dateInfo);
-                }
-                else {
-                    c = {
-                        data: new DateAvailability(dateInfo),
-                        control: new CacheControl({ ttl: { minutes: 1 } })
-                    };
-                    cache.byDate[dateKey] = c;
-                }
-                c.control.touch();
-                
-                return c.data;
+                // Update cache and retun data as class instance
+                return cache.set(date, dateInfo).data;
             });
         }
+    };
+    
+    
+    //////
+    // NEW MULTI DATES API
+    
+    /**
+        Get a list of generic calendar appointment objects, made of events and/or bookings
+        by Date, from the remote source directly.
+        Used internally only, to get appointments with and without free/unavailable
+        slots use getDateAvailability
+    **/
+    var getRemoteAppointmentsByDates = function getRemoteAppointmentsByDates(start, end) {
+        return Promise.all([
+            appModel.bookings.getBookingsByDates(start, end),
+            appModel.calendarEvents.getEventsByDates(start, end)
+        ]).then(function(group) {
+
+            var events = group[1],
+                bookings = group[0],
+                apts = [];
+
+            if (events && events().length) {
+                apts = Appointment.listFromCalendarEventsBookings(events(), bookings());
+            }
+
+            // Group apts by date
+            var grouped = _.groupBy(apts, function(apt) {
+                return moment(apt.startTime()).format('YYYY-MM-DD');
+            });
+            
+            // Ensure all the dates in the range are filled, with empty arrays in the holes.
+            // NOTE: this way of first group apts and then fill gaps makes the resulting object
+            // to display properties out of order (if some hole needed being filled out).
+            var date = new Date(start);
+            while (date <= end) {
+                var key = moment(date).format('YYYY-MM-DD');
+                
+                if (!grouped.hasOwnProperty(key))
+                    grouped[key] = [];
+
+                // Next date:
+                date.setDate(date.getDate() + 1);
+            }
+
+            return grouped;
+        });
+    };
+    
+    /**
+        Fetch appointments and schedule information for the dates from remote
+        in a convenient object to use with the DateAvailability model
+        (returns an array of them).
+    **/
+    var getRemoteDatesAvailability = function getRemoteDatesAvailability(start, end) {
+        return Promise.all([
+            getRemoteAppointmentsByDates(start, end),
+            appModel.simplifiedWeeklySchedule.load()
+        ])
+        .then(function(result) {
+            var aptsDates = result[0],
+                settings = result[1],
+                results = {};
+
+            Object.keys(aptsDates).forEach(function(dateKey) {
+                var date = new Date(dateKey);
+                var weekDaySchedule = settings.weekDays[date.getDay()];
+            
+                var dateInfo = {
+                    date: date,
+                    appointmentsList: aptsDates[dateKey] || [],
+                    weekDaySchedule: weekDaySchedule
+                };
+
+                results[dateKey] = dateInfo;
+            });
+
+            return results;
+        });
+    };
+    
+    api.getDatesAvailability = function getDatesAvailability(start, end) {
+
+        var cacheResults = cache.get(start, end);
+        
+        // We know what dates we need and what data is cached already
+        // If all cached, just resolve to cache
+        if (cacheResults.minRequest === null) {
+            return Promise.resolve(cacheResults.byDate);
+        }
+        
+        // Request all dates in the range (even if some cached in between)
+        return getRemoteDatesAvailability(cacheResults.minHole, cacheResults.maxHole)
+        .then(function(results) {
+            // Add results to cache, creating DateAvailability object
+            // and add that to the resultset
+            Object.keys(results).forEach(function(dateKey) {
+                cacheResults.byDate[dateKey] = cache.set(dateKey, results[dateKey]).data;
+            });
+            return cacheResults.byDate;
+        });
     };
 
     return api;

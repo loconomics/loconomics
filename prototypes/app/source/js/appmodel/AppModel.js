@@ -197,12 +197,3 @@ AppModel.prototype.clearLocalData = function clearLocalData() {
         this.emit('clearLocalData');
     }.bind(this));
 };
-
-// TODO Review removal, maybe too the utility internally used, since now there
-// is an (incomplete still) AppModel.calendarEvents
-// Class splited in different files to mitigate size and organization
-// but keeping access to the common set of methods and objects easy with
-// the same class.
-// Loading extensions:
-//require('./AppModel-events').plugIn(AppModel);
-

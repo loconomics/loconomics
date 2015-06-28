@@ -27,7 +27,7 @@ var A = Activity.extends(function CalendarActivity() {
     this.$datepicker.show().datepicker({ extraClasses: 'DatePicker--tagged' });
     
     var daysElements = this.$datepicker.datepicker('getDaysElements');
-    var prevMonth = this.viewModel.currentDate().getMonth();
+    var prevMonth = null;
     this.tagAvailability = function tagAvailability(date) {
         var month = date.getMonth();
         // Avoid dupes
