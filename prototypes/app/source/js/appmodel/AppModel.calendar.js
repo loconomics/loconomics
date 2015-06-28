@@ -20,7 +20,10 @@ exports.create = function create(appModel) {
 
     var api = {};
     
-    var cache = new DateCache({ Model: DateAvailability });
+    var cache = new DateCache({
+        Model: DateAvailability,
+        ttl: { minutes: 1 }
+    });
     
     api.clearCache = function clearCache() {
         cache.clear();
@@ -59,6 +62,11 @@ exports.create = function create(appModel) {
     };
     
     api.setAppointment = function setAppointment(apt) {
+        
+        // TODO IMPORTANT: Saving apt must invalidate the cache and force date
+        // availability computation with UI update, when start time or start end changes 
+        // (ever when inserting apt), for the previous date and the new one (if date changed)
+        // and only date availability computation if date is the same but time changed.
         
         // If is a booking
         if (apt.sourceBooking()) {
@@ -216,8 +224,8 @@ exports.create = function create(appModel) {
                 results = {};
 
             Object.keys(aptsDates).forEach(function(dateKey) {
-                var date = new Date(dateKey);
-                var weekDaySchedule = settings.weekDays[date.getDay()];
+                var date = moment(dateKey, 'YYYY-MM-DD').toDate();
+                var weekDaySchedule = settings.weekDays[date.getDay()]();
             
                 var dateInfo = {
                     date: date,
@@ -235,10 +243,9 @@ exports.create = function create(appModel) {
     api.getDatesAvailability = function getDatesAvailability(start, end) {
 
         var cacheResults = cache.get(start, end);
-        
         // We know what dates we need and what data is cached already
         // If all cached, just resolve to cache
-        if (cacheResults.minRequest === null) {
+        if (cacheResults.minHole === null) {
             return Promise.resolve(cacheResults.byDate);
         }
         

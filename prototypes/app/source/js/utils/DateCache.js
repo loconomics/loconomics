@@ -13,6 +13,7 @@ var moment = require('moment'),
 module.exports = function DateCache(settings) {
     
     this.Model = settings && settings.Model || null;
+    this.ttl = settings && settings.ttl || { minutes: 1 };
     
     this.byDate = {};
     
@@ -34,6 +35,13 @@ module.exports = function DateCache(settings) {
         return null;
     };
     
+    this.remove = function(date) {
+        var dateKey = date;
+        if (date instanceof Date)
+            dateKey = moment(date).format('YYYY-MM-DD');
+        delete this.byDate[dateKey];
+    };
+    
     this.get = function(start, end) {
 
         var date = new Date(start);
@@ -50,13 +58,18 @@ module.exports = function DateCache(settings) {
                 resultsPerDate[dateKey] = this.byDate[dateKey].data;
             }
             else {
-                maxRequest = new Date(date);
-                if (!minRequest) minRequest = maxRequest;
-                holes.push(maxRequest);
+                holes.push(new Date(date));
             }
             // Next date:
             date.setDate(date.getDate() + 1);
         }
+        
+        // Sort holes
+        holes.sort(function(a, b) { return a === b ? 0 : a < b ? -1 : 1; });
+        // min hole is the first one
+        minRequest = holes.length ? holes[0] : null;
+        // max hole is the last one
+        maxRequest = holes.length ? holes[holes.length - 1] : null;
         
         return {
             byDate: resultsPerDate,
@@ -83,7 +96,7 @@ module.exports = function DateCache(settings) {
         else {
             c = {
                 data: this.Model ? new this.Model(data) : data,
-                control: new CacheControl({ ttl: { minutes: 1 } })
+                control: new CacheControl({ ttl: this.ttl })
             };
             this.byDate[dateKey] = c;
         }

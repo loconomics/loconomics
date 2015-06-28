@@ -371,6 +371,10 @@ DatePicker.prototype = {
         return this.date;
     },
     
+    getViewDate: function() {
+        return this.viewDate;
+    },
+    
     moveValue: function(dir, mode) {
         // dir can be: 'prev', 'next'
         if (['prev', 'next'].indexOf(dir && dir.toLowerCase()) == -1)

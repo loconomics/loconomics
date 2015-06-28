@@ -1,4 +1,6 @@
 /** Events
+
+    IMPORTANT!!!! API not to use directly by the app, but through appModel.calendar (it has cache and more)
 **/
 'use strict';
 

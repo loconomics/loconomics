@@ -125,8 +125,6 @@ var A = Activity.extends(function AppointmentActivity() {
                     // TODO: enhance by discarding only the cache for the previous
                     // and new date
                     this.app.model.calendar.clearCache();
-                    this.app.model.bookings.clearCache();
-                    this.app.model.calendarEvents.clearCache();
                     
                     this.viewModel.setCurrent(date, id);
                     updateUrl();
