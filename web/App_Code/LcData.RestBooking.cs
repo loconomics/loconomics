@@ -398,7 +398,7 @@ public static partial class LcData
                     WHERE 
                         (R.CustomerUserID = @0 OR R.ProviderUserID = @0)
                          AND
-                        E.StartTime > @1
+                        E.EndTime > @1
                          AND
                         E.StartTime < @2
                 ", UserID, StartTime, EndTime).Select<dynamic, RestBooking>(booking => {
