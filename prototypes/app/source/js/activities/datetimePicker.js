@@ -5,8 +5,11 @@
 
 var ko = require('knockout'),
     //moment = require('moment'),
-    Time = require('../utils/Time');
+    Time = require('../utils/Time'),
+    getDateWithoutTime = require('../utils/getDateWithoutTime');
+
 require('../components/DatePicker');
+var datepickerAvailability = require('../utils/datepickerAvailability');
 
 var Activity = require('../components/Activity');
 
@@ -29,6 +32,7 @@ var A = Activity.extends(function DatetimePickerActivity() {
     
     /* Init components */
     this.$datePicker.show().datepicker({ extraClasses: 'DatePicker--tagged' });
+    this.tagAvailability = datepickerAvailability.create(this.app, this.$datePicker, this.viewModel.isLoading);
     
     this.registerHandler({
         target: this.$datePicker,
@@ -65,49 +69,16 @@ var A = Activity.extends(function DatetimePickerActivity() {
         }.bind(this)
     });
     
-    // Like in calendar:
-    // TODO Deduplicate
-    // TODO terrible performance, very click launchs this even if already done
-    this.registerHandler({
-        target: this.$datePicker,
-        event: 'dayRendered',
-        handler: function(e, $dateTd) {
-            var id = $dateTd.data('date-time');
-            // Get availability info
-            this.app.model.calendar.getDateAvailability(new Date(id))
-            .then(function(dateAvail) {
-                /*jshint maxcomplexity:8*/
-                // If still the same (is async, could have changed)
-                if (id === $dateTd.data('date-time')) {
-                    var cls = '';
-                    switch(dateAvail.availableTag()) {
-                        case 'past':
-                            cls = 'tag-muted';
-                            break;
-                        case 'full':
-                            cls = 'tag-blank';
-                            break;
-                        case 'medium':
-                            cls = 'tag-dark';
-                            break;
-                        case 'low':
-                            cls = 'tag-warning';
-                            break;
-                        case 'none':
-                            cls = 'tag-danger';
-                            break;
-                    }
-                    if (cls) $dateTd.addClass(cls);
-                }
-            });
-        }.bind(this)
-    });
-    
     this.returnRequest = function returnRequest() {
         this.app.shell.goBack(this.requestData);
     }.bind(this);
     
-    this.bindDateData(new Date());
+    // First load of today data
+    this.bindDateData(this.viewModel.selectedDate())
+    .then(function() {
+        // Once finished, load the whole month
+        this.tagAvailability(this.viewModel.selectedDate());
+    }.bind(this));
 });
 
 exports.init = A.init;
@@ -159,7 +130,7 @@ A.prototype.show = function show(state) {
 A.prototype.bindDateData = function bindDateData(date) {
 
     this.viewModel.isLoading(true);
-    this.app.model.calendar.getDateAvailability(date)
+    return this.app.model.calendar.getDateAvailability(date)
     .then(function(data) {
         
         this.viewModel.dateAvail(data);
@@ -188,7 +159,7 @@ function ViewModel(app) {
     this.schedulingPreferences = app.model.schedulingPreferences.data;
 
     this.headerText = ko.observable('Select a time');
-    this.selectedDate = ko.observable(new Date());
+    this.selectedDate = ko.observable(getDateWithoutTime());
     this.isLoading = ko.observable(false);
 
     this.dateAvail = ko.observable();
