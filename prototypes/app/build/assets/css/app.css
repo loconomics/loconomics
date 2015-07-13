@@ -4349,7 +4349,7 @@ body.use-backdrop:before {
   padding: 18px 0 18px 0;
   height: 76px;
   overflow: hidden;
-  padding-right: 53px;
+  padding-right: 62px;
 }
 
 /* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
@@ -4598,7 +4598,7 @@ body.use-backdrop:before {
   right: 0px;
   top: 18px;
   bottom: 18px;
-  width: 45px;
+  width: 54px;
   overflow: hidden;
   height: 40px;
 }
@@ -4625,7 +4625,7 @@ body.use-backdrop:before {
 .ItemAddonTile .Tile-addon > i,
 .ItemAddonTile .Tile-addon > .glyphicon,
 .ItemAddonTile .Tile-addon > .fa {
-  width: 45px;
+  width: 54px;
   display: table-cell;
   height: 40px;
   vertical-align: middle;
