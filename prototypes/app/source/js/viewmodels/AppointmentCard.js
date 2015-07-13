@@ -125,6 +125,9 @@ function AppointmentCardViewModel(params) {
                 this.item().summary('');
             }
         }
+        else {
+            this.item(AppointmentView(this.sourceItem(), app));
+        }
     }, this);
 
     this.edit = function edit() {
@@ -149,6 +152,7 @@ function AppointmentCardViewModel(params) {
                 // Update with remote data, the original appointment in the version,
                 // not the currentAppointment or in the index in the list to avoid
                 // race-conditions
+                console.log('SAVED APT', savedApt.id(), version.original.id(), version.version.id());
                 version.original.model.updateWith(savedApt);
                 // Do a pull so original and version gets the exact same data
                 version.pull({ evenIfNewer: true });

@@ -1,5 +1,5 @@
 <!-- Activity appointment -->
-<div class="container-fluid" data-activity="appointment">
+<div class="container-fluid" data-activity="appointment" data-bind="css: { 'in-edit': editMode }">
     <!-- Appointment View (cards) -->
     <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
        data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">

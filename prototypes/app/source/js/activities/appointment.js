@@ -78,72 +78,30 @@ var A = Activity.extends(function AppointmentActivity() {
     this.registerHandler({
         target: this.viewModel.currentAppointment,
         handler: function (apt) {
-
             if (!apt)
                 return;
 
-            if (apt.id() === Appointment.specialIds.newBooking ||
-                apt.id() === Appointment.specialIds.loading)
-                return;
-            
-            var updateUrl = function updateUrl() {
-                // Update URL to match the appointment ID and
-                // track it state
-                // Get ID from URL, to avoid do anything if the same.
-                var aptId = apt.id(),
-                    found = /appointment\/([^\/]+)\/(\-?\d+)/i.exec(window.location),
-                    urlId = found && found[2] |0,
-                    urlDate = found && found[1],
-                    curDateStr = getDateWithoutTime(this.viewModel.currentDate()).toISOString();
-                
-                if (!found ||
-                    urlId !== aptId.toString() ||
-                    urlDate !== curDateStr) {
-
-                    // If was an incomplete URL, just replace current state
-                    if (urlId === '')
-                        this.app.shell.history.replaceState(null, null, 'appointment/' + curDateStr + '/' + aptId);
-                    else
-                        this.app.shell.history.pushState(null, null, 'appointment/' + curDateStr + '/' + aptId);
-                }
-            }.bind(this);
-            
-            // Update now
-            updateUrl();
-            
-            // Attach handlers to ID and StartTime
-            // if not attached already on the appointment
-            if (!apt.__idDateHandlersAttached) {
+            if ((apt.id() === Appointment.specialIds.newBooking ||
+                apt.id() === Appointment.specialIds.newEvent) &&
+                !apt.__idDateHandlersAttached) {
                 apt.__idDateHandlersAttached = true;
-                var relocateList = function relocateList() {
-                    var date = getDateWithoutTime(apt.startTime()),
-                        id = apt.id();
-                    
-                    // Current cache must be removed, otherwise the apt
-                    // will not appear in the new dated list, showing a strange
-                    // change and de-synced/corrupted data
-                    // TODO: enhance by discarding only the cache for the previous
-                    // and new date
-                    this.app.model.calendar.clearCache();
-                    
-                    this.viewModel.setCurrent(date, id);
-                    updateUrl();
-                }.bind(this);
+                var prevID = apt.id();
                 // With explicit subscribe and not a computed because we
                 // must avoid the first time execution (creates an infinite loop)
-                apt.startTime.subscribe(relocateList);
-                apt.id.subscribe(relocateList);
+                apt.id.subscribe(function relocateList() {
+                    var id = apt.id();
+    
+                    if (prevID > 0 || id <= 0) return;
+                    prevID = id;
+                    this.viewModel.setCurrent(null, id)
+                    .then(function() {
+                        this.viewModel.updateUrl();
+                    }.bind(this));
+                }.bind(this));
             }
             
         }.bind(this)._delayed(10)
         // IMPORTANT: delayed REQUIRED to avoid triple loading (activity.show) on first load triggered by a click event.
-    });
-
-    this.registerHandler({
-        target: this.viewModel.editMode,
-        handler: function(isEdit) {
-            this.$activity.toggleClass('in-edit', isEdit);
-        }.bind(this)
     });
 });
 
@@ -276,6 +234,29 @@ function ViewModel(app) {
     
     this.currentAppointment = ko.observable(loadingAppointment);
 
+    this.updateUrl = function updateUrl() {
+        // Update URL to match the appointment ID and
+        // track it state
+        // Get ID from URL, to avoid do anything if the same.
+        var apt = this.currentAppointment(),
+            aptId = apt.id(),
+            found = /appointment\/([^\/]+)\/(\-?\d+)/i.exec(window.location),
+            urlId = found && found[2] |0,
+            urlDate = found && found[1],
+            curDateStr = getDateWithoutTime(apt.startTime()).toISOString();
+
+        if (!found ||
+            urlId !== aptId.toString() ||
+            urlDate !== curDateStr) {
+
+            // If was an incomplete URL, just replace current state
+            if (urlId === '')
+                this.app.shell.history.replaceState(null, null, 'appointment/' + curDateStr + '/' + aptId);
+            else
+                this.app.shell.history.pushState(null, null, 'appointment/' + curDateStr + '/' + aptId);
+        }
+    };
+
     this.goPrevious = function goPrevious() {
         if (this.editMode()) return;
 
@@ -297,6 +278,7 @@ function ViewModel(app) {
             this.currentIndex(index);
             this.currentID(apt.id());
             this.currentAppointment(apt);
+            this.updateUrl();
             // Complete load-double check: this.setCurrent(apt.startTime(), apt.id());
         }
     };
@@ -321,6 +303,7 @@ function ViewModel(app) {
             this.currentIndex(index);
             this.currentID(apt.id());
             this.currentAppointment(apt);
+            this.updateUrl();
             // Complete load-double check: this.setCurrent(apt.startTime(), apt.id());
         }
     };
