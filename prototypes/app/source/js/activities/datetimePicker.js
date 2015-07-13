@@ -114,6 +114,12 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
+    // Parameters: pass a required duration
+    this.viewModel.requiredDuration(this.requestData.requiredDuration |0);
+
+    // Preselect a date, or current date
+    this.viewModel.selectedDate(getDateWithoutTime(this.requestData.selectedDatetime));
+    
     if (!this.__firstShowDone) {
         this.__firstShowDone = true;
         // Force first refresh on datepicker to allow
@@ -161,11 +167,13 @@ function ViewModel(app) {
     this.headerText = ko.observable('Select a time');
     this.selectedDate = ko.observable(getDateWithoutTime());
     this.isLoading = ko.observable(false);
+    this.requiredDuration = ko.observable(0);
 
     this.dateAvail = ko.observable();
     this.groupedSlots = ko.computed(function(){
         
-        var incSize = this.schedulingPreferences.incrementsSizeInMinutes();
+        var incSize = this.schedulingPreferences.incrementsSizeInMinutes(),
+            requiredDuration = this.requiredDuration();
         
         /*
           before 12:00pm (noon) = morning
@@ -197,7 +205,7 @@ function ViewModel(app) {
         ];
 
         // Populate groups with the time slots
-        var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(incSize) || [];
+        var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(incSize, requiredDuration) || [];
         // Iterate to organize by group
         slots.forEach(function(slot) {
 

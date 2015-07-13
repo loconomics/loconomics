@@ -113,7 +113,10 @@ function DateAvailability(values) {
                 of show slots that don't fit the needed service duration (because ends in an
                 unavailable slot).
     **/
-    this.getFreeTimeSlots = function getFreeTimeSlots(slotSizeMinutes) {
+    this.getFreeTimeSlots = function getFreeTimeSlots(slotSizeMinutes, duration) {
+        
+        if (!duration)
+            duration = slotSizeMinutes;
         
         var date = this.date(),
             today = getDateWithoutTime();
@@ -130,7 +133,7 @@ function DateAvailability(values) {
             // Iterate every free appointment
             this.list().forEach(function (apt) {
                 if (apt.id() === Appointment.specialIds.free) {
-                    slots.push.apply(slots, createTimeSlots(apt.startTime(), apt.endTime(), slotSizeMinutes));
+                    slots.push.apply(slots, createTimeSlots(apt.startTime(), apt.endTime(), slotSizeMinutes, duration));
                 }
             });
             return slots;
@@ -144,11 +147,12 @@ module.exports = DateAvailability;
     It creates slots between the given times and size for each one.
     Past times are avoided, because are not available
 **/
-function createTimeSlots(from, to, size) {
+function createTimeSlots(from, to, size, duration) {
     var i = moment(from),
         d,
         slots = [],
-        now = new Date();
+        now = new Date(),
+        enought;
 
     // Shortcut if bad 'to' (avoid infinite loop)
     if (to <= from)
@@ -156,8 +160,14 @@ function createTimeSlots(from, to, size) {
 
     while(i.toDate() < to) {
         d = i.clone().toDate();
-        if (d >= now)
+        enought = i.clone().add(duration, 'minutes').toDate();
+        // Check that:
+        // - is not a past date
+        // - it has enought time in advance to fill the expected duration
+        if (d >= now &&
+            enought <= to)
             slots.push(d);
+        // Next slot
         i.add(size, 'minutes');
     }
     

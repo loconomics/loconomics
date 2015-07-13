@@ -232,7 +232,8 @@ function AppointmentCardViewModel(params) {
         editFieldOn('datetimePicker', {
             selectedDatetime: this.item().startTime(),
             datetimeField: 'startTime',
-            headerText: 'Select the start time'
+            headerText: 'Select the start time',
+            requiredDuration: this.item().serviceDurationMinutes()
         });
     }.bind(this);
 
