@@ -5115,3 +5115,13 @@ body.use-backdrop:before {
 [data-activity=weeklySchedule] .weeklySchedule-allTime label .bootstrap-switch {
   margin-left: 1em;
 }
+
+/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+
+/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+
+/* line 2 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] #homeNextBooking {
+  min-height: 196px;
+  overflow: hidden;
+}
