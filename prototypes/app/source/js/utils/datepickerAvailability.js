@@ -18,6 +18,22 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
     // displayed month
     var prevMonth = null;
     
+    // Listen to cache changes in order to force a data load (to avoid invalid
+    // availability being displayed after an apt was modified)
+    app.model.calendar.on('clearCache', function(dates) {
+        if (!dates) {
+            prevMonth = null;
+        }
+        else {
+            dates.some(function(date) {
+                if (date.getMonth() === prevMonth) {
+                    prevMonth = null;
+                    return true;
+                }
+            });
+        }
+    });
+    
     var tagAvailability = function tagAvailability(date) {
         var month = date.getMonth();
         // Avoid dupes

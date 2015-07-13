@@ -14,11 +14,18 @@ var Appointment = require('../models/Appointment'),
     DateAvailability = require('../models/DateAvailability'),
     DateCache = require('../utils/DateCache'),
     moment = require('moment'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    EventEmitter = require('events').EventEmitter;
 
 exports.create = function create(appModel) {
 
-    var api = {};
+    function Api() {
+        EventEmitter.call(this);
+        this.setMaxListeners(30);
+    }
+    Api._inherits(EventEmitter);
+    
+    var api = new Api();
     
     var cache = new DateCache({
         Model: DateAvailability,
@@ -27,6 +34,7 @@ exports.create = function create(appModel) {
     
     api.clearCache = function clearCache() {
         cache.clear();
+        this.emit('clearCache');
     };
     
     appModel.on('clearLocalData', function() {
@@ -37,8 +45,7 @@ exports.create = function create(appModel) {
         Get a generic calendar appointment object, made of events and/or bookings,
         depending on the given ID in the ids object.
         
-        TODO: Implement cache for the Appointment Models (the back-end models for
-        bookings and events is already managed by its own API).
+        TODO: gets single apt from the DateCache
     **/
     api.getAppointment = function getAppointment(ids) {
 
@@ -69,6 +76,7 @@ exports.create = function create(appModel) {
         // and only date availability computation if date is the same but time changed.
         // IT WORKS now, because on activities/appointment, in a id/startTime handler, the 
         // whole calendar cache is removed on change/set, but is lot of cache invalidation.
+        // And triggers "this.emit('clearCache');" passing as parameter the dates array that needs refresh
         
         // If is a booking
         if (apt.sourceBooking()) {
