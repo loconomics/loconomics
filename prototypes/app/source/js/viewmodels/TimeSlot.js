@@ -37,6 +37,12 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
     //var link = null;
     //if (!unavail)
     var link = '#!appointment/' + apt.startTime().toISOString() + '/' + apt.id();
+    
+    if (apt.id() === Appointment.specialIds.preparationTime) {
+        // Special link case: it goes to scheduling preferences to allow quick edit
+        // the preparation time slots
+        link = '#!schedulingPreferences';
+    }
 
     var classNames = null;
     if (Appointment.specialIds.free === apt.id()) {
@@ -52,7 +58,7 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
         classNames += 'ItemAddonTile--largerContent ';
     }
     else {
-        // any block event
+        // any block event, preparation time slots
         classNames = 'Tile--tag-danger ';
     }
 
