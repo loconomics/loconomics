@@ -202,7 +202,8 @@ Appointment.specialIds = {
     free: -2,
     newEvent: -3,
     newBooking: -4,
-    unavailable: -5
+    unavailable: -5,
+    preparationTime: -6
 };
 
 var Time = require('../utils/Time');
@@ -245,6 +246,22 @@ Appointment.newUnavailableSlot = function newUnavailableSlot(options) {
         endTime: end,
 
         summary: options.text || 'Unavailable',
+        description: null
+    });
+};
+
+Appointment.newPreparationTimeSlot = function newPreparationTimeSlot(options) {
+
+    var start = options.start || new Time(options.date, 0, 0, 0),
+        end = options.end || new Time(options.date, 0, 0, 0);
+
+    return new Appointment({
+        id: Appointment.specialIds.preparationTime,
+
+        startTime: start,
+        endTime: end,
+
+        summary: options.text || 'Preparation time',
         description: null
     });
 };

@@ -38,26 +38,75 @@ exports.sortAppointments = function(a, b) {
 };
 
 /**
+    It adds before every booking apt/slot a 'preparation time' slot for the 'preparationHours' (AKA 'betweenTime').
+    The given slots array MUST BE SORTED.
+    It takes care to:
+    - do not add slots out of the given date
+    - do not add slots that overlay other bookings (if two bookings too close; because of manual timing or preference
+      change of the preparationHours)
+**/
+exports.fillPreparationTimeSlots = function fillPreparationTimeSlots(date, slots, preparationHours) {
+    
+    // Initial check of previous slot start and ends is the given date (at midnight)
+    // so we avoid to insert slots out of the date.
+    var prevEnd = date;
+
+    slots.forEach(function(slot, index) {
+        // for each booking
+        if (slot.id() > 0 &&
+            slot.sourceBooking()) {
+            
+            var end = slot.startTime(),
+                start = moment(end).subtract(preparationHours, 'hours').toDate();
+    
+            // avoiding the preparation slot if it ends before or just on
+            // the previous slot end (or before the date) to avoid unneeded slots
+            // NOTE: do NOT a (end <= prevEnd return;) because will introduce a bug
+            // since the prevEnd will not be collected, failing when there are 
+            // more than 2 consecutive bookings
+            if (end > prevEnd) {
+                // ..or cuts the beggining of the slot ('start') by
+                // the end of the previous slot (so fits perfectly, without overlay)
+                start = start < prevEnd ? prevEnd : start;
+
+                // its added before the current slot:
+                slots.splice(index, 0, Appointment.newPreparationTimeSlot({
+                    start: start,
+                    end: end
+                }));
+            }
+        }
+        prevEnd = slot.endTime();
+    });
+};
+
+/**
     Introduce free or unavailable slots wherever needed in the given
     array of Appointments, to fill any gap in a natural day
     (from Midnight to Midnight next date) and based on the
     given week day schedule.
     The hours in the schedule are assumed in the local time.
     A new array is returned.
+    It introduce 'preparation time' slots too before of bookings when needed.
     
     date is a Date object representing the same date as used in
-    the appointmentsList; (for now) it's used only when no appointments exists (so
+    the appointmentsList; it's used when no appointments exists (so
     date cannot be extracted from first appointent) to return an empty
-    date unavaialable/free/unavailable slots.
+    date unavaialable/free/unavailable slots; and when filling preparation slots, to
+    avoid add a slot with time that starts in a previous date
     
     TODO: Make it compatible with an initial appointment that may start before the 
     date (but ends inside the date) and a final appointment that may end
     on the next date (but starts inside the date).
 **/
-exports.fillDayAvailability = function fillDayAvailability(date, appointmentsList, weekDaySchedule) {
+exports.fillDayAvailability = function fillDayAvailability(date, appointmentsList, weekDaySchedule, schedulingPreferences) {
 
-    // Shadow clone and sort the list
-    var slots = appointmentsList.slice(0).sort(exports.sortAppointments);
+    // Shadow clone
+    var slots = appointmentsList.slice(0);
+    // sort the list
+    slots.sort(exports.sortAppointments);
+    // add preparation time for each booking
+    exports.fillPreparationTimeSlots(date, slots, schedulingPreferences.betweenTime());
 
     var filledSlots = [],
         zeroTime = '00:00:00',
@@ -67,7 +116,7 @@ exports.fillDayAvailability = function fillDayAvailability(date, appointmentsLis
 
     if (slots.length === 0) {
         // No slots, empty date so create the required
-        // unavailable/free/unavailable slots for the 'ate'
+        // unavailable/free/unavailable slots for the 'date'
         var fullStart = moment(date).startOf('day'),
             fullEnd = fullStart.clone().add(1, 'days');
 

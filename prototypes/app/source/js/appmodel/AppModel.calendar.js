@@ -135,17 +135,20 @@ exports.create = function create(appModel) {
     var getRemoteDateAvailability = function getRemoteDateAvailability(date) {
         return Promise.all([
             getRemoteAppointmentsByDate(date),
-            appModel.simplifiedWeeklySchedule.load()
+            appModel.simplifiedWeeklySchedule.load(),
+            appModel.schedulingPreferences.load()
         ])
         .then(function(result) {
             var apts = result[0],
                 settings = result[1],
-                weekDaySchedule = settings.weekDays[date.getDay()]();
+                weekDaySchedule = settings.weekDays[date.getDay()](),
+                prefs = result[2];
 
             var dateInfo = {
                 date: date,
                 appointmentsList: apts || [],
-                weekDaySchedule: weekDaySchedule
+                weekDaySchedule: weekDaySchedule,
+                schedulingPreferences: prefs
             };
 
             return dateInfo;
@@ -229,12 +232,14 @@ exports.create = function create(appModel) {
     var getRemoteDatesAvailability = function getRemoteDatesAvailability(start, end) {
         return Promise.all([
             getRemoteAppointmentsByDates(start, end),
-            appModel.simplifiedWeeklySchedule.load()
+            appModel.simplifiedWeeklySchedule.load(),
+            appModel.schedulingPreferences.load()
         ])
         .then(function(result) {
             var aptsDates = result[0],
                 settings = result[1],
-                results = {};
+                results = {},
+                prefs = result[2];
 
             Object.keys(aptsDates).forEach(function(dateKey) {
                 var date = moment(dateKey, 'YYYY-MM-DD').toDate();
@@ -243,7 +248,8 @@ exports.create = function create(appModel) {
                 var dateInfo = {
                     date: date,
                     appointmentsList: aptsDates[dateKey] || [],
-                    weekDaySchedule: weekDaySchedule
+                    weekDaySchedule: weekDaySchedule,
+                    schedulingPreferences: prefs
                 };
 
                 results[dateKey] = dateInfo;

@@ -10,6 +10,7 @@
 var Model = require('../models/Model');
 var Appointment = require('../models/Appointment'),
     WeekDaySchedule = require('../models/WeekDaySchedule'),
+    SchedulingPreferences = require('../models/SchedulingPreferences'),
     moment = require('moment'),
     ko = require('knockout'),
     availabilityCalculation = require('../utils/availabilityCalculation'),
@@ -27,6 +28,9 @@ function DateAvailability(values) {
         appointmentsList: {
             isArray: true,
             Model: Appointment
+        },
+        schedulingPreferences: {
+            Model: SchedulingPreferences
         }
     }, values);
     
@@ -37,7 +41,7 @@ function DateAvailability(values) {
     **/
     this.list = ko.pureComputed(function() {
         return availabilityCalculation.fillDayAvailability(
-            this.date(), this.appointmentsList(), this.weekDaySchedule()
+            this.date(), this.appointmentsList(), this.weekDaySchedule(), this.schedulingPreferences()
         );
     }, this);
 
@@ -108,10 +112,9 @@ function DateAvailability(values) {
         in this date with a separation between each of the given slotSize
         in minutes.
         
-        TODO: Implement a second parameter 'duration' so the returned slots
-                are free almost for the given duration. This fix the current problem
-                of show slots that don't fit the needed service duration (because ends in an
-                unavailable slot).
+        The second parameter 'duration' allows that returned slots
+        are free almost for the given duration. This allows to choose times
+        that fit the needed service duration.
     **/
     this.getFreeTimeSlots = function getFreeTimeSlots(slotSizeMinutes, duration) {
         
