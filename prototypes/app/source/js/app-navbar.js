@@ -50,7 +50,7 @@ exports.extends = function (app) {
     /**
         Update the nav model using the Activity defaults
     **/
-    app.updateAppNav = function updateAppNav(activity) {
+    app.updateAppNav = function updateAppNav(activity, state) {
 
         // if the activity has its own
         if ('navBar' in activity) {
@@ -60,6 +60,12 @@ exports.extends = function (app) {
         else {
             // Use default one
             app.navBar(new NavBar());
+        }
+        
+        if (state && state.route && state.route.query &&
+            state.route.query.mustReturn) {
+            // Left action forced to be a go-back
+            app.navBar().leftAction(NavAction.goBack);
         }
 
         // TODO Double check if needed.

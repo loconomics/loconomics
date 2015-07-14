@@ -286,7 +286,7 @@ var appInit = function appInit() {
         app.updateMenu(menuItem);
 
         // Update app navigation
-        app.updateAppNav(activity);
+        app.updateAppNav(activity, state);
     });
     // When an activity is hidden
     app.shell.on(app.shell.events.closed, function($act) {
