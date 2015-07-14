@@ -30,6 +30,8 @@ function AppointmentCardViewModel(params) {
     
     this.item = ko.observable(AppointmentView(this.sourceItem(), app));
     
+    this.allowBookUnavailableTime = ko.observable(false);
+    
     this.currentID = ko.pureComputed(function() {
         var it = this.item();
         return it && it.id() || 0;
@@ -145,14 +147,13 @@ function AppointmentCardViewModel(params) {
 
         if (version && version.areDifferent()) {
             this.isSaving(true);
-            app.model.calendar.setAppointment(version.version)
+            app.model.calendar.setAppointment(version.version, this.allowBookUnavailableTime())
             .then(function(savedApt) {
                 // Do not do a version push, just update with remote
                 //version.push({ evenIfObsolete: true });
                 // Update with remote data, the original appointment in the version,
                 // not the currentAppointment or in the index in the list to avoid
                 // race-conditions
-                console.log('SAVED APT', savedApt.id(), version.original.id(), version.version.id());
                 version.original.model.updateWith(savedApt);
                 // Do a pull so original and version gets the exact same data
                 version.pull({ evenIfNewer: true });
@@ -367,6 +368,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     if (typeof(requestData.selectedDatetime) !== 'undefined') {
         var field = requestData.datetimeField;
         this.item()[field](requestData.selectedDatetime);
+        this.allowBookUnavailableTime(requestData.allowBookUnavailableTime);
     }
     if (requestData.selectedJobTitleID) {
         this.item().jobTitleID(requestData.selectedJobTitleID);

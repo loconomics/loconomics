@@ -68,7 +68,7 @@ exports.create = function create(appModel) {
         }
     };
     
-    api.setAppointment = function setAppointment(apt) {
+    api.setAppointment = function setAppointment(apt, allowBookUnavailableTime) {
         
         // TODO: Saving apt must invalidate the cache and force date
         // availability computation with UI update, when start time or start end changes 
@@ -78,7 +78,7 @@ exports.create = function create(appModel) {
         
         // If is a booking
         if (apt.sourceBooking()) {
-            return appModel.bookings.setBooking(apt)
+            return appModel.bookings.setBooking(apt, allowBookUnavailableTime)
             .then(function(booking) {
                 
                 // TODO: clearCache, enhance by discarding only the cache for the previous

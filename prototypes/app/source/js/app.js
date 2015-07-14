@@ -183,6 +183,8 @@ var appInit = function appInit() {
     
     attachFastClick(document.body);
     
+    require('custom-modernizr');
+    
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that
     // may require adjustments on other scripts that listen to it.

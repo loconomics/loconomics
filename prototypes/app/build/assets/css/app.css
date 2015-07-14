@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-07-13
+/*! LoconomicsApp 2015-07-14
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -134,10 +134,27 @@ fieldset[disabled] .btn-secondary.active {
   clip: rect(0px, 0px, 0px, 0px);
 }
 
-/* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 3 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */
+
+/* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */
+select.btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */
+select.btn::-ms-expand {
+/* for IE 11 */
+  display: none;
+}
+
+/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /* app */
 
-/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
 /* line 104 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
@@ -595,12 +612,12 @@ body.has-appNav-open .SmartNavBar h1 {
   color: #f0ad4e;
 }
 
-/* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Utilities styles **/
 
 /* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 
-/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 .isolated {
   margin-top: 14px;
   margin-bottom: 14px;
@@ -610,7 +627,7 @@ body.has-appNav-open .SmartNavBar h1 {
 
 /* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 
-/* line 16 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 
 /* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 body:before {
@@ -918,7 +935,7 @@ body.use-backdrop:before {
   }
 }
 
-/* line 21 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
 /* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
@@ -4700,7 +4717,7 @@ body.use-backdrop:before {
   padding-bottom: 10px;
 }
 
-/* line 43 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */

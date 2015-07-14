@@ -374,7 +374,7 @@
                 <div><strong>ItemAddonTile larger</strong></div>
                 <p>A paragraph for 2 lines after a one-line.</p>
             </div>
-            <div class="Tile-addon"><p><strong>$155</strong></p></div>
+            <div class="Tile-addon"><p><strong>$155.00</strong></p></div>
         </a>
         </li>
         <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
@@ -624,7 +624,7 @@
       </form>
     </div>
     <!-- Activity appointment -->
-    <div class="container-fluid" data-activity="appointment">
+    <div class="container-fluid" data-activity="appointment" data-bind="css: { 'in-edit': editMode }">
       <!-- Appointment View (cards) -->
       <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
@@ -977,6 +977,14 @@
               /ko -->
             </div>
           </div>
+        </div>
+        <div class="isolated">
+          <label class="btn btn-default btn-block" id="datetimePicker-chooseAny"
+          data-bind="visible: nativeTimePicker"> <span>Book an unavailable time</span>
+ <span class="sr-only"><input type="time" data-bind="value: pickedTime" /></span>
+
+          </label>
+          <select class="btn btn-default btn-block" data-bind="optionsCaption: 'Book an unavailable time', options: allTimes, value: pickedTime, optionsText: 'label', optionsValue: 'value', visible: !nativeTimePicker()"></select>
         </div>
       </div>
     </div>
@@ -2255,7 +2263,7 @@
           </div>
           <div class="Tile-addon">
               <p data-bind="visible: actionText, text: actionText"></p>
-              <span class="fa fa-2x" aria-hidden="true" data-bind="css: actionIcon"></span>
+              <span class="fa fa-2x" aria-hidden="true" data-bind="visible: actionIcon, css: actionIcon"></span>
           </div>
       </a>
     </script>

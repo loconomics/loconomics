@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
-id="com.loconomics.app" version="0.7.3">
+id="com.loconomics.app" version="0.7.6">
   <name>Loconomics</name>
   <description>Make your life better</description>
   <author href="https://loconomics.com"
@@ -46,7 +46,7 @@ id="com.loconomics.app" version="0.7.3">
   <preference name="disable-cursor" value="false" />
   <!-- android: MIN SDK version supported on the target device. MAX version
   is blank by default. -->
-  <preference name="android-minSdkVersion" value="7" />
+  <preference name="android-minSdkVersion" value="11" />
   <!-- android: app install location. 'auto' will choose. 'internalOnly'
   is device memory. 'preferExternal' is SDCard. -->
   <preference name="android-installLocation" value="auto" />

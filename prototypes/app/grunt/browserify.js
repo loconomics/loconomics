@@ -69,6 +69,7 @@ module.exports = function(/*grunt*/) {
                 'localforage',
                 'is_js',
                 'moment-timezone',
+                './source/js/custom-modernizr.js:custom-modernizr',
                 // Using a specific browser version of events.EventEmitter, to avoid
                 // the extra load of NodeJS/Browserify 'events' module that has heavy-unneed
                 // dependencies as 'utils'.

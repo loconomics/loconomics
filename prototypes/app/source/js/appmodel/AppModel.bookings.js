@@ -108,7 +108,7 @@ exports.create = function create(appModel) {
         Creates/updates a booking, given a simplified booking
         object or an Appointment model or a Booking model
     **/
-    api.setBooking = function setBooking(booking) {    
+    api.setBooking = function setBooking(booking, allowBookUnavailableTime) {    
         booking = booking.bookingID ?
             api.bookingToSimplifiedBooking(booking) :
             booking.sourceBooking ?
@@ -118,6 +118,8 @@ exports.create = function create(appModel) {
 
         var id = booking.bookingID || '',
             method = id ? 'put' : 'post';
+        
+        booking.allowBookUnavailableTime = allowBookUnavailableTime || false;
 
         return appModel.rest[method]('freelancer-bookings/' + id, booking)
         .then(function(serverBooking) {

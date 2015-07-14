@@ -4,9 +4,12 @@
 'use strict';
 
 var ko = require('knockout'),
-    //moment = require('moment'),
     Time = require('../utils/Time'),
+    moment = require('moment'),
     getDateWithoutTime = require('../utils/getDateWithoutTime');
+
+var modernizr = require('custom-modernizr');
+var hasNativeDateInput = modernizr.inputtypes.date;
 
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
@@ -30,6 +33,10 @@ var A = Activity.extends(function DatetimePickerActivity() {
     this.$datePicker = this.$activity.find('#datetimePickerDatePicker');
     this.$timePicker = this.$activity.find('#datetimePickerTimePicker');
     
+    //var $chooseAny = this.$activity.find('#datetimePicker-chooseAny');
+    var iOS = /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
+    this.viewModel.nativeTimePicker = ko.observable(hasNativeDateInput && !iOS);
+    
     /* Init components */
     this.$datePicker.show().datepicker({ extraClasses: 'DatePicker--tagged' });
     this.tagAvailability = datepickerAvailability.create(this.app, this.$datePicker, this.viewModel.isLoading);
@@ -51,22 +58,32 @@ var A = Activity.extends(function DatetimePickerActivity() {
         }.bind(this)
     });
     
-    // Handler to go back with the selected date-time when
-    // that selection is done (could be to null)
+    // Return the selected date-time
     this.registerHandler({
         target: this.viewModel.selectedDatetime,
         handler: function (datetime) {
-            if (!this.requestData ||
-                !datetime) {
-                return;
-            }
+            if (!datetime) return;
             // Pass the selected datetime in the info
             this.requestData.selectedDatetime = datetime;
+            this.requestData.allowBookUnavailableTime = this.viewModel.allowBookUnavailableTime();
             // And go back
             this.app.shell.goBack(this.requestData);
-            // Last, clear requestData
-            this.requestData = null;
         }.bind(this)
+    });
+    
+    this.registerHandler({
+        target: this.viewModel.pickedTime,
+        handler: function(t) {
+            if (t) {
+                if (!(t instanceof Date)) {
+                    // Build date-time
+                    var timespan = moment.duration(t);
+                    t = moment(this.selectedDate()).startOf('day').add(timespan).toDate();
+                }
+                this.allowBookUnavailableTime(true);
+                this.selectedDatetime(t);
+            }
+        }.bind(this.viewModel)
     });
     
     this.returnRequest = function returnRequest() {
@@ -112,6 +129,11 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(state) {
+    // Reset
+    this.viewModel.selectedDatetime(null);
+    this.viewModel.pickedTime(null);
+    this.viewModel.allowBookUnavailableTime(false);
+    
     Activity.prototype.show.call(this, state);
     
     // Parameters: pass a required duration
@@ -228,12 +250,27 @@ function ViewModel(/*app*/) {
     this.selectedDatetime = ko.observable(null);
     
     this.selectDatetime = function(selectedDatetime, event) {
-        
-        this.selectedDatetime(selectedDatetime);
-        
         event.preventDefault();
         event.stopImmediatePropagation();
-
+        this.selectedDatetime(selectedDatetime);
     }.bind(this);
 
+    this.pickedTime = ko.observable();
+    this.allowBookUnavailableTime = ko.observable(false);
+    // Fallback time picker UI data
+    this.allTimes = ko.pureComputed(function() {
+        var size = this.dateAvail() &&
+            this.dateAvail().schedulingPreferences() && 
+            this.dateAvail().schedulingPreferences().incrementsSizeInMinutes() ||
+            15;
+        var t,
+            list = [],
+            date = moment(this.selectedDate()).startOf('day');
+
+        for(var i = 0; i < 1440; i += size) {
+            t = date.clone().add({ minutes: i });
+            list.push({ label: t.format('LT'), value: t.toDate() });
+        }
+        return list;
+    }, this);
 }

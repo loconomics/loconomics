@@ -53,7 +53,875 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],"RAklWF":[function(require,module,exports){
+},{}],2:[function(require,module,exports){
+var Modernizr = require('./lib/Modernizr'),
+    ModernizrProto = require('./lib/ModernizrProto'),
+    classes = require('./lib/classes'),
+    testRunner = require('./lib/testRunner'),
+    setClasses = require('./lib/setClasses');
+
+// Run each test
+testRunner();
+
+// Remove the "no-js" class if it exists
+setClasses(classes);
+
+delete ModernizrProto.addTest;
+delete ModernizrProto.addAsyncTest;
+
+// Run the things that are supposed to run after the tests
+for (var i = 0; i < Modernizr._q.length; i++) {
+  Modernizr._q[i]();
+}
+
+module.exports = Modernizr;
+
+},{"./lib/Modernizr":3,"./lib/ModernizrProto":4,"./lib/classes":5,"./lib/setClasses":24,"./lib/testRunner":31}],3:[function(require,module,exports){
+var ModernizrProto = require('./ModernizrProto');
+
+
+  // Fake some of Object.create
+  // so we can force non test results
+  // to be non "own" properties.
+  var Modernizr = function(){};
+  Modernizr.prototype = ModernizrProto;
+
+  // Leak modernizr globally when you `require` it
+  // rather than force it here.
+  // Overwrite name so constructor name is nicer :D
+  Modernizr = new Modernizr();
+
+  
+
+module.exports = Modernizr;
+},{"./ModernizrProto":4}],4:[function(require,module,exports){
+var tests = require('./tests');
+
+
+  var ModernizrProto = {
+    // The current version, dummy
+    _version: 'v3.0.0pre',
+
+    // Any settings that don't work as separate modules
+    // can go in here as configuration.
+    _config: {
+      classPrefix : '',
+      enableClasses : true
+    },
+
+    // Queue of tests
+    _q: [],
+
+    // Stub these for people who are listening
+    on: function( test, cb ) {
+      // I don't really think people should do this, but we can
+      // safe guard it a bit.
+      // -- NOTE:: this gets WAY overridden in src/addTest for
+      // actual async tests. This is in case people listen to
+      // synchronous tests. I would leave it out, but the code
+      // to *disallow* sync tests in the real version of this
+      // function is actually larger than this.
+      setTimeout(function() {
+        cb(this[test]);
+      }, 0);
+    },
+
+    addTest: function( name, fn, options ) {
+      tests.push({name : name, fn : fn, options : options });
+    },
+
+    addAsyncTest: function (fn) {
+      tests.push({name : null, fn : fn});
+    }
+  };
+
+  
+
+module.exports = ModernizrProto;
+},{"./tests":32}],5:[function(require,module,exports){
+
+  var classes = [];
+  
+module.exports = classes;
+},{}],6:[function(require,module,exports){
+
+  /**
+   * contains returns a boolean for if substr is found within str.
+   */
+  function contains( str, substr ) {
+    return !!~('' + str).indexOf(substr);
+  }
+
+  
+module.exports = contains;
+},{}],7:[function(require,module,exports){
+
+  var createElement = function() {
+    return document.createElement.apply(document, arguments);
+  };
+  
+module.exports = createElement;
+},{}],8:[function(require,module,exports){
+var ModernizrProto = require('./ModernizrProto');
+var omPrefixes = require('./omPrefixes');
+
+
+  var cssomPrefixes = omPrefixes.split(' ');
+  ModernizrProto._cssomPrefixes = cssomPrefixes;
+  
+
+module.exports = cssomPrefixes;
+},{"./ModernizrProto":4,"./omPrefixes":22}],9:[function(require,module,exports){
+
+  var docElement = document.documentElement;
+  
+module.exports = docElement;
+},{}],10:[function(require,module,exports){
+var ModernizrProto = require('./ModernizrProto');
+var omPrefixes = require('./omPrefixes');
+
+
+  var domPrefixes = omPrefixes.toLowerCase().split(' ');
+  ModernizrProto._domPrefixes = domPrefixes;
+  
+
+module.exports = domPrefixes;
+},{"./ModernizrProto":4,"./omPrefixes":22}],11:[function(require,module,exports){
+
+    // Helper function for e.g. boxSizing -> box-sizing
+    function domToHyphenated( name ) {
+        return name.replace(/([A-Z])/g, function(str, m1) {
+            return '-' + m1.toLowerCase();
+        }).replace(/^ms-/, '-ms-');
+    }
+    
+module.exports = domToHyphenated;
+},{}],12:[function(require,module,exports){
+var slice = require('./slice');
+
+
+  // Adapted from ES5-shim https://github.com/kriskowal/es5-shim/blob/master/es5-shim.js
+  // es5.github.com/#x15.3.4.5
+
+  if (!Function.prototype.bind) {
+    Function.prototype.bind = function bind(that) {
+
+      var target = this;
+
+      if (typeof target != "function") {
+        throw new TypeError();
+      }
+
+      var args = slice.call(arguments, 1);
+      var bound = function() {
+
+        if (this instanceof bound) {
+
+          var F = function(){};
+          F.prototype = target.prototype;
+          var self = new F();
+
+          var result = target.apply(
+            self,
+            args.concat(slice.call(arguments))
+          );
+          if (Object(result) === result) {
+            return result;
+          }
+          return self;
+
+        } else {
+
+          return target.apply(
+            that,
+            args.concat(slice.call(arguments))
+          );
+
+        }
+
+      };
+
+      return bound;
+    };
+  }
+
+  
+
+module.exports = Function.prototype.bind;
+},{"./slice":25}],13:[function(require,module,exports){
+var createElement = require('./createElement');
+
+
+  function getBody() {
+    // After page load injecting a fake body doesn't work so check if body exists
+    var body = document.body;
+
+    if(!body) {
+      // Can't use the real body create a fake one.
+      body = createElement('body');
+      body.fake = true;
+    }
+
+    return body;
+  }
+
+  
+
+module.exports = getBody;
+},{"./createElement":7}],14:[function(require,module,exports){
+var ModernizrProto = require('./ModernizrProto');
+var docElement = require('./docElement');
+var createElement = require('./createElement');
+var getBody = require('./getBody');
+
+
+  // Inject element with style element and some CSS rules
+  function injectElementWithStyles( rule, callback, nodes, testnames ) {
+    var mod = 'modernizr';
+    var style;
+    var ret;
+    var node;
+    var docOverflow;
+    var div = createElement('div');
+    var body = getBody();
+
+    if ( parseInt(nodes, 10) ) {
+      // In order not to give false positives we create a node for each test
+      // This also allows the method to scale for unspecified uses
+      while ( nodes-- ) {
+        node = createElement('div');
+        node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
+        div.appendChild(node);
+      }
+    }
+
+    // <style> elements in IE6-9 are considered 'NoScope' elements and therefore will be removed
+    // when injected with innerHTML. To get around this you need to prepend the 'NoScope' element
+    // with a 'scoped' element, in our case the soft-hyphen entity as it won't mess with our measurements.
+    // msdn.microsoft.com/en-us/library/ms533897%28VS.85%29.aspx
+    // Documents served as xml will throw if using &shy; so use xml friendly encoded version. See issue #277
+    style = ['&#173;','<style id="s', mod, '">', rule, '</style>'].join('');
+    div.id = mod;
+    // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
+    // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
+    (!body.fake ? div : body).innerHTML += style;
+    body.appendChild(div);
+    if ( body.fake ) {
+      //avoid crashing IE8, if background image is used
+      body.style.background = '';
+      //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
+      body.style.overflow = 'hidden';
+      docOverflow = docElement.style.overflow;
+      docElement.style.overflow = 'hidden';
+      docElement.appendChild(body);
+    }
+
+    ret = callback(div, rule);
+    // If this is done after page load we don't want to remove the body so check if body exists
+    if ( body.fake ) {
+      body.parentNode.removeChild(body);
+      docElement.style.overflow = docOverflow;
+      // Trigger layout so kinetic scrolling isn't disabled in iOS6+
+      docElement.offsetHeight;
+    } else {
+      div.parentNode.removeChild(div);
+    }
+
+    return !!ret;
+
+  }
+
+  
+
+module.exports = injectElementWithStyles;
+},{"./ModernizrProto":4,"./createElement":7,"./docElement":9,"./getBody":13}],15:[function(require,module,exports){
+var createElement = require('./createElement');
+
+
+  var inputElem = createElement('input');
+  
+
+module.exports = inputElem;
+},{"./createElement":7}],16:[function(require,module,exports){
+
+  var inputs = {};
+  
+module.exports = inputs;
+},{}],17:[function(require,module,exports){
+
+  var inputtypes = 'search tel url email datetime date month week time datetime-local number range color'.split(' ');
+  
+module.exports = inputtypes;
+},{}],18:[function(require,module,exports){
+
+  /**
+   * is returns a boolean for if typeof obj is exactly type.
+   */
+  function is( obj, type ) {
+    return typeof obj === type;
+  }
+  
+module.exports = is;
+},{}],19:[function(require,module,exports){
+var Modernizr = require('./Modernizr');
+var modElem = require('./modElem');
+
+
+  var mStyle = {
+    style : modElem.elem.style
+  };
+
+  // kill ref for gc, must happen before
+  // mod.elem is removed, so we unshift on to
+  // the front of the queue.
+  Modernizr._q.unshift(function() {
+    delete mStyle.style;
+  });
+
+  
+
+module.exports = mStyle;
+},{"./Modernizr":3,"./modElem":20}],20:[function(require,module,exports){
+var Modernizr = require('./Modernizr');
+var createElement = require('./createElement');
+
+
+  /**
+   * Create our "modernizr" element that we do most feature tests on.
+   */
+  var modElem = {
+    elem : createElement('modernizr')
+  };
+
+  // Clean up this element
+  Modernizr._q.push(function() {
+    delete modElem.elem;
+  });
+
+  
+
+module.exports = modElem;
+},{"./Modernizr":3,"./createElement":7}],21:[function(require,module,exports){
+var injectElementWithStyles = require('./injectElementWithStyles');
+var domToHyphenated = require('./domToHyphenated');
+
+
+    // Function to allow us to use native feature detection functionality if available.
+    // Accepts a list of property names and a single value
+    // Returns `undefined` if native detection not available
+    function nativeTestProps ( props, value ) {
+        var i = props.length;
+        // Start with the JS API: http://www.w3.org/TR/css3-conditional/#the-css-interface
+        if ('CSS' in window && 'supports' in window.CSS) {
+            // Try every prefixed variant of the property
+            while (i--) {
+                if (window.CSS.supports(domToHyphenated(props[i]), value)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        // Otherwise fall back to at-rule (for FF 17 and Opera 12.x)
+        else if ('CSSSupportsRule' in window) {
+            // Build a condition string for every prefixed variant
+            var conditionText = [];
+            while (i--) {
+                conditionText.push('(' + domToHyphenated(props[i]) + ':' + value + ')');
+            }
+            conditionText = conditionText.join(' or ');
+            return injectElementWithStyles('@supports (' + conditionText + ') { #modernizr { position: absolute; } }', function( node ) {
+                return (window.getComputedStyle ?
+                        getComputedStyle(node, null) :
+                        node.currentStyle)['position'] == 'absolute';
+            });
+        }
+        return undefined;
+    }
+    
+
+module.exports = nativeTestProps;
+},{"./domToHyphenated":11,"./injectElementWithStyles":14}],22:[function(require,module,exports){
+
+  // Following spec is to expose vendor-specific style properties as:
+  //   elem.style.WebkitBorderRadius
+  // and the following would be incorrect:
+  //   elem.style.webkitBorderRadius
+
+  // Webkit ghosts their properties in lowercase but Opera & Moz do not.
+  // Microsoft uses a lowercase `ms` instead of the correct `Ms` in IE8+
+  //   erik.eae.net/archives/2008/03/10/21.48.10/
+
+  // More here: github.com/Modernizr/Modernizr/issues/issue/21
+  var omPrefixes = 'Webkit Moz O ms';
+  
+module.exports = omPrefixes;
+},{}],23:[function(require,module,exports){
+var ModernizrProto = require('./ModernizrProto');
+
+
+  // List of property values to set for css tests. See ticket #21
+  var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
+
+  // expose these for the plugin API. Look in the source for how to join() them against your input
+  ModernizrProto._prefixes = prefixes;
+
+  
+
+module.exports = prefixes;
+},{"./ModernizrProto":4}],24:[function(require,module,exports){
+var Modernizr = require('./Modernizr');
+var docElement = require('./docElement');
+
+
+  // Pass in an and array of class names, e.g.:
+  //  ['no-webp', 'borderradius', ...]
+  function setClasses( classes ) {
+    var className = docElement.className;
+    var regex;
+    var classPrefix = Modernizr._config.classPrefix || '';
+
+    // Change `no-js` to `js` (we do this regardles of the `enableClasses`
+    // option)
+    // Handle classPrefix on this too
+    var reJS = new RegExp('(^|\\s)'+classPrefix+'no-js(\\s|$)');
+    className = className.replace(reJS, '$1'+classPrefix+'js$2');
+
+    if(Modernizr._config.enableClasses) {
+      // Add the new classes
+      className += ' ' + classPrefix + classes.join(' ' + classPrefix);
+      docElement.className = className;
+    }
+
+  }
+
+  
+
+module.exports = setClasses;
+},{"./Modernizr":3,"./docElement":9}],25:[function(require,module,exports){
+var classes = require('./classes');
+
+
+  var slice = classes.slice;
+  
+
+module.exports = slice;
+},{"./classes":5}],26:[function(require,module,exports){
+
+  var smile = ':)';
+  
+module.exports = smile;
+},{}],27:[function(require,module,exports){
+var ModernizrProto = require('./ModernizrProto');
+var testPropsAll = require('./testPropsAll');
+
+
+  /**
+   * testAllProps determines whether a given CSS property, in some prefixed
+   * form, is supported by the browser. It can optionally be given a value; in
+   * which case testAllProps will only return true if the browser supports that
+   * value for the named property; this latter case will use native detection
+   * (via window.CSS.supports) if available. A boolean can be passed as a 3rd
+   * parameter to skip the value check when native detection isn't available,
+   * to improve performance when simply testing for support of a property.
+   *
+   * @param prop - String naming the property to test
+   * @param value - [optional] String of the value to test
+   * @param skipValueTest - [optional] Whether to skip testing that the value
+   *                        is supported when using non-native detection
+   *                        (default: false)
+   */
+    function testAllProps (prop, value, skipValueTest) {
+        return testPropsAll(prop, undefined, undefined, value, skipValueTest);
+    }
+    ModernizrProto.testAllProps = testAllProps;
+    
+
+module.exports = testAllProps;
+},{"./ModernizrProto":4,"./testPropsAll":30}],28:[function(require,module,exports){
+var is = require('./is');
+require('./fnBind');
+
+
+  /**
+   * testDOMProps is a generic DOM property test; if a browser supports
+   *   a certain property, it won't return undefined for it.
+   */
+  function testDOMProps( props, obj, elem ) {
+    var item;
+
+    for ( var i in props ) {
+      if ( props[i] in obj ) {
+
+        // return the property name as a string
+        if (elem === false) return props[i];
+
+        item = obj[props[i]];
+
+        // let's bind a function (and it has a bind method -- certain native objects that report that they are a
+        // function don't [such as webkitAudioContext])
+        if (is(item, 'function') && 'bind' in item){
+          // default to autobind unless override
+          return item.bind(elem || obj);
+        }
+
+        // return the unbound function or obj or value
+        return item;
+      }
+    }
+    return false;
+  }
+
+  
+
+module.exports = testDOMProps;
+},{"./fnBind":12,"./is":18}],29:[function(require,module,exports){
+var contains = require('./contains');
+var mStyle = require('./mStyle');
+var createElement = require('./createElement');
+var nativeTestProps = require('./nativeTestProps');
+var is = require('./is');
+
+
+  // testProps is a generic CSS / DOM property test.
+
+  // In testing support for a given CSS property, it's legit to test:
+  //    `elem.style[styleName] !== undefined`
+  // If the property is supported it will return an empty string,
+  // if unsupported it will return undefined.
+
+  // We'll take advantage of this quick test and skip setting a style
+  // on our modernizr element, but instead just testing undefined vs
+  // empty string.
+
+  // Because the testing of the CSS property names (with "-", as
+  // opposed to the camelCase DOM properties) is non-portable and
+  // non-standard but works in WebKit and IE (but not Gecko or Opera),
+  // we explicitly reject properties with dashes so that authors
+  // developing in WebKit or IE first don't end up with
+  // browser-specific content by accident.
+
+  function testProps( props, prefixed, value, skipValueTest ) {
+    skipValueTest = is(skipValueTest, 'undefined') ? false : skipValueTest;
+
+    // Try native detect first
+    if (!is(value, 'undefined')) {
+      var result = nativeTestProps(props, value);
+      if(!is(result, 'undefined')) {
+        return result;
+      }
+    }
+
+    // Otherwise do it properly
+    var afterInit, i, j, prop, before;
+
+    // If we don't have a style element, that means
+    // we're running async or after the core tests,
+    // so we'll need to create our own elements to use
+    if ( !mStyle.style ) {
+      afterInit = true;
+      mStyle.modElem = createElement('modernizr');
+      mStyle.style = mStyle.modElem.style;
+    }
+
+    // Delete the objects if we
+    // we created them.
+    function cleanElems() {
+      if (afterInit) {
+        delete mStyle.style;
+        delete mStyle.modElem;
+      }
+    }
+
+    for ( i in props ) {
+      prop = props[i];
+      before = mStyle.style[prop];
+
+      if ( !contains(prop, "-") && mStyle.style[prop] !== undefined ) {
+
+        // If value to test has been passed in, do a set-and-check test.
+        // 0 (integer) is a valid property value, so check that `value` isn't
+        // undefined, rather than just checking it's truthy.
+        if (!skipValueTest && !is(value, 'undefined')) {
+
+          // Needs a try catch block because of old IE. This is slow, but will
+          // be avoided in most cases because `skipValueTest` will be used.
+          try {
+            mStyle.style[prop] = value;
+          } catch (e) {}
+
+          // If the property value has changed, we assume the value used is
+          // supported. If `value` is empty string, it'll fail here (because
+          // it hasn't changed), which matches how browsers have implemented
+          // CSS.supports()
+          if (mStyle.style[prop] != before) {
+            cleanElems();
+            return prefixed == 'pfx' ? prop : true;
+          }
+        }
+        // Otherwise just return true, or the property name if this is a
+        // `prefixed()` call
+        else {
+          cleanElems();
+          return prefixed == 'pfx' ? prop : true;
+        }
+      }
+    }
+    cleanElems();
+    return false;
+  }
+
+  
+
+module.exports = testProps;
+},{"./contains":6,"./createElement":7,"./is":18,"./mStyle":19,"./nativeTestProps":21}],30:[function(require,module,exports){
+var ModernizrProto = require('./ModernizrProto');
+var cssomPrefixes = require('./cssomPrefixes');
+var is = require('./is');
+var testProps = require('./testProps');
+var domPrefixes = require('./domPrefixes');
+var testDOMProps = require('./testDOMProps');
+var prefixes = require('./prefixes');
+
+
+    /**
+     * testPropsAll tests a list of DOM properties we want to check against.
+     *     We specify literally ALL possible (known and/or likely) properties on
+     *     the element including the non-vendor prefixed one, for forward-
+     *     compatibility.
+     */
+    function testPropsAll( prop, prefixed, elem, value, skipValueTest ) {
+
+        var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
+            props = (prop + ' ' + cssomPrefixes.join(ucProp + ' ') + ucProp).split(' ');
+
+        // did they call .prefixed('boxSizing') or are we just testing a prop?
+        if(is(prefixed, "string") || is(prefixed, "undefined")) {
+            return testProps(props, prefixed, value, skipValueTest);
+
+            // otherwise, they called .prefixed('requestAnimationFrame', window[, elem])
+        } else {
+            props = (prop + ' ' + (domPrefixes).join(ucProp + ' ') + ucProp).split(' ');
+            return testDOMProps(props, prefixed, elem);
+        }
+    }
+
+    // Modernizr.testAllProps() investigates whether a given style property,
+    //     or any of its vendor-prefixed variants, is recognized
+    // Note that the property names must be provided in the camelCase variant.
+    // Modernizr.testAllProps('boxSizing')
+    ModernizrProto.testAllProps = testPropsAll;
+
+    
+
+module.exports = testPropsAll;
+},{"./ModernizrProto":4,"./cssomPrefixes":8,"./domPrefixes":10,"./is":18,"./prefixes":23,"./testDOMProps":28,"./testProps":29}],31:[function(require,module,exports){
+var tests = require('./tests');
+var Modernizr = require('./Modernizr');
+var classes = require('./classes');
+var is = require('./is');
+
+
+  // Run through all tests and detect their support in the current UA.
+  function testRunner() {
+    var featureNames;
+    var feature;
+    var aliasIdx;
+    var result;
+    var nameIdx;
+    var featureName;
+    var featureNameSplit;
+    var modernizrProp;
+    var mPropCount;
+
+    for ( var featureIdx in tests ) {
+      featureNames = [];
+      feature = tests[featureIdx];
+      // run the test, throw the return value into the Modernizr,
+      //   then based on that boolean, define an appropriate className
+      //   and push it into an array of classes we'll join later.
+      //
+      //   If there is no name, it's an 'async' test that is run,
+      //   but not directly added to the object. That should
+      //   be done with a post-run addTest call.
+      if ( feature.name ) {
+        featureNames.push(feature.name.toLowerCase());
+
+        if (feature.options && feature.options.aliases && feature.options.aliases.length) {
+          // Add all the aliases into the names list
+          for (aliasIdx = 0; aliasIdx < feature.options.aliases.length; aliasIdx++) {
+            featureNames.push(feature.options.aliases[aliasIdx].toLowerCase());
+          }
+        }
+      }
+
+      // Run the test, or use the raw value if it's not a function
+      result = is(feature.fn, 'function') ? feature.fn() : feature.fn;
+
+
+      // Set each of the names on the Modernizr object
+      for (nameIdx = 0; nameIdx < featureNames.length; nameIdx++) {
+        featureName = featureNames[nameIdx];
+        // Support dot properties as sub tests. We don't do checking to make sure
+        // that the implied parent tests have been added. You must call them in
+        // order (either in the test, or make the parent test a dependency).
+        //
+        // Cap it to TWO to make the logic simple and because who needs that kind of subtesting
+        // hashtag famous last words
+        featureNameSplit = featureName.split('.');
+
+        if (featureNameSplit.length === 1) {
+          Modernizr[featureNameSplit[0]] = result;
+        }
+        else if (featureNameSplit.length === 2) {
+          Modernizr[featureNameSplit[0]][featureNameSplit[1]] = result;
+        }
+
+        classes.push((result ? '' : 'no-') + featureNameSplit.join('-'));
+      }
+    }
+  }
+
+  
+
+module.exports = testRunner;
+},{"./Modernizr":3,"./classes":5,"./is":18,"./tests":32}],32:[function(require,module,exports){
+
+  var tests = [];
+  
+module.exports = tests;
+},{}],33:[function(require,module,exports){
+var Modernizr = require('./../../lib/Modernizr');
+var testAllProps = require('./../../lib/testAllProps');
+
+/*!
+{
+  "name": "CSS Transforms",
+  "property": "csstransforms",
+  "caniuse": "transforms2d",
+  "tags": ["css"]
+}
+!*/
+
+  Modernizr.addTest('csstransforms', testAllProps('transform', 'scale(1)', true));
+
+
+},{"./../../lib/Modernizr":3,"./../../lib/testAllProps":27}],34:[function(require,module,exports){
+var Modernizr = require('./../lib/Modernizr');
+var inputElem = require('./../lib/inputElem');
+var docElement = require('./../lib/docElement');
+var inputtypes = require('./../lib/inputtypes');
+var inputs = require('./../lib/inputs');
+var smile = require('./../lib/smile');
+
+/*!
+{
+  "name": "Form input types",
+  "property": "inputtypes",
+  "caniuse": "forms",
+  "tags": ["forms"],
+  "authors": ["Mike Taylor"],
+  "polyfills": [
+    "jquerytools",
+    "webshims",
+    "h5f",
+    "webforms2",
+    "nwxforms",
+    "fdslider",
+    "html5slider",
+    "galleryhtml5forms",
+    "jscolor",
+    "html5formshim",
+    "jqueryformshim",
+    "selectedoptionsjs",
+    "formvalidationjs"
+  ]
+}
+!*/
+/* DOC
+
+Detects support for HTML5 form input types and exposes Boolean subproperties with the results:
+
+```javascript
+Modernizr.inputtypes.color
+Modernizr.inputtypes.date
+Modernizr.inputtypes.datetime
+Modernizr.inputtypes['datetime-local']
+Modernizr.inputtypes.email
+Modernizr.inputtypes.month
+Modernizr.inputtypes.number
+Modernizr.inputtypes.range
+Modernizr.inputtypes.search
+Modernizr.inputtypes.tel
+Modernizr.inputtypes.time
+Modernizr.inputtypes.url
+Modernizr.inputtypes.week
+```
+
+*/
+
+  // Run through HTML5's new input types to see if the UA understands any.
+  //   This is put behind the tests runloop because it doesn't return a
+  //   true/false like all the other tests; instead, it returns an object
+  //   containing each input type with its corresponding true/false value
+
+  // Big thanks to @miketaylr for the html5 forms expertise. miketaylr.com/
+  Modernizr['inputtypes'] = (function(props) {
+    var bool;
+    var inputElemType;
+    var defaultView;
+    var len = props.length;
+
+    for ( var i = 0; i < len; i++ ) {
+
+      inputElem.setAttribute('type', inputElemType = props[i]);
+      bool = inputElem.type !== 'text';
+
+      // We first check to see if the type we give it sticks..
+      // If the type does, we feed it a textual value, which shouldn't be valid.
+      // If the value doesn't stick, we know there's input sanitization which infers a custom UI
+      if ( bool ) {
+
+        inputElem.value         = smile;
+        inputElem.style.cssText = 'position:absolute;visibility:hidden;';
+
+        if ( /^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined ) {
+
+          docElement.appendChild(inputElem);
+          defaultView = document.defaultView;
+
+          // Safari 2-4 allows the smiley as a value, despite making a slider
+          bool =  defaultView.getComputedStyle &&
+            defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
+            // Mobile android web browser has false positive, so must
+            // check the height to see if the widget is actually there.
+            (inputElem.offsetHeight !== 0);
+
+          docElement.removeChild(inputElem);
+
+        } else if ( /^(search|tel)$/.test(inputElemType) ){
+          // Spec doesn't define any special parsing or detectable UI
+          //   behaviors so we pass these through as true
+
+          // Interestingly, opera fails the earlier test, so it doesn't
+          //  even make it here.
+
+        } else if ( /^(url|email)$/.test(inputElemType) ) {
+          // Real url and email support comes with prebaked validation.
+          bool = inputElem.checkValidity && inputElem.checkValidity() === false;
+
+        } else {
+          // If the upgraded input compontent rejects the :) text, we got a winner
+          bool = inputElem.value != smile;
+        }
+      }
+
+      inputs[ props[i] ] = !!bool;
+    }
+    return inputs;
+  })(inputtypes);
+
+
+},{"./../lib/Modernizr":3,"./../lib/docElement":9,"./../lib/inputElem":15,"./../lib/inputs":16,"./../lib/inputtypes":17,"./../lib/smile":26}],"RAklWF":[function(require,module,exports){
 var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
  * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
@@ -8282,7 +9150,7 @@ ko.exportSymbol('nativeTemplateEngine', ko.nativeTemplateEngine);
 
 },{}],"knockout":[function(require,module,exports){
 module.exports=require('N405As');
-},{}],12:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 var asap = require('asap')
@@ -8389,7 +9257,7 @@ function doResolve(fn, onFulfilled, onRejected) {
   }
 }
 
-},{"asap":14}],13:[function(require,module,exports){
+},{"asap":47}],46:[function(require,module,exports){
 'use strict';
 
 //This file contains then/promise specific extensions to the core promise API
@@ -8571,7 +9439,7 @@ Promise.prototype['catch'] = function (onRejected) {
   return this.then(null, onRejected);
 }
 
-},{"./core.js":12,"asap":14}],14:[function(require,module,exports){
+},{"./core.js":45,"asap":47}],47:[function(require,module,exports){
 var process=require("__browserify_process");
 // Use the fastest possible means to execute a task in a future turn
 // of the event loop.
@@ -8686,7 +9554,7 @@ function asap(task) {
 module.exports = asap;
 
 
-},{"__browserify_process":1}],15:[function(require,module,exports){
+},{"__browserify_process":1}],48:[function(require,module,exports){
 // Some code originally from async_storage.js in
 // [Gaia](https://github.com/mozilla-b2g/gaia).
 (function() {
@@ -9101,7 +9969,7 @@ module.exports = asap;
     }
 }).call(window);
 
-},{"promise":13}],16:[function(require,module,exports){
+},{"promise":46}],49:[function(require,module,exports){
 // If IndexedDB isn't available, we'll fall back to localStorage.
 // Note that this will have considerable performance and storage
 // side-effects (all data will be serialized on save and only data that
@@ -9432,7 +10300,7 @@ module.exports = asap;
     }
 }).call(window);
 
-},{"./../utils/serializer":20,"promise":13}],17:[function(require,module,exports){
+},{"./../utils/serializer":53,"promise":46}],50:[function(require,module,exports){
 /*
  * Includes code from:
  *
@@ -9850,7 +10718,7 @@ module.exports = asap;
     }
 }).call(window);
 
-},{"./../utils/serializer":20,"promise":13}],"localforage":[function(require,module,exports){
+},{"./../utils/serializer":53,"promise":46}],"localforage":[function(require,module,exports){
 module.exports=require('3buXfx');
 },{}],"3buXfx":[function(require,module,exports){
 (function() {
@@ -10274,7 +11142,7 @@ module.exports=require('3buXfx');
     }
 }).call(window);
 
-},{"./drivers/indexeddb":15,"./drivers/localstorage":16,"./drivers/websql":17,"promise":13}],20:[function(require,module,exports){
+},{"./drivers/indexeddb":48,"./drivers/localstorage":49,"./drivers/websql":50,"promise":46}],53:[function(require,module,exports){
 (function() {
     'use strict';
 
@@ -17296,7 +18164,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 },{}],"lodash":[function(require,module,exports){
 module.exports=require('E3ub6S');
-},{}],23:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 module.exports={
 	"version": "2015a",
 	"zones": [
@@ -17890,9 +18758,9 @@ module.exports={
 var moment = module.exports = require("./moment-timezone");
 moment.tz.load(require('./data/packed/latest.json'));
 
-},{"./data/packed/latest.json":23,"./moment-timezone":26}],"moment-timezone":[function(require,module,exports){
+},{"./data/packed/latest.json":56,"./moment-timezone":59}],"moment-timezone":[function(require,module,exports){
 module.exports=require('/PaSMv');
-},{}],26:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 //! moment-timezone.js
 //! version : 0.3.1
 //! author : Tim Wood
@@ -21935,6 +22803,20 @@ module.exports=require('Qf2fGb');
 
 },{}],"numeral":[function(require,module,exports){
 module.exports=require('av8buC');
+},{}],"2zKS+L":[function(require,module,exports){
+/** Load Modernizr custom build.
+    Uses the module Browsernizr with just the tests
+    we want.
+ **/
+// Tests que necesitamos
+require('browsernizr/test/inputtypes');
+require('browsernizr/test/css/transforms');
+
+// Cargando Modernizr y devolviendo la instancia:
+module.exports = require('browsernizr');
+
+},{"browsernizr":2,"browsernizr/test/css/transforms":33,"browsernizr/test/inputtypes":34}],"custom-modernizr":[function(require,module,exports){
+module.exports=require('2zKS+L');
 },{}],"fastclick":[function(require,module,exports){
 module.exports=require('4k9/4/');
 },{}],"4k9/4/":[function(require,module,exports){
@@ -22956,7 +23838,7 @@ exports.off = function off() {
     $(window).off(exports.layoutUpdateEvent);
 };
 
-},{"./throttle":39}],39:[function(require,module,exports){
+},{"./throttle":74}],74:[function(require,module,exports){
 /**
     throttle function
 **/

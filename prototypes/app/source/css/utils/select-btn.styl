@@ -1,0 +1,11 @@
+// Include styles to better display 'select' elements
+// as btn if the .btn class is set
+select.btn {
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+}
+
+select.btn::-ms-expand { /* for IE 11 */
+    display: none;
+}
