@@ -261,7 +261,7 @@ Appointment.newPreparationTimeSlot = function newPreparationTimeSlot(options) {
         startTime: start,
         endTime: end,
 
-        summary: options.text || 'Preparation time (edit)',
+        summary: options.text || 'Preparation time',
         description: null
     });
 };
