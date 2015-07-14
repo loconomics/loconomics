@@ -128,9 +128,6 @@ A.prototype.show = function show(state) {
     }
     
     this.updateNavBarState();
-    
-    // Keep data updated:
-    this.app.model.schedulingPreferences.sync();
 };
 
 A.prototype.bindDateData = function bindDateData(date) {
@@ -160,9 +157,7 @@ A.prototype.bindDateData = function bindDateData(date) {
     }.bind(this));
 };
 
-function ViewModel(app) {
-    
-    this.schedulingPreferences = app.model.schedulingPreferences.data;
+function ViewModel(/*app*/) {
 
     this.headerText = ko.observable('Select a time');
     this.selectedDate = ko.observable(getDateWithoutTime());
@@ -172,8 +167,7 @@ function ViewModel(app) {
     this.dateAvail = ko.observable();
     this.groupedSlots = ko.computed(function(){
         
-        var incSize = this.schedulingPreferences.incrementsSizeInMinutes(),
-            requiredDuration = this.requiredDuration();
+        var requiredDuration = this.requiredDuration();
         
         /*
           before 12:00pm (noon) = morning
@@ -205,7 +199,7 @@ function ViewModel(app) {
         ];
 
         // Populate groups with the time slots
-        var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(incSize, requiredDuration) || [];
+        var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(requiredDuration) || [];
         // Iterate to organize by group
         slots.forEach(function(slot) {
 

@@ -110,13 +110,16 @@ function DateAvailability(values) {
     /**
         Retrieve a list of date-times that are free, available to be used,
         in this date with a separation between each of the given slotSize
-        in minutes.
-        
-        The second parameter 'duration' allows that returned slots
+        in minutes or using the default from the scheduling preferences
+        included in the object.
+
+        The parameter 'duration' allows that returned slots
         are free almost for the given duration. This allows to choose times
         that fit the needed service duration.
     **/
-    this.getFreeTimeSlots = function getFreeTimeSlots(slotSizeMinutes, duration) {
+    this.getFreeTimeSlots = function getFreeTimeSlots(duration, slotSizeMinutes) {
+        
+        slotSizeMinutes = slotSizeMinutes || this.schedulingPreferences().incrementsSizeInMinutes();
         
         if (!duration)
             duration = slotSizeMinutes;
