@@ -76,8 +76,11 @@ public static partial class LcCalendar
     /// <param name="userID"></param>
     /// <param name="dateStart"></param>
     /// <param name="dateEnd"></param>
+    /// <param name="excludeAdvanceTime">This avoids the check of 'advance time allowed to booking' by passing the lowest datetime possible
+    /// to the Calendar API. It's needed when the user checking availability is the same provider and don't want this time to block itself
+    /// but only clients.</param>
     /// <returns></returns>
-    public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTime dateStart, DateTime dateEnd)
+    public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTime dateStart, DateTime dateEnd, bool excludeAdvanceTime = false)
     {
         var lcCalendar = new CalendarDll.CalendarUtils();
         return
@@ -85,7 +88,7 @@ public static partial class LcCalendar
                 new CalendarDll.CalendarUser(userID),
                 dateStart,
                 dateEnd,
-                DateTime.Now);
+                excludeAdvanceTime ? DateTime.MinValue : DateTime.Now);
     }
     /// <summary>
     /// Check if the user is available for all the time between dateStart and dateEnd
@@ -94,9 +97,9 @@ public static partial class LcCalendar
     /// <param name="dateStart">Start date and time for the time range (greater or equals than dateStart)</param>
     /// <param name="dateEnd">End date and time for the time range (less than dateEnd)</param>
     /// <returns>True when is available, False when not</returns>
-    public static bool CheckUserAvailability(int userID, DateTime dateStart, DateTime dateEnd)
+    public static bool CheckUserAvailability(int userID, DateTime dateStart, DateTime dateEnd, bool excludeAdvanceTime = false)
     {
-        foreach (var e in GetUserAvailability(userID, dateStart, dateEnd))
+        foreach (var e in GetUserAvailability(userID, dateStart, dateEnd, excludeAdvanceTime))
         {
             var edt = e.DateSet + e.TimeBlock;
             if ((e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.BUSY ||

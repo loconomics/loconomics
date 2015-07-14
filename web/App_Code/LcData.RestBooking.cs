@@ -472,7 +472,8 @@ public static partial class LcData
 
                 // 2º: Creating event for the start date and calculated duration, checking availability
                 var endTime = startTime.AddMinutes((double)totalDuration);
-                var isAvailable = LcCalendar.CheckUserAvailability(providerUserID, startTime, endTime);
+                // Because this API is only for providers, we avoid the advance time from the checking
+                var isAvailable = LcCalendar.CheckUserAvailability(providerUserID, startTime, endTime, true);
                 if (!isAvailable)
                     throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
 
@@ -599,7 +600,8 @@ public static partial class LcData
                 var eventInfo = GetBasicEventInfo(booking.confirmedDateID.Value, db);
                 if (eventInfo.StartTime != startTime && eventInfo.EndTime != endTime)
                 {
-                    if (!DoubleCheckEventAvailability(booking.confirmedDateID.Value, startTime, endTime))
+                    // Because this API is only for providers, we avoid the advance time from the checking
+                    if (!DoubleCheckEventAvailability(booking.confirmedDateID.Value, startTime, endTime, true))
                         throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
 
                     // Transaction begins
@@ -828,7 +830,7 @@ getdate(), getdate(), 'sys',
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <returns></returns>
-        public static bool DoubleCheckEventAvailability(int eventID, DateTime? startTime =  null, DateTime? endTime = null)
+        public static bool DoubleCheckEventAvailability(int eventID, DateTime? startTime =  null, DateTime? endTime = null, bool excludeAdvanceTime = false)
         {
             // We require an owned connection, to avoid conflict with other transactions
             using (var db = Database.Open("sqlloco"))
@@ -848,7 +850,7 @@ getdate(), getdate(), 'sys',
                 var checkStartTime = startTime ?? dateInfo.StartTime;
                 var checkEndTime = endTime ?? dateInfo.EndTime;
 
-                var isAvailable = LcCalendar.CheckUserAvailability(dateInfo.UserId, checkStartTime, checkEndTime);
+                var isAvailable = LcCalendar.CheckUserAvailability(dateInfo.UserId, checkStartTime, checkEndTime, excludeAdvanceTime);
 
                 // restore event to its previous state, so gets 'untouched'
                 db.Execute(@"
