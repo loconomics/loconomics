@@ -81,7 +81,8 @@
                         startTime.Value,
                         pricingIds,
                         Request["preNotesToClient"],
-                        Request["preNotesToSelf"]
+                        Request["preNotesToSelf"],
+                        Request["allowBookUnavailableTime"].AsBool(false)
                     );
                 }
                 else {
@@ -95,7 +96,8 @@
                         Request["preNotesToClient"],
                         Request["preNotesToSelf"],
                         Request["postNotesToClient"],
-                        Request["postNotesToSelf"]
+                        Request["postNotesToSelf"],
+                        Request["allowBookUnavailableTime"].AsBool(false)
                     );
                     
                     // If doesn't exists, return null early

@@ -435,6 +435,20 @@ public static partial class LcData
         }
 
         #region Simplified Provider Booking (App)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="providerUserID"></param>
+        /// <param name="customerUserID"></param>
+        /// <param name="addressID"></param>
+        /// <param name="startTime"></param>
+        /// <param name="services"></param>
+        /// <param name="preNotesToClient"></param>
+        /// <param name="preNotesToSelf"></param>
+        /// <param name="allowBookUnavailableTime">This value allows (when true) to avoid the check of availability
+        /// for the given time, letting the freelancer to book any time even if unavailable (this must be asked
+        /// and warned in the UI).</param>
+        /// <returns></returns>
         public static int InsSimplifiedProviderBooking(
             int providerUserID,
             int customerUserID,
@@ -442,7 +456,8 @@ public static partial class LcData
             DateTime startTime,
             IEnumerable<int> services,
             string preNotesToClient,
-            string preNotesToSelf
+            string preNotesToSelf,
+            bool allowBookUnavailableTime
         )
         {
             using (var db = Database.Open("sqlloco"))
@@ -473,7 +488,7 @@ public static partial class LcData
                 // 2º: Creating event for the start date and calculated duration, checking availability
                 var endTime = startTime.AddMinutes((double)totalDuration);
                 // Because this API is only for providers, we avoid the advance time from the checking
-                var isAvailable = LcCalendar.CheckUserAvailability(providerUserID, startTime, endTime, true);
+                var isAvailable = allowBookUnavailableTime || LcCalendar.CheckUserAvailability(providerUserID, startTime, endTime, true);
                 if (!isAvailable)
                     throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
 
@@ -551,6 +566,9 @@ public static partial class LcData
         /// <param name="preNotesToSelf"></param>
         /// <param name="postNotesToClient"></param>
         /// <param name="postNotesToSelf"></param>
+        /// <param name="allowBookUnavailableTime">This value allows (when true) to avoid the check of availability
+        /// for the given time, letting the freelancer to book any time even if unavailable (this must be asked
+        /// and warned in the UI).</param>
         /// <returns></returns>
         public static bool UpdSimplifiedProviderBooking(
             int bookingID,
@@ -562,7 +580,8 @@ public static partial class LcData
             string preNotesToClient,
             string preNotesToSelf,
             string postNotesToClient,
-            string postNotesToSelf
+            string postNotesToSelf,
+            bool allowBookUnavailableTime
         )
         {
             using (var db = Database.Open("sqlloco"))
@@ -601,7 +620,7 @@ public static partial class LcData
                 if (eventInfo.StartTime != startTime && eventInfo.EndTime != endTime)
                 {
                     // Because this API is only for providers, we avoid the advance time from the checking
-                    if (!DoubleCheckEventAvailability(booking.confirmedDateID.Value, startTime, endTime, true))
+                    if (!allowBookUnavailableTime && !DoubleCheckEventAvailability(booking.confirmedDateID.Value, startTime, endTime, true))
                         throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
 
                     // Transaction begins
