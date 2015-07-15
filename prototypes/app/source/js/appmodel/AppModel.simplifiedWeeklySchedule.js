@@ -38,7 +38,13 @@ exports.create = function create(appModel) {
             }
 
             return appModel.rest.put('availability/weekly-schedule', plainData)
-            .then(fromWeeklySchedule);
+            .then(fromWeeklySchedule)
+            .then(function(result) {
+                // We need to recompute availability as side effect of schedule
+                appModel.calendar.clearCache();
+                // Forward the result
+                return result;
+            });
         }
     });
     

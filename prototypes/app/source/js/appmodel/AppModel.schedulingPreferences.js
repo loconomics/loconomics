@@ -15,7 +15,13 @@ exports.create = function create(appModel) {
             return appModel.rest.get('scheduling-preferences');
         },
         push: function push() {
-            return appModel.rest.put('scheduling-preferences', this.data.model.toPlainObject());
+            return appModel.rest.put('scheduling-preferences', this.data.model.toPlainObject())
+            .then(function(result) {
+                // We need to recompute availability as side effect of scheduling preferences changes
+                appModel.calendar.clearCache();
+                // Forward the result
+                return result;
+            });
         }
     });
     

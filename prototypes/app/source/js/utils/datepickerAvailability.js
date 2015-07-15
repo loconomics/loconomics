@@ -34,10 +34,14 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
         }
     });
     
-    var tagAvailability = function tagAvailability(date) {
+    /**
+        It tags, if the month changed, the calendar with the Date Availability.
+        The refresh param forces the process even if the same month than previously tagged/rendered
+    **/
+    var tagAvailability = function tagAvailability(date, refresh) {
         var month = date.getMonth();
         // Avoid dupes
-        if (month === prevMonth) return;
+        if (month === prevMonth && !refresh) return;
         prevMonth = month;
         
         // We need to know the range of dates being displayed on the
@@ -55,7 +59,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
         .then(function(resultByDates) {
             // We are still in the same showed month? (loading is async, so could have changed)
             if (month !== $datepicker.datepicker('getViewDate').getMonth()) return;
- 
+
             // We received a set of DateAvailability objects per date (iso string key)
             // Iterate every day element, and use its date avail from the result
             daysElements.each(function() {
@@ -66,6 +70,9 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
 
                 // Integrity check to avoid edge case exceptions (must not happens, but stronger code)
                 if (!id || !dateAvail) return;
+                
+                // Remove any previous 'tag-' class from the cell classNames and keep for later change
+                var cellClass = $dateTd.attr('class').replace(/(^|\s)tag-[^\s]+/, '');
 
                 // Set a date cell class based on its availability
                 var cls = '';
@@ -86,7 +93,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
                         cls = 'tag-danger';
                         break;
                 }
-                if (cls) $dateTd.addClass(cls);
+                $dateTd.attr('class', cellClass + ' ' + cls);
             });
         })
         .catch(function(err) {

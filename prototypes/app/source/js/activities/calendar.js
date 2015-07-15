@@ -108,8 +108,6 @@ var A = Activity.extends(function CalendarActivity() {
 
     // Set date to today
     this.viewModel.currentDate(getDateWithoutTime());
-    // First availability load
-    this.tagAvailability(this.viewModel.currentDate());
 });
 
 exports.init = A.init;
@@ -131,7 +129,11 @@ A.prototype.show = function show(options) {
         // Today:
         date = getDateWithoutTime();
     
+    // Reset to force new data load (can happens if schedule was change or anything in the middle)
+    this.viewModel.previousDate = null;
     this.viewModel.currentDate(date);
+    // Force a refresh of tags
+    this.tagAvailability(date, true);
 };
 
 var Appointment = require('../models/Appointment'),
@@ -175,19 +177,21 @@ function ViewModel(app) {
     this.isLoading = ko.observable(false);
 
     // Update current slots on date change
-    var previousDate = this.currentDate().toISOString();
+    // previousDate is public to allow being reset on a new show (discard old data
+    // by forcing a load)
+    this.previousDate = this.currentDate().toISOString();
     this.currentDate.subscribe(function (date) {
-        
+
         // IMPORTANT: The date object may be reused and mutated between calls
         // (mostly because the widget I think), so is better to create
         // a clone and avoid getting race-conditions in the data downloading.
         date = new Date(Date.parse(date.toISOString()));
 
         // Avoid duplicated notification, un-changed date
-        if (date.toISOString() === previousDate) {
+        if (date.toISOString() === this.previousDate) {
             return;
         }
-        previousDate = date.toISOString();
+        this.previousDate = date.toISOString();
 
         this.isLoading(true);
         
