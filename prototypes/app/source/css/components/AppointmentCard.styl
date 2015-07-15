@@ -15,7 +15,7 @@
         
         > .LinkTile {
             .Tile-icon {
-                transition: opacity 1.2s;
+                transition: opacity 400ms;
                 opacity: 1;
                 margin-right: 12px;
                 > * {
@@ -23,6 +23,8 @@
                 }
             }
         }
+        
+        transition: background 400ms $cubic-easing;
 
         addColor($colorName, $color) {
             &.Card-title--{$colorName} {
