@@ -991,6 +991,9 @@
         <div data-bind="css: { 'is-loading': isLoading }">
           <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
         </div>
+        <div class="isolated" data-bind="visible: durationDisplay"> <span>You'll need</span>  <span data-bind="text: durationDisplay"></span>
+
+        </div>
         <div class="GroupedTimeSlots" data-bind="foreach: groupedSlots">
           <div class="GroupedTimeSlots-group">
             <div class="GroupedTimeSlots-groupName" data-bind="text: group"></div>
