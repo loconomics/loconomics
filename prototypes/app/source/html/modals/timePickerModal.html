@@ -8,6 +8,7 @@
         </div>
         <div class="modal-body text-center">
             <select class="btn btn-default" data-bind="options: hourValues, value: pickedHour, optionsText: 'label', optionsValue: 'value'"></select>
+            <span data-bind="visible: minuteValues().length">:</span>
             <select class="btn btn-default" data-bind="options: minuteValues, value: pickedMinute, optionsText: 'label', optionsValue: 'value', visible: minuteValues().length"></select>
             <select class="btn btn-default" data-bind="options: ampmValues, value: pickedAmpm, optionsText: 'label', optionsValue: 'value', visible: ampmValues().length"></select>
         </div>

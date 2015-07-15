@@ -135,6 +135,7 @@ A.prototype.show = function show(state) {
 
     // Preselect a date, or current date
     this.viewModel.selectedDate(getDateWithoutTime(this.requestData.selectedDatetime));
+    this.$datePicker.datepicker('setValue', this.viewModel.selectedDate(), true);
     
     if (!this.__firstShowDone) {
         this.__firstShowDone = true;
