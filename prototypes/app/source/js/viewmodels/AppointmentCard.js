@@ -204,6 +204,19 @@ function AppointmentCardViewModel(params) {
         // Out of edit mode
         this.editMode(false);
     }.bind(this);
+    
+    this.confirmCancel = function confirmCancel() {
+        this.app.modals.confirm({
+            title: 'Cancel',
+            message: 'Are you sure?',
+            yes: 'Yes',
+            no: 'No'
+        })
+        .then(function() {
+            // Confirmed cancellation:
+            this.cancel();
+        }.bind(this));
+    }.bind(this);
 
     /**
         External actions

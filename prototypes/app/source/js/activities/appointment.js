@@ -42,15 +42,29 @@ var A = Activity.extends(function AppointmentActivity() {
     // and appointment date (on read-only, to go back to calendar on current date)
     ko.computed(function() {
         var editMode = this.viewModel.editMode(),
+            isNew = this.viewModel.appointmentCardView() && this.viewModel.appointmentCardView().isNew(),
             date = this.viewModel.currentDate();
 
         if (editMode) {
             // Is cancel action
+            
+            if (isNew) {
+                // Common way of keep a cancel button on navbar
+                var cancelLink = this.viewModel.appointmentCardView();
+                cancelLink = cancelLink && cancelLink.progress && cancelLink.progress.cancelLink;
 
-            var cancelLink = this.viewModel.appointmentCardView();
-            cancelLink = cancelLink && cancelLink.progress && cancelLink.progress.cancelLink;
-
-            this.convertToCancelAction(this.navBar.leftAction(), cancelLink || this.requestData.cancelLink);
+                this.convertToCancelAction(this.navBar.leftAction(), cancelLink || this.requestData.cancelLink);
+            }
+            else {
+                // Use the viewmodel cancelation with confirm, so avoid redirects (and all
+                // its problems, as redirects to the sub-edition pages -for example, datetimePicker)
+                // and avoid reload, just change current state and keeps in read-only mode
+                this.navBar.leftAction().model.updateWith({
+                    link: null,
+                    text: 'cancel',
+                    handler: this.viewModel.appointmentCardView().confirmCancel.bind(this)
+                });
+            }
         }
         else {
             // Is go to calendar/date action
