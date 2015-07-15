@@ -61,7 +61,7 @@ function AppointmentCardViewModel(params) {
     
     this.headerClass = ko.pureComputed(function() {
         return (
-            this.isBooking() ? 'Card-title--primary' :
+            this.isBooking() ? (this.editMode() ? 'Card-title--warning' : 'Card-title--primary') :
             this.isEvent() ? 'Card-title--danger' :
             ''
         );
@@ -86,7 +86,7 @@ function AppointmentCardViewModel(params) {
                     v && v.areDifferent() ?
                         this.isNew() && this.isBooking() ?
                             'Book' :
-                            'Save'
+                            'Save changes'
                         : 'Saved'
         );
     }, this);

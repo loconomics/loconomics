@@ -196,12 +196,17 @@ var CalendarEvent = require('../models/CalendarEvent'),
 
 function ViewModel(app) {
     this.app = app;
-    this.appointments = ko.observableArray([]);
     this.currentDate = ko.observable(new Date());
     this.currentID = ko.observable(0);
     this.currentIndex = ko.observable(0);
     this.editMode = ko.observable(false);
     this.isLoading = ko.observable(false);
+    
+    this.dateAvailability = ko.observable();
+    this.appointments = ko.pureComputed(function() {
+        var dateAvail = this.dateAvailability();
+        return dateAvail && dateAvail.appointmentsList() || [];            
+    }, this);
     
     // To access the component API we use next observable,
     // updated by the component with its view
@@ -331,10 +336,6 @@ function ViewModel(app) {
         Changing the current viewed data by date and id
     **/
 
-    this.setList = function (list) {
-        list = list || [];
-        this.appointments(list);
-    };
     this.getSpecialItem = function (id) {
         switch (id) {
             default:
@@ -353,7 +354,7 @@ function ViewModel(app) {
         }
     };
     this.setItemFromCurrentList = function (id) {
-        /*jshint maxdepth:6*/
+        /*jshint maxdepth:6,maxcomplexity:8*/
         var list = this.appointments(),
             index,
             item;
@@ -366,7 +367,11 @@ function ViewModel(app) {
         else if (list.length === 0) {
             // No item ID, empty list:
             index = -1;
-            item = newEmptyDateAppointment();
+            // Show as empty or full-unavailable:
+            if (this.dateAvailability().workDayMinutes() === 0)
+                item = newUnavailableAppointment();
+            else
+                item = newEmptyDateAppointment();
         }
         else {
             // Start getting the first item in the list
@@ -453,7 +458,7 @@ function ViewModel(app) {
             return app.model.calendar.getDateAvailability(date)
             .then(function (dateAvail) {
                 this.isLoading(false);
-                this.setList(dateAvail.appointmentsList());
+                this.dateAvailability(dateAvail);
                 this.setItemFromCurrentList(id);
             }.bind(this))
             .catch(function(err) {
