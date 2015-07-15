@@ -183,6 +183,30 @@
         </div>
       </div>
     </div>
+    <!-- timePickerModal -->
+    <div id="timePickerModal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="timePickerModal-label" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+             <h4 class="modal-title" id="timePickerModal-label" data-bind="text: title">Select time</h4>
+
+          </div>
+          <div class="modal-body text-center">
+            <select class="btn btn-default" data-bind="options: hourValues, value: pickedHour, optionsText: 'label', optionsValue: 'value'"></select>
+            <select class="btn btn-default" data-bind="options: minuteValues, value: pickedMinute, optionsText: 'label', optionsValue: 'value', visible: minuteValues().length"></select>
+            <select class="btn btn-default" data-bind="options: ampmValues, value: pickedAmpm, optionsText: 'label', optionsValue: 'value', visible: ampmValues().length"></select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default timePickerModal-unset" data-bind="text: unsetLabel">Unset</button>
+            <button type="button" class="btn btn-primary timePickerModal-select"
+            data-bind="text: selectLabel">Select</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container-fluid" data-activity="_test">
       <div class="LeadContent">
          <h3>Test Area (LeadContent)</h3>
@@ -978,12 +1002,9 @@
           </div>
         </div>
         <div class="isolated">
-          <label class="btn btn-default btn-block" id="datetimePicker-chooseAny"
-          data-bind="visible: nativeTimePicker"> <span>Book an unavailable time</span>
- <span class="sr-only"><input type="time" data-bind="value: pickedTime" /></span>
+          <button type="button" class="btn btn-default btn-block" data-bind="click: showTimePicker"> <span>Book an unavailable time</span>
 
-          </label>
-          <select class="btn btn-default btn-block" data-bind="optionsCaption: 'Book an unavailable time', options: allTimes, value: pickedTime, optionsText: 'label', optionsValue: 'value', visible: !nativeTimePicker()"></select>
+          </button>
         </div>
       </div>
     </div>

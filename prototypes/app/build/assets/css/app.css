@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-07-14
+/*! LoconomicsApp 2015-07-15
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -136,16 +136,22 @@ fieldset[disabled] .btn-secondary.active {
 
 /* line 3 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */
 
-/* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */
+/* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */
 select.btn {
   -webkit-appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  text-align: left;
 }
 
-/* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */
+select.btn-block {
+  text-align: center;
+}
+
+/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */
 select.btn::-ms-expand {
 /* for IE 11 */
   display: none;
@@ -154,7 +160,7 @@ select.btn::-ms-expand {
 /* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /* app */
 
-/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 20 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
 /* line 104 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 

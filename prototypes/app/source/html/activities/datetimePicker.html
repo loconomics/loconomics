@@ -24,11 +24,9 @@
       </div>
     </div>
       <div class="isolated">
-          <label class="btn btn-default btn-block" id="datetimePicker-chooseAny" data-bind="visible: nativeTimePicker">
+          <button type="button" class="btn btn-default btn-block" data-bind="click: showTimePicker">
               <span>Book an unavailable time</span>
-              <span class="sr-only"><input type="time" data-bind="value: pickedTime" /></span>
-          </label>
-          <select class="btn btn-default btn-block" data-bind="optionsCaption: 'Book an unavailable time', options: allTimes, value: pickedTime, optionsText: 'label', optionsValue: 'value', visible: !nativeTimePicker()"></select>
+          </button>
       </div>
   </div>
 

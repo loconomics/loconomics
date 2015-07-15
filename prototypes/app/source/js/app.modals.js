@@ -209,3 +209,5 @@ exports.showNotification = function showNotification(options) {
         });
     });
 };
+
+exports.showTimePicker = require('./modals/timePicker').show;
