@@ -149,6 +149,8 @@ A.prototype.show = function show(options) {
         // (to request information edition)
         var cardApi = this.viewModel.appointmentCardView();
         if (cardApi) {
+            // Preset the startTime to the one given by the requestData URL parameters
+            this.requestData.presetStartTime = date;
             cardApi.passIn(this.requestData);
         }
     }.bind(this));

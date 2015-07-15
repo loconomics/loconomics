@@ -37,6 +37,10 @@ function AppointmentCardViewModel(params) {
         return it && it.id() || 0;
     }, this);
     
+    this.currentDatetime = ko.pureComputed(function() {
+        return this.item() && this.item().startTime() || new Date();
+    }, this);
+    
     this.currentDate = ko.pureComputed(function() {
         return getDateWithoutTime(this.item() && this.item().startTime());
     }, this);
@@ -407,6 +411,8 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
                 total: 4,
                 ended: false
             };
+            // Use start time preset by request
+            this.item().startTime(requestData.presetStartTime);
             // First step
             this.pickClient(); //._delayed(50)();
         }
