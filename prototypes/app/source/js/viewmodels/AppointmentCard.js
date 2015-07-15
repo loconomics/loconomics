@@ -47,7 +47,7 @@ function AppointmentCardViewModel(params) {
     
     this.isNew = ko.computed(function() {
         var id = this.currentID();
-        return id === -3 || id === -4;
+        return id === Appointment.specialIds.newBooking || id === Appointment.specialIds.newEvent;
     }, this);
     
     this.isBooking = ko.computed(function() {
@@ -411,8 +411,6 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
                 total: 4,
                 ended: false
             };
-            // Use start time preset by request
-            this.item().startTime(requestData.presetStartTime);
             // First step
             this.pickClient(); //._delayed(50)();
         }

@@ -126,6 +126,7 @@ A.prototype.show = function show(options) {
         s2 = options && options.route && options.route.segments[1],
         s3 = options && options.route && options.route.segments[2],
         date,
+        datetime,
         id,
         type;
 
@@ -137,12 +138,12 @@ A.prototype.show = function show(options) {
     }
     else {
         date = getDateWithoutTime(s1);
+        datetime = s1 && new Date(s1) || date;
         id = s2 |0;
         type = s3;
     }
-
-    this.viewModel.setCurrent(date, id, type)
-    .then(function() {
+    
+    var setupCard = function() {
         // The card component needs to be updated on load
         // with any option passed to the activity since the component
         // is able to to interact with other activities it has requested
@@ -150,10 +151,26 @@ A.prototype.show = function show(options) {
         var cardApi = this.viewModel.appointmentCardView();
         if (cardApi) {
             // Preset the startTime to the one given by the requestData URL parameters
-            this.requestData.presetStartTime = date;
+            // when not in an existent appointment, just because:
+            // - On a new booking we can preset the date in the 'select date-time' step
+            // - On a new event we can preset the date and time in the card
+            // - On the other special cards, its allows to pass the datetime to the links
+            //   for creation of a new booking/event.
+            if (this.viewModel.appointmentCardView().currentID() <= 0) {
+                this.viewModel.appointmentCardView().item().startTime(datetime);
+            }
+
             cardApi.passIn(this.requestData);
         }
-    }.bind(this));
+        else {
+            // The first time may happen that the binding is not ready, no cardApi available
+            // but we need it, attempt again in short so card is ready:
+            setTimeout(setupCard, 80);
+        }
+    }.bind(this);
+
+    this.viewModel.setCurrent(date, id, type)
+    .then(setupCard);
 };
 
 var Appointment = require('../models/Appointment');
