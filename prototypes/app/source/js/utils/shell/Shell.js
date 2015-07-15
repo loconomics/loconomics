@@ -179,6 +179,40 @@ Shell.prototype.getUpdatedState = function getUpdatedState(state) {
     return state;
 };
 
+Shell.prototype._getLocationRoutedUrl = function() {
+    var reg = /^#!/;
+    return reg.test(window.location.hash) ? window.location.hash : window.location.pathname + window.location.search + window.location.hash;
+};
+
+/**
+    Internal use only.
+    Update the URL/route saved as Referrer using the current one from location.
+**/
+Shell.prototype._refreshReferrer = function() {
+    this.referrerRoute = this.parseUrl(this._getLocationRoutedUrl());
+};
+Shell.prototype._refreshCurrent = function() {
+    this.currentRoute = this.parseUrl(this._getLocationRoutedUrl());
+};
+
+/**
+    Shortcut to history.replaceState API that keeps some internal Shell state correct.
+**/
+Shell.prototype.replaceState = function replaceState(state, title, url) {
+    this._refreshReferrer();
+    this.history.replaceState(state, title, url);
+    this._refreshCurrent();
+};
+
+/**
+    Shortcut to history.replaceState API that keeps some internal Shell state correct.
+**/
+Shell.prototype.pushState = function pushState(state, title, url) {
+    this._refreshReferrer();
+    this.history.pushState(state, title, url);
+    this._refreshCurrent();
+};
+
 Shell.prototype.replace = function replace(state) {
     
     state = this.getUpdatedState(state);
@@ -187,7 +221,6 @@ Shell.prototype.replace = function replace(state) {
     if (state.route.root === true) {
         state.route = this.parseUrl(this.indexName);
     }
-    
     this.referrerRoute = this.currentRoute;
     this.currentRoute = state.route;
     //console.log('shell replace', state.route);

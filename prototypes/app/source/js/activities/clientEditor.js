@@ -33,7 +33,7 @@ var A = Activity.extends(function ClientEditionActivity() {
             if (!found ||
                 urlID !== clientID) {
                 // Replace URL
-                this.app.shell.history.replaceState(null, null, 'clientEditor/' + clientID);
+                this.app.shell.replaceState(null, null, 'clientEditor/' + clientID);
             }
         }.bind(this)
     });

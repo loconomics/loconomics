@@ -115,9 +115,13 @@ A.prototype.show = function show(options) {
     if (!this.requestData.cancelLink) {
         var referrer = this.app.shell.referrerRoute;
         referrer = referrer && referrer.url;
-        // Set a default and avoid links to this same page, preventing infinite loops
-        if (referrer && /\/?appointment\//i.test(referrer))
-            referrer = '/calendar';
+        // Avoid links to this same page at 'new booking' or 'new event' state
+        // to prevent infinite loops
+        //referrer && referrer.replace(/\/?appointment\//i, 'calendar/');
+        var reg = /\/?appointment\/([^\/]*)\/((\-3)|(\-4))/i;
+        if (referrer && reg.test(referrer)) {
+            referrer.replace(reg, '/appointment/$1/');
+        }
         
         this.requestData.cancelLink = referrer;
     }
@@ -272,12 +276,14 @@ function ViewModel(app) {
         if (!found ||
             urlId !== aptId.toString() ||
             urlDate !== curDateStr) {
+            
+            var url = 'appointment/' + curDateStr + '/' + aptId;
 
             // If was an incomplete URL, just replace current state
             if (urlId === '')
-                this.app.shell.history.replaceState(null, null, 'appointment/' + curDateStr + '/' + aptId);
+                this.app.shell.replaceState(null, null, url);
             else
-                this.app.shell.history.pushState(null, null, 'appointment/' + curDateStr + '/' + aptId);
+                this.app.shell.pushState(null, null, url);
         }
     };
 
@@ -293,7 +299,10 @@ function ViewModel(app) {
                 m = moment(new Date());
             }
             var prevDate = m.subtract(1, 'days').toDate();
-            this.setCurrent(prevDate);
+            this.setCurrent(prevDate)
+            .then(function() {
+                this.updateUrl();
+            }.bind(this));
         }
         else {
             // Go previous item in the list, by changing currentID
@@ -318,7 +327,10 @@ function ViewModel(app) {
                 m = moment(new Date());
             }
             var nextDate = m.add(1, 'days').toDate();
-            this.setCurrent(nextDate);
+            this.setCurrent(nextDate)
+            .then(function() {
+                this.updateUrl();
+            }.bind(this));
         }
         else {
             // Go next item in the list, by changing currentID

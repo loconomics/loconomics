@@ -205,7 +205,7 @@ function ViewModel(app) {
         // pushState cannot be used because it conflicts with the 
         // selection logic (on new-booking progress)
         // TODO: commented until the bug with replaceState in HashbangHistory is fixed
-        //app.shell.history.replaceState(null, null, url);
+        //app.shell.replaceState(null, null, url);
         
         return false;
     }.bind(this);

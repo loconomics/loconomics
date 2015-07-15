@@ -53,7 +53,7 @@ var A = Activity.extends(function CalendarActivity() {
                     // On currentDate changes, update the URL
                     // TODO: save a useful state
                     // DOUBT: push or replace state? (more history entries or the same?)
-                    this.app.shell.history.pushState(null, null, 'calendar/' + isoDate);
+                    this.app.shell.pushState(null, null, 'calendar/' + isoDate);
 
                     // DONE
                     return;
