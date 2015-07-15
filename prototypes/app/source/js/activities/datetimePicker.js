@@ -180,6 +180,23 @@ function ViewModel(app) {
     this.selectedDate = ko.observable(getDateWithoutTime());
     this.isLoading = ko.observable(false);
     this.requiredDuration = ko.observable(0);
+    
+    this.durationDisplay = ko.pureComputed(function() {
+        var fullMinutes = this.requiredDuration();
+        if (fullMinutes <= 0)
+            return '';
+
+        var hours = Math.floor(fullMinutes / 60),
+            minutes = fullMinutes % 60,
+            text = '';
+
+        if (hours > 0)
+            text += moment.duration({ hours: hours }).humanize() + ' ';
+        if (minutes > 0)
+            text += moment.duration({ minutes: minutes }).humanize();
+
+        return text;
+    }, this);
 
     this.dateAvail = ko.observable();
     this.groupedSlots = ko.computed(function(){

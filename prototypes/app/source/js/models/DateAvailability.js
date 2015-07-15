@@ -113,7 +113,7 @@ function DateAvailability(values) {
         in minutes or using the default from the scheduling preferences
         included in the object.
 
-        The parameter 'duration' allows that returned slots
+        The parameter 'duration' (in minutes) allows that returned slots
         are free almost for the given duration. This allows to choose times
         that fit the needed service duration.
     **/
