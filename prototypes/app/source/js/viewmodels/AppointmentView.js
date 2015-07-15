@@ -65,13 +65,18 @@ module.exports = function AppointmentView(appointment, app) {
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     // TODO Review for any change of compute the full service duration
-    appointment.serviceDurationMinutes = ko.computed(function() {
+    // ServiceDuration as function, because is needed for cases when cannot wait for the 
+    // rated computed
+    appointment.getServiceDurationMinutes = function() {
         var pricing = this.pricingWithInfo();
         var sum = pricing.reduce(function(prev, service) {
             return prev + service.freelancerPricing().serviceDurationMinutes();
         }, 0);
-
         return sum;
+    };
+    // ServiceDuration as computed so can be observed for changes
+    appointment.serviceDurationMinutes = ko.computed(function() {
+        return this.getServiceDurationMinutes();
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     

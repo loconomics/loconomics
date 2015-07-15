@@ -238,7 +238,7 @@ function AppointmentCardViewModel(params) {
             selectedDatetime: this.item().startTime(),
             datetimeField: 'startTime',
             headerText: 'Select the start time',
-            requiredDuration: this.item().serviceDurationMinutes()
+            requiredDuration: this.item().getServiceDurationMinutes()
         });
     }.bind(this);
 
