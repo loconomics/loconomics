@@ -18,7 +18,7 @@ var A = Activity.extends(function ProfilePictureBioActivity() {
     });
     
     this.registerHandler({
-        target: this.app.model.userProfile,
+        target: this.app.model.marketplaceProfile,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Error saving your data.' : 'Error loading your data.';

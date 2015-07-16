@@ -54,5 +54,6 @@ module.exports = {
     'freelancerPricingEditor': require('./activities/freelancerPricingEditor'),
     'marketplaceProfile': require('./activities/marketplaceProfile'),
     'marketplaceJobtitles': require('./activities/marketplaceJobtitles'),
-    'profilePictureBio': require('./activities/profilePictureBio')
+    'profilePictureBio': require('./activities/profilePictureBio'),
+    'servicesOverview': require('./activities/servicesOverview')
 };

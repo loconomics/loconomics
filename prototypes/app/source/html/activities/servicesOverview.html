@@ -1,0 +1,30 @@
+<!-- Activity profilePictureBio -->
+<div class="container-fluid LightForm" data-activity="servicesOverview">
+  <form role="form" data-bind="submit: save">
+    <div>
+        <h2 class="SectionTitle">Brief description of your services</h2>
+        <div class="form-group">
+            <textarea aria-label="Job title intro" rows="6"
+                      class="form-control" data-bind="value: userJobTitle() && userJobTitle().intro, disable: isLocked"></textarea>
+        </div>
+    
+        <h2 class="SectionTitle">Services I provide</h2>
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control" data-bind="value: attributeSearch, disable: isLocked" />
+                <span class="input-group-btn"><button type="button" class="btn btn-primary" data-bind="click: addAttribute">Add</button></span>
+            </div>
+        </div>
+        <ol class="TagsList" data-bind="foreach: list">
+            <li class="TagsList-item">
+                <span data-bind="text: name"></span>
+                <button type="button" class="btn btn-link"><i class="fa ion ion-ios-close-outline" aria-hidden="true"></i> <span class="sr-only">Remove</span></button>
+            </li>
+        </ol>
+    </div>
+
+    <div class="LightForm-submitBar">
+        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+    </div>
+  </form>
+</div>
