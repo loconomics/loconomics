@@ -83,6 +83,19 @@ Tile-addContent($linesNumber) {
         Tile-addP($internalHeight)
         Tile-addDiv()
         Tile-addEm()
+
+        // Support for buttons in tile content, so instead
+        // of the tile being a button/link, its a regular element with
+        // a button inside.
+        // Margin needs adjustment to appear vertically centered, since
+        // button height can be lower than tile content
+        $computedBtnHeight = 34px;
+        $btnMargin = ($internalHeight - $computedBtnHeight) / 2;
+        if $btnMargin >= 0 {
+            .btn {
+                margin: $btnMargin auto;
+            }
+        }
     }
 }
 

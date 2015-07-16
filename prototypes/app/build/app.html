@@ -56,7 +56,7 @@
             </li>
             <li class="go-performance"><a href="/insurance"><i class="fa fa-fw ion-umbrella" aria-hidden="true"></i> Insurance</a>
             </li>
-            <li class="go-marketplace-profile"><a href="/marketplace-profile"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a>
+            <li class="go-marketplaceProfile"><a href="/marketplaceProfile"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a>
             </li>
             <li class="go-insurance"><a href="/insurance"><i class="fa fa-fw ion-ios-cart-outline" aria-hidden="true"></i> Hire services</a>
             </li>
@@ -262,6 +262,10 @@
             </div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
+        </li>
+        <li class="LinkTile">
+          <div class="Tile-content"><a href="#somethingElse" class="btn btn-default btn-block">Sample of button inside tile</a>
+          </div>
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
@@ -1454,6 +1458,77 @@
     </div>
     <!-- Activity logout -->
     <div class="container-fluid" data-activity="logout"></div>
+    <!-- marketplaceProfile activity -->
+    <div class="container-fluid" data-activity="marketplaceProfile" data-bind="css: { 'is-loading': isLoading }">
+       <h2 class="SectionTitle">Job Profiles
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+    </h2>
+
+      <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle"></app-job-titles-list>
+      <ul class="TilesList TilesList--openEnd">
+        <li><a class="CompactLinkTile" href="/addJobTitles">
+            <div class="Tile-content text-muted">Add a job profile</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </a>
+        </li>
+        <li class="LinkTile">
+          <div class="Tile-content"><a href="#marketplaceProfilePreview" class="btn btn-default btn-block">Preview profile</a>
+          </div>
+        </li>
+      </ul>
+       <h2 class="SectionTitle">About You</h2>
+
+      <ul class="TilesList TilesList--openEnd">
+        <li><a class="InfoTile" href="/profilePictureBio">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Profile picture and bio</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/verifications">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <div>Verifications <span data-bind="text: displayedVerificationsNumber"></span></div>
+                <em data-bind="text: verificationsSecondaryText"></em>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/education">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-university" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Education</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/freelancerWebsite">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-link" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Your website</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/backgroundCheck">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-checkmark" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <div>Background check</div>
+                <em>Last run: <span data-bind="text: displayedLastBackgroundCheck"></span></em>
+            </div>
+        </a>
+        </li>
+      </ul>
+      <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
+    </div>
     <!-- OwnerInfo activity -->
     <div class="container-fluid" data-activity="ownerInfo">
        <h1 class="SectionTitle has-HelpPoint">Owner information</h1>
@@ -2199,7 +2274,7 @@
       <h2 class="SectionTitle">Talk to us</h2>
       <a class="InfoTile" href="/feedbackForm" data-bind="attr: { href: url }">
           <div class="Tile-icon" aria-hidden="true">
-              <span class="fa ion ion-lightbulb" aria-hidden="true"></span>
+              <span class="fa ion ion-ios-lightbulb-outline" aria-hidden="true"></span>
           </div>                
           <div class="Tile-content"><p>
               Send us your ideas
