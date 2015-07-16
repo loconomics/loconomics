@@ -15,6 +15,8 @@ var A = Activity.extends(function MarketplaceProfileActivity() {
     this.accessLevel = this.app.UserType.Freelancer;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Marketplace Profile');
+    
+    this.viewModel.showMarketplaceInfo(true);
 });
 
 exports.init = A.init;

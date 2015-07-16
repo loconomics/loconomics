@@ -9,6 +9,8 @@ var ko = require('knockout');
 
 function UserJobProfileViewModel(app) {
     
+    this.showMarketplaceInfo = ko.observable(false);
+    
     // Load and save job title info
     var jobTitlesIndex = {};
     function syncJobTitle(jobTitleID) {
@@ -25,6 +27,33 @@ function UserJobProfileViewModel(app) {
         userJobTitle.jobTitle = ko.computed(function(){
             return jobTitlesIndex[this.jobTitleID()];
         }, userJobTitle);
+        // Shortcut to singular name
+        userJobTitle.displayedSingularName = ko.computed(function() {
+            return this.jobTitle() && this.jobTitle().singularName() || 'Unknow';
+        }, userJobTitle);
+    }
+    
+    function attachMarketplaceStatus(userJobtitle) {
+        userJobtitle.marketplaceStatusHtml = ko.pureComputed(function() {
+            var status = this.statusID();
+            // L18N
+            if (status === 1) {
+                return 'Marketplace profile: <strong class="text-success">ON</strong>';
+            }
+            else if (status === 3) {
+                return 'Marketplace profile: <strong class="text-danger">OFF</strong>';
+            }
+            else {
+                // TODO: read number of steps left to activate from required alerts for the jobtitle
+                // '__count__ steps left to activate'
+                return '<span class="text-danger">There are steps left to activate</span>';
+            }
+        }, userJobtitle);
+    }
+
+    function attachExtras(userJobtitle) {
+        attachJobTitle(userJobtitle);
+        attachMarketplaceStatus(userJobtitle);
     }
     
     this.userJobProfile = ko.observableArray([]);
@@ -35,9 +64,8 @@ function UserJobProfileViewModel(app) {
             return syncJobTitle(userJobTitle.jobTitleID());
         }))
         .then(function() {
-            // Create jobTitle property before update
-            // observable with the profile
-            list.forEach(attachJobTitle);
+            // Needs additional properties for the view
+            list.forEach(attachExtras);
 
             this.userJobProfile(list);
 

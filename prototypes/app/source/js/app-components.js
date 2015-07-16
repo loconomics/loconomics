@@ -103,6 +103,7 @@ exports.registerAll = function() {
         viewModel: function(params) {
             this.jobTitles = getObservable(params.jobTitles || []);
             this.selectJobTitle = params.selectJobTitle || function() {};
+            this.showMarketplaceInfo = getObservable(params.showMarketplaceInfo || false);
         }
     });
 };
