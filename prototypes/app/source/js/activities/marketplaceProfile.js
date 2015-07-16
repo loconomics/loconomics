@@ -17,6 +17,7 @@ var A = Activity.extends(function MarketplaceProfileActivity() {
     this.navBar = Activity.createSectionNavBar('Marketplace Profile');
     
     this.viewModel.showMarketplaceInfo(true);
+    this.viewModel.baseUrl('/marketplaceJobtitles');
 });
 
 exports.init = A.init;

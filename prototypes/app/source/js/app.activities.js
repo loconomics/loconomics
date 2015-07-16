@@ -52,5 +52,6 @@ module.exports = {
     'privacySettings': require('./activities/privacySettings'),
     'addJobTitles': require('./activities/addJobTitles'),
     'freelancerPricingEditor': require('./activities/freelancerPricingEditor'),
-    'marketplaceProfile': require('./activities/marketplaceProfile')
+    'marketplaceProfile': require('./activities/marketplaceProfile'),
+    'marketplaceJobtitles': require('./activities/marketplaceJobtitles')
 };

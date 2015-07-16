@@ -942,10 +942,18 @@ body.use-backdrop:before {
   }
 }
 
-/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 2 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\switchLine.styl */
+
+/* line 2 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\switchLine.styl */
+.switchLine {
+  padding: 14px 0;
+  line-height: 32px;
+}
+
+/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {
@@ -4744,7 +4752,7 @@ body.use-backdrop:before {
   padding-bottom: 10px;
 }
 
-/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 45 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 129 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
