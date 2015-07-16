@@ -1765,6 +1765,32 @@
         </div>
       </form>
     </div>
+    <!-- Activity profilePictureBio -->
+    <div class="container-fluid LightForm" data-activity="profilePictureBio">
+      <form role="form" data-bind="submit: save">
+        <div>
+           <h2 class="SectionTitle">Profile picture</h2>
+
+          <div class="profilePicture">
+            <img data-bind="attr: { src: profile.photoUrl }" />
+          </div>
+          <div class="LightForm-tool">
+            <button type="button" class="btn btn-block btn-primary"> <span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span>  <span>Change photo</span>
+
+            </button>
+          </div>
+           <h2 class="SectionTitle">Public bio</h2>
+
+          <div class="form-group">
+            <textarea aria-label="Public bio" id="profilePictureBio-publicBio" rows="6"
+            class="form-control" data-bind="value: profile.publicBio, disable: isLocked"></textarea>
+          </div>
+        </div>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+        </div>
+      </form>
+    </div>
     <!-- Scheduling activity -->
     <div class="container-fluid" data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }">
        <h2 class="SectionTitle">Services, Pricing, &amp; Locations

@@ -1,0 +1,33 @@
+/**
+    LightForm style.
+    
+    It's just the common styles followed by 'all a form activities',
+    may apply to any element (not just a 'form' element), but an activity or top-level '.container'
+    is the best because of the background (or using a '.row' element so background fills all the width),
+    and will change the standard appearance of other components, like SectionTitle's
+**/
+.LightForm {
+    background: $gray-background;
+    
+    .SectionTitle {
+        text-transform: none;
+        text-align: center;
+        font-weight: bold;
+        margin-top: 25px;
+        margin-bottom: 12px;
+    }
+    
+    // The toolbar, usually at the bottom and only one primary button,
+    // that holds the main form buttons (submit/save, remove, quick without save).
+    .LightForm-submitBar {
+        margin: 25px 0;
+    }
+    
+    // Container for a one line button/link that triggers a tool.
+    // It adds some gap around on both axis, so can hold a btn-block
+    // without take all the width an appear a submitBar and being separated
+    // vertically too
+    .LightForm-tool {
+        margin: 25px 40px;
+    }
+}

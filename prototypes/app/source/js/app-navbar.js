@@ -127,13 +127,11 @@ exports.extends = function (app) {
     };
     
     app.setupNavBarBinding = function setupNavBarBinding() {
-        var siteUrl = $('html').attr('data-site-url');
         // Set model for the AppNav
         app.navBarBinding = {
             navBar: app.navBar,
-            // URL, keep updated with any site change
-            photoUrl: ko.observable(siteUrl + '/en-US/Profile/Photo/'),
-            // It's later filled with a call to the model once loaded and ready
+            // Both: are later filled with a call to the model once loaded and ready
+            photoUrl: ko.observable('about:blank'),
             userName: ko.observable('Me')
         };
         ko.applyBindings(app.navBarBinding, $('.AppNav').get(0));

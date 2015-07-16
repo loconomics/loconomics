@@ -393,6 +393,11 @@ var appInit = function appInit() {
             var n = app.model.userProfile.data.firstName();
             app.navBarBinding.userName(n || 'Me');
         });
+        // Connect photoUrl in navbar
+        ko.computed(function() {
+            var n = app.model.marketplaceProfile.data.photoUrl();
+            app.navBarBinding.photoUrl(n || 'about:blank');
+        });
         
         // Onboarding model needs initialization
         app.model.onboarding.init(app);
