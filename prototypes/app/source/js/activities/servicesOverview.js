@@ -76,14 +76,22 @@ function ViewModel(/*app*/) {
     // TODO: Must be a component, with one instance per service attribute category, and being completed
     this.list = ko.observableArray(sampleDataList);
     this.attributeSearch = ko.observable('');
+    var foundAttItem = function(att, item) {
+        return item.name === att.name;
+    };
     this.addAttribute = function() {
         var newOne = this.attributeSearch() || '';
-        if (!/^\s*$/.test(newOne)) {
+        if (!/^\s*$/.test(newOne) &&
+            !this.list().some(foundAttItem.bind(null, { name: newOne }))) {
             this.list.push({
                 name: newOne
             });
         }
     };
+    this.removeAttribute = function(att) {
+        // ko array: remove
+        this.list.remove(foundAttItem.bind(null, att));
+    }.bind(this);
     
     this.submitText = ko.pureComputed(function() {
         return (

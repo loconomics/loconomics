@@ -1988,7 +1988,8 @@
           <ol class="TagsList" data-bind="foreach: list">
             <li class="TagsList-item"> <span data-bind="text: name"></span>
 
-              <button type="button" class="btn btn-link"><i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+              <button type="button" class="btn btn-link"
+              data-bind="click: $parent.removeAttribute"><i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
               </button>
             </li>
           </ol>
