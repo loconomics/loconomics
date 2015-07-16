@@ -215,7 +215,7 @@ Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options
     });
 };
 
-Activity.prototype.createCancelAction = function createCancelAction(cancelLink) {
+Activity.prototype.createCancelAction = function createCancelAction(cancelLink, state) {
     
     var app = this.app;
     
@@ -228,9 +228,9 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink) 
             
             var goLink = function() {
                 if (link)
-                    app.shell.go(link);
+                    app.shell.go(link, state);
                 else
-                    app.shell.goBack();
+                    app.shell.goBack(state);
             };
             
             // A silentMode passed to the event requires

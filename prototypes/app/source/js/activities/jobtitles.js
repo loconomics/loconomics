@@ -104,6 +104,18 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.jobTitleName = ko.observable('Job Title');
     
+    // Retrieves a computed that will link to the given named activity adding the current
+    // jobTitleID and a mustReturn URL to point this page so its remember the back route
+    this.getJobUrlTo = function(name) {
+        // Sample '/freelancerPricing/' + jobTitleID()
+        return ko.pureComputed(function() {
+            return (
+                '/' + name + '/' + this.jobTitleID() + '?mustReturn=jobtitles/' + this.jobTitleID() +
+                '&returnText=' + this.jobTitleName()
+            );
+        }, this);
+    };
+    
     this.addresses = ko.observable([]);
     this.pricing = ko.observable([]);
 

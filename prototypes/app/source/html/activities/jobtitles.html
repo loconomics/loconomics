@@ -5,7 +5,7 @@
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
     <ul class="TilesList">
-        <li><a class="InfoTile" href="/freelancerPricing" data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }">
+        <li><a class="InfoTile" href="/freelancerPricing" data-bind="attr: { href: getJobUrlTo('freelancerPricing') }">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
             </div>                
@@ -14,7 +14,7 @@
                 <em data-bind="text: pricingCount"></em>
             </div>
         </a></li>
-        <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: '/serviceAddresses/' + jobTitleID() }">
+        <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: getJobUrlTo('serviceAddresses') }">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
             </div>                
@@ -23,7 +23,7 @@
                 <em data-bind="text: addressesCount"></em>
             </div>
         </a></li>
-        <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: '/bookMeButton/' + jobTitleID() }">
+        <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
             </div>                

@@ -62,11 +62,7 @@ exports.extends = function (app) {
             app.navBar(new NavBar());
         }
         
-        if (state && state.route && state.route.query &&
-            state.route.query.mustReturn) {
-            // Left action forced to be a go-back
-            app.navBar().leftAction(NavAction.goBack);
-        }
+        app.applyNavbarMustReturn(state);
 
         // TODO Double check if needed.
         // Latest changes, when needed
@@ -75,6 +71,35 @@ exports.extends = function (app) {
         refreshNav();
         autoRefreshNav(app.navBar().leftAction());
         autoRefreshNav(app.navBar().rightAction());
+    };
+    
+    app.applyNavbarMustReturn = function(state) {
+        if (state && state.route && state.route.query &&
+            state.route.query.mustReturn) {
+            var returnLink = decodeURIComponent(state.route.query.mustReturn);
+            // A text can be provided
+            var returnText = decodeURIComponent(state.route.query.returnText || '');
+
+            if (returnLink === '1' || returnLink === 'true') {
+                // Left action forced to be a go-back
+                app.navBar().leftAction(NavAction.goBack.model.clone({
+                    text: returnText,
+                    isShell: false,
+                    isTitle: true
+                }));
+            }
+            else {
+                // Left action force to return to the given URL
+                app.navBar().leftAction(NavAction.goBack.model.clone({
+                    link: returnLink,
+                    text: returnText,
+                    isShell: false,
+                    isTitle: true
+                }));
+            }
+            return true;
+        }
+        return false;
     };
     
     

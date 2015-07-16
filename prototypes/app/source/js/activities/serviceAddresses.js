@@ -74,52 +74,64 @@ var A = Activity.extends(function ServiceAddressesActivity() {
 
 exports.init = A.init;
 
-A.prototype.updateNavBarState = function updateNavBarState() {
+A.prototype.applyOwnNavbarRules = function() {
     //jshint maxcomplexity:10
+    
+    var itIs = this.viewModel.isSelectionMode();
+
+    if (this.requestData.title) {
+        // Replace title by title if required
+        this.navBar.title(this.requestData.title);
+    }
+    else {
+        // Title must be empty
+        this.navBar.title('');
+    }
+
+    if (this.requestData.cancelLink) {
+        this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink, this.requestData);
+    }
+    else {
+        // Reset to defaults, or given title:
+        this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
+        if (this.requestData.navTitle)
+            this.navBar.leftAction().text(this.requestData.navTitle);
+
+        var jid = this.viewModel.jobTitleID(),
+            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling',
+            url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling');
+
+        this.navBar.leftAction().link(url);
+        this.navBar.leftAction().text(jname);
+    }
+
+    if (itIs && !this.requestData.cancelLink) {
+        // Uses a custom handler so it returns keeping the given state:
+        this.navBar.leftAction().handler(this.returnRequest);
+    }
+    else if (!this.requestData.cancelLink) {
+        this.navBar.leftAction().handler(null);
+    }
+};
+
+A.prototype.updateNavBarState = function updateNavBarState() {
+    //jshint maxcomplexity:12
 
     var itIs = this.viewModel.isSelectionMode();
     
     this.viewModel.headerText(itIs ? 'Select or add a service location' : 'Locations');
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
-
-        if (this.requestData.title) {
-            // Replace title by title if required
-            this.navBar.title(this.requestData.title);
-        }
-        else {
-            // Title must be empty
-            this.navBar.title('');
-        }
-
-        if (this.requestData.cancelLink) {
-            this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink);
-        }
-        else {
-            // Reset to defaults, or given title:
-            this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
-            if (this.requestData.navTitle)
-                this.navBar.leftAction().text(this.requestData.navTitle);
-
-            var jid = this.viewModel.jobTitleID(),
-                jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling';
-
-            this.navBar.leftAction().link(jid ? '/jobtitles/' + jid : '/scheduling');
-            this.navBar.leftAction().text(jname);
-        }
-
-        if (itIs && !this.requestData.cancelLink) {
-            // Uses a custom handler so it returns keeping the given state:
-            this.navBar.leftAction().handler(this.returnRequest);
-        }
-        else if (!this.requestData.cancelLink) {
-            this.navBar.leftAction().handler(null);
-        }
-    }
+    // Perform updates that apply this request:
+    this.app.model.onboarding.updateNavBar(this.navBar) ||
+    //this.app.applyNavbarMustReturn(this.requestData) ||
+    this.applyOwnNavbarRules();
 };
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
+    
+    // Remember route to go back, from a request of 'mustReturn' or last requested
+    this.mustReturnTo = this.requestData.route.query.mustReturn || this.mustReturnTo;
 
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
