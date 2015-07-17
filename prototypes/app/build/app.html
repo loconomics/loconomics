@@ -2050,6 +2050,41 @@
         </div>
       </div>
     </div>
+    <!-- Activity verifications -->
+    <div class="container-fluid" data-activity="verifications">
+       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      <span>
+        Verifications
+      </span>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div>
+        <ul class="TilesList" data-bind="foreach: userVerifications">
+          <li class="InfoTile">
+            <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+
+            </div>
+            <div class="Tile-content">
+              <div data-bind="text: verification().name() || 'Verification'"></div> <em>
+                        <span data-bind="text: statusText, css: { 'text-warning': isStatus('pending'), 'text-success': isStatus('confirmed'), 'text-danger': isStatus('revoked') || isStatus('obsolete') }"></span>
+                        <span data-bind="text: lastVerifiedDate, format: { type: 'datetime', format: 'L LTS' }"></span>
+                    </em>
+
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="TilesList"> <a href="/addVerification" class="CompactLinkTile">
+            <div class="Tile-content text-muted">Add a verification</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </a>
+
+      </div>
+    </div>
     <!-- WeeklySchedule activity -->
     <div class="container-fluid" data-activity="weeklySchedule">
        <h2 class="SectionTitle">Weekly schedule</h2>
