@@ -790,6 +790,72 @@
     </div>
     </form>
     </div>
+    <!-- cancellationPolicy activity -->
+    <div class="container-fluid LightForm" data-activity="cancellationPolicy">
+       <h2 class="SectionTitle">Cancellation Policy</h2>
+
+      <script type="text/html" id="cancellationPolicy-item-tpl">
+        <div class="radio">
+            <div class="input-group">
+                <label class="form-control-static btn-block">
+                    <input type="radio" data-bind="checked: checkedValue, value: itemValue, disable: disabled" />
+                    <span data-bind="text: itemLabel"></span>
+                </label>
+                <span class="input-group-btn">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" aria-expanded="false"
+                            data-bind="attr: { 'data-target': '#cancellationPolicy-info-' + itemValue(),
+                                             'data-controls': '#cancellationPolicy-info-' + itemValue() }">
+                        (details)
+                    </button>
+                </span>
+            </div>
+        </div>
+      </script>
+      <script type="text/html" id="cancellationPolicy-info-tpl">
+        <div class="collapse" data-bind="attr: { id: 'cancellationPolicy-info-' + policy.cancellationPolicyID() }">
+            <strong><span data-bind="text: policy.name"></span>:</strong>
+            <em><strong data-bind="text: policy.description"></strong>
+                    <span>
+                        If a booking is made by the customer for one week from now, the customer would need to cancel by
+                        <strong data-bind="text: policy.refundLimitDate, format: { type: 'datetime', format: 'LT dddd, LL' }"></strong>
+                        to receive a <strong><span data-bind="text: policy.refundIfCancelledBeforeDisplay"></span> refund.</strong>
+                    </span>
+            </em>
+        </div>
+      </script>
+      <form data-bind="submit: save, with: userJobTitle">
+        <div data-bind="foreach: { data: $parent.policies, as: 'policy' }">
+          <!-- ko template: { name: 'cancellationPolicy-item-tpl', data: { checkedValue:
+          $parent.cancellationPolicyID, itemValue: policy.cancellationPolicyID, disabled:
+          $parent.isLocked, itemLabel: policy.name } } -->
+          <!-- /ko -->
+          <!-- ko template: { name: 'cancellationPolicy-info-tpl', data: { policy:
+          policy } } -->
+          <!-- /ko -->
+        </div>
+         <h2 class="SectionTitle">General policy</h2>
+
+        <div class="well">
+          <ul class="list-group">
+            <li>The Loconomics service fee is non-refundable.</li>
+            <li>Loconomics must be notified of any no-shows or complaints by either party
+              within 24 hours after a booking is scheduled to end.</li>
+            <li>Loconomics will help faciliate dispute resolution but has the final say
+              should a dispute not be resolved between parties.</li>
+            <li>A booking is officially canceled when the client clicks the cancellation
+              button on the cancellation confirmation page, which they can find in Dashboard
+              > Bookings > Change or Cancel</li>
+            <li>You will have the option to waive a cancellation fee for a client on a
+              case-by-case basis when cancellations occur.</li>
+            <li>Loconomics reserves the right to waive a cancellation fee under extenuating
+              circumstances of which you’ll be notified.</li>
+          </ul>
+        </div>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>
+        </div>
+      </form>
+    </div>
     <!-- ClientEdition activity -->
     <div class="container-fluid" data-activity="clientEditor">
       <form role="form" data-bind="submit: save">

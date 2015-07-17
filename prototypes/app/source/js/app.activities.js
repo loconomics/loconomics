@@ -60,5 +60,6 @@ module.exports = {
     'education': require('./activities/education'),
     'freelancerWebsite': require('./activities/freelancerWebsite'),
     'backgroundCheck': require('./activities/backgroundCheck'),
-    'educationForm': require('./activities/educationForm')
+    'educationForm': require('./activities/educationForm'),
+    'cancellationPolicy': require('./activities/cancellationPolicy')
 };
