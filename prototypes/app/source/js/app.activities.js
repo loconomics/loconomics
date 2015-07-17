@@ -58,5 +58,6 @@ module.exports = {
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
     'education': require('./activities/education'),
-    'freelancerWebsite': require('./activities/freelancerWebsite')
+    'freelancerWebsite': require('./activities/freelancerWebsite'),
+    'backgroundCheck': require('./activities/backgroundCheck')
 };

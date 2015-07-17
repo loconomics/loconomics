@@ -1,0 +1,38 @@
+<!-- Activity backgroundCheck -->
+<div class="container-fluid" data-activity="backgroundCheck">
+
+  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      <span>
+        Background Check
+      </span>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+    <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+    </div>
+    
+    <div>
+        <ul class="TilesList" data-bind="foreach: list">
+            <li class="InfoTile">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+                </div>
+                <div class="Tile-content">
+                    <div data-bind="text: backgroundCheck().name() || 'Background check'"></div>
+                    <em>
+                        <span data-bind="text: statusText, css: { 'text-warning': isStatus('pending'), 'text-success': isStatus('confirmed'), 'text-danger': isStatus('revoked') || isStatus('obsolete') }"></span>
+                        <span data-bind="text: lastVerifiedDate, format: { type: 'datetime', format: 'L LTS' }"></span>
+                    </em>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="TilesList">  
+        <a href="/addBackgroundCheck" class="CompactLinkTile">
+            <div class="Tile-content text-muted">Add a background check</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </a>
+    </div>
+
+</div>
