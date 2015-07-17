@@ -16,6 +16,28 @@ var A = Activity.extends(function VerificationsActivity() {
     this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
         backLink: '/marketplaceProfile'
     });
+    
+    // Setup special links behavior to add/perform specific verifications
+    this.registerHandler({
+        target: this.$activity,
+        event: 'click',
+        selector: '[href="#resendEmailConfirmation"]',
+        handler: function() {
+            this.app.modals.showNotification({
+                message: 'TO-DO: resend email confirmation'
+            });
+        }.bind(this)
+    });
+    this.registerHandler({
+        target: this.$activity,
+        event: 'click',
+        selector: '[href="#connectWithFacebook"]',
+        handler: function() {
+            this.app.modals.showNotification({
+                message: 'TO-DO: ask for connect with Facebook API'
+            });
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;
@@ -25,7 +47,7 @@ A.prototype.show = function show(options) {
     
 };
 
-function ViewModel(/*app*/) {
+function ViewModel(app) {
     
     //this.isSyncing = app.model.userVerifications.state.isSyncing;
     this.isSyncing = ko.observable(false);
@@ -33,6 +55,12 @@ function ViewModel(/*app*/) {
     this.isSaving = ko.observable(false);
     
     this.userVerifications = ko.observableArray(testdata());
+    
+    this.emailInfo = ko.observable('Please click on "Verify my account" in the e-mail we sent you to verify your address. <a class="btn btn-link btn-block"  href="#resendEmailConfirmation">Click here to resend.</a>');
+    this.facebookInfo = ko.pureComputed(function() {
+        var tpl = 'Letting potential __kind__ know you have a trusted online presence helps them know you\'re real. <a class="btn btn-link btn-block" href="#connectWithFacebook">Click here to connect your account.</a>';
+        return tpl.replace(/__kind__/, app.model.user().isFreelancer() ? 'clients' : 'freelancers');
+    });
 }
 
 function testdata() {
