@@ -62,5 +62,6 @@ module.exports = {
     'backgroundCheck': require('./activities/backgroundCheck'),
     'educationForm': require('./activities/educationForm'),
     'cancellationPolicy': require('./activities/cancellationPolicy'),
-    'licensesCertifications': require('./activities/licensesCertifications')
+    'licensesCertifications': require('./activities/licensesCertifications'),
+    'licensesCertificationsForm': require('./activities/licensesCertificationsForm')
 };

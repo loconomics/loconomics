@@ -11,7 +11,7 @@
     
     <div>
         <ul class="TilesList" data-bind="foreach: list">
-            <li><a class="InfoTile" href="#" data-bind="attr: { href: '/licensesCertifications/' + jobTitleID() + '/' + licenseCertificationID() }">
+            <li><button class="InfoTile" type="button" data-bind="click: $root.selectItem">
                 <div class="Tile-icon" aria-hidden="true">
                     <span class="fa fa-certificate" aria-hidden="true"></span>
                 </div>
@@ -19,7 +19,7 @@
                     <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
                     <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
                 </div>
-            </a></li>
+            </button></li>
         </ul>
     </div>
 

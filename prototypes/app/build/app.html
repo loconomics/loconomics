@@ -1640,15 +1640,16 @@
       </div>
       <div>
         <ul class="TilesList" data-bind="foreach: list">
-          <li><a class="InfoTile" href="#" data-bind="attr: { href: '/licensesCertifications/' + jobTitleID() + '/' + licenseCertificationID() }">
-                <div class="Tile-icon" aria-hidden="true">
-                    <span class="fa fa-certificate" aria-hidden="true"></span>
-                </div>
-                <div class="Tile-content">
-                    <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
-                    <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
-                </div>
-            </a>
+          <li>
+            <button class="InfoTile" type="button" data-bind="click: $root.selectItem">
+              <div class="Tile-icon" aria-hidden="true"> <span class="fa fa-certificate" aria-hidden="true"></span>
+
+              </div>
+              <div class="Tile-content">
+                <div data-bind="text: licenseCertification() && licenseCertification().name"></div> <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
+
+              </div>
+            </button>
           </li>
         </ul>
       </div>
@@ -1659,6 +1660,98 @@
           </div>
         </button>
       </div>
+    </div>
+    <!-- licensesCertificationsForm activity -->
+    <div class="container-fluid LightForm" data-activity="licensesCertificationsForm">
+       <h2 class="SectionTitle">Certification/License</h2>
+
+      <p>Please input your <strong>General Massage Practitioner</strong> license
+        details below, and we’ll verify it right away.</p>
+      <form data-bind="submit: save, with: item">
+        <div class="form-group">
+          <label>License description</label>
+          <div class="form-control-static">Generally must complete at least 250 hours of education and training.
+            CMPs also must undergo background checks, including fingerprinting and
+            other identification verification procedures.</div>
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <div class="form-control-static">California (CA)</div>
+        </div>
+        <div class="form-group">
+          <label>Certifying board</label>
+          <div class="form-control-static"> <a target="_blank" href="https://www.camtc.org/VerifyCertification.aspx">The California Massage Therapy Council (CAMTC)</a>
+
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-county">County</label>
+          <div>
+            <select id="licensesCertificationsForm-county" class="form-control" data-bind="options: $parent.counties, optionsCaption: ' ', value: countyID, disable: $parent.isLocked, optionsValue: 'countyID', optionsText: 'name'"></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-licenseCertificationNumber">Certificate/license number</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-licenseCertificationNumber"
+            class="form-control" data-bind="textInput: licenseCertificationNumber, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-businessName">Business name (optional)</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-businessName" class="form-control"
+            data-bind="textInput: businessName, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-firstName">First name</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-firstName" class="form-control"
+            data-bind="textInput: firstName, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-lastName">Last name</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-lastName" class="form-control"
+            data-bind="textInput: lastName, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-middleInitial">Middle initial</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-middleInitial" class="form-control"
+            data-bind="textInput: middleInitial, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-city">City</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-city" class="form-control"
+            data-bind="textInput: city, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-licenseCertificationUrl">Link to license</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-licenseCertificationUrl"
+            class="form-control" data-bind="textInput: licenseCertificationUrl, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <p>Need to apply or renew this license/certification? Please <a target="_blank"
+          href="https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf">visit this link.</a>
+
+        </p>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>
+          <!--<button type="button" class="btn btn-danger btn-block"
+          data-bind="text: $parent.deleteText, disable: $parent.isLocked, click:
+          $parent.confirmRemoval">Delete</button>-->
+        </div>
+      </form>
     </div>
     <!-- Activity login -->
     <div class="container-fluid" data-activity="login">

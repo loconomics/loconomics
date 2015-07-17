@@ -63,8 +63,21 @@ function ViewModel(app) {
     this.isLoading = app.model.licensesCertifications.state.isLoading();
 
     this.addNew = function() {
-        var url = '#!licensesCertificationsForm/' + this.jobTitleID();
-        var request = $.extend({}, this.requestData);
+        var url = '#!licensesCertificationsForm/' + this.jobTitleID(),
+            cancelUrl = 'licensesCertifications/' + this.jobTitleID();
+        var request = $.extend({}, this.requestData, {
+            cancelLink: cancelUrl
+        });
+        app.shell.go(url, request);
+    }.bind(this);
+    
+    this.selectItem = function(item) {
+        var url = '/licensesCertificationsForm/' + this.jobTitleID() + '/' +
+            item.licenseCertificationID(),
+            cancelUrl = 'licensesCertifications/' + this.jobTitleID();
+        var request = $.extend({}, this.requestData, {
+            cancelLink: cancelUrl
+        });
         app.shell.go(url, request);
     }.bind(this);
 }
