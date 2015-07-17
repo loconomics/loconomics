@@ -1,0 +1,20 @@
+// An style to complement the Bootstrap form styles
+// to ensure that a form element is kept inline, no aware
+// of the default form-control styles
+// Must be used with form-control
+.form-group.form-control-inline {
+    display: inline-block;
+    width: auto;
+}
+
+// To set all the content on a group inlined, use
+// it instead on the form-group (no need for form-control-inline,
+// is implicit)
+.form-group.form-group-inline {
+    &,
+    .form-control,
+    label {
+        display: inline-block;
+        width: auto;   
+    }
+}

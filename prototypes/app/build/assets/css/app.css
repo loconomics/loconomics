@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-07-16
+/*! LoconomicsApp 2015-07-17
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -950,10 +950,28 @@ body.use-backdrop:before {
   line-height: 32px;
 }
 
-/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\form-control-inline.styl */
+
+/* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\form-control-inline.styl */
+.form-group.form-control-inline {
+  display: inline-block;
+  width: auto;
+}
+
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\form-control-inline.styl */
+
+/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\form-control-inline.styl */
+.form-group.form-group-inline,
+.form-group.form-group-inline .form-control,
+.form-group.form-group-inline label {
+  display: inline-block;
+  width: auto;
+}
+
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {
@@ -4935,7 +4953,7 @@ body.use-backdrop:before {
   box-shadow: 0px 0px 2px -1px #000;
 }
 
-/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 77 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */

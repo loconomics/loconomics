@@ -172,6 +172,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.customers = require('./AppModel.customers').create(this);
     this.postalCodes = require('./AppModel.postalCodes').create(this);
     this.feedback = require('./AppModel.feedback').create(this);
+    this.education = require('./AppModel.education').create(this);
     //UNSTABLE:this.availability = require('./AppModel.availability').create(this);
 };
 

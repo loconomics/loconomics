@@ -13,7 +13,7 @@
     
     <div>
         <ul class="TilesList" data-bind="foreach: list">
-            <li class="InfoTile">
+            <li><a class="InfoTile" href="/educationForm" data-bind="attr: { href: '/educationForm/' + educationID() }">
                 <div class="Tile-icon" aria-hidden="true">
                     <span class="fa ion ion-university" aria-hidden="true"></span>
                 </div>
@@ -22,16 +22,15 @@
                     <em>
                         <span data-bind="text: degree"></span><span data-bind="visible: degree() && field()">, </span>
                         <span data-bind="text: field"></span>
-                        <span data-bind="text: startYear"></span><span data-bind="visible: startYear() && endYear()"> - </span>
-                        <span data-bind="text: endYear"></span>
+                        <span data-bind="visible: startYear() || endYear()"><span data-bind="text: startYear"></span> - <span data-bind="text: endYear"></span></span>
                     </em>
                 </div>
-            </li>
+            </a></li>
         </ul>
     </div>
 
     <div class="TilesList">  
-        <a href="/addEducation" class="CompactLinkTile">
+        <a href="/educationForm" class="CompactLinkTile">
             <div class="Tile-content text-muted">Add education</div>
             <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </a>

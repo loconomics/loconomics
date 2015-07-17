@@ -1066,28 +1066,73 @@
       </div>
       <div>
         <ul class="TilesList" data-bind="foreach: list">
-          <li class="InfoTile">
-            <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-university" aria-hidden="true"></span>
-
-            </div>
-            <div class="Tile-content">
-              <div data-bind="text: school"></div> <em>
+          <li><a class="InfoTile" href="/educationForm" data-bind="attr: { href: '/educationForm/' + educationID() }">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span class="fa ion ion-university" aria-hidden="true"></span>
+                </div>
+                <div class="Tile-content">
+                    <div data-bind="text: school"></div>
+                    <em>
                         <span data-bind="text: degree"></span><span data-bind="visible: degree() && field()">, </span>
                         <span data-bind="text: field"></span>
-                        <span data-bind="text: startYear"></span><span data-bind="visible: startYear() && endYear()"> - </span>
-                        <span data-bind="text: endYear"></span>
+                        <span data-bind="visible: startYear() || endYear()"><span data-bind="text: startYear"></span> - <span data-bind="text: endYear"></span></span>
                     </em>
-
-            </div>
+                </div>
+            </a>
           </li>
         </ul>
       </div>
-      <div class="TilesList"> <a href="/addEducation" class="CompactLinkTile">
+      <div class="TilesList"> <a href="/educationForm" class="CompactLinkTile">
             <div class="Tile-content text-muted">Add education</div>
             <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </a>
 
       </div>
+    </div>
+    <!-- educationForm activity -->
+    <div class="container-fluid LightForm" data-activity="educationForm">
+       <h2 class="SectionTitle">Education</h2>
+
+      <form data-bind="submit: save, with: item">
+        <div class="form-group">
+          <label for="educationForm-school">School</label>
+          <div>
+            <input type="text" id="educationForm-school" class="form-control" data-bind="value: school, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="educationForm-degree">Degree/Certificate</label>
+          <div>
+            <input type="text" id="educationForm-degree" class="form-control" data-bind="value: degree, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="educationForm-field">Field of study</label>
+          <div>
+            <input type="text" id="educationForm-field" class="form-control" data-bind="value: field, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <div>
+          <label for="educationForm-startYear">Years attended:</label>
+          <div class="form-group form-group-inline">
+            <label for="educationForm-startYear" class="sr-only">Start year</label>
+            <select id="educationForm-startYear" class="form-control"
+            data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: startYear, disable: $parent.isLocked"></select>
+          </div>&nbsp;-&nbsp;
+          <div class="form-group form-group-inline">
+            <label for="educationForm-startYear" class="sr-only">End year</label>
+            <select id="educationForm-endYear" class="form-control"
+            data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: endYear, disable: $parent.isLocked"></select>
+          </div>
+        </div>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: $parent.deleteText, disable: $parent.isLocked, click: $parent.confirmRemoval">Delete</button>
+        </div>
+      </form>
     </div>
     <!-- Faqs activity -->
     <div class="container-fluid" data-activity="faqs">

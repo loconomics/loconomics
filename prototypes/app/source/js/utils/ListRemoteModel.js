@@ -4,6 +4,8 @@
     with local copy and cache, where the list is managed will all the data,
     without paging/cursor, with indexed access to each item by its ID.
     Is good for lists that keep small in the time.
+    
+    TODO To implement single item update mode, not full list each time, by set-up or method
 **/
 'use strict';
 
@@ -441,5 +443,18 @@ ListRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, b
     };
     this.removeItemFromRemote = function removeItemFromRemote(itemID) {
         return restClient.delete(baseUrl + '/' + itemID);
+    };
+};
+
+// For testing purposes, emulate a remote providing a static list for the data:
+ListRemoteModel.prototype.addMockedRemote = function addMockedRemote(dataList) {
+    this.fetchListFromRemote = function fetchListFromRemote() {
+        return Promise.resolve(dataList);
+    };
+    this.pushListToRemote = function pushListToRemote(data) {
+        return Promise.resolve(data);
+    };
+    this.removeItemFromRemote = function removeItemFromRemote(itemID) {
+        return Promise.resolve(itemID);
     };
 };
