@@ -1,0 +1,40 @@
+<!-- Activity education -->
+<div class="container-fluid" data-activity="education">
+
+  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      <span>
+        Education
+      </span>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+    <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+    </div>
+    
+    <div>
+        <ul class="TilesList" data-bind="foreach: list">
+            <li class="InfoTile">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span class="fa ion ion-university" aria-hidden="true"></span>
+                </div>
+                <div class="Tile-content">
+                    <div data-bind="text: school"></div>
+                    <em>
+                        <span data-bind="text: degree"></span><span data-bind="visible: degree() && field()">, </span>
+                        <span data-bind="text: field"></span>
+                        <span data-bind="text: startYear"></span><span data-bind="visible: startYear() && endYear()"> - </span>
+                        <span data-bind="text: endYear"></span>
+                    </em>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="TilesList">  
+        <a href="/addEducation" class="CompactLinkTile">
+            <div class="Tile-content text-muted">Add education</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </a>
+    </div>
+
+</div>

@@ -56,5 +56,6 @@ module.exports = {
     'marketplaceJobtitles': require('./activities/marketplaceJobtitles'),
     'profilePictureBio': require('./activities/profilePictureBio'),
     'servicesOverview': require('./activities/servicesOverview'),
-    'verifications': require('./activities/verifications')
+    'verifications': require('./activities/verifications'),
+    'education': require('./activities/education')
 };
