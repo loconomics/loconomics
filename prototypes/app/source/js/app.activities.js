@@ -57,5 +57,6 @@ module.exports = {
     'profilePictureBio': require('./activities/profilePictureBio'),
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
-    'education': require('./activities/education')
+    'education': require('./activities/education'),
+    'freelancerWebsite': require('./activities/freelancerWebsite')
 };

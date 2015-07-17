@@ -1270,6 +1270,23 @@
     </div>
     </form>
     </div>
+    <!-- freelancerWebsite activity -->
+    <div class="container-fluid LightForm" data-activity="freelancerWebsite">
+       <h2 class="SectionTitle">Your website</h2>
+
+      <form data-bind="submit: save">
+        <div class="form-group">
+          <label for="freelancerWebsite-url" class="sr-only">Enter your website URL</label>
+          <div>
+            <input type="url" id="freelancerWebsite-url" class="form-control" data-bind="value: profile.freelancerWebsiteUrl, disable: isLocked"
+            />
+          </div>
+        </div>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+        </div>
+      </form>
+    </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
       <div>
