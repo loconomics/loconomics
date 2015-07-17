@@ -1628,6 +1628,38 @@
             $199.</p>
       </div>
     </div>
+    <!-- Activity licensesCertifications -->
+    <div class="container-fluid" data-activity="licensesCertifications">
+       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      Certifications/Licenses
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div>
+        <ul class="TilesList" data-bind="foreach: list">
+          <li><a class="InfoTile" href="#" data-bind="attr: { href: '/licensesCertifications/' + jobTitleID() + '/' + licenseCertificationID() }">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span class="fa fa-certificate" aria-hidden="true"></span>
+                </div>
+                <div class="Tile-content">
+                    <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
+                    <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
+                </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">
+        <button type="button" class="CompactLinkTile" data-bind="click: addNew">
+          <div class="Tile-content text-muted">Add a certification/license</div>
+          <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
+          </div>
+        </button>
+      </div>
+    </div>
     <!-- Activity login -->
     <div class="container-fluid" data-activity="login">
       <div class="LeadContent">
@@ -1730,13 +1762,13 @@
             </div>
           </button>
         </li>
-        <li><a class="InfoTile" href="/licenseCertifications" data-bind="attr: { href: getJobUrlTo('licenseCertifications') }">
+        <li><a class="InfoTile" href="/licensesCertifications" data-bind="attr: { href: getJobUrlTo('licensesCertifications') }">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa fa-certificate" aria-hidden="true"></span>
-            </div>                
+            </div>
             <div class="Tile-content">
                 <div>Certifications/Licenses</div>
-                <em data-bind="text: licenseCertificationsSummary"></em>
+                <em data-bind="text: licensesCertificationsSummary"></em>
             </div>
         </a>
         </li>

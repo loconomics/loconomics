@@ -213,7 +213,7 @@ function ViewModel(app) {
 
     }, this);
     
-    this.licenseCertificationsSummary = ko.pureComputed(function() {
+    this.licensesCertificationsSummary = ko.pureComputed(function() {
         var lc = this.licenseCertifications();
         if (lc && lc.length) {
             // TODO Detect 
