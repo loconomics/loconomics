@@ -1,0 +1,41 @@
+<!-- Activity workPhotos -->
+<div class="container-fluid LightForm" data-activity="workPhotos">
+
+  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      Photos of your work
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+    <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+    </div>
+    
+    <div>
+        <ul class="TilesList" data-bind="foreach: list" style="max-width: 442px; display: block; width: auto;overflow:hidden;">
+            <li>
+                <a href="#selectItem" data-bind="click: $root.selectItem" style="display: block">
+                    <img src="nophoto.jpg" alt="Work photo" style="display:block;width: auto; height:auto;max-width:100%;max-height:332px;" data-bind="attr: { src: url, alt: title }" />
+                </a>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input class="form-control" type="text" data-bind="textInput: title" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-move"></span></button>
+                        </span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
+        <button type="button" class="CompactLinkTile" data-bind="click: addNew">
+            <div class="Tile-content text-muted">Upload/take photo</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </button>
+    </div>
+    
+    <div class="LightForm-submitBar">
+        <button type="submit" class="btn btn-primary btn-block">Save</button>
+    </div>
+
+</div>

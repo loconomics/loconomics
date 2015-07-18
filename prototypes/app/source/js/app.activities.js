@@ -63,5 +63,6 @@ module.exports = {
     'educationForm': require('./activities/educationForm'),
     'cancellationPolicy': require('./activities/cancellationPolicy'),
     'licensesCertifications': require('./activities/licensesCertifications'),
-    'licensesCertificationsForm': require('./activities/licensesCertificationsForm')
+    'licensesCertificationsForm': require('./activities/licensesCertificationsForm'),
+    'workPhotos': require('./activities/workPhotos')
 };
