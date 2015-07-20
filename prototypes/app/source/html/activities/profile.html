@@ -1,0 +1,14 @@
+<!-- Activity profile -->
+<div class="container-fluid" data-activity="profile">
+    <div>
+        <h1 class="SectionTitle"
+            data-bind="css: { 'is-syncing': isSyncing() }">
+            Public Profile
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>
+        <strong><span data-bind="text: profile() && profile().fullName()"></span></strong>
+    </div>
+</div>

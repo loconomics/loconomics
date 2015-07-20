@@ -64,5 +64,6 @@ module.exports = {
     'cancellationPolicy': require('./activities/cancellationPolicy'),
     'licensesCertifications': require('./activities/licensesCertifications'),
     'licensesCertificationsForm': require('./activities/licensesCertificationsForm'),
-    'workPhotos': require('./activities/workPhotos')
+    'workPhotos': require('./activities/workPhotos'),
+    'profile': require('./activities/profile')
 };
