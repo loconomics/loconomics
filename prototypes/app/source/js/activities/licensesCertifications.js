@@ -64,7 +64,7 @@ function ViewModel(app) {
 
     this.addNew = function() {
         var url = '#!licensesCertificationsForm/' + this.jobTitleID(),
-            cancelUrl = 'licensesCertifications/' + this.jobTitleID();
+            cancelUrl = app.shell.currentRoute.url;
         var request = $.extend({}, this.requestData, {
             cancelLink: cancelUrl
         });
@@ -73,12 +73,10 @@ function ViewModel(app) {
     
     this.selectItem = function(item) {
         var url = '/licensesCertificationsForm/' + this.jobTitleID() + '/' +
-            item.licenseCertificationID(),
-            cancelUrl = 'licensesCertifications/' + this.jobTitleID();
-        var request = $.extend({}, this.requestData, {
-            cancelLink: cancelUrl
-        });
-        app.shell.go(url, request);
+            item.licenseCertificationID() + '?mustReturn=' + 
+            encodeURIComponent(app.shell.currentRoute.url) +
+            '&returnText=' + encodeURIComponent('Certifications/Licenses');
+        app.shell.go(url, this.requestData);
     }.bind(this);
 }
 
