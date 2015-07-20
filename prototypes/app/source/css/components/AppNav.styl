@@ -55,13 +55,14 @@
         // Individual menus set-up
         > .navbar-collapse {
             position: fixed;
-            left: 0px;
-            right: 0px;
+            left: 0;
+            right: 0;
             overflow: auto;
-            bottom: 0px;
-            top: $app-navbar-height;
+            bottom: 0;
+            top: 0;
+            padding-top: $app-navbar-height;
             @media $media-big-navbar {
-                top: $big-navbar-height;
+                padding-top: $big-navbar-height;
             }
             
             // iOS7-8.1 requires a explicit z-index:
@@ -251,13 +252,19 @@
 // On AppNav opened, match SmartNavBar style with nav
 body.has-appNav-open {
     .SmartNavBar {
-        background: $AppNav-backColor;
+        //background: $AppNav-backColor;
+        background: transparent;
         border-bottom-color: transparent;
         
         .SmartNavBar-btn {
             color: White;
         }
         
+        pointer-events: none;
+        .SmartNavBar-edge,
+        .SmartNavBar-btn {
+            pointer-events: auto;
+        }
         h1 {
             opacity: 0;
             pointer-events: none;
