@@ -1,7 +1,8 @@
 /** UserLicenseCertification model **/
 'use strict';
 
-var Model = require('./Model');
+var Model = require('./Model'),
+    ko = require('knockout');
 
 function UserLicenseCertification(values) {
 
@@ -35,6 +36,19 @@ function UserLicenseCertification(values) {
     }, values);
     
     this.model.defID(['userID', 'jobTitleID', 'licenseCertificationID']);
+    
+    this.countyName = ko.pureComputed(function() {
+        // TODO Implement look-up of counties, a hardly cached version must exists ever
+        return 'Alameda';
+    }, this);
+    this.stateProvinceName = ko.pureComputed(function() {
+        // TODO Implement look-up, a hardly cached version must exists ever
+        return 'California';
+    }, this);
+    this.stateProvinceCode = ko.pureComputed(function() {
+        // TODO Implement look-up, a hardly cached version must exists ever
+        return 'CA';
+    }, this);
 }
 
 module.exports = UserLicenseCertification;

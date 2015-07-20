@@ -968,10 +968,36 @@ body.use-backdrop:before {
   width: auto;
 }
 
-/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\btn-file.styl */
+
+/* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\btn-file.styl */
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+
+/* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\btn-file.styl */
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  outline: none;
+  background: #fff;
+  cursor: inherit;
+  display: block;
+}
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 19 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {
@@ -5025,7 +5051,7 @@ body.use-backdrop:before {
   pointer-events: auto;
 }
 
-/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
 /* line 65 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */

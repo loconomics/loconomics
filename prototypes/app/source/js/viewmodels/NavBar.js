@@ -1,8 +1,8 @@
 /** NavBar view model.
     It allows customize the NavBar per activity.
 **/
-var Model = require('../models/Model');
-    //NavAction = require('./NavAction');
+var Model = require('../models/Model'),
+    NavAction = require('./NavAction');
 
 function NavBar(values) {
     
@@ -13,10 +13,12 @@ function NavBar(values) {
         // When the title is 'null', the app logo is showed in place,
         // on empty text, the empty text is showed and no logo.
         title: '',
-        // NavAction instance:
-        leftAction: null,
-        // NavAction instance:
-        rightAction: null
+        leftAction: {
+            Model: NavAction
+        },
+        rightAction: {
+            Model: NavAction
+        }
     }, values);
 }
 

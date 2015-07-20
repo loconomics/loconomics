@@ -14,6 +14,7 @@ var A = Activity.extends(function LicensesCertificationsFormActivity() {
     this.accessLevel = this.app.UserType.Freelancer;
 
     this.navBar = Activity.createSubsectionNavBar('Certifications/Licenses');
+    this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
 });
 
 exports.init = A.init;
@@ -22,7 +23,10 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 
     var link = this.requestData.cancelLink || '/licensesCertifications/';
     
-    this.convertToCancelAction(this.navBar.leftAction(), link);
+    if (this.viewModel.isNew())
+        this.convertToCancelAction(this.navBar.leftAction(), link);
+    else
+        this.navBar.model.updateWith(this.defaultNavBarSettings, true);
 };
 
 A.prototype.show = function show(state) {
@@ -42,19 +46,25 @@ A.prototype.show = function show(state) {
     // TODO Remove when AppModel
     var ModelVersion = require('../utils/ModelVersion'),
         UserLicenseCertification = require('../models/UserLicenseCertification');
-    this.viewModel.version(new ModelVersion(new UserLicenseCertification({
-        userID: 141,
-        jobTitleID: 106,
-        statusID: 2,
-        licenseCertificationID: 18,
-        licenseCertificationNumber: 21341234,
-        stateProvinceID: 1,
-        countryID: 1,
-        expirationDate: new Date(2016, 1, 20),
-        lastVerifiedDate: new Date(2015, 3, 20),
-        createdDate: new Date(),
-        updatedDate: new Date()
-    })));
+    
+    if (this.viewModel.isNew()) {
+        this.viewModel.version(new ModelVersion(new UserLicenseCertification()));
+    }
+    else {
+        this.viewModel.version(new ModelVersion(new UserLicenseCertification({
+            userID: 141,
+            jobTitleID: 106,
+            statusID: 2,
+            licenseCertificationID: 18,
+            licenseCertificationNumber: 21341234,
+            stateProvinceID: 1,
+            countryID: 1,
+            expirationDate: new Date(2016, 1, 20),
+            lastVerifiedDate: new Date(2015, 3, 20),
+            createdDate: new Date(),
+            updatedDate: new Date()
+        })));
+    }
     
     
     // TODO IT DOES NOT WORKS THIS WAY: in the website dahsboard, the licenseID is provided
@@ -105,6 +115,10 @@ function ViewModel(app) {
         return this.isDeleting() || app.model.licensesCertifications.state.isLocked();
     }, this);*/
     
+    this.isNew = ko.pureComputed(function() {
+        return this.licenseCertificationID() === 0;
+    }, this);
+    
     this.version = ko.observable(null);
     this.item = ko.pureComputed(function() {
         var v = this.version();
@@ -114,23 +128,9 @@ function ViewModel(app) {
         return null;
     }, this);
     
-    this.isNew = ko.pureComputed(function() {
-        var p = this.item();
-        return p && !p.updatedDate();
-    }, this);
-
-    this.submitText = ko.pureComputed(function() {
-        var v = this.version();
-        return (
-            this.isLoading() ? 
-                'Loading...' : 
-                this.isSaving() ? 
-                    'Saving changes' : 
-                    v && v.areDifferent() ?
-                        'Save changes' :
-                        'Saved'
-        );
-    }, this);
+    // Fields for the new-certification-file
+    this.stateProvinceID = ko.observable(0);
+    this.file = ko.observable('');
 
     this.unsavedChanges = ko.pureComputed(function() {
         var v = this.version();
@@ -193,20 +193,8 @@ function ViewModel(app) {
     }.bind(this);
     
     // TODO COMPLETE; FROM A MODEL, REMOTE?
-    this.counties = ko.computed(function() {
-        return [
-            {
-                countyID: 1,
-                name: 'Alameda'
-            },
-            {
-                countyID: 2,
-                name: 'Alpine'
-            },
-            {
-                countyID: 3,
-                name: 'Amador'
-            }
-        ];
+    this.statesProvinces = ko.computed(function() {
+        // BLOB copy:
+        return [{"stateProvinceID":"23","name":"Alabama"},{"stateProvinceID":"49","name":"Alaska"},{"stateProvinceID":"52","name":"American Samoa"},{"stateProvinceID":"48","name":"Arizona"},{"stateProvinceID":"26","name":"Arkansas"},{"stateProvinceID":"60","name":"Armed Forces Americas (except Canada)"},{"stateProvinceID":"61","name":"Armed Forces Canada, Europe, Middle East, and Africa"},{"stateProvinceID":"62","name":"Armed Forces Pacific"},{"stateProvinceID":"1","name":"California"},{"stateProvinceID":"38","name":"Colorado"},{"stateProvinceID":"6","name":"Connecticut"},{"stateProvinceID":"2","name":"Delaware"},{"stateProvinceID":"51","name":"District of Columbia"},{"stateProvinceID":"57","name":"Federated States of Micronesia"},{"stateProvinceID":"28","name":"Florida"},{"stateProvinceID":"5","name":"Georgia"},{"stateProvinceID":"53","name":"Guam"},{"stateProvinceID":"50","name":"Hawaii"},{"stateProvinceID":"43","name":"Idaho"},{"stateProvinceID":"22","name":"Illinois"},{"stateProvinceID":"20","name":"Indiana"},{"stateProvinceID":"30","name":"Iowa"},{"stateProvinceID":"34","name":"Kansas"},{"stateProvinceID":"16","name":"Kentucky"},{"stateProvinceID":"19","name":"Louisiana"},{"stateProvinceID":"24","name":"Maine"},{"stateProvinceID":"58","name":"Marshall Islands"},{"stateProvinceID":"8","name":"Maryland"},{"stateProvinceID":"7","name":"Massachusetts"},{"stateProvinceID":"27","name":"Michigan"},{"stateProvinceID":"32","name":"Minnesota"},{"stateProvinceID":"21","name":"Mississippi"},{"stateProvinceID":"25","name":"Missouri"},{"stateProvinceID":"41","name":"Montana"},{"stateProvinceID":"37","name":"Nebraska"},{"stateProvinceID":"36","name":"Nevada"},{"stateProvinceID":"10","name":"New Hampshire"},{"stateProvinceID":"4","name":"New Jersey"},{"stateProvinceID":"47","name":"New Mexico"},{"stateProvinceID":"12","name":"New York"},{"stateProvinceID":"13","name":"North Carolina"},{"stateProvinceID":"39","name":"North Dakota"},{"stateProvinceID":"54","name":"Northern Mariana Islands"},{"stateProvinceID":"18","name":"Ohio"},{"stateProvinceID":"46","name":"Oklahoma"},{"stateProvinceID":"33","name":"Oregon"},{"stateProvinceID":"59","name":"Palau"},{"stateProvinceID":"3","name":"Pennsylvania"},{"stateProvinceID":"55","name":"Puerto Rico"},{"stateProvinceID":"14","name":"Rhode Island"},{"stateProvinceID":"9","name":"South Carolina"},{"stateProvinceID":"40","name":"South Dakota"},{"stateProvinceID":"17","name":"Tennessee"},{"stateProvinceID":"29","name":"Texas"},{"stateProvinceID":"56","name":"U.S. Virgin Islands"},{"stateProvinceID":"45","name":"Utah"},{"stateProvinceID":"15","name":"Vermont"},{"stateProvinceID":"11","name":"Virginia"},{"stateProvinceID":"42","name":"Washington"},{"stateProvinceID":"35","name":"West Virginia"},{"stateProvinceID":"31","name":"Wisconsin"},{"stateProvinceID":"44","name":"Wyoming"}];
     });
 }

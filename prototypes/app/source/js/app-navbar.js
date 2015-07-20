@@ -84,7 +84,7 @@ exports.extends = function (app) {
                 // Left action forced to be a go-back
                 app.navBar().leftAction(NavAction.goBack.model.clone({
                     text: returnText,
-                    isShell: false,
+                    isShell: true,
                     isTitle: true
                 }));
             }

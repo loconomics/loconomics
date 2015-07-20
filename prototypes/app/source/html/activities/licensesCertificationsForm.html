@@ -1,91 +1,104 @@
 <!-- licensesCertificationsForm activity -->
 <div class="container-fluid LightForm" data-activity="licensesCertificationsForm">
     <h2 class="SectionTitle">Certification/License</h2>
-    <p>
-        Please input your <strong>General Massage Practitioner</strong> license details below, and we’ll verify it right away.
-    </p>
-    <form data-bind="submit: save, with: item">
-        <div class="form-group">
-            <label>License description</label>
-            <div class="form-control-static">
-                Generally must complete at least 250 hours of education and training. CMPs also must undergo background checks, including fingerprinting and other identification verification procedures.                
+    <form data-bind="submit: save">
+        <fieldset data-bind="visible: isNew">
+            <div class="form-group">
+                <label for="licensesCertificationsForm-state">State</label>
+                <div>
+                    <select id="licensesCertificationsForm-state" class="form-control"
+                           data-bind="options: statesProvinces, value: stateProvinceID, optionsValue: 'stateProvinceID',
+                                      optionsText: 'name', disable: isLocked, optionsCaption: ' '">
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label>State</label>
-            <div class="form-control-static">
-                California (CA)
+            <div clas="form-group">
+                <label for="licensesCertificationForm-file">Upload a photo or document of your certification/license</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <div class="btn btn-default btn-file">
+                            <span>Browse</span>
+                            <input type="file" data-bind="value: file" id="licensesCertificationForm-file" />
+                        </div>
+                    </span>
+                    <input type="text" data-bind="value: file" class="form-control" />
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label>Certifying board</label>
-            <div class="form-control-static">
-                <a target="_blank" href="https://www.camtc.org/VerifyCertification.aspx">The California Massage Therapy Council (CAMTC)</a>
+        </fieldset>
+        <fieldset data-bind="visible: !isNew(), with: item">
+            <div class="form-group">
+                <label>License description</label>
+                <div class="form-control-static">
+                    Generally must complete at least 250 hours of education and training. CMPs also must undergo background checks, including fingerprinting and other identification verification procedures.
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="licensesCertificationsForm-county">County</label>
-            <div>
-                <select id="licensesCertificationsForm-county" class="form-control"
-                       data-bind="options: $parent.counties, optionsCaption: ' ', value: countyID, disable: $parent.isLocked, optionsValue: 'countyID', optionsText: 'name'">
-                </select>
+            <div class="form-group" data-bind="visible: stateProvinceName">
+                <label>State</label>
+                <div class="form-control-static">
+                    <span data-bind="text: stateProvinceName"></span> (<span data-bind="text: stateProvinceCode"></span>)
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="licensesCertificationsForm-licenseCertificationNumber">Certificate/license number</label>
-            <div>
-                <input type="text" id="licensesCertificationsForm-licenseCertificationNumber" class="form-control"
-                       data-bind="textInput: licenseCertificationNumber, disable: $parent.isLocked"/>
+            <div class="form-group">
+                <label>Certifying board</label>
+                <div class="form-control-static">
+                    <a target="_blank" href="https://www.camtc.org/VerifyCertification.aspx">The California Massage Therapy Council (CAMTC)</a>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="licensesCertificationsForm-businessName">Business name (optional)</label>
-            <div>
-                <input type="text" id="licensesCertificationsForm-businessName" class="form-control"
-                       data-bind="textInput: businessName, disable: $parent.isLocked"/>
+            <div class="form-group" data-bind="visible: countyName">
+                <label>County</label>
+                <div class="form-control-static">
+                    <span data-bind="text: countyName"></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="licensesCertificationsForm-firstName">First name</label>
-            <div>
-                <input type="text" id="licensesCertificationsForm-firstName" class="form-control"
-                       data-bind="textInput: firstName, disable: $parent.isLocked"/>
+            <div class="form-group" data-bind="visible: licenseCertificationNumber">
+                <label>Certificate/license number</label>
+                <div class="form-control-static">
+                    <span data-bind="text: licenseCertificationNumber"></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="licensesCertificationsForm-lastName">Last name</label>
-            <div>
-                <input type="text" id="licensesCertificationsForm-lastName" class="form-control"
-                       data-bind="textInput: lastName, disable: $parent.isLocked"/>
+            <div class="form-group" data-bind="visible: businessName">
+                <label>Business name (optional)</label>
+                <div class="form-control-static">
+                    <span data-bind="text: businessName"></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="licensesCertificationsForm-middleInitial">Middle initial</label>
-            <div>
-                <input type="text" id="licensesCertificationsForm-middleInitial" class="form-control"
-                       data-bind="textInput: middleInitial, disable: $parent.isLocked"/>
+            <div class="form-group" data-bind="visible: firstName">
+                <label>First name</label>
+                <div class="form-control-static">
+                    <span data-bind="text: firstName"></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="licensesCertificationsForm-city">City</label>
-            <div>
-                <input type="text" id="licensesCertificationsForm-city" class="form-control"
-                       data-bind="textInput: city, disable: $parent.isLocked"/>
+            <div class="form-group" data-bind="visible: lastName">
+                <label>Last name</label>
+                <div class="form-control-static">
+                    <span data-bind="text: lastName"></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="licensesCertificationsForm-licenseCertificationUrl">Link to license</label>
-            <div>
-                <input type="text" id="licensesCertificationsForm-licenseCertificationUrl" class="form-control"
-                       data-bind="textInput: licenseCertificationUrl, disable: $parent.isLocked"/>
+            <div class="form-group" data-bind="visible: middleInitial">
+                <label>Middle initial</label>
+                <div class="form-control-static">
+                    <span data-bind="text: middleInitial"></span>
+                </div>
             </div>
-        </div>
-        <p>
-            Need to apply or renew this license/certification? Please <a target="_blank" href="https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf">visit this link.</a>
-        </p>
+            <div class="form-group" data-bind="visible: city">
+                <label>City</label>
+                <div class="form-control-static">
+                    <span data-bind="text: city"></span>
+                </div>
+            </div>
+            <div class="form-group" data-bind="visible: licenseCertificationUrl">
+                <label>Link to license</label>
+                <div class="form-control-static">
+                    <span data-bind="licenseCertificationUrl"></span>
+                </div>
+            </div>
+            <p>
+                Need to apply or renew this license/certification? Please <a target="_blank" href="https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf">visit this link.</a>
+            </p>
+        </fieldset>
         <div class="LightForm-submitBar">
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>
-            <!--<button type="button" class="btn btn-danger btn-block" data-bind="text: $parent.deleteText, disable: $parent.isLocked, click: $parent.confirmRemoval">Delete</button>-->
+            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, visible: isNew">Save</button>
+            <a href="contactForm/marketplaceProfile?mustReturn=1&returnText=Certifications%2FLicenses" class="btn btn-primary btn-block" data-bind="visible: !isNew()">Contact us</a>
         </div>
     </form>
 </div>
