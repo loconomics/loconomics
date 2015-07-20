@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-07-17
+/*! LoconomicsApp 2015-07-20
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -4953,10 +4953,80 @@ body.use-backdrop:before {
   box-shadow: 0px 0px 2px -1px #000;
 }
 
-/* line 48 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 77 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+
+/* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+.WorkPhotos {
+  max-width: 442px;
+  display: block;
+  width: auto;
+  overflow: hidden;
+}
+
+/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+.WorkPhotos > li {
+  position: relative;
+}
+
+/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+.WorkPhotos > li .WorkPhotos-imgBtn {
+  display: block;
+  position: relative;
+}
+
+/* line 18 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+.WorkPhotos > li .WorkPhotos-imgBtn img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 332px;
+}
+
+/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+.WorkPhotos > li .WorkPhotos-imgBtn .WorkPhotos-editionLayer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255,255,255,0.6);
+  pointer-events: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transition: opacity 300ms ease;
+  -moz-transition: opacity 300ms ease;
+  -o-transition: opacity 300ms ease;
+  -ms-transition: opacity 300ms ease;
+  transition: opacity 300ms ease;
+}
+
+/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+.WorkPhotos > li .WorkPhotos-imgBtn .WorkPhotos-editionLayer > .WorkPhotos-toolbar {
+  width: 100%;
+  height: 100%;
+  display: block;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  margin: -23px auto 0;
+}
+
+/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+
+/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+.WorkPhotos > li.is-selected .WorkPhotos-editionLayer {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  pointer-events: auto;
+}
+
+/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 77 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

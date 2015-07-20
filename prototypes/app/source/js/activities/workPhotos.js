@@ -4,6 +4,7 @@
 'use strict';
 
 var ko = require('knockout'),
+    $ = require('jquery'),
     Activity = require('../components/Activity');
 
 var A = Activity.extends(function WorkPhotosActivity() {
@@ -42,6 +43,16 @@ var A = Activity.extends(function WorkPhotosActivity() {
     });*/
     // TODO Remove on implemented REST API
     this.viewModel.list(testdata());
+    
+    // Event handlers for photo list management
+    this.registerHandler({
+        target: this.$activity,
+        selector: '.WorkPhotos-imgBtn',
+        event: 'click',
+        handler: function(event) {
+            $(event.target).closest('li').toggleClass('is-selected');
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;
@@ -62,26 +73,12 @@ function ViewModel(app) {
     this.isLoading = app.model.licensesCertifications.state.isLoading();
 
     this.addNew = function() {
-        /*
-        var url = '#!licensesCertificationsForm/' + this.jobTitleID(),
-            cancelUrl = 'licensesCertifications/' + this.jobTitleID();
-        var request = $.extend({}, this.requestData, {
-            cancelLink: cancelUrl
-        });
-        app.shell.go(url, request);
-        */
+        // Pick a new photo
     }.bind(this);
     
-    this.selectItem = function(/*item*/) {
-        /*
-        var url = '/licensesCertificationsForm/' + this.jobTitleID() + '/' +
-            item.licenseCertificationID(),
-            cancelUrl = 'licensesCertifications/' + this.jobTitleID();
-        var request = $.extend({}, this.requestData, {
-            cancelLink: cancelUrl
-        });
-        app.shell.go(url, request);*/
-    }.bind(this);
+    this.changeImg = function(/*item*/) {
+        // Pick another photo to replace on 'item'
+    };
 }
 
 

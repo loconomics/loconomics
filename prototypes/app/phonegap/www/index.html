@@ -57,7 +57,7 @@
             </li>
             <li class="go-performance"><a href="/insurance"><i class="fa fa-fw ion-umbrella" aria-hidden="true"></i> Insurance</a>
             </li>
-            <li class="go-marketplace-profile"><a href="/marketplace-profile"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a>
+            <li class="go-marketplaceProfile"><a href="/marketplaceProfile"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a>
             </li>
             <li class="go-insurance"><a href="/insurance"><i class="fa fa-fw ion-ios-cart-outline" aria-hidden="true"></i> Hire services</a>
             </li>
@@ -263,6 +263,10 @@
             </div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
+        </li>
+        <li class="LinkTile">
+          <div class="Tile-content"><a href="#somethingElse" class="btn btn-default btn-block">Sample of button inside tile</a>
+          </div>
         </li>
         <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
@@ -660,6 +664,41 @@
         </div>
       </div>
     </div>
+    <!-- Activity backgroundCheck -->
+    <div class="container-fluid" data-activity="backgroundCheck">
+       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      <span>
+        Background Check
+      </span>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div>
+        <ul class="TilesList" data-bind="foreach: list">
+          <li class="InfoTile">
+            <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+
+            </div>
+            <div class="Tile-content">
+              <div data-bind="text: backgroundCheck().name() || 'Background check'"></div> <em>
+                        <span data-bind="text: statusText, css: { 'text-warning': isStatus('pending'), 'text-success': isStatus('confirmed'), 'text-danger': isStatus('revoked') || isStatus('obsolete') }"></span>
+                        <span data-bind="text: lastVerifiedDate, format: { type: 'datetime', format: 'L LTS' }"></span>
+                    </em>
+
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="TilesList"> <a href="/addBackgroundCheck" class="CompactLinkTile">
+            <div class="Tile-content text-muted">Add a background check</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </a>
+
+      </div>
+    </div>
     <!-- BookMeButton activity -->
     <div class="container-fluid" data-activity="bookMeButton">
        <h2 class="SectionTitle">Book Me Now Button</h2>
@@ -751,6 +790,72 @@
       <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { click: reset }">Reset Private URL</button>
     </div>
     </form>
+    </div>
+    <!-- cancellationPolicy activity -->
+    <div class="container-fluid LightForm" data-activity="cancellationPolicy">
+       <h2 class="SectionTitle">Cancellation Policy</h2>
+
+      <script type="text/html" id="cancellationPolicy-item-tpl">
+        <div class="radio">
+            <div class="input-group">
+                <label class="form-control-static btn-block">
+                    <input type="radio" data-bind="checked: checkedValue, value: itemValue, disable: disabled" />
+                    <span data-bind="text: itemLabel"></span>
+                </label>
+                <span class="input-group-btn">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" aria-expanded="false"
+                            data-bind="attr: { 'data-target': '#cancellationPolicy-info-' + itemValue(),
+                                             'data-controls': '#cancellationPolicy-info-' + itemValue() }">
+                        (details)
+                    </button>
+                </span>
+            </div>
+        </div>
+      </script>
+      <script type="text/html" id="cancellationPolicy-info-tpl">
+        <div class="collapse" data-bind="attr: { id: 'cancellationPolicy-info-' + policy.cancellationPolicyID() }">
+            <strong><span data-bind="text: policy.name"></span>:</strong>
+            <em><strong data-bind="text: policy.description"></strong>
+                    <span>
+                        If a booking is made by the customer for one week from now, the customer would need to cancel by
+                        <strong data-bind="text: policy.refundLimitDate, format: { type: 'datetime', format: 'LT dddd, LL' }"></strong>
+                        to receive a <strong><span data-bind="text: policy.refundIfCancelledBeforeDisplay"></span> refund.</strong>
+                    </span>
+            </em>
+        </div>
+      </script>
+      <form data-bind="submit: save, with: userJobTitle">
+        <div data-bind="foreach: { data: $parent.policies, as: 'policy' }">
+          <!-- ko template: { name: 'cancellationPolicy-item-tpl', data: { checkedValue:
+          $parent.cancellationPolicyID, itemValue: policy.cancellationPolicyID, disabled:
+          $parent.isLocked, itemLabel: policy.name } } -->
+          <!-- /ko -->
+          <!-- ko template: { name: 'cancellationPolicy-info-tpl', data: { policy:
+          policy } } -->
+          <!-- /ko -->
+        </div>
+         <h2 class="SectionTitle">General policy</h2>
+
+        <div class="well">
+          <ul class="list-group">
+            <li>The Loconomics service fee is non-refundable.</li>
+            <li>Loconomics must be notified of any no-shows or complaints by either party
+              within 24 hours after a booking is scheduled to end.</li>
+            <li>Loconomics will help faciliate dispute resolution but has the final say
+              should a dispute not be resolved between parties.</li>
+            <li>A booking is officially canceled when the client clicks the cancellation
+              button on the cancellation confirmation page, which they can find in Dashboard
+              > Bookings > Change or Cancel</li>
+            <li>You will have the option to waive a cancellation fee for a client on a
+              case-by-case basis when cancellations occur.</li>
+            <li>Loconomics reserves the right to waive a cancellation fee under extenuating
+              circumstances of which you’ll be notified.</li>
+          </ul>
+        </div>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>
+        </div>
+      </form>
     </div>
     <!-- ClientEdition activity -->
     <div class="container-fluid" data-activity="clientEditor">
@@ -1014,6 +1119,88 @@
         </div>
       </div>
     </div>
+    <!-- Activity education -->
+    <div class="container-fluid" data-activity="education">
+       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      <span>
+        Education
+      </span>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div>
+        <ul class="TilesList" data-bind="foreach: list">
+          <li><a class="InfoTile" href="/educationForm" data-bind="attr: { href: '/educationForm/' + educationID() }">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span class="fa ion ion-university" aria-hidden="true"></span>
+                </div>
+                <div class="Tile-content">
+                    <div data-bind="text: school"></div>
+                    <em>
+                        <span data-bind="text: degree"></span><span data-bind="visible: degree() && field()">, </span>
+                        <span data-bind="text: field"></span>
+                        <span data-bind="visible: startYear() || endYear()"><span data-bind="text: startYear"></span> - <span data-bind="text: endYear"></span></span>
+                    </em>
+                </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="TilesList"> <a href="/educationForm" class="CompactLinkTile">
+            <div class="Tile-content text-muted">Add education</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </a>
+
+      </div>
+    </div>
+    <!-- educationForm activity -->
+    <div class="container-fluid LightForm" data-activity="educationForm">
+       <h2 class="SectionTitle">Education</h2>
+
+      <form data-bind="submit: save, with: item">
+        <div class="form-group">
+          <label for="educationForm-school">School</label>
+          <div>
+            <input type="text" id="educationForm-school" class="form-control" data-bind="value: school, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="educationForm-degree">Degree/Certificate</label>
+          <div>
+            <input type="text" id="educationForm-degree" class="form-control" data-bind="value: degree, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="educationForm-field">Field of study</label>
+          <div>
+            <input type="text" id="educationForm-field" class="form-control" data-bind="value: field, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <div>
+          <label for="educationForm-startYear">Years attended:</label>
+          <div class="form-group form-group-inline">
+            <label for="educationForm-startYear" class="sr-only">Start year</label>
+            <select id="educationForm-startYear" class="form-control"
+            data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: startYear, disable: $parent.isLocked"></select>
+          </div>&nbsp;-&nbsp;
+          <div class="form-group form-group-inline">
+            <label for="educationForm-startYear" class="sr-only">End year</label>
+            <select id="educationForm-endYear" class="form-control"
+            data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: endYear, disable: $parent.isLocked"></select>
+          </div>
+        </div>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>
+          <button type="button" class="btn btn-danger btn-block" data-bind="text: $parent.deleteText, disable: $parent.isLocked, click: $parent.confirmRemoval">Delete</button>
+        </div>
+      </form>
+    </div>
     <!-- Faqs activity -->
     <div class="container-fluid" data-activity="faqs">
       <div class="isolated">
@@ -1230,6 +1417,23 @@
     </div>
     </form>
     </div>
+    <!-- freelancerWebsite activity -->
+    <div class="container-fluid LightForm" data-activity="freelancerWebsite">
+       <h2 class="SectionTitle">Your website</h2>
+
+      <form data-bind="submit: save">
+        <div class="form-group">
+          <label for="freelancerWebsite-url" class="sr-only">Enter your website URL</label>
+          <div>
+            <input type="url" id="freelancerWebsite-url" class="form-control" data-bind="value: profile.freelancerWebsiteUrl, disable: isLocked"
+            />
+          </div>
+        </div>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+        </div>
+      </form>
+    </div>
     <!-- Activity home -->
     <div class="container-fluid" data-activity="home">
       <div>
@@ -1373,7 +1577,7 @@
     </h2>
 
       <ul class="TilesList">
-        <li><a class="InfoTile" href="/freelancerPricing" data-bind="attr: { href: '/freelancerPricing/' + jobTitleID() }">
+        <li><a class="InfoTile" href="/freelancerPricing" data-bind="attr: { href: getJobUrlTo('freelancerPricing') }">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
             </div>                
@@ -1383,7 +1587,7 @@
             </div>
         </a>
         </li>
-        <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: '/serviceAddresses/' + jobTitleID() }">
+        <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: getJobUrlTo('serviceAddresses') }">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
             </div>                
@@ -1393,7 +1597,7 @@
             </div>
         </a>
         </li>
-        <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: '/bookMeButton//' + jobTitleID() }">
+        <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
             </div>                
@@ -1425,6 +1629,131 @@
             $199.</p>
       </div>
     </div>
+    <!-- Activity licensesCertifications -->
+    <div class="container-fluid" data-activity="licensesCertifications">
+       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      Certifications/Licenses
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div>
+        <ul class="TilesList" data-bind="foreach: list">
+          <li>
+            <button class="InfoTile" type="button" data-bind="click: $root.selectItem">
+              <div class="Tile-icon" aria-hidden="true"> <span class="fa fa-certificate" aria-hidden="true"></span>
+
+              </div>
+              <div class="Tile-content">
+                <div data-bind="text: licenseCertification() && licenseCertification().name"></div> <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
+
+              </div>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">
+        <button type="button" class="CompactLinkTile" data-bind="click: addNew">
+          <div class="Tile-content text-muted">Add a certification/license</div>
+          <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
+          </div>
+        </button>
+      </div>
+    </div>
+    <!-- licensesCertificationsForm activity -->
+    <div class="container-fluid LightForm" data-activity="licensesCertificationsForm">
+       <h2 class="SectionTitle">Certification/License</h2>
+
+      <p>Please input your <strong>General Massage Practitioner</strong> license
+        details below, and we’ll verify it right away.</p>
+      <form data-bind="submit: save, with: item">
+        <div class="form-group">
+          <label>License description</label>
+          <div class="form-control-static">Generally must complete at least 250 hours of education and training.
+            CMPs also must undergo background checks, including fingerprinting and
+            other identification verification procedures.</div>
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <div class="form-control-static">California (CA)</div>
+        </div>
+        <div class="form-group">
+          <label>Certifying board</label>
+          <div class="form-control-static"> <a target="_blank" href="https://www.camtc.org/VerifyCertification.aspx">The California Massage Therapy Council (CAMTC)</a>
+
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-county">County</label>
+          <div>
+            <select id="licensesCertificationsForm-county" class="form-control" data-bind="options: $parent.counties, optionsCaption: ' ', value: countyID, disable: $parent.isLocked, optionsValue: 'countyID', optionsText: 'name'"></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-licenseCertificationNumber">Certificate/license number</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-licenseCertificationNumber"
+            class="form-control" data-bind="textInput: licenseCertificationNumber, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-businessName">Business name (optional)</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-businessName" class="form-control"
+            data-bind="textInput: businessName, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-firstName">First name</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-firstName" class="form-control"
+            data-bind="textInput: firstName, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-lastName">Last name</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-lastName" class="form-control"
+            data-bind="textInput: lastName, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-middleInitial">Middle initial</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-middleInitial" class="form-control"
+            data-bind="textInput: middleInitial, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-city">City</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-city" class="form-control"
+            data-bind="textInput: city, disable: $parent.isLocked" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="licensesCertificationsForm-licenseCertificationUrl">Link to license</label>
+          <div>
+            <input type="text" id="licensesCertificationsForm-licenseCertificationUrl"
+            class="form-control" data-bind="textInput: licenseCertificationUrl, disable: $parent.isLocked"
+            />
+          </div>
+        </div>
+        <p>Need to apply or renew this license/certification? Please <a target="_blank"
+          href="https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf">visit this link.</a>
+
+        </p>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>
+          <!--<button type="button" class="btn btn-danger btn-block"
+          data-bind="text: $parent.deleteText, disable: $parent.isLocked, click:
+          $parent.confirmRemoval">Delete</button>-->
+        </div>
+      </form>
+    </div>
     <!-- Activity login -->
     <div class="container-fluid" data-activity="login">
       <div class="LeadContent">
@@ -1455,6 +1784,181 @@
     </div>
     <!-- Activity logout -->
     <div class="container-fluid" data-activity="logout"></div>
+    <!-- marketplaceJobtitles activity -->
+    <div class="container-fluid" data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }">
+       <h2 class="SectionTitle">
+        <span>Profile Status</span>
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+    </h2>
+
+      <div class="switchLine"> <span data-bind="text: jobTitleName"></span>  <span>profile:</span> 
+        <strong
+        data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
+          <div class="pull-right">
+            <label>
+              <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }"
+              />
+            </label>
+          </div>
+      </div>
+       <h2 class="SectionTitle">
+        <span>About your services</span>
+    </h2>
+
+      <ul class="TilesList">
+        <li><a class="InfoTile" href="/freelancerPricing" data-bind="attr: { href: getJobUrlTo('freelancerPricing') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Pricing and services</div>
+                <em data-bind="text: pricingCount"></em>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: getJobUrlTo('serviceAddresses') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Service locations</div>
+                <em data-bind="text: addressesCount"></em>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/servicesOverview" data-bind="attr: { href: getJobUrlTo('servicesOverview') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-clipboard" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Overview of services</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/cancellationPolicy" data-bind="attr: { href: getJobUrlTo('cancellationPolicy') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-close" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Cancellation policy</div>
+                <em data-bind="text: cancellationPolicyLabel"></em>
+            </div>
+        </a>
+        </li>
+        <li>
+          <button type="button" class="InfoTile" data-bind="click: toggleInstantBooking">
+            <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ios-bolt-outline" aria-hidden="true"></span>
+
+            </div>
+            <div class="Tile-content">
+              <div>Instant booking</div> <strong data-bind="text: instantBookingLabel, css: { 'text-success': instantBooking, 'text-danger': !instantBooking() }"></strong>
+
+            </div>
+          </button>
+        </li>
+        <li><a class="InfoTile" href="/licensesCertifications" data-bind="attr: { href: getJobUrlTo('licensesCertifications') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa fa-certificate" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <div>Certifications/Licenses</div>
+                <em data-bind="text: licensesCertificationsSummary"></em>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/workPhotos" data-bind="attr: { href: getJobUrlTo('workPhotos') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-camera-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Photos of your work</div>
+                <em data-bind="text: workPhotosSummary"></em>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <p>Add Book Now button</p>
+            </div>
+        </a>
+        </li>
+      </ul>
+      <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
+    </div>
+    <!-- marketplaceProfile activity -->
+    <div class="container-fluid" data-activity="marketplaceProfile" data-bind="css: { 'is-loading': isLoading }">
+       <h2 class="SectionTitle">Job Profiles
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+    </h2>
+
+      <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
+      <ul class="TilesList TilesList--openEnd">
+        <li><a class="CompactLinkTile" href="/addJobTitles">
+            <div class="Tile-content text-muted">Add a job profile</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </a>
+        </li>
+        <li class="LinkTile">
+          <div class="Tile-content"><a href="#marketplaceProfilePreview" class="btn btn-default btn-block">Preview profile</a>
+          </div>
+        </li>
+      </ul>
+       <h2 class="SectionTitle">About You</h2>
+
+      <ul class="TilesList TilesList--openEnd">
+        <li><a class="InfoTile" href="/profilePictureBio">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Profile picture and bio</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/verifications">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <div>Verifications <span data-bind="text: displayedVerificationsNumber"></span></div>
+                <em data-bind="text: verificationsSecondaryText"></em>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/education">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-university" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Education</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/freelancerWebsite">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-link" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Your website</p>
+            </div>
+        </a>
+        </li>
+        <li><a class="InfoTile" href="/backgroundCheck">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-checkmark" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <div>Background check</div>
+                <em>Last run: <span data-bind="text: displayedLastBackgroundCheck"></span></em>
+            </div>
+        </a>
+        </li>
+      </ul>
+      <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
+    </div>
     <!-- OwnerInfo activity -->
     <div class="container-fluid" data-activity="ownerInfo">
        <h1 class="SectionTitle has-HelpPoint">Owner information</h1>
@@ -1584,6 +2088,32 @@
           <div>
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>
+        </div>
+      </form>
+    </div>
+    <!-- Activity profilePictureBio -->
+    <div class="container-fluid LightForm" data-activity="profilePictureBio">
+      <form role="form" data-bind="submit: save">
+        <div>
+           <h2 class="SectionTitle">Profile picture</h2>
+
+          <div class="profilePicture">
+            <img data-bind="attr: { src: profile.photoUrl }" />
+          </div>
+          <div class="LightForm-tool">
+            <button type="button" class="btn btn-block btn-primary"> <span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span>  <span>Change photo</span>
+
+            </button>
+          </div>
+           <h2 class="SectionTitle">Public bio</h2>
+
+          <div class="form-group">
+            <textarea aria-label="Public bio" id="profilePictureBio-publicBio" rows="6"
+            class="form-control" data-bind="value: profile.publicBio, disable: isLocked"></textarea>
+          </div>
+        </div>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
         </div>
       </form>
     </div>
@@ -1763,6 +2293,38 @@
         <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
       </div>
     </div>
+    <!-- Activity profilePictureBio -->
+    <div class="container-fluid LightForm" data-activity="servicesOverview">
+      <form role="form" data-bind="submit: save">
+        <div>
+           <h2 class="SectionTitle">Brief description of your services</h2>
+
+          <div class="form-group">
+            <textarea aria-label="Job title intro" rows="6" class="form-control" data-bind="value: userJobTitle() && userJobTitle().intro, disable: isLocked"></textarea>
+          </div>
+           <h2 class="SectionTitle">Services I provide</h2>
+
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" data-bind="value: attributeSearch, disable: isLocked"
+              /> <span class="input-group-btn"><button type="button" class="btn btn-primary" data-bind="click: addAttribute">Add</button></span>
+
+            </div>
+          </div>
+          <ol class="TagsList" data-bind="foreach: list">
+            <li class="TagsList-item"> <span data-bind="text: name"></span>
+
+              <button type="button" class="btn btn-link"
+              data-bind="click: $parent.removeAttribute"><i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+              </button>
+            </li>
+          </ol>
+        </div>
+        <div class="LightForm-submitBar">
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+        </div>
+      </form>
+    </div>
     <!-- Activity Signup -->
     <div class="container-fluid" data-activity="signup">
       <div class="LeadContent">
@@ -1812,6 +2374,47 @@
         <div class="col-xs-6">
           <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }">Save</button>
         </div>
+      </div>
+    </div>
+    <!-- Activity verifications -->
+    <div class="container-fluid" data-activity="verifications">
+       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      <span>
+        Verifications
+      </span>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div>
+        <ul class="TilesList" data-bind="foreach: userVerifications">
+          <li class="InfoTile">
+            <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+
+            </div>
+            <div class="Tile-content">
+              <div data-bind="text: verification().name() || 'Verification'"></div> <em>
+                        <span data-bind="text: statusText, css: { 'text-warning': isStatus('pending'), 'text-success': isStatus('confirmed'), 'text-danger': isStatus('revoked') || isStatus('obsolete') }"></span>
+                        <span data-bind="text: lastVerifiedDate, format: { type: 'datetime', format: 'L LTS' }"></span>
+                    </em>
+
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="TilesList">
+        <button type="button" class="CompactLinkTile" data-bind="popover: { content: facebookInfo, trigger: 'focus', container: '[data-activity=verifications]', placement: 'bottom', html: true }">
+          <div class="Tile-content text-muted">Connect with Facebook</div>
+          <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
+          </div>
+        </button>
+        <button type="button" class="CompactLinkTile" data-bind="popover: { content: emailInfo, trigger: 'focus', container: '[data-activity=verifications]', placement: 'bottom', html: true }">
+          <div class="Tile-content text-muted">Confirm e-mail address</div>
+          <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
+          </div>
+        </button>
       </div>
     </div>
     <!-- WeeklySchedule activity -->
@@ -1962,6 +2565,44 @@
           a marketplace profile and much more.</p>
         <button type="button" class="btn btn-block btn-primary"
         data-bind="click: startOnboarding">Set up scheduling</button>
+      </div>
+    </div>
+    <!-- Activity workPhotos -->
+    <div class="container-fluid LightForm" data-activity="workPhotos">
+       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      Photos of your work
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
+      <div>
+        <ul class="TilesList" data-bind="foreach: list" style="max-width: 442px; display: block; width: auto;overflow:hidden;">
+          <li> <a href="#selectItem" data-bind="click: $root.selectItem" style="display: block">
+                    <img src="nophoto.jpg" alt="Work photo" style="display:block;width: auto; height:auto;max-width:100%;max-height:332px;" data-bind="attr: { src: url, alt: title }" />
+                </a>
+
+            <div class="form-group">
+              <div class="input-group">
+                <input class="form-control" type="text" data-bind="textInput: title" /> <span class="input-group-btn">
+                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-move"></span>
+                </button>
+                </span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">
+        <button type="button" class="CompactLinkTile" data-bind="click: addNew">
+          <div class="Tile-content text-muted">Upload/take photo</div>
+          <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
+          </div>
+        </button>
+      </div>
+      <div class="LightForm-submitBar">
+        <button type="submit" class="btn btn-primary btn-block">Save</button>
       </div>
     </div>
     <!-- Component Template appointment-card -->
@@ -2200,7 +2841,7 @@
       <h2 class="SectionTitle">Talk to us</h2>
       <a class="InfoTile" href="/feedbackForm" data-bind="attr: { href: url }">
           <div class="Tile-icon" aria-hidden="true">
-              <span class="fa ion ion-lightbulb" aria-hidden="true"></span>
+              <span class="fa ion ion-ios-lightbulb-outline" aria-hidden="true"></span>
           </div>                
           <div class="Tile-content"><p>
               Send us your ideas
@@ -2224,7 +2865,11 @@
       <ul class="TilesList" data-bind="foreach: jobTitles">
           <li>
               <button class="LinkTile" type="button" data-bind="click: $parent.selectJobTitle">
-                  <div class="Tile-content"><p data-bind="text: jobTitle() && jobTitle().singularName() || 'Unknow'"></p></div>
+                  <div class="Tile-content">
+                      <p data-bind="visible: !$parent.showMarketplaceInfo(), text: displayedSingularName"></p>
+                      <div data-bind="visible: $parent.showMarketplaceInfo(), text: displayedSingularName"></div>
+                      <em data-bind="visible: $parent.showMarketplaceInfo(), html: marketplaceStatusHtml"></em>
+                  </div>
                   <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right"></span></div>
               </button>
           </li>

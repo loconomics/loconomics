@@ -2577,18 +2577,19 @@
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
       </div>
       <div>
-        <ul class="TilesList" data-bind="foreach: list" style="max-width: 442px; display: block; width: auto;overflow:hidden;">
-          <li> <a href="#selectItem" data-bind="click: $root.selectItem" style="display: block">
-                    <img src="nophoto.jpg" alt="Work photo" style="display:block;width: auto; height:auto;max-width:100%;max-height:332px;" data-bind="attr: { src: url, alt: title }" />
+        <ul class="list-unstyled WorkPhotos" data-bind="foreach: list">
+          <li> <a class="WorkPhotos-imgBtn" href="#selectItem">
+                    <img src="nophoto.jpg" alt="Work photo" data-bind="attr: { src: url, alt: title }" />
+                    <div class="WorkPhotos-editionLayer">
+                        <div class="WorkPhotos-toolbar">
+                            <button type="button" class="btn btn-link btn-lg WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span></button>
+                            <button type="button" class="btn btn-link btn-lg WorkPhotos-changeBtn" data-bind="click: $root.changeImg"><span class="glyphicon glyphicon-picture"></span></button>
+                        </div>
+                    </div>
                 </a>
 
             <div class="form-group">
-              <div class="input-group">
-                <input class="form-control" type="text" data-bind="textInput: title" /> <span class="input-group-btn">
-                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-move"></span>
-                </button>
-                </span>
-              </div>
+              <input class="form-control" type="text" data-bind="textInput: title" />
             </div>
           </li>
         </ul>
