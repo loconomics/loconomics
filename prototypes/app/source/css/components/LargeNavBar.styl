@@ -36,6 +36,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
     
     .navbar-brand
         float left
+        height $LargeNavBar-contentHeight
 
     & > ul 
         padding 0px
@@ -43,17 +44,14 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
         
         & > li
             display inline-block
-            height 62px
+            height $LargeNavBar-contentHeight
             font-size 16px
             width auto
             float left
-            border-right 1px solid $border-color
+            border-left 1px solid $border-color
             padding 0
             white-space: nowrap;
-            
-            &:last-child
-                border-right 0px
-                
+
             .LargeNavBar-label
                 max-width: 96px;
                 white-space: nowrap;
@@ -118,8 +116,8 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
 
     // search bar, with input-group
     .LargeNavBar-searchBar 
+        border none
         border-left 1px solid $border-color
-        border-right 1px solid $border-color
         float left
         margin-left 2%
         // min-width 150px

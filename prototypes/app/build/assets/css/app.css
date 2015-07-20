@@ -1748,32 +1748,28 @@ body.use-backdrop:before {
 /* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar .navbar-brand {
   float: left;
+  height: 58px;
 }
 
-/* line 40 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul {
   padding: 0px;
   float: right;
 }
 
-/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 45 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul > li {
   display: inline-block;
-  height: 62px;
+  height: 58px;
   font-size: 16px;
   width: auto;
   float: left;
-  border-right: 1px solid #eee;
+  border-left: 1px solid #eee;
   padding: 0;
   white-space: nowrap;
 }
 
-/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
-.LargeNavBar > ul > li:last-child {
-  border-right: 0px;
-}
-
-/* line 57 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul > li .LargeNavBar-label {
   max-width: 96px;
   white-space: nowrap;
@@ -1785,7 +1781,7 @@ body.use-backdrop:before {
   display: inline-block;
 }
 
-/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 64 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul > li > a {
   height: 58px;
   line-height: 58px;
@@ -1794,15 +1790,15 @@ body.use-backdrop:before {
   padding-bottom: 0;
 }
 
-/* line 73 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 71 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 
-/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 72 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul > .open > a {
   color: #999;
   background-color: #fff;
 }
 
-/* line 78 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 76 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul > .open > .dropdown-menu {
   float: left;
   position: absolute;
@@ -1816,36 +1812,36 @@ body.use-backdrop:before {
   box-shadow: 0 6px 12px rgba(0,0,0,0.175);
 }
 
-/* line 89 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 87 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul > .open > .dropdown-menu > li {
   width: 200px;
 }
 
-/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 89 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul > .open > .dropdown-menu > li > a {
   white-space: normal;
   color: inherit;
   font-size: inherit;
 }
 
+/* line 94 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+
+/* line 95 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+
 /* line 96 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
-
-/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
-
-/* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul .LargeNavBar-userMenu > a .LargeNavBar-label {
   max-width: 80px;
 }
 
-/* line 102 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 100 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 
-/* line 103 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul .mail-nav i,
 .LargeNavBar > ul .mail-nav .caret {
   vertical-align: middle;
 }
 
-/* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 104 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar > ul .mail-alert {
   background-color: White;
   border: 1px solid #00989a;
@@ -1861,28 +1857,28 @@ body.use-backdrop:before {
   pointer-events: none;
 }
 
-/* line 120 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 118 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar .LargeNavBar-searchBar {
+  border: none;
   border-left: 1px solid #eee;
-  border-right: 1px solid #eee;
   float: left;
   margin-left: 2%;
   padding: 0 10px;
 }
 
-/* line 128 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 126 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar .LargeNavBar-searchBar .input-group {
   border: none;
 }
 
-/* line 131 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 129 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar .LargeNavBar-searchBar .input-group .input-group-addon {
   background: transparent;
   border: none;
   padding-right: 0;
 }
 
-/* line 136 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 134 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar .LargeNavBar-searchBar .input-group .form-control {
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -1891,7 +1887,7 @@ body.use-backdrop:before {
 }
 @media (min-width: 992px) {
 
-/* line 142 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 140 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
   .LargeNavBar .LargeNavBar-searchBar .input-group .form-control {
     max-width: none;
     min-width: 340px;
@@ -1899,7 +1895,7 @@ body.use-backdrop:before {
 }
 @media (min-width: 1200px) {
 
-/* line 146 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 144 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
   .LargeNavBar .LargeNavBar-searchBar .input-group .form-control {
     min-width: 535px;
   }
@@ -1920,14 +1916,14 @@ body.use-backdrop:before {
   color: #999;
 }
 
-/* line 152 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 150 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar .LargeNavBar-searchBar i {
   vertical-align: top;
   color: #5bc0de;
   line-height: 58px;
 }
 
-/* line 158 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 156 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar input {
   vertical-align: top;
   border: none;
@@ -1937,9 +1933,9 @@ body.use-backdrop:before {
   width: 90%;
 }
 
-/* line 167 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 165 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 
-/* line 168 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 166 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar ul.message-dropdown {
   padding: 0px;
   max-height: 250px;
@@ -1947,55 +1943,55 @@ body.use-backdrop:before {
   overflow-y: auto;
 }
 
-/* line 174 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 172 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar ul.alert-dropdown {
   width: 200px;
 }
 
-/* line 177 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 175 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 
-/* line 178 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 176 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar li.message-preview {
   width: 275px !important;
   border-bottom: 1px solid rgba(0,0,0,0.15);
 }
 
-/* line 181 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 179 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar li.message-preview > a {
   padding-top: 15px;
   padding-bottom: 15px;
 }
 
-/* line 185 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 183 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 .LargeNavBar li.message-footer {
   margin: 5px 0;
 }
 @media (min-width: 768px) {
 
-/* line 191 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 189 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
   .LargeNavBar .navbar-right .dropdown-menu {
     left: auto;
     right: 0;
   }
 
-/* line 195 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 193 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
   .LargeNavBar .navbar-right .dropdown-menu-left {
     left: 0;
     right: auto;
   }
 
-/* line 199 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 197 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
   .LargeNavBar .navbar-left {
     float: left !important;
   }
 
-/* line 202 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 200 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
   .LargeNavBar .navbar-right {
     float: right !important;
     margin-right: -15px;
   }
 
-/* line 206 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+/* line 204 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
   .LargeNavBar .navbar-right ~ .navbar-right {
     margin-right: 0;
   }
