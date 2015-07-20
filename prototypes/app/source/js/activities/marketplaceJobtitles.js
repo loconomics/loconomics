@@ -146,7 +146,7 @@ function ViewModel(app) {
     this.cancellationPolicyLabel = ko.pureComputed(function() {
         var pid = this.userJobTitle() && this.userJobTitle().cancellationPolicyID();
         // TODO fetch policy ID label
-        return pid || 'Unknow';
+        return pid === 3 ? 'Flexible' : pid === 2 ? 'Moderate' : 'Strict';
     }, this);
     
     this.instantBooking = ko.pureComputed(function() {
