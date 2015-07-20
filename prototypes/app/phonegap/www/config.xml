@@ -90,9 +90,10 @@ id="com.loconomics.app" version="0.7.12">
   />-->
   <gap:plugin name="cordova-plugin-whitelist" version="1.0.0" source="npm"
   />
+  <gap:plugin name="cordova-plugin-camera" version="1.1.0" source="npm"
+  />
   <!-- More official plugins examples -->
   <!-- <gap:plugin name="org.apache.cordova.battery-status" />
-  <gap:plugin name="org.apache.cordova.camera" />
   <gap:plugin name="org.apache.cordova.media-capture" />
   <gap:plugin name="org.apache.cordova.console" />
   <gap:plugin name="org.apache.cordova.contacts" />

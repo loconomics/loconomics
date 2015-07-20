@@ -74,10 +74,43 @@ function ViewModel(app) {
 
     this.addNew = function() {
         // Pick a new photo
+        var newItem = {
+            url: '',
+            title: ''
+        };
+        this.openPhotoPicker(newItem);
     }.bind(this);
     
-    this.changeImg = function(/*item*/) {
+    this.changeImg = function(item) {
         // Pick another photo to replace on 'item'
+        this.openPhotoPicker(item);
+    }.bind(this);
+
+    this.openPhotoPicker = function(item) {
+        /*global navigator,Camera*/
+        if (navigator.camera && navigator.camera.getPicture) {
+            navigator.camera.getPicture(function(img) {
+                item.url = img;
+            }, function(err) {
+                // bug iOS note: http://plugins.cordova.io/#/package/org.apache.cordova.camera
+                setTimeout(function() {
+                    app.modals.showError({ title: 'Error getting photo.', error: err });
+                }, 0);
+            }, {
+                destinationType: Camera.DestinationType.FILE_URI,
+                targetWidth: 446,
+                targetHeight: 332,
+                saveToPhotoAlbum: true,
+                mediaType: Camera.MediaType.PICTURE,
+                correctOrientation: true
+            });
+        }
+        else {
+            // bug iOS note: http://plugins.cordova.io/#/package/org.apache.cordova.camera
+            setTimeout(function() {
+                app.modals.showError({ error: 'Impossible to get photo from device.' });
+            }, 0);
+        }
     };
 }
 
