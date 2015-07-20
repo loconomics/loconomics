@@ -112,18 +112,30 @@ $caret-width-base = caret-width-base;
 /** Grids **/
 $grid-gutter-width = grid-gutter-width;
 
-// Bootstrap navbar
-// TODO: review if still used (maybe on non mobile sizes?)
-$navbar-height = navbar-height;
+/** Media queries helper variables based on Bootstrap limits **/
+$mediaMinXs = "(min-width: " + screen-xs-min + ")";
+$mediaMinSm = "(min-width: " + screen-sm-min + ")";
+$mediaMinMd = "(min-width: " + screen-md-min + ")";
+$mediaMinLg = "(min-width: " + screen-lg-min + ")";
+$mediaMaxXs = "(max-width: " + screen-xs-max + ")";
+$mediaMaxSm = "(max-width: " + screen-sm-max + ")";
+$mediaMaxMd = "(max-width: " + screen-md-max + ")";
 
 /**
     App variables
 **/
 $container-padding-left = round($grid-gutter-width / 2);
 $container-padding-right = round($grid-gutter-width / 2);
+
 // App/Mobile navbar (SmartNavBar)
 // 51px for Bootstrap default, 44px following iOS navbar size
+// NOT using Bootstrap variable 'navbar-height' since is 50px, not the iOS size
 $app-navbar-height = 44px;
+$big-navbar-height = 62px;
+// Media queries where each one of the navbars are used
+// (this allows to selectively choose on height or another
+$media-app-navbar = $mediaMaxSm;
+$media-big-navbar = $mediaMinSm;
 
 // Cubic easing:
 $cubic-easing = cubic-bezier(0.65,0.05,0.36,1);

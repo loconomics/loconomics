@@ -6,7 +6,6 @@ Activity() {
     // Corretly getting space, scrolling context and fixing SmartNavBar
     overflow: auto;    
     position: absolute;
-    top: $app-navbar-height;
     right: 0;
     bottom: 0;
     left: 0;
@@ -17,6 +16,12 @@ Activity() {
     */
     &.has-navbar {
         bottom: $activityNavbarHeight;
+    }
+
+    // media-app-navbar and big
+    top: $app-navbar-height;
+    @media $media-big-navbar {
+        top: $big-navbar-height;
     }
 }
 

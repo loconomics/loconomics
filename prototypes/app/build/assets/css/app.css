@@ -162,7 +162,7 @@ select.btn::-ms-expand {
 
 /* line 20 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 104 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+/* line 112 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
 
@@ -239,27 +239,35 @@ select.btn::-ms-expand {
     background-size: 100px 39px;
   }
 }
+@media (min-width: 768px) {
 
-/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+  .AppNav .navbar-brand {
+    height: 62px;
+    background-position: center;
+  }
+}
+
+/* line 36 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle {
   float: none;
   margin-right: 0;
 }
 
-/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar .SmartNavBar-btn h1 {
   color: #555;
   font-weight: normal;
 }
 
-/* line 46 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 51 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus {
   background: #fff;
 }
 
-/* line 51 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 56 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus > .navbar-collapse {
   position: fixed;
   left: 0px;
@@ -270,13 +278,20 @@ select.btn::-ms-expand {
   z-index: 300;
   border-top: none;
 }
+@media (min-width: 768px) {
 
-/* line 64 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 63 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+  .AppNav .App-menus > .navbar-collapse {
+    top: 62px;
+  }
+}
+
+/* line 73 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus > .navbar-collapse.collapsing {
   overflow: hidden;
 }
 
-/* line 70 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 79 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .nav {
   background: #53474b;
   margin-top: 0;
@@ -285,7 +300,7 @@ select.btn::-ms-expand {
   z-index: 200;
 }
 
-/* line 78 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 87 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .App-menus-header {
   margin: 0 -15px 0 -15px;
   padding: 15px;
@@ -295,7 +310,7 @@ select.btn::-ms-expand {
   font-size: 1.1em;
 }
 
-/* line 87 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 96 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .App-menus-header .App-menus-header-user {
   text-align: center;
   font-size: 1em;
@@ -303,7 +318,7 @@ select.btn::-ms-expand {
   margin: 10px 0 0 0;
 }
 
-/* line 94 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 103 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .App-menus-header .App-menus-header-photo {
   display: block;
   margin: auto;
@@ -311,7 +326,7 @@ select.btn::-ms-expand {
   background: none;
 }
 
-/* line 100 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 109 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .App-menus-header .App-menus-header-photo img {
   width: 60px;
   height: 60px;
@@ -323,18 +338,18 @@ select.btn::-ms-expand {
   overflow: hidden;
 }
 
-/* line 113 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav {
   padding-top: 10px;
 }
 
-/* line 117 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 126 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a {
   color: #fff;
   padding: 10px 15px 10px 40px;
 }
 
-/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 131 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a:hover,
 .AppNav .App-menus .navbar-nav a:active {
   color: #555;
@@ -342,18 +357,18 @@ select.btn::-ms-expand {
   outline: none;
 }
 
-/* line 129 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 138 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav a > i {
   color: #3d3232;
   margin-right: 5px;
 }
 
-/* line 148 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 157 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .App-menus .navbar-nav li.active > a {
   color: #00989a;
 }
 
-/* line 159 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 168 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle,
 .AppNav > .SmartNavBar > .SmartNavBar-edge {
   overflow: hidden;
@@ -361,20 +376,20 @@ select.btn::-ms-expand {
   text-overflow: clip !important;
 }
 
-/* line 165 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 174 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 167 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 176 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar .SmartNavBar-btn .ion {
   font-size: 2em;
   line-height: 44px;
 }
 
-/* line 174 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 183 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar .SmartNavBar-btn .ion-navicon {
   font-size: 31px;
 }
 
-/* line 178 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 187 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle {
   -webkit-transition-property: -webkit-transform, opacity;
   -moz-transition-property: -moz-transform, opacity;
@@ -393,7 +408,7 @@ select.btn::-ms-expand {
   transition-timing-function: ease-in-out;
 }
 
-/* line 180 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 189 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle > * {
   -webkit-transition-property: -webkit-transform, opacity;
   -moz-transition-property: -moz-transform, opacity;
@@ -416,12 +431,12 @@ select.btn::-ms-expand {
   display: block;
 }
 
-/* line 187 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 196 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle > * > .icon {
   display: block;
 }
 
-/* line 195 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 204 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle:before {
   font-family: "Ionicons";
   content: "";
@@ -432,7 +447,6 @@ select.btn::-ms-expand {
   right: 0;
   bottom: 0;
   left: 0;
-  line-height: 44px;
   text-align: center;
   pointer-events: none;
   opacity: 0;
@@ -454,37 +468,44 @@ select.btn::-ms-expand {
   -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
 }
+@media (min-width: 768px) {
 
-/* line 220 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 212 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+  .AppNav .navbar-toggle:before {
+    line-height: 62px;
+  }
+}
 
-/* line 222 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 231 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+
+/* line 233 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"] > * {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
 }
 
-/* line 229 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 240 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .navbar-toggle[aria-expanded="true"]:before {
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
 
-/* line 243 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 254 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 244 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 255 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 body.has-appNav-open .SmartNavBar {
   background: #53474b;
   border-bottom-color: transparent;
 }
 
-/* line 247 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 258 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 body.has-appNav-open .SmartNavBar .SmartNavBar-btn {
   color: White;
 }
 
-/* line 250 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 261 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 body.has-appNav-open .SmartNavBar h1 {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -492,9 +513,9 @@ body.has-appNav-open .SmartNavBar h1 {
   pointer-events: none;
 }
 
-/* line 257 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 268 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 
-/* line 258 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 269 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar {
   -webkit-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
   -moz-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
@@ -503,7 +524,7 @@ body.has-appNav-open .SmartNavBar h1 {
   transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
-/* line 260 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 271 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar .SmartNavBar-btn {
   -webkit-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
   -moz-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
@@ -512,7 +533,7 @@ body.has-appNav-open .SmartNavBar h1 {
   transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
-/* line 263 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
+/* line 274 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
 .AppNav .SmartNavBar h1 {
   -webkit-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
   -moz-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
@@ -573,24 +594,31 @@ body.has-appNav-open .SmartNavBar h1 {
 /* Space for app-nav on top */
   padding-top: 44px;
 }
+@media (min-width: 768px) {
 
-/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+  .App > body {
+    padding-top: 62px;
+  }
+}
+
+/* line 58 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .btn-google {
   background-color: #c00;
   color: #fff;
   border: none;
 }
 
-/* line 58 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 63 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .btn-facebook {
   background-color: #085394;
   color: #fff;
   border: none;
 }
 
-/* line 72 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 77 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 73 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 78 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal.bottom .modal-dialog {
   position: absolute;
   padding: 10px;
@@ -599,21 +627,28 @@ body.has-appNav-open .SmartNavBar h1 {
   bottom: 0;
 }
 
-/* line 86 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 87 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 92 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal .modal-dialog {
   padding-top: 44px;
 }
+@media (min-width: 768px) {
 
-/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 94 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+  .App .modal .modal-dialog {
+    padding-top: 62px;
+  }
+}
+
+/* line 101 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App .modal {
   background: rgba(0,0,0,0.4);
 }
 
-/* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 99 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+/* line 107 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 .App app-feedback-entry .ion-lightbulb,
 .App app-feedback-entry .ion-ios-lightbulb-outline {
   color: #f0ad4e;
@@ -676,8 +711,15 @@ body:before {
   -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
 }
+@media (min-width: 768px) {
 
-/* line 32 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+/* line 40 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+  body:before {
+    top: 62px;
+  }
+}
+
+/* line 35 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 body.use-backdrop:before {
   pointer-events: all;
   opacity: 1;
@@ -685,7 +727,7 @@ body.use-backdrop:before {
   filter: none;
 }
 
-/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
+/* line 40 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 
 /* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\loadingSpinner.styl */
 .loadingSpinner {
@@ -1648,17 +1690,328 @@ body.use-backdrop:before {
   height: 100%;
 }
 
-/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
 
-/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
+/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\index.styl */
 
-/* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
+/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\border.styl */
+
+/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\flex.styl */
+
+/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\image.styl */
+
+/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 10 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 578 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\size.styl */
+
+/* line 2 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\input-placeholder.styl */
+
+/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar {
+  height: 62px;
+  position: relative;
+  z-index: 200;
+  padding: 2px 15px 2px 15px;
+/*  DISCARDED FOR NOW, DOUBLE CHECK TO REMOVE */
+}
+
+/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .navbar-brand {
+  float: left;
+}
+
+/* line 40 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul {
+  padding: 0px;
+  float: right;
+}
+
+/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul > li {
+  display: inline-block;
+  height: 62px;
+  font-size: 16px;
+  width: auto;
+  float: left;
+  border-right: 1px solid #eee;
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul > li:last-child {
+  border-right: 0px;
+}
+
+/* line 57 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul > li .LargeNavBar-label {
+  max-width: 96px;
+  white-space: nowrap;
+  word-break: break-all;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  vertical-align: top;
+  display: inline-block;
+}
+
+/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul > li > a {
+  height: 58px;
+  line-height: 58px;
+  color: #4c4c4c;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* line 73 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+
+/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul > .open > a {
+  color: #999;
+  background-color: #fff;
+}
+
+/* line 78 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul > .open > .dropdown-menu {
+  float: left;
+  position: absolute;
+  margin-top: 0px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+}
+
+/* line 89 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul > .open > .dropdown-menu > li {
+  width: 200px;
+}
+
+/* line 91 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul > .open > .dropdown-menu > li > a {
+  white-space: normal;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* line 96 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+
+/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+
+/* line 98 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul .LargeNavBar-userMenu > a .LargeNavBar-label {
+  max-width: 80px;
+}
+
+/* line 102 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+
+/* line 103 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul .mail-nav i,
+.LargeNavBar > ul .mail-nav .caret {
+  vertical-align: middle;
+}
+
+/* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > ul .mail-alert {
+  background-color: White;
+  border: 1px solid #00989a;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  color: #00989a;
+  height: 20px;
+  position: absolute;
+  right: 20px;
+  top: 8px;
+  width: 20px;
+  z-index: 999;
+  pointer-events: none;
+}
+
+/* line 120 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-searchBar {
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  float: left;
+  margin-left: 2%;
+  padding: 0 10px;
+}
+
+/* line 128 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group {
+  border: none;
+}
+
+/* line 131 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .input-group-addon {
+  background: transparent;
+  border: none;
+  padding-right: 0;
+}
+
+/* line 136 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .form-control {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: none;
+  max-width: 120px;
+}
+@media (min-width: 992px) {
+
+/* line 142 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .LargeNavBar-searchBar .input-group .form-control {
+    max-width: none;
+    min-width: 340px;
+  }
+}
+@media (min-width: 1200px) {
+
+/* line 146 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .LargeNavBar-searchBar .input-group .form-control {
+    min-width: 535px;
+  }
+}
+
+/* line 3 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\input-placeholder.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .form-control::-moz-placeholder {
+  color: #999;
+}
+
+/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\input-placeholder.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .form-control:-ms-input-placeholder {
+  color: #999;
+}
+
+/* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\input-placeholder.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .form-control::-webkit-input-placeholder {
+  color: #999;
+}
+
+/* line 152 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-searchBar i {
+  vertical-align: top;
+  color: #5bc0de;
+  line-height: 58px;
+}
+
+/* line 158 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar input {
+  vertical-align: top;
+  border: none;
+  height: 58px;
+  line-height: 58px;
+  font-size: 16px;
+  width: 90%;
+}
+
+/* line 167 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+
+/* line 168 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar ul.message-dropdown {
+  padding: 0px;
+  max-height: 250px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* line 174 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar ul.alert-dropdown {
+  width: 200px;
+}
+
+/* line 177 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+
+/* line 178 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar li.message-preview {
+  width: 275px !important;
+  border-bottom: 1px solid rgba(0,0,0,0.15);
+}
+
+/* line 181 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar li.message-preview > a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+/* line 185 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar li.message-footer {
+  margin: 5px 0;
+}
+@media (min-width: 768px) {
+
+/* line 191 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-right .dropdown-menu {
+    left: auto;
+    right: 0;
+  }
+
+/* line 195 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-right .dropdown-menu-left {
+    left: 0;
+    right: auto;
+  }
+
+/* line 199 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-left {
+    float: left !important;
+  }
+
+/* line 202 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-right {
+    float: right !important;
+    margin-right: -15px;
+  }
+
+/* line 206 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-right ~ .navbar-right {
+    margin-right: 0;
+  }
+}
+
+/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
+
+/* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
 .ActivityNavbar {
   position: fixed;
   bottom: 0px;
   left: 0px;
   right: 0px;
-  height: 50px;
+  height: 44px;
   overflow: hidden;
   white-space: nowrap;
   -o-text-overflow: ellipsis;
@@ -1668,13 +2021,19 @@ body.use-backdrop:before {
   background: White;
   border-color: transparent;
 }
+@media (min-width: 768px) {
 
-/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
+  .ActivityNavbar {
+    height: 62px;
+  }
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity,
 [data-activity] {
   overflow: auto;
   position: absolute;
-  top: 44px;
   right: 0;
   bottom: 0;
   left: 0;
@@ -1682,15 +2041,24 @@ body.use-backdrop:before {
 /* activity must be notified of the navbar to fix
        available space
     */
+  top: 44px;
 }
 
-/* line 18 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
+/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-navbar,
 [data-activity].has-navbar {
-  bottom: 50px;
+  bottom: $activityNavbarHeight;
+}
+@media (min-width: 768px) {
+
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
+  .Activity,
+  [data-activity] {
+    top: 62px;
+  }
 }
 
-/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadContent.styl */
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadContent.styl */
 
 /* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LeadContent.styl */
 .LeadContent {
@@ -5051,10 +5419,103 @@ body.use-backdrop:before {
   pointer-events: auto;
 }
 
-/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 65 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar {
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar img {
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  border: 2px solid White;
+}
+
+/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--primary img {
+  border: 2px solid #00989a;
+}
+
+/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--secondary img {
+  border: 2px solid #e0004f;
+}
+
+/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--success img {
+  border: 2px solid #47b347;
+}
+
+/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--info img {
+  border: 2px solid #5bc0de;
+}
+
+/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--warning img {
+  border: 2px solid #f0ad4e;
+}
+
+/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--danger img {
+  border: 2px solid #d9534f;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--xs,
+.Avatar.Avatar--xs img {
+  height: 40px;
+  width: 40px;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--sm,
+.Avatar.Avatar--sm img {
+  height: 60px;
+  width: 60px;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--md,
+.Avatar.Avatar--md img {
+  height: 90px;
+  width: 90px;
+}
+
+/* line 28 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Avatar.styl */
+.Avatar.Avatar--lg,
+.Avatar.Avatar--lg img {
+  height: 125px;
+  width: 125px;
+}
+
+/* line 52 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 65 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 32 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

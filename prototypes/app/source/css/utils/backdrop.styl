@@ -12,6 +12,9 @@ backdrop() {
         transform: translateZ(0);
         position: fixed;
         top: $app-navbar-height;
+        @media $media-big-navbar {
+            top: $big-navbar-height;
+        }
         bottom: 0;
         left: 0;
         right: 0;

@@ -12,20 +12,25 @@
     
     // Logo
     .navbar-brand {
-      float: none;
-      display: inline-block;
+        float: none;
+        display: inline-block;
     
-      // magic number! For some reason, the only line-height
-      // that limits the full height to the navbar-height (44px now)
-      line-height: 13px;
+        // magic number! For some reason, the only line-height
+        // that limits the full height to the navbar-height (44px now)
+        line-height: 13px;
 
-      text-indent: -99999px;
-      // manually vertical 'visually' centering (depends on icon)
-      background: url("../images/logo-loconomics-header-mini.png") no-repeat center 2px;
-      hr-image("../images/logo-loconomics-header-mini@2x.png", 100px, 39px);
-      min-width: 100px;
-      min-height: 39px;
-      height: $app-navbar-height;
+        text-indent: -99999px;
+        // manually vertical 'visually' centering (depends on icon)
+        background: url("../images/logo-loconomics-header-mini.png") no-repeat center 2px;
+        hr-image("../images/logo-loconomics-header-mini@2x.png", 100px, 39px);
+        min-width: 100px;
+        min-height: 39px;
+        height: $app-navbar-height;
+        @media $media-big-navbar {
+            height: $big-navbar-height;
+            
+            background-position: center;
+        }
     }
     
     .navbar-toggle {
@@ -55,6 +60,10 @@
             overflow: auto;
             bottom: 0px;
             top: $app-navbar-height;
+            @media $media-big-navbar {
+                top: $big-navbar-height;
+            }
+            
             // iOS7-8.1 requires a explicit z-index:
             z-index: 300;
             // No border
@@ -197,6 +206,9 @@
             // NOTE: It requires to fix the ridiculous size of ion icons
             font-size: 2em;
             line-height: $app-navbar-height;
+            @media $media-big-navbar {
+                line-height: $big-navbar-height;
+            }
 
             position: absolute;
             top: 0;
@@ -204,7 +216,6 @@
             bottom: 0;
             left: 0;
 
-            line-height: $app-navbar-height;
             text-align: center;
 
             pointer-events: none;

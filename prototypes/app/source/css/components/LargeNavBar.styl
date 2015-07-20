@@ -1,0 +1,208 @@
+/**
+    LargeNavBar component.
+
+    A navigation bar for medium to large screens
+    with lot of defails, status and shortcut tools links
+    for the Loconomics App Styleguide.
+
+    Areas: Logo, Search, Contextual Menu, User Menu, Notifications 
+    and tool links
+    
+    Initial code (hightly adapted, renamed): Adi/Juvo.
+    
+    NOTES:
+        *NOTE-A: Size adjustment is managed manually with max/min widths on the search input
+            taking care of the use of a .container class with the .LargeNavBar class,
+            TODO: replace the top navbar elements layout by a flex/table based one to autoadjust
+**/
+
+@import 'nib';
+@import '../utils/input-placeholder.styl';
+
+$LargeNavBar-height = $big-navbar-height
+$LargeNavBar-vGap = 2px
+$LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
+
+.LargeNavBar
+    
+    height $LargeNavBar-height
+    
+    position: relative;
+    z-index: 200;
+    padding $LargeNavBar-vGap $container-padding-right $LargeNavBar-vGap $container-padding-left
+    
+    // common border color
+    $border-color =	$gray-lighter
+    
+    .navbar-brand
+        float left
+
+    & > ul 
+        padding 0px
+        float right
+        
+        & > li
+            display inline-block
+            height 62px
+            font-size 16px
+            width auto
+            float left
+            border-right 1px solid $border-color
+            padding 0
+            white-space: nowrap;
+            
+            &:last-child
+                border-right 0px
+                
+            .LargeNavBar-label
+                max-width: 96px;
+                white-space: nowrap;
+                word-break: break-all;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                vertical-align: top;
+                display: inline-block;
+
+            & > a
+                  height $LargeNavBar-contentHeight
+                  line-height $LargeNavBar-contentHeight
+                  color #4c4c4c
+                  padding-top 0
+                  padding-bottom 0
+
+        & > .open
+            & > a
+                color #999
+                background-color #fff
+
+            & > .dropdown-menu
+                float left
+                position absolute
+                margin-top 0px
+                border 1px solid rgba(0,0,0,0.15)
+                border-top-left-radius 0px
+                border-top-right-radius 0px
+                background-color #fff
+                -webkit-box-shadow 0 6px 12px rgba(0,0,0,0.175)
+                box-shadow 0 6px 12px rgba(0,0,0,0.175)
+
+                > li
+                    width 200px
+                    > a
+                      white-space normal
+                      color inherit
+                      font-size inherit
+                      
+        .LargeNavBar-userMenu
+            > a
+                .LargeNavBar-label
+                    max-width: 80px;
+
+        ///// SPECIFIC THINGS THAT MAY GET BETTER ORGANIZED OR CONVERTED TO GENERIC COMPONENTS:
+        .mail-nav
+            i, .caret
+                vertical-align middle
+
+        .mail-alert 
+            background-color White
+            border 1px solid $brand-primary
+            border-radius 50%
+            color $brand-primary
+            height 20px
+            position absolute
+            right: 20px;
+            top: 8px;
+            width 20px
+            z-index 999
+            pointer-events none
+
+    // search bar, with input-group
+    .LargeNavBar-searchBar 
+        border-left 1px solid $border-color
+        border-right 1px solid $border-color
+        float left
+        margin-left 2%
+        // min-width 150px
+        padding 0 10px
+        
+        .input-group
+            border none
+            
+            .input-group-addon
+                background transparent
+                border none
+                padding-right 0
+            
+            .form-control
+                box-shadow none
+                border none
+                // *NOTE-A
+                max-width: 120px;
+                
+                @media $mediaMinMd
+                    max-width none
+                    min-width 340px
+                    
+                @media $mediaMinLg
+                    min-width 535px
+                
+                +input-placeholder()
+                    color #999
+
+        i
+            // Must have a .fa-2x class
+            vertical-align top
+            color $brand-info
+            line-height $LargeNavBar-contentHeight
+
+      input 
+          vertical-align top
+          border none
+          height $LargeNavBar-contentHeight
+          line-height $LargeNavBar-contentHeight
+          font-size 16px
+          width 90%
+                  
+    /*  DISCARDED FOR NOW, DOUBLE CHECK TO REMOVE */
+    ul
+      &.message-dropdown
+        padding 0px
+        max-height 250px
+        overflow-x hidden
+        overflow-y auto
+
+      &.alert-dropdown
+        width 200px
+
+    li
+      &.message-preview
+        width 275px !important
+        border-bottom 1px solid rgba(0,0,0,0.15)
+        & > a
+          padding-top 15px
+          padding-bottom 15px
+
+      &.message-footer
+        margin 5px 0
+
+    // Fix for the navbar-right class that get an ugly media-min-query value as sideeffect of customization
+    // (min-width: 99999)...replaced by a min-width: sm-size
+    @media $media-big-navbar
+        .navbar-right .dropdown-menu
+            left: auto;
+            right: 0;
+
+        .navbar-right .dropdown-menu-left
+            left: 0;
+            right: auto;
+        
+        .navbar-left
+            float: left !important;
+        
+        .navbar-right
+            float: right !important;
+            margin-right: -15px;
+      
+        .navbar-right ~ .navbar-right
+            margin-right: 0;
+

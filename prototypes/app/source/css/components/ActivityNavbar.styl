@@ -3,15 +3,16 @@
    Its a navbar specific of an activity, placed on
    bottom.
 */
-/* Height from a Bootstrap value: */
-$activityNavbarHeight = $navbar-height;
 
 .ActivityNavbar {
     position: fixed;
     bottom: 0px;
     left: 0px;
     right: 0px;
-    height: $activityNavbarHeight;
+    height: $app-navbar-height;
+    @media $media-big-navbar {
+        height: $big-navbar-height;
+    }
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

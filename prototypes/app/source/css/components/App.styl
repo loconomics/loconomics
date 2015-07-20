@@ -39,7 +39,12 @@
     > body {
         height: 100%;
         /* Space for app-nav on top */
+        // media-app-navbar and big
         padding-top: $app-navbar-height;
+        @media $media-big-navbar {
+            padding-top: $big-navbar-height;
+        }
+        
         // DO NEVER EVER EVER PUT THE NEXT LINE ON BODY,
         // WILL BREAK Webkit/Blink (iOS, Android, Chrome, Opera).
         // scrolling is auto on html/documentElement so no need for this.
@@ -86,6 +91,9 @@
     .modal {
         .modal-dialog {
             padding-top: $app-navbar-height;
+            @media $media-big-navbar {
+                padding-top: $big-navbar-height;
+            }
         }
     }
     

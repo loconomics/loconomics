@@ -37,7 +37,7 @@
 
         <nav role="navigation" class="AppNav">
             
-            <div class="SmartNavBar">
+            <div class="SmartNavBar visible-xs">
                 <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }" class="SmartNavBar-edge left"></span>
 
                 <h1>&nbsp;
@@ -49,6 +49,7 @@
                 
                 <span data-bind="component: { name: 'app-navbar-action', params: { action: 'rightAction', navBar: navBar } }" class="SmartNavBar-edge right"></span>
             </div>
+            <div class="hidden-xs" data-bind="template: 'largenavbar-template'"></div>
 
             <div class="App-menus">
                 <div id="menuIn" class="navbar-collapse collapse">
