@@ -183,6 +183,13 @@ var appInit = function appInit() {
     
     attachFastClick(document.body);
     
+    // Knockout binding for jquery-ui sortable.
+    // It loads jquery-ui sortable and draggable as dependencies:
+    require('knockout-sortable');
+    // Just AFTER jquery-ui is loaded (or the selected components), load
+    // the fix for touch support:
+    require('jquery.ui.touch-punch');
+    
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that
     // may require adjustments on other scripts that listen to it.

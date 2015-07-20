@@ -4961,20 +4961,22 @@ body.use-backdrop:before {
   display: block;
   width: auto;
   overflow: hidden;
-}
-
-/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
-.WorkPhotos > li {
   position: relative;
 }
 
-/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+/* line 13 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+.WorkPhotos > li {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
 .WorkPhotos > li .WorkPhotos-imgBtn {
   display: block;
   position: relative;
 }
 
-/* line 18 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+/* line 21 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
 .WorkPhotos > li .WorkPhotos-imgBtn img {
   display: block;
   width: auto;
@@ -4983,7 +4985,7 @@ body.use-backdrop:before {
   max-height: 332px;
 }
 
-/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+/* line 29 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
 .WorkPhotos > li .WorkPhotos-imgBtn .WorkPhotos-editionLayer {
   position: absolute;
   top: 0;
@@ -5002,7 +5004,7 @@ body.use-backdrop:before {
   transition: opacity 300ms ease;
 }
 
-/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
 .WorkPhotos > li .WorkPhotos-imgBtn .WorkPhotos-editionLayer > .WorkPhotos-toolbar {
   width: 100%;
   height: 100%;
@@ -5013,9 +5015,9 @@ body.use-backdrop:before {
   margin: -23px auto 0;
 }
 
-/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+/* line 56 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
 
-/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
+/* line 57 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\WorkPhotos.styl */
 .WorkPhotos > li.is-selected .WorkPhotos-editionLayer {
   opacity: 1;
   -ms-filter: none;
@@ -5026,7 +5028,7 @@ body.use-backdrop:before {
 /* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 62 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 65 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

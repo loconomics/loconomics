@@ -75,14 +75,16 @@ module.exports = function(/*grunt*/) {
                 // dependencies as 'utils'.
                 './node_modules/events:events',
                 './vendor/iagosrl/ko/formatBinding:ko/formatBinding',
-                './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent'
+                './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent',
+                'jquery-ui',
+                'knockout-sortable',
             ],
             'shim': {
-                'jquery-ui':  {
+                /*'jquery-ui':  {
                     'path': './vendor/jquery-ui/jquery-ui.js',
                     'exports': null,
                     'depends': { 'jquery': null }
-                },
+                },*/
                 'jquery-mobile':  {
                     'path': './vendor/jquerymobile/jquery.mobile.custom.js',
                     'exports': null,
@@ -95,6 +97,11 @@ module.exports = function(/*grunt*/) {
                 'fastclick': {
                     path: './vendor/fastclick-forked/fastclick.js',
                     exports: 'FastClick'
+                },
+                'jquery.ui.touch-punch': {
+                    path: './vendor/touch-punch/jquery.ui.touch-punch.min',
+                    exports: null,
+                    'depends': { 'jquery': null }
                 }
             }
         }

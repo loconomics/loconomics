@@ -112,6 +112,10 @@ function ViewModel(app) {
             }, 0);
         }
     };
+    
+    this.updateSort = function(/*info*/) {
+        // TODO
+    };
 }
 
 
