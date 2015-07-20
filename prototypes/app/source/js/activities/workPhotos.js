@@ -74,43 +74,51 @@ function ViewModel(app) {
 
     this.addNew = function() {
         // Pick a new photo
-        var newItem = {
-            url: '',
-            title: ''
-        };
-        this.openPhotoPicker(newItem);
-    }.bind(this);
-    
-    this.changeImg = function(item) {
-        // Pick another photo to replace on 'item'
-        this.openPhotoPicker(item);
+        this.openPhotoPicker()
+        .then(function(img) {
+            var newItem = new WorkPhoto({
+                url: img,
+                title: ''
+            });
+            this.list.push(newItem);
+        }.bind(this))
+        .catch(function(err) {
+            app.modals.showError({ error: err, title: 'Error getting photo.' });
+        });
     }.bind(this);
 
-    this.openPhotoPicker = function(item) {
+    this.removeImg = function(item) {
+        // Pick another photo to replace on 'item'
+        this.list.remove(item);
+    }.bind(this);
+
+    this.openPhotoPicker = function() {
         /*global navigator,Camera*/
-        if (navigator.camera && navigator.camera.getPicture) {
-            navigator.camera.getPicture(function(img) {
-                item.url = img;
-            }, function(err) {
+        return new Promise(function(resolve, reject) {
+            if (navigator.camera && navigator.camera.getPicture) {
+                navigator.camera.getPicture(function(img) {
+                    resolve(img);
+                }, function(err) {
+                    // bug iOS note: http://plugins.cordova.io/#/package/org.apache.cordova.camera
+                    setTimeout(function() {
+                        reject(err);
+                    }, 0);
+                }, {
+                    destinationType: Camera.DestinationType.FILE_URI,
+                    targetWidth: 446,
+                    targetHeight: 332,
+                    saveToPhotoAlbum: true,
+                    mediaType: Camera.MediaType.PICTURE,
+                    correctOrientation: true
+                });
+            }
+            else {
                 // bug iOS note: http://plugins.cordova.io/#/package/org.apache.cordova.camera
                 setTimeout(function() {
-                    app.modals.showError({ title: 'Error getting photo.', error: err });
+                    reject({ error: 'Unsupported', message: 'Impossible to get photo from device' });
                 }, 0);
-            }, {
-                destinationType: Camera.DestinationType.FILE_URI,
-                targetWidth: 446,
-                targetHeight: 332,
-                saveToPhotoAlbum: true,
-                mediaType: Camera.MediaType.PICTURE,
-                correctOrientation: true
-            });
-        }
-        else {
-            // bug iOS note: http://plugins.cordova.io/#/package/org.apache.cordova.camera
-            setTimeout(function() {
-                app.modals.showError({ error: 'Impossible to get photo from device.' });
-            }, 0);
-        }
+            }
+        });
     };
     
     this.updateSort = function(/*info*/) {
@@ -122,11 +130,21 @@ function ViewModel(app) {
 
 /// TESTDATA
 
+var Model = require('../models/Model');
+function WorkPhoto(values) {
+    Model(this);
+    
+    this.model.defProperties({
+        url: '',
+        title: ''
+    }, values);
+}
+
 function testdata() {
     return [
-        { url: 'https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg', title: 'Testing photo 1' },
-        { url: 'https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg', title: 'Testing photo 2' },
-        { url: 'https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg', title: 'Testing photo 3' },
-        { url: 'https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg', title: 'Testing photo 4' }
+        new WorkPhoto({ url: 'https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg', title: 'Testing photo 1' }),
+        new WorkPhoto({ url: 'https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg', title: 'Testing photo 2' }),
+        new WorkPhoto({ url: 'https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg', title: 'Testing photo 3' }),
+        new WorkPhoto({ url: 'https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg', title: 'Testing photo 4' })
     ];
 }
