@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-07-20
+/*! LoconomicsApp 2015-07-21
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -5973,4 +5973,529 @@ body.use-backdrop:before {
   border-radius: 100%;
   background: #00989a;
   overflow: hidden;
+}
+
+/* line 20 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] body,
+[data-activity=profile] textarea {
+  background-color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13.3px;
+  font-weight: 400;
+  color: #3d3d3d;
+}
+
+/* line 45 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .loco-primary {
+  color: #00989a;
+}
+
+/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .loco-common {
+  color: #fff;
+}
+
+/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .loco-info {
+  color: #777;
+}
+
+/* line 51 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .loco-secondary {
+  color: #ff6765;
+}
+
+/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .loco-warning {
+  color: #f0ad4e;
+}
+
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .loco-infolight {
+  color: #888;
+}
+
+/* line 72 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] img {
+  height: auto;
+  width: 100%;
+}
+
+/* line 76 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .profile {
+  margin-top: 40px;
+}
+
+/* line 80 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .panel {
+  padding: 10px;
+  border: 1px solid #dfdfdf;
+}
+
+/* line 84 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .panel-content section {
+  background-color: #fff;
+  padding: 0.1px 10px;
+  margin: 0 0px 10px 0;
+  position: relative;
+  border-bottom: 1px solid #e8eaeb;
+}
+
+/* line 90 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .panel-content article {
+  border-top: 1px solid #ff6765;
+  padding: 10px;
+  margin: 5px -10px;
+}
+
+/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .page-wrapper {
+  background-color: #ecf0f1;
+}
+
+/* line 100 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .form-wrapper {
+  background-color: #fff;
+  font-size: 16px;
+  border-bottom: 1px solid #e8eaeb;
+}
+
+/* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .media-middle {
+  vertical-align: middle !important;
+}
+
+/* line 109 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .profilename {
+  display: inline-block;
+  height: 20px;
+  overflow: hidden;
+  vertical-align: sub;
+  width: 64px;
+}
+
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .display-inline-block {
+  display: inline-block;
+}
+
+/* line 119 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .display-block {
+  display: block;
+}
+
+/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pointer {
+  cursor: pointer;
+}
+
+/* line 125 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pad5l {
+  padding-left: 5px;
+}
+
+/* line 128 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pad5t {
+  padding-top: 5px;
+}
+
+/* line 131 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pad5r {
+  padding-right: 5px;
+}
+
+/* line 134 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pad10t {
+  padding-top: 10px !important;
+}
+
+/* line 137 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pad5b {
+  padding-bottom: 5px;
+}
+
+/* line 140 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pad10b {
+  padding-bottom: 10px;
+}
+
+/* line 143 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pad20b {
+  padding-bottom: 20px !important;
+}
+
+/* line 146 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pad20t {
+  padding-top: 20px !important;
+}
+
+/* line 149 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .bold {
+  font-weight: bold;
+}
+
+/* line 152 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .margin-none {
+  margin: 0px !important;
+}
+
+/* line 155 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .margin5t {
+  margin-top: 5px;
+}
+
+/* line 158 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .margin10t {
+  margin-top: 10px;
+}
+
+/* line 161 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .margin0t {
+  margin-top: 0px;
+}
+
+/* line 164 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .margin5r {
+  margin-right: 5px;
+}
+
+/* line 167 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .margin0b {
+  margin-bottom: 0px !important;
+}
+
+/* line 170 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .margin20b {
+  margin-bottom: 20px !important;
+}
+
+/* line 173 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .border-right-blue {
+  border-right: 2px solid #00989a;
+}
+
+/* line 176 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .border-right-red {
+  border-right: 2px solid #ff6765;
+}
+
+/* line 179 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .border-right-grey {
+  border-right: 2px solid #777;
+}
+
+/* line 182 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .border-right-yellow {
+  border-right: 2px solid #f0ad4e;
+}
+
+/* line 185 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .border-bottom {
+  border-bottom: 1px solid #00989a;
+}
+
+/* line 188 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .border-top {
+  border-top: 1px solid #00989a;
+}
+
+/* line 191 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .table-border-bottom {
+  border-bottom: 1px solid #888;
+}
+
+/* line 194 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .btn-border {
+  border: 1px solid #00989a;
+}
+
+/* line 197 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .border-none {
+  border: 0px !important;
+}
+
+/* line 200 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .pos-relative {
+  position: relative;
+}
+
+/* line 202 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .center-block {
+  float: none;
+}
+
+/* line 204 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .logo {
+  background-image: url("../css/logo-loconomics-header-mini.png");
+  height: 48px;
+  overflow: hidden;
+  text-indent: -551px;
+  width: 106px;
+  display: block;
+  float: left;
+}
+
+/* line 215 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .sm-icons {
+  font-size: 28px;
+}
+
+/* line 218 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .sm-icons :hover {
+  color: #888;
+  text-decoration: none;
+}
+
+/* line 222 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .editpen {
+  border: 1px solid #00989a;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  display: block;
+  height: 22px;
+  padding: 0 5px;
+  width: 22px;
+}
+
+/* line 230 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .about {
+  display: none;
+}
+
+/* line 233 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .user-review {
+  top: 8px;
+  position: relative;
+}
+
+/* line 239 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 240 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .btn-border:hover {
+  background-color: #a8dbdb;
+  border: 1px solid #fff;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* line 246 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 247 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .btn-info:hover {
+  background-color: #a8dbdb;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* line 255 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 25px;
+  margin-right: 15px;
+  font-size: 13px;
+}
+
+/* line 262 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] label:before {
+  content: "";
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  position: absolute;
+  left: 0;
+  bottom: 1px;
+  background-color: #fff;
+  border: 2px solid #4c4c4c;
+}
+
+/* line 274 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .wrapper {
+  width: 500px;
+  margin: 50px auto;
+}
+
+/* line 278 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] input[type=radio],
+[data-activity=profile] input[type=checkbox] {
+  display: none;
+}
+
+/* line 281 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 282 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 283 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .radio label:before {
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+}
+
+/* line 286 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 287 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .checkbox label {
+  margin-bottom: 0px;
+}
+
+/* line 289 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] .checkbox label:before {
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+
+/* line 292 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 293 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 294 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] input[type=radio]:checked + label:before {
+  content: "\2022";
+  color: #00989a;
+  font-size: 30px;
+  text-align: center;
+  line-height: 18px;
+  border: 2px solid #00989a;
+}
+
+/* line 302 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 303 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+
+/* line 304 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+[data-activity=profile] input[type=checkbox]:checked + label:before {
+  content: "\2713";
+  font-size: 22px;
+  color: #00989a;
+  text-align: center;
+  font-weight: bold;
+  line-height: 8px;
+  border: 2px solid #00989a;
+}
+@media (min-width: 1920px) and (max-width: 2560px) {
+
+/* line 316 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .pad5r {
+    padding-right: 15px;
+  }
+
+/* line 319 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .pad5l {
+    padding-left: 15px;
+  }
+}
+@media (min-width: 2560px) and (max-width: 2880px) {
+
+/* line 323 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .pad5r {
+    padding-right: 15px;
+  }
+
+/* line 326 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .pad5l {
+    padding-left: 15px;
+  }
+}
+@media (min-width: 1024px) and (max-width: 1920px) {
+
+/* line 330 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .searchbar {
+    min-width: 400px;
+  }
+
+/* line 333 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .pad5r {
+    padding-right: 15px;
+  }
+
+/* line 336 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .pad5l {
+    padding-left: 15px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+
+/* line 340 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .nav > li > a {
+    padding: 15px 7px;
+  }
+
+/* line 343 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .searchbar {
+    min-width: 190px;
+  }
+
+/* line 345 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .searchbar input {
+    width: 85%;
+  }
+
+/* line 348 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .sm-icons {
+    font-size: 22px;
+  }
+}
+@media (min-width: 320px) and (max-width: 767px) {
+
+/* line 352 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .form-wrapper {
+    display: none;
+  }
+
+/* line 355 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .panel-content {
+    width: 100%;
+    float: none;
+  }
+
+/* line 359 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .sm-icons {
+    display: none;
+  }
+
+/* line 362 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .profile {
+    text-align: center;
+  }
+
+/* line 365 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .profile h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 30px;
+  }
+
+/* line 370 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .profile h4 {
+    font-size: 14px !important;
+    font-weight: 400;
+  }
+
+/* line 374 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .profile .btn-info {
+    margin-left: 10px;
+  }
+
+/* line 377 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .profile .star {
+    position: relative;
+    top: -70px;
+  }
+
+/* line 381 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .profile .loco-info {
+    display: none;
+  }
+
+/* line 384 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\profile.styl */
+  [data-activity=profile] .about,
+  [data-activity=profile] .about .sm-icons {
+    margin-top: 10px;
+    display: block;
+  }
 }
