@@ -1652,7 +1652,108 @@
             </div>
           </div>
         </div>
+        <div class="home-categories">
+           <h2 class="home-section-title">Browse by category</h2>
+
+          <div class="container-fluid">
+            <ul class="list-unstyled">
+              <li class="SearchCategory-home">
+                 <h3>Home</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-ios-color-filter-outline"></i>
+
+                <p>Loconomics is owned by the professionals providing you great service.
+                  No middle-men.</p> <a href="/?category=home" class="btn btn-secondary btn-block">Book from <em data-bind="">$17/h</em></a>
+
+              </li>
+              <li class="SearchCategory-children">
+                 <h3>Children</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-ios-search"></i>
+
+                <p>Book anything from house cleaning to reiki using the same simple booking
+                  process.</p> <a href="/?category=children" class="btn btn-secondary btn-block">Book from <em data-bind="">$17/h</em></a>
+
+              </li>
+              <li class="SearchCategory-pet">
+                 <h3>Pet</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa fa-calendar-o"></i>
+
+                <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                <a
+                href="/?category=pet" class="btn btn-secondary btn-block">Book from <em data-bind="">$17/h</em>
+                  </a>
+              </li>
+              <li class="SearchCategory-personal">
+                 <h3>Personal</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa fa-calendar-o"></i>
+
+                <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                <a
+                href="/?category=personal" class="btn btn-secondary btn-block">Book from <em data-bind="">$17/h</em>
+                  </a>
+              </li>
+            </ul>
+            <ul class="list-unstyled">
+              <li class="SearchCategory-transport">
+                 <h3>Transport</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-card"></i>
+
+                <p>No awkward cash exchanges, pay with credit card and include optional gratuity.</p>
+                <a
+                href="/?category=transport" class="btn btn-secondary btn-block">Book from <em data-bind="">$17/h</em>
+                  </a>
+              </li>
+              <li class="SearchCategory-office">
+                 <h3>Office</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
+
+                <p>Choose your comfort level when booking providers using our <a href="/backgroundCheckPolicy"
+                  target="_blank">Background Check Policy</a>.</p> <a href="/?category=office"
+                class="btn btn-secondary btn-block">Book from <em data-bind="">$17/h</em></a>
+
+              </li>
+              <li class="SearchCategory-senior">
+                 <h3>Senior</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
+
+                <p>Easily store and share your favorite professionals with your favorite
+                  people.</p> <a href="/?category=senior" class="btn btn-secondary btn-block">Book from <em data-bind="">$17/h</em></a>
+
+              </li>
+              <li class="SearchCategory-celebration">
+                 <h3>Celebration</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa fa-calendar-o"></i>
+
+                <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                <a
+                href="/?category=celebration" class="btn btn-secondary btn-block">Book from <em data-bind="">$17/h</em>
+                  </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
+      <footer>
+        <ul class="list-unstyled">
+          <li><a href="/about">About</a>
+          </li>
+          <li><a href="http://blog.loconomics.com/category/press">Press</a>
+          </li>
+          <li><a href="http://blog.loconomics.com">Blog</a>
+          </li>
+          <li><a href="/feedback/faqs">Help</a>
+          </li>
+          <li><a href="/terms">Terms &amp; Privacy</a>
+          </li>
+        </ul>
+      </footer>
     </div>
     <!-- Inbox activity -->
     <div class="container-fluid" data-activity="inbox">
@@ -3683,6 +3784,16 @@
               <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
           </span>
       </button>
+    </script>
+    <!-- StarsRating -->
+    <script type="text/html" id="stars-rating-template">
+      <span class="StarsRating">
+          <span class="sr-only StarsRating-label"><span class="StarsRating-rating" data-bind="text: rating"></span> stars</span>
+          <span class="StarsRating-icons" data-bind="foreach: { data: stars, as: 'rate' }">
+              <i class="fa ion ion-android-star" aria-hidden="true" data-bind="css: { 'ion-android-star': rate === 1, 'ion-android-star-hal': rate === 0.5, 'ion-android-star-outline': rate === 0 }"></i>
+          </span>
+          <span class="StarsRating-total" data-bind="text: totalText"></span>
+      </span>
     </script>
     <!-- Knockout Template time-slot-tile -->
     <script type="text/html" id="time-slot-tile-template">

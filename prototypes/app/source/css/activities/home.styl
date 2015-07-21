@@ -2,7 +2,8 @@
     Home page styles (aka Search page)
 **/
 
-@import '../utils/input-group-addon-inset';
+@import '../utils/input-group-addon-inset.styl';
+@import '../utils/arrows.styl';
 
 [data-activity=home] {
     $homeHeaderHeight = 56px;
@@ -118,6 +119,7 @@
         .home-hiw {
             text-align: center;
             color: $gray;
+            down-arrow(30px, 0, none, White, center);
             
             $iconsSize = 90px;
             
@@ -152,6 +154,9 @@
         .home-booking {
             background: $brand-secondary-background;
             text-align: center;
+            padding-top: 40px;
+
+            down-arrow(30px, 0, none, $brand-secondary, center);
 
             ul {
                 color: $gray;
@@ -186,8 +191,65 @@
             
             .btn-secondary {
                 border-color: White;
-                margin: 2em auto;
+                margin: 0 auto 2em;
                 border-radius: 2px;
+            }
+        }
+        
+        .home-categories {
+            background: $gray-background;
+            text-align: center;
+            padding-top: 40px;
+            
+            h2 {
+                color: $gray;
+            }
+            
+            ul {
+                color: $gray;
+                clearfix()
+
+                li {
+                    // TODO Add background photo per category
+                    background: White no-repeat top center;
+                    background-size: contain;
+                    float: left;
+                    width: 21%;
+                    margin: 2%;
+                    padding: 12px;
+                    vertical-align: middle;
+
+                    h3 {
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+                    
+                    .StarsRating {
+                        color: $brand-secondary;
+                    }
+                    
+                    .btn {
+                        font-weight: bold;
+                        border-radius: 1px;
+                        
+                        em {
+                            font-weight: normal;
+                            font-style: normal;
+                        }
+                    }
+                    
+                    // icons
+                    > i {
+                        color: White;
+                        font-size: 4em;
+                        display: inline-block;
+                        border-radius: 12px;
+                        background: $brand-primary;
+                        text-align: center;
+                        padding: 14px 20px;
+                        margin: 30px auto 8px;
+                    }
+                }
             }
         }
     }

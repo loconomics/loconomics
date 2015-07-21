@@ -106,4 +106,28 @@ exports.registerAll = function() {
             this.showMarketplaceInfo = getObservable(params.showMarketplaceInfo || false);
         }
     });
+    
+    /// Stars
+    ko.components.register('app-stars-rating', {
+        template: { element: 'stars-rating-template' },
+        viewModel: function(params) {
+            this.rating = getObservable(params.rating || 2.5);
+            this.total = getObservable(params.total || 0);
+            
+            this.stars = ko.pureComputed(function() {
+                var r = this.rating(),
+                    list = [];
+                for (var i = 1; i <= 5; i++) {
+                    // TODO Support half values
+                    list.push(i <= r ? 1 : 0);
+                }
+                return list;
+            }, this);
+
+            this.totalText = ko.pureComputed(function() {
+                // TODO Conditional formatting for big numbers cases
+                return '(' + this.total() + ')';
+            }, this);
+        }
+    });
 };
