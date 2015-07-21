@@ -65,5 +65,6 @@ module.exports = {
     'licensesCertifications': require('./activities/licensesCertifications'),
     'licensesCertificationsForm': require('./activities/licensesCertificationsForm'),
     'workPhotos': require('./activities/workPhotos'),
-    'profile': require('./activities/profile')
+    'profile': require('./activities/profile'),
+    'home': require('./activities/home')
 };
