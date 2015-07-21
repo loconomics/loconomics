@@ -1,5 +1,5 @@
-<!-- Activity home -->
-<div class="container-fluid" data-activity="home">
+<!-- Activity dashboard -->
+<div class="container-fluid" data-activity="dashboard">
 
     <div>
         <h1 class="SectionTitle"
@@ -10,7 +10,7 @@
                 params: { mod: 'onRight' }
             } --><!-- /ko -->
         </h1>    
-        <div id="homeNextBooking"
+        <div id="dashboardNextBooking"
            data-bind="css: { 'is-loading': nextBooking.isLoading() }">
             <div data-bind="with: nextBooking">
                 <a href="#" class="LeadTile"
@@ -39,7 +39,7 @@
         <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-        <ul id="homeUpcomingBookings" class="TilesList" data-bind="foreach: upcomingBookings.items">
+        <ul id="dashboardUpcomingBookings" class="TilesList" data-bind="foreach: upcomingBookings.items">
             <li><a href="#" class="LineTile"
                data-bind="attr: { href: url }">
                 <strong data-bind="text: quantity"></strong>
@@ -64,7 +64,7 @@
         <div data-bind="css: { 'is-loading': inbox.isLoading() }">
             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-        <div id="homeInbox" class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
+        <div id="dashboardInbox" class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
         <a class="CompactLinkTile" href="/inbox">
             <div class="Tile-content">Go to inbox</div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
@@ -73,7 +73,7 @@
 
     <div>
         <h1 class="SectionTitle">Performance</h1>
-        <ul id="homePerformance" class="TilesList" data-bind="foreach: performance.items">
+        <ul id="dashboardPerformance" class="TilesList" data-bind="foreach: performance.items">
             <li><a href="#" class="LineTile"
                    data-bind="attr: { href: link }">
                     <strong data-bind="text: markerLine1"></strong>
@@ -89,7 +89,7 @@
     
     <div>
         <h1 class="SectionTitle">Get more from Loconomics</h1>
-        <ul class="TilesList" id="homeGetMore" data-bind="foreach: getMore.items()">
+        <ul class="TilesList" id="dashboardGetMore" data-bind="foreach: getMore.items()">
             <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
                 <div class="Tile-icon" aria-hidden="true">
                     <span data-bind="css: markerIcon"></span>

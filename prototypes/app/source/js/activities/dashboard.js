@@ -1,5 +1,5 @@
 /**
-    Home activity
+    Dashboard activity
 **/
 'use strict';
 
@@ -8,7 +8,7 @@ var ko = require('knockout');
 var Activity = require('../components/Activity'),
     AppointmentView = require('../viewmodels/AppointmentView');
 
-var A = Activity.extends(function HomeActivity() {
+var A = Activity.extends(function DashboardActivity() {
     
     Activity.apply(this, arguments);
 
@@ -18,11 +18,11 @@ var A = Activity.extends(function HomeActivity() {
     this.navBar = Activity.createSectionNavBar(null);
     
     // Getting elements
-    this.$nextBooking = this.$activity.find('#homeNextBooking');
-    this.$upcomingBookings = this.$activity.find('#homeUpcomingBookings');
-    this.$inbox = this.$activity.find('#homeInbox');
-    this.$performance = this.$activity.find('#homePerformance');
-    this.$getMore = this.$activity.find('#homeGetMore');
+    this.$nextBooking = this.$activity.find('#dashboardNextBooking');
+    this.$upcomingBookings = this.$activity.find('#dashboardUpcomingBookings');
+    this.$inbox = this.$activity.find('#dashboardInbox');
+    this.$performance = this.$activity.find('#dashboardPerformance');
+    this.$getMore = this.$activity.find('#dashboardGetMore');
     
     // TestingData
     setSomeTestingData(this.viewModel);

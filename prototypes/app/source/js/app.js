@@ -111,7 +111,7 @@ var app = {
                     this.shell.go(onboarding);
                 }
                 else {
-                    this.shell.go('home');
+                    this.shell.go('/dashboard');
                 }
 
                 // Just because is delayed, needs

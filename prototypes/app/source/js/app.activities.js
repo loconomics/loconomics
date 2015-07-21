@@ -23,7 +23,7 @@ module.exports = {
     'freelancerPricing': require('./activities/freelancerPricing'),
     'serviceAddresses': require('./activities/serviceAddresses'),
     'textEditor': require('./activities/textEditor'),
-    'home': require('./activities/home'),
+    'dashboard': require('./activities/dashboard'),
     'appointment': require('./activities/appointment'),
     'index': require('./activities/index'),
     'login': require('./activities/login'),

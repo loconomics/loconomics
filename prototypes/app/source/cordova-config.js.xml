@@ -91,7 +91,7 @@
     <gap:plugin name="cordova-plugin-device" version="1.0.0" source="npm" />
     <!--<gap:plugin name="cordova-plugin-wkwebview" version="0.3.9" source="npm" />-->
     <gap:plugin name="cordova-plugin-whitelist" version="1.0.0" source="npm" />
-    <gap:plugin name="cordova-plugin-camera" version="1.1.0" source="npm" />
+    <gap:plugin name="cordova-plugin-camera" version="1.2.0" source="npm" />
 
     <!-- More official plugins examples -->
     <!--

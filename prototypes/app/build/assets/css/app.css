@@ -5939,12 +5939,12 @@ body.use-backdrop:before {
   margin-left: 1em;
 }
 
-/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\dashboard.styl */
 
-/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\dashboard.styl */
 
-/* line 2 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] #homeNextBooking {
+/* line 2 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\dashboard.styl */
+[data-activity=dashbard] #dashboardNextBooking {
   min-height: 196px;
   overflow: hidden;
 }
