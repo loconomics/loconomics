@@ -2,443 +2,441 @@
 <div class="" data-activity="profile">
     <div>
         <!-- ko component: {
-            name: 'app-loading-spinner',
-            params: { mod: 'row' }
-        } --><!-- /ko -->
+name: 'app-loading-spinner',
+params: { mod: 'row' }
+} --><!-- /ko -->
     </div>
     <!-- TODO: FROM JUVO, TO REFACTOR -->
+    <!-- profile internal menu -->
+    <div class="profile-menu hidden-xs">
+        <ul>
+            <li><a href="#profile-overview">Overview</a></li>
+            <li><a href="#profile-pricing">Pricing</a></li>
+            <li><a href="#profile-reviews">Reviews</a></li>
+            <li><a href="#profile-workphotos">Photos</a></li>
+            <li><a href="#profile-locations">Location</a></li>
+            <li><a href="#profile-credentials">Credentials</a></li>
+        </ul>
+    </div>
     <!--profile box -->
     <div class="container profile">
-		<div class="col-xs-12 col-sm-3 user-in-card">
-		<div class="Avatar Avatar--primary Avatar--lg"><img src="https://loconomics.com/en-US/Profile/Photo/"></div>
-		<h3 class="text-center bold margin0b"><span data-bind="text: profile() && profile().fullName()"></span></h3>
-		<h5 class="bold text-center margin0t">Tact Massage Therapy</h5>
-		</div>
-		<div class="col-xs-12 col-sm-6">
-		<h2 class="bold margin0t margin0b">Massage Therapist</h2>
-		<h4 class="loco-primary margin0t">Physical Therapist, Midwife </h4>
-		
-		<div class="star">
-		<span class="display-inline-block pointer h4 margin0t">
-		<i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i>
-		<span class="h5 bold" >(85)</span>
-		</span>
-		<span class="h5 bold">&nbsp; &nbsp; <i class="icon ion-ribbon-b"></i> <span class="h5 bold" >(5)</span> </span>
-		</div>
-		
-		<p class="loco-info margin10t">Originally from Glacia, I have a wife, three dogs, and a cat. They keep me quite busy. I Love living in Vigo so much that i moved back here.</p>
-		</div>
-		<div class="col-xs-12 col-sm-3 pad5r pad5l">
-		<div class="sm-icons profile-share-icons">
-            <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>
-            <a href="#" class="loco-info"><i class="icon ion-ios-email-outline"></i></a>
-            <a href="#" class="loco-info"><i class="icon ion-social-facebook"></i></a> 
-            <a href="#" class="loco-info"><i class="icon ion-social-twitter"></i> </a>
-            <a href="#" class="loco-info"><i class="icon ion-social-googleplus"></i></a>
-            <a href="#" class="loco-info"><i class="icon ion-social-pinterest"></i></a>
-		</div>
-		<div class="row">
-            <div class="col-xs-6 col-sm-12">
-		      <a href="#" class="btn btn-default btn-lg btn-block">Message</a>
-            </div>
-            <div class="col-xs-6 col-sm-12 margin10t">
-		      <a href="#" class="btn btn-primary btn-lg btn-block">Book</a> 
-            </div>
+        <div class="col-xs-12 col-sm-3 user-in-card">
+            <div class="Avatar Avatar--primary Avatar--lg"><img src="https://loconomics.com/en-US/Profile/Photo/"></div>
+            <h3 class="text-center bold margin0b"><span data-bind="text: profile() && profile().fullName()"></span></h3>
+            <h5 class="bold text-center margin0t">Tact Massage Therapy</h5>
         </div>
-		<p class="h5 text-center pad10b"><i>response time</i> <b>2 hr 30 min</b> <br/> From <b>$17/hr</b></p>
-		</div>
-		<div class="clearfix"></div>
-		
+        <div class="col-xs-12 col-sm-6">
+            <h2 class="bold margin0t margin0b">Massage Therapist</h2>
+            <h4 class="loco-primary margin0t">Physical Therapist, Midwife </h4>
+
+            <div class="star">
+                <span class="display-inline-block pointer h4 margin0t">
+                    <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i>
+                    <span class="h5 bold" >(85)</span>
+                </span>
+                <span class="h5 bold">&nbsp; &nbsp; <i class="icon ion-ribbon-b"></i> <span class="h5 bold" >(5)</span> </span>
+            </div>
+
+            <p class="loco-info margin10t">Originally from Glacia, I have a wife, three dogs, and a cat. They keep me quite busy. I Love living in Vigo so much that i moved back here.</p>
+        </div>
+        <div class="col-xs-12 col-sm-3 pad5r pad5l">
+            <div class="sm-icons profile-share-icons">
+                <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>
+                <a href="#" class="loco-info"><i class="icon ion-ios-email-outline"></i></a>
+                <a href="#" class="loco-info"><i class="icon ion-social-facebook"></i></a> 
+                <a href="#" class="loco-info"><i class="icon ion-social-twitter"></i> </a>
+                <a href="#" class="loco-info"><i class="icon ion-social-googleplus"></i></a>
+                <a href="#" class="loco-info"><i class="icon ion-social-pinterest"></i></a>
+            </div>
+            <div class="row">
+                <div class="col-xs-6 col-sm-12">
+                    <a href="#" class="btn btn-default btn-lg btn-block">Message</a>
+                </div>
+                <div class="col-xs-6 col-sm-12 profile-book-btn">
+                    <a href="#" class="btn btn-primary btn-lg btn-block">Book</a> 
+                </div>
+            </div>
+            <p class="h5 text-center pad10b"><i>response time</i> <b>2 hr 30 min</b> <br/> From <b>$17/hr</b></p>
+        </div>
+        <div class="clearfix"></div>
+
     </div>
     <!-- END profile box -->
-    
-   <div class="page-wrapper border-top">
+
+    <div class="page-wrapper border-top">
         <div class="container">
-			<br/>
-			<div class="row">
+            <div class="row">
                 <!-- overview -->
-              <section class="col-xs-12 col-sm-8">
-			<div class="loco-infolight">
-			 <h4 class="bold text-muted"><i class="icon ion-clipboard h2"></i> Overview of services</h4>
-			 <p>i have been walking dogs for three years and take my job  very seriously. It's my passion and can't get enough of it.</p>
-			 <div class="bold loco-info">Techniques Offered</div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Reiki</div>
-			 <div><i class="icon ion-android-done"></i> Shiatsu</div>
-			 <div><i class="icon ion-android-done"></i> Reflexology</div>
-			 </div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Qui gong</div>
-			 <div><i class="icon ion-android-done"></i> Aromatherapy</div>
-			 <div><i class="icon ion-android-done"></i> Really deep tissue massage</div>
-			 </div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Qui gong</div>
-			 <div><i class="icon ion-android-done"></i> Aromatherapy</div>
-			 <div><i class="icon ion-android-done"></i> Deep tissue massage</div>
-			 </div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Lymphatic</div>
-			 <div><i class="icon ion-android-done"></i> Body work</div>
-			 </div> 
-			 <div class="clearfix"></div>
-			 
-			 <div class="bold">Specialized in</div>
-			  <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Reiki</div>
-			 <div><i class="icon ion-android-done"></i> Shiatsu</div>
-			 <div><i class="icon ion-android-done"></i> Reflexology</div>
-			 </div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Qui gong</div>
-			 <div><i class="icon ion-android-done"></i> Aromatherapy</div>
-			 <div><i class="icon ion-android-done"></i> Really deep tissue massage</div>
-			 </div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Qui gong</div>
-			 <div><i class="icon ion-android-done"></i> Aromatherapy</div>
-			 <div><i class="icon ion-android-done"></i> Deep tissue massage</div>
-			 </div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Lymphatic</div>
-			 <div><i class="icon ion-android-done"></i> Body work</div>
-			 </div> 
-			 <div class="clearfix"></div>
-			 
-			 <div class="bold">Subjects Tutored</div>
-			  <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Reiki</div>
-			 <div><i class="icon ion-android-done"></i> Shiatsu</div>
-			 <div><i class="icon ion-android-done"></i> Reflexology</div>
-			 </div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Qui gong</div>
-			 <div><i class="icon ion-android-done"></i> Aromatherapy</div>
-			 <div><i class="icon ion-android-done"></i> Really deep tissue massage</div>
-			 </div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Qui gong</div>
-			 <div><i class="icon ion-android-done"></i> Aromatherapy</div>
-			 <div><i class="icon ion-android-done"></i> Deep tissue massage</div>
-			 </div>
-			 <div class="col-xs-6 col-sm-3 pad5l pad5r">
-			 <div><i class="icon ion-android-done"></i> Lymphatic</div>
-			 <div><i class="icon ion-android-done"></i> Body work</div>
-			 </div> 
-			 <div class="clearfix"></div>
-			
-			</div>
-			 
-			 <!--pricing-->
-			<br/>
-			 <h4 class="bold text-muted"><i class="icon ion-social-usd-outline h2"></i> Pricing</h4>
-			<br/>
-			 <div class="row">
-			 <div class="col-xs-6 panel-content">
-			 <section>
-			 <h5 class="bold margin0b">Pure Bliss Massage</h5>
-			 <p class="bold loco-info">30 min, $95.00</p>
-			</section>
-			<section>
-			 <h5 class="bold margin0b">Pure Bliss Massage</h5>
-			 <p class="bold loco-info">30 min, $95.00</p>
-			 <article>
-			Pure bliss is an understatement when you book this massgae. it includes sotthing oils band aromas in addition to a warm towel over you face !
-			 </article>
-			 </section>
-			 </div>	 
-			<div class="col-xs-6 panel-content">
-			 <section>
-			 <h5 class="bold margin0b">Pure Bliss Massage</h5>
-			 <p class="bold loco-info">30 min, $95.00</p>
-			 <article>
-			Pure bliss is an understatement when you book this massgae. it includes sotthing oils band aromas in addition to a warm towel over you face !
-			 </article>
-			 </section>
-			 <section>
-			 <h5 class="bold margin0b">Pure Bliss Massage</h5>
-			 <p class="bold loco-info">30 min, $95.00</p>
-			</section>
-			 </div>
+                <section class="col-xs-12 col-sm-8">
+                    <div id="profile-overview" class="loco-infolight">
+                        <h4 class="bold text-muted"><i class="icon ion-clipboard h2"></i> Overview of services</h4>
+                        <p>i have been walking dogs for three years and take my job  very seriously. It's my passion and can't get enough of it.</p>
+                        <div class="bold loco-info">Techniques Offered</div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Reiki</div>
+                            <div><i class="icon ion-android-done"></i> Shiatsu</div>
+                            <div><i class="icon ion-android-done"></i> Reflexology</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Qui gong</div>
+                            <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                            <div><i class="icon ion-android-done"></i> Really deep tissue massage</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Qui gong</div>
+                            <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                            <div><i class="icon ion-android-done"></i> Deep tissue massage</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Lymphatic</div>
+                            <div><i class="icon ion-android-done"></i> Body work</div>
+                        </div> 
+                        <div class="clearfix"></div>
 
-			 
-			 </div>
-			 
-			 	 
-			 <div class="clearfix"></div>
-			
-			<!--pricing-->
-			
-			<!--reviews-->
-			<br/>
-			<h4 class="bold loco-info"><i class="icon ion-ios-chatboxes-outline h3"></i> Reviews <span class="h5 bold">(41)</span>
-			<span class="display-inline-block pointer h4 margin0t">
-			<i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
-			</h4>
-			
-			<h5>Summary</h5>
-			
-			<div class="loco-info row">
-			<div class="col-xs-5 col-sm-4 col-md-3">Quality of Work</div>
-			<span class="pointer col-xs-5 col-sm-4">
-			<i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
-			<div class="clearfix"></div>
-			</div>
-			
-			<div class="loco-info row">
-			<div class="col-xs-5 col-sm-4 col-md-3">Environment</div>
-			<span class="pointer col-xs-5 col-sm-4">
-			<i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
-			<div class="clearfix"></div>
-			</div>
-			
-			<div class="loco-info row">
-			<div class="col-xs-5 col-sm-4 col-md-3">Professionalism</div>
-			<span class="pointer col-xs-5 col-sm-4">
-			<i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
-			<div class="clearfix"></div>
-			</div>
-			
-			<!--reviews-->
-			
-			<!--testimonials-->
-			 <div class="row margin10t">
-			 <div class="panel-content col-xs-12 col-sm-6">
-			<section>
-			
-			<div class="row">
-			<div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
-			<h5 class="bold margin0b">Joshua D.</h5>
-			<p class="bold loco-info"><small>Client since January 2011</small></p></div>
-			 
-			 <article>
-			I reall can't say enough good things about Fernando. He's been my dog walker for three years and my dogs love him. if they could talk, I'm sure they'd tell you about all the beach days. 
-			I highly recommend Fernando's services.
-			 </article>
-			 </section>
-			 </div>	
+                        <div class="bold">Specialized in</div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Reiki</div>
+                            <div><i class="icon ion-android-done"></i> Shiatsu</div>
+                            <div><i class="icon ion-android-done"></i> Reflexology</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Qui gong</div>
+                            <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                            <div><i class="icon ion-android-done"></i> Really deep tissue massage</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Qui gong</div>
+                            <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                            <div><i class="icon ion-android-done"></i> Deep tissue massage</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Lymphatic</div>
+                            <div><i class="icon ion-android-done"></i> Body work</div>
+                        </div> 
+                        <div class="clearfix"></div>
 
-			<div class="panel-content col-xs-12 col-sm-6">
-			 <section>
-			 <div class="row">
-			<div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
-			<h5 class="bold margin0b">Joshua D.</h5>
-			<p class="bold loco-info"><small>Client since January 2011</small></p></div>
-			  
-			 <article>
-			I really can't say enough good things about Fernando. He's been my dog walker for three years and my dogs love him. if they could talk, 
-			I'm sure they'd tell you about all the beach days. I highly recommend Fernando's services.
-			 </article>
-			 </section>
-			 </div>
-			 <div class="clearfix"></div>			 
-			 <div class="text-center margin10t col-sm-12">
-			 <a href="#" class="btn-danger  btn-lg col-lg-4 center-block h5">View all 23 reviews</a>
-			 </div>
-			 </div>
-			 <!--testimonials-->
-			
-			<!--work-->
-			<br/>
-			<div class="loco-info">
-			<h4 class="bold loco-info margin0b"><i class="icon ion-ios-camera-outline h2 media-middle"></i> Photos of Patricia's work</h4>
-			<br/>
-			<div class="row">
-			<div class="col-xs-12 col-sm-6">
-			<img src="https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg" class="display-block"> <br/>
-			<h5 class="text-center">Look, its really clean!</h5> <br/>
-			</div>
-			
-			<div class="col-xs-12 col-sm-6">
-			<img src="https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg" class="display-block"> <br/>
-			<h5 class="text-center">Look, its really clean!</h5>
-			</div>
-			<div class="clearfix"></div>
-			<div class="text-center margin10t col-sm-12">
-			 <a href="#" class="btn-danger  btn-lg col-lg-4 center-block h5">View all 8 images</a>
-			 </div>
-			</div>
-			<!--work-->
-			
-			<!--location-->
-			<br/>
-			<h4 class="bold loco-info"><i class="icon ion-ios-location-outline h2 media-middle"></i> Locations</h4>
-			<div class="row">
-			<div class="col-xs-12 col-sm-6">
-			<div class="loco-info pad10b">
-			<h5 class="bold">ActivSpace (0.6 miles away)</h5> 
-			
-				3150 18th street, suite 438 <br/>
-				San Francisco, CA 94110
-			</div>
-			<img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">
-			</div>
-			<div class="col-xs-12 col-sm-6">
-			<div class="loco-info pad10b">
-			<h5 class="bold">Service area</h5> 
-				2 mile radius from<br/>
-				San Francisco, CA 94110
-			</div>
-			<img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">
-			</div>
-			<div class="clearfix"></div>
-			</div>		
-			<!--location-->
-			
-			<!--credentials-->
-			<br/>
-			<h4 class="bold loco-infolight"><i class="icon ion-ribbon-b loco-info h2 media-middle"></i> Credentials</h4>
-			<h5 class="bold">Personal Information verified</h5>
-			<div class="row">
-			<div class="col-xs-6 col-sm-3">
-			 <div><i class="icon ion-android-done"></i> Name</div>
-			 <div><i class="icon ion-android-done"></i> Linked-in Account</div>
-			 </div>
-			
-			 <div class="col-xs-6 col-sm-2">
-			 <div><i class="icon ion-android-done"></i> Email</div>
-			 </div>
-			 
-			 <div class="col-xs-6 col-sm-3">
-			 <div><i class="icon ion-android-done"></i> Phone Number</div>
-			 </div>
-			 
-			 <div class="col-xs-6 col-sm-4">
-			 <div><i class="icon ion-android-done"></i> Facebook Account</div>
-			 </div>
-			 <div class="clearfix"></div>
-			 </div>
-			 
-			 
-			 <h5 class="bold">Professional licenses and certificates</h5>
-			 <div class="row">
-			 <div class="col-sm-6">
-			 <div><i class="icon ion-android-done"></i> Certified Massage Therapist (CMT)</div>
-			 </div>			 
-			 <div class="col-sm-6">
-			 <div><i class="icon ion-android-done"></i> CPR Training</div>
-			 </div>
-			  <div class="clearfix"></div>
-			  </div>
-			  
-			 <br/>
-			 <h4 class="bold loco-info"><i class="icon ion-university loco-info h2 media-middle"></i> Education</h4>
-			
-			<div class="row">
-			 <div class="pull-left" style="padding:0px 10px 0 20px;"><br/>
-			 <i class="icon ion-android-done"></i>
-			 </div>			  
-			 <div class="display-inline-block">Bachelor of Science in Business <br/>
-			 <span class="text-muted">
-			 University of Minnesota Twin Cities <br/>
-			 Finance and Marketing <br/>
-			 1997 - 2001</span> </div>
-			 <div class="clearfix"></div>
-			 </div>
-			<!--credentials-->
-			
-			<div class="about">
-			<b class="loco-info h5"><strong>About Fernando</strong> </b>
-			<p class="loco-info">Originally from Glacia, I have a wife, three dogs, and a cat. They keep me quite busy. I Love living in Vigo so much that i moved back here.</p>
-			
-			<div class="sm-icons">
-		<span class="bold h4 display-inline-block media-middle loco-info">Share: </span>&nbsp;
-		<a class="loco-info" href="#"><i class="icon ion-ios-email-outline"></i></a>
-		<a class="loco-info" href="#"><i class="icon ion-social-facebook"></i></a> 
-		<a class="loco-info" href="#"><i class="icon ion-social-twitter"></i> </a>
-		<a class="loco-info" href="#"><i class="icon ion-social-googleplus"></i></a>
-		<a class="loco-info" href="#"><i class="icon ion-social-pinterest"></i></a>
-		<div class="clearfix"></div>
-		</div>
-			
-			</div>
-			 
-			  </section>			  
-				<!-- overview-->
-				
-			  <!-- book service -->
-              <div class="col-sm-4 form-wrapper margin10t">
-			  <h3 class="bold loco-secondary text-center">Book Services with Patricia</h3>
-			  <h5 class="text-center bold pad10t pad5b">Select standalone service(s)</h5>
-			  			  <hr>
-			  <table class="table table-condensed">
-			  <tr>
-			  <td class="media-middle border-none">$99</td>
-			  <td class="col-xs-9 border-none"><span>Deep Tissue Massage</span> 
-			  <h5 class="text-muted margin5t">120 minutes</h5>
-			  </td>
-			  <td class="border-none pad20b">
-			  <div class="checkbox">
-				<input id="check1" type="checkbox" name="check" value="check1">
-				<label for="check1"></label>
-			</div>
-		</td>
-			  </tr>
-			 
-			  <tr>
-			  <td class="media-middle pad20t">$99</td>
-			  <td class="col-xs-9 pad20t "><span>Deep Tissue Massage</span> 
-			  <h5 class="text-muted margin5t">120 minutes</h5>
-			  </td>
-			  <td class="media-middle">
-			  <div class="checkbox">
-				<input id="check2" type="checkbox" name="check" value="check1">
-				<label for="check2"></label>
-			</div>
-			  </td>
-			  </tr>
-			</table>
-			<hr>
-			<h5 class="text-center bold">Select add-on service(s)</h5>
-			<hr>
-			<table class="table margin0b">
-			  <tr>
-			  <td class="border-none">$15</td>
-			  <td class="col-xs-9 border-none"><span>Special Oils</span></td>
-			  <td class="border-none">
-			  <div class="checkbox margin-none">
-				<input id="check3" type="checkbox" name="check" value="check1">
-				<label for="check3"></label>
-			</div>
-			  </td>
-			  </tr>			 
-			</table>
-			  <hr>
-			  <p class="text-center margin20b">Summary</p>
-			  
-			  <div class="col-sm-9">Deep Tissue Massage</div> <div class="col-sm-3">$99.00</div><div class="clearfix"></div>
-			  <div class="col-sm-9">Special oils</div> <div class="col-sm-3">$15.00</div><div class="clearfix"></div>
-			  <hr>
-			  <div class="col-sm-9 pad5l pad5r bold">Total</div> 
-			  <div class="col-sm-3 pad5l pad5r bold">$114.00</div>
-			  <div class="clearfix"></div>
-			  
-			  <h4 class="col-sm-10 margin10t" style="font-weight:normal"><i class="ion-ios-clock-outline h3"></i> 2 hours, 30 minutes</h4> 
-			  <h4 class="col-sm-2">
-			  <span class="editpen">
-			  <i class="icon ion-edit loco-primary h6"></i>
-			  </span>
-			  </h4>
-			  <div class="clearfix"></div>
-			 
-			<div class="checkbox col-sm-12">
-			<input id="repeat" type="checkbox" name="repeat" value="repeat"/>
-			<label for="repeat"> &nbsp; Make this repeat booking</label>
-			</div>
-			<div class="clearfix"></div>					
-		    <a class="center-block btn-danger btn-lg h5 text-center" href="#">Schedule Appointment</a>
-			<br/>
-			</div>			  
-				<!-- book service-->
-				<div class="clearfix"></div>
-				<div class="help-block"></div>
-				</div>
+                        <div class="bold">Subjects Tutored</div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Reiki</div>
+                            <div><i class="icon ion-android-done"></i> Shiatsu</div>
+                            <div><i class="icon ion-android-done"></i> Reflexology</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Qui gong</div>
+                            <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                            <div><i class="icon ion-android-done"></i> Really deep tissue massage</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Qui gong</div>
+                            <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                            <div><i class="icon ion-android-done"></i> Deep tissue massage</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                            <div><i class="icon ion-android-done"></i> Lymphatic</div>
+                            <div><i class="icon ion-android-done"></i> Body work</div>
+                        </div> 
+                        <div class="clearfix"></div>
+
+                    </div>
+
+                    <!--pricing-->
+                    <div id="profile-pricing">
+                        <h4 class="bold text-muted"><i class="icon ion-social-usd-outline h2"></i> Pricing</h4>
+                        <div class="row">
+                            <div class="col-xs-6 panel-content">
+                                <section>
+                                    <h5 class="bold margin0b">Pure Bliss Massage</h5>
+                                    <p class="bold loco-info">30 min, $95.00</p>
+                                </section>
+                                <section>
+                                    <h5 class="bold margin0b">Pure Bliss Massage</h5>
+                                    <p class="bold loco-info">30 min, $95.00</p>
+                                    <article>
+                                        Pure bliss is an understatement when you book this massgae. it includes sotthing oils band aromas in addition to a warm towel over you face !
+                                    </article>
+                                </section>
+                            </div>	 
+                            <div class="col-xs-6 panel-content">
+                                <section>
+                                    <h5 class="bold margin0b">Pure Bliss Massage</h5>
+                                    <p class="bold loco-info">30 min, $95.00</p>
+                                    <article>
+                                        Pure bliss is an understatement when you book this massgae. it includes sotthing oils band aromas in addition to a warm towel over you face !
+                                    </article>
+                                </section>
+                                <section>
+                                    <h5 class="bold margin0b">Pure Bliss Massage</h5>
+                                    <p class="bold loco-info">30 min, $95.00</p>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                    <!--pricing-->
+
+                    <!--reviews-->
+                    <div id="profile-reviews">
+                        <h4 class="bold loco-info"><i class="icon ion-ios-chatboxes-outline h3"></i> Reviews <span class="h5 bold">(41)</span>
+                            <span class="display-inline-block pointer h4 margin0t">
+                                <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
+                        </h4>
+
+                        <h5>Summary</h5>
+
+                        <div class="loco-info row">
+                            <div class="col-xs-5 col-sm-4 col-md-3">Quality of Work</div>
+                            <span class="pointer col-xs-5 col-sm-4">
+                                <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="loco-info row">
+                            <div class="col-xs-5 col-sm-4 col-md-3">Environment</div>
+                            <span class="pointer col-xs-5 col-sm-4">
+                                <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="loco-info row">
+                            <div class="col-xs-5 col-sm-4 col-md-3">Professionalism</div>
+                            <span class="pointer col-xs-5 col-sm-4">
+                                <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!--reviews-->
+
+                        <!--testimonials-->
+                        <div class="row margin10t">
+                            <div class="panel-content col-xs-12 col-sm-6">
+                                <section>
+
+                                    <div class="row">
+                                        <div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
+                                        <h5 class="bold margin0b">Joshua D.</h5>
+                                        <p class="bold loco-info"><small>Client since January 2011</small></p></div>
+
+                                    <article>
+                                        I reall can't say enough good things about Fernando. He's been my dog walker for three years and my dogs love him. if they could talk, I'm sure they'd tell you about all the beach days. 
+                                        I highly recommend Fernando's services.
+                                    </article>
+                                </section>
+                            </div>	
+
+                            <div class="panel-content col-xs-12 col-sm-6">
+                                <section>
+                                    <div class="row">
+                                        <div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
+                                        <h5 class="bold margin0b">Joshua D.</h5>
+                                        <p class="bold loco-info"><small>Client since January 2011</small></p></div>
+
+                                    <article>
+                                        I really can't say enough good things about Fernando. He's been my dog walker for three years and my dogs love him. if they could talk, 
+                                        I'm sure they'd tell you about all the beach days. I highly recommend Fernando's services.
+                                    </article>
+                                </section>
+                            </div>
+                            <div class="clearfix"></div>			 
+                            <div class="text-center margin10t col-sm-12">
+                                <a href="#" class="btn-danger  btn-lg col-lg-4 center-block h5">View all 23 reviews</a>
+                            </div>
+                        </div>
+                        <!--testimonials-->
+                    </div>
+
+                    <!--work-->
+                    <div id="profile-workphotos">
+                        <div class="loco-info">
+                            <h4 class="bold loco-info margin0b"><i class="icon ion-ios-camera-outline h2 media-middle"></i> Photos of Patricia's work</h4>
+                            <br/>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <img src="https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg" class="display-block"> <br/>
+                                    <h5 class="text-center">Look, its really clean!</h5> <br/>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-6">
+                                    <img src="https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg" class="display-block"> <br/>
+                                    <h5 class="text-center">Look, its really clean!</h5>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="text-center margin10t col-sm-12">
+                                    <a href="#" class="btn-danger  btn-lg col-lg-4 center-block h5">View all 8 images</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--work-->
+
+                    <!--location-->
+                    <div id="profile-locations">
+                        <h4 class="bold loco-info"><i class="icon ion-ios-location-outline h2 media-middle"></i> Locations</h4>
+                        <div class="row clearfix">
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="loco-info pad10b">
+                                    <h5 class="bold">ActivSpace (0.6 miles away)</h5> 
+
+                                    3150 18th street, suite 438 <br/>
+                                    San Francisco, CA 94110
+                                </div>
+                                <img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="loco-info pad10b">
+                                    <h5 class="bold">Service area</h5> 
+                                    2 mile radius from<br/>
+                                    San Francisco, CA 94110
+                                </div>
+                                <img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <!--location-->
+
+                    <!--credentials-->
+                    <div id="profile-credentials">
+                        <h4 class="bold loco-infolight"><i class="icon ion-ribbon-b loco-info h2 media-middle"></i> Credentials</h4>
+                        <h5 class="bold">Personal Information verified</h5>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-3">
+                                <div><i class="icon ion-android-done"></i> Name</div>
+                                <div><i class="icon ion-android-done"></i> Linked-in Account</div>
+                            </div>
+
+                            <div class="col-xs-6 col-sm-2">
+                                <div><i class="icon ion-android-done"></i> Email</div>
+                            </div>
+
+                            <div class="col-xs-6 col-sm-3">
+                                <div><i class="icon ion-android-done"></i> Phone Number</div>
+                            </div>
+
+                            <div class="col-xs-6 col-sm-4">
+                                <div><i class="icon ion-android-done"></i> Facebook Account</div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+
+                        <h5 class="bold">Professional licenses and certificates</h5>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div><i class="icon ion-android-done"></i> Certified Massage Therapist (CMT)</div>
+                            </div>			 
+                            <div class="col-sm-6">
+                                <div><i class="icon ion-android-done"></i> CPR Training</div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div id="profile-education">
+                        <h4 class="bold loco-info"><i class="icon ion-university loco-info h2 media-middle"></i> Education</h4>
+
+                        <div class="row">
+                            <div class="pull-left" style="padding:0px 10px 0 20px;"><br/>
+                                <i class="icon ion-android-done"></i>
+                            </div>			  
+                            <div class="display-inline-block">Bachelor of Science in Business <br/>
+                                <span class="text-muted">
+                                    University of Minnesota Twin Cities <br/>
+                                    Finance and Marketing <br/>
+                                    1997 - 2001</span> </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <!--credentials-->
+
+                    <div class="about">
+                        <b class="loco-info h5"><strong>About Fernando</strong> </b>
+                        <p class="loco-info">Originally from Glacia, I have a wife, three dogs, and a cat. They keep me quite busy. I Love living in Vigo so much that i moved back here.</p>
+                        <div class="sm-icons clearfix">
+                            <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>&nbsp;
+                            <a class="loco-info" href="#"><i class="icon ion-ios-email-outline"></i></a>
+                            <a class="loco-info" href="#"><i class="icon ion-social-facebook"></i></a> 
+                            <a class="loco-info" href="#"><i class="icon ion-social-twitter"></i> </a>
+                            <a class="loco-info" href="#"><i class="icon ion-social-googleplus"></i></a>
+                            <a class="loco-info" href="#"><i class="icon ion-social-pinterest"></i></a>
+                        </div>
+                    </div>
+
+                </section>			  
+                <!-- overview-->
+
+                <!-- book service -->
+                <div class="col-sm-4 form-wrapper margin10t">
+                    <h3 class="bold loco-secondary text-center">Book Services with Patricia</h3>
+                    <h5 class="text-center bold pad10t pad5b">Select standalone service(s)</h5>
+                    <hr>
+                    <table class="table table-condensed">
+                        <tr>
+                            <td class="media-middle border-none">$99</td>
+                            <td class="col-xs-9 border-none"><span>Deep Tissue Massage</span> 
+                                <h5 class="text-muted margin5t">120 minutes</h5>
+                            </td>
+                            <td class="border-none pad20b">
+                                <div class="checkbox">
+                                    <input id="check1" type="checkbox" name="check" value="check1">
+                                    <label for="check1"></label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="media-middle pad20t">$99</td>
+                            <td class="col-xs-9 pad20t "><span>Deep Tissue Massage</span> 
+                                <h5 class="text-muted margin5t">120 minutes</h5>
+                            </td>
+                            <td class="media-middle">
+                                <div class="checkbox">
+                                    <input id="check2" type="checkbox" name="check" value="check1">
+                                    <label for="check2"></label>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <h5 class="text-center bold">Select add-on service(s)</h5>
+                    <hr>
+                    <table class="table margin0b">
+                        <tr>
+                            <td class="border-none">$15</td>
+                            <td class="col-xs-9 border-none"><span>Special Oils</span></td>
+                            <td class="border-none">
+                                <div class="checkbox margin-none">
+                                    <input id="check3" type="checkbox" name="check" value="check1">
+                                    <label for="check3"></label>
+                                </div>
+                            </td>
+                        </tr>			 
+                    </table>
+                    <hr>
+                    <p class="text-center margin20b">Summary</p>
+
+                    <div class="col-sm-9">Deep Tissue Massage</div> <div class="col-sm-3">$99.00</div><div class="clearfix"></div>
+                    <div class="col-sm-9">Special oils</div> <div class="col-sm-3">$15.00</div><div class="clearfix"></div>
+                    <hr>
+                    <div class="col-sm-9 pad5l pad5r bold">Total</div> 
+                    <div class="col-sm-3 pad5l pad5r bold">$114.00</div>
+                    <div class="clearfix"></div>
+
+                    <h4 class="col-sm-10 margin10t" style="font-weight:normal"><i class="ion-ios-clock-outline h3"></i> 2 hours, 30 minutes</h4> 
+                    <h4 class="col-sm-2">
+                        <span class="editpen">
+                            <i class="icon ion-edit loco-primary h6"></i>
+                        </span>
+                    </h4>
+                    <div class="clearfix"></div>
+
+                    <div class="checkbox col-sm-12">
+                        <input id="repeat" type="checkbox" name="repeat" value="repeat"/>
+                        <label for="repeat"> &nbsp; Make this repeat booking</label>
+                    </div>
+                    <div class="clearfix"></div>					
+                    <a class="center-block btn-danger btn-lg h5 text-center" href="#">Schedule Appointment</a>
+                    <br/>
+                </div>			  
+                <!-- book service-->
             </div>
-            <!-- /.container-fluid -->
-
         </div>
-        <!-- /#page-wrapper -->
+        <!-- /.container-fluid -->
+
     </div>
-    <!-- /#wrapper -->
-    
+    <!-- /#page-wrapper -->
 </div>

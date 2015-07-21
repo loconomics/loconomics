@@ -239,6 +239,45 @@
         top: 8px;
         position: relative;
   
+    .profile-book-btn
+        @media $mediaMinSm
+            margin-top 10px
+        
+    ///
+    // navmenu.styl (.rmm) -> .profile-menu
+    .profile-menu
+        display block
+        position relative
+        width 100%
+        padding 0px
+        margin 0px auto 25px !important
+        text-align center
+        line-height 19px !important
+        background-color $loco-primary
+        a
+            color #FFF
+            text-decoration none
+        ul
+            display block
+            width 100% !important
+            margin 0 auto !important
+            list-style none
+            
+            li
+                display inline
+                margin 0px !important
+
+                a
+                  color #FFF
+                  display inline-block
+                  padding 17px 15px
+                  margin 0px -3px 0px -3px
+                  font-size 15px
+
+                  &:hover
+                    border-bottom 4px solid
+                    padding-bottom 13px !important
+              
       
     ///
     // Customized.styl
