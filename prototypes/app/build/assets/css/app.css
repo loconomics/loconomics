@@ -6695,6 +6695,104 @@ body.use-backdrop:before {
   color: White;
   font-size: 32px;
   font-weight: bold;
-  margin: 0.4em auto;
+  margin: 0 auto;
+  padding: 0.4em 0;
   text-align: center;
+}
+
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-hiw {
+  text-align: center;
+  color: #555;
+}
+
+/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-hiw ul {
+  background: White;
+  margin-top: 65px;
+  margin-bottom: 0;
+  padding-bottom: 45px;
+}
+
+/* line 128 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-hiw ul > li {
+  margin-top: -45px;
+}
+
+/* line 133 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-hiw h3 {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+/* line 139 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-hiw i {
+  background: #ff6765;
+  font-size: 56px;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  width: 90px;
+  line-height: 90px;
+  color: White;
+}
+
+/* line 150 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-booking {
+  background: #ff6765;
+  text-align: center;
+}
+
+/* line 154 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-booking ul {
+  color: #555;
+  zoom: 1;
+}
+
+/* line 22 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
+[data-activity=home] [role=main] .home-booking ul:before,
+[data-activity=home] [role=main] .home-booking ul:after {
+  content: "";
+  display: table;
+}
+
+/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\clearfix.styl */
+[data-activity=home] [role=main] .home-booking ul:after {
+  clear: both;
+}
+
+/* line 158 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-booking ul li {
+  background: White;
+  float: left;
+  width: 27.3333%;
+  margin: 3%;
+  padding: 20px;
+  vertical-align: middle;
+}
+
+/* line 166 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-booking ul li a {
+  color: #ff6765;
+  font-weight: bold;
+}
+
+/* line 171 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-booking ul li h3 {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+/* line 178 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-booking ul i {
+  color: #ff6765;
+  font-size: 3em;
+  display: block;
+}
+
+/* line 185 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-booking .btn-secondary {
+  border-color: White;
+  margin: 2em auto;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
 }

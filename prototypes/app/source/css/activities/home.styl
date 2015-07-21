@@ -109,8 +109,86 @@
             color: White;
             font-size: 32px;
             font-weight: bold;
-            margin: 0.4em auto;
+            margin: 0 auto;
+            padding: 0.4em 0;
             text-align: center
+        }
+        
+        // How It Works section
+        .home-hiw {
+            text-align: center;
+            color: $gray;
+            
+            $iconsSize = 90px;
+            
+            ul {
+                background: White;
+                margin-top: ($iconsSize / 2) + 20px;
+                margin-bottom: 0;
+                padding-bottom: ($iconsSize / 2);
+                
+                > li {
+                    margin-top: (0 - $iconsSize / 2);
+                }
+            }
+            
+            h3 {
+                font-weight: bold;
+                font-size: 22px;
+            }
+            
+            // icons
+            i {
+                background: $brand-secondary-background;
+                font-size: floor($iconsSize / 1.60);
+                border-radius: 100%;
+                width: $iconsSize;
+                line-height: $iconsSize;
+                color: White;
+            }
+        }
+        
+        // Why book on Loconomics section
+        .home-booking {
+            background: $brand-secondary-background;
+            text-align: center;
+
+            ul {
+                color: $gray;
+                clearfix()
+
+                li {
+                    background: White;
+                    float: left;
+                    width: 27.3333%;
+                    margin: 3%;
+                    padding: 20px;
+                    vertical-align: middle;
+                    
+                    a {
+                        color: $brand-secondary;
+                        font-weight: bold;
+                    }
+                    
+                    h3 {
+                        font-size: 15px;
+                        font-weight: bold;
+                    }
+                }
+                
+                // icons
+                i {
+                    color: $brand-secondary;
+                    font-size: 3em;
+                    display: block;
+                }
+            }
+            
+            .btn-secondary {
+                border-color: White;
+                margin: 2em auto;
+                border-radius: 2px;
+            }
         }
     }
 }
