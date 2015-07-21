@@ -21,7 +21,7 @@
   <body>
     <div class="SplashScreen">Loading...</div>
     <nav role="navigation" class="AppNav">
-      <div class="SmartNavBar"> <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }"
+      <div class="SmartNavBar visible-xs"> <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }"
         class="SmartNavBar-edge left"></span>
 
          <h1>&nbsp;
@@ -33,6 +33,7 @@
         class="SmartNavBar-edge right"></span>
 
       </div>
+      <div class="hidden-xs" data-bind="template: 'largenavbar-template'"></div>
       <div class="App-menus">
         <div id="menuIn" class="navbar-collapse collapse">
            <h4 class="App-menus-header">
@@ -1666,93 +1667,105 @@
     <div class="container-fluid LightForm" data-activity="licensesCertificationsForm">
        <h2 class="SectionTitle">Certification/License</h2>
 
-      <p>Please input your <strong>General Massage Practitioner</strong> license
-        details below, and we’ll verify it right away.</p>
-      <form data-bind="submit: save, with: item">
-        <div class="form-group">
-          <label>License description</label>
-          <div class="form-control-static">Generally must complete at least 250 hours of education and training.
-            CMPs also must undergo background checks, including fingerprinting and
-            other identification verification procedures.</div>
-        </div>
-        <div class="form-group">
-          <label>State</label>
-          <div class="form-control-static">California (CA)</div>
-        </div>
-        <div class="form-group">
-          <label>Certifying board</label>
-          <div class="form-control-static"> <a target="_blank" href="https://www.camtc.org/VerifyCertification.aspx">The California Massage Therapy Council (CAMTC)</a>
+      <form data-bind="submit: save">
+        <fieldset data-bind="visible: isNew">
+          <div class="form-group">
+            <label for="licensesCertificationsForm-state">State</label>
+            <div>
+              <select id="licensesCertificationsForm-state" class="form-control" data-bind="options: statesProvinces, value: stateProvinceID, optionsValue: 'stateProvinceID',
+                                      optionsText: 'name', disable: isLocked, optionsCaption: ' '"></select>
+            </div>
+          </div>
+          <div clas="form-group">
+            <label for="licensesCertificationForm-file">Upload a photo or document of your certification/license</label>
+            <div class="input-group"> <span class="input-group-btn">
+                        <div class="btn btn-default btn-file">
+                            <span>Browse</span>
 
+              <input type="file" data-bind="value: file"
+              id="licensesCertificationForm-file" />
+            </div>
+            </span>
+            <input type="text" data-bind="value: file" class="form-control" />
           </div>
-        </div>
-        <div class="form-group">
-          <label for="licensesCertificationsForm-county">County</label>
-          <div>
-            <select id="licensesCertificationsForm-county" class="form-control" data-bind="options: $parent.counties, optionsCaption: ' ', value: countyID, disable: $parent.isLocked, optionsValue: 'countyID', optionsText: 'name'"></select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="licensesCertificationsForm-licenseCertificationNumber">Certificate/license number</label>
-          <div>
-            <input type="text" id="licensesCertificationsForm-licenseCertificationNumber"
-            class="form-control" data-bind="textInput: licenseCertificationNumber, disable: $parent.isLocked"
-            />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="licensesCertificationsForm-businessName">Business name (optional)</label>
-          <div>
-            <input type="text" id="licensesCertificationsForm-businessName" class="form-control"
-            data-bind="textInput: businessName, disable: $parent.isLocked" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="licensesCertificationsForm-firstName">First name</label>
-          <div>
-            <input type="text" id="licensesCertificationsForm-firstName" class="form-control"
-            data-bind="textInput: firstName, disable: $parent.isLocked" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="licensesCertificationsForm-lastName">Last name</label>
-          <div>
-            <input type="text" id="licensesCertificationsForm-lastName" class="form-control"
-            data-bind="textInput: lastName, disable: $parent.isLocked" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="licensesCertificationsForm-middleInitial">Middle initial</label>
-          <div>
-            <input type="text" id="licensesCertificationsForm-middleInitial" class="form-control"
-            data-bind="textInput: middleInitial, disable: $parent.isLocked" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="licensesCertificationsForm-city">City</label>
-          <div>
-            <input type="text" id="licensesCertificationsForm-city" class="form-control"
-            data-bind="textInput: city, disable: $parent.isLocked" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="licensesCertificationsForm-licenseCertificationUrl">Link to license</label>
-          <div>
-            <input type="text" id="licensesCertificationsForm-licenseCertificationUrl"
-            class="form-control" data-bind="textInput: licenseCertificationUrl, disable: $parent.isLocked"
-            />
-          </div>
-        </div>
-        <p>Need to apply or renew this license/certification? Please <a target="_blank"
-          href="https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf">visit this link.</a>
+    </div>
+    </fieldset>
+    <fieldset data-bind="visible: !isNew(), with: item">
+      <div class="form-group">
+        <label>License description</label>
+        <div class="form-control-static">Generally must complete at least 250 hours of education and training.
+          CMPs also must undergo background checks, including fingerprinting and
+          other identification verification procedures.</div>
+      </div>
+      <div class="form-group" data-bind="visible: stateProvinceName">
+        <label>State</label>
+        <div class="form-control-static"> <span data-bind="text: stateProvinceName"></span> (<span data-bind="text: stateProvinceCode"></span>)</div>
+      </div>
+      <div class="form-group">
+        <label>Certifying board</label>
+        <div class="form-control-static"> <a target="_blank" href="https://www.camtc.org/VerifyCertification.aspx">The California Massage Therapy Council (CAMTC)</a>
 
-        </p>
-        <div class="LightForm-submitBar">
-          <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>
-          <!--<button type="button" class="btn btn-danger btn-block"
-          data-bind="text: $parent.deleteText, disable: $parent.isLocked, click:
-          $parent.confirmRemoval">Delete</button>-->
         </div>
-      </form>
+      </div>
+      <div class="form-group" data-bind="visible: countyName">
+        <label>County</label>
+        <div class="form-control-static"> <span data-bind="text: countyName"></span>
+
+        </div>
+      </div>
+      <div class="form-group" data-bind="visible: licenseCertificationNumber">
+        <label>Certificate/license number</label>
+        <div class="form-control-static"> <span data-bind="text: licenseCertificationNumber"></span>
+
+        </div>
+      </div>
+      <div class="form-group" data-bind="visible: businessName">
+        <label>Business name (optional)</label>
+        <div class="form-control-static"> <span data-bind="text: businessName"></span>
+
+        </div>
+      </div>
+      <div class="form-group" data-bind="visible: firstName">
+        <label>First name</label>
+        <div class="form-control-static"> <span data-bind="text: firstName"></span>
+
+        </div>
+      </div>
+      <div class="form-group" data-bind="visible: lastName">
+        <label>Last name</label>
+        <div class="form-control-static"> <span data-bind="text: lastName"></span>
+
+        </div>
+      </div>
+      <div class="form-group" data-bind="visible: middleInitial">
+        <label>Middle initial</label>
+        <div class="form-control-static"> <span data-bind="text: middleInitial"></span>
+
+        </div>
+      </div>
+      <div class="form-group" data-bind="visible: city">
+        <label>City</label>
+        <div class="form-control-static"> <span data-bind="text: city"></span>
+
+        </div>
+      </div>
+      <div class="form-group" data-bind="visible: licenseCertificationUrl">
+        <label>Link to license</label>
+        <div class="form-control-static"> <span data-bind="licenseCertificationUrl"></span>
+
+        </div>
+      </div>
+      <p>Need to apply or renew this license/certification? Please <a target="_blank"
+        href="https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf">visit this link.</a>
+
+      </p>
+    </fieldset>
+    <div class="LightForm-submitBar">
+      <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, visible: isNew">Save</button> <a href="contactForm/marketplaceProfile?mustReturn=1&returnText=Certifications%2FLicenses"
+      class="btn btn-primary btn-block" data-bind="visible: !isNew()">Contact us</a>
+
+    </div>
+    </form>
     </div>
     <!-- Activity login -->
     <div class="container-fluid" data-activity="login">
@@ -1902,7 +1915,7 @@
         </a>
         </li>
         <li class="LinkTile">
-          <div class="Tile-content"><a href="#marketplaceProfilePreview" class="btn btn-default btn-block">Preview profile</a>
+          <div class="Tile-content"><a href="/profile" class="btn btn-default btn-block">Preview profile</a>
           </div>
         </li>
       </ul>
@@ -2090,6 +2103,473 @@
           </div>
         </div>
       </form>
+    </div>
+    <!-- Activity profile -->
+    <div class="" data-activity="profile">
+      <div>
+        <!-- ko component: { name: 'app-loading-spinner', params: { mod: 'row'
+        } } -->
+        <!-- /ko -->
+      </div>
+      <!-- TODO: FROM JUVO, TO REFACTOR -->
+      <!-- profile internal menu -->
+      <div class="profile-menu hidden-xs">
+        <ul>
+          <li><a href="#profile-overview">Overview</a>
+          </li>
+          <li><a href="#profile-pricing">Pricing</a>
+          </li>
+          <li><a href="#profile-reviews">Reviews</a>
+          </li>
+          <li><a href="#profile-workphotos">Photos</a>
+          </li>
+          <li><a href="#profile-locations">Location</a>
+          </li>
+          <li><a href="#profile-credentials">Credentials</a>
+          </li>
+        </ul>
+      </div>
+      <!--profile box -->
+      <div class="container profile">
+        <div class="col-xs-12 col-sm-3 user-in-card">
+          <div class="Avatar Avatar--primary Avatar--lg">
+            <img src="https://loconomics.com/en-US/Profile/Photo/">
+          </div>
+           <h3 class="text-center bold margin0b"><span data-bind="text: profile() && profile().fullName()"></span></h3>
+
+           <h5 class="bold text-center margin0t">Tact Massage Therapy</h5>
+
+        </div>
+        <div class="col-xs-12 col-sm-6">
+           <h2 class="bold margin0t margin0b">Massage Therapist</h2>
+
+           <h4 class="loco-primary margin0t">Physical Therapist, Midwife </h4>
+
+          <div class="star"> <span class="display-inline-block pointer h4 margin0t">
+                    <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i>
+                    <span class="h5 bold" >(85)</span>
+</span> <span class="h5 bold">&nbsp; &nbsp; <i class="icon ion-ribbon-b"></i> <span class="h5 bold" >(5)</span> </span>
+          </div>
+          <p class="loco-info margin10t">Originally from Glacia, I have a wife, three dogs, and a cat. They keep
+            me quite busy. I Love living in Vigo so much that i moved back here.</p>
+        </div>
+        <div class="col-xs-12 col-sm-3 pad5r pad5l">
+          <div class="sm-icons profile-share-icons"> <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>
+
+            <a
+            href="#" class="loco-info"><i class="icon ion-ios-email-outline"></i>
+              </a> <a href="#" class="loco-info"><i class="icon ion-social-facebook"></i></a> 
+              <a
+              href="#" class="loco-info"><i class="icon ion-social-twitter"></i> 
+                </a> <a href="#" class="loco-info"><i class="icon ion-social-googleplus"></i></a>
+
+                <a
+                href="#" class="loco-info"><i class="icon ion-social-pinterest"></i>
+                  </a>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-sm-12"> <a href="#" class="btn btn-default btn-lg btn-block">Message</a>
+
+            </div>
+            <div class="col-xs-6 col-sm-12 profile-book-btn"> <a href="#" class="btn btn-primary btn-lg btn-block">Book</a> 
+            </div>
+          </div>
+          <p class="h5 text-center pad10b"><i>response time</i>  <b>2 hr 30 min</b> 
+            <br/>From <b>$17/hr</b>
+          </p>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <!-- END profile box -->
+      <div class="page-wrapper border-top">
+        <div class="container">
+          <div class="row">
+            <!-- overview -->
+            <section class="col-xs-12 col-sm-8">
+              <div id="profile-overview" class="loco-infolight">
+                 <h4 class="bold text-muted"><i class="icon ion-clipboard h2"></i> Overview of services</h4>
+
+                <p>i have been walking dogs for three years and take my job very seriously.
+                  It's my passion and can't get enough of it.</p>
+                <div class="bold loco-info">Techniques Offered</div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Reiki</div>
+                  <div><i class="icon ion-android-done"></i> Shiatsu</div>
+                  <div><i class="icon ion-android-done"></i> Reflexology</div>
+                </div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Qui gong</div>
+                  <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                  <div><i class="icon ion-android-done"></i> Really deep tissue massage</div>
+                </div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Qui gong</div>
+                  <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                  <div><i class="icon ion-android-done"></i> Deep tissue massage</div>
+                </div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Lymphatic</div>
+                  <div><i class="icon ion-android-done"></i> Body work</div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="bold">Specialized in</div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Reiki</div>
+                  <div><i class="icon ion-android-done"></i> Shiatsu</div>
+                  <div><i class="icon ion-android-done"></i> Reflexology</div>
+                </div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Qui gong</div>
+                  <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                  <div><i class="icon ion-android-done"></i> Really deep tissue massage</div>
+                </div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Qui gong</div>
+                  <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                  <div><i class="icon ion-android-done"></i> Deep tissue massage</div>
+                </div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Lymphatic</div>
+                  <div><i class="icon ion-android-done"></i> Body work</div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="bold">Subjects Tutored</div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Reiki</div>
+                  <div><i class="icon ion-android-done"></i> Shiatsu</div>
+                  <div><i class="icon ion-android-done"></i> Reflexology</div>
+                </div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Qui gong</div>
+                  <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                  <div><i class="icon ion-android-done"></i> Really deep tissue massage</div>
+                </div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Qui gong</div>
+                  <div><i class="icon ion-android-done"></i> Aromatherapy</div>
+                  <div><i class="icon ion-android-done"></i> Deep tissue massage</div>
+                </div>
+                <div class="col-xs-6 col-sm-3 pad5l pad5r">
+                  <div><i class="icon ion-android-done"></i> Lymphatic</div>
+                  <div><i class="icon ion-android-done"></i> Body work</div>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+              <!--pricing-->
+              <div id="profile-pricing">
+                 <h4 class="bold text-muted"><i class="icon ion-social-usd-outline h2"></i> Pricing</h4>
+
+                <div class="row">
+                  <div class="col-xs-6 panel-content">
+                    <section>
+                       <h5 class="bold margin0b">Pure Bliss Massage</h5>
+
+                      <p class="bold loco-info">30 min, $95.00</p>
+                    </section>
+                    <section>
+                       <h5 class="bold margin0b">Pure Bliss Massage</h5>
+
+                      <p class="bold loco-info">30 min, $95.00</p>
+                      <article>Pure bliss is an understatement when you book this massgae. it includes
+                        sotthing oils band aromas in addition to a warm towel over you face !</article>
+                    </section>
+                  </div>
+                  <div class="col-xs-6 panel-content">
+                    <section>
+                       <h5 class="bold margin0b">Pure Bliss Massage</h5>
+
+                      <p class="bold loco-info">30 min, $95.00</p>
+                      <article>Pure bliss is an understatement when you book this massgae. it includes
+                        sotthing oils band aromas in addition to a warm towel over you face !</article>
+                    </section>
+                    <section>
+                       <h5 class="bold margin0b">Pure Bliss Massage</h5>
+
+                      <p class="bold loco-info">30 min, $95.00</p>
+                    </section>
+                  </div>
+                </div>
+              </div>
+              <!--pricing-->
+              <!--reviews-->
+              <div id="profile-reviews">
+                 <h4 class="bold loco-info"><i class="icon ion-ios-chatboxes-outline h3"></i> Reviews <span class="h5 bold">(41)</span>
+                            <span class="display-inline-block pointer h4 margin0t">
+                                <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
+                        </h4>
+
+                 <h5>Summary</h5>
+
+                <div class="loco-info row">
+                  <div class="col-xs-5 col-sm-4 col-md-3">Quality of Work</div> <span class="pointer col-xs-5 col-sm-4">
+                                <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
+
+                  <div
+                  class="clearfix"></div>
+              </div>
+              <div class="loco-info row">
+                <div class="col-xs-5 col-sm-4 col-md-3">Environment</div> <span class="pointer col-xs-5 col-sm-4">
+                                <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
+
+                <div
+                class="clearfix"></div>
+          </div>
+          <div class="loco-info row">
+            <div class="col-xs-5 col-sm-4 col-md-3">Professionalism</div> <span class="pointer col-xs-5 col-sm-4">
+                                <i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
+
+            <div
+            class="clearfix"></div>
+        </div>
+        <!--reviews-->
+        <!--testimonials-->
+        <div class="row margin10t">
+          <div class="panel-content col-xs-12 col-sm-6">
+            <section>
+              <div class="row">
+                <div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i>
+                </div>
+                 <h5 class="bold margin0b">Joshua D.</h5>
+
+                <p class="bold loco-info"><small>Client since January 2011</small>
+                </p>
+              </div>
+              <article>I reall can't say enough good things about Fernando. He's been my dog
+                walker for three years and my dogs love him. if they could talk, I'm sure
+                they'd tell you about all the beach days. I highly recommend Fernando's
+                services.</article>
+            </section>
+          </div>
+          <div class="panel-content col-xs-12 col-sm-6">
+            <section>
+              <div class="row">
+                <div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i>
+                </div>
+                 <h5 class="bold margin0b">Joshua D.</h5>
+
+                <p class="bold loco-info"><small>Client since January 2011</small>
+                </p>
+              </div>
+              <article>I really can't say enough good things about Fernando. He's been my dog
+                walker for three years and my dogs love him. if they could talk, I'm sure
+                they'd tell you about all the beach days. I highly recommend Fernando's
+                services.</article>
+            </section>
+          </div>
+          <div class="clearfix"></div>
+          <div class="text-center margin10t col-sm-12"> <a href="#" class="btn-danger  btn-lg col-lg-4 center-block h5">View all 23 reviews</a>
+
+          </div>
+        </div>
+        <!--testimonials-->
+      </div>
+      <!--work-->
+      <div id="profile-workphotos">
+        <div class="loco-info">
+           <h4 class="bold loco-info margin0b"><i class="icon ion-ios-camera-outline h2 media-middle"></i> Photos of Patricia's work</h4>
+
+          <br/>
+          <div class="row">
+            <div class="col-xs-12 col-sm-6">
+              <img src="https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg"
+              class="display-block">
+              <br/>
+               <h5 class="text-center">Look, its really clean!</h5> 
+              <br/>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <img src="https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg"
+              class="display-block">
+              <br/>
+               <h5 class="text-center">Look, its really clean!</h5>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="text-center margin10t col-sm-12"> <a href="#" class="btn-danger  btn-lg col-lg-4 center-block h5">View all 8 images</a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--work-->
+      <!--location-->
+      <div id="profile-locations">
+         <h4 class="bold loco-info"><i class="icon ion-ios-location-outline h2 media-middle"></i> Locations</h4>
+
+        <div class="row clearfix">
+          <div class="col-xs-12 col-sm-6">
+            <div class="loco-info pad10b">
+               <h5 class="bold">ActivSpace (0.6 miles away)</h5> 3150 18th street, suite 438
+              <br/>San Francisco, CA 94110</div>
+            <img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <div class="loco-info pad10b">
+               <h5 class="bold">Service area</h5> 2 mile radius from
+              <br/>San Francisco, CA 94110</div>
+            <img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">
+          </div>
+        </div>
+      </div>
+      <!--location-->
+      <!--credentials-->
+      <div id="profile-credentials">
+         <h4 class="bold loco-infolight"><i class="icon ion-ribbon-b loco-info h2 media-middle"></i> Credentials</h4>
+
+         <h5 class="bold">Personal Information verified</h5>
+
+        <div class="row">
+          <div class="col-xs-6 col-sm-3">
+            <div><i class="icon ion-android-done"></i> Name</div>
+            <div><i class="icon ion-android-done"></i> Linked-in Account</div>
+          </div>
+          <div class="col-xs-6 col-sm-2">
+            <div><i class="icon ion-android-done"></i> Email</div>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <div><i class="icon ion-android-done"></i> Phone Number</div>
+          </div>
+          <div class="col-xs-6 col-sm-4">
+            <div><i class="icon ion-android-done"></i> Facebook Account</div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+         <h5 class="bold">Professional licenses and certificates</h5>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div><i class="icon ion-android-done"></i> Certified Massage Therapist (CMT)</div>
+          </div>
+          <div class="col-sm-6">
+            <div><i class="icon ion-android-done"></i> CPR Training</div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div id="profile-education">
+         <h4 class="bold loco-info"><i class="icon ion-university loco-info h2 media-middle"></i> Education</h4>
+
+        <div class="row">
+          <div class="pull-left" style="padding:0px 10px 0 20px;">
+            <br/> <i class="icon ion-android-done"></i>
+
+          </div>
+          <div class="display-inline-block">Bachelor of Science in Business
+            <br/> <span class="text-muted">
+                                    University of Minnesota Twin Cities <br/>
+                                    Finance and Marketing <br/>
+                                    1997 - 2001</span> 
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <!--credentials-->
+      <div class="about"> <b class="loco-info h5"><strong>About Fernando</strong> </b>
+
+        <p class="loco-info">Originally from Glacia, I have a wife, three dogs, and a cat. They keep
+          me quite busy. I Love living in Vigo so much that i moved back here.</p>
+        <div
+        class="sm-icons clearfix"> <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>&nbsp;
+          <a
+          class="loco-info" href="#"><i class="icon ion-ios-email-outline"></i>
+            </a> <a class="loco-info" href="#"><i class="icon ion-social-facebook"></i></a> 
+            <a
+            class="loco-info" href="#"><i class="icon ion-social-twitter"></i> 
+              </a> <a class="loco-info" href="#"><i class="icon ion-social-googleplus"></i></a>
+
+              <a
+              class="loco-info" href="#"><i class="icon ion-social-pinterest"></i>
+                </a>
+      </div>
+    </div>
+    </section>
+    <!-- overview-->
+    <!-- book service -->
+    <div class="col-sm-4 form-wrapper margin10t">
+       <h3 class="bold loco-secondary text-center">Book Services with Patricia</h3>
+
+       <h5 class="text-center bold pad10t pad5b">Select standalone service(s)</h5>
+
+      <hr>
+      <table class="table table-condensed">
+        <tr>
+          <td class="media-middle border-none">$99</td>
+          <td class="col-xs-9 border-none"><span>Deep Tissue Massage</span> 
+             <h5 class="text-muted margin5t">120 minutes</h5>
+
+          </td>
+          <td class="border-none pad20b">
+            <div class="checkbox">
+              <input id="check1" type="checkbox" name="check" value="check1">
+              <label for="check1"></label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="media-middle pad20t">$99</td>
+          <td class="col-xs-9 pad20t "><span>Deep Tissue Massage</span> 
+             <h5 class="text-muted margin5t">120 minutes</h5>
+
+          </td>
+          <td class="media-middle">
+            <div class="checkbox">
+              <input id="check2" type="checkbox" name="check" value="check1">
+              <label for="check2"></label>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <hr>
+       <h5 class="text-center bold">Select add-on service(s)</h5>
+
+      <hr>
+      <table class="table margin0b">
+        <tr>
+          <td class="border-none">$15</td>
+          <td class="col-xs-9 border-none"><span>Special Oils</span>
+          </td>
+          <td class="border-none">
+            <div class="checkbox margin-none">
+              <input id="check3" type="checkbox" name="check" value="check1">
+              <label for="check3"></label>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <hr>
+      <p class="text-center margin20b">Summary</p>
+      <div class="col-sm-9">Deep Tissue Massage</div>
+      <div class="col-sm-3">$99.00</div>
+      <div class="clearfix"></div>
+      <div class="col-sm-9">Special oils</div>
+      <div class="col-sm-3">$15.00</div>
+      <div class="clearfix"></div>
+      <hr>
+      <div class="col-sm-9 pad5l pad5r bold">Total</div>
+      <div class="col-sm-3 pad5l pad5r bold">$114.00</div>
+      <div class="clearfix"></div>
+       <h4 class="col-sm-10 margin10t" style="font-weight:normal"><i class="ion-ios-clock-outline h3"></i> 2 hours, 30 minutes</h4> 
+       <h4 class="col-sm-2">
+                        <span class="editpen">
+                            <i class="icon ion-edit loco-primary h6"></i>
+                        </span>
+                    </h4>
+
+      <div class="clearfix"></div>
+      <div class="checkbox col-sm-12">
+        <input id="repeat" type="checkbox" name="repeat" value="repeat" />
+        <label for="repeat">&nbsp; Make this repeat booking</label>
+      </div>
+      <div class="clearfix"></div> <a class="center-block btn-danger btn-lg h5 text-center" href="#">Schedule Appointment</a>
+
+      <br/>
+    </div>
+    <!-- book service-->
+    </div>
+    </div>
+    <!-- /.container-fluid -->
+    </div>
+    <!-- /#page-wrapper -->
     </div>
     <!-- Activity profilePictureBio -->
     <div class="container-fluid LightForm" data-activity="profilePictureBio">
@@ -2587,7 +3067,7 @@
                 <div class="WorkPhotos-toolbar"> <a href="#move" type="button" class="btn btn-link btn-lg WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span></a>
 
                   <button
-                  type="button" class="btn btn-link btn-lg WorkPhotos-changeBtn" data-bind="click: $root.changeImg"><span class="glyphicon glyphicon-picture"></span>
+                  type="button" class="btn btn-link btn-lg WorkPhotos-removeBtn" data-bind="click: $root.removeImg"><span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>
               </div>
@@ -2609,6 +3089,164 @@
         <button type="submit" class="btn btn-primary btn-block">Save</button>
       </div>
     </div>
+    <!-- Component Template appointment-card -->
+    <script type="text/html" id="largenavbar-template">
+      <div class="LargeNavBar container">
+          
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <a class="navbar-brand" href="/">Loconomics</a>
+          <!-- Top Menu Items -->
+          <div class="LargeNavBar-searchBar">
+              <div class="input-group">
+                  <span class="input-group-addon">
+                      <label for="navbar-search" class="fa fa-2x ion ion-ios-search" style=""></label>
+                  </span>
+                  <input id="navbar-search" type="text" name="s" class="form-control" placeholder="Search for a (e.g. Garderner, Tutor...)" />
+              </div>
+          </div>
+          
+          <ul class="nav navbar-right">
+              <li class="dropdown toggle">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                      <span class="LargeNavBar-label">Browse</span> <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu alert-dropdown">
+                      <li>
+                          <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+                      </li>
+                      <li>
+                          <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+                      </li>
+                      <li>
+                          <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+                      </li>
+                      <li>
+                          <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+                      </li>
+                      <li>
+                          <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+                      </li> 
+                      <li>
+                          <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="#">View All</a>
+                      </li>
+                  </ul>
+              </li>
+              <li class="LargeNavBar-userMenu dropdown text-right">
+                  <a href="#" class="dropdown-toggle toggle" data-toggle="dropdown">
+                      <i class="Avatar Avatar--primary Avatar--xs"><img src="https://loconomics.com/en-US/Profile/Photo/" /></i>
+                      <span class="LargeNavBar-label">Iago Lorenzo</span> <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li>
+                          <a href="/home"><i class="fa ion ion-connection-bars"></i> Dashboard</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="/calendar"><i class="fa fa-calendar"></i> Calendar</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="/inbox" class=""><i class="fa ion ion-ios-email-outline"></i> Inbox</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="/scheduling" class=""><i class="fa ion ion-ios-calendar-outline"></i> Scheduling</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="/clients" class=""><i class="fa ion ion-android-people"></i> Clients</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="/payments" class=""><i class="fa fa-credit-card"></i> Payments</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="/performance" class=""><i class="fa ion ion-ios-speedometer-outline"></i> Performance</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="/profile" class=""><i class="fa ion ion-android-person"></i> Marketplace Profile</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="/account" class=""><i class="fa ion ion-gear-b"></i> Account</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                          <a href="/logout"><i class="fa ion ion-power"></i> Log Out</a>
+                      </li>
+                  </ul>
+              </li>
+  
+              <li class="dropdown toggle mail-nav">
+                  <small class="mail-alert text-center">1</small>
+                  <a href="#" class="mail-toggle dropdown-toggle" data-toggle="dropdown">
+                      <span class="LargeNavBar-label sr-only">Unread Messages</span>
+                      <i class="fa fa-2x ion ion-ios-email-outline" aria-hidden="true"></i> <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu message-dropdown">
+                      <li class="message-preview">
+                          <a href="#">
+                              <div class="media">
+                                  <span class="pull-left">
+                                      <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                  </span>
+                                  <div class="media-body">
+                                      <h5 class="media-heading"><strong>John Smith</strong>
+                                      </h5>
+                                      <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                      <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                  </div>
+                              </div>
+                          </a>
+                      </li>
+                      <li class="message-preview">
+                          <a href="#">
+                              <div class="media">
+                                  <span class="pull-left">
+                                      <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                  </span>
+                                  <div class="media-body">
+                                      <h5 class="media-heading"><strong>John Smith</i></strong>
+                                      </h5>
+                                      <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                      <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                  </div>
+                              </div>
+                          </a>
+                      </li>
+                      <li class="message-preview">
+                          <a href="#">
+                              <div class="media">
+                                  <span class="pull-left">
+                                      <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                  </span>
+                                  <div class="media-body">
+                                      <h5 class="media-heading"><strong>John Smith</strong>
+                                      </h5>
+                                      <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                      <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                  </div>
+                              </div>
+                          </a>
+                      </li>
+                      <li class="message-footer">
+                          <a href="#">Read All New Messages</a>
+                      </li>
+                  </ul>
+              </li>
+  
+              <li>
+                  <a href="/feedback"><span class="LargeNavBar-label">Talk to Us</span></a>
+              </li>
+          </ul>
+      </div>
+    </script>
     <!-- Component Template appointment-card -->
     <script type="text/html" id="appointment-card-template">
       <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">

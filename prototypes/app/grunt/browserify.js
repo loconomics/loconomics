@@ -76,7 +76,6 @@ module.exports = function(/*grunt*/) {
                 './node_modules/events:events',
                 './vendor/iagosrl/ko/formatBinding:ko/formatBinding',
                 './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent',
-                'jquery-ui',
                 'knockout-sortable',
             ],
             'shim': {

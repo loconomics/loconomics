@@ -183,6 +183,8 @@ var appInit = function appInit() {
     
     attachFastClick(document.body);
     
+    // Jquery-ui components used
+    require('jquery-ui/autocomplete');
     // Knockout binding for jquery-ui sortable.
     // It loads jquery-ui sortable and draggable as dependencies:
     require('knockout-sortable');

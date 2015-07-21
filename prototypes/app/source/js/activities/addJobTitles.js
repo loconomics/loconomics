@@ -5,7 +5,9 @@
 
 var Activity = require('../components/Activity');
 var $ = require('jquery');
-require('jquery-ui');
+//NOTE: IT DEPENDS on this, but jquery-ui touch events support requires special load order
+// so thats being done in the entry point file
+//require('jquery-ui/autocomplete');
 
 var A = Activity.extends(function AddJobTitlesActivity() {
     
