@@ -9,7 +9,7 @@
     <!-- TODO: FROM JUVO, TO REFACTOR -->
     <!--profile box -->
     <div class="container profile">
-		<div class="col-xs-12 col-sm-3">
+		<div class="col-xs-12 col-sm-3 user-in-card">
 		<div class="Avatar Avatar--primary Avatar--lg"><img src="https://loconomics.com/en-US/Profile/Photo/"></div>
 		<h3 class="text-center bold margin0b"><span data-bind="text: profile() && profile().fullName()"></span></h3>
 		<h5 class="bold text-center margin0t">Tact Massage Therapy</h5>
@@ -29,19 +29,22 @@
 		<p class="loco-info margin10t">Originally from Glacia, I have a wife, three dogs, and a cat. They keep me quite busy. I Love living in Vigo so much that i moved back here.</p>
 		</div>
 		<div class="col-xs-12 col-sm-3 pad5r pad5l">
-		<div class="sm-icons">
-		<span class="bold h4 display-inline-block media-middle loco-info">Share: </span>&nbsp; 
-		<a href="#" class="loco-info"><i class="icon ion-ios-email-outline"></i></a>
-		<a href="#" class="loco-info"><i class="icon ion-social-facebook"></i></a> 
-		<a href="#" class="loco-info"><i class="icon ion-social-twitter"></i> </a>
-		<a href="#" class="loco-info"><i class="icon ion-social-googleplus"></i></a>
-		<a href="#" class="loco-info"><i class="icon ion-social-pinterest"></i></a>
-		<div class="clearfix"></div>
+		<div class="sm-icons profile-share-icons">
+            <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>
+            <a href="#" class="loco-info"><i class="icon ion-ios-email-outline"></i></a>
+            <a href="#" class="loco-info"><i class="icon ion-social-facebook"></i></a> 
+            <a href="#" class="loco-info"><i class="icon ion-social-twitter"></i> </a>
+            <a href="#" class="loco-info"><i class="icon ion-social-googleplus"></i></a>
+            <a href="#" class="loco-info"><i class="icon ion-social-pinterest"></i></a>
 		</div>
-		
-		<a href="#" class="btn-border  btn-lg text-center margin10t loco-primary col-xs-6 col-sm-12">Message</a>
-		<a href="#" class="btn-info  btn-lg text-center margin10t col-xs-5 col-sm-12">Book</a> 
-		<div class="clearfix"></div>
+		<div class="row">
+            <div class="col-xs-6 col-sm-12">
+		      <a href="#" class="btn btn-default btn-lg btn-block">Message</a>
+            </div>
+            <div class="col-xs-6 col-sm-12 margin10t">
+		      <a href="#" class="btn btn-primary btn-lg btn-block">Book</a> 
+            </div>
+        </div>
 		<p class="h5 text-center pad10b"><i>response time</i> <b>2 hr 30 min</b> <br/> From <b>$17/hr</b></p>
 		</div>
 		<div class="clearfix"></div>
@@ -133,11 +136,11 @@
 			 <div class="row">
 			 <div class="col-xs-6 panel-content">
 			 <section>
-			 <h5 class="bold">Pure Bliss Massage</h5>
+			 <h5 class="bold margin0b">Pure Bliss Massage</h5>
 			 <p class="bold loco-info">30 min, $95.00</p>
 			</section>
 			<section>
-			 <h5 class="bold">Pure Bliss Massage</h5>
+			 <h5 class="bold margin0b">Pure Bliss Massage</h5>
 			 <p class="bold loco-info">30 min, $95.00</p>
 			 <article>
 			Pure bliss is an understatement when you book this massgae. it includes sotthing oils band aromas in addition to a warm towel over you face !
@@ -146,14 +149,14 @@
 			 </div>	 
 			<div class="col-xs-6 panel-content">
 			 <section>
-			 <h5 class="bold">Pure Bliss Massage</h5>
+			 <h5 class="bold margin0b">Pure Bliss Massage</h5>
 			 <p class="bold loco-info">30 min, $95.00</p>
 			 <article>
 			Pure bliss is an understatement when you book this massgae. it includes sotthing oils band aromas in addition to a warm towel over you face !
 			 </article>
 			 </section>
 			 <section>
-			 <h5 class="bold">Pure Bliss Massage</h5>
+			 <h5 class="bold margin0b">Pure Bliss Massage</h5>
 			 <p class="bold loco-info">30 min, $95.00</p>
 			</section>
 			 </div>
@@ -176,22 +179,22 @@
 			<h5>Summary</h5>
 			
 			<div class="loco-info row">
-			<div class="col-xs-5 col-sm-2">Quality of Work</div>
-			<span class="display-inline-block pointer h5 margin0t">
+			<div class="col-xs-5 col-sm-4 col-md-3">Quality of Work</div>
+			<span class="pointer col-xs-5 col-sm-4">
 			<i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
 			<div class="clearfix"></div>
 			</div>
 			
 			<div class="loco-info row">
-			<div class="col-xs-5 col-sm-2">Environment</div>
-			<span class="display-inline-block pointer h5 margin0t">
+			<div class="col-xs-5 col-sm-4 col-md-3">Environment</div>
+			<span class="pointer col-xs-5 col-sm-4">
 			<i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
 			<div class="clearfix"></div>
 			</div>
 			
 			<div class="loco-info row">
-			<div class="col-xs-5 col-sm-2">Professionalism</div>
-			<span class="display-inline-block pointer h5 margin0t">
+			<div class="col-xs-5 col-sm-4 col-md-3">Professionalism</div>
+			<span class="pointer col-xs-5 col-sm-4">
 			<i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-android-star loco-secondary"></i><i class="icon ion-ios-star-half loco-secondary"></i></span>
 			<div class="clearfix"></div>
 			</div>
@@ -206,7 +209,7 @@
 			<div class="row">
 			<div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
 			<h5 class="bold margin0b">Joshua D.</h5>
-			<p class="bold loco-info">Client since January 2011</p></div>
+			<p class="bold loco-info"><small>Client since January 2011</small></p></div>
 			 
 			 <article>
 			I reall can't say enough good things about Fernando. He's been my dog walker for three years and my dogs love him. if they could talk, I'm sure they'd tell you about all the beach days. 
@@ -220,7 +223,7 @@
 			 <div class="row">
 			<div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
 			<h5 class="bold margin0b">Joshua D.</h5>
-			<p class="bold loco-info">Client since January 2011</p></div>
+			<p class="bold loco-info"><small>Client since January 2011</small></p></div>
 			  
 			 <article>
 			I really can't say enough good things about Fernando. He's been my dog walker for three years and my dogs love him. if they could talk, 
@@ -309,10 +312,10 @@
 			 
 			 <h5 class="bold">Professional licenses and certificates</h5>
 			 <div class="row">
-			 <div class="col-xs-9 col-sm-6">
+			 <div class="col-sm-6">
 			 <div><i class="icon ion-android-done"></i> Certified Massage Therapist (CMT)</div>
 			 </div>			 
-			 <div class="col-xs-9 col-sm-6">
+			 <div class="col-sm-6">
 			 <div><i class="icon ion-android-done"></i> CPR Training</div>
 			 </div>
 			  <div class="clearfix"></div>
@@ -339,7 +342,7 @@
 			<p class="loco-info">Originally from Glacia, I have a wife, three dogs, and a cat. They keep me quite busy. I Love living in Vigo so much that i moved back here.</p>
 			
 			<div class="sm-icons">
-		<span class="bold h4 display-inline-block media-middle loco-info">Share: </span>&nbsp; 
+		<span class="bold h4 display-inline-block media-middle loco-info">Share: </span>&nbsp;
 		<a class="loco-info" href="#"><i class="icon ion-ios-email-outline"></i></a>
 		<a class="loco-info" href="#"><i class="icon ion-social-facebook"></i></a> 
 		<a class="loco-info" href="#"><i class="icon ion-social-twitter"></i> </a>

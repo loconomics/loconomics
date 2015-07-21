@@ -191,9 +191,6 @@
     .table-border-bottom
       border-bottom $border-default $loco-infolight
 
-    .btn-border
-      border $border-default $loco-primary
-
     .border-none
       border 0px !important
 
@@ -201,23 +198,31 @@
       position $position-relative
     .center-block
         float none
-    .logo 
-      background-image url("../css/logo-loconomics-header-mini.png")
-      height 48px
-      overflow hidden
-      text-indent -551px
-      width 106px
-      display $display-block
-      float $pull-left
-
-
 
     .sm-icons
         font-size 28px
+        
+        .h4
+            font-size: 16px !important;
 
         & :hover
             color $loco-infolight
             text-decoration none
+
+    .profile-share-icons
+        > a
+            display inline-block
+            
+    .user-in-card
+        h3
+            white-space nowrap
+            overflow hidden
+            text-overflow ellipsis
+            
+        h5
+            // two lines only
+            height 32px
+            overflow hidden
 
     .editpen
       border $border-default $loco-primary
@@ -233,22 +238,7 @@
     .user-review
         top: 8px;
         position: relative;
-
-    ///
-    // Buttons.styl
-    .btn-border
-     &:hover
-      background-color #a8dbdb
-      border $border-default $loco-common
-      color $loco-common
-      text-decoration none
-
-    .btn-info
-     &:hover
-      background-color #a8dbdb
-      color $loco-common
-      text-decoration none
-      
+  
       
     ///
     // Customized.styl
@@ -256,7 +246,6 @@
       display inline-block
       cursor pointer
       position relative
-      padding-left 25px
       margin-right 15px
       font-size 13px
       &:before
@@ -371,9 +360,6 @@
         .profile h4
             font-size 14px !important
             font-weight 400
-
-        .profile .btn-info
-            margin-left 10px
 
         .profile .star
             position relative
