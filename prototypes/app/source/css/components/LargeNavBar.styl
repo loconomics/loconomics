@@ -9,11 +9,6 @@
     and tool links
     
     Initial code (hightly adapted, renamed): Adi/Juvo.
-    
-    NOTES:
-        *NOTE-A: Size adjustment is managed manually with max/min widths on the search input
-            taking care of the use of a .container class with the .LargeNavBar class,
-            TODO: replace the top navbar elements layout by a flex/table based one to autoadjust
 **/
 
 @import 'nib';
@@ -34,11 +29,36 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
     // common border color
     $border-color =	$gray-lighter
     
-    .navbar-brand
-        float left
-        height $LargeNavBar-contentHeight
+    // General layout: flexible layout using 'table' so search expands all the needed while using
+    // only one line
+    display table
 
-    & > ul 
+    & > .LargeNavBar-brand
+    & > .LargeNavBar-navBar
+    & > .LargeNavBar-searchBar
+        float none
+        display table-cell
+        vertical-align top
+        white-space nowrap
+        // Automatic size, the minimum required
+        width auto
+    // Brand has fixed size
+    & > .LargeNavBar-brand
+        width 100px
+    // Search grow the max, all remaining size for it
+    & > .LargeNavBar-searchBar
+        width 100%
+    // Navbar left with auto size, just the needed minimum size for one line
+
+    
+    // Brand
+    .LargeNavBar-brand
+        padding-right $container-padding-right;
+        .navbar-brand
+            height $LargeNavBar-contentHeight
+
+    // Links
+    .LargeNavBar-navBar
         padding 0px
         float right
         
@@ -47,7 +67,6 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
             height $LargeNavBar-contentHeight
             font-size 16px
             width auto
-            float left
             border-left 1px solid $border-color
             padding 0
             white-space: nowrap;
@@ -90,11 +109,6 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
                       white-space normal
                       color inherit
                       font-size inherit
-                      
-        .LargeNavBar-userMenu
-            > a
-                .LargeNavBar-label
-                    max-width: 80px;
 
         ///// SPECIFIC THINGS THAT MAY GET BETTER ORGANIZED OR CONVERTED TO GENERIC COMPONENTS:
         .mail-nav
@@ -118,10 +132,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
     .LargeNavBar-searchBar 
         border none
         border-left 1px solid $border-color
-        float left
-        margin-left 2%
-        // min-width 150px
-        padding 0 10px
+        padding 0
         
         .input-group
             border none
@@ -134,16 +145,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
             .form-control
                 box-shadow none
                 border none
-                // *NOTE-A
-                max-width: 120px;
-                
-                @media $mediaMinMd
-                    max-width none
-                    min-width 340px
-                    
-                @media $mediaMinLg
-                    min-width 535px
-                
+            
                 +input-placeholder()
                     color #999
 
@@ -161,7 +163,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
           font-size 16px
           width 90%
                   
-    /*  DISCARDED FOR NOW, DOUBLE CHECK TO REMOVE */
+    /* DOUBLE CHECK TO REMOVE BY USING A STANDARD MESSAGETILE */
     ul
       &.message-dropdown
         padding 0px
@@ -199,7 +201,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
         
         .navbar-right
             float: right !important;
-            margin-right: -15px;
+            margin-right: (0 - $container-padding-right);
       
         .navbar-right ~ .navbar-right
             margin-right: 0;
