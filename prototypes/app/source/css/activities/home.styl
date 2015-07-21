@@ -1,6 +1,116 @@
 /**
     Home page styles (aka Search page)
 **/
+
+@import '../utils/input-group-addon-inset';
+
 [data-activity=home] {
+    $homeHeaderHeight = 56px;
     
+    // NOTE: all activities are absolute positioned
+    
+    header {
+        height: $homeHeaderHeight;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        
+        .home-brand {
+            position: absolute;
+            top: 13px;
+            left: 28px;
+            
+            display: block;
+            text-indent: -99999px;
+            background: url("../images/logo-loconomics-white-mini.png") no-repeat center;
+            hr-image("../images/logo-loconomics-white-mini@2x.png", 100px, 38px);
+            width: 100px;
+            height: 38px;
+        }
+        
+        .home-nav {
+            position: absolute;
+            top: 13px;
+            right: 40px;
+            
+            background: White;
+            
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                font-size: 0;
+                
+                li {
+                    display: inline-block;
+                    font-size: $font-size-base;
+                    
+                    &:before {
+                        border-left: 1px solid $brand-primary;
+                        content: '';
+                        line-height: 1em;
+                    }
+                    
+                    &:first-child:before {
+                        display: none;
+                    }
+                    
+                    a {
+                        color: $brand-primary;
+                        // With links using btn btn-link, just adjust line to get the 44px full home-nav
+                        line-height: 30px;
+                    }
+                }
+            }
+        }
+    }
+    
+    [role=main] {
+        padding-top: $homeHeaderHeight + 40px;
+        background: rgb(79, 184, 185);
+        
+        .home-title {
+            color: White;
+            font-size: 44px;
+            font-weight: bold;
+            margin: 0.4em auto;
+            text-align: center
+        }
+
+        .home-tagline {
+            color: White;
+            font-size: 24px;
+            margin: 0.5em auto;
+            text-align: center;
+        }
+        
+        form {
+            margin: 40px auto;
+            max-width: 700px;
+            
+            // Flatty, square
+            .form-control,
+            .input-group-addon,
+            .btn {
+                border-radius: 0;
+                border-width: 0 0 1px 0;
+            }
+            
+            // Reduce column gaps by a 20px in total
+            > * {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+        
+        .home-section-title {
+            color: White;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0.4em auto;
+            text-align: center
+        }
+    }
 }
