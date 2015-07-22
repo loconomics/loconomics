@@ -20,7 +20,7 @@
   
   <body>
     <div class="SplashScreen">Loading...</div>
-    <nav role="navigation" class="AppNav">
+    <nav role="navigation" class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }">
       <div class="SmartNavBar visible-xs"> <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }"
         class="SmartNavBar-edge left"></span>
 
@@ -42,7 +42,7 @@
                     </h4>
 
           <ul class="nav navbar-nav">
-            <li class="go-home"><a href="/home"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a>
+            <li class="go-dashboard"><a href="/dashboard"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a>
             </li>
             <li class="go-calendar"><a href="/calendar"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Calendar</a>
             </li>
@@ -1085,6 +1085,103 @@
         <button type="button" class="btn btn-default btn-block" data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() + '/booking' }">Open Booking</button>
       </div>
     </div>
+    <!-- Activity dashboard -->
+    <div class="container-fluid" data-activity="dashboard">
+      <div>
+         <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
+            Upcoming bookings
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1> 
+        <div id="dashboardNextBooking" data-bind="css: { 'is-loading': nextBooking.isLoading() }">
+          <div data-bind="with: nextBooking"> <a href="#" class="LeadTile" data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
+                    <h3 class="Tile-title">
+                        <div data-bind="text: displayedDate"></div>
+                        <div>
+                            <span data-bind="text: displayedStartTime"></span>
+                            -
+                            <span data-bind="text: displayedEndTime"></span>
+                        </div>
+                    </h3>
+                    <h4 class="Tile-subtitle" data-bind="text: customer() && customer().fullName()"></h4>
+                    <p class="Tile-content">
+                        <span data-bind="text: servicesSummary()"></span>
+                        <em data-bind="text: price, format: { type: 'number', format: '$0,0' }"></em>
+                    </p>
+                </a>
+
+          </div>
+          <div data-bind="visible: !nextBooking()" class="isolated"> <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
+
+            <app-loading-spinner
+            params="mod: 'row bigger'"></app-loading-spinner>
+          </div>
+        </div>
+        <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
+          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
+        <ul id="dashboardUpcomingBookings" class="TilesList" data-bind="foreach: upcomingBookings.items">
+          <li><a href="#" class="LineTile" data-bind="attr: { href: url }">
+                <strong data-bind="text: quantity"></strong>
+                <span data-bind="text: phrase"></span>
+            </a>
+          </li>
+        </ul> <a class="CompactLinkTile" href="/calendar">
+            <div class="Tile-content">Go to calendar</div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+
+      </div>
+      <div>
+         <h1 class="SectionTitle" data-bind="css: { 'is-syncing': inbox.isSyncing() }">
+            Inbox
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>
+
+        <div data-bind="css: { 'is-loading': inbox.isLoading() }">
+          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
+        <div id="dashboardInbox" class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div> <a class="CompactLinkTile" href="/inbox">
+            <div class="Tile-content">Go to inbox</div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+
+      </div>
+      <div>
+         <h1 class="SectionTitle">Performance</h1>
+
+        <ul id="dashboardPerformance" class="TilesList" data-bind="foreach: performance.items">
+          <li><a href="#" class="LineTile" data-bind="attr: { href: link }">
+                    <strong data-bind="text: markerLine1"></strong>
+                    <span data-bind="text: contentLine1"></span>
+                </a>
+
+          </li>
+        </ul> <a class="CompactLinkTile" href="/performance">
+            <div class="Tile-content">Go to performance</div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+
+      </div>
+      <div>
+         <h1 class="SectionTitle">Get more from Loconomics</h1>
+
+        <ul class="TilesList" id="dashboardGetMore" data-bind="foreach: getMore.items()">
+          <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span data-bind="css: markerIcon"></span>
+                </div>                
+                <div class="Tile-content"><p data-bind="text: contentLine1()"></p></div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
     <!-- Activity datetimePicker -->
     <div class="container-fluid" data-activity="datetimePicker">
        <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Select a start time</h2>
@@ -1435,102 +1532,285 @@
         </div>
       </form>
     </div>
-    <!-- Activity home -->
-    <div class="container-fluid" data-activity="home">
-      <div>
-         <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
-            Upcoming bookings
-            <!-- ko component: {
-                name: 'app-loading-spinner',
-                params: { mod: 'onRight' }
-            } --><!-- /ko -->
-        </h1> 
-        <div id="homeNextBooking" data-bind="css: { 'is-loading': nextBooking.isLoading() }">
-          <div data-bind="with: nextBooking"> <a href="#" class="LeadTile" data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
-                    <h3 class="Tile-title">
-                        <div data-bind="text: displayedDate"></div>
-                        <div>
-                            <span data-bind="text: displayedStartTime"></span>
-                            -
-                            <span data-bind="text: displayedEndTime"></span>
-                        </div>
-                    </h3>
-                    <h4 class="Tile-subtitle" data-bind="text: customer() && customer().fullName()"></h4>
-                    <p class="Tile-content">
-                        <span data-bind="text: servicesSummary()"></span>
-                        <em data-bind="text: price, format: { type: 'number', format: '$0,0' }"></em>
-                    </p>
-                </a>
+    <!-- Home activity (aka search) -->
+    <div class="" data-activity="home">
+      <header>
+        <div class="home-menu"> <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button"
+          aria-haspopup="true" aria-expanded="false">
+                <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+                <span class="sr-only">Menu</span>
+            </a>
+
+          <ul class="SideMenu">
+            <li><a href="#home-search">Search</a>
+            </li>
+            <li><a href="#">Download the App</a>
+            </li>
+            <li><a href="/signup">Sign Up</a>
+            </li>
+            <li><a href="/login">Log In</a>
+            </li>
+            <li><a href="#home-categories">Browse</a>
+            </li>
+            <li><a href="#home-hiw">How it Works</a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#inline-help">Help</a>
+            </li>
+          </ul>
+        </div> <a class="home-brand" href="/">Loconomics</a>
+
+        <nav class="home-nav">
+          <ul>
+            <li><a href="/signup" class="btn btn-link">Sign up</a>
+            </li>
+            <li><a href="/login" class="btn btn-link">Log in</a>
+            </li>
+            <li> <a href="#inline-help" class="btn btn-link dropdown-toggle" data-toggle="dropdown"
+              role="button" aria-haspopup="true" aria-expanded="false">
+                        Help <span class="caret"></span>
+                    </a>
+
+              <ul class="dropdown-menu">
+                <li><a href="#h">Visit the Help Center</a>
+                </li>
+                <li><a href="#h">Getting Started Guide</a>
+                </li>
+                <li><a href="#h">How much do I pay for a service?</a>
+                </li>
+                <li><a href="#h">How does process payments?</a>
+                </li>
+                <li><a href="#h">See all FAQs</a>
+                </li>
+              </ul>
+            </li>
+            <li><a href="/signup/freelancer" class="btn btn-secondary">List your services</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <div role="main">
+         <h1 class="home-title">Make life better.</h1>
+
+        <p class="home-tagline">Book local, independent service providers safely and easily</p>
+        <form id="home-search"
+        action="/" method="get" class="row">
+          <div class="form-group col-sm-6">
+            <label for="homeSearch" class="sr-only">Search</label>
+            <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
+              <input
+              type="text" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)">
+            </div>
+          </div>
+          <div class="form-group col-sm-4">
+            <label for="homeLocation" class="sr-only">Where?</label>
+            <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
+              <input
+              type="text" name="location" class="form-control inset" id="homeLocation"
+              placeholder="Where?">
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <button type="submit" class="btn btn-secondary btn-lg btn-block">Search</button>
+          </div>
+        </form>
+        <div id="home-hiw" class="home-hiw">
+           <h2 class="home-section-title">How Loconomics works:</h2>
+
+          <div class="container home-section-listing">
+            <ul class="row list-unstyled">
+              <li class="col-sm-4"> <i aria-hidden="true" class="fa ion ion-ios-search"></i>
+
+                 <h3>Search and book</h3>
+
+                <p>Find the perfect person to help you with your service needs. Profiles
+                  include clear pricing and verified reviews.</p>
+              </li>
+              <li class="col-sm-4"> <i aria-hidden="true" class="fa ion ion-bowtie"></i>
+
+                 <h3>Service completed</h3>
+
+                <p>Let the professional do the work and focus your efforts on enjoying the
+                  time and stress you've saved.</p>
+              </li>
+              <li class="col-sm-4"> <i aria-hidden="true" class="fa ion ion-ios-star"></i>
+
+                 <h3>Review &amp; repeat</h3>
+
+                <p>Help imporve your provider's services &amp; share the love of them with
+                  your neighbors. Karma is good.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="home-booking">
+           <h2 class="home-section-title">Why book on Loconomics?</h2>
+
+          <div class="home-section-listing">
+            <ul class="list-unstyled">
+              <li> <i aria-hidden="true" class="fa ion ion-ios-color-filter-outline"></i>
+
+                 <h3>Worker-owned</h3>
+
+                <p>Loconomics is owned by the professionals providing you great service.
+                  No middle-men.</p>
+              </li>
+              <li> <i aria-hidden="true" class="fa ion ion-ios-search"></i>
+
+                 <h3>All your needs</h3>
+
+                <p>Book anything from house cleaning to reiki using the same simple booking
+                  process.</p>
+              </li>
+              <li> <i aria-hidden="true" class="fa fa-calendar-o"></i>
+
+                 <h3>Easy scheduling</h3>
+
+                <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+              </li>
+              <li> <i aria-hidden="true" class="fa ion ion-card"></i>
+
+                 <h3>Payments handled</h3>
+
+                <p>No awkward cash exchanges, pay with credit card and include optional gratuity.</p>
+              </li>
+              <li> <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
+
+                 <h3>Background check policy</h3>
+
+                <p>Choose your comfort level when booking providers using our <a href="/backgroundCheckPolicy"
+                  target="_blank">Background Check Policy</a>.</p>
+              </li>
+              <li> <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
+
+                 <h3>Favorites</h3>
+
+                <p>Easily store and share your favorite professionals with your favorite
+                  people.</p>
+              </li>
+            </ul>
+          </div>
+          <div class="home-booking-more"> <a href="learnMore" class="btn btn-secondary btn-lg btn-block">Learn more</a>
 
           </div>
-          <div data-bind="visible: !nextBooking()" class="isolated"> <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
+        </div>
+        <div id="home-categories" class="home-categories">
+           <h2 class="home-section-title">Browse by category</h2>
 
-            <app-loading-spinner
-            params="mod: 'row bigger'"></app-loading-spinner>
+          <div class="home-section-listing">
+            <ul class="list-unstyled">
+              <li class="SearchCategory-home">
+                 <h3>Home</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-ios-color-filter-outline"></i>
+
+                <p>Loconomics is owned by the professionals providing you great service.
+                  No middle-men.</p> <a href="/?category=home" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+
+              </li>
+              <li class="SearchCategory-children">
+                 <h3>Children</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-ios-search"></i>
+
+                <p>Book anything from house cleaning to reiki using the same simple booking
+                  process.</p> <a href="/?category=children" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+
+              </li>
+              <li class="SearchCategory-pet">
+                 <h3>Pet</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa fa-calendar-o"></i>
+
+                <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                <a
+                href="/?category=pet" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em>
+                  </a>
+              </li>
+              <li class="SearchCategory-personal">
+                 <h3>Personal</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa fa-calendar-o"></i>
+
+                <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                <a
+                href="/?category=personal" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em>
+                  </a>
+              </li>
+              <li class="SearchCategory-transport">
+                 <h3>Transport</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-card"></i>
+
+                <p>No awkward cash exchanges, pay with credit card and include optional gratuity.</p>
+                <a
+                href="/?category=transport" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em>
+                  </a>
+              </li>
+              <li class="SearchCategory-office">
+                 <h3>Office</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
+
+                <p>Choose your comfort level when booking providers using our <a href="/backgroundCheckPolicy"
+                  target="_blank">Background Check Policy</a>.</p> <a href="/?category=office"
+                class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+
+              </li>
+              <li class="SearchCategory-senior">
+                 <h3>Senior</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
+
+                <p>Easily store and share your favorite professionals with your favorite
+                  people.</p> <a href="/?category=senior" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+
+              </li>
+              <li class="SearchCategory-celebration">
+                 <h3>Celebration</h3>
+
+                <app-stars-rating params="rating: 4, total: 23"></app-stars-rating> <i aria-hidden="true" class="fa fa-calendar-o"></i>
+
+                <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                <a
+                href="/?category=celebration" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em>
+                  </a>
+              </li>
+            </ul>
           </div>
         </div>
-        <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
-          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-        </div>
-        <ul id="homeUpcomingBookings" class="TilesList" data-bind="foreach: upcomingBookings.items">
-          <li><a href="#" class="LineTile" data-bind="attr: { href: url }">
-                <strong data-bind="text: quantity"></strong>
-                <span data-bind="text: phrase"></span>
-            </a>
+      </div>
+      <footer class="WebsiteFooter">
+        <ul class="list-unstyled WebsiteFooter-links">
+          <li><a href="/about">About</a>
           </li>
-        </ul> <a class="CompactLinkTile" href="/calendar">
-            <div class="Tile-content">Go to calendar</div>
-            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
-        </a>
-
-      </div>
-      <div>
-         <h1 class="SectionTitle" data-bind="css: { 'is-syncing': inbox.isSyncing() }">
-            Inbox
-            <!-- ko component: {
-                name: 'app-loading-spinner',
-                params: { mod: 'onRight' }
-            } --><!-- /ko -->
-        </h1>
-
-        <div data-bind="css: { 'is-loading': inbox.isLoading() }">
-          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-        </div>
-        <div id="homeInbox" class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div> <a class="CompactLinkTile" href="/inbox">
-            <div class="Tile-content">Go to inbox</div>
-            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
-        </a>
-
-      </div>
-      <div>
-         <h1 class="SectionTitle">Performance</h1>
-
-        <ul id="homePerformance" class="TilesList" data-bind="foreach: performance.items">
-          <li><a href="#" class="LineTile" data-bind="attr: { href: link }">
-                    <strong data-bind="text: markerLine1"></strong>
-                    <span data-bind="text: contentLine1"></span>
-                </a>
-
+          <li><a href="http://blog.loconomics.com/category/press">Press</a>
           </li>
-        </ul> <a class="CompactLinkTile" href="/performance">
-            <div class="Tile-content">Go to performance</div>
-            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
-        </a>
-
-      </div>
-      <div>
-         <h1 class="SectionTitle">Get more from Loconomics</h1>
-
-        <ul class="TilesList" id="homeGetMore" data-bind="foreach: getMore.items()">
-          <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
-                <div class="Tile-icon" aria-hidden="true">
-                    <span data-bind="css: markerIcon"></span>
-                </div>                
-                <div class="Tile-content"><p data-bind="text: contentLine1()"></p></div>
-            </a>
+          <li><a href="http://blog.loconomics.com">Blog</a>
+          </li>
+          <li><a href="/feedback/faqs">Help</a>
+          </li>
+          <li><a href="/terms">Terms &amp; Privacy</a>
           </li>
         </ul>
-      </div>
+        <div class="WebsiteFooter-social">
+           <h6>Join us on:</h6>
+
+          <ul class="list-unstyled">
+            <li><a href="https://instagram.com/" target="_blank"><span class="sr-only">Instagram</span> <i aria-hidden="true" class="fa ion ion-social-instagram"></i></a>
+            </li>
+            <li><a href="https://facebook.com" target="_blank"><span class="sr-only">Facebook</span> <i aria-hidden="true" class="fa ion ion-social-facebook"></i></a>
+            </li>
+            <li><a href="https://twitter.com" target="_blank"><span class="sr-only">Twitter</span> <i aria-hidden="true" class="fa ion ion-social-twitter"></i></a>
+            </li>
+            <li><a href="https://plus.google.com" target="_blank"><span class="sr-only">Google Plus</span> <i aria-hidden="true" class="fa ion ion-social-googleplus"></i></a>
+            </li>
+            <li><a href="https://pinterest.com" target="_blank"><span class="sr-only">Pinterest</span> <i aria-hidden="true" class="fa ion ion-social-pinterest"></i></a>
+            </li>
+          </ul>
+        </div>
+        <p class="WebsiteFooter-copyright">&copy; Loconomics Cooperative, Inc.</p>
+      </footer>
     </div>
     <!-- Inbox activity -->
     <div class="container-fluid" data-activity="inbox">
@@ -1772,10 +2052,10 @@
       <div class="LeadContent">
          <h3>Log in to your account</h3>
 
-        <div> <a href="home.html" class="btn btn-default btn-block btn-facebook">Facebook</a>
+        <div> <a href="#facebook" class="btn btn-default btn-block btn-facebook">Facebook</a>
 
           <a
-          href="home.html" class="btn btn-default btn-block btn-google">Google</a>
+          href="#google" class="btn btn-default btn-block btn-google">Google</a>
         </div>
         <p class="isolated text-center">or</p>
         <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }"
@@ -2810,10 +3090,10 @@
       <div class="LeadContent">
          <h3>Sign up for a free trial</h3>
 
-        <div> <a href="#!home" class="btn btn-default btn-block btn-facebook">Facebook</a>
+        <div> <a href="#facebook" class="btn btn-default btn-block btn-facebook">Facebook</a>
 
           <a
-          href="#!home" class="btn btn-default btn-block btn-google">Google</a>
+          href="#google" class="btn btn-default btn-block btn-google">Google</a>
         </div>
         <p class="isolated text-center">or</p>
         <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }"
@@ -3143,7 +3423,7 @@
                   </a>
                   <ul class="dropdown-menu">
                       <li>
-                          <a href="/home"><i class="fa ion ion-connection-bars"></i> Dashboard</a>
+                          <a href="/dashboard"><i class="fa ion ion-connection-bars"></i> Dashboard</a>
                       </li>
                       <li class="divider"></li>
                       <li>
@@ -3561,6 +3841,16 @@
               <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
           </span>
       </button>
+    </script>
+    <!-- StarsRating -->
+    <script type="text/html" id="stars-rating-template">
+      <span class="StarsRating">
+          <span class="sr-only StarsRating-label"><span class="StarsRating-rating" data-bind="text: rating"></span> stars</span>
+          <span class="StarsRating-icons" data-bind="foreach: { data: stars, as: 'rate' }">
+              <i class="fa ion ion-android-star" aria-hidden="true" data-bind="css: { 'ion-android-star': rate === 1, 'ion-android-star-hal': rate === 0.5, 'ion-android-star-outline': rate === 0 }"></i>
+          </span>
+          <span class="StarsRating-total" data-bind="text: totalText"></span>
+      </span>
     </script>
     <!-- Knockout Template time-slot-tile -->
     <script type="text/html" id="time-slot-tile-template">

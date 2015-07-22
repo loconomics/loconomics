@@ -8,7 +8,11 @@
 @import '../components/SideMenu.styl';
 
 [data-activity=home] {
-    $homeHeaderHeight = 56px;
+    // computed based on font-sizes line-height and height on logo and max-height buttons:
+    $homeHeaderContentHeight = 40px;
+    $homeHeaderVGap = 12px;
+    // Total height to reserve for the header
+    $homeHeaderHeight = $homeHeaderContentHeight + ($homeHeaderVGap * 2);
     
     // NO NAVBAR, disabled on the JS activity, so this can replace the default:
     top: 0 !important;
@@ -25,7 +29,7 @@
         
         .home-brand {
             position: absolute;
-            top: 13px;
+            top: $homeHeaderVGap;
             left: 28px;
             
             display: block;
@@ -38,7 +42,7 @@
         
         .home-nav {
             position: absolute;
-            top: 13px;
+            top: $homeHeaderVGap;
             right: 40px;
             
             > ul {
@@ -104,15 +108,43 @@
             
             .home-brand {
                 position: static;
-                margin: 13px auto 0;
+                margin: $homeHeaderVGap auto 0;
             }
+        }
+        
+        ///
+        // States
+        // Transitions support
+        &,
+        .btn-link {
+            transition: all 300ms $cubic-easing;
+        }
+
+        // Fixed header (usually enabled with js on scroll)
+        &.is-fixed {
+            background: White;
+            position: fixed;
+
+            .btn-link {
+                color: $brand-primary !important;
+            }
+            
+            .home-brand {
+                background: url("../images/logo-loconomics-teal-mini.png") no-repeat center;
+                hr-image("../images/logo-loconomics-teal-mini@2x.png", 100px, 38px);
+            }
+        }
+        
+        // Search visible
+        &.is-search {
+            
         }
     }
     
     [role=main] {
         $arrowSize = 30px;
         
-        padding-top: $homeHeaderHeight + 40px;
+        padding-top: $homeHeaderHeight + 32px;
         background: rgb(79, 184, 185);
         
         .home-title {
