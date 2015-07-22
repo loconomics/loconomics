@@ -205,7 +205,8 @@
             ul {
                 color: $gray;
                 text-align: center;
-                margin: 0 auto 10px;
+                margin: 0 auto;
+                padding-bottom: 10px;
                 // 3 boxes limit: UPDATE on each size or margin change
                 max-width: 1200px;
 
@@ -250,6 +251,9 @@
         }
         
         .home-categories {
+            $boxSize = 240px;
+            $boxMargin = 1.5%;
+            
             background: $gray-background;
             text-align: center;
             padding-top: 40px;
@@ -260,15 +264,19 @@
             
             ul {
                 color: $gray;
-                clearfix()
+                text-align: center;
+                margin: 0 auto;
+                padding-bottom: 10px;
+                // 4 boxes limit: UPDATE on each size or margin change
+                max-width: 1200px;
 
                 li {
                     // TODO Add background photo per category
                     background: White no-repeat top center;
                     background-size: contain;
-                    float: left;
-                    width: 21%;
-                    margin: 2%;
+                    display: inline-block;
+                    width: $boxSize;
+                    margin: $boxMargin;
                     padding: 12px;
                     vertical-align: middle;
 
