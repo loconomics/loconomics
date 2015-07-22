@@ -37,8 +37,6 @@
             top: 13px;
             right: 40px;
             
-            background: White;
-            
             ul {
                 list-style: none;
                 padding: 0;
@@ -47,21 +45,14 @@
                 
                 li {
                     display: inline-block;
-                    font-size: $font-size-base;
+                    margin: 0 18px;
                     
-                    &:before {
-                        border-left: 1px solid $brand-primary;
-                        content: '';
-                        line-height: 1em;
-                    }
-                    
-                    &:first-child:before {
-                        display: none;
-                    }
-                    
+                    // Used along .btn.btn-link
                     a {
-                        color: $brand-primary;
-                        // With links using btn btn-link, just adjust line to get the 44px full home-nav
+                        font-size: 16px;
+                        color: White;
+                        font-weight: bold;
+                        // With links using btn btn-link, just adjust line to get the desired block size
                         line-height: 30px;
                     }
                 }
@@ -100,12 +91,8 @@
             margin: 40px auto;
             max-width: 700px;
             
-            // Flatty, square
-            .form-control,
-            .input-group-addon,
-            .btn {
-                border-radius: 0;
-                border-width: 0 0 1px 0;
+            .form-control {
+                background: White;
             }
             
             // Reduce column gaps by a 20px in total
@@ -245,7 +232,6 @@
 
                 .btn {
                     border-color: White;
-                    border-radius: 2px;
                 }
             }
         }
@@ -296,7 +282,6 @@
                     
                     .btn {
                         font-weight: bold;
-                        border-radius: 1px;
                         
                         em {
                             font-weight: normal;

@@ -49,3 +49,54 @@ $btn-secondary-border = $brand-secondary-dark
         clip: rect(0px, 0px, 0px, 0px);
     }
 }
+
+/**
+    Overwritting buttons and form controls default style:
+**/
+// Flatty, square
+.form-control,
+// Increased specifity to overwrite the group/addons styles:
+.input-group > .input-group-addon,
+.input-group > .form-control,
+// All buttons
+.btn {
+    border-radius: 0; // Or 1px so looks square but gets a smooth rendering??
+}
+// Only bottom border to look flatty
+.form-control,
+.input-group-addon,
+// All button styles except default and link
+.btn-primary,
+.btn-secondary,
+.btn-info,
+.btn-success,
+.btn-warning,
+.btn-danger {
+    // Looks near flat, just only border on bottom, so
+    // put others as transparent so keeps the expected size
+    // while with current box-sizing the border area shows the
+    // background
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-left-color: transparent;
+}
+// No box shadow on default state
+// NOTE: Apply only one class selector to don't override pseudo-class styles
+.form-control,
+.input-group-addon,
+.btn {
+    box-shadow: none;
+}
+// Remove borders on the special '.inset' class form input groups
+.input-group > .form-control.inset,
+.input-group > .form-control.inset {
+    border-left-color: transparent;
+    border-right-color: transparent;
+}
+
+// Because of the border change, form controls on default, white background
+// does not looks like a control, add a background
+// Other form styles can revert this to white again
+.form-control {
+    background: #fbfbfb;
+}

@@ -5,6 +5,8 @@
     may apply to any element (not just a 'form' element), but an activity or top-level '.container'
     is the best because of the background (or using a '.row' element so background fills all the width),
     and will change the standard appearance of other components, like SectionTitle's
+    
+    To receive custom styles, form elements must have a 'form-control' class (like Bootstrap).
 **/
 .LightForm {
     background: $gray-background;
@@ -31,7 +33,12 @@
         margin: 25px 40px;
     }
     
-    textarea {
+    textarea.form-control {
         resize: vertical;
+    }
+    
+    // All form controls are white background
+    .form-control {
+        background: White;
     }
 }
