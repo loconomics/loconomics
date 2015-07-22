@@ -171,6 +171,9 @@
         
         // Why book on Loconomics section
         .home-booking {
+            $boxSize = 340px;
+            $boxMargin = 1.5%;
+
             background: $brand-secondary-background;
             text-align: center;
             padding-top: 40px;
@@ -179,14 +182,18 @@
 
             ul {
                 color: $gray;
-                clearfix()
+                text-align: center;
+                margin: 0 auto 10px;
+                // 3 boxes limit: UPDATE on each size or margin change
+                max-width: 1200px;
 
                 li {
                     background: White;
-                    float: left;
-                    width: 27.3333%;
-                    margin: 3%;
-                    padding: 20px;
+                    //float: left;
+                    display: inline-block;
+                    width: $boxSize;
+                    margin: $boxMargin;
+                    padding: 16px;
                     vertical-align: middle;
                     
                     a {
@@ -208,10 +215,15 @@
                 }
             }
             
-            .btn-secondary {
-                border-color: White;
-                margin: 0 auto 2em;
-                border-radius: 2px;
+            .home-booking-more {
+                width: $boxSize;
+                margin: auto;
+                padding-bottom: 2em;
+
+                .btn {
+                    border-color: White;
+                    border-radius: 2px;
+                }
             }
         }
         
