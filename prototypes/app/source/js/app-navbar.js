@@ -54,8 +54,16 @@ exports.extends = function (app) {
 
         // if the activity has its own
         if ('navBar' in activity) {
-            // Use specializied activity bar data
-            app.navBar(activity.navBar);
+            if (activity.navBar === null) {
+                // Activity requires no menu, create a hidden NavBar instance
+                app.navBar(new NavBar({
+                    hidden: true
+                }));
+            }
+            else {
+                // Use specializied activity bar data
+                app.navBar(activity.navBar);
+            }
         }
         else {
             // Use default one

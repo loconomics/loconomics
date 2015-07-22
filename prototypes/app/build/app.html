@@ -19,7 +19,7 @@
   
   <body>
     <div class="SplashScreen">Loading...</div>
-    <nav role="navigation" class="AppNav">
+    <nav role="navigation" class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }">
       <div class="SmartNavBar visible-xs"> <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }"
         class="SmartNavBar-edge left"></span>
 

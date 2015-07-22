@@ -10,6 +10,9 @@
 [data-activity=home] {
     $homeHeaderHeight = 56px;
     
+    // NO NAVBAR, disabled on the JS activity, so this can replace the default:
+    top: 0 !important;
+    
     // NOTE: all activities are absolute positioned
     
     header {
@@ -157,7 +160,7 @@
             font-size: 32px;
             font-weight: bold;
             margin: 0 auto;
-            padding: 0.4em 0;
+            padding: 0.4em $container-padding-right 0.4em $container-padding-left;
             text-align: center
         }
         
@@ -252,6 +255,11 @@
                     padding: 16px;
                     vertical-align: middle;
                     
+                    @media $mediaMaxXs {
+                        width: auto;
+                        display: block;
+                    }
+                    
                     a {
                         color: $brand-secondary;
                         font-weight: bold;
@@ -275,6 +283,12 @@
                 width: $boxSize;
                 margin: auto;
                 padding-bottom: 2em;
+                
+                @media $mediaMaxXs {
+                    width: auto;
+                    display: block;
+                    margin: 0 $boxMargin;
+                }
 
                 .btn {
                     border-color: White;
@@ -311,6 +325,11 @@
                     margin: $boxMargin;
                     padding: 12px;
                     vertical-align: middle;
+                    
+                    @media $mediaMaxXs {
+                        width: auto;
+                        display: block;
+                    }
 
                     h3 {
                         font-size: 20px;

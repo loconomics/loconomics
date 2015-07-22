@@ -8,6 +8,7 @@ var Activity = require('../components/Activity');
 var A = Activity.extends(function HomeActivity() {
     
     Activity.apply(this, arguments);
+    this.navBar = null;
 
     this.accessLevel = null;
 });
