@@ -133,7 +133,7 @@
         // Edge limit for phone
         .home-title,
         .home-tagline {
-            padding: 0 $container-padding-right 0 $container-padding-left;
+            padding: 0 $grid-gap;
         }
         
         form {
@@ -160,7 +160,7 @@
             font-size: 32px;
             font-weight: bold;
             margin: 0 auto;
-            padding: 0.4em $container-padding-right 0.4em $container-padding-left;
+            padding: 0.4em $grid-gap;
             text-align: center
         }
         
@@ -255,9 +255,18 @@
                     padding: 16px;
                     vertical-align: middle;
                     
+                    // On small sizes 2 columns does not fits so
+                    // (using XS/mobile now -- is close enough to the actual needed size) 
+                    // it automatically gets 1 column but needs to manage size so it
+                    // shrinks automatically for smaller screens using current fixed size
+                    // as maximum size (to don't let to appear too wide on sizes in the middle
+                    // of the breakpoint and card size).
+                    // Margin is auto for centering and added gap on list container
                     @media $mediaMaxXs {
                         width: auto;
                         display: block;
+                        max-width: $boxSize;
+                        margin: $grid-gap auto;
                     }
                     
                     a {
@@ -269,6 +278,11 @@
                         font-size: 15px;
                         font-weight: bold;
                     }
+                }
+                
+                // Setting margin for small screens since the items margin is auto there
+                @media $mediaMaxXs {
+                    margin: 0 $grid-gap;
                 }
                 
                 // icons
@@ -287,7 +301,12 @@
                 @media $mediaMaxXs {
                     width: auto;
                     display: block;
-                    margin: 0 $boxMargin;
+                    margin: 0 $grid-gap;
+                    
+                    > .btn {
+                        max-width: $boxSize;
+                        margin: 0 auto;
+                    }
                 }
 
                 .btn {
@@ -326,9 +345,20 @@
                     padding: 12px;
                     vertical-align: middle;
                     
-                    @media $mediaMaxXs {
+                    // For a small size where only one card fits the space (~pixels)
+                    // use an automatic width so the card does not looks with lot of
+                    // margin space and fits on sizes smaller than original card size,
+                    // but keeping a maximum size so it does not looks too wide.
+                    // On the beggining, the XS breakpoint was used, but was too wide
+                    // and lot of devices still hold two columns easily, so custom breakpoint
+                    // for the current design and $boxSize and $boxMargin
+                    // Margin is auto for centering and added gap on list container
+                    //@media $mediaMaxXs {
+                    @media (max-width: 520px) {
                         width: auto;
                         display: block;
+                        max-width: 340px;
+                        margin: $grid-gap auto;
                     }
 
                     h3 {
@@ -365,6 +395,12 @@
                         padding: 14px 20px;
                         margin: 30px auto 8px;
                     }
+                }
+                
+                // Setting margin for small screens since the items margin is auto there
+                //@media $mediaMaxXs {
+                @media (max-width: 520px) {
+                    margin: 0 $grid-gap;
                 }
             }
         }

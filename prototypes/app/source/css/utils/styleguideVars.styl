@@ -126,6 +126,10 @@ $mediaMaxMd = "(max-width: " + screen-md-max + ")";
 **/
 $container-padding-left = round($grid-gutter-width / 2);
 $container-padding-right = round($grid-gutter-width / 2);
+// Starting to use this var instead of the previous one, they were too much specific and not useful
+// Grip gap is the gap (as margin or padding) usually added to a column or container.
+// Its the half of the total space between elements, that is $grid-gutter-width
+$grid-gap = round($grid-gutter-width / 2);
 
 // App/Mobile navbar (SmartNavBar)
 // 51px for Bootstrap default, 44px following iOS navbar size
