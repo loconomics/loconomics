@@ -6924,8 +6924,15 @@ body.use-backdrop:before {
   padding-top: 12px;
   padding-left: 28px;
 }
+@media (max-width: 991px) {
 
 /* line 60 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar .HomeNavBar-brand {
+    padding-left: 15px;
+  }
+}
+
+/* line 64 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar .HomeNavBar-brand > a {
   display: inline-block;
   text-indent: -99999px;
@@ -6935,7 +6942,7 @@ body.use-backdrop:before {
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 182 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 198 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
   .HomeNavBar .HomeNavBar-brand > a {
     background-image: url("../images/logo-loconomics-white-mini@2x.png");
     -webkit-background-size: 100px 38px;
@@ -6944,14 +6951,21 @@ body.use-backdrop:before {
   }
 }
 
-/* line 70 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 74 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar .HomeNavBar-nav {
   padding-top: 12px;
   padding-right: 40px;
   float: right;
 }
+@media (max-width: 991px) {
 
-/* line 76 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 80 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar .HomeNavBar-nav {
+    padding-right: 15px;
+  }
+}
+
+/* line 84 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar .HomeNavBar-nav > ul {
   list-style: none;
   padding: 0;
@@ -6959,20 +6973,32 @@ body.use-backdrop:before {
   font-size: 0;
 }
 
-/* line 82 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 90 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar .HomeNavBar-nav > ul > li {
   display: inline-block;
-  margin: 0 18px;
+  margin: 0 0 0 16px;
   position: relative;
 }
+@media (max-width: 991px) {
 
-/* line 88 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 94 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar .HomeNavBar-nav > ul > li {
+    margin-left: 14px;
+  }
+
+/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar .HomeNavBar-nav > ul > li:first-child {
+    margin-left: 0;
+  }
+}
+
+/* line 104 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar .HomeNavBar-nav > ul > li > .dropdown-menu {
   right: 0;
   left: auto;
 }
 
-/* line 94 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 110 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar .HomeNavBar-nav > ul > li > a {
   font-size: 16px;
   color: White;
@@ -6980,7 +7006,7 @@ body.use-backdrop:before {
   line-height: 26px;
 }
 
-/* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar .HomeNavBar-menu {
   display: none;
   position: absolute;
@@ -6988,13 +7014,13 @@ body.use-backdrop:before {
   top: 7px;
 }
 
-/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 132 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar .HomeNavBar-menu .dropdown-toggle {
   font-size: 30px;
   color: White;
 }
 
-/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 138 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar .HomeNavBar-searchBar {
   border: none;
   padding: 0;
@@ -7041,22 +7067,22 @@ body.use-backdrop:before {
 /* line 537 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
 @media (max-width: 767px) {
 
-/* line 134 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 150 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
   .HomeNavBar .HomeNavBar-menu {
     display: block;
   }
 
-/* line 138 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 154 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
   .HomeNavBar .HomeNavBar-nav {
     display: none;
   }
 
-/* line 142 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 158 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
   .HomeNavBar .HomeNavBar-searchBar {
     display: none;
   }
 
-/* line 146 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 162 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
   .HomeNavBar .HomeNavBar-brand {
     display: block;
     padding: 0;
@@ -7064,7 +7090,7 @@ body.use-backdrop:before {
   }
 }
 
-/* line 156 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 172 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar,
 .HomeNavBar .btn-link {
   -webkit-transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
@@ -7074,24 +7100,24 @@ body.use-backdrop:before {
   transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
-/* line 161 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 177 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar.is-fixed {
   background: White;
   position: fixed;
 }
 
-/* line 165 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 181 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar.is-fixed .btn-link {
   color: #00989a !important;
 }
 
-/* line 169 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 185 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar.is-fixed .HomeNavBar-brand > a {
   background-image: url("../images/logo-loconomics-teal-mini.png");
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 182 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 198 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
   .HomeNavBar.is-fixed .HomeNavBar-brand > a {
     background-image: url("../images/logo-loconomics-teal-mini@2x.png");
     -webkit-background-size: 100px 38px;
@@ -7100,9 +7126,9 @@ body.use-backdrop:before {
   }
 }
 
-/* line 176 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 192 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 
-/* line 177 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+/* line 193 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 .HomeNavBar.is-search .HomeNavBar-searchBar {
   opacity: 1;
   -ms-filter: none;

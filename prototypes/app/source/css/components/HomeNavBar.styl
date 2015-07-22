@@ -56,6 +56,10 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
         // positioning:
         padding-top: $HomeNavBar-VGap;
         padding-left: $brandLeft;
+        
+        @media $mediaMaxSm {
+            padding-left: $grid-gap;
+        }
 
         > a {
             display: inline-block;
@@ -72,6 +76,10 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
         padding-top: $HomeNavBar-VGap;
         padding-right: 40px;
         float: right;
+        
+        @media $mediaMaxSm {
+            padding-right: $grid-gap;
+        }
 
         > ul {
             list-style: none;
@@ -81,7 +89,15 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
 
             > li {
                 display: inline-block;
-                margin: 0 18px;
+                margin: 0 0 0 16px;
+                
+                @media $mediaMaxSm {
+                    margin-left: 14px;
+                    
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
 
                 // For the help link to get dropdown in the correct place
                 position: relative;

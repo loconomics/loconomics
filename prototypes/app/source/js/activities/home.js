@@ -49,7 +49,13 @@ A.prototype._registerSnapPoints = function() {
     var $searchBox = this.$activity.find('#homeSearch'),
         // Calculate the position where search box is completely hidden, and get 1 on the worse case -- bad value coerced to 0,
         // negative result because some lack of data (content hidden)
-        searchPoint = Math.max(1, ($searchBox.offset().top + $searchBox.outerHeight() - this.$header.outerHeight()) |0);
+        searchPoint = Math.max(1, (
+            // Top offset with the scrolling area plus current scrollTop to know the actual position inside the positioning context
+            // (is an issue if the section is showed with scroll applied on the activity)
+            $searchBox.offset().top + this.$activity.scrollTop() +
+            // Add the box height but sustract the header height because that is fixed and overlaps
+            $searchBox.outerHeight() - this.$header.outerHeight()
+        ) |0);
     
     var pointsEvents = {
         // Just after start scrolling
@@ -64,7 +70,7 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
     if (!this._notFirstShow) {
-        setTimeout(function() { this._registerSnapPoints(); }.bind(this), 2000);
+        this._registerSnapPoints();
         this._notFirstShow = true;
     }
 };
