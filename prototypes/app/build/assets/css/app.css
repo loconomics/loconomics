@@ -6878,27 +6878,56 @@ body.use-backdrop:before {
 
 /* line 537 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
 
-/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] {
-  top: 0 !important;
-}
+/* line 32 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 
-/* line 23 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header {
+/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar {
+  width: 100%;
   height: 64px;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   z-index: 10;
+  display: table;
 }
 
-/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header .home-brand {
-  position: absolute;
-  top: 12px;
-  left: 28px;
-  display: block;
+/* line 25 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar > .HomeNavBar-menu,
+.HomeNavBar > .HomeNavBar-brand,
+.HomeNavBar > .HomeNavBar-nav,
+.HomeNavBar > .HomeNavBar-searchBar {
+  float: none;
+  display: table-cell;
+  vertical-align: top;
+  white-space: nowrap;
+  width: auto;
+}
+
+/* line 37 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar > .HomeNavBar-brand {
+  width: 56px;
+}
+
+/* line 41 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar > .HomeNavBar-brand {
+  width: 100px;
+}
+
+/* line 45 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar > .HomeNavBar-searchBar {
+  width: 100%;
+}
+
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-brand {
+  padding-top: 12px;
+  padding-left: 28px;
+}
+
+/* line 60 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-brand > a {
+  display: inline-block;
   text-indent: -99999px;
   background: url("../images/logo-loconomics-white-mini.png") no-repeat center;
   width: 100px;
@@ -6906,8 +6935,8 @@ body.use-backdrop:before {
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 32 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SearchBar.styl */
-  [data-activity=home] header .home-brand {
+/* line 182 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar .HomeNavBar-brand > a {
     background-image: url("../images/logo-loconomics-white-mini@2x.png");
     -webkit-background-size: 100px 38px;
     -moz-background-size: 100px 38px;
@@ -6915,86 +6944,91 @@ body.use-backdrop:before {
   }
 }
 
-/* line 44 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header .home-nav {
-  position: absolute;
-  top: 12px;
-  right: 40px;
+/* line 70 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-nav {
+  padding-top: 12px;
+  padding-right: 40px;
+  float: right;
 }
 
-/* line 49 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header .home-nav > ul {
+/* line 76 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-nav > ul {
   list-style: none;
   padding: 0;
   margin: 0;
   font-size: 0;
 }
 
-/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header .home-nav > ul > li {
+/* line 82 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-nav > ul > li {
   display: inline-block;
   margin: 0 18px;
   position: relative;
 }
 
-/* line 61 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header .home-nav > ul > li > .dropdown-menu {
+/* line 88 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-nav > ul > li > .dropdown-menu {
   right: 0;
   left: auto;
 }
 
-/* line 67 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header .home-nav > ul > li > a {
+/* line 94 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-nav > ul > li > a {
   font-size: 16px;
   color: White;
   font-weight: bold;
   line-height: 26px;
 }
 
-/* line 79 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header .home-menu {
+/* line 106 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-menu {
   display: none;
   position: absolute;
   left: 0;
   top: 7px;
 }
 
-/* line 88 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header .home-menu .dropdown-toggle {
+/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-menu .dropdown-toggle {
   font-size: 30px;
   color: White;
 }
 
-/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-
-/* line 97 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header .home-searchBar {
+/* line 122 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar .HomeNavBar-searchBar {
   border: none;
   padding: 0;
-  display: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
 /* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SearchBar.styl */
-[data-activity=home] header .home-searchBar .input-group {
+.HomeNavBar .HomeNavBar-searchBar .input-group {
   border: none;
 }
 
 /* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SearchBar.styl */
-[data-activity=home] header .home-searchBar .input-group .input-group-addon {
+.HomeNavBar .HomeNavBar-searchBar .input-group .input-group-addon {
   background: transparent;
   border: none;
   padding-right: 0;
 }
 
 /* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SearchBar.styl */
-[data-activity=home] header .home-searchBar .input-group .form-control {
+.HomeNavBar .HomeNavBar-searchBar .input-group .form-control {
   -webkit-box-shadow: none;
   box-shadow: none;
   border: none;
   background: White;
   vertical-align: top;
-  height: 40px;
-  line-height: 40px;
+  height: 64px;
+  line-height: 64px;
   font-size: 16px;
 }
 
@@ -7007,26 +7041,32 @@ body.use-backdrop:before {
 /* line 537 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\nib\lib\nib\vendor.styl */
 @media (max-width: 767px) {
 
-/* line 108 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-  [data-activity=home] header .home-menu {
+/* line 134 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar .HomeNavBar-menu {
     display: block;
   }
 
-/* line 112 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-  [data-activity=home] header .home-nav {
+/* line 138 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar .HomeNavBar-nav {
     display: none;
   }
 
-/* line 116 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-  [data-activity=home] header .home-brand {
-    position: static;
+/* line 142 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar .HomeNavBar-searchBar {
+    display: none;
+  }
+
+/* line 146 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar .HomeNavBar-brand {
+    display: block;
+    padding: 0;
     margin: 12px auto 0;
   }
 }
 
-/* line 125 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header,
-[data-activity=home] header .btn-link {
+/* line 156 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar,
+.HomeNavBar .btn-link {
   -webkit-transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
   -moz-transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
   -o-transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
@@ -7034,25 +7074,25 @@ body.use-backdrop:before {
   transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
-/* line 130 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header.is-fixed {
+/* line 161 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar.is-fixed {
   background: White;
   position: fixed;
 }
 
-/* line 134 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header.is-fixed .btn-link {
+/* line 165 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar.is-fixed .btn-link {
   color: #00989a !important;
 }
 
-/* line 138 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header.is-fixed .home-brand {
-  background: url("../images/logo-loconomics-teal-mini.png") no-repeat center;
+/* line 169 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar.is-fixed .HomeNavBar-brand > a {
+  background-image: url("../images/logo-loconomics-teal-mini.png");
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 32 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SearchBar.styl */
-  [data-activity=home] header.is-fixed .home-brand {
+/* line 182 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+  .HomeNavBar.is-fixed .HomeNavBar-brand > a {
     background-image: url("../images/logo-loconomics-teal-mini@2x.png");
     -webkit-background-size: 100px 38px;
     -moz-background-size: 100px 38px;
@@ -7060,20 +7100,27 @@ body.use-backdrop:before {
   }
 }
 
-/* line 145 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 176 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
 
-/* line 146 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] header.is-search .home-searchBar {
-  display: block;
+/* line 177 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\HomeNavBar.styl */
+.HomeNavBar.is-search .HomeNavBar-searchBar {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }
 
-/* line 152 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 12 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] {
+  top: 0 !important;
+}
+
+/* line 20 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] {
   padding-top: 96px;
   background: #4fb8b9;
 }
 
-/* line 158 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 26 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-title {
   color: White;
   font-size: 44px;
@@ -7082,7 +7129,7 @@ body.use-backdrop:before {
   text-align: center;
 }
 
-/* line 166 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 34 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-tagline {
   color: White;
   font-size: 24px;
@@ -7090,32 +7137,32 @@ body.use-backdrop:before {
   text-align: center;
 }
 
-/* line 174 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 42 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-title,
 [data-activity=home] [role=main] .home-tagline {
   padding: 0 15px;
 }
 
-/* line 178 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 46 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] form {
   margin: 40px auto;
   max-width: 700px;
 }
 
-/* line 182 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 50 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] form .form-control {
   background: White;
 }
 @media (min-width: 768px) {
 
-/* line 190 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 58 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] form > * {
     padding-left: 10px;
     padding-right: 10px;
   }
 }
 
-/* line 197 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 65 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-section-title {
   color: White;
   font-size: 32px;
@@ -7125,7 +7172,7 @@ body.use-backdrop:before {
   text-align: center;
 }
 
-/* line 207 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 75 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw {
   text-align: center;
   color: #555;
@@ -7167,25 +7214,25 @@ body.use-backdrop:before {
   bottom: -30px;
 }
 
-/* line 215 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 83 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw ul {
   margin-top: 65px;
   margin-bottom: 0;
   padding-bottom: 45px;
 }
 
-/* line 220 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 88 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw ul > li {
   margin-top: -45px;
 }
 
-/* line 225 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 93 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw h3 {
   font-weight: bold;
   font-size: 22px;
 }
 
-/* line 231 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 99 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw i {
   background: #ff6765;
   font-size: 56px;
@@ -7196,32 +7243,32 @@ body.use-backdrop:before {
   color: White;
 }
 
-/* line 246 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 114 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw .home-section-title,
 [data-activity=home] [role=main] .home-hiw .home-section-listing {
   position: relative;
   top: -126px;
 }
 
-/* line 250 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 118 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw:after,
 [data-activity=home] [role=main] .home-hiw:before {
   bottom: 96px;
 }
 @media (max-width: 767px) {
 
-/* line 256 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 124 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-hiw ul {
     margin-top: 0;
   }
 
-/* line 260 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 128 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-hiw ul > li {
     margin-top: 20px;
   }
 }
 
-/* line 268 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 136 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking {
   background: #ff6765;
   text-align: center;
@@ -7261,7 +7308,7 @@ body.use-backdrop:before {
   bottom: -30px;
 }
 
-/* line 278 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 146 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul {
   color: #555;
   text-align: center;
@@ -7270,7 +7317,7 @@ body.use-backdrop:before {
   max-width: 1200px;
 }
 
-/* line 286 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 154 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul li {
   background: White;
   display: inline-block;
@@ -7281,7 +7328,7 @@ body.use-backdrop:before {
 }
 @media (max-width: 767px) {
 
-/* line 302 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 170 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-booking ul li {
     width: auto;
     display: block;
@@ -7290,33 +7337,33 @@ body.use-backdrop:before {
   }
 }
 
-/* line 309 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 177 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul li a {
   color: #ff6765;
   font-weight: bold;
 }
 
-/* line 314 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 182 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul li h3 {
   font-size: 15px;
   font-weight: bold;
 }
 @media (max-width: 767px) {
 
-/* line 321 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 189 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-booking ul {
     margin: 0 15px;
   }
 }
 
-/* line 326 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 194 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul i {
   color: #ff6765;
   font-size: 3em;
   display: block;
 }
 
-/* line 333 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 201 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking .home-booking-more {
   width: 340px;
   margin: auto;
@@ -7324,38 +7371,38 @@ body.use-backdrop:before {
 }
 @media (max-width: 767px) {
 
-/* line 338 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 206 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-booking .home-booking-more {
     width: auto;
     display: block;
     margin: 0 15px;
   }
 
-/* line 343 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 211 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-booking .home-booking-more > .btn {
     max-width: 340px;
     margin: 0 auto;
   }
 }
 
-/* line 349 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 217 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking .home-booking-more .btn {
   border-color: White;
 }
 
-/* line 355 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 223 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories {
   background: #eee;
   text-align: center;
   padding-top: 40px;
 }
 
-/* line 363 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 231 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories h2 {
   color: #555;
 }
 
-/* line 367 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 235 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul {
   color: #555;
   text-align: center;
@@ -7364,7 +7411,7 @@ body.use-backdrop:before {
   max-width: 1200px;
 }
 
-/* line 375 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 243 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li {
   background: White no-repeat top center;
   -webkit-background-size: contain;
@@ -7378,7 +7425,7 @@ body.use-backdrop:before {
 }
 @media (max-width: 520px) {
 
-/* line 394 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 262 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-categories ul li {
     width: auto;
     display: block;
@@ -7387,35 +7434,35 @@ body.use-backdrop:before {
   }
 }
 
-/* line 401 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 269 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li h3 {
   font-size: 20px;
   font-weight: bold;
 }
 
-/* line 406 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 274 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li .StarsRating {
   color: #ff6765;
   display: block;
 }
 
-/* line 411 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 279 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li p {
   margin: 0px 0px 30px;
 }
 
-/* line 415 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 283 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li .btn {
   font-weight: bold;
 }
 
-/* line 418 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 286 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li .btn em {
   font-weight: normal;
   font-style: normal;
 }
 
-/* line 425 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 293 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li > i {
   color: White;
   font-size: 4em;
@@ -7429,7 +7476,7 @@ body.use-backdrop:before {
 }
 @media (max-width: 520px) {
 
-/* line 439 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 307 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-categories ul {
     margin: 0 15px;
   }

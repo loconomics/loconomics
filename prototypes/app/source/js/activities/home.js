@@ -13,15 +13,11 @@ var A = Activity.extends(function HomeActivity() {
 
     this.accessLevel = null;
     
-    snapPoints(this.$activity, {
-        0: 'fixed-header'
-    }, 0);
-    
-    var $header = this.$activity.find('header');
+    var $header = this.$header = this.$activity.find('header');
 
     this.registerHandler({
         target: this.$activity,
-        event: 'fixed-header',
+        event: 'scroll-fixed-header',
         handler: function(e, what) {
             if (what === 'after') {
                 $header.addClass('is-fixed');
@@ -31,10 +27,44 @@ var A = Activity.extends(function HomeActivity() {
             }
         }
     });
+
+    this.registerHandler({
+        target: this.$activity,
+        event: 'scroll-search',
+        handler: function(e, what) {
+            if (what === 'after') {
+                $header.addClass('is-search');
+            }
+            else {
+                $header.removeClass('is-search');
+            }
+        }
+    });
 });
 
 exports.init = A.init;
 
+A.prototype._registerSnapPoints = function() {
+
+    var $searchBox = this.$activity.find('#homeSearch'),
+        // Calculate the position where search box is completely hidden, and get 1 on the worse case -- bad value coerced to 0,
+        // negative result because some lack of data (content hidden)
+        searchPoint = Math.max(1, ($searchBox.offset().top + $searchBox.outerHeight() - this.$header.outerHeight()) |0);
+    
+    var pointsEvents = {
+        // Just after start scrolling
+        0: 'scroll-fixed-header'
+    };
+    pointsEvents[searchPoint] = 'scroll-search';
+
+    snapPoints(this.$activity, pointsEvents, 0);
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
+    
+    if (!this._notFirstShow) {
+        setTimeout(function() { this._registerSnapPoints(); }.bind(this), 2000);
+        this._notFirstShow = true;
+    }
 };

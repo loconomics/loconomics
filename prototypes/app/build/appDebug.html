@@ -1533,8 +1533,8 @@
     </div>
     <!-- Home activity (aka search) -->
     <div class="" data-activity="home">
-      <header>
-        <div class="home-menu"> <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button"
+      <header class="HomeNavBar">
+        <div class="HomeNavBar-menu"> <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button"
           aria-haspopup="true" aria-expanded="false">
                 <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
                 <span class="sr-only">Menu</span>
@@ -1557,9 +1557,11 @@
             <li><a href="#inline-help">Help</a>
             </li>
           </ul>
-        </div> <a class="home-brand" href="/">Loconomics</a>
+        </div>
+        <div class="HomeNavBar-brand"> <a href="/">Loconomics</a>
 
-        <div class="home-searchBar SearchBar">
+        </div>
+        <div class="HomeNavBar-searchBar SearchBar">
           <div class="input-group"> <span class="input-group-addon">
                     <label for="navbar-search" class="fa fa-2x ion ion-ios-search" style=""></label>
                 </span>
@@ -1569,7 +1571,7 @@
             />
           </div>
         </div>
-        <nav class="home-nav">
+        <nav class="HomeNavBar-nav">
           <ul>
             <li><a href="/signup" class="btn btn-link">Sign up</a>
             </li>
