@@ -70,6 +70,8 @@
     }
     
     [role=main] {
+        $arrowSize = 30px;
+        
         padding-top: $homeHeaderHeight + 40px;
         background: rgb(79, 184, 185);
         
@@ -120,12 +122,12 @@
         .home-hiw {
             text-align: center;
             color: $gray;
-            down-arrow(30px, 0, none, White, center);
+            background: White;
+            down-arrow($arrowSize, 0, none, White, center);
             
             $iconsSize = 90px;
             
             ul {
-                background: White;
                 margin-top: ($iconsSize / 2) + 20px;
                 margin-bottom: 0;
                 padding-bottom: ($iconsSize / 2);
@@ -149,6 +151,22 @@
                 line-height: $iconsSize;
                 color: White;
             }
+            
+            /// Move everything up to show title and half icons out of the
+            /// box and out of the background, while keeping separation with previous section;
+            // Manually calculated:
+            $offset = 126px;
+            position: relative;
+            top: $offset;
+            .home-section-title,
+            .home-section-listing {
+                position: relative;
+                top: (0 - $offset);
+            }
+            &:after,
+            &:before {
+                bottom: ($offset - $arrowSize);
+            }
         }
         
         // Why book on Loconomics section
@@ -157,7 +175,7 @@
             text-align: center;
             padding-top: 40px;
 
-            down-arrow(30px, 0, none, $brand-secondary, center);
+            down-arrow($arrowSize, 0, none, $brand-secondary, center);
 
             ul {
                 color: $gray;
@@ -227,6 +245,11 @@
                     
                     .StarsRating {
                         color: $brand-secondary;
+                        display: block;
+                    }
+                    
+                    p {
+                        margin: 0px 0px 30px;
                     }
                     
                     .btn {
