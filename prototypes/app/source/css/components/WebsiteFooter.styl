@@ -1,0 +1,64 @@
+/**
+    A component for the footer used website pages,
+    with a collection of links and copyright notice.
+**/
+.WebsiteFooter {
+    $footerFontSize = 16px;
+    
+    background: rgb(106, 106, 106);
+    margin: 0 auto;
+    display: block;
+    padding: 10px;
+    text-align: center;
+    
+    &,
+    a {
+        color: White;
+        font-weight: bold;
+    }
+    
+    // used with .list-unstyled
+    .WebsiteFooter-links {
+        li {
+            display: inline-block;
+            
+            a {
+                font-size: $footerFontSize;
+                padding: 20px 26px;
+                display: inline-block;
+            }
+        }
+    }
+
+    .WebsiteFooter-social {
+        h6 {
+            display: inline-block;
+            padding-right: 10px;
+            font-size: $footerFontSize;
+            vertical-align: middle;
+        }
+        // used with .list-unstyled
+        ul {
+            display: inline-block;
+
+            li {
+                display: inline-block;
+
+                a {
+                    padding: 6px;
+                    display: inline-block;
+                    
+                    i {
+                        font-size: 25px;
+                        vertical-align: middle;
+                    }
+                }
+            }
+        }
+    }
+
+    .WebsiteFooter-copyright {
+        padding: 20px 0;
+        font-size: $footerFontSize;
+    }
+}
