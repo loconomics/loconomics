@@ -1,0 +1,41 @@
+.SideMenu {
+    position: fixed;
+    top: 0;
+    right: 10%;
+    bottom: 0;
+    left: 0;
+    z-index: 90900;
+    overflow: auto;
+
+    background: rgba(0, 0, 0, .86);
+    
+    padding: 30px 0 0 0;
+    margin: 0;
+    
+    &,
+    li {
+        list-style: none;
+        padding: 0;
+    }
+    
+    a {
+        color: White;
+        background: none;
+        padding: 14px 30px;
+        font-size: 18px;
+        display: block;
+    }
+    
+    .divider {
+        padding-top: 30px;
+    }
+    
+    transition: transform 300ms $cubic-easing;
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+.open .SideMenu {
+    transform: translateX(0);
+    pointer-events: auto;
+}

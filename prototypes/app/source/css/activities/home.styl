@@ -5,6 +5,7 @@
 @import '../utils/input-group-addon-inset.styl';
 @import '../utils/arrows.styl';
 @import '../components/WebsiteFooter.styl';
+@import '../components/SideMenu.styl';
 
 [data-activity=home] {
     $homeHeaderHeight = 56px;
@@ -37,25 +38,70 @@
             top: 13px;
             right: 40px;
             
-            ul {
+            > ul {
                 list-style: none;
                 padding: 0;
                 margin: 0;
                 font-size: 0;
                 
-                li {
+                > li {
                     display: inline-block;
                     margin: 0 18px;
                     
+                    // For the help link to get dropdown in the correct place
+                    position: relative;
+                    > .dropdown-menu {
+                        right: 0;
+                        left: auto;
+                    }
+                    
                     // Used along .btn.btn-link
-                    a {
+                    > a {
                         font-size: 16px;
                         color: White;
                         font-weight: bold;
                         // With links using btn btn-link, just adjust line to get the desired block size
-                        line-height: 30px;
+                        line-height: 26px;
                     }
                 }
+            }
+        }
+        
+        // Home collapsed menu styles
+        .home-menu {
+            // Only on mobile, so hide by default
+            display: none;
+            
+            // Its style:
+            position: absolute;
+            left: 0;
+            top: 7px;
+            
+            .dropdown-toggle {
+                font-size: 30px;
+                color: White;
+            }
+
+            .dropdown-menu {
+            }
+        }
+        
+        // On mobile:
+        // - show menu button
+        // - hide standard navbar
+        // - move brand to center
+        @media $mediaMaxXs {
+            .home-menu {
+                display: block;
+            }
+            
+            .home-nav {
+                display: none;
+            }
+            
+            .home-brand {
+                position: static;
+                margin: 13px auto 0;
             }
         }
     }
