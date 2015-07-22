@@ -90,6 +90,12 @@
             text-align: center;
         }
         
+        // Edge limit for phone
+        .home-title,
+        .home-tagline {
+            padding: 0 $container-padding-right 0 $container-padding-left;
+        }
+        
         form {
             margin: 40px auto;
             max-width: 700px;
@@ -103,9 +109,13 @@
             }
             
             // Reduce column gaps by a 20px in total
-            > * {
-                padding-left: 10px;
-                padding-right: 10px;
+            // for sizes bigger than XS (so keep standar in phone where
+            // forms goes vertical)
+            @media $mediaMinSm {
+                > * {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
             }
         }
         
@@ -166,6 +176,18 @@
             &:after,
             &:before {
                 bottom: ($offset - $arrowSize);
+            }
+            
+            // Just rows in extra-small size (html is set to use 3 Bootstrap columns from col-sm and up)
+            @media $mediaMaxXs {
+                ul {
+                    // Just this to keep the effect of first icon half in/out the background
+                    margin-top: 0;
+                    // And add margin to separate each item, now in vertical
+                    > li {
+                        margin-top: 20px;
+                    }
+                }
             }
         }
         
