@@ -6,6 +6,7 @@
 @import '../utils/arrows.styl';
 @import '../components/WebsiteFooter.styl';
 @import '../components/SideMenu.styl';
+@import '../components/SearchBar.styl';
 
 [data-activity=home] {
     // computed based on font-sizes line-height and height on logo and max-height buttons:
@@ -93,6 +94,12 @@
             }
         }
         
+        .home-searchBar {
+            SearchBar($homeHeaderContentHeight)
+            
+            display: none;
+        }
+        
         // On mobile:
         // - show menu button
         // - hide standard navbar
@@ -137,7 +144,9 @@
         
         // Search visible
         &.is-search {
-            
+            .home-searchBar {
+                display: block;
+            }
         }
     }
     

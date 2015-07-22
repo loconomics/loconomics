@@ -13,6 +13,7 @@
 
 @import 'nib';
 @import '../utils/input-placeholder.styl';
+@import './SearchBar.styl';
 
 $LargeNavBar-height = $big-navbar-height
 $LargeNavBar-vGap = 2px
@@ -50,7 +51,11 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
         width 100%
     // Navbar left with auto size, just the needed minimum size for one line
 
-    
+    // Search bar.
+    .LargeNavBar-searchBar
+        border-left 1px solid $border-color
+        SearchBar($LargeNavBar-contentHeight)
+
     // Brand
     .LargeNavBar-brand
         padding-right $container-padding-right;
@@ -127,42 +132,6 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
             width 20px
             z-index 999
             pointer-events none
-
-    // search bar, with input-group
-    .LargeNavBar-searchBar 
-        border none
-        border-left 1px solid $border-color
-        padding 0
-        
-        .input-group
-            border none
-            
-            .input-group-addon
-                background transparent
-                border none
-                padding-right 0
-            
-            .form-control
-                box-shadow none
-                border none
-                background White
-            
-                +input-placeholder()
-                    color #999
-
-        i
-            // Must have a .fa-2x class
-            vertical-align top
-            color $brand-info
-            line-height $LargeNavBar-contentHeight
-
-      input 
-          vertical-align top
-          border none
-          height $LargeNavBar-contentHeight
-          line-height $LargeNavBar-contentHeight
-          font-size 16px
-          width 90%
                   
     /* DOUBLE CHECK TO REMOVE BY USING A STANDARD MESSAGETILE */
     ul
