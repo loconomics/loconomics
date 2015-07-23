@@ -12,7 +12,14 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
 .HomeNavBar {
     width: 100%;
     height: $HomeNavBar-Height;
-    position: absolute;
+    // IMPORTANT: Since the is-fixed option is used just once we scroll down the first pixel
+    // is better to keep it fixed from the beggining; performance considerations and perception,
+    // since in iOS (almost, maybe Chrome too) the js scroll handlers does not happen synchronously
+    // causing a small lag between starting scroll (moving up visible navbar) and changing to fixed
+    // so keeps in the same place. This fixes that and the engine does not need to change the layout
+    // computation.
+    //position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;

@@ -63,7 +63,7 @@ A.prototype._registerSnapPoints = function() {
     };
     pointsEvents[searchPoint] = 'scroll-search';
 
-    snapPoints(this.$activity, pointsEvents, 0);
+    snapPoints(this.$activity, pointsEvents);
 };
 
 A.prototype.show = function show(state) {
