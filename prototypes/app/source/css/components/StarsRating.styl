@@ -2,13 +2,16 @@
     StarsRating component
 **/
 .StarsRating {
+    display: inline-block;
+    
     .StarsRating-icons {
         white-space: nowrap;
+        display: inline-block;
         
         i {
             font-size: 22px;
             line-height: 24px;
-            vertical-align: middle;
+            vertical-align: baseline;
         }
     }
     .StarsRating-total {
@@ -16,4 +19,8 @@
         line-height: 24px;
         font-size: 16px;
     }
+}
+// custom element
+app-stars-rating {
+    display: inline-block;
 }

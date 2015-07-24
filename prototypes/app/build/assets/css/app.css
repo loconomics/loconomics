@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-07-23
+/*! LoconomicsApp 2015-07-24
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -5602,30 +5602,109 @@ body.use-backdrop:before {
 /* line 32 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\StarsRating.styl */
 
 /* line 4 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\StarsRating.styl */
-
-/* line 5 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\StarsRating.styl */
-.StarsRating .StarsRating-icons {
-  white-space: nowrap;
+.StarsRating {
+  display: inline-block;
 }
 
-/* line 8 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\StarsRating.styl */
+/* line 7 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\StarsRating.styl */
+.StarsRating .StarsRating-icons {
+  white-space: nowrap;
+  display: inline-block;
+}
+
+/* line 11 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\StarsRating.styl */
 .StarsRating .StarsRating-icons i {
   font-size: 22px;
   line-height: 24px;
-  vertical-align: middle;
+  vertical-align: baseline;
 }
 
-/* line 14 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\StarsRating.styl */
+/* line 17 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\StarsRating.styl */
 .StarsRating .StarsRating-total {
   vertical-align: bottom;
   line-height: 24px;
   font-size: 16px;
 }
 
-/* line 53 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\StarsRating.styl */
+app-stars-rating {
+  display: inline-block;
+}
+
+/* line 27 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+
+/* line 9 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo {
+  text-align: center;
+  margin: 0 auto;
+  padding-left: 80px;
+  position: relative;
+  width: 300px;
+  height: 96px;
+  padding-right: 10px;
+}
+
+/* line 18 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .Avatar {
+  position: absolute;
+  left: 10px;
+  top: 18px;
+}
+
+/* line 24 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .FreelancerInfo-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  padding: 5px 19px;
+}
+
+/* line 31 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .FreelancerInfo-jobTitle {
+  color: #777;
+}
+
+/* line 35 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .FreelancerInfo-businessName {
+  color: #777;
+}
+
+/* line 39 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .FreelancerInfo-meta {
+  display: block;
+}
+
+/* line 43 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .FreelancerInfo-meta i {
+  font-size: 22px;
+}
+
+/* line 47 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .FreelancerInfo-meta .VerificationRating {
+  color: #777;
+}
+
+/* line 51 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .FreelancerInfo-meta .BackgroundCheckRating {
+  color: #47b347;
+}
+
+/* line 55 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .FreelancerInfo-meta .FreelancerInfo-favorite {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+}
+
+/* line 60 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\FreelancerInfo.styl */
+.FreelancerInfo .FreelancerInfo-meta .FreelancerInfo-favorite i {
+  color: #ff6765;
+}
+
+/* line 54 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 20 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 66 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : C:\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

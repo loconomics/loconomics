@@ -121,6 +121,7 @@ AppModel.prototype.init = function init() {
             config.siteUrl = $('html').attr('data-site-url');
         }
         
+        this.config = config;
         this.rest = new Rest(config.siteUrl + '/api/v1/en-US/');
         
         // Setup Rest authentication
