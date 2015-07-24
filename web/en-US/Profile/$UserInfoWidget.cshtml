@@ -91,7 +91,7 @@
                 <div class="user-address">Address: <span class="value">@data[dataPrefix + "AddressLine1"] @data[dataPrefix + "AddressLine2"]</span></div>
                 <div class="user-location">@LcHelpers.JoinNotEmptyStrings(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</div>
                 <div class="user-mobile-phone">Mobile phone: <span class="value">@data[dataPrefix + "MobilePhone"]</span></div>
-                <div class="user-email">Email address: <span class="value">@data[dataPrefix + "Email"]</span></div>
+                <div class="user-email">Email address: <span class="value">@LcRestCustomer.GetEmailFromDb(data[dataPrefix + "Email"])</span></div>
             </div>
             if (withGoogleMap) {
                 @printGoogleLink(getLocationForGoogleMaps(data))

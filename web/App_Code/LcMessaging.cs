@@ -845,6 +845,14 @@ public class LcMessaging
         }
     }
 
+    /// <summary>
+    /// Booking created by Customer for Providers with Instant Booking enabled
+    /// </summary>
+    /// <param name="CustomerUserID"></param>
+    /// <param name="ProviderUserID"></param>
+    /// <param name="PositionID"></param>
+    /// <param name="BookingRequestID"></param>
+    /// <param name="BookingID"></param>
     public static void SendInstantBooking(int CustomerUserID, int ProviderUserID, int PositionID, int BookingRequestID, int BookingID)
     {
         dynamic customer = null, provider = null;
@@ -924,16 +932,20 @@ public class LcMessaging
             // #520: MessageTypeID:15 "Booking Provider Update"
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 15, message, ProviderUserID, BookingID, "Booking");
 
-            SendMail(customer.Email, LcData.Booking.GetBookingTitleFor(1, provider, LcData.UserInfo.UserType.Customer),
-                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
-                new Dictionary<string, object> {
-                { "BookingID", BookingID }
-                ,{ "BookingRequestID", BookingRequestID }
-                ,{ "SentTo", "Customer" }
-                ,{ "SentBy", "Provider" }
-                ,{ "RequestKey", SecurityRequestKey }
-                ,{ "EmailTo", customer.Email }
-            }));
+            var cemail = LcRestCustomer.GetEmailFromDb(customer.Email);
+            if (!String.IsNullOrEmpty(cemail))
+            {
+                SendMail(cemail, LcData.Booking.GetBookingTitleFor(1, provider, LcData.UserInfo.UserType.Customer),
+                    ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
+                    new Dictionary<string, object> {
+                        { "BookingID", BookingID }
+                        ,{ "BookingRequestID", BookingRequestID }
+                        ,{ "SentTo", "Customer" }
+                        ,{ "SentBy", "Provider" }
+                        ,{ "RequestKey", SecurityRequestKey }
+                        ,{ "EmailTo", cemail }
+                }));
+            }
         }
     }
 
@@ -1088,15 +1100,19 @@ public class LcMessaging
             }
             if (onlyTo == 'b' || onlyTo == 'c')
             {
-                SendMail(customer.Email, LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, provider, LcData.UserInfo.UserType.Customer),
-                    ApplyTemplate(LcUrl.LangPath + emailTemplatePath,
-                    new Dictionary<string, object> {
-                    { "BookingID", BookingID }
-                    ,{ "SentTo", "Customer" }
-                    ,{ "SentBy", LcData.UserInfo.ParseUserType(bySystemProviderOrCustomer) }
-                    ,{ "RequestKey", SecurityRequestKey }
-                    ,{ "EmailTo", customer.Email }
-                }));
+                var cemail = LcRestCustomer.GetEmailFromDb(customer.Email);
+                if (!String.IsNullOrEmpty(cemail))
+                {
+                    SendMail(cemail, LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, provider, LcData.UserInfo.UserType.Customer),
+                        ApplyTemplate(LcUrl.LangPath + emailTemplatePath,
+                        new Dictionary<string, object> {
+                        { "BookingID", BookingID }
+                        ,{ "SentTo", "Customer" }
+                        ,{ "SentBy", LcData.UserInfo.ParseUserType(bySystemProviderOrCustomer) }
+                        ,{ "RequestKey", SecurityRequestKey }
+                        ,{ "EmailTo", cemail }
+                    }));
+                }
             }
         }
     }

@@ -69,7 +69,7 @@ public class LcRestCustomer
             return email;
         }
     }
-    private static string GetEmailFromDb(string email)
+    public static string GetEmailFromDb(string email)
     {
         if (email == null)
             return "";
