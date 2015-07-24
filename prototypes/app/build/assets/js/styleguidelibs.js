@@ -1,7 +1,8 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"bootstrap-switch":[function(require,module,exports){
-module.exports=require('h6/Y8k');
-},{}],"h6/Y8k":[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, define) {
+module.exports=require('RWgH/d');
+},{}],"RWgH/d":[function(require,module,exports){
+(function (global){
+(function browserifyShim(module, define) {
 
 ; global.jquery = require("jquery");
 global.bootstrap = require("bootstrap");
@@ -718,10 +719,12 @@ global.bootstrap = require("bootstrap");
 
 }).call(global, module, undefined);
 
-},{"bootstrap":"PALIk6","jquery":"ZBLw1S"}],"bootstrap":[function(require,module,exports){
-module.exports=require('PALIk6');
-},{}],"PALIk6":[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, define) {
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"bootstrap":"V0yJ6o","jquery":"BJHI4T"}],"bootstrap":[function(require,module,exports){
+module.exports=require('V0yJ6o');
+},{}],"V0yJ6o":[function(require,module,exports){
+(function (global){
+(function browserifyShim(module, define) {
 
 ; global.jquery = require("jquery");
 /*!
@@ -2526,10 +2529,12 @@ if (typeof jQuery === 'undefined') {
 
 }).call(global, module, undefined);
 
-},{"jquery":"ZBLw1S"}],"jquery.ajaxQueue":[function(require,module,exports){
-module.exports=require('f7vhPX');
-},{}],"f7vhPX":[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, define) {
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"jquery":"BJHI4T"}],"jquery.ajaxQueue":[function(require,module,exports){
+module.exports=require('8O+hK1');
+},{}],"8O+hK1":[function(require,module,exports){
+(function (global){
+(function browserifyShim(module, define) {
 
 ; global.jquery = require("jquery");
 /*! jQuery Ajax Queue - v0.1.2pre - 2013-03-19
@@ -2584,10 +2589,12 @@ $.ajaxQueue = function( ajaxOpts ) {
 
 }).call(global, module, undefined);
 
-},{"jquery":"ZBLw1S"}],"jquery":[function(require,module,exports){
-module.exports=require('ZBLw1S');
-},{}],"ZBLw1S":[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"jquery":"BJHI4T"}],"jquery":[function(require,module,exports){
+module.exports=require('BJHI4T');
+},{}],"BJHI4T":[function(require,module,exports){
+(function (global){
+(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -11803,5 +11810,5 @@ return jQuery;
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}]},{},[])
-;
