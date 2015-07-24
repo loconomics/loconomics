@@ -1,29 +1,21 @@
 ﻿@{
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
-    
+
     if (IsPost) {
         var url = Request["url"].Replace(LcUrl.SiteUrl, "");
-        LcMessaging.SendMail(Request["email"], "Testing Email " + url, 
+        LcMessaging.SendMail(Request["email"], "Testing Email " + url,
             LcMessaging.ApplyTemplate(url, null));
     }
-    
+
     var list = new Dictionary<string, List<string>>{
-        { "EmailWelcomeProvider", new List<string> { 
+        { "EmailWelcomeProvider", new List<string> {
             "Email/EmailWelcomeProvider?UserID=141&ConfirmationURL=theurl&ConfirmationToken=sometoken&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"
             ,"Email/EmailWelcomeProvider?UserID=141&ConfirmationURL=theurl&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailLicenseVerificationRequest", new List<string> { "Email/EmailLicenseVerificationRequest/?ProviderUserID=141&PositionID=14&LicenseCertificationID=18&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailInquiry", new List<string> { 
+        ,{ "EmailInquiry", new List<string> {
             "Messaging/EmailInquiry/?ThreadID=13&MessageID=26&Kind=-1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"
             ,"Messaging/EmailInquiry/?ThreadID=13&MessageID=26&Kind=2&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"} }
-        ,{ "EmailBooking", new List<string> { 
-            "Booking/EmailBooking/?BookingRequestID=120&BookingID=22&SentTo=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBooking/?BookingRequestID=120&BookingID=22&SentTo=Provider&RequestKey=abcd3" } }
-        ,{ "EmailBookingRequest", new List<string> { 
-            "Booking/EmailBookingRequest/?BookingRequestID=120&SentTo=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequest/?BookingRequestID=120&SentTo=Provider&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequest/?BookingRequestID=157&SentTo=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequest/?BookingRequestID=157&SentTo=Provider&RequestKey=abcd3" } }
         ,{ "EmailProviderReference", new List<string> { "Email/EmailProviderReference/?UserID=141&PositionID=14&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailResetPassword", new List<string> { "Email/EmailResetPassword/?UserID=141&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailWelcomeCustomer", new List<string> { "Email/EmailWelcomeCustomer/?UserID=141&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
@@ -32,24 +24,32 @@
         ,{ "EmailBackgroundCheckRequest", new List<string> { "Email/EmailBackgroundCheckRequest/?ProviderUserID=141&PositionID=14&BackgroundCheckID=1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailReportUnauthorizedUse", new List<string> { "Email/EmailReportUnauthorizedUse/?ReportedUserID=141&ReportedByUserID=141&Message=Reporting+some+problem&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailProviderPaymentRequest", new List<string> { "Email/EmailProviderPaymentRequest/?BookingID=31&emailto=iagosrl@gmail.com&RequestKey=abcd3" } }
-        
+
+        ,{ "EmailBooking", new List<string> {
+            "Booking/EmailBooking/?BookingRequestID=144&BookingID=24&SentTo=Customer&RequestKey=abcd3"
+            ,"Booking/EmailBooking/?BookingRequestID=144&BookingID=24&SentTo=Provider&RequestKey=abcd3" } }
+        ,{ "EmailBookingRequest", new List<string> {
+            "Booking/EmailBookingRequest/?BookingRequestID=144&SentTo=Customer&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequest/?BookingRequestID=144&SentTo=Provider&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequest/?BookingRequestID=157&SentTo=Customer&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequest/?BookingRequestID=157&SentTo=Provider&RequestKey=abcd3" } }
         ,{ "EmailBookingRequestExpired", new List<string> {
-            "Booking/EmailBookingRequestExpired/?BookingRequestID=120&SentTo=Provider&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequestExpired/?BookingRequestID=120&SentTo=Customer&RequestKey=abcd3"} }
-        ,{ "EmailBookingRequestDeclined", new List<string> { 
-            "Booking/EmailBookingRequestDeclined/?BookingRequestID=120&SentTo=Provider&SentBy=Provider&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequestDeclined/?BookingRequestID=120&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
-        ,{ "EmailBookingCancelled", new List<string> { 
-            "Booking/EmailBookingCancelled/?BookingRequestID=120&BookingID=22&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingCancelled/?BookingRequestID=120&BookingID=22&SentTo=Customer&SentBy=Customer&RequestKey=abcd3"} }
-        ,{ "EmailBookingReminder", new List<string> { 
-            "Booking/EmailBookingReminder/?BookingRequestID=120&BookingID=22&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingReminder/?BookingRequestID=120&BookingID=22&SentTo=Customer&SentBy=Customer&RequestKey=abcd3"} }
-        ,{ "EmailBookingReview", new List<string> { 
-            "Booking/EmailBookingReview/?BookingRequestID=120&BookingID=22&SentTo=Provider&SentBy=Customer&RequestKey=abcd3&FirstReminder=true"
-            ,"Booking/EmailBookingReview/?BookingRequestID=120&BookingID=22&SentTo=Customer&SentBy=Customer&RequestKey=abcd3&FirstReminder=true"
-            ,"Booking/EmailBookingReview/?BookingRequestID=120&BookingID=22&SentTo=Provider&SentBy=Customer&RequestKey=abcd3&FirstReminder=false"
-            ,"Booking/EmailBookingReview/?BookingRequestID=120&BookingID=22&SentTo=Customer&SentBy=Customer&RequestKey=abcd3&FirstReminder=false"} }
+            "Booking/EmailBookingRequestExpired/?BookingRequestID=144&SentTo=Provider&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequestExpired/?BookingRequestID=144&SentTo=Customer&RequestKey=abcd3"} }
+        ,{ "EmailBookingRequestDeclined", new List<string> {
+            "Booking/EmailBookingRequestDeclined/?BookingRequestID=144&SentTo=Provider&SentBy=Provider&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequestDeclined/?BookingRequestID=144&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
+        ,{ "EmailBookingCancelled", new List<string> {
+            "Booking/EmailBookingCancelled/?BookingRequestID=144&BookingID=242&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
+            ,"Booking/EmailBookingCancelled/?BookingRequestID=144&BookingID=24&SentTo=Customer&SentBy=Customer&RequestKey=abcd3"} }
+        ,{ "EmailBookingReminder", new List<string> {
+            "Booking/EmailBookingReminder/?BookingRequestID=144&BookingID=24&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
+            ,"Booking/EmailBookingReminder/?BookingRequestID=144&BookingID=24&SentTo=Customer&SentBy=Customer&RequestKey=abcd3"} }
+        ,{ "EmailBookingReview", new List<string> {
+            "Booking/EmailBookingReview/?BookingRequestID=144&BookingID=24&SentTo=Provider&SentBy=Customer&RequestKey=abcd3&FirstReminder=true"
+            ,"Booking/EmailBookingReview/?BookingRequestID=144&BookingID=24&SentTo=Customer&SentBy=Customer&RequestKey=abcd3&FirstReminder=true"
+            ,"Booking/EmailBookingReview/?BookingRequestID=144&BookingID=24&SentTo=Provider&SentBy=Customer&RequestKey=abcd3&FirstReminder=false"
+            ,"Booking/EmailBookingReview/?BookingRequestID=144&BookingID=24&SentTo=Customer&SentBy=Customer&RequestKey=abcd3&FirstReminder=false"} }
     };
 }
     
