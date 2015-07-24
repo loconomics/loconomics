@@ -7,20 +7,21 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "web", ".", "{314F4D2E-CED3-
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		Debug.AspNetCompiler.VirtualPath = "/loconomics"
-		Debug.AspNetCompiler.PhysicalPath = "..\vs\"
+		Debug.AspNetCompiler.PhysicalPath = "..\web\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\loconomics\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/loconomics"
-		Release.AspNetCompiler.PhysicalPath = "..\vs\"
+		Release.AspNetCompiler.PhysicalPath = "..\web\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\loconomics\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "60309"
+		SlnRelativePath = "..\web\"
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
