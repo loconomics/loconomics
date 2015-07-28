@@ -155,8 +155,8 @@ function IndexedListCache(settings) {
             // - Update every entry with an ID greater than the updated,
             // since they are now one position less in the updated list
             Object.keys(cache.index).forEach(function(key) {
-                if (cache.index[key] > itemEntry.index)
-                    cache.index[key]--;
+                if (cache.index[key].index > itemEntry.index)
+                    cache.index[key].index--;
             });
         }
     }

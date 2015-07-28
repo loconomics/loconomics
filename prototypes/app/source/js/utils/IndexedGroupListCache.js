@@ -150,8 +150,8 @@ function IndexedGroupListCache(settings) {
                 // - Update every entry with an ID greater than the updated,
                 // since they are now one position less in the updated list
                 Object.keys(groupEntry.index).forEach(function(key) {
-                    if (groupEntry.index[key] > itemEntry.index)
-                        groupEntry.index[key]--;
+                    if (groupEntry.index[key].index > itemEntry.index)
+                        groupEntry.index[key].index--;
                 });
             }
         }
