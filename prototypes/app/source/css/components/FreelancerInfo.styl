@@ -8,10 +8,10 @@
 **/
 .FreelancerInfo {
     text-align: center;
-    margin: 0 auto;
-    padding-left: 80px;
+    margin: 12px auto;
+    padding-left: 76px;
     position: relative;
-    width: 300px;
+    width: 320px;
     height: 96px;
     padding-right: 10px;
 
@@ -26,14 +26,23 @@
         font-weight: bold;
         margin: 0;
         padding: 5px 19px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     
     .FreelancerInfo-jobTitle {
         color: $gray-light;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     
     .FreelancerInfo-businessName {
         color: $gray-light;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     
     .FreelancerInfo-meta {
@@ -44,8 +53,14 @@
             font-size: 22px;
         }
         
-        .VerificationRating {
-            color: $gray-light;
+        .VerificationsRating {
+            color: $gray;
+            
+            vertical-align: bottom;
+            line-height: 22px;
+            font-size: 15px;
+            
+            margin: 0 5px;
         }
         
         .BackgroundCheckRating {
@@ -54,7 +69,7 @@
         
         .FreelancerInfo-favorite {
             position: absolute;
-            top: 0px;
+            top: 4px;
             right: 10px;
             
             i {
