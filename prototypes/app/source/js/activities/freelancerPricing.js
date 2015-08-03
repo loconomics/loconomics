@@ -1,5 +1,7 @@
 /**
     Freelancer Pricing activity
+    
+    TODO: Use FreelancerPricing ViewModel and template
 **/
 'use strict';
 

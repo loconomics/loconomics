@@ -34,6 +34,9 @@ A.prototype.show = function show(state) {
         this.app.shell.go('/home');
         return;
     }
+    
+    // TODO Depends on jobTitle:
+    this.viewModel.supportGratuity(true);
 };
 
 var FreelancerPricingVM = require('../viewmodels/FreelancerPricing');
@@ -42,6 +45,7 @@ function ViewModel(app) {
     this.freelancerID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
     this.instantBooking = ko.observable(true);
+    this.isLocked = ko.observable(false);
     this.bookingHeader = ko.pureComputed(function() {
         return this.instantBooking() ? 'Your instant booking' : 'Your booking request';
     }, this);
@@ -55,4 +59,7 @@ function ViewModel(app) {
     this.freelancerID.subscribe(this.freelancerPricing.freelancerID);
     this.freelancerPricing.isSelectionMode(true);
     //this.freelancerPricing.preSelectedPricing([]);
+    
+    this.supportGratuity = ko.observable(false);
+    this.gratuity = ko.observable(0);
 }

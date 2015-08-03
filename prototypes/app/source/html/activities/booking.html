@@ -21,4 +21,23 @@
     </div>
     
     <div data-bind="template: { name: 'freelancer-pricing-template', data: freelancerPricing }"></div>
+    
+    <div data-bind="visible: supportGratuity">
+        <h2 class="SectionTitle">Add gratuity</h2>
+        <script type="text/html" id="booking-gratuity-radioButton">
+            <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
+                <input type="radio" name="gratuity" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+                <span data-bind="text: labelText"></span>
+            </label>
+        </script>
+        <div class="center-block row isolated" style="text-align: center">
+            <div class="btn-group ut-noRadioCheck">
+                <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: gratuity, itemValue: 10, disabled: isLocked, labelText: '10%' } } --><!-- /ko -->
+                <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: gratuity, itemValue: 15, disabled: isLocked, labelText:  '15%' } } --><!-- /ko -->
+                <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: gratuity, itemValue: 20, disabled: isLocked, labelText: '20%' } } --><!-- /ko -->
+                <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: gratuity, itemValue: 0, disabled: isLocked, labelText: 'Custom' } } --><!-- /ko -->
+            </div>
+            <p class="isolated">You’ll have until 2 hours after your app’t to edit</p>
+        </div>
+    </div>
 </div>
