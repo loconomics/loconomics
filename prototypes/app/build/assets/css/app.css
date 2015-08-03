@@ -723,7 +723,13 @@ body.has-appNav-open .SmartNavBar h1 {
   display: block;
 }
 
-/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+.isolated.inset {
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+/* line 16 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 
 /* line 17 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 
@@ -5717,10 +5723,51 @@ app-stars-rating {
   color: #ff6765;
 }
 
-/* line 54 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 81 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
+
+/* line 4 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
+.PricingSummary {
+  font-size: 16px;
+}
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
+.PricingSummary table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0px;
+  margin: 10px auto;
+}
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
+.PricingSummary table td,
+.PricingSummary table th {
+  padding: 4px;
+  line-height: 1.42857;
+  vertical-align: top;
+}
+
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
+.PricingSummary table tfoot {
+  border-top: 1px solid #ccc;
+}
+
+/* line 23 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
+.PricingSummary table tfoot .PricingSummary-fees {
+  padding-top: 0;
+  font-size: 14px;
+}
+
+/* line 29 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
+.PricingSummary table .PricingSummary-price {
+  text-align: right;
+}
+
+/* line 34 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
+
+/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 81 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 38 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
@@ -6109,6 +6156,12 @@ app-stars-rating {
         */
 }
 
+/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+[data-activity=weeklySchedule] .weeklySchedule-weekDay.inset {
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
 /* line 19 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
 [data-activity=weeklySchedule] .weeklySchedule-weekDay label div + span {
   pointer-events: none;
@@ -6129,6 +6182,12 @@ app-stars-rating {
   display: block;
 }
 
+/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+[data-activity=weeklySchedule] .weeklySchedule-allTime.inset {
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
 /* line 39 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
 [data-activity=weeklySchedule] .weeklySchedule-allTime label {
   display: block;
@@ -6145,7 +6204,7 @@ app-stars-rating {
   margin-left: 1em;
 }
 
-/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\dashboard.styl */
+/* line 16 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\dashboard.styl */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\dashboard.styl */
 

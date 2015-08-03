@@ -1,7 +1,7 @@
 <!-- Activity booking -->
 <div class="container-fluid" data-activity="booking">
     
-    <div class="isolated">Already hav an account? <a href="/login" class="btn btn-link text-secondary">Log In</a></div>
+    <div class="isolated text-center">Already hav an account? <a href="/login" class="btn btn-link text-secondary">Log In</a></div>
     
     <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
     
@@ -38,6 +38,45 @@
                 <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: gratuity, itemValue: 0, disabled: isLocked, labelText: 'Custom' } } --><!-- /ko -->
             </div>
             <p class="isolated">You’ll have until 2 hours after your app’t to edit</p>
+        </div>
+    </div>
+    
+    <h2 class="SectionTitle">Summary</h2>
+    <div class="PricingSummary" class="row">
+        <table>
+            <tbody data-bind="foreach: summary.items">
+                <tr><td class="PricingSummary-concept" data-bind="text: concept"></td><td class="PricingSummary-price" data-bind="text: price, format: { type: 'number', format: '$#,##0.00' }"></td></tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th class="PricingSummary-concept">Total</th>
+                    <th class="PricingSummary-price"><span data-bind="text: summary.totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span>*</th>
+                </tr>
+                <tr>
+                    <td class="PricingSummary-fees" colspan="2">
+                        <span data-bind="text: summary.feesMessage"></span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="PricingSummary-time isolated inset">
+            <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
+            <span>2 hours, 30 minutes</span>
+        </div>
+    </div>
+    
+    <div class="isolated inset">
+        <label>
+            <span data-bind="attr: { 'aria-pressed': makeRepeatBooking }" role="button">
+                <span class="fa fa-lg ion" data-bind="css: { 'ion-android-checkbox-outline': makeRepeatBooking, 'ion-android-checkbox-outline-blank': !makeRepeatBooking() }"></span>
+            </span>
+            <input type="checkbox" data-bind="checked: makeRepeatBooking" hidden /> Make this a repeat booking
+        </label>
+    </div>
+    
+    <div class="isolated">
+        <div>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked">Save and continue</button>
         </div>
     </div>
 </div>
