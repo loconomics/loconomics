@@ -20,6 +20,16 @@ var A = Activity.extends(function FreelancerPricingActivity() {
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
+    
+    // On changing jobTitleID:
+    // - load pricing
+    this.registerHandler({
+        target: this.viewModel.jobTitle,
+        handler: function(/*jobTitle*/) {
+            // Update navbar (may indicate the jobTitle name)
+            this.updateNavBarState();
+        }.bind(this)
+    });
 
     // On changing jobTitleID:
     // - load pricing
@@ -37,8 +47,6 @@ var A = Activity.extends(function FreelancerPricingActivity() {
                     var jobTitle = data[0];
                     // Save for use in the view
                     this.viewModel.jobTitle(jobTitle);
-                    // Update navbar (may indicate the jobTitle name)
-                    this.updateNavBarState();
                     // Get pricing
                     return this.app.model.freelancerPricing.getList(jobTitleID);
                 }.bind(this))
@@ -76,7 +84,6 @@ var A = Activity.extends(function FreelancerPricingActivity() {
             else {
                 this.viewModel.list([]);
                 this.viewModel.jobTitle(null);
-                this.updateNavBarState();
             }
         }.bind(this)
     });

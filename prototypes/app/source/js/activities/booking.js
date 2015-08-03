@@ -36,12 +36,23 @@ A.prototype.show = function show(state) {
     }
 };
 
+var FreelancerPricingVM = require('../viewmodels/FreelancerPricing');
+
 function ViewModel(app) {
     this.freelancerID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
-    this.bookingHeader = ko.observable('Instant Booking');
+    this.instantBooking = ko.observable(true);
+    this.bookingHeader = ko.pureComputed(function() {
+        return this.instantBooking() ? 'Your instant booking' : 'Your booking request';
+    }, this);
     
     this.photoUrl = ko.pureComputed(function() {
         return app.model.config.siteUrl + '/en-US/Profile/Photo/' + this.freelancerID();
     }, this);
+    
+    this.freelancerPricing = new FreelancerPricingVM(app);
+    this.jobTitleID.subscribe(this.freelancerPricing.jobTitleID);
+    this.freelancerID.subscribe(this.freelancerPricing.freelancerID);
+    this.freelancerPricing.isSelectionMode(true);
+    //this.freelancerPricing.preSelectedPricing([]);
 }
