@@ -1363,6 +1363,9 @@
         </div>
         <!-- /input-group -->
       </div>
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
       <ul class="TilesList" data-bind="foreach: filteredFaqs">
         <li><a class="LinkTile" href="/faqs/" data-bind="attr: { href: '/faqs/' + id() }">
             <div class="Tile-content"><p data-bind="text: title"></p></div>
@@ -1370,7 +1373,7 @@
         </a>
         </li>
       </ul>
-      <div class="isolated text-center" data-bind="if: !filteredFaqs().length">
+      <div class="isolated text-center" data-bind="if: !filteredFaqs().length && !isLoading()">
         <div>Nothing found :-(</div> <a href="/contactForm" class="btn btn-link">Contact us</a>
 
       </div>

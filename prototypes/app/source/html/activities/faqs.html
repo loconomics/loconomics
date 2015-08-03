@@ -1,13 +1,17 @@
 <!-- Faqs activity -->
 <div class="container-fluid" data-activity="faqs">
 
-  <div class="isolated">
+    <div class="isolated">
         <div class="input-group">
             <span class="input-group-addon">
                 <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
             </span>
             <input type="text" class="form-control" placeholder="search faqs" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
         </div><!-- /input-group -->
+    </div>
+    
+    <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
     </div>
 
     <ul class="TilesList" data-bind="foreach: filteredFaqs">
@@ -16,7 +20,7 @@
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a></li>
     </ul>
-    <div class="isolated text-center" data-bind="if: !filteredFaqs().length">
+    <div class="isolated text-center" data-bind="if: !filteredFaqs().length && !isLoading()">
         <div>Nothing found :-(</div>
         <a href="/contactForm" class="btn btn-link">Contact us</a>
     </div>
