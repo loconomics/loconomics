@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-08-03
+/*! LoconomicsApp 2015-08-04
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -5764,10 +5764,29 @@ app-stars-rating {
 
 /* line 34 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 38 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\NumberField.styl */
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\NumberField.styl */
+.NumberField {
+  text-align: right;
+}
+
+/* line 17 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\NumberField.styl */
+.NumberField.NumberField--xs,
+.NumberField.NumberField--percentage {
+  width: 5em;
+}
+
+/* line 21 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\NumberField.styl */
+.NumberField.NumberField--center {
+  margin: 0 auto;
+  display: inline-block;
+}
+
+/* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 38 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

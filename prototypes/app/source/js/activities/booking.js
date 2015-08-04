@@ -16,6 +16,19 @@ var A = Activity.extends(function BookingActivity() {
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Booking');
     
+    // Only on change (not first time), when choosed the option 'custom'
+    // from gratuity, focus the textbox to input the custom value
+    this.viewModel.presetGratuity.subscribe(function(preset) {
+        if (preset === 'custom') {
+            // Small delay to allow the binding to display the custom field,
+            // the UI to update, and then focus it; trying to do it without
+            // timeout will do nothing.
+            setTimeout(function() {
+                this.$activity.find('[name=custom-gratuity]').focus();
+            }.bind(this), 50);
+        }
+    }.bind(this));
+    
     setTestingData(this.viewModel);
 });
 
@@ -63,9 +76,18 @@ function ViewModel(app) {
     //this.freelancerPricing.preSelectedPricing([]);
     
     this.supportGratuity = ko.observable(false);
-    this.gratuity = ko.observable(0);
+    this.customGratuity = ko.observable(0);
+    this.presetGratuity = ko.observable(0);
+    this.gratuity = ko.pureComputed(function() {
+        var preset = this.presetGratuity();
+        if (preset === 'custom')
+            return this.customGratuity();
+        else
+            return preset;
+    }, this);
     
     this.summary = new PricingSummary();
+    this.gratuity.subscribe(this.summary.gratuityPercentage);
     
     this.makeRepeatBooking = ko.observable(false);
 }
@@ -73,20 +95,31 @@ function ViewModel(app) {
 var Model = require('../Models/Model');
 var numeral = require('numeral');
 
+function PricingSummaryItem(values) {
+    
+    Model(this);
+
+    this.model.defProperties({
+        concept: '',
+        price: 0
+    }, values);
+}
+
 function PricingSummary(values) {
 
     Model(this);
 
     this.model.defProperties({
-        items: {
+        pricingItems: {
             isArray: true,
             Model: PricingSummaryItem
         },
+        gratuityPercentage: 0,
         feesPercentage: 10
     }, values);
 
     this.subtotalPrice = ko.pureComputed(function() {
-        return this.items().reduce(function(total, item) {
+        return this.pricingItems().reduce(function(total, item) {
             total += item.price();
             return total;
         }, 0);
@@ -99,27 +132,35 @@ function PricingSummary(values) {
     }, this);
 
     this.totalPrice = ko.pureComputed(function() {
-        return this.subtotalPrice() + this.fees();
+        return this.subtotalPrice() + this.fees() + this.gratuityAmount();
     }, this);
     
     this.feesMessage = ko.pureComputed(function() {
         var f = numeral(this.fees()).format('$#,##0.00');
         return '*includes a __fees__ first-time booking fee'.replace(/__fees__/g, f);
     }, this);
-}
-
-function PricingSummaryItem(values) {
     
-    Model(this);
+    this.gratuityAmount = ko.pureComputed(function() {
+        return this.subtotalPrice() * ((this.gratuityPercentage() |0) / 100);
+    }, this);
 
-    this.model.defProperties({
-        concept: '',
-        price: 0
-    }, values);
+    this.items = ko.pureComputed(function() {
+
+        var items = this.pricingItems().slice();
+
+        var gratuityLabel = 'Gratuity (__gratuity__%)'.replace(/__gratuity__/g, (this.gratuityPercentage() |0));
+
+        items.push(new PricingSummaryItem({
+            concept: gratuityLabel,
+            price: this.gratuityAmount()
+        }));
+
+        return items;
+    }, this);
 }
 
 function setTestingData(vw) {
-    vw.summary.items([
+    vw.summary.pricingItems([
         new PricingSummaryItem({
             concept: 'Deep Tissue Massage',
             price: 99
@@ -127,10 +168,6 @@ function setTestingData(vw) {
         new PricingSummaryItem({
             concept: 'Special oils',
             price: 15
-        }),
-        new PricingSummaryItem({
-            concept: 'Gratuity (20%)',
-            price: 22.8
         })
     ]);
 }

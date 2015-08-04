@@ -783,19 +783,29 @@
         <div class="center-block row isolated" style="text-align: center">
           <div class="btn-group ut-noRadioCheck">
             <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value:
-            gratuity, itemValue: 10, disabled: isLocked, labelText: '10%' } } -->
+            presetGratuity, itemValue: 10, disabled: isLocked, labelText: '10%' } }
+            -->
             <!-- /ko -->
             <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value:
-            gratuity, itemValue: 15, disabled: isLocked, labelText: '15%' } } -->
+            presetGratuity, itemValue: 15, disabled: isLocked, labelText: '15%' } }
+            -->
             <!-- /ko -->
             <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value:
-            gratuity, itemValue: 20, disabled: isLocked, labelText: '20%' } } -->
+            presetGratuity, itemValue: 20, disabled: isLocked, labelText: '20%' } }
+            -->
             <!-- /ko -->
             <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value:
-            gratuity, itemValue: 0, disabled: isLocked, labelText: 'Custom' } } -->
+            presetGratuity, itemValue: 'custom', disabled: isLocked, labelText: 'Custom'
+            } } -->
             <!-- /ko -->
           </div>
-          <p class="isolated">You’ll have until 2 hours after your app’t to edit</p>
+          <div class="isolated inset" data-bind="visible: presetGratuity() === 'custom'">
+            <input type="number" name="custom-gratuity" data-bind="textInput: customGratuity"
+            class="form-control NumberField NumberField--percentage NumberField--center"> <span>%</span>
+
+          </div>
+          <p class="isolated"><small>You’ll have until 2 hours after your app’t to edit</small>
+          </p>
         </div>
       </div>
        <h2 class="SectionTitle">Summary</h2>
