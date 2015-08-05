@@ -6126,27 +6126,32 @@ app-stars-rating {
 }
 
 /* line 13 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+@media (min-width: 768px) {
 
-/* line 8 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
-.Boxes {
-  background: #eee;
-}
+/* line 10 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes {
+    background: #eee;
+  }
 
-/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
-.Boxes .Box {
-  background: White;
-  overflow: hidden;
-}
+/* line 13 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes .Box {
+    background: White;
+    overflow: hidden;
+    outline: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+  }
 
-/* line 16 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
-.Boxes .Box.Box-padded {
-  padding: 15px;
+/* line 18 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes .Box.Box-padded {
+    padding: 15px;
+  }
 }
 
 /* line 58 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 21 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 28 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

@@ -5,16 +5,23 @@
     
     It works for medium-large sizes
 **/
-.Boxes {
-    background: $gray-background;
-    
-    .Box {
-        background: White;
-        // Make any internal margin to become a padding.
-        overflow: hidden;
-        
-        &.Box-padded {
-            padding: 15px;
+// only on big sizes
+@media $mediaMinSm {
+    .Boxes {
+        background: $gray-background;
+
+        .Box {
+            background: White;
+            // Make any internal margin to become a padding.
+            overflow: hidden;
+
+            &.Box-padded {
+                padding: 15px;
+            }
+
+            outline: 1px solid $gray-lighter;
+            position: relative;
+            z-index: 1;
         }
-    }
+}
 }

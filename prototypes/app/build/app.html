@@ -758,7 +758,7 @@
               </div>
             </div>
             <div class="col-sm-9">
-              <div class="isolated text-center">Already have an account? <a href="/login" class="btn btn-link text-secondary">Log In</a>
+              <div class="isolated text-center Box Box-padded">Already have an account? <a href="/login" class="btn btn-link text-secondary">Log In</a>
               </div>
                <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
 
@@ -781,7 +781,7 @@
                   </div>
                 </div>
               </div>
-              <div class="Box" data-bind="template: { name: 'freelancer-pricing-template', data: freelancerPricing }"></div>
+              <div data-bind="template: { name: 'freelancer-pricing-template', data: freelancerPricing }"></div>
               <div data-bind="visible: supportGratuity">
                  <h2 class="SectionTitle">Add gratuity</h2>
 
@@ -791,7 +791,7 @@
                             <span data-bind="text: labelText"></span>
                         </label>
                 </script>
-                <div class="center-block row isolated" style="text-align: center">
+                <div class="center-block Box Box-padded" style="text-align: center">
                   <div class="btn-group ut-noRadioCheck">
                     <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value:
                     presetGratuity, itemValue: 10, disabled: isLocked, labelText: '10%' } }
@@ -819,11 +819,12 @@
                   </p>
                 </div>
               </div>
-               <h2 class="SectionTitle">Promotional code</h2>
+               <h2 class="SectionTitle">Promotions</h2>
 
               <div class="form-group Box Box-padded">
+                <label for="booking-promotionalCode">Promotional code</label>
                 <input type="text" class="form-control" data-bind="textInput: promotionalCode"
-                />
+                id="booking-promotionalCode" />
               </div>
                <h2 class="SectionTitle">Summary</h2>
 
@@ -847,13 +848,13 @@
                     </tr>
                   </tfoot>
                 </table>
-                <div class="PricingSummary-time Box Box-padded"> <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
+                <div class="PricingSummary-time isolated inset"> <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
  <span>2 hours, 30 minutes</span>
 
                 </div>
               </div>
               <div class="isolated Box">
-                <label class="btn btn-block"> <span data-bind="attr: { 'aria-pressed': makeRepeatBooking }" role="button">
+                <label class="btn btn-block" role="button" tabindex="0"> <span data-bind="attr: { 'aria-pressed': makeRepeatBooking }" role="button">
                             <span class="fa fa-lg ion" data-bind="css: { 'ion-android-checkbox-outline': makeRepeatBooking, 'ion-android-checkbox-outline-blank': !makeRepeatBooking() }"></span>
 </span>
                   <input
@@ -3915,7 +3916,7 @@
               <span data-bind="text: group"></span>
           </div>
   
-          <ul class="TilesList" data-bind="foreach: { data: pricing, as: 'pricingItem' }">
+          <ul class="TilesList Box" data-bind="foreach: { data: pricing, as: 'pricingItem' }">
               <li><a href="#" class="ItemTile" data-bind="click: $parents[1].tapPricing, css: { active: pricingItem.isSelected }" role="button">
                   <div class="Tile-marker"><p data-bind="text: pricingItem.displayedPrice"></p></div>
                   <div class="Tile-content">

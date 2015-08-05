@@ -5,7 +5,7 @@
             <span data-bind="text: group"></span>
         </div>
 
-        <ul class="TilesList" data-bind="foreach: { data: pricing, as: 'pricingItem' }">
+        <ul class="TilesList Box" data-bind="foreach: { data: pricing, as: 'pricingItem' }">
             <li><a href="#" class="ItemTile" data-bind="click: $parents[1].tapPricing, css: { active: pricingItem.isSelected }" role="button">
                 <div class="Tile-marker"><p data-bind="text: pricingItem.displayedPrice"></p></div>
                 <div class="Tile-content">
