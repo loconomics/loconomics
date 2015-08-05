@@ -92,6 +92,7 @@ function ViewModel(app) {
     this.gratuityAmount.subscribe(this.summary.gratuityAmount);
     
     this.makeRepeatBooking = ko.observable(false);
+    this.promotionalCode = ko.observable('');
 }
 
 var Model = require('../Models/Model');
