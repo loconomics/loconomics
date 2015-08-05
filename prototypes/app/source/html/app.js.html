@@ -35,7 +35,7 @@
     <body>
         <div class="SplashScreen">Loading...</div>
 
-        <nav role="navigation" class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }">
+        <nav class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }">
             
             <div class="SmartNavBar visible-xs">
                 <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }" class="SmartNavBar-edge left"></span>
@@ -91,9 +91,11 @@
                 </div>
             </div>
         </nav>
-    
-        @for(var f=0; f < includedFiles.length; f++) {
-            @render(includedFiles[f])
-        }
+
+        <div class="App-activities">
+            @for(var f=0; f < includedFiles.length; f++) {
+                @render(includedFiles[f])
+            }
+        </div>
 </body>
 </html>

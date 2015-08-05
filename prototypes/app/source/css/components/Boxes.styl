@@ -1,0 +1,20 @@
+/**
+    Boxes and Box styles: is a layout style with gray background
+    for the container Boxes and lighter for every Box so they
+    visually pop-up in the design.
+    
+    It works for medium-large sizes
+**/
+.Boxes {
+    background: $gray-background;
+    
+    .Box {
+        background: White;
+        // Make any internal margin to become a padding.
+        overflow: hidden;
+        
+        &.Box-padded {
+            padding: 15px;
+        }
+    }
+}

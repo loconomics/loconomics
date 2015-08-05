@@ -17,7 +17,7 @@
     
     Tile-addTagContentSupport($vgap)
     
-    padding: $vgap 0 $vgap $CompactLinkTile-indentSize;
+    padding: $vgap $Tile-hgap $vgap ($CompactLinkTile-indentSize + $Tile-hgap);
 
     CompactLinkTile-addIcon(line-height-computed / 2 + $vgap);
 }

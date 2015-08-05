@@ -20,7 +20,7 @@ var shell = new Shell({
 
     // Selector, DOM element or jQuery object pointing
     // the root or container for the shell items
-    root: 'body',
+    root: 'App-activities', //'body',
 
     // If is not in the site root, the base URL is required:
     baseUrl: baseUrl,
@@ -40,7 +40,8 @@ var shell = new Shell({
     // A DomItemsManager or equivalent object instance needs to
     // be provided:
     domItemsManager: new DomItemsManager({
-        idAttributeName: 'data-activity'
+        idAttributeName: 'data-activity',
+        root: '.App-activities'
     })
 });
 

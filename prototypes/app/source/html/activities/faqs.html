@@ -1,7 +1,7 @@
 <!-- Faqs activity -->
-<div class="container-fluid" data-activity="faqs">
+<div data-activity="faqs">
 
-    <div class="isolated">
+    <div class="isolated inset">
         <div class="input-group">
             <span class="input-group-addon">
                 <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
@@ -20,7 +20,7 @@
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a></li>
     </ul>
-    <div class="isolated text-center" data-bind="if: !filteredFaqs().length && !isLoading()">
+    <div class="isolated inset text-center" data-bind="if: !filteredFaqs().length && !isLoading()">
         <div>Nothing found :-(</div>
         <a href="/contactForm" class="btn btn-link">Contact us</a>
     </div>

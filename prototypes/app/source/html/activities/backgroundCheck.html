@@ -1,12 +1,12 @@
 <!-- Activity backgroundCheck -->
-<div class="container-fluid" data-activity="backgroundCheck">
+<div data-activity="backgroundCheck">
 
-  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+    <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span>
         Background Check
       </span>
       <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-  </h2>
+    </h2>
     <div data-bind="css: { 'is-loading': isLoading }">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
     </div>

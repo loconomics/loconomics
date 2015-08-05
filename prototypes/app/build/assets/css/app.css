@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-08-04
+/*! LoconomicsApp 2015-08-05
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -210,7 +210,7 @@ select.btn::-ms-expand {
 
 /* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
 
-/* line 112 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+/* line 116 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
 
@@ -710,6 +710,8 @@ body.has-appNav-open .SmartNavBar h1 {
   color: #f0ad4e;
 }
 
+/* line 112 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
+
 /* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Utilities styles **/
 
@@ -1047,7 +1049,7 @@ body.use-backdrop:before {
 
 /* line 2 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\switchLine.styl */
 .switchLine {
-  padding: 14px 0;
+  padding: 14px 15px;
   line-height: 32px;
 }
 
@@ -2135,7 +2137,7 @@ body.use-backdrop:before {
 /* line 17 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Activity.styl */
 .Activity.has-navbar,
 [data-activity].has-navbar {
-  bottom: $activityNavbarHeight;
+  padding-bottom: $activityNavbarHeight;
 }
 @media (min-width: 768px) {
 
@@ -2823,12 +2825,14 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
+  padding-left: 15px;
+  padding-right: 15px;
   text-align: left;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LeadTile:active,
 .LeadTile:hover,
 .LeadTile:active *,
@@ -2863,7 +2867,7 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\MessageTile.styl */
 
 /* line 32 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
@@ -2880,12 +2884,14 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding: 16px 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding: 16px 15px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .MessageTile:active,
 .MessageTile:hover,
 .MessageTile:active *,
@@ -2916,7 +2922,7 @@ body.use-backdrop:before {
   font-weight: bold;
 }
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\InfoTile.styl */
 
 /* line 35 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
@@ -2933,14 +2939,16 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding: 18px 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding: 18px 15px;
   height: 76px;
   overflow: hidden;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .InfoTile:active,
 .InfoTile:hover,
 .InfoTile:active *,
@@ -2963,7 +2971,7 @@ body.use-backdrop:before {
   font-size: 24px;
 }
 
-/* line 75 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 79 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .InfoTile .Tile-content {
   white-space: normal;
   word-wrap: break-word;
@@ -2972,14 +2980,14 @@ body.use-backdrop:before {
   overflow: hidden;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 51 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .InfoTile .Tile-content > p {
   display: table-cell;
   height: 40px;
   vertical-align: middle;
 }
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .InfoTile .Tile-content > div {
   display: block;
   -webkit-box-sizing: content-box;
@@ -2995,7 +3003,7 @@ body.use-backdrop:before {
   font-weight: normal;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 66 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .InfoTile .Tile-content > em {
   display: block;
   -webkit-box-sizing: content-box;
@@ -3012,12 +3020,12 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 94 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 98 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .InfoTile .Tile-content .btn {
   margin: 3px auto;
 }
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
 /* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
@@ -3034,13 +3042,15 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding-left: 30px;
-  padding-right: 26px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-left: 45px;
+  padding-right: 41px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile:active,
 .CompactLinkTile:hover,
 .CompactLinkTile:active *,
@@ -3048,9 +3058,9 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-primary .Tile-content:before {
   content: '';
   position: absolute;
@@ -3061,9 +3071,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-secondary .Tile-content:before {
   content: '';
   position: absolute;
@@ -3074,9 +3084,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-success .Tile-content:before {
   content: '';
   position: absolute;
@@ -3087,9 +3097,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-info .Tile-content:before {
   content: '';
   position: absolute;
@@ -3100,9 +3110,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-warning .Tile-content:before {
   content: '';
   position: absolute;
@@ -3113,9 +3123,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-danger .Tile-content:before {
   content: '';
   position: absolute;
@@ -3126,9 +3136,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-darker .Tile-content:before {
   content: '';
   position: absolute;
@@ -3139,9 +3149,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-dark .Tile-content:before {
   content: '';
   position: absolute;
@@ -3152,9 +3162,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-gray .Tile-content:before {
   content: '';
   position: absolute;
@@ -3165,9 +3175,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-light .Tile-content:before {
   content: '';
   position: absolute;
@@ -3178,9 +3188,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-lighter .Tile-content:before {
   content: '';
   position: absolute;
@@ -3191,9 +3201,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-background .Tile-content:before {
   content: '';
   position: absolute;
@@ -3222,7 +3232,7 @@ body.use-backdrop:before {
 /* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-icon {
   position: absolute;
-  right: 0px;
+  right: 15px;
   top: 10px;
   bottom: 10px;
   width: 22px;
@@ -3238,11 +3248,11 @@ body.use-backdrop:before {
   font-size: 20px;
 }
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LinkTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LinkTile.styl */
 
 /* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
 /* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
@@ -3259,13 +3269,15 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding-left: 30px;
-  padding-right: 26px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-left: 45px;
+  padding-right: 41px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile:active,
 .CompactLinkTile:hover,
 .CompactLinkTile:active *,
@@ -3273,9 +3285,9 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-primary .Tile-content:before {
   content: '';
   position: absolute;
@@ -3286,9 +3298,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-secondary .Tile-content:before {
   content: '';
   position: absolute;
@@ -3299,9 +3311,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-success .Tile-content:before {
   content: '';
   position: absolute;
@@ -3312,9 +3324,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-info .Tile-content:before {
   content: '';
   position: absolute;
@@ -3325,9 +3337,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-warning .Tile-content:before {
   content: '';
   position: absolute;
@@ -3338,9 +3350,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-danger .Tile-content:before {
   content: '';
   position: absolute;
@@ -3351,9 +3363,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-darker .Tile-content:before {
   content: '';
   position: absolute;
@@ -3364,9 +3376,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-dark .Tile-content:before {
   content: '';
   position: absolute;
@@ -3377,9 +3389,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-gray .Tile-content:before {
   content: '';
   position: absolute;
@@ -3390,9 +3402,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-light .Tile-content:before {
   content: '';
   position: absolute;
@@ -3403,9 +3415,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-lighter .Tile-content:before {
   content: '';
   position: absolute;
@@ -3416,9 +3428,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-background .Tile-content:before {
   content: '';
   position: absolute;
@@ -3447,7 +3459,7 @@ body.use-backdrop:before {
 /* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-icon {
   position: absolute;
-  right: 0px;
+  right: 15px;
   top: 10px;
   bottom: 10px;
   width: 22px;
@@ -3476,13 +3488,15 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding: 18px 0 18px 30px;
-  padding-right: 26px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding: 18px 15px 18px 45px;
+  padding-right: 41px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile:active,
 .LinkTile:hover,
 .LinkTile:active *,
@@ -3490,7 +3504,7 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 75 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 79 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile .Tile-content {
   white-space: normal;
   word-wrap: break-word;
@@ -3499,14 +3513,14 @@ body.use-backdrop:before {
   overflow: hidden;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 51 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile .Tile-content > p {
   display: table-cell;
   height: 40px;
   vertical-align: middle;
 }
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile .Tile-content > div {
   display: block;
   -webkit-box-sizing: content-box;
@@ -3522,7 +3536,7 @@ body.use-backdrop:before {
   font-weight: normal;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 66 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile .Tile-content > em {
   display: block;
   -webkit-box-sizing: content-box;
@@ -3539,14 +3553,14 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 94 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 98 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile .Tile-content .btn {
   margin: 3px auto;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-primary .Tile-content:before {
   content: '';
   position: absolute;
@@ -3557,9 +3571,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-secondary .Tile-content:before {
   content: '';
   position: absolute;
@@ -3570,9 +3584,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-success .Tile-content:before {
   content: '';
   position: absolute;
@@ -3583,9 +3597,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-info .Tile-content:before {
   content: '';
   position: absolute;
@@ -3596,9 +3610,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-warning .Tile-content:before {
   content: '';
   position: absolute;
@@ -3609,9 +3623,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-danger .Tile-content:before {
   content: '';
   position: absolute;
@@ -3622,9 +3636,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-gray-darker .Tile-content:before {
   content: '';
   position: absolute;
@@ -3635,9 +3649,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-gray-dark .Tile-content:before {
   content: '';
   position: absolute;
@@ -3648,9 +3662,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-gray-gray .Tile-content:before {
   content: '';
   position: absolute;
@@ -3661,9 +3675,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-gray-light .Tile-content:before {
   content: '';
   position: absolute;
@@ -3674,9 +3688,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-gray-lighter .Tile-content:before {
   content: '';
   position: absolute;
@@ -3687,9 +3701,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LinkTile.Tile--tag-gray-background .Tile-content:before {
   content: '';
   position: absolute;
@@ -3703,7 +3717,7 @@ body.use-backdrop:before {
 /* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .LinkTile .Tile-icon {
   position: absolute;
-  right: 0px;
+  right: 15px;
   top: 28px;
   bottom: 28px;
   width: 22px;
@@ -3719,28 +3733,42 @@ body.use-backdrop:before {
   font-size: 20px;
 }
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
+/* line 40 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
 .TilesList {
   padding: 0;
   list-style: none;
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-/* line 14 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
+/* line 17 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
 .TilesList > * {
-  border-bottom: 1px solid #eee !important;
+  position: relative;
 }
 
 /* line 21 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
+.TilesList > *::after {
+  border-bottom: 1px solid #eee;
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+  right: 15px;
+}
 
-/* line 22 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
-.TilesList.TilesList--openEnd > *:last-child {
+/* line 34 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
+
+/* line 35 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\TilesList.styl */
+.TilesList.TilesList--openEnd > *:last-child::after {
   border-bottom: none !important;
 }
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LineTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LineTile.styl */
 
 /* line 12 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
@@ -3757,12 +3785,14 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding: 10px 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding: 10px 15px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .LineTile:active,
 .LineTile:hover,
 .LineTile:active *,
@@ -3770,11 +3800,11 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 
 /* line 68 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
 /* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
@@ -3791,13 +3821,15 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding-left: 30px;
-  padding-right: 26px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-left: 45px;
+  padding-right: 41px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile:active,
 .CompactLinkTile:hover,
 .CompactLinkTile:active *,
@@ -3805,9 +3837,9 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-primary .Tile-content:before {
   content: '';
   position: absolute;
@@ -3818,9 +3850,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-secondary .Tile-content:before {
   content: '';
   position: absolute;
@@ -3831,9 +3863,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-success .Tile-content:before {
   content: '';
   position: absolute;
@@ -3844,9 +3876,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-info .Tile-content:before {
   content: '';
   position: absolute;
@@ -3857,9 +3889,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-warning .Tile-content:before {
   content: '';
   position: absolute;
@@ -3870,9 +3902,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-danger .Tile-content:before {
   content: '';
   position: absolute;
@@ -3883,9 +3915,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-darker .Tile-content:before {
   content: '';
   position: absolute;
@@ -3896,9 +3928,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-dark .Tile-content:before {
   content: '';
   position: absolute;
@@ -3909,9 +3941,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-gray .Tile-content:before {
   content: '';
   position: absolute;
@@ -3922,9 +3954,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-light .Tile-content:before {
   content: '';
   position: absolute;
@@ -3935,9 +3967,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-lighter .Tile-content:before {
   content: '';
   position: absolute;
@@ -3948,9 +3980,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-background .Tile-content:before {
   content: '';
   position: absolute;
@@ -3979,7 +4011,7 @@ body.use-backdrop:before {
 /* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-icon {
   position: absolute;
-  right: 0px;
+  right: 15px;
   top: 10px;
   bottom: 10px;
   width: 22px;
@@ -4008,15 +4040,17 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding: 18px 0 18px 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding: 18px 15px;
   height: 76px;
   overflow: hidden;
-  padding-right: 26px;
+  padding-right: 41px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile:active,
 .ItemTile:hover,
 .ItemTile:active *,
@@ -4024,9 +4058,9 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-primary .Tile-content:before {
   content: '';
   position: absolute;
@@ -4037,9 +4071,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-secondary .Tile-content:before {
   content: '';
   position: absolute;
@@ -4050,9 +4084,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-success .Tile-content:before {
   content: '';
   position: absolute;
@@ -4063,9 +4097,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-info .Tile-content:before {
   content: '';
   position: absolute;
@@ -4076,9 +4110,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-warning .Tile-content:before {
   content: '';
   position: absolute;
@@ -4089,9 +4123,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-danger .Tile-content:before {
   content: '';
   position: absolute;
@@ -4102,9 +4136,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-darker .Tile-content:before {
   content: '';
   position: absolute;
@@ -4115,9 +4149,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-dark .Tile-content:before {
   content: '';
   position: absolute;
@@ -4128,9 +4162,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-gray .Tile-content:before {
   content: '';
   position: absolute;
@@ -4141,9 +4175,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-light .Tile-content:before {
   content: '';
   position: absolute;
@@ -4154,9 +4188,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-lighter .Tile-content:before {
   content: '';
   position: absolute;
@@ -4167,9 +4201,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-background .Tile-content:before {
   content: '';
   position: absolute;
@@ -4193,7 +4227,7 @@ body.use-backdrop:before {
   height: 40px;
 }
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-marker > div {
   display: block;
   -webkit-box-sizing: content-box;
@@ -4209,7 +4243,7 @@ body.use-backdrop:before {
   font-weight: normal;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 66 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-marker > em {
   display: block;
   -webkit-box-sizing: content-box;
@@ -4226,7 +4260,7 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 51 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-marker > p {
   display: table-cell;
   height: 40px;
@@ -4253,7 +4287,7 @@ body.use-backdrop:before {
   font-size: 40px;
 }
 
-/* line 75 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 79 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content {
   white-space: normal;
   word-wrap: break-word;
@@ -4262,14 +4296,14 @@ body.use-backdrop:before {
   overflow: hidden;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 51 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content > p {
   display: table-cell;
   height: 40px;
   vertical-align: middle;
 }
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content > div {
   display: block;
   -webkit-box-sizing: content-box;
@@ -4285,7 +4319,7 @@ body.use-backdrop:before {
   font-weight: normal;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 66 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content > em {
   display: block;
   -webkit-box-sizing: content-box;
@@ -4302,7 +4336,7 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 94 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 98 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content .btn {
   margin: 3px auto;
 }
@@ -4310,7 +4344,7 @@ body.use-backdrop:before {
 /* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .ItemTile .Tile-icon {
   position: absolute;
-  right: 0px;
+  right: 15px;
   top: 28px;
   bottom: 28px;
   width: 22px;
@@ -4326,15 +4360,15 @@ body.use-backdrop:before {
   font-size: 20px;
 }
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemAddonTile.styl */
 
 /* line 91 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ItemTile.styl */
 
 /* line 68 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 
 /* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
@@ -4351,13 +4385,15 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding-left: 30px;
-  padding-right: 26px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-left: 45px;
+  padding-right: 41px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile:active,
 .CompactLinkTile:hover,
 .CompactLinkTile:active *,
@@ -4365,9 +4401,9 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-primary .Tile-content:before {
   content: '';
   position: absolute;
@@ -4378,9 +4414,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-secondary .Tile-content:before {
   content: '';
   position: absolute;
@@ -4391,9 +4427,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-success .Tile-content:before {
   content: '';
   position: absolute;
@@ -4404,9 +4440,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-info .Tile-content:before {
   content: '';
   position: absolute;
@@ -4417,9 +4453,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-warning .Tile-content:before {
   content: '';
   position: absolute;
@@ -4430,9 +4466,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-danger .Tile-content:before {
   content: '';
   position: absolute;
@@ -4443,9 +4479,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-darker .Tile-content:before {
   content: '';
   position: absolute;
@@ -4456,9 +4492,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-dark .Tile-content:before {
   content: '';
   position: absolute;
@@ -4469,9 +4505,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-gray .Tile-content:before {
   content: '';
   position: absolute;
@@ -4482,9 +4518,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-light .Tile-content:before {
   content: '';
   position: absolute;
@@ -4495,9 +4531,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-lighter .Tile-content:before {
   content: '';
   position: absolute;
@@ -4508,9 +4544,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .CompactLinkTile.Tile--tag-gray-background .Tile-content:before {
   content: '';
   position: absolute;
@@ -4539,7 +4575,7 @@ body.use-backdrop:before {
 /* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .CompactLinkTile .Tile-icon {
   position: absolute;
-  right: 0px;
+  right: 15px;
   top: 10px;
   bottom: 10px;
   width: 22px;
@@ -4568,15 +4604,17 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding: 18px 0 18px 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding: 18px 15px;
   height: 76px;
   overflow: hidden;
-  padding-right: 26px;
+  padding-right: 41px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile:active,
 .ItemTile:hover,
 .ItemTile:active *,
@@ -4584,9 +4622,9 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-primary .Tile-content:before {
   content: '';
   position: absolute;
@@ -4597,9 +4635,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-secondary .Tile-content:before {
   content: '';
   position: absolute;
@@ -4610,9 +4648,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-success .Tile-content:before {
   content: '';
   position: absolute;
@@ -4623,9 +4661,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-info .Tile-content:before {
   content: '';
   position: absolute;
@@ -4636,9 +4674,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-warning .Tile-content:before {
   content: '';
   position: absolute;
@@ -4649,9 +4687,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-danger .Tile-content:before {
   content: '';
   position: absolute;
@@ -4662,9 +4700,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-darker .Tile-content:before {
   content: '';
   position: absolute;
@@ -4675,9 +4713,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-dark .Tile-content:before {
   content: '';
   position: absolute;
@@ -4688,9 +4726,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-gray .Tile-content:before {
   content: '';
   position: absolute;
@@ -4701,9 +4739,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-light .Tile-content:before {
   content: '';
   position: absolute;
@@ -4714,9 +4752,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-lighter .Tile-content:before {
   content: '';
   position: absolute;
@@ -4727,9 +4765,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile.Tile--tag-gray-background .Tile-content:before {
   content: '';
   position: absolute;
@@ -4753,7 +4791,7 @@ body.use-backdrop:before {
   height: 40px;
 }
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-marker > div {
   display: block;
   -webkit-box-sizing: content-box;
@@ -4769,7 +4807,7 @@ body.use-backdrop:before {
   font-weight: normal;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 66 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-marker > em {
   display: block;
   -webkit-box-sizing: content-box;
@@ -4786,7 +4824,7 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 51 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-marker > p {
   display: table-cell;
   height: 40px;
@@ -4813,7 +4851,7 @@ body.use-backdrop:before {
   font-size: 40px;
 }
 
-/* line 75 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 79 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content {
   white-space: normal;
   word-wrap: break-word;
@@ -4822,14 +4860,14 @@ body.use-backdrop:before {
   overflow: hidden;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 51 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content > p {
   display: table-cell;
   height: 40px;
   vertical-align: middle;
 }
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content > div {
   display: block;
   -webkit-box-sizing: content-box;
@@ -4845,7 +4883,7 @@ body.use-backdrop:before {
   font-weight: normal;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 66 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content > em {
   display: block;
   -webkit-box-sizing: content-box;
@@ -4862,7 +4900,7 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 94 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 98 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemTile .Tile-content .btn {
   margin: 3px auto;
 }
@@ -4870,7 +4908,7 @@ body.use-backdrop:before {
 /* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\CompactLinkTile.styl */
 .ItemTile .Tile-icon {
   position: absolute;
-  right: 0px;
+  right: 15px;
   top: 28px;
   bottom: 28px;
   width: 22px;
@@ -4899,15 +4937,17 @@ body.use-backdrop:before {
   background: none;
   text-align: left;
   position: relative;
-  padding: 18px 0 18px 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding: 18px 15px;
   height: 76px;
   overflow: hidden;
-  padding-right: 62px;
+  padding-right: 77px;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile:active,
 .ItemAddonTile:hover,
 .ItemAddonTile:active *,
@@ -4915,9 +4955,9 @@ body.use-backdrop:before {
   color: #2a6496 !important;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-primary .Tile-content:before {
   content: '';
   position: absolute;
@@ -4928,9 +4968,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-secondary .Tile-content:before {
   content: '';
   position: absolute;
@@ -4941,9 +4981,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-success .Tile-content:before {
   content: '';
   position: absolute;
@@ -4954,9 +4994,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-info .Tile-content:before {
   content: '';
   position: absolute;
@@ -4967,9 +5007,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-warning .Tile-content:before {
   content: '';
   position: absolute;
@@ -4980,9 +5020,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-danger .Tile-content:before {
   content: '';
   position: absolute;
@@ -4993,9 +5033,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-gray-darker .Tile-content:before {
   content: '';
   position: absolute;
@@ -5006,9 +5046,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-gray-dark .Tile-content:before {
   content: '';
   position: absolute;
@@ -5019,9 +5059,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-gray-gray .Tile-content:before {
   content: '';
   position: absolute;
@@ -5032,9 +5072,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-gray-light .Tile-content:before {
   content: '';
   position: absolute;
@@ -5045,9 +5085,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-gray-lighter .Tile-content:before {
   content: '';
   position: absolute;
@@ -5058,9 +5098,9 @@ body.use-backdrop:before {
   display: block;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 109 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile.Tile--tag-gray-background .Tile-content:before {
   content: '';
   position: absolute;
@@ -5084,7 +5124,7 @@ body.use-backdrop:before {
   height: 40px;
 }
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile .Tile-marker > div {
   display: block;
   -webkit-box-sizing: content-box;
@@ -5100,7 +5140,7 @@ body.use-backdrop:before {
   font-weight: normal;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 66 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile .Tile-marker > em {
   display: block;
   -webkit-box-sizing: content-box;
@@ -5117,7 +5157,7 @@ body.use-backdrop:before {
   color: #777;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 51 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile .Tile-marker > p {
   display: table-cell;
   height: 40px;
@@ -5148,7 +5188,7 @@ body.use-backdrop:before {
 .ItemAddonTile .Tile-addon {
   text-align: right;
   position: absolute;
-  right: 0px;
+  right: 15px;
   top: 18px;
   bottom: 18px;
   width: 54px;
@@ -5194,14 +5234,14 @@ body.use-backdrop:before {
   overflow: hidden;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 51 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile .Tile-content > p {
   display: table-cell;
   height: 40px;
   vertical-align: middle;
 }
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile .Tile-content > div {
   display: block;
   -webkit-box-sizing: content-box;
@@ -5217,7 +5257,7 @@ body.use-backdrop:before {
   font-weight: normal;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
+/* line 66 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Tile.styl */
 .ItemAddonTile .Tile-content > em {
   display: block;
   -webkit-box-sizing: content-box;
@@ -5253,7 +5293,7 @@ body.use-backdrop:before {
   padding-bottom: 10px;
 }
 
-/* line 129 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LightForm.styl */
+/* line 133 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LightForm.styl */
 
 /* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LightForm.styl */
 .LightForm {
@@ -5735,7 +5775,7 @@ app-stars-rating {
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0px;
-  margin: 10px auto;
+  margin: 0 auto;
 }
 
 /* line 14 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\PricingSummary.styl */
@@ -5783,10 +5823,42 @@ app-stars-rating {
   display: inline-block;
 }
 
-/* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Sidebar.styl */
+
+/* line 4 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Sidebar.styl */
+.Sidebar {
+  background: White;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Sidebar.styl */
+.Sidebar .active {
+  background: #eee;
+}
+
+/* line 13 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+.Boxes {
+  background: #eee;
+}
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+.Boxes .Box {
+  background: White;
+  overflow: hidden;
+}
+
+/* line 16 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+.Boxes .Box.Box-padded {
+  padding: 15px;
+}
+
+/* line 58 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 21 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
@@ -5869,7 +5941,7 @@ app-stars-rating {
 
 /* line 19 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 
-/* line 68 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
+/* line 69 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Card.styl */
 .Card {
@@ -5993,21 +6065,19 @@ app-stars-rating {
 }
 
 /* line 51 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard .TilesList {
-  padding: 0 6px;
+
+/* line 52 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+.AppointmentCard .TilesList > li > .InfoTile {
+  padding-right: 6px;
+  padding-left: 6px;
 }
 
-/* line 54 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
-.AppointmentCard .TilesList > li {
-  padding-right: 8px;
-}
-
-/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+/* line 60 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-actions {
   margin: 14px 30px;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
+/* line 63 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppointmentCard.styl */
 .AppointmentCard .AppointmentCard-actions .btn {
   -webkit-border-radius: 0;
   border-radius: 0;

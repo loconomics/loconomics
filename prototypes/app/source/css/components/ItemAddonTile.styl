@@ -9,13 +9,13 @@ ItemAddonTile-addAddon($internalHeight, $vgap) {
     $addonWidth = 54px;
 
     // Left space for the marker and small gap:
-    padding-right: ($addonWidth + 8px);
+    padding-right: ($addonWidth + 8px + $Tile-hgap);
     
     .Tile-addon {
         text-align: right;
         
         position: absolute;
-        right: 0px;
+        right: $Tile-hgap;
         top: $vgap;
         bottom: $vgap;
         width: $addonWidth;
@@ -54,7 +54,7 @@ ItemAddonTile-addAddon($internalHeight, $vgap) {
     
     Tile-addTagContentSupport($vgap)
 
-    padding: $vgap 0 $vgap 0;
+    padding: $vgap $Tile-hgap;
 
     // Style
     height: $heightLimit;

@@ -9,6 +9,8 @@
     Tile--tag-** (one per each $brand-colors)
 **/
 
+$Tile-hgap = $grid-gap;
+
 Tile() {
     // The tile can be a link, a button
     // or any other element, so ensure
@@ -22,6 +24,8 @@ Tile() {
     background: none;
     text-align: left;
     position: relative;
+    padding-left: $Tile-hgap;
+    padding-right: $Tile-hgap;
     
     &:active,
     &:hover {

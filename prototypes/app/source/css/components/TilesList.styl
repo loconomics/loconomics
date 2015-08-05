@@ -6,20 +6,33 @@
     NOTE: any inmediate child element is styled, no need for a .Tile class name
     on each
 **/
+@import 'Tile.styl'
+
 .TilesList {
     padding: 0;
     list-style: none;
-    margin: 0;
+    margin-top: 0;
+    margin-bottom: 0;
     
     > * {
-        border-bottom: 1px solid $gray-background !important;
+        position: relative;
+    }
+    
+    > *::after {
+        border-bottom: 1px solid $gray-background;
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: $Tile-hgap;
+        right: $Tile-hgap;
     }
     
     // openEnd modifier: remove border from last element
     // so the ending is left open; useful when the last
     // list in a page or next element has already a line or backgroud
     &.TilesList--openEnd {
-        > *:last-child {
+        > *:last-child::after {
             border-bottom: none !important;
         }
     }

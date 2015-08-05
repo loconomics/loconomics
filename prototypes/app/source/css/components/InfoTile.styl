@@ -13,19 +13,19 @@
     $gap = 18px;
     $heightLimit = $internalHeight + ($gap * 2);
     
-    padding: $gap 0;
-    
+    padding: $gap $Tile-hgap;
+
     // Style
     height: $heightLimit;
     overflow: hidden;
-    
+
     .Tile-icon {
         float: left;
         width: 70px;
         text-align: center;
         &, > * {
             height: $internalHeight;
-            line-height: $internalHeight;        
+            line-height: $internalHeight;
             font-size: 24px;
         }
     }

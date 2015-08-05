@@ -218,7 +218,7 @@ DomItemsManager.prototype.init = function init() {
     // A layer to visually hide an opening item while not completed opened
     $('<div class="items-backstage"/>').css({
         background: this.$root.css('background-color') || 'white',
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         right: 0,
         bottom: 0,
@@ -232,7 +232,7 @@ DomItemsManager.prototype.init = function init() {
     var $disableLayer = $('<div class="items-disable-layer"/>').css({
         background: 'White',
         opacity: 0,
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         right: 0,
         bottom: 0,

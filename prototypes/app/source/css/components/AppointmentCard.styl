@@ -50,10 +50,11 @@
     }
     
     .TilesList {
-        padding: 0 6px;
-        
-        > li {
-            padding-right: 8px;
+        > li > .InfoTile {
+            // Reduce hgap so keeps the same gap with the window edges,
+            // compensate the card padding
+            padding-right: 6px;
+            padding-left: 6px;            
         }
     }
     
