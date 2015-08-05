@@ -78,16 +78,18 @@ function ViewModel(app) {
     this.supportGratuity = ko.observable(false);
     this.customGratuity = ko.observable(0);
     this.presetGratuity = ko.observable(0);
-    this.gratuity = ko.pureComputed(function() {
+    this.gratuityAmount = ko.observable(0);
+    this.gratuityPercentage = ko.pureComputed(function() {
         var preset = this.presetGratuity();
         if (preset === 'custom')
-            return this.customGratuity();
+            return 0;
         else
             return preset;
     }, this);
-    
+
     this.summary = new PricingSummary();
-    this.gratuity.subscribe(this.summary.gratuityPercentage);
+    this.gratuityPercentage.subscribe(this.summary.gratuityPercentage);
+    this.gratuityAmount.subscribe(this.summary.gratuityAmount);
     
     this.makeRepeatBooking = ko.observable(false);
 }
@@ -115,6 +117,7 @@ function PricingSummary(values) {
             Model: PricingSummaryItem
         },
         gratuityPercentage: 0,
+        gratuityAmount: 0,
         feesPercentage: 10
     }, values);
 
@@ -130,30 +133,41 @@ function PricingSummary(values) {
             f = this.feesPercentage();
         return t * (f / 100);
     }, this);
+    
+    this.gratuity = ko.pureComputed(function() {
+        var percentage = this.gratuityPercentage() |0,
+            amount = this.gratuityAmount() |0;
+        return (
+            percentage > 0 ?
+                (this.subtotalPrice() * (percentage / 100)) :
+                amount < 0 ? 0 : amount
+        );
+    }, this);
 
     this.totalPrice = ko.pureComputed(function() {
-        return this.subtotalPrice() + this.fees() + this.gratuityAmount();
+        return this.subtotalPrice() + this.fees() + this.gratuity();
     }, this);
     
     this.feesMessage = ko.pureComputed(function() {
         var f = numeral(this.fees()).format('$#,##0.00');
         return '*includes a __fees__ first-time booking fee'.replace(/__fees__/g, f);
     }, this);
-    
-    this.gratuityAmount = ko.pureComputed(function() {
-        return this.subtotalPrice() * ((this.gratuityPercentage() |0) / 100);
-    }, this);
 
     this.items = ko.pureComputed(function() {
 
         var items = this.pricingItems().slice();
+        var gratuity = this.gratuity();
 
-        var gratuityLabel = 'Gratuity (__gratuity__%)'.replace(/__gratuity__/g, (this.gratuityPercentage() |0));
+        if (gratuity > 0) {
+            var gratuityLabel = this.gratuityPercentage() ?
+                'Gratuity (__gratuity__%)'.replace(/__gratuity__/g, (this.gratuityPercentage() |0)) :
+                'Gratuity';
 
-        items.push(new PricingSummaryItem({
-            concept: gratuityLabel,
-            price: this.gratuityAmount()
-        }));
+            items.push(new PricingSummaryItem({
+                concept: gratuityLabel,
+                price: this.gratuity()
+            }));
+        }
 
         return items;
     }, this);

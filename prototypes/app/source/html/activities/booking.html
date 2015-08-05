@@ -38,8 +38,8 @@
                 <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 'custom', disabled: isLocked, labelText: 'Custom' } } --><!-- /ko -->
             </div>
             <div class="isolated inset" data-bind="visible: presetGratuity() === 'custom'">
-                <input type="number" name="custom-gratuity" data-bind="textInput: customGratuity" class="form-control NumberField NumberField--percentage NumberField--center">
-                <span>%</span>
+                <span>$</span>
+                <input type="number" name="custom-gratuity" data-bind="textInput: gratuityAmount" class="form-control NumberField NumberField--xs NumberField--center">
             </div>
             <p class="isolated"><small>You’ll have until 2 hours after your app’t to edit</small></p>
         </div>
