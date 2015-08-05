@@ -33,6 +33,29 @@ Tile() {
             color: link-hover-color !important;
         }
     }
+    
+    &:hover,
+    &:focus {
+        outline: 1px solid lighten($brand-secondary, 50%);
+        outline-offset: -2px;
+    }
+    
+    // Class to permanent mark as active, and :active pseudo styles
+    &:active,
+    &.active {
+        outline: 1px solid $brand-secondary;
+        outline-offset: -2px;
+    }
+    
+    &.active {
+        // Tile icons changes color too
+        i,
+        .icon,
+        .fa,
+        .ion {
+            color: $brand-secondary !important;
+        }
+    }
 }
 
 Tile-singleLine($gap = 0) {
