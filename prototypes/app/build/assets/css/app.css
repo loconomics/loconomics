@@ -7950,7 +7950,7 @@ app-stars-rating {
 
 /* line 221 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li {
-  background: White no-repeat top center;
+  background: White no-repeat top center/contain;
   -webkit-background-size: contain;
   -moz-background-size: contain;
   background-size: contain;
@@ -7971,35 +7971,80 @@ app-stars-rating {
   }
 }
 
-/* line 247 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 248 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-categories ul li.SearchCategory-home {
+  background-image: url("../images/search-category-home.jpg");
+}
+
+/* line 251 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-categories ul li.SearchCategory-children {
+  background-image: url("../images/search-category-children.jpg");
+}
+
+/* line 254 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-categories ul li.SearchCategory-pet {
+  background-image: url("../images/search-category-pet.jpg");
+}
+
+/* line 257 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-categories ul li.SearchCategory-personal {
+  background-image: url("../images/search-category-personal.jpg");
+}
+
+/* line 260 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-categories ul li.SearchCategory-transport {
+  background-image: url("../images/search-category-transport.jpg");
+}
+
+/* line 263 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-categories ul li.SearchCategory-office {
+  background-image: url("../images/search-category-office.jpg");
+}
+
+/* line 266 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-categories ul li.SearchCategory-senior {
+  background-image: url("../images/search-category-senior.jpg");
+}
+
+/* line 269 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-categories ul li.SearchCategory-celebration {
+  background-image: url("../images/search-category-celebration.jpg");
+}
+
+/* line 273 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li h3 {
   font-size: 20px;
   font-weight: bold;
 }
 
-/* line 252 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 278 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-categories ul li app-stars-rating {
+  display: block;
+}
+
+/* line 282 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li .StarsRating {
   color: #ff6765;
   display: block;
 }
 
-/* line 257 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 287 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li p {
   margin: 0px 0px 30px;
 }
 
-/* line 261 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 291 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li .btn {
   font-weight: bold;
 }
 
-/* line 264 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 294 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li .btn em {
   font-weight: normal;
   font-style: normal;
 }
 
-/* line 271 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 301 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li > i {
   color: White;
   font-size: 4em;
@@ -8008,55 +8053,55 @@ app-stars-rating {
   border-radius: 12px;
   background: #00989a;
   text-align: center;
-  padding: 14px 20px;
-  margin: 30px auto 8px;
+  padding: 13px 20px;
+  margin: 24px auto 8px;
 }
 @media (max-width: 520px) {
 
-/* line 285 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 315 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-categories ul {
     margin: 0 15px;
   }
 }
 
-/* line 297 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 327 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-search {
   padding-bottom: 126px;
 }
 
-/* line 302 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 332 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw {
   margin-bottom: -126px;
 }
 
-/* line 305 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 335 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw .home-section-title,
 [data-activity=home] [role=main] .home-hiw .home-section-listing {
   position: relative;
   top: -126px;
 }
 
-/* line 309 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 339 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw:after,
 [data-activity=home] [role=main] .home-hiw:before {
   bottom: 96px;
 }
 @media (max-width: 767px) {
 
-/* line 315 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 345 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-hiw ul {
     margin-top: 0;
   }
 
-/* line 319 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 349 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-hiw ul > li {
     margin-top: 20px;
   }
 }
 
-/* line 325 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 355 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 
-/* line 326 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 356 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking .home-section-title {
   clear: both;
 }

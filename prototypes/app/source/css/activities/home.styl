@@ -220,8 +220,8 @@
                 max-width: 1200px;
 
                 li {
-                    // TODO Add background photo per category
-                    background: White no-repeat top center;
+                    // background photo setup (will have an image per category)
+                    background: White no-repeat top center / contain;
                     background-size: contain;
                     display: inline-block;
                     width: $boxSize;
@@ -245,9 +245,39 @@
                         margin: $grid-gap auto;
                     }
 
+                    // Category background images
+                    &.SearchCategory-home {
+                        background-image: url('../images/search-category-home.jpg');
+                    }
+                    &.SearchCategory-children {
+                        background-image: url('../images/search-category-children.jpg');
+                    }
+                    &.SearchCategory-pet {
+                        background-image: url('../images/search-category-pet.jpg');
+                    }
+                    &.SearchCategory-personal {
+                        background-image: url('../images/search-category-personal.jpg');
+                    }
+                    &.SearchCategory-transport {
+                        background-image: url('../images/search-category-transport.jpg');
+                    }
+                    &.SearchCategory-office {
+                        background-image: url('../images/search-category-office.jpg');
+                    }
+                    &.SearchCategory-senior {
+                        background-image: url('../images/search-category-senior.jpg');
+                    }
+                    &.SearchCategory-celebration {
+                        background-image: url('../images/search-category-celebration.jpg');
+                    }
+
                     h3 {
                         font-size: 20px;
                         font-weight: bold;
+                    }
+                    
+                    app-stars-rating {
+                        display: block;
                     }
                     
                     .StarsRating {
@@ -276,8 +306,8 @@
                         border-radius: 12px;
                         background: $brand-primary;
                         text-align: center;
-                        padding: 14px 20px;
-                        margin: 30px auto 8px;
+                        padding: 13px 20px;
+                        margin: 24px auto 8px;
                     }
                 }
                 
