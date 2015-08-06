@@ -19,14 +19,24 @@
     
     [role=main] {
         $arrowSize = 30px;
-        
+        $sectionTitleFontSize = 32px;
+        $sectionTitleLineHeight = ceil($sectionTitleFontSize * 1.1);
+        $sectionTitleFontSizeSmall = 28px;
+        $sectionTitleLineHeightSmall = ceil($sectionTitleFontSizeSmall * 1.1);
+
         .home-section-title {
             color: White;
-            font-size: 32px;
+            font-size: $sectionTitleFontSize;
+            line-height: $sectionTitleLineHeight;
             font-weight: bold;
             margin: 0 auto;
             padding: 0.4em $grid-gap;
             text-align: center
+            
+            @media $mediaMaxXs {
+                font-size: $sectionTitleFontSizeSmall;
+                line-height: $sectionTitleLineHeightSmall;
+            }
         }
         
         .home-search {
@@ -39,6 +49,10 @@
                 font-weight: bold;
                 margin: 0.4em auto;
                 text-align: center
+                
+                @media $mediaMaxSm {
+                    font-size: 38px;
+                }
             }
 
             .home-tagline {
@@ -85,7 +99,7 @@
             $iconsSize = 90px;
             
             ul {
-                margin-top: ($iconsSize / 2) + 20px;
+                margin-top: ($iconsSize / 2) + 18px;
                 margin-bottom: 0;
                 padding-bottom: ($iconsSize / 2);
                 
@@ -229,6 +243,7 @@
                     padding: 12px;
                     vertical-align: middle;
                     
+                    /* DISABLED, background does not looks good, and not so needed
                     // For a small size where only one card fits the space (~pixels)
                     // use an automatic width so the card does not looks with lot of
                     // margin space and fits on sizes smaller than original card size,
@@ -243,7 +258,11 @@
                         display: block;
                         max-width: 340px;
                         margin: $grid-gap auto;
+                        // Don't allow the background to lost alignment with the icon
+                        // NOTE: side-effect, image lost aspect rate
+                        background-size: 100% 157px;
                     }
+                    */
 
                     // Category background images
                     &.SearchCategory-home {
@@ -345,12 +364,18 @@
             
             // Just rows in extra-small size (html is set to use 3 Bootstrap columns from col-sm and up)
             @media $mediaMaxXs {
+                .home-section-title {
+                    // 2 lines height, even when only one required to keep offsets the same
+                    height: ($sectionTitleLineHeightSmall * 2);
+                    box-sizing: content-box;
+                }
+                
                 ul {
                     // Just this to keep the effect of first icon half in/out the background
                     margin-top: 0;
                     // And add margin to separate each item, now in vertical
                     > li {
-                        margin-top: 20px;
+                        margin-top: -4px;
                     }
                 }
             }
