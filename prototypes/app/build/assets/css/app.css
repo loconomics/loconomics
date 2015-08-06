@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-08-05
+/*! LoconomicsApp 2015-08-06
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -7677,54 +7677,8 @@ app-stars-rating {
 }
 
 /* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] [role=main] {
-  padding-top: 96px;
-  background: #4fb8b9;
-}
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] [role=main] .home-title {
-  color: White;
-  font-size: 44px;
-  font-weight: bold;
-  margin: 0.4em auto;
-  text-align: center;
-}
-
-/* line 34 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] [role=main] .home-tagline {
-  color: White;
-  font-size: 24px;
-  margin: 0.5em auto;
-  text-align: center;
-}
-
-/* line 42 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] [role=main] .home-title,
-[data-activity=home] [role=main] .home-tagline {
-  padding: 0 15px;
-}
-
-/* line 46 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] [role=main] form {
-  margin: 40px auto;
-  max-width: 700px;
-}
-
-/* line 50 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] [role=main] form .form-control {
-  background: White;
-}
-@media (min-width: 768px) {
-
-/* line 58 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-  [data-activity=home] [role=main] form > * {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-}
-
-/* line 65 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 23 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-section-title {
   color: White;
   font-size: 32px;
@@ -7734,14 +7688,60 @@ app-stars-rating {
   text-align: center;
 }
 
-/* line 75 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 32 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-search {
+  padding-top: 96px;
+  background: #4fb8b9 url("../images/home-header.jpg") no-repeat top center/cover;
+}
+
+/* line 36 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-search .home-title {
+  color: White;
+  font-size: 44px;
+  font-weight: bold;
+  margin: 0.4em auto;
+  text-align: center;
+}
+
+/* line 44 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-search .home-tagline {
+  color: White;
+  font-size: 24px;
+  margin: 0.5em auto;
+  text-align: center;
+}
+
+/* line 52 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-search .home-title,
+[data-activity=home] [role=main] .home-search .home-tagline {
+  padding: 0 15px;
+}
+
+/* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-search form {
+  margin: 40px auto;
+  max-width: 700px;
+}
+
+/* line 60 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-search form .form-control {
+  background: White;
+}
+@media (min-width: 768px) {
+
+/* line 68 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+  [data-activity=home] [role=main] .home-search form > * {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+/* line 78 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw {
   text-align: center;
   color: #555;
   background: White;
   position: relative;
-  position: relative;
-  top: 126px;
 }
 
 /* line 69 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\arrows.styl */
@@ -7776,25 +7776,25 @@ app-stars-rating {
   bottom: -30px;
 }
 
-/* line 83 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 86 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw ul {
   margin-top: 65px;
   margin-bottom: 0;
   padding-bottom: 45px;
 }
 
-/* line 88 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 91 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw ul > li {
   margin-top: -45px;
 }
 
-/* line 93 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 96 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw h3 {
   font-weight: bold;
   font-size: 22px;
 }
 
-/* line 99 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 102 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-hiw i {
   background: #ff6765;
   font-size: 56px;
@@ -7806,31 +7806,6 @@ app-stars-rating {
 }
 
 /* line 114 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] [role=main] .home-hiw .home-section-title,
-[data-activity=home] [role=main] .home-hiw .home-section-listing {
-  position: relative;
-  top: -126px;
-}
-
-/* line 118 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-[data-activity=home] [role=main] .home-hiw:after,
-[data-activity=home] [role=main] .home-hiw:before {
-  bottom: 96px;
-}
-@media (max-width: 767px) {
-
-/* line 124 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-  [data-activity=home] [role=main] .home-hiw ul {
-    margin-top: 0;
-  }
-
-/* line 128 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
-  [data-activity=home] [role=main] .home-hiw ul > li {
-    margin-top: 20px;
-  }
-}
-
-/* line 136 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking {
   background: #ff6765;
   text-align: center;
@@ -7870,7 +7845,7 @@ app-stars-rating {
   bottom: -30px;
 }
 
-/* line 146 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 124 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul {
   color: #555;
   text-align: center;
@@ -7879,7 +7854,7 @@ app-stars-rating {
   max-width: 1200px;
 }
 
-/* line 154 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 132 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul li {
   background: White;
   display: inline-block;
@@ -7890,7 +7865,7 @@ app-stars-rating {
 }
 @media (max-width: 767px) {
 
-/* line 170 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 148 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-booking ul li {
     width: auto;
     display: block;
@@ -7899,33 +7874,33 @@ app-stars-rating {
   }
 }
 
-/* line 177 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 155 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul li a {
   color: #ff6765;
   font-weight: bold;
 }
 
-/* line 182 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 160 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul li h3 {
   font-size: 15px;
   font-weight: bold;
 }
 @media (max-width: 767px) {
 
-/* line 189 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 167 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-booking ul {
     margin: 0 15px;
   }
 }
 
-/* line 194 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 172 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking ul i {
   color: #ff6765;
   font-size: 3em;
   display: block;
 }
 
-/* line 201 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 179 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking .home-booking-more {
   width: 340px;
   margin: auto;
@@ -7933,38 +7908,38 @@ app-stars-rating {
 }
 @media (max-width: 767px) {
 
-/* line 206 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 184 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-booking .home-booking-more {
     width: auto;
     display: block;
     margin: 0 15px;
   }
 
-/* line 211 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 189 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-booking .home-booking-more > .btn {
     max-width: 340px;
     margin: 0 auto;
   }
 }
 
-/* line 217 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 195 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-booking .home-booking-more .btn {
   border-color: White;
 }
 
-/* line 223 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 201 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories {
   background: #eee;
   text-align: center;
   padding-top: 40px;
 }
 
-/* line 231 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 209 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories h2 {
   color: #555;
 }
 
-/* line 235 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 213 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul {
   color: #555;
   text-align: center;
@@ -7973,7 +7948,7 @@ app-stars-rating {
   max-width: 1200px;
 }
 
-/* line 243 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 221 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li {
   background: White no-repeat top center;
   -webkit-background-size: contain;
@@ -7987,7 +7962,7 @@ app-stars-rating {
 }
 @media (max-width: 520px) {
 
-/* line 262 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 240 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-categories ul li {
     width: auto;
     display: block;
@@ -7996,35 +7971,35 @@ app-stars-rating {
   }
 }
 
-/* line 269 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 247 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li h3 {
   font-size: 20px;
   font-weight: bold;
 }
 
-/* line 274 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 252 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li .StarsRating {
   color: #ff6765;
   display: block;
 }
 
-/* line 279 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 257 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li p {
   margin: 0px 0px 30px;
 }
 
-/* line 283 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 261 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li .btn {
   font-weight: bold;
 }
 
-/* line 286 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 264 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li .btn em {
   font-weight: normal;
   font-style: normal;
 }
 
-/* line 293 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 271 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
 [data-activity=home] [role=main] .home-categories ul li > i {
   color: White;
   font-size: 4em;
@@ -8038,10 +8013,52 @@ app-stars-rating {
 }
 @media (max-width: 520px) {
 
-/* line 307 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+/* line 285 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
   [data-activity=home] [role=main] .home-categories ul {
     margin: 0 15px;
   }
+}
+
+/* line 297 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-search {
+  padding-bottom: 126px;
+}
+
+/* line 302 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-hiw {
+  margin-bottom: -126px;
+}
+
+/* line 305 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-hiw .home-section-title,
+[data-activity=home] [role=main] .home-hiw .home-section-listing {
+  position: relative;
+  top: -126px;
+}
+
+/* line 309 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-hiw:after,
+[data-activity=home] [role=main] .home-hiw:before {
+  bottom: 96px;
+}
+@media (max-width: 767px) {
+
+/* line 315 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+  [data-activity=home] [role=main] .home-hiw ul {
+    margin-top: 0;
+  }
+
+/* line 319 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+  [data-activity=home] [role=main] .home-hiw ul > li {
+    margin-top: 20px;
+  }
+}
+
+/* line 325 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+
+/* line 326 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\home.styl */
+[data-activity=home] [role=main] .home-booking .home-section-title {
+  clear: both;
 }
 
 /* line 205 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\booking.styl */

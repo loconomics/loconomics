@@ -20,49 +20,6 @@
     [role=main] {
         $arrowSize = 30px;
         
-        padding-top: $HomeNavBar-Height + 32px;
-        background: rgb(79, 184, 185);
-        
-        .home-title {
-            color: White;
-            font-size: 44px;
-            font-weight: bold;
-            margin: 0.4em auto;
-            text-align: center
-        }
-
-        .home-tagline {
-            color: White;
-            font-size: 24px;
-            margin: 0.5em auto;
-            text-align: center;
-        }
-        
-        // Edge limit for phone
-        .home-title,
-        .home-tagline {
-            padding: 0 $grid-gap;
-        }
-        
-        form {
-            margin: 40px auto;
-            max-width: 700px;
-            
-            .form-control {
-                background: White;
-            }
-            
-            // Reduce column gaps by a 20px in total
-            // for sizes bigger than XS (so keep standar in phone where
-            // forms goes vertical)
-            @media $mediaMinSm {
-                > * {
-                    padding-left: 10px;
-                    padding-right: 10px;
-                }
-            }
-        }
-        
         .home-section-title {
             color: White;
             font-size: 32px;
@@ -71,6 +28,52 @@
             padding: 0.4em $grid-gap;
             text-align: center
         }
+        
+        .home-search {
+            padding-top: $HomeNavBar-Height + 32px;
+            background: rgb(79, 184, 185) url('../images/home-header.jpg') no-repeat top center / cover;
+        
+            .home-title {
+                color: White;
+                font-size: 44px;
+                font-weight: bold;
+                margin: 0.4em auto;
+                text-align: center
+            }
+
+            .home-tagline {
+                color: White;
+                font-size: 24px;
+                margin: 0.5em auto;
+                text-align: center;
+            }
+
+            // Edge limit for phone
+            .home-title,
+            .home-tagline {
+                padding: 0 $grid-gap;
+            }
+
+            form {
+                margin: 40px auto;
+                max-width: 700px;
+
+                .form-control {
+                    background: White;
+                }
+
+                // Reduce column gaps by a 20px in total
+                // for sizes bigger than XS (so keep standar in phone where
+                // forms goes vertical)
+                @media $mediaMinSm {
+                    > * {
+                        padding-left: 10px;
+                        padding-right: 10px;
+                    }
+                }
+            }
+        }
+
         
         // How It Works section
         .home-hiw {
@@ -105,34 +108,7 @@
                 line-height: $iconsSize;
                 color: White;
             }
-            
-            /// Move everything up to show title and half icons out of the
-            /// box and out of the background, while keeping separation with previous section;
-            // Manually calculated:
-            $offset = 126px;
-            position: relative;
-            top: $offset;
-            .home-section-title,
-            .home-section-listing {
-                position: relative;
-                top: (0 - $offset);
-            }
-            &:after,
-            &:before {
-                bottom: ($offset - $arrowSize);
-            }
-            
-            // Just rows in extra-small size (html is set to use 3 Bootstrap columns from col-sm and up)
-            @media $mediaMaxXs {
-                ul {
-                    // Just this to keep the effect of first icon half in/out the background
-                    margin-top: 0;
-                    // And add margin to separate each item, now in vertical
-                    > li {
-                        margin-top: 20px;
-                    }
-                }
-            }
+
         }
         
         // Why book on Loconomics section
@@ -310,6 +286,52 @@
                 @media (max-width: 520px) {
                     margin: 0 $grid-gap;
                 }
+            }
+        }
+        
+        ///////////////
+        /// SPECIAL HOW-IT-WORKS OVERLAY EFFECT:
+        /// Move everything up to show title and half icons out of the
+        /// box and out of the background, while keeping separation with previous section;
+        // Manually calculated:
+        $offset = 126px;
+        .home-search {
+            // Add the space to home-search on bottom to hold the moved-up home-hiw
+            // while keeping background filling the whole area
+            padding-bottom: $offset;
+        }
+        .home-hiw {
+            margin-bottom: (0 - $offset);
+            
+            .home-section-title,
+            .home-section-listing {
+                position: relative;
+                top: (0 - $offset);
+            }
+            &:after,
+            &:before {
+                bottom: ($offset - $arrowSize);
+            }
+            
+            // Just rows in extra-small size (html is set to use 3 Bootstrap columns from col-sm and up)
+            @media $mediaMaxXs {
+                ul {
+                    // Just this to keep the effect of first icon half in/out the background
+                    margin-top: 0;
+                    // And add margin to separate each item, now in vertical
+                    > li {
+                        margin-top: 20px;
+                    }
+                }
+            }
+        }
+        .home-booking {
+            .home-section-title {
+                // Required to avoid an ugly side-effect from the negative margin offset on the
+                // previous box (home-hiw):
+                // IMPORTANT: The clear must go in the first element in this container (the title)
+                // because if goes in the container it will hide the previous container arrow
+                clear: both;
             }
         }
     }
