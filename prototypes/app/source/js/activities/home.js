@@ -7,12 +7,13 @@ var Activity = require('../components/Activity'),
     snapPoints = require('../utils/snapPoints');
 
 var A = Activity.extends(function HomeActivity() {
-    
+
     Activity.apply(this, arguments);
     this.navBar = null;
-
     this.accessLevel = null;
-    
+    this.viewModel = {
+        isAnonymous: this.app.model.user().isAnonymous
+    };
     var $header = this.$header = this.$activity.find('header');
 
     this.registerHandler({

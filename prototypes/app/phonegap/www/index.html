@@ -20,7 +20,7 @@
   
   <body>
     <div class="SplashScreen">Loading...</div>
-    <nav role="navigation" class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }">
+    <nav class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }">
       <div class="SmartNavBar visible-xs"> <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }"
         class="SmartNavBar-edge left"></span>
 
@@ -66,6 +66,8 @@
             </li>
             <li class="go-feedback"><a href="/feedback"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Talk to us</a>
             </li>
+            <li class="go-search"><a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search</a>
+            </li>
             <li class="go-logout"><a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a>
             </li>
           </ul>
@@ -75,6 +77,8 @@
             <li class="go-index"><a href="/">Home</a>
             </li>
             <li class="go-login"><a href="/login">Login</a>
+            </li>
+            <li class="go-search"><a href="/home"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Search</a>
             </li>
           </ul>
         </div>
@@ -96,180 +100,181 @@
         </div>
       </div>
     </nav>
-    <!-- confirmModal -->
-    <div id="confirmModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="confirmModal-label"
-    aria-hidden="true" data-backdrop="static">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-            </button>
-             <h4 class="modal-title" id="confirmModal-label" data-default-text="Confirmation">Confirmation</h4>
+    <div class="App-activities">
+      <!-- confirmModal -->
+      <div id="confirmModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="confirmModal-label"
+      aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+              </button>
+               <h4 class="modal-title" id="confirmModal-label" data-default-text="Confirmation">Confirmation</h4>
 
-          </div>
-          <div class="modal-body">
-            <p id="confirmModal-body" data-default-text="Are you sure?"></p>
-          </div>
-          <div class="modal-footer">
-            <button id="confirmModal-noBtn" type="button" class="btn btn-default"
-            data-default-text="No" data-dismiss="modal">No</button>
-            <button id="confirmModal-yesBtn" type="button" class="btn btn-default"
-            data-default-text="Yes" data-dismiss="modal">Yes</button>
+            </div>
+            <div class="modal-body">
+              <p id="confirmModal-body" data-default-text="Are you sure?"></p>
+            </div>
+            <div class="modal-footer">
+              <button id="confirmModal-noBtn" type="button" class="btn btn-default"
+              data-default-text="No" data-dismiss="modal">No</button>
+              <button id="confirmModal-yesBtn" type="button" class="btn btn-default"
+              data-default-text="Yes" data-dismiss="modal">Yes</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div id="datetimePickerHelp" class="modal" tabindex="-1" role="dialog"
-    aria-labelledby="datetimePickerHelp-label" aria-hidden="true" data-backdrop="static">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-            </button>
-             <h4 class="modal-title" id="datetimePickerHelp-label">Help</h4>
+      <div id="datetimePickerHelp" class="modal" tabindex="-1" role="dialog"
+      aria-labelledby="datetimePickerHelp-label" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+              </button>
+               <h4 class="modal-title" id="datetimePickerHelp-label">Help</h4>
 
-          </div>
-          <div class="modal-body">LJDI: :-)
-             <h5>Month calendar legend</h5>
+            </div>
+            <div class="modal-body">LJDI: :-)
+               <h5>Month calendar legend</h5>
 
-            <ul>
-              <li class="text-success">Date completely available</li>
-              <li class="text-info">Available almost half the date</li>
-              <li class="text-warning">Low availability (less than half the date)</li>
-              <li class="text-danger">No available (full or unavailable)</li>
-            </ul>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Close</button>
+              <ul>
+                <li class="text-success">Date completely available</li>
+                <li class="text-info">Available almost half the date</li>
+                <li class="text-warning">Low availability (less than half the date)</li>
+                <li class="text-danger">No available (full or unavailable)</li>
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- errorModal -->
-    <div id="errorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="errorModal-label"
-    aria-hidden="true" data-backdrop="static">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-            </button>
-             <h4 class="modal-title" id="errorModal-label" data-default-text="There was an error">There was an error</h4>
+      <!-- errorModal -->
+      <div id="errorModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="errorModal-label"
+      aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+              </button>
+               <h4 class="modal-title" id="errorModal-label" data-default-text="There was an error">There was an error</h4>
 
-          </div>
-          <div class="modal-body">
-            <p id="errorModal-body" data-default-text="There was an error"></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Close</button>
+            </div>
+            <div class="modal-body">
+              <p id="errorModal-body" data-default-text="There was an error"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-block btn-danger" data-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- notificationModal -->
-    <div id="notificationModal" class="modal" tabindex="-1" role="dialog"
-    aria-labelledby="notificationModal-label" aria-hidden="true" data-backdrop="static">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-            </button>
-             <h4 class="modal-title" id="notificationModal-label" data-default-text="Notification"></h4>
+      <!-- notificationModal -->
+      <div id="notificationModal" class="modal" tabindex="-1" role="dialog"
+      aria-labelledby="notificationModal-label" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+              </button>
+               <h4 class="modal-title" id="notificationModal-label" data-default-text="Notification"></h4>
 
-          </div>
-          <div class="modal-body">
-            <p id="notificationModal-body" data-default-text="Done!"></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-block btn-default" data-dismiss="modal">Close</button>
+            </div>
+            <div class="modal-body">
+              <p id="notificationModal-body" data-default-text="Done!"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-block btn-default" data-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- timePickerModal -->
-    <div id="timePickerModal" class="modal fade" tabindex="-1" role="dialog"
-    aria-labelledby="timePickerModal-label" aria-hidden="true" data-backdrop="static">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-            </button>
-             <h4 class="modal-title" id="timePickerModal-label" data-bind="text: title">Select time</h4>
+      <!-- timePickerModal -->
+      <div id="timePickerModal" class="modal fade" tabindex="-1" role="dialog"
+      aria-labelledby="timePickerModal-label" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+              </button>
+               <h4 class="modal-title" id="timePickerModal-label" data-bind="text: title">Select time</h4>
 
-          </div>
-          <div class="modal-body text-center">
-            <select class="btn btn-default" data-bind="options: hourValues, value: pickedHour, optionsText: 'label', optionsValue: 'value'"></select> <span data-bind="visible: minuteValues().length">:</span>
+            </div>
+            <div class="modal-body text-center">
+              <select class="btn btn-default" data-bind="options: hourValues, value: pickedHour, optionsText: 'label', optionsValue: 'value'"></select> <span data-bind="visible: minuteValues().length">:</span>
 
-            <select
-            class="btn btn-default" data-bind="options: minuteValues, value: pickedMinute, optionsText: 'label', optionsValue: 'value', visible: minuteValues().length"></select>
-              <select class="btn btn-default" data-bind="options: ampmValues, value: pickedAmpm, optionsText: 'label', optionsValue: 'value', visible: ampmValues().length"></select>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default timePickerModal-unset" data-bind="text: unsetLabel">Unset</button>
-            <button type="button" class="btn btn-primary timePickerModal-select"
-            data-bind="text: selectLabel">Select</button>
+              <select
+              class="btn btn-default" data-bind="options: minuteValues, value: pickedMinute, optionsText: 'label', optionsValue: 'value', visible: minuteValues().length"></select>
+                <select class="btn btn-default" data-bind="options: ampmValues, value: pickedAmpm, optionsText: 'label', optionsValue: 'value', visible: ampmValues().length"></select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default timePickerModal-unset" data-bind="text: unsetLabel">Unset</button>
+              <button type="button" class="btn btn-primary timePickerModal-select"
+              data-bind="text: selectLabel">Select</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="container-fluid" data-activity="_test">
-      <div class="LeadContent">
-         <h3>Test Area (LeadContent)</h3>
+      <div class="container-fluid" data-activity="_test">
+        <div class="LeadContent">
+           <h3>Test Area (LeadContent)</h3>
 
-      </div>
-       <h2 class="SectionTitle">Tiles styles (SectionTitle)</h2>
+        </div>
+         <h2 class="SectionTitle">Tiles styles (SectionTitle)</h2>
 
-      <ul class="TilesList TilesList--openEnd">
-        <li><a class="LineTile" href="#">
+        <ul class="TilesList TilesList--openEnd row">
+          <li><a class="LineTile" href="#">
             A very simple LineTile
         </a>
-        </li>
-        <li><a class="LineTile" href="#">
+          </li>
+          <li><a class="LineTile" href="#">
             LineTile. No need for 'content' wrappers.
         </a>
-        </li>
-        <li><a class="CompactLinkTile" href="#">
+          </li>
+          <li><a class="CompactLinkTile" href="#">
             <div class="Tile-content">CompactLinkTile for simple one-line links. Long text cut on line ending.</div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="CompactLinkTile" href="#">
+          </li>
+          <li><a class="CompactLinkTile" href="#">
             <div class="Tile-content">Go there</div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="LinkTile" href="#">
+          </li>
+          <li><a class="LinkTile" href="#">
             <div class="Tile-content"><p>LinkTile for two lines links, 'p' content.</p></div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="LinkTile" href="#">
+          </li>
+          <li><a class="LinkTile" href="#">
             <div class="Tile-content">
                 <p>LinkTile for two lines links. Long text cut on second line. large text test large text test large text test large text test large text test large text test</p>
             </div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="LinkTile" href="#">
+          </li>
+          <li><a class="LinkTile" href="#">
             <div class="Tile-content">
                 <div>LinkTile line one</div>
                 <em>Extra 'em' single line.</em>
             </div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="LinkTile" href="#">
+          </li>
+          <li><a class="LinkTile" href="#">
             <div class="Tile-content">
                 <div>LinkTile line one</div>
                 <em>Using strong and <strong class="text-danger">a Bootstrap class-color</strong>. Cut on single line large text test large text test large text test large text test large text test large text test</em>
             </div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li class="LinkTile">
-          <div class="Tile-content"><a href="#somethingElse" class="btn btn-default btn-block">Sample of button inside tile</a>
-          </div>
-        </li>
-        <li><a class="InfoTile" href="#">
+          </li>
+          <li class="LinkTile">
+            <div class="Tile-content"><a href="#somethingElse" class="btn btn-default btn-block">Sample of button inside tile</a>
+            </div>
+          </li>
+          <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
@@ -277,8 +282,8 @@
                 InfoTile p content
             </p></div>
         </a>
-        </li>
-        <li><a class="InfoTile" href="#">
+          </li>
+          <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-load-c fa-spin" aria-hidden="true"></span>
             </div>                
@@ -286,8 +291,8 @@
                 InfoTile p content, allows from 1 to 2 lines that cut large text test large text test large text test large text test large text test
             </p></div>
         </a>
-        </li>
-        <li><a class="InfoTile" href="#">
+          </li>
+          <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
@@ -296,8 +301,8 @@
                 <em>Extra 'em' single line</em>
             </div>
         </a>
-        </li>
-        <li><a class="InfoTile" href="#">
+          </li>
+          <li><a class="InfoTile" href="#">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-load-c" aria-hidden="true"></span>
             </div>                
@@ -306,8 +311,8 @@
                 <em>Extra 'em' single line cut on single line large text test large text test large text test large text test large text test large text test</em>
             </div>
         </a>
-        </li>
-        <li><a class="ItemTile" href="#">
+          </li>
+          <li><a class="ItemTile" href="#">
             <div class="Tile-marker">
                 <p>$120</p>
             </div>
@@ -317,8 +322,8 @@
             </div>
             <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="ItemTile" href="#">
+          </li>
+          <li><a class="ItemTile" href="#">
             <div class="Tile-marker">
                 <p>$15/hour</p>
             </div>
@@ -328,8 +333,8 @@
             </div>
             <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="ItemTile" href="#">
+          </li>
+          <li><a class="ItemTile" href="#">
             <div class="Tile-marker">
                 <div>$120</div>
                 <em>First time</em>
@@ -340,8 +345,8 @@
             </div>
             <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="ItemTile" href="#">
+          </li>
+          <li><a class="ItemTile" href="#">
             <i class="Tile-marker fa ion ion-load-c fa-spin" aria-hidden="true"></i>
             <div class="Tile-content">
                 <div><strong>ItemTile line one</strong></div>
@@ -349,8 +354,8 @@
             </div>
             <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile" href="#">
+          </li>
+          <li><a class="ItemAddonTile" href="#">
             <div class="Tile-marker">
                 <div>8:00am</div>
                 <em>11:30am</em>
@@ -361,8 +366,8 @@
             </div>
             <div class="Tile-addon"><span class="fa fa-edit fa-2x" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile" href="#">
+          </li>
+          <li><a class="ItemAddonTile" href="#">
             <div class="Tile-marker">
                 <div>8:00am</div>
                 <em>11:30am</em>
@@ -372,8 +377,8 @@
             </div>
             <div class="Tile-addon"><div>One</div><em>Two</em></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile" href="#">
+          </li>
+          <li><a class="ItemAddonTile" href="#">
             <div class="Tile-marker">
                 <div>8:00am</div>
                 <em>11:30am</em>
@@ -383,8 +388,8 @@
             </div>
             <div class="Tile-addon"><p>Addon text multiline</p></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
+          </li>
+          <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
             <div class="Tile-marker">
                 <div>8:00am</div>
                 <em>11:30am</em>
@@ -396,8 +401,8 @@
             </div>
             <div class="Tile-addon"><span class="fa fa-edit fa-2x" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
+          </li>
+          <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
             <div class="Tile-marker">
                 <p>12:45pm</p>
             </div>
@@ -407,8 +412,8 @@
             </div>
             <div class="Tile-addon"><p><strong>$155.00</strong></p></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
+          </li>
+          <li><a class="ItemAddonTile ItemAddonTile--largerContent" href="#">
             <div class="Tile-marker">
                 <p>12:45pm</p>
             </div>
@@ -418,13 +423,13 @@
             </div>
             <div class="Tile-addon"><p><strong>$20/hour</strong></p></div>
         </a>
-        </li>
-        <li><a class="CompactLinkTile Tile--tag-danger" href="#">
+          </li>
+          <li><a class="CompactLinkTile Tile--tag-danger" href="#">
             <div class="Tile-content">Tag-danger on CompactLinkTile.</div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="ItemTile Tile--tag-success" href="#">
+          </li>
+          <li><a class="ItemTile Tile--tag-success" href="#">
             <div class="Tile-marker">
                 <p>$120</p>
             </div>
@@ -434,8 +439,8 @@
             </div>
             <div class="Tile-icon"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile Tile--tag-gray-lighter" href="#">
+          </li>
+          <li><a class="ItemAddonTile Tile--tag-gray-lighter" href="#">
             <div class="Tile-marker">
                 <div>8:00am</div>
                 <em>11:30am</em>
@@ -445,8 +450,8 @@
             </div>
             <div class="Tile-addon"><p>Addon text multiline</p></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile Tile--tag-primary" href="#">
+          </li>
+          <li><a class="ItemAddonTile Tile--tag-primary" href="#">
             <div class="Tile-marker">
                 <div>8:00am</div>
                 <em>11:30am</em>
@@ -456,8 +461,8 @@
             </div>
             <div class="Tile-addon"><p>Addon text multiline</p></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile Tile--tag-info" href="#">
+          </li>
+          <li><a class="ItemAddonTile Tile--tag-info" href="#">
             <div class="Tile-marker">
                 <div>8:00am</div>
                 <em>11:30am</em>
@@ -468,9 +473,9 @@
             </div>
             <div class="Tile-addon"><span class="fa fa-edit fa-2x" aria-hidden="true"></span></div>
         </a>
-        </li>
-        <li><a class="ItemAddonTile Tile--tag-warning ItemAddonTile--largerContent"
-          href="#">
+          </li>
+          <li><a class="ItemAddonTile Tile--tag-warning ItemAddonTile--largerContent"
+            href="#">
             <div class="Tile-marker">
                 <p>12:45pm</p>
             </div>
@@ -480,16 +485,16 @@
             </div>
             <div class="Tile-addon"><p><strong>$20/hour</strong></p></div>
         </a>
-        </li>
-        <li><a href="#" class="MessageTile">
+          </li>
+          <li><a href="#" class="MessageTile">
             <h4 class="Tile-title">MessageTile title</h4>
             <div class="Tile-subtitle">some time ago</div>
             <p class="Tile-content">
                 <span>Message subject, Tile-content element here for multiline. Maybe need to be limited to 2 lines?</span>
             </p>
         </a>
-        </li>
-        <li><a href="#" class="MessageTile">
+          </li>
+          <li><a href="#" class="MessageTile">
             <h4 class="Tile-title">Name lastname</h4>
             <div class="Tile-subtitle">today</div>
             <p class="Tile-content">
@@ -497,8 +502,8 @@
                 <span>Using a strong and a Bootstrap text-color class.</span>
             </p>
         </a>
-        </li>
-        <li><a href="#" class="LeadTile">
+          </li>
+          <li><a href="#" class="LeadTile">
             <h3 class="Tile-title">
                 <div>LeadTile</div>
                 <div>
@@ -511,8 +516,8 @@
                 <em>emphasized in-line text</em>
             </p>
         </a>
-        </li>
-        <li><a href="#" class="LeadTile">
+          </li>
+          <li><a href="#" class="LeadTile">
             <h3 class="Tile-title">
                 <div>6/21</div>
                 <div>
@@ -527,15 +532,15 @@
                 <em>$120</em>
             </p>
         </a>
-        </li>
-      </ul>
-    </div>
-    <!-- Activity account -->
-    <div class="container-fluid" data-activity="account">
-       <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
+          </li>
+        </ul>
+      </div>
+      <!-- Activity account -->
+      <div data-activity="account">
+         <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
 
-      <ul class="TilesList">
-        <li><a class="InfoTile" href="/ownerInfo">
+        <ul class="TilesList">
+          <li><a class="InfoTile" href="/ownerInfo">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-information-outline" aria-hidden="true"></span>
             </div>
@@ -543,8 +548,8 @@
                 <p>Owner information</p>
             </div>
         </a>
-        </li>
-        <li><a class="InfoTile" href="/privacySettings">
+          </li>
+          <li><a class="InfoTile" href="/privacySettings">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-eye-outline" aria-hidden="true"></span>
             </div>
@@ -552,9 +557,9 @@
                 <p>Privacy settings</p>
             </div>
         </a>
-        </li>
-        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/TermsOfUse/"
-          target="_blank">
+          </li>
+          <li><a class="InfoTile" href="https://loconomics.com/en-US/About/TermsOfUse/"
+            target="_blank">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa fa-file-text-o" aria-hidden="true"></span>
             </div>
@@ -562,9 +567,9 @@
                 <p>Terms of Use</p>
             </div>
         </a>
-        </li>
-        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/PrivacyPolicy/"
-          target="_blank">
+          </li>
+          <li><a class="InfoTile" href="https://loconomics.com/en-US/About/PrivacyPolicy/"
+            target="_blank">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa fa-file-text-o" aria-hidden="true"></span>
             </div>
@@ -572,183 +577,306 @@
                 <p>Privacy policy</p>
             </div>
         </a>
-        </li>
-      </ul>
-    </div>
-    <!-- AddJobTitles activity -->
-    <div class="container-fluid" data-activity="addJobTitles">
-       <h2 class="SectionTitle">
+          </li>
+        </ul>
+      </div>
+      <!-- AddJobTitles activity -->
+      <div data-activity="addJobTitles">
+         <h2 class="SectionTitle">
         <span>Add one or more job title(s)</span>
     </h2>
 
-      <div class="isolated">
-        <div class="input-group"> <span class="input-group-addon">
+        <div class="isolated inset">
+          <div class="input-group"> <span class="input-group-addon">
                 <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
 </span>
-          <input
-          id="addJobTitles-search" type="text" class="form-control" placeholder="search"
-          data-bind="textInput: searchText"> <span class="input-group-btn">
+            <input
+            id="addJobTitles-search" type="text" class="form-control" placeholder="search"
+            data-bind="textInput: searchText"> <span class="input-group-btn">
                 <button type="button" class="btn btn-secondary" data-bind="event: { click: add }">Add</button>
             </span>
 
+          </div>
+          <!-- /input-group -->
         </div>
-        <!-- /input-group -->
-      </div>
-      <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: jobTitles">
-        <div class="ListView-item"> <a href="#" class="btn btn-link btn-block ListView-item-content">
+        <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: jobTitles">
+          <div class="ListView-item"> <a href="#" class="btn btn-link btn-block ListView-item-content">
         <p data-bind="text: label"></p>
       </a>
  <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span></a>
 
+          </div>
+        </div>
+        <div class="navbar navbar-default ActivityNavbar">
+          <div class="container">
+            <button type="button" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { click: save }"></button>
+          </div>
         </div>
       </div>
-      <div class="navbar navbar-default ActivityNavbar">
-        <div class="container">
-          <button type="button" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { click: save }"></button>
-        </div>
-      </div>
-    </div>
-    <!-- Activity addressEditor -->
-    <div class="container-fluid" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
-      <form role="form" data-bind="submit: save">
-         <h2 class="SectionTitle">
+      <!-- Activity addressEditor -->
+      <div class="container-fluid" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
+        <form role="form" data-bind="submit: save">
+           <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
         </h2>
 
-        <fieldset class="isolated" data-bind="with: address()">
-          <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
-            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code"
-            data-bind="textInput: postalCode, disable: $root.isLocked,
+          <fieldset class="isolated" data-bind="with: address()">
+            <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
+              <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code"
+              data-bind="textInput: postalCode, disable: $root.isLocked,
                                 popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
-          </div>
-          <div data-bind="visible: isServiceArea">
-            <div class="form-group">
-              <label for="addressEditorRadius">Service radius</label>
-              <select class="form-control" id="addressEditorRadius"
-              data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked, valueAllowUnset: true"></select>
             </div>
-          </div>
-          <div data-bind="visible: isServiceLocation">
-            <div class="form-group">
-              <p class="form-control-static"> <span data-bind="visible: city() || stateProvinceCode()">
+            <div data-bind="visible: isServiceArea">
+              <div class="form-group">
+                <label for="addressEditorRadius">Service radius</label>
+                <select class="form-control" id="addressEditorRadius"
+                data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked, valueAllowUnset: true"></select>
+              </div>
+            </div>
+            <div data-bind="visible: isServiceLocation">
+              <div class="form-group">
+                <p class="form-control-static"> <span data-bind="visible: city() || stateProvinceCode()">
                             <span data-bind="text: city"></span>,
-                <span
-                data-bind="text: stateProvinceCode"></span>
-                  </span>
-                  <!-- White space to reserve space -->&nbsp;</p>
+                  <span
+                  data-bind="text: stateProvinceCode"></span>
+                    </span>
+                    <!-- White space to reserve space -->&nbsp;</p>
+              </div>
+              <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
+              <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
+              <app-unlabeled-input params="placeholder: 'Location name, e.g. `Joshua´s Appartment`', value: addressName, disable: $root.isLocked"></app-unlabeled-input>
+              <div class="form-group">
+                <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
+                <textarea rows="2" class="form-control" placeholder="Special instructions"
+                id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
+              </div>
             </div>
-            <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Location name, e.g. `Joshua´s Appartment`', value: addressName, disable: $root.isLocked"></app-unlabeled-input>
-            <div class="form-group">
-              <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
-              <textarea rows="2" class="form-control" placeholder="Special instructions"
-              id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
-            </div>
+          </fieldset>
+          <div class="isolated">
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
           </div>
-        </fieldset>
-        <div class="isolated">
-          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-          <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
-        </div>
-      </form>
-    </div>
-    <!-- Activity appointment -->
-    <div class="container-fluid" data-activity="appointment" data-bind="css: { 'in-edit': editMode }">
-      <!-- Appointment View (cards) -->
-      <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
-      data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
-        <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
-        <div class="CardsDeck-dots" data-bind="foreach: appointments"> <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+        </form>
+      </div>
+      <!-- Activity appointment -->
+      <div class="container-fluid" data-activity="appointment" data-bind="css: { 'in-edit': editMode }">
+        <!-- Appointment View (cards) -->
+        <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
+        data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
+          <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
+          <div class="CardsDeck-dots" data-bind="foreach: appointments"> <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
 
+          </div>
         </div>
       </div>
-    </div>
-    <!-- Activity backgroundCheck -->
-    <div class="container-fluid" data-activity="backgroundCheck">
-       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      <!-- Activity backgroundCheck -->
+      <div data-activity="backgroundCheck">
+         <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span>
         Background Check
       </span>
       <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-  </h2>
+    </h2>
 
-      <div data-bind="css: { 'is-loading': isLoading }">
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-      </div>
-      <div>
-        <ul class="TilesList" data-bind="foreach: list">
-          <li class="InfoTile">
-            <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+        <div data-bind="css: { 'is-loading': isLoading }">
+          <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
+        <div>
+          <ul class="TilesList" data-bind="foreach: list">
+            <li class="InfoTile">
+              <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
 
-            </div>
-            <div class="Tile-content">
-              <div data-bind="text: backgroundCheck().name() || 'Background check'"></div> <em>
+              </div>
+              <div class="Tile-content">
+                <div data-bind="text: backgroundCheck().name() || 'Background check'"></div> <em>
                         <span data-bind="text: statusText, css: { 'text-warning': isStatus('pending'), 'text-success': isStatus('confirmed'), 'text-danger': isStatus('revoked') || isStatus('obsolete') }"></span>
                         <span data-bind="text: lastVerifiedDate, format: { type: 'datetime', format: 'L LTS' }"></span>
                     </em>
 
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="TilesList"> <a href="/addBackgroundCheck" class="CompactLinkTile">
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="TilesList"> <a href="/addBackgroundCheck" class="CompactLinkTile">
             <div class="Tile-content text-muted">Add a background check</div>
             <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </a>
 
+        </div>
       </div>
-    </div>
-    <!-- BookMeButton activity -->
-    <div class="container-fluid" data-activity="bookMeButton">
-       <h2 class="SectionTitle">Book Me Now Button</h2>
+      <!-- BookMeButton activity -->
+      <div class="container-fluid" data-activity="bookMeButton">
+         <h2 class="SectionTitle">Book Me Now Button</h2>
 
-      <script type="text/html" id="bookMeButton-radioButton">
-        <label class="btn btn-primary" data-bind="css: { 'active': value() === itemValue }">
-            <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
-            <span data-bind="text: labelText"></span>
-        </label>
-      </script>
-      <form class="container">
-        <div class="center-block isolated" style="height: 60px; text-align: center"
-        data-bind="html: buttonHtmlCode"></div>
-        <div class="center-block row isolated" style="text-align: center">
-          <div class="btn-group ut-noRadioCheck">
-            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
-            itemValue: 'small', disabled: isLocked, labelText: 'Small' } } -->
-            <!-- /ko -->
-            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
-            itemValue: 'medium', disabled: isLocked, labelText: 'Medium' } } -->
-            <!-- /ko -->
-            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
-            itemValue: 'large', disabled: isLocked, labelText: 'Large' } } -->
-            <!-- /ko -->
-          </div>
-          <div class="ut-noRadioCheck isolated">
-            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
-            itemValue: 'link', disabled: isLocked, labelText: 'Link only (no button)'
-            } } -->
-            <!-- /ko -->
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Using "Source" or "Code" view in your website editor, copy the code below
-            and paste it into yours:
-            <textarea rows="6" readonly data-bind="value: buttonHtmlCode"
-            class="form-control"></textarea>
+        <script type="text/html" id="bookMeButton-radioButton">
+          <label class="btn btn-primary" data-bind="css: { 'active': value() === itemValue }">
+              <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+              <span data-bind="text: labelText"></span>
           </label>
-        </div>
-        <!-- TODO Unhide when implemented the handlers <div class="row">
+        </script>
+        <form class="container">
+          <div class="center-block isolated" style="height: 60px; text-align: center"
+          data-bind="html: buttonHtmlCode"></div>
+          <div class="center-block row isolated" style="text-align: center">
+            <div class="btn-group ut-noRadioCheck">
+              <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
+              itemValue: 'small', disabled: isLocked, labelText: 'Small' } } -->
+              <!-- /ko -->
+              <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
+              itemValue: 'medium', disabled: isLocked, labelText: 'Medium' } } -->
+              <!-- /ko -->
+              <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
+              itemValue: 'large', disabled: isLocked, labelText: 'Large' } } -->
+              <!-- /ko -->
+            </div>
+            <div class="ut-noRadioCheck isolated">
+              <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type,
+              itemValue: 'link', disabled: isLocked, labelText: 'Link only (no button)'
+              } } -->
+              <!-- /ko -->
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Using "Source" or "Code" view in your website editor, copy the code below
+              and paste it into yours:
+              <textarea rows="6" readonly data-bind="value: buttonHtmlCode"
+              class="form-control"></textarea>
+            </label>
+          </div>
+          <!-- TODO Unhide when implemented the handlers <div class="row">
             <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked">Copy</button>
             <button type="button" class="btn btn-default btn-block" data-bind="event: { click: sendByEmail }, disable: isLocked">E-mail to your tech person</button>
         </div>
         -->
-      </form>
-    </div>
-    <!-- Activity calendar -->
-    <div class="container-fluid" data-activity="calendar" data-bind="css: { 'is-loading': isLoading }">
-       <h1 class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
+        </form>
+      </div>
+      <!-- Activity booking -->
+      <div data-activity="booking" class="Boxes">
+        <div class="container">
+          <div class="row">
+            <div class="Sidebar hidden-xs col-sm-3">
+               <h4>Add a new booking</h4>
+
+              <div class="row"> <a href="#step1" class="active btn btn-link btn-block">Step 1</a>
+
+              </div>
+            </div>
+            <div class="col-sm-9">
+              <div class="isolated text-center Box Box-padded">Already have an account? <a href="/login" class="btn btn-link text-secondary">Log In</a>
+              </div>
+               <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
+
+              <div class="Box">
+                <div class="FreelancerInfo FreelancerInfo--md">
+                  <div class="Avatar Avatar--primary Avatar--sm">
+                    <img data-bind="attr: { src: photoUrl }">
+                  </div>
+                   <h3 class="FreelancerInfo-name">Joshua Danielson</h3>
+
+                  <div class="FreelancerInfo-jobTitle">Massage Therapist</div>
+                  <div class="FreelancerInfo-businessName">Tact Massage Therapy</div>
+                  <div class="FreelancerInfo-meta">
+                    <app-stars-rating params="rating: 4.5, total: 1283" class="text-secondary"></app-stars-rating> <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" aria-description="4 Verifications"></i> (14)</span>
+
+                    <span
+                    class="BackgroundCheckRating"><i class="fa ion ion-ios-checkmark" aria-hidden="true" aria-description="Background Check: OK"></i>
+                      </span> <span class="FreelancerInfo-favorite"><i class="fa ion ion-ios-heart ion-ios-heart-outlineDISABLED" aria-hidden="true"></i></span>
+
+                  </div>
+                </div>
+              </div>
+              <div data-bind="template: { name: 'freelancer-pricing-template', data: freelancerPricing }"></div>
+              <div data-bind="visible: supportGratuity">
+                 <h2 class="SectionTitle">Add gratuity</h2>
+
+                <script type="text/html" id="booking-gratuity-radioButton">
+                  <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
+                            <input type="radio" name="gratuity" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+                            <span data-bind="text: labelText"></span>
+                        </label>
+                </script>
+                <div class="center-block Box Box-padded" style="text-align: center">
+                  <div class="btn-group ut-noRadioCheck">
+                    <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value:
+                    presetGratuity, itemValue: 10, disabled: isLocked, labelText: '10%' } }
+                    -->
+                    <!-- /ko -->
+                    <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value:
+                    presetGratuity, itemValue: 15, disabled: isLocked, labelText: '15%' } }
+                    -->
+                    <!-- /ko -->
+                    <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value:
+                    presetGratuity, itemValue: 20, disabled: isLocked, labelText: '20%' } }
+                    -->
+                    <!-- /ko -->
+                    <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value:
+                    presetGratuity, itemValue: 'custom', disabled: isLocked, labelText: 'Custom'
+                    } } -->
+                    <!-- /ko -->
+                  </div>
+                  <div class="isolated inset" data-bind="visible: presetGratuity() === 'custom'"> <span>$</span>
+
+                    <input type="number" name="custom-gratuity" data-bind="textInput: gratuityAmount"
+                    class="form-control NumberField NumberField--xs NumberField--center">
+                  </div>
+                  <p class="isolated"><small>You’ll have until 2 hours after your app’t to edit</small>
+                  </p>
+                </div>
+              </div>
+               <h2 class="SectionTitle">Promotions</h2>
+
+              <div class="form-group Box Box-padded">
+                <label for="booking-promotionalCode">Promotional code</label>
+                <input type="text" class="form-control" data-bind="textInput: promotionalCode"
+                id="booking-promotionalCode" />
+              </div>
+               <h2 class="SectionTitle">Summary</h2>
+
+              <div class="PricingSummary Box Box-padded">
+                <table>
+                  <tbody data-bind="foreach: summary.items">
+                    <tr>
+                      <td class="PricingSummary-concept" data-bind="text: concept"></td>
+                      <td class="PricingSummary-price" data-bind="text: price, format: { type: 'number', format: '$#,##0.00' }"></td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th class="PricingSummary-concept">Total</th>
+                      <th class="PricingSummary-price"><span data-bind="text: summary.totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span>*</th>
+                    </tr>
+                    <tr>
+                      <td class="PricingSummary-fees" colspan="2"> <span data-bind="text: summary.feesMessage"></span>
+
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+                <div class="PricingSummary-time isolated inset"> <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
+ <span>2 hours, 30 minutes</span>
+
+                </div>
+              </div>
+              <div class="isolated Box">
+                <label class="btn btn-block" role="button" tabindex="0"> <span data-bind="attr: { 'aria-pressed': makeRepeatBooking }" role="button">
+                            <span class="fa fa-lg ion" data-bind="css: { 'ion-android-checkbox-outline': makeRepeatBooking, 'ion-android-checkbox-outline-blank': !makeRepeatBooking() }"></span>
+</span>
+                  <input
+                  type="checkbox" data-bind="checked: makeRepeatBooking" hidden />Make this a repeat booking</label>
+              </div>
+              <div class="isolated">
+                <div>
+                  <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked">Save and continue</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Activity calendar -->
+      <div data-activity="calendar" data-bind="css: { 'is-loading': isLoading }">
+         <h1 class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
       <button type="button" class="btn btn-link">
           <time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
           <span class="caret"></span>
@@ -756,41 +884,41 @@
       </button>
   </h1>
 
-      <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
-      <!-- Daily View (appointments list) -->
-      <div id="calendarDailyView" class="TilesList" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
-    </div>
-    <!-- CalendarSyncing activity -->
-    <div class="container-fluid" data-activity="calendarSyncing">
-       <h2 class="SectionTitle">Calendar Syncing</h2>
-
-      <form data-bind="submit: save" class="container">
-        <p class="isolated text-muted">Do you use a calendar already? We can both import your availability and
-          export your Loconomics bookings to ensure you never miss an appointment.</p>
-        <div
-        class="isolated">
-          <div class="form-group">
-            <label for="calendarSync-icalImportUrl">Please paste the URL from your iCal-supported calendar to import your
-              free/busy information here:</label>
-            <div>
-              <input type="url" id="calendarSync-icalImportUrl" class="form-control"
-              data-bind="value: sync.icalImportUrl, disable: isLocked" />
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
-    </div>
-    <div class="form-group">
-      <label for="calendarSync-icalExportUrl">Please copy this URL and paste it into your iCal-supported calendar to
-        sync all your Loconomics appointments:</label>
-      <div>
-        <input type="url" readonly id="calendarSync-icalExportUrl" class="form-control"
-        data-bind="value: sync.icalExportUrl" />
+        <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
+        <!-- Daily View (appointments list) -->
+        <div id="calendarDailyView" class="TilesList" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
       </div>
-    </div>
-    <div class="isolated">
-      <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { click: reset }">Reset Private URL</button>
-    </div>
-    </form>
+      <!-- CalendarSyncing activity -->
+      <div class="container-fluid" data-activity="calendarSyncing">
+         <h2 class="SectionTitle">Calendar Syncing</h2>
+
+        <form data-bind="submit: save" class="container">
+          <p class="isolated text-muted">Do you use a calendar already? We can both import your availability and
+            export your Loconomics bookings to ensure you never miss an appointment.</p>
+          <div
+          class="isolated">
+            <div class="form-group">
+              <label for="calendarSync-icalImportUrl">Please paste the URL from your iCal-supported calendar to import your
+                free/busy information here:</label>
+              <div>
+                <input type="url" id="calendarSync-icalImportUrl" class="form-control"
+                data-bind="value: sync.icalImportUrl, disable: isLocked" />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+      </div>
+      <div class="form-group">
+        <label for="calendarSync-icalExportUrl">Please copy this URL and paste it into your iCal-supported calendar to
+          sync all your Loconomics appointments:</label>
+        <div>
+          <input type="url" readonly id="calendarSync-icalExportUrl" class="form-control"
+          data-bind="value: sync.icalExportUrl" />
+        </div>
+      </div>
+      <div class="isolated">
+        <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { click: reset }">Reset Private URL</button>
+      </div>
+      </form>
     </div>
     <!-- cancellationPolicy activity -->
     <div class="container-fluid LightForm" data-activity="cancellationPolicy">
@@ -979,7 +1107,7 @@
       </div>
     </div>
     <!-- CMS activity -->
-    <div class="container-fluid" data-activity="cms">
+    <div data-activity="cms">
        <h2 class="SectionTitle">Clients</h2>
 
       <div>
@@ -1086,7 +1214,7 @@
       </div>
     </div>
     <!-- Activity dashboard -->
-    <div class="container-fluid" data-activity="dashboard">
+    <div data-activity="dashboard">
       <div>
          <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
             Upcoming bookings
@@ -1218,7 +1346,7 @@
       </div>
     </div>
     <!-- Activity education -->
-    <div class="container-fluid" data-activity="education">
+    <div data-activity="education">
        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span>
         Education
@@ -1300,8 +1428,8 @@
       </form>
     </div>
     <!-- Faqs activity -->
-    <div class="container-fluid" data-activity="faqs">
-      <div class="isolated">
+    <div data-activity="faqs">
+      <div class="isolated inset">
         <div class="input-group"> <span class="input-group-addon">
                 <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
 </span>
@@ -1310,6 +1438,9 @@
         </div>
         <!-- /input-group -->
       </div>
+      <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+      </div>
       <ul class="TilesList" data-bind="foreach: filteredFaqs">
         <li><a class="LinkTile" href="/faqs/" data-bind="attr: { href: '/faqs/' + id() }">
             <div class="Tile-content"><p data-bind="text: title"></p></div>
@@ -1317,13 +1448,13 @@
         </a>
         </li>
       </ul>
-      <div class="isolated text-center" data-bind="if: !filteredFaqs().length">
+      <div class="isolated inset text-center" data-bind="if: !filteredFaqs().length && !isLoading()">
         <div>Nothing found :-(</div> <a href="/contactForm" class="btn btn-link">Contact us</a>
 
       </div>
     </div>
     <!-- Feedback activity -->
-    <div class="container-fluid" data-activity="feedback">
+    <div data-activity="feedback">
        <h2 class="SectionTitle">We're here to help</h2>
 
       <ul class="TilesList">
@@ -1342,7 +1473,7 @@
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
         </li>
-    </div>
+      </ul>
     </div>
     <!-- FeedbackForm activity -->
     <div class="container-fluid" data-activity="feedbackForm">
@@ -1360,7 +1491,7 @@
       </div>
     </div>
     <!-- FreelancerPricing activity -->
-    <div class="container-fluid" data-activity="freelancerPricing" data-bind="css: { 'is-loading': isLoading }">
+    <div data-activity="freelancerPricing" data-bind="css: { 'is-loading': isLoading }">
       <div>
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle"
@@ -1387,7 +1518,7 @@
 
         </div>
       </div>
-      <div class="isolated" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
+      <div class="isolated inset" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
         <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
       </div>
     </div>
@@ -1534,8 +1665,8 @@
     </div>
     <!-- Home activity (aka search) -->
     <div class="" data-activity="home">
-      <header>
-        <div class="home-menu"> <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button"
+      <header class="HomeNavBar">
+        <div class="HomeNavBar-menu"> <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button"
           aria-haspopup="true" aria-expanded="false">
                 <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
                 <span class="sr-only">Menu</span>
@@ -1557,10 +1688,24 @@
             <li role="separator" class="divider"></li>
             <li><a href="#inline-help">Help</a>
             </li>
+            <li data-bind="visible: !isAnonymous()"><a href="#!/dashboard">Dashboard</a>
+            </li>
           </ul>
-        </div> <a class="home-brand" href="/">Loconomics</a>
+        </div>
+        <div class="HomeNavBar-brand"> <a href="/">Loconomics</a>
 
-        <nav class="home-nav">
+        </div>
+        <div class="HomeNavBar-searchBar SearchBar">
+          <div class="input-group"> <span class="input-group-addon">
+                    <label for="navbar-search" class="fa fa-2x ion ion-ios-search" style=""></label>
+                </span>
+
+            <input id="navbar-search" type="text" name="s"
+            class="form-control" placeholder="Search for a (e.g. Garderner, Tutor...)"
+            />
+          </div>
+        </div>
+        <nav class="HomeNavBar-nav">
           <ul>
             <li><a href="/signup" class="btn btn-link">Sign up</a>
             </li>
@@ -1590,30 +1735,32 @@
         </nav>
       </header>
       <div role="main">
-         <h1 class="home-title">Make life better.</h1>
+        <div class="home-search">
+           <h1 class="home-title">Make life better.</h1>
 
-        <p class="home-tagline">Book local, independent service providers safely and easily</p>
-        <form id="home-search"
-        action="/" method="get" class="row">
-          <div class="form-group col-sm-6">
-            <label for="homeSearch" class="sr-only">Search</label>
-            <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
-              <input
-              type="text" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)">
+          <p class="home-tagline">Book local, independent service providers safely and easily</p>
+          <form id="home-search"
+          action="/" method="get" class="row">
+            <div class="form-group col-sm-6">
+              <label for="homeSearch" class="sr-only">Search</label>
+              <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
+                <input
+                type="text" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)">
+              </div>
             </div>
-          </div>
-          <div class="form-group col-sm-4">
-            <label for="homeLocation" class="sr-only">Where?</label>
-            <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
-              <input
-              type="text" name="location" class="form-control inset" id="homeLocation"
-              placeholder="Where?">
+            <div class="form-group col-sm-4">
+              <label for="homeLocation" class="sr-only">Where?</label>
+              <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
+                <input
+                type="text" name="location" class="form-control inset" id="homeLocation"
+                placeholder="Where?">
+              </div>
             </div>
-          </div>
-          <div class="col-sm-2">
-            <button type="submit" class="btn btn-secondary btn-lg btn-block">Search</button>
-          </div>
-        </form>
+            <div class="col-sm-2">
+              <button type="submit" class="btn btn-secondary btn-lg btn-block">Search</button>
+            </div>
+          </form>
+        </div>
         <div id="home-hiw" class="home-hiw">
            <h2 class="home-section-title">How Loconomics works:</h2>
 
@@ -1813,8 +1960,8 @@
       </footer>
     </div>
     <!-- Inbox activity -->
-    <div class="container-fluid" data-activity="inbox">
-      <div class="isolated">
+    <div data-activity="inbox">
+      <div class="isolated inset">
         <div class="input-group"> <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
             <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
             <span class="fa ion ion-ios-search"></span>
@@ -1851,7 +1998,7 @@
       </div>
     </div>
     <!-- Jobtitles activity -->
-    <div class="container-fluid" data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
+    <div data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
        <h2 class="SectionTitle">
         <span data-bind="text: jobTitleName">Job Title</span>
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -1911,11 +2058,11 @@
       </div>
     </div>
     <!-- Activity licensesCertifications -->
-    <div class="container-fluid" data-activity="licensesCertifications">
+    <div data-activity="licensesCertifications">
        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
-      Certifications/Licenses
-      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-  </h2>
+        Certifications/Licenses
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+    </h2>
 
       <div data-bind="css: { 'is-loading': isLoading }">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -2078,7 +2225,7 @@
     <!-- Activity logout -->
     <div class="container-fluid" data-activity="logout"></div>
     <!-- marketplaceJobtitles activity -->
-    <div class="container-fluid" data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }">
+    <div data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }">
        <h2 class="SectionTitle">
         <span>Profile Status</span>
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -2253,7 +2400,7 @@
       <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
     </div>
     <!-- OwnerInfo activity -->
-    <div class="container-fluid" data-activity="ownerInfo">
+    <div data-activity="ownerInfo">
        <h1 class="SectionTitle has-HelpPoint">Owner information</h1>
 
       <ul class="TilesList">
@@ -2878,7 +3025,7 @@
       </form>
     </div>
     <!-- Scheduling activity -->
-    <div class="container-fluid" data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }">
+    <div data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }">
        <h2 class="SectionTitle">Services, Pricing, &amp; Locations
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
@@ -3005,7 +3152,7 @@
       </form>
     </div>
     <!-- Activity locations -->
-    <div class="container-fluid" data-activity="serviceAddresses">
+    <div data-activity="serviceAddresses">
        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span data-bind="visible: headerText, text: headerText">
         Locations
@@ -3049,7 +3196,7 @@
           </div>
         </button>
       </div>
-      <div class="isolated" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
+      <div class="isolated inset" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
         <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
       </div>
     </div>
@@ -3137,7 +3284,7 @@
       </div>
     </div>
     <!-- Activity verifications -->
-    <div class="container-fluid" data-activity="verifications">
+    <div data-activity="verifications">
        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span>
         Verifications
@@ -3315,7 +3462,7 @@
       </form>
     </div>
     <!-- Activity welcome -->
-    <div class="container-fluid" data-activity="welcome">
+    <div data-activity="welcome">
       <div class="LeadContent">
          <h2>Welcome in!</h2>
 
@@ -3376,7 +3523,7 @@
           <div class="LargeNavBar-brand">
               <a class="navbar-brand" href="/">Loconomics</a>
           </div>
-          <!-- Top Menu Items -->
+  
           <div class="LargeNavBar-searchBar">
               <div class="input-group">
                   <span class="input-group-addon">
@@ -3771,6 +3918,32 @@
           </p></div>
       </a>
     </script>
+    <!-- Knockout Template freelancer-pricing -->
+    <script type="text/html" id="freelancer-pricing-template">
+      <div data-bind="foreach: groupedPricing">
+          <div class="SectionTitle" data-bind="visible: !$parent.isAdditionMode()">
+              <span data-bind="text: group"></span>
+          </div>
+  
+          <ul class="TilesList Box" data-bind="foreach: { data: pricing, as: 'pricingItem' }">
+              <li><a href="#" class="ItemTile" data-bind="click: $parents[1].tapPricing, css: { active: pricingItem.isSelected }" role="button">
+                  <div class="Tile-marker"><p data-bind="text: pricingItem.displayedPrice"></p></div>
+                  <div class="Tile-content">
+                      <div data-bind="visible: pricingItem.sessionsAndDuration(), text: pricingItem.name"></div>
+                      <em data-bind="visible: pricingItem.sessionsAndDuration(), text: pricingItem.sessionsAndDuration"></em>
+                      <p data-bind="visible: !pricingItem.sessionsAndDuration(), text: pricingItem.name"></p>
+                  </div>
+                  <div class="Tile-icon">
+                    <span data-bind="visible: $parents[1].isSelectionMode, attr: { 'aria-pressed': pricingItem.isSelected }" role="button"><span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': pricingItem.isSelected, 'ion-android-checkbox-outline-blank': !pricingItem.isSelected() }"></span><span class="sr-only">Selected?</span></span>
+                    <span data-bind="visible: !$parents[1].isSelectionMode()"><span class="fa ion ion-edit"></span><span class="sr-only">Edit</span></span>
+                  </div>
+              </a></li>
+          </ul>
+  
+          <a class="LinkTile" role="button" href="#!freelancerPricingEditor/"
+             data-bind="visible: $parent.allowAddPricing, click: $parent.tapNewPricing, text: type() && type().addNewLabel()"></a>
+      </div>
+    </script>
     <!-- Knockout Template inbox-tile -->
     <script type="text/html" id="inbox-tile-template">
       <a href="#" data-bind="attr: { href: link }"
@@ -3877,6 +4050,7 @@
         <input type="text" class="form-control" data-bind="textInput: value, disable: disable, attr: attr">
       </div>
     </script>
+    </div>
   </body>
 
 </html>

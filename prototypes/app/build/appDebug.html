@@ -65,6 +65,8 @@
             </li>
             <li class="go-feedback"><a href="/feedback"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Talk to us</a>
             </li>
+            <li class="go-search"><a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search</a>
+            </li>
             <li class="go-logout"><a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a>
             </li>
           </ul>
@@ -74,6 +76,8 @@
             <li class="go-index"><a href="/">Home</a>
             </li>
             <li class="go-login"><a href="/login">Login</a>
+            </li>
+            <li class="go-search"><a href="/home"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Search</a>
             </li>
           </ul>
         </div>
@@ -1682,6 +1686,8 @@
             </li>
             <li role="separator" class="divider"></li>
             <li><a href="#inline-help">Help</a>
+            </li>
+            <li data-bind="visible: !isAnonymous()"><a href="#!/dashboard">Dashboard</a>
             </li>
           </ul>
         </div>
