@@ -56,7 +56,7 @@
 
 /* line 381 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
-/* line 89 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+/* line 98 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
 
@@ -65,8 +65,8 @@
 /* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .btn-secondary {
   color: #fff;
-  background-color: #ff6765;
-  border-color: #e4423e;
+  background-color: #ff7674;
+  border-color: #e75551;
 }
 
 /* line 5 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
@@ -77,8 +77,8 @@
 .btn-secondary.active,
 .open > .dropdown-toggle.btn-secondary {
   color: #fff;
-  background-color: #ff4441;
-  border-color: #e0241f;
+  background-color: #ff514f;
+  border-color: #e23530;
 }
 
 /* line 9 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
@@ -109,29 +109,29 @@ fieldset[disabled] .btn-secondary:active,
 .btn-secondary.disabled.active,
 .btn-secondary[disabled].active,
 fieldset[disabled] .btn-secondary.active {
-  background-color: #ff6765;
-  border-color: #e4423e;
+  background-color: #ff7674;
+  border-color: #e75551;
 }
 
 /* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\mixins\buttons.styl */
 .btn-secondary .badge {
-  color: #ff6765;
+  color: #ff7674;
   background-color: #fff;
 }
 
-/* line 19 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .text-secondary {
   color: #ff6765;
 }
 
-/* line 29 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .form-control-static {
   padding: 7px 13px;
 }
 
-/* line 43 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
-
 /* line 44 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+
+/* line 45 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .ut-noRadioCheck input[type="radio"],
 .ut-noRadioCheck input[type="checkbox"] {
   position: absolute;
@@ -140,6 +140,11 @@ fieldset[disabled] .btn-secondary.active {
 }
 
 /* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+.ut-noRadioCheck label span {
+  pointer-events: none;
+}
+
+/* line 65 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .form-control,
 .input-group > .input-group-addon,
 .input-group > .form-control,
@@ -148,7 +153,7 @@ fieldset[disabled] .btn-secondary.active {
   border-radius: 0;
 }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 71 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .form-control,
 .input-group-addon,
 .btn-primary,
@@ -162,7 +167,7 @@ fieldset[disabled] .btn-secondary.active {
   border-left-color: transparent;
 }
 
-/* line 74 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 83 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .form-control,
 .input-group-addon,
 .btn {
@@ -170,14 +175,14 @@ fieldset[disabled] .btn-secondary.active {
   box-shadow: none;
 }
 
-/* line 78 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 87 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .input-group > .form-control.inset,
 .input-group > .form-control.inset {
   border-left-color: transparent;
   border-right-color: transparent;
 }
 
-/* line 86 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 95 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .form-control {
   background: #fbfbfb;
 }

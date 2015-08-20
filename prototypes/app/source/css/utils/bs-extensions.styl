@@ -10,11 +10,12 @@
 // create the button for that
 @import '../../../vendor/bootstrap/styl/mixins/buttons.styl'
 $btn-secondary-color = #fff
-$btn-secondary-bg = $brand-secondary
-$btn-secondary-border = $brand-secondary-dark
+$btn-secondary-bg = lighten($brand-secondary, 10%)
+$btn-secondary-border = lighten($brand-secondary-dark, 10%)
 .btn-secondary {
     button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
 }
+
 // Create the text-secondary
 .text-secondary {
     color: $brand-secondary;
@@ -47,6 +48,14 @@ $btn-secondary-border = $brand-secondary-dark
         left: -99999px;
         // Bootstrap uses the deprecated 'clip' trick rather than a negative position.
         clip: rect(0px, 0px, 0px, 0px);
+    }
+    
+    // Fix bug in iOS: span elements inside the label (used normally to set text programatically)
+    // make that it receive the first click/touch, not reacting the label and not setting the underground
+    // radio input, needing a long-tap to get enabled; gets solved making that span elements not able
+    // to react to events
+    label span {
+        pointer-events: none;
     }
 }
 

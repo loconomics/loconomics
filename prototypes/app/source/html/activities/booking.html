@@ -35,7 +35,7 @@
                 <div data-bind="visible: supportGratuity">
                     <h2 class="SectionTitle">Add gratuity</h2>
                     <script type="text/html" id="booking-gratuity-radioButton">
-                        <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
+                        <label class="btn btn-default" data-bind="css: { 'btn-secondary': value() === itemValue }">
                             <input type="radio" name="gratuity" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
                             <span data-bind="text: labelText"></span>
                         </label>
