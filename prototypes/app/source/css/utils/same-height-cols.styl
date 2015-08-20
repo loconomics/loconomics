@@ -1,0 +1,42 @@
+/**
+    Modifier class for Bootstrap columns, that
+    sets all the columns to the same height.
+    
+    The class must be set on a container of rows
+    with the desired columns, that usually is the
+    same element that has a .container or .container-fluid
+    class, but not required.
+    
+    IMPORTANT: In order to do not affect this class to every
+    descendant columns (columns inside columns), its applied
+    only to the inmediate descentant row and cols.
+    Additional class .same-height-col exists to be applied
+    on columns that are not inmediate descentant of a .row element
+    but needs to get this style applied (it needs a container with
+    the main class still .same-height-cols).
+
+    Additionally, the modifier 'full-height' can be added
+    to make the columns container to fill all the available
+    height (in the page or ancestor container).
+
+    NOTE: This class modifies the original layout of Bootstrap
+    columns based on floating boxes by a table based layout.
+**/
+.same-height-cols {
+    display:table;
+    box-sizing: border-box;
+
+    > .row {
+        display: table-row;
+
+        > [class*="col-"],
+        .same-height-col {
+            float: none;
+            display: table-cell;
+        }
+    }
+    
+    &.full-height {
+        height:100%;
+    }
+}
