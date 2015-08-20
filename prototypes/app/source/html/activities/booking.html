@@ -1,105 +1,150 @@
 <!-- Activity booking -->
 <div data-activity="booking" class="Boxes">
 
-    <div class="container same-height-cols">
+    <div class="container same-height-cols full-height">
         <div class="row">
             <div class="Sidebar hidden-xs hidden-sm col-sm-3">
                 <h4>Add a new booking</h4>
-                <div class="row">
-                    <a href="#step1" class="active btn btn-link btn-block">Step 1</a>
+                <div class="row" data-bind="foreach: { data: progress.stepsList, as: 'stepName' }">
+                    <a href="#" class="btn btn-link btn-block" data-bind="css: { active: $parent.progress.observeStep(stepName)() },
+                        text: $parent.getStepLabel(stepName), click: $parent.goStep.bind($parent, stepName)"></a>
                 </div>
             </div>
 
             <div class="col-md-9">
-                <div class="isolated text-center Box Box-padded">Already have an account? <a href="/login" class="btn btn-link text-secondary">Log In</a></div>
+                <div data-bind="attr: { hidden: !progress.observeStep('services')() }">
+                    <div class="isolated text-center Box Box-padded">Already have an account? <a href="/login" class="btn btn-link text-secondary">Log In</a></div>
 
-                <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
+                    <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
 
-                <div class="Box">
-                    <div class="FreelancerInfo FreelancerInfo--md">
-                        <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: photoUrl }"></div>
-                        <h3 class="FreelancerInfo-name">Joshua Danielson</h3>
-                        <div class="FreelancerInfo-jobTitle">Massage Therapist</div>
-                        <div class="FreelancerInfo-businessName">Tact Massage Therapy</div>
-                        <div class="FreelancerInfo-meta">
-                            <app-stars-rating params="rating: 4.5, total: 1283" class="text-secondary"></app-stars-rating>
-                            <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" aria-description="4 Verifications"></i> (14)</span>
-                            <span class="BackgroundCheckRating"><i class="fa ion ion-ios-checkmark" aria-hidden="true" aria-description="Background Check: OK"></i></span>
-                            <span class="FreelancerInfo-favorite"><i class="fa ion ion-ios-heart ion-ios-heart-outlineDISABLED" aria-hidden="true"></i></span>
+                    <div class="Box">
+                        <div class="FreelancerInfo FreelancerInfo--md">
+                            <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: photoUrl }"></div>
+                            <h3 class="FreelancerInfo-name">Joshua Danielson</h3>
+                            <div class="FreelancerInfo-jobTitle">Massage Therapist</div>
+                            <div class="FreelancerInfo-businessName">Tact Massage Therapy</div>
+                            <div class="FreelancerInfo-meta">
+                                <app-stars-rating params="rating: 4.5, total: 1283" class="text-secondary"></app-stars-rating>
+                                <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" aria-description="4 Verifications"></i> (14)</span>
+                                <span class="BackgroundCheckRating"><i class="fa ion ion-ios-checkmark" aria-hidden="true" aria-description="Background Check: OK"></i></span>
+                                <span class="FreelancerInfo-favorite"><i class="fa ion ion-ios-heart ion-ios-heart-outlineDISABLED" aria-hidden="true"></i></span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div data-bind="template: { name: 'freelancer-pricing-template', data: freelancerPricing }"></div>
+                    <div data-bind="template: { name: 'freelancer-pricing-template', data: freelancerPricing }"></div>
 
-                <div data-bind="visible: supportGratuity">
-                    <h2 class="SectionTitle">Add gratuity</h2>
-                    <script type="text/html" id="booking-gratuity-radioButton">
-                        <label class="btn btn-default" data-bind="css: { 'btn-secondary': value() === itemValue }">
-                            <input type="radio" name="gratuity" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
-                            <span data-bind="text: labelText"></span>
-                        </label>
-                    </script>
-                    <div class="center-block Box Box-padded" style="text-align: center">
-                        <div class="btn-group ut-noRadioCheck">
-                            <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 10, disabled: isLocked, labelText: '10%' } } --><!-- /ko -->
-                            <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 15, disabled: isLocked, labelText:  '15%' } } --><!-- /ko -->
-                            <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 20, disabled: isLocked, labelText: '20%' } } --><!-- /ko -->
-                            <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 'custom', disabled: isLocked, labelText: 'Custom' } } --><!-- /ko -->
+                    <div data-bind="visible: supportGratuity">
+                        <h2 class="SectionTitle">Add gratuity</h2>
+                        <script type="text/html" id="booking-gratuity-radioButton">
+                            <label class="btn btn-default" data-bind="css: { 'btn-secondary': value() === itemValue }">
+                                <input type="radio" name="gratuity" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+                                <span data-bind="text: labelText"></span>
+                            </label>
+                        </script>
+                        <div class="center-block Box Box-padded" style="text-align: center">
+                            <div class="btn-group ut-noRadioCheck">
+                                <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 10, disabled: isLocked, labelText: '10%' } } --><!-- /ko -->
+                                <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 15, disabled: isLocked, labelText:  '15%' } } --><!-- /ko -->
+                                <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 20, disabled: isLocked, labelText: '20%' } } --><!-- /ko -->
+                                <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 'custom', disabled: isLocked, labelText: 'Custom' } } --><!-- /ko -->
+                            </div>
+                            <div class="isolated inset" data-bind="visible: presetGratuity() === 'custom'">
+                                <span>$</span>
+                                <input type="number" name="custom-gratuity" data-bind="textInput: gratuityAmount" class="form-control NumberField NumberField--xs NumberField--center">
+                            </div>
+                            <p class="isolated"><small>You’ll have until 2 hours after your app’t to edit</small></p>
                         </div>
-                        <div class="isolated inset" data-bind="visible: presetGratuity() === 'custom'">
-                            <span>$</span>
-                            <input type="number" name="custom-gratuity" data-bind="textInput: gratuityAmount" class="form-control NumberField NumberField--xs NumberField--center">
-                        </div>
-                        <p class="isolated"><small>You’ll have until 2 hours after your app’t to edit</small></p>
                     </div>
-                </div>
 
-                <h2 class="SectionTitle">Promotions</h2>
-                <div class="form-group Box Box-padded">
-                    <label for="booking-promotionalCode">Promotional code</label>
-                    <span class="input-group">
-                        <span class="input-group-addon">Code:</span>
-                        <input type="text" class="form-control" data-bind="textInput: promotionalCode" id="booking-promotionalCode" />
-                    </span>
-                </div>
-
-                <h2 class="SectionTitle">Summary</h2>
-                <div class="PricingSummary Box Box-padded">
-                    <table>
-                        <tbody data-bind="foreach: summary.items">
-                            <tr><td class="PricingSummary-concept" data-bind="text: concept"></td><td class="PricingSummary-price" data-bind="text: price, format: { type: 'number', format: '$#,##0.00' }"></td></tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th class="PricingSummary-concept">Total</th>
-                                <th class="PricingSummary-price"><span data-bind="text: summary.totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span>*</th>
-                            </tr>
-                            <tr>
-                                <td class="PricingSummary-fees" colspan="2">
-                                    <span data-bind="text: summary.feesMessage"></span>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                    <div class="PricingSummary-time isolated inset">
-                        <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
-                        <span>2 hours, 30 minutes</span>
-                    </div>
-                </div>
-
-                <div class="isolated Box">
-                    <label class="btn btn-block" role="button" tabindex="0">
-                        <span data-bind="attr: { 'aria-pressed': makeRepeatBooking }" role="button">
-                            <span class="fa fa-lg ion" data-bind="css: { 'ion-android-checkbox-outline': makeRepeatBooking, 'ion-android-checkbox-outline-blank': !makeRepeatBooking() }"></span>
+                    <h2 class="SectionTitle">Promotions</h2>
+                    <div class="form-group Box Box-padded">
+                        <label for="booking-promotionalCode">Promotional code</label>
+                        <span class="input-group">
+                            <span class="input-group-addon">Code:</span>
+                            <input type="text" class="form-control" data-bind="textInput: promotionalCode" id="booking-promotionalCode" />
                         </span>
-                        <input type="checkbox" data-bind="checked: makeRepeatBooking" hidden /> Make this a repeat booking
-                    </label>
+                    </div>
+
+                    <h2 class="SectionTitle">Summary</h2>
+                    <div class="PricingSummary Box Box-padded">
+                        <table>
+                            <tbody data-bind="foreach: summary.items">
+                                <tr><td class="PricingSummary-concept" data-bind="text: concept"></td><td class="PricingSummary-price" data-bind="text: price, format: { type: 'number', format: '$#,##0.00' }"></td></tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="PricingSummary-concept">Total</th>
+                                    <th class="PricingSummary-price"><span data-bind="text: summary.totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span>*</th>
+                                </tr>
+                                <tr>
+                                    <td class="PricingSummary-fees" colspan="2">
+                                        <span data-bind="text: summary.feesMessage"></span>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div class="PricingSummary-time isolated inset">
+                            <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
+                            <span>2 hours, 30 minutes</span>
+                        </div>
+                    </div>
+
+                    <div class="isolated Box">
+                        <label class="btn btn-block" role="button" tabindex="0">
+                            <span data-bind="attr: { 'aria-pressed': makeRepeatBooking }" role="button">
+                                <span class="fa fa-lg ion" data-bind="css: { 'ion-android-checkbox-outline': makeRepeatBooking, 'ion-android-checkbox-outline-blank': !makeRepeatBooking() }"></span>
+                            </span>
+                            <input type="checkbox" data-bind="checked: makeRepeatBooking" hidden /> Make this a repeat booking
+                        </label>
+                    </div>
+
+                    <div class="isolated">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }">
+                    Step 2
+                    <div class="isolated">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-bind="attr: { hidden: !progress.observeStep('selectTimes')() }">
+                    Step 3
+                    <div class="isolated">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="isolated">
-                    <div>
-                        <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked">Save and continue</button>
+                <div data-bind="attr: { hidden: !progress.observeStep('selectTime')() }">
+                    <div class="isolated">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-bind="attr: { hidden: !progress.observeStep('payment')() }">
+                    <div class="isolated">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-bind="attr: { hidden: !progress.observeStep('confirm')() }">
+                    <div class="isolated">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: save">Confirm</button>
+                        </div>
                     </div>
                 </div>
             </div>

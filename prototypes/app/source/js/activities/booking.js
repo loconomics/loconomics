@@ -54,9 +54,37 @@ A.prototype.show = function show(state) {
     this.viewModel.supportGratuity(true);
 };
 
-var FreelancerPricingVM = require('../viewmodels/FreelancerPricing');
+var FreelancerPricingVM = require('../viewmodels/FreelancerPricing'),
+    BookingProgress = require('../viewmodels/BookingProgress');
+
+var bookingRequestSteps = [
+    'services',
+    'selectLocation',
+    'selectTimes',
+    'payment',
+    'confirm'
+];
+var instantBookingSteps = [
+    'services',
+    'selectLocation',
+    'selectTime', // <- This is different
+    'payment',
+    'confirm'
+];
+
+// L18N
+var stepsLabels = {
+    services: 'Services',
+    selectLocation: 'Select a location',
+    selectTimes: 'Select preferred times',
+    selectTime: 'Select the time',
+    payment: 'Payment',
+    confirm: 'Confirm'
+};
 
 function ViewModel(app) {
+    //jshint maxstatements:40
+    
     this.freelancerID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
     this.instantBooking = ko.observable(true);
@@ -67,6 +95,12 @@ function ViewModel(app) {
     
     this.photoUrl = ko.pureComputed(function() {
         return app.model.config.siteUrl + '/en-US/Profile/Photo/' + this.freelancerID();
+    }, this);
+    
+    this.progress = new BookingProgress();
+    
+    ko.computed(function() {
+        this.progress.stepsList(this.instantBooking() ? instantBookingSteps : bookingRequestSteps);
     }, this);
     
     this.freelancerPricing = new FreelancerPricingVM(app);
@@ -93,6 +127,23 @@ function ViewModel(app) {
     
     this.makeRepeatBooking = ko.observable(false);
     this.promotionalCode = ko.observable('');
+    
+    this.nextStep = function() {
+        this.progress.next();
+    };
+    
+    this.goStep = function(stepName) {
+        var i = this.progress.stepsList().indexOf(stepName);
+        this.progress.step(i > -1 ? i : 0);
+    };
+
+    this.getStepLabel = function(stepName) {
+        return stepsLabels[stepName] || stepName;
+    };
+    
+    this.save = function() {
+        // TODO Final step, confirm and save booking
+    };
 }
 
 var Model = require('../Models/Model');

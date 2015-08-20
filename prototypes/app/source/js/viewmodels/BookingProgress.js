@@ -3,18 +3,42 @@
 **/
 'use strict';
 
-var Model = require('../models/Model');
+var Model = require('../models/Model'),
+    ko = require('knockout');
 
 function BookingProgress(values) {
     Model(this);
 
     this.model.defProperties({
         step: 0,
-        totalSteps: 0,
+        stepsList: [],
         ended: false
     }, values);
+    
+    this.totalSteps = ko.pureComputed(function() {
+        return this.stepsList().length;
+    }, this);
 }
 
+module.exports = BookingProgress;
+
+BookingProgress.prototype.next = function() {
+    var step = Math.max(0, Math.min(this.step() + 1, this.totalSteps() - 1));
+    
+    this.step(step);
+};
+
+BookingProgress.prototype.observeStep = function(stepName) {
+    return ko.pureComputed(function() {
+        return this.isStep(stepName);
+    }, this);
+};
+
+BookingProgress.prototype.isStep = function(stepName) {
+    return this.stepsList()[this.step()] === stepName;
+};
+
+/*
 BookingProgress.prototype.getRequestData = function() {
     
     var data = {
@@ -36,3 +60,4 @@ BookingProgress.prototype.getRequestData = function() {
 
     return data;
 };
+*/

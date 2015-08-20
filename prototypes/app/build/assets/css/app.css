@@ -1122,9 +1122,10 @@ body.use-backdrop:before {
 .same-height-cols > .row .same-height-col {
   float: none;
   display: table-cell;
+  vertical-align: top;
 }
 
-/* line 38 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\same-height-cols.styl */
+/* line 39 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\same-height-cols.styl */
 .same-height-cols.full-height {
   height: 100%;
 }
@@ -1132,7 +1133,7 @@ body.use-backdrop:before {
 /* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
-/* line 42 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
+/* line 43 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
 .SplashScreen {
