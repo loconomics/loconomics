@@ -732,8 +732,8 @@ module.exports=require('0/eMst');
  */
 
 /*!
- * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=f846e2bf4a194a94e237)
- * Config saved to config.json and https://gist.github.com/f846e2bf4a194a94e237
+ * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=ebd037ff806ac626497c)
+ * Config saved to config.json and https://gist.github.com/ebd037ff806ac626497c
  */
 if (typeof jQuery === 'undefined') {
   throw new Error('Bootstrap\'s JavaScript requires jQuery')

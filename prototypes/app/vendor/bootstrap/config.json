@@ -100,7 +100,7 @@
     "@form-group-margin-bottom": "15px",
     "@legend-color": "@gray-dark",
     "@legend-border-color": "#e5e5e5",
-    "@input-group-addon-bg": "@gray-lighter",
+    "@input-group-addon-bg": "#eeeeee",
     "@input-group-addon-border-color": "@input-border",
     "@cursor-disabled": "not-allowed",
     "@dropdown-bg": "#fff",
@@ -421,5 +421,5 @@
     "collapse.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=f846e2bf4a194a94e237"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=ebd037ff806ac626497c"
 }

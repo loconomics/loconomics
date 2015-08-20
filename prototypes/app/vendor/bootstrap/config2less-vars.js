@@ -3,13 +3,18 @@
 // current directory
 'use strict';
 
-var config = require('./config.json');
+exports.build = function() {
+    var config = require('./config.json');
 
-if (config && config.vars) {
-    
+    if (config && config.vars) {       
+        return Object.keys(config.vars).map(function(key) {
+            return key + ':\t\t\t' + config.vars[key] + ';';
+        }).join('\n');
+    }
+    return '';
+};
+
+if (require.main === module) {
     console.log('// Variables from config.json');
-    
-    Object.keys(config.vars).forEach(function(key) {
-        console.log(key + ':\t\t\t', config.vars[key] + ';');
-    });
+    console.log(exports.build());
 }

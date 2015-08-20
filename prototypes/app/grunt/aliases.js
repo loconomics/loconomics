@@ -60,6 +60,7 @@ module.exports = {
 	],
 	'build': [
         'build-js',
+        'prepare-bootstrap-variables',
 		'build-css',
         'build-html',
         'build-images',
