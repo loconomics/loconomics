@@ -56,7 +56,7 @@
 
 /* line 381 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
-/* line 98 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
 
@@ -185,6 +185,11 @@ fieldset[disabled] .btn-secondary.active {
 /* line 95 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .form-control {
   background: #fbfbfb;
+}
+
+/* line 103 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+.fa-xl {
+  font-size: 25px;
 }
 
 /* line 3 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\select-btn.styl */

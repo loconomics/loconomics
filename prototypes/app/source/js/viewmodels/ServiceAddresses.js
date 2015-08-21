@@ -30,6 +30,15 @@ function ServiceAddressesViewModel() {
         event.preventDefault();
         event.stopImmediatePropagation();
     }.bind(this);
+    
+    this.observerSelected = function(item) {
+        return ko.pureComputed(function() {
+            //return this.selectedAddress() === item;
+            var sid = this.selectedAddress() && ko.unwrap(this.selectedAddress().addressID),
+                iid = item && ko.unwrap(item.addressID);
+            return sid === iid;
+        }, this);
+    }.bind(this);
 }
 
 module.exports = ServiceAddressesViewModel;
