@@ -23,8 +23,26 @@
     columns based on floating boxes by a table based layout.
 **/
 .same-height-cols {
-    display:table;
+    display: table;
     box-sizing: border-box;
+    
+    // Table layout has the problem that, by default, it uses only the width needed
+    // by its cells, what means will not behave responsive as expected from
+    // standard display:block (and Bootstrap .container classes).
+    // Solution is to use width:100%.
+    // BUT doing so will break the size control
+    // that Bootstrap has at the .container class for medium-large screen sizes,
+    // that conflict happens when using this class on the same container element.
+    // So we need to apply it by default (for the case that same-height-cols and
+    // container are applied to different elements) but not when is a .container too
+    // We don't care about container-fluid, because it expects to behave as 100% too.
+    &:not(.container) {
+        width: 100%;
+    }
+    // On sm and xs, its applied all the time
+    @media $mediaMaxSm {
+        width: 100%;
+    }
 
     > .row {
         display: table-row;
