@@ -18,6 +18,10 @@ function BookingProgress(values) {
     this.totalSteps = ko.pureComputed(function() {
         return this.stepsList().length;
     }, this);
+    
+    this.currentStep = ko.pureComputed(function() {
+        return this.stepsList()[this.step()];
+    }, this);
 }
 
 module.exports = BookingProgress;

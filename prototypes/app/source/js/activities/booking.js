@@ -29,6 +29,16 @@ var A = Activity.extends(function BookingActivity() {
         }
     }.bind(this));
     
+    this.registerHandler({
+        target: this.viewModel.progress.step,
+        handler: function() {
+            // Trigger load of the specific step
+            var load = this[this.viewModel.progress.currentStep() + 'Load'];
+            if (load)
+                load.call(this);
+        }.bind(this)
+    });
+    
     setTestingData(this.viewModel);
 });
 
@@ -50,12 +60,14 @@ A.prototype.show = function show(state) {
         return;
     }
     
-    // TODO Depends on jobTitle:
-    this.viewModel.supportGratuity(true);
+    // Reset progress to none and trigger next so Load logic gets executed
+    this.viewModel.progress.step(-1);
+    this.viewModel.nextStep();
 };
 
-var FreelancerPricingVM = require('../viewmodels/FreelancerPricing'),
-    BookingProgress = require('../viewmodels/BookingProgress');
+///
+/// Registered static list of steps. There are different possible lists depending
+/// on provider settings
 
 var bookingRequestSteps = [
     'services',
@@ -82,8 +94,50 @@ var stepsLabels = {
     confirm: 'Confirm'
 };
 
+///
+/// Methods that initialize/load each step, given the name of registered steps
+/// and sufix 'Load'
+
+A.prototype.servicesLoad = function() {
+    // TODO Depends on jobTitle:
+    this.viewModel.supportGratuity(true);    
+};
+
+A.prototype.selectLocationLoad = function() {
+    // TODO Load remote addresses for provider and jobtitle
+    this.viewModel.serviceAddresses.sourceAddresses([]);
+    // TEST
+    this.app.model.serviceAddresses.getList(this.viewModel.jobTitleID())
+    .then(function(list) {
+        list = this.app.model.serviceAddresses.asModel(list);
+        this.viewModel.serviceAddresses.sourceAddresses(list);
+    }.bind(this));
+};
+
+A.prototype.selectTimesLoad = function() {
+    // TODO 
+};
+
+A.prototype.selectTimeLoad = function() {
+    // TODO 
+};
+
+A.prototype.paymentLoad = function() {
+    // TODO 
+};
+
+A.prototype.confirmLoad = function() {
+    // TODO 
+};
+
+var FreelancerPricingVM = require('../viewmodels/FreelancerPricing'),
+    BookingProgress = require('../viewmodels/BookingProgress'),
+    ServiceAddresses = require('../viewmodels/ServiceAddresses');
+
 function ViewModel(app) {
     //jshint maxstatements:40
+    
+    this.serviceAddresses = new ServiceAddresses();
     
     this.freelancerID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
@@ -97,7 +151,9 @@ function ViewModel(app) {
         return app.model.config.siteUrl + '/en-US/Profile/Photo/' + this.freelancerID();
     }, this);
     
-    this.progress = new BookingProgress();
+    // Se inicializa con un estado previo al primer paso
+    // (necesario para el manejo de reset y preparación del activity)
+    this.progress = new BookingProgress({ step: -1 });
     
     ko.computed(function() {
         this.progress.stepsList(this.instantBooking() ? instantBookingSteps : bookingRequestSteps);

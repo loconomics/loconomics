@@ -757,9 +757,10 @@
             <div class="Sidebar hidden-xs hidden-sm col-sm-3">
                <h4>Add a new booking</h4>
 
-              <div class="row" data-bind="foreach: { data: progress.stepsList, as: 'stepName' }"> <a href="#" class="btn btn-link btn-block" data-bind="css: { active: $parent.progress.observeStep(stepName)() },
-                        text: $parent.getStepLabel(stepName), click: $parent.goStep.bind($parent, stepName)"></a>
-
+              <div class="row" data-bind="foreach: { data: progress.stepsList, as: 'stepName' }">
+                <button type="button" class="btn btn-link btn-block" data-bind="css: { active: $parent.progress.observeStep(stepName)() },
+                        text: $parent.getStepLabel(stepName), click: $parent.goStep.bind($parent, stepName)">
+                  </buttons>
               </div>
             </div>
             <div class="col-md-9">
@@ -876,7 +877,10 @@
                   </div>
                 </div>
               </div>
-              <div data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }">Step 2
+              <div data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }">
+                 <h1 class="SectionTitle">Select location</h1>
+
+                <div class="Box" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
                 <div class="isolated">
                   <div>
                     <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
@@ -3207,18 +3211,7 @@
       <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle"
       data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
       <div id="addressesListView">
-        <ul class="TilesList" data-bind="foreach: addresses">
-          <li><a class="InfoTile" href="#" data-bind="click: $root.selectAddress">
-                <div class="Tile-icon" aria-hidden="true">
-                    <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
-                </div>
-                <div class="Tile-content">
-                    <div data-bind="text: addressName() || 'Service Area'"></div>
-                    <em data-bind="text: singleLine"></em>
-                </div>
-            </a>
-          </li>
-        </ul>
+        <div data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
       </div>
       <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">
         <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
@@ -3226,12 +3219,12 @@
           <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
           </div>
         </button>
-        <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !isSelectionMode()">
+        <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !serviceAddresses.isSelectionMode()">
           <div class="Tile-content text-muted">Add a service area</div>
           <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
           </div>
         </button>
-        <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: isSelectionMode() && clientID()">
+        <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: serviceAddresses.isSelectionMode() && clientID()">
           <div class="Tile-content text-muted">Add a client location</div>
           <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
           </div>
@@ -4055,6 +4048,20 @@
               <span><h1 data-bind="visible: action && action.isTitle(), text: action && action.text()"></h1><span data-bind="visible: action && !action.isTitle(), text: action && action.text()"></span></span>
           </span>
       </button>
+    </script>
+    <!-- Knockout Template service-addresses -->
+    <script type="text/html" id="service-addresses-template">
+      <ul class="TilesList" data-bind="foreach: addresses">
+          <li><a class="InfoTile" href="#" data-bind="click: $parent.selectAddress">
+              <div class="Tile-icon" aria-hidden="true">
+                  <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
+              </div>
+              <div class="Tile-content">
+                  <div data-bind="text: addressName() || 'Service Area'"></div>
+                  <em data-bind="text: singleLine"></em>
+              </div>
+          </a></li>
+      </ul>
     </script>
     <!-- StarsRating -->
     <script type="text/html" id="stars-rating-template">

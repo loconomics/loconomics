@@ -40,7 +40,7 @@ var A = Activity.extends(function ServiceAddressesActivity() {
                 .then(function(list) {
 
                     list = this.app.model.serviceAddresses.asModel(list);
-                    this.viewModel.sourceAddresses(list);
+                    this.viewModel.serviceAddresses.sourceAddresses(list);
 
                 }.bind(this))
                 .catch(function (err) {
@@ -51,7 +51,7 @@ var A = Activity.extends(function ServiceAddressesActivity() {
                 }.bind(this));
             }
             else {
-                this.viewModel.sourceAddresses([]);
+                this.viewModel.serviceAddresses.sourceAddresses([]);
                 this.viewModel.jobTitle(null);
                 this.updateNavBarState();
             }
@@ -77,7 +77,7 @@ exports.init = A.init;
 A.prototype.applyOwnNavbarRules = function() {
     //jshint maxcomplexity:10
     
-    var itIs = this.viewModel.isSelectionMode();
+    var itIs = this.viewModel.serviceAddresses.isSelectionMode();
 
     if (this.requestData.title) {
         // Replace title by title if required
@@ -117,7 +117,7 @@ A.prototype.applyOwnNavbarRules = function() {
 A.prototype.updateNavBarState = function updateNavBarState() {
     //jshint maxcomplexity:12
 
-    var itIs = this.viewModel.isSelectionMode();
+    var itIs = this.viewModel.serviceAddresses.isSelectionMode();
     
     this.viewModel.headerText(itIs ? 'Select or add a service location' : 'Locations');
 
@@ -138,7 +138,7 @@ A.prototype.show = function show(options) {
     this.viewModel.jobTitleID(0);
     this.viewModel.requestData = this.requestData;
 
-    this.viewModel.isSelectionMode(options.selectAddress === true);
+    this.viewModel.serviceAddresses.isSelectionMode(options.selectAddress === true);
     this.viewModel.clientID(options.clientID || null);
 
     var params = options && options.route && options.route.segments;
@@ -168,17 +168,17 @@ A.prototype.show = function show(options) {
     }
 };
 
-var UserJobProfile = require('../viewmodels/UserJobProfile');
+var UserJobProfile = require('../viewmodels/UserJobProfile'),
+    ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 function ViewModel(app) {
+    
+    this.serviceAddresses = new ServiceAddresses();
 
     this.headerText = ko.observable('Locations');
     
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
-    // Especial mode when instead of pick and edit we are just selecting
-    // (when editing an appointment)
-    this.isSelectionMode = ko.observable(false);
     // Optionally, some times a clientID can be passed in order to create
     // a location for that client where perform a work.
     this.clientID = ko.observable(null);
@@ -192,19 +192,6 @@ function ViewModel(app) {
         return false;
     }.bind(this);
 
-    // List of addresses
-    this.sourceAddresses = ko.observableArray([]);
-    this.addresses = ko.computed(function() {
-        var list = this.sourceAddresses();
-        if (this.isSelectionMode()) {
-            // Filter by service addresses (excluding service area)
-            list = list.filter(function(add) {
-                return add.isServiceLocation();
-            });
-        }
-        return list;
-    }, this);
-    
     this.isSyncing = app.model.serviceAddresses.state.isSyncing();
     this.isLoading = ko.computed(function() {
         var add = app.model.serviceAddresses.state.isLoading(),
@@ -218,8 +205,9 @@ function ViewModel(app) {
         }
     };
 
-    this.selectAddress = function(selectedAddress, event) {
-        if (this.isSelectionMode() === true) {
+    // Replace default selectAddress
+    this.serviceAddresses.selectAddress = function(selectedAddress, event) {
+        if (this.serviceAddresses.isSelectionMode() === true) {
             // Run method injected by the activity to return a 
             // selected address:
             this.returnSelected(
@@ -242,7 +230,7 @@ function ViewModel(app) {
     this.addServiceLocation = function() {
         var url = '#!addressEditor/service/' + this.jobTitleID() + '/serviceLocation';
         var request = $.extend({}, this.requestData, {
-            returnNewAsSelected: this.isSelectionMode()
+            returnNewAsSelected: this.serviceAddresses.isSelectionMode()
         });
         app.shell.go(url, request);
     }.bind(this);
@@ -250,7 +238,7 @@ function ViewModel(app) {
     this.addServiceArea = function() {
         var url = '#!addressEditor/service/' + this.jobTitleID() + '/serviceArea';
         var request = $.extend({}, this.requestData, {
-            returnNewAsSelected: this.isSelectionMode()
+            returnNewAsSelected: this.serviceAddresses.isSelectionMode()
         });
         app.shell.go(url, request);
     }.bind(this);
@@ -258,14 +246,14 @@ function ViewModel(app) {
     this.addClientLocation = function() {
         var url = '#!addressEditor/service/' + this.jobTitleID() + '/clientLocation/' + this.clientID();
         var request = $.extend({}, this.requestData, {
-            returnNewAsSelected: this.isSelectionMode()
+            returnNewAsSelected: this.serviceAddresses.isSelectionMode()
         });
         app.shell.go(url, request);
     }.bind(this);
     
     this.onboardingNextReady = ko.computed(function() {
         var isin = app.model.onboarding.inProgress(),
-            hasItems = this.sourceAddresses().length > 0;
+            hasItems = this.serviceAddresses.sourceAddresses().length > 0;
 
         return isin && hasItems;
     }, this);

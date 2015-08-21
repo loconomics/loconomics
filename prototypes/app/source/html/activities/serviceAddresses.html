@@ -14,17 +14,7 @@
     <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
     
     <div id="addressesListView">
-        <ul class="TilesList" data-bind="foreach: addresses">
-            <li><a class="InfoTile" href="#" data-bind="click: $root.selectAddress">
-                <div class="Tile-icon" aria-hidden="true">
-                    <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
-                </div>
-                <div class="Tile-content">
-                    <div data-bind="text: addressName() || 'Service Area'"></div>
-                    <em data-bind="text: singleLine"></em>
-                </div>
-            </a></li>
-        </ul>
+        <div data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
     </div>
 
     <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
@@ -32,11 +22,11 @@
             <div class="Tile-content text-muted">Add a service location</div>
             <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </button>
-        <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !isSelectionMode()">
+        <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !serviceAddresses.isSelectionMode()">
             <div class="Tile-content text-muted">Add a service area</div>
             <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </button>
-        <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: isSelectionMode() && clientID()">
+        <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: serviceAddresses.isSelectionMode() && clientID()">
             <div class="Tile-content text-muted">Add a client location</div>
             <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
         </button>

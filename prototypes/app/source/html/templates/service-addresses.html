@@ -1,0 +1,14 @@
+<!-- Knockout Template service-addresses -->
+<script type="text/html" id="service-addresses-template">
+    <ul class="TilesList" data-bind="foreach: addresses">
+        <li><a class="InfoTile" href="#" data-bind="click: $parent.selectAddress">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <div data-bind="text: addressName() || 'Service Area'"></div>
+                <em data-bind="text: singleLine"></em>
+            </div>
+        </a></li>
+    </ul>
+</script>
