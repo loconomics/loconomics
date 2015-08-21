@@ -752,9 +752,9 @@
       </div>
       <!-- Activity booking -->
       <div data-activity="booking" class="Boxes">
-        <div class="container same-height-cols full-height">
+        <div class="container">
           <div class="row">
-            <div class="Sidebar hidden-xs hidden-sm col-sm-3">
+            <div class="Sidebar hidden-xs hidden-sm col-md-3">
                <h4>Add a new booking</h4>
 
               <div class="row" data-bind="foreach: { data: progress.stepsList, as: 'stepName' }">
@@ -765,7 +765,7 @@
             </div>
             <div class="col-md-9">
               <div data-bind="attr: { hidden: !progress.observeStep('services')() }">
-                <div class="isolated text-center Box Box-padded">Already have an account? <a href="/login" class="btn btn-link text-secondary">Log In</a>
+                <div class="isolated top-only text-center Box Box-padded">Already have an account? <a href="/login" class="btn btn-link text-secondary">Log In</a>
                 </div>
                  <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
 

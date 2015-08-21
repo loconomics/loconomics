@@ -21,6 +21,10 @@
 
     NOTE: This class modifies the original layout of Bootstrap
     columns based on floating boxes by a table based layout.
+    
+    IMPORTANT: SIDE-EFFECTS: Using this, rows cannot decrease margin using negative
+    values as expected by Bootstrap, because tables does not allow that. And more
+    important, content does not shrinks because of table layout does not allow that.
 **/
 .same-height-cols {
     display: table;
