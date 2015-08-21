@@ -56,7 +56,7 @@
 
 /* line 381 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
+/* line 140 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\vendor\bootstrap\styl\variables.styl */
 
@@ -187,7 +187,45 @@ fieldset[disabled] .btn-secondary.active {
   background: #fbfbfb;
 }
 
-/* line 103 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+/* line 114 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+.col-lg-reset {
+  padding-right: 0;
+  padding-left: 0;
+  min-height: 0;
+  position: static;
+}
+@media (max-width: 767px) {
+
+/* line 118 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+  .col-xs-reset {
+    padding-right: 0;
+    padding-left: 0;
+    min-height: 0;
+    position: static;
+  }
+}
+@media (max-width: 991px) {
+
+/* line 123 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+  .col-sm-reset {
+    padding-right: 0;
+    padding-left: 0;
+    min-height: 0;
+    position: static;
+  }
+}
+@media (max-width: 1199px) {
+
+/* line 128 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
+  .col-md-reset {
+    padding-right: 0;
+    padding-left: 0;
+    min-height: 0;
+    position: static;
+  }
+}
+
+/* line 137 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\bs-extensions.styl */
 .fa-xl {
   font-size: 25px;
 }
@@ -297,7 +335,7 @@ select.btn::-ms-expand {
     background-size: 100px 39px;
   }
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 
 /* line 29 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
   .AppNav .navbar-brand {
@@ -337,7 +375,7 @@ select.btn::-ms-expand {
   z-index: 300;
   border-top: none;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 
 /* line 64 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
   .AppNav .App-menus > .navbar-collapse {
@@ -527,7 +565,7 @@ select.btn::-ms-expand {
   -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 
 /* line 213 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\AppNav.styl */
   .AppNav .navbar-toggle:before {
@@ -660,7 +698,7 @@ body.has-appNav-open .SmartNavBar h1 {
 /* Space for app-nav on top */
   padding-top: 44px;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 
 /* line 44 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
   .App > body {
@@ -699,7 +737,7 @@ body.has-appNav-open .SmartNavBar h1 {
 .App .modal .modal-dialog {
   padding-top: 44px;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 
 /* line 94 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\App.styl */
   .App .modal .modal-dialog {
@@ -727,33 +765,115 @@ body.has-appNav-open .SmartNavBar h1 {
 
 /* line 29 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 
-/* line 13 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
-.isolated {
+/* line 29 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+.isolated,
+.isolated-xs {
   margin-top: 14px;
   margin-bottom: 14px;
   clear: both;
   display: block;
 }
 
-/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
-.isolated.inset {
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+.isolated.inset,
+.isolated-xs.inset {
   margin-left: 14px;
   margin-right: 14px;
 }
 
-/* line 16 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
-.isolated.top-only {
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+.isolated.top-only,
+.isolated-xs.top-only {
   margin-bottom: 0;
 }
 
-/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
-.isolated.bottom-only {
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+.isolated.bottom-only,
+.isolated-xs.bottom-only {
   margin-top: 0;
 }
+@media (min-width: 768px) {
 
-/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+/* line 35 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-sm {
+    margin-top: 14px;
+    margin-bottom: 14px;
+    clear: both;
+    display: block;
+  }
 
-/* line 17 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-sm.inset {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-sm.top-only {
+    margin-bottom: 0;
+  }
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-sm.bottom-only {
+    margin-top: 0;
+  }
+}
+@media (min-width: 992px) {
+
+/* line 35 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-md {
+    margin-top: 14px;
+    margin-bottom: 14px;
+    clear: both;
+    display: block;
+  }
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-md.inset {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-md.top-only {
+    margin-bottom: 0;
+  }
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-md.bottom-only {
+    margin-top: 0;
+  }
+}
+@media (min-width: 1200px) {
+
+/* line 35 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-lg {
+    margin-top: 14px;
+    margin-bottom: 14px;
+    clear: both;
+    display: block;
+  }
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-lg.inset {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-lg.top-only {
+    margin-bottom: 0;
+  }
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-lg.bottom-only {
+    margin-top: 0;
+  }
+}
+
+/* line 44 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 
 /* line 9 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\backdrop.styl */
 body:before {
@@ -1157,7 +1277,7 @@ body.use-backdrop:before {
   height: 100%;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 23 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Components styles **/
 
 /* line 65 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\SplashScreen.styl */
@@ -2120,7 +2240,7 @@ body.use-backdrop:before {
 .LargeNavBar li.message-footer {
   margin: 5px 0;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 
 /* line 161 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\LargeNavBar.styl */
   .LargeNavBar .navbar-right .dropdown-menu {
@@ -2171,7 +2291,7 @@ body.use-backdrop:before {
   background: White;
   border-color: transparent;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 
 /* line 13 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
   .ActivityNavbar {
@@ -2199,7 +2319,7 @@ body.use-backdrop:before {
 [data-activity].has-navbar {
   padding-bottom: $activityNavbarHeight;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 
 /* line 25 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\ActivityNavbar.styl */
   .Activity,
@@ -6186,15 +6306,34 @@ app-stars-rating {
 }
 
 /* line 13 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+
+/* line 28 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+.Boxes-xs {
+  background: #eee;
+}
+
+/* line 31 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+.Box-xs {
+  background: White;
+  overflow: hidden;
+  outline: 1px solid #ccc;
+  position: relative;
+  z-index: 1;
+}
+
+/* line 34 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+.PaddedBox-xs {
+  padding: 15px;
+}
 @media (min-width: 768px) {
 
-/* line 10 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
-  .Boxes {
+/* line 40 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes-sm {
     background: #eee;
   }
 
-/* line 13 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
-  .Boxes .Box {
+/* line 43 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Box-sm {
     background: White;
     overflow: hidden;
     outline: 1px solid #ccc;
@@ -6202,16 +6341,58 @@ app-stars-rating {
     z-index: 1;
   }
 
-/* line 18 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
-  .Boxes .Box.Box-padded {
+/* line 46 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .PaddedBox-sm {
+    padding: 15px;
+  }
+}
+@media (min-width: 992px) {
+
+/* line 40 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes-md {
+    background: #eee;
+  }
+
+/* line 43 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Box-md {
+    background: White;
+    overflow: hidden;
+    outline: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+  }
+
+/* line 46 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .PaddedBox-md {
+    padding: 15px;
+  }
+}
+@media (min-width: 1200px) {
+
+/* line 40 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes-lg {
+    background: #eee;
+  }
+
+/* line 43 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Box-lg {
+    background: White;
+    overflow: hidden;
+    outline: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+  }
+
+/* line 46 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .PaddedBox-lg {
     padding: 15px;
   }
 }
 
-/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
+/* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 28 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
@@ -6585,6 +6766,112 @@ app-stars-rating {
 
 /* line 53 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 
+/* line 29 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+.isolated,
+.isolated-xs {
+  margin-top: 14px;
+  margin-bottom: 14px;
+  clear: both;
+  display: block;
+}
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+.isolated.inset,
+.isolated-xs.inset {
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+.isolated.top-only,
+.isolated-xs.top-only {
+  margin-bottom: 0;
+}
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+.isolated.bottom-only,
+.isolated-xs.bottom-only {
+  margin-top: 0;
+}
+@media (min-width: 768px) {
+
+/* line 35 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-sm {
+    margin-top: 14px;
+    margin-bottom: 14px;
+    clear: both;
+    display: block;
+  }
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-sm.inset {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-sm.top-only {
+    margin-bottom: 0;
+  }
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-sm.bottom-only {
+    margin-top: 0;
+  }
+}
+@media (min-width: 992px) {
+
+/* line 35 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-md {
+    margin-top: 14px;
+    margin-bottom: 14px;
+    clear: both;
+    display: block;
+  }
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-md.inset {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-md.top-only {
+    margin-bottom: 0;
+  }
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-md.bottom-only {
+    margin-top: 0;
+  }
+}
+@media (min-width: 1200px) {
+
+/* line 35 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-lg {
+    margin-top: 14px;
+    margin-bottom: 14px;
+    clear: both;
+    display: block;
+  }
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-lg.inset {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-lg.top-only {
+    margin-bottom: 0;
+  }
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+  .isolated-lg.bottom-only {
+    margin-top: 0;
+  }
+}
+
 /* line 5 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
 
 /* line 12 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\weeklySchedule.styl */
@@ -6598,18 +6885,18 @@ app-stars-rating {
         */
 }
 
-/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 [data-activity=weeklySchedule] .weeklySchedule-weekDay.inset {
   margin-left: 14px;
   margin-right: 14px;
 }
 
-/* line 16 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 [data-activity=weeklySchedule] .weeklySchedule-weekDay.top-only {
   margin-bottom: 0;
 }
 
-/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 [data-activity=weeklySchedule] .weeklySchedule-weekDay.bottom-only {
   margin-top: 0;
 }
@@ -6634,18 +6921,18 @@ app-stars-rating {
   display: block;
 }
 
-/* line 11 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+/* line 15 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 [data-activity=weeklySchedule] .weeklySchedule-allTime.inset {
   margin-left: 14px;
   margin-right: 14px;
 }
 
-/* line 16 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 [data-activity=weeklySchedule] .weeklySchedule-allTime.top-only {
   margin-bottom: 0;
 }
 
-/* line 20 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
+/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\utils\isolated.styl */
 [data-activity=weeklySchedule] .weeklySchedule-allTime.bottom-only {
   margin-top: 0;
 }
@@ -6666,7 +6953,7 @@ app-stars-rating {
   margin-left: 1em;
 }
 
-/* line 24 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\dashboard.styl */
+/* line 44 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\dashboard.styl */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\dashboard.styl */
 

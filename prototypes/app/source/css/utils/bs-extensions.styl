@@ -110,6 +110,40 @@ $btn-secondary-border = lighten($brand-secondary-dark, 10%)
     background: #fbfbfb;
 }
 
+// COLUMNS RESET
+// Allow reset the column paddings and other features added because of global
+// Bootstrap column styles that get applied even when in sizes that must not apply.
+// Example: a col-md-6 column becomes implicitelly a col-xs-12 on mobile, what
+// means it keeps the padding/column gutter even if you do not want a column on 
+// that size; the only way to let the column use the full width, without padding,
+// is to reset that: do it with this classes, that apply on each size and smaller
+// following the opposite Bootstrap rules for col-* classes because thats the common
+// use case for resets
+col-reset() {
+    padding-right: 0;
+    padding-left: 0;
+    min-height: 0;
+    position: static;
+}
+.col-lg-reset {
+    col-reset()
+}
+@media $mediaMaxXs {
+    .col-xs-reset {
+        col-reset();
+    }
+}
+@media $mediaMaxSm {
+    .col-sm-reset {
+        col-reset();
+    }
+}
+@media $mediaMaxMd {
+    .col-md-reset {
+        col-reset();
+    }
+}
+
 // Additional icon size, between size fa-lg and fa-2x, with a good
 // size for quality ionicons
 // NOTE: is not technically a Bootstrap extension, and size is targetting specially

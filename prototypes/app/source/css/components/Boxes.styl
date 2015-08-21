@@ -1,27 +1,54 @@
 /**
-    Boxes and Box styles: is a layout style with gray background
+    Boxes, Box, PaddedBox styles: is a layout style with gray background
     for the container Boxes and lighter for every Box so they
     visually pop-up in the design.
-    
-    It works for medium-large sizes
+
+    Works in sizes following Bootstrap conventions and breakpoints,
+    and each class can be used individually, without enforce hierarchy.
 **/
-// only on big sizes
-@media $mediaMinSm {
-    .Boxes {
-        background: $gray-background;
 
-        .Box {
-            background: White;
-            // Make any internal margin to become a padding.
-            overflow: hidden;
+Boxes() {
+    background: $gray-background;
+}
 
-            &.Box-padded {
-                padding: 15px;
-            }
+Box() {
+    background: White;
+    // Make any internal margin to become a padding.
+    overflow: hidden;
 
-            outline: 1px solid $gray-lighter;
-            position: relative;
-            z-index: 1;
+    outline: 1px solid $gray-lighter;
+    position: relative;
+    z-index: 1;
+}
+
+PaddedBox() {
+    padding: $grid-gap;
+}
+
+.Boxes-xs {
+    Boxes()
+}
+.Box-xs {
+    Box()
+}
+.PaddedBox-xs {
+    PaddedBox()
+}
+
+createBoxesSize($media, $name) {
+    @media $media {
+        .Boxes-{$name} {
+            Boxes()
         }
+        .Box-{$name} {
+            Box()
+        }
+        .PaddedBox-{$name} {
+            PaddedBox()
+        }
+    }
 }
-}
+
+createBoxesSize($mediaMinSm, 'sm');
+createBoxesSize($mediaMinMd, 'md');
+createBoxesSize($mediaMinLg, 'lg');

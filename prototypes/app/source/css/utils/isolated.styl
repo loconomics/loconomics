@@ -1,6 +1,10 @@
-/* Isolated element mixim.
+/*  isolated element mixim.
     A block with a medium margin to separate itself
     from other elements on separated rows
+    
+    Works in sizes following Bootstrap conventions and breakpoints,
+    and each class can be used individually, without enforce hierarchy.
+    The standard name works for all sizes, synonimon of isolated-xs
 */
 isolated() {
     margin-top: 14px;
@@ -21,3 +25,20 @@ isolated() {
         margin-top: 0;
     }
 }
+
+.isolated,
+.isolated-xs {
+    isolated();
+}
+
+createIsolatedSize($media, $name) {
+    @media $media {
+        .isolated-{$name} {
+            isolated()
+        }
+    }
+}
+
+createIsolatedSize($mediaMinSm, 'sm');
+createIsolatedSize($mediaMinMd, 'md');
+createIsolatedSize($mediaMinLg, 'lg');
