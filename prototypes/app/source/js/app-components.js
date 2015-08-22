@@ -130,4 +130,10 @@ exports.registerAll = function() {
             }, this);
         }
     });
+    
+    /// FreelancerInfo
+    ko.components.register('app-freelancer-info', {
+        template: { element: 'freelancer-info-template' },
+        viewModel: require('./viewmodels/FreelancerInfo')
+    });
 };
