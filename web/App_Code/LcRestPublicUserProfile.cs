@@ -22,6 +22,9 @@ public class LcRestPublicUserProfile
     public string lastName;
     public string secondLastName;
     public string businessName;
+    public string publicBio;
+    public string freelancerProfileUrlSlug;
+    public string freelancerWebsiteUrl;
     
     /// Fields protected, empty/null except for users that has a relationship together
     public string email;
@@ -45,6 +48,11 @@ public class LcRestPublicUserProfile
             firstName = record.firstName,
             lastName = record.lastName,
             secondLastName = record.secondLastName,
+
+            publicBio = record.publicBio,
+
+            freelancerProfileUrlSlug = record.freelancerProfileUrlSlug,
+            freelancerWebsiteUrl = record.freelancerWebsiteUrl,
             businessName = record.businessName,
 
             phone = record.phone,
@@ -68,6 +76,7 @@ public class LcRestPublicUserProfile
             ,lastName
             ,secondLastName
             ,businessName
+            ,publicBio
 
             -- User Type
             ,isProvider as isFreelancer
@@ -76,6 +85,9 @@ public class LcRestPublicUserProfile
 
             ,CASE WHEN PC.Active = 1 THEN UP.email ELSE null END as Email
             ,CASE WHEN PC.Active = 1 THEN Users.MobilePhone ELSE null END As phone
+            ,CASE WHEN PC.Active = 1 THEN providerWebsiteUrl ELSE null END as freelancerWebsiteUrl
+            
+            ,providerProfileUrl as freelancerProfileUrlSlug
 
             ,Users.updatedDate
 

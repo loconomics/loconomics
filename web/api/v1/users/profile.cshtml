@@ -1,8 +1,10 @@
 ﻿@using WebMatrix.WebData;
 @*
     Fetchs user public profile information.
-    Basic info as name (firstName, lastName,..), businessName on freelancers,
+    Basic info as name (firstName, lastName,..), publicBio,
     contact data (email, phone), isFreelancer flag.
+    When freelancer, other fields are included as businessName, websiteUrl (is contact data),
+    profileUrlSlug.
     (Other data may be included in the future)
 
     The contact data is included only if the user requesting the data (logged user)
