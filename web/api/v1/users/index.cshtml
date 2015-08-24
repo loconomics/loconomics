@@ -5,7 +5,9 @@
     on its own endpoints that follows the same (or adapted) name as the property
     where they are included.
     For information on the returned format of each one, check out each individual API.
-    The result includes: profile, rating, verificationsSummary, jobProfile (last only on freelancers)
+    The result includes: profile, rating, verificationsSummary, jobProfile (only on freelancers,
+    and extended with properties rating and verificationsSummary to get that specific info
+    for the job title).
 
     IMPORTANT: this API is expected to be reach under the URL ~/users/{userID}
     not using the trailing '/index'.
@@ -14,10 +16,10 @@
     
     - GET /
         @returns {
-            profile: {}, // /users/{userID}/profile
-            rating: {}, // /users/{userID}/rating
-            verificationsSummary: {}, // /users/{userID}/verifications-summary
-            jobProfile: [{}] // /users/{userID}/jobProfile
+            profile: {}, // like /users/{userID}/profile
+            rating: {}, // like /users/{userID}/rating
+            verificationsSummary: {}, // like /users/{userID}/verifications-summary
+            jobProfile: [{}] // like /users/{userID}/jobProfile BUT extended with rating and verificationsSummary
         }
 
     EXAMPLES {
@@ -48,12 +50,25 @@
             var verificationsSummary = LcRestPublicUserVerificationsSummary.Get(userID, profile.isFreelancer ? -2 : 0);
             
             var jobProfile = profile.isFreelancer ? LcData.JobTitle.GetPublicUserJobTitles(userID) : null;
+            
+            var extendedJobProfile = jobProfile == null ? null : ((IList<dynamic>)jobProfile).Select(x => {
+                return new {
+                    jobTitleID = x.jobTitleID,
+                    intro = x.intro,
+                    cancellationPolicyID = x.cancellationPolicyID,
+                    instantBooking = x.instantBooking,
+                    jobTitleSingularName = x.jobTitleSingularName,
+                    jobTitlePluralName = x.jobTitlePluralName,
+                    rating = LcRestPublicUserRating.Get(userID, x.jobTitleID),
+                    verificationsSummary = LcRestPublicUserVerificationsSummary.Get(userID, x.jobTitleID)
+                };
+            });
 
             return new {
                 profile = profile,
                 rating = rating,
                 verificationsSummary = verificationsSummary,
-                jobProfile = jobProfile
+                jobProfile = extendedJobProfile
             };
         }
     }
