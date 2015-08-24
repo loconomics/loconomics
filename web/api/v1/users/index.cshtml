@@ -46,11 +46,14 @@
             var rating = LcRestPublicUserRating.Get(userID, profile.isFreelancer ? -2 : 0);
             
             var verificationsSummary = LcRestPublicUserVerificationsSummary.Get(userID, profile.isFreelancer ? -2 : 0);
+            
+            var jobProfile = profile.isFreelancer ? LcData.JobTitle.GetPublicUserJobTitles(userID) : null;
 
             return new {
                 profile = profile,
                 rating = rating,
-                verificationsSummary = verificationsSummary
+                verificationsSummary = verificationsSummary,
+                jobProfile = jobProfile
             };
         }
     }

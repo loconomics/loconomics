@@ -1,0 +1,82 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetchs user public job profile, including its active job titles only.
+
+    NOTE: Additionally, for convenience, the jobTitleSingularName and jobTitlePluralName
+    are included in each record.
+
+    Options:
+    
+    - GET /
+        List all job titles
+    - GET/{jobTitleID}
+        Fetch that job title info
+
+    ALL @returns UserJobTitle {
+        "jobTitleID":14,
+        "intro":"",
+        "cancellationPolicyID":3,
+        "instantBooking":false,
+        "jobTitleSingularName":"Housekeeper",
+        "jobTitlePluralName":"Housekeepers"
+    }
+        
+    EXAMPLES {
+        'User Public Job Profile (list of active job titles)': {
+            url: '/api/v1/en-US/users/141/job-profile',
+            get: {}
+        },
+        'User Public Job Title': {
+            url: '/api/v1/en-US/users/141/job-profile/106',
+            get: {}
+        }
+    }
+*@
+@functions{
+    public class RestPublicUserJobProfile : RestWebPage
+    {
+        /// <summary>
+        /// Retrieve the full list of job titles or one by jobTitleID
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+
+            // Item ID
+            if (UrlData.Count == 1 && UrlData[0].IsInt()) {
+                return GetItem(userID, UrlData[0].AsInt(0));
+            }
+            else if (UrlData.Count == 1) {
+                throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+            }
+            else if (UrlData.Count > 1) {
+                throw new HttpException(404, "Not Found");
+            }
+            
+            return LcData.JobTitle.GetPublicUserJobTitles(userID);
+        }
+        
+        /// <summary>
+        /// Internal utility to get a record for a single job title
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        private dynamic GetItem(int userID, int itemID)
+        {
+            if (itemID > 0)
+            {              
+                var items = LcData.JobTitle.GetPublicUserJobTitles(userID, itemID);  
+                var item = items == null || items.Count == 0 ? null : items[0];
+                if (item != null) {
+                    return item;
+                }
+            }
+
+            throw new HttpException(404, "Job Title not found.");
+        }        
+    }
+}
+@{
+    new RestPublicUserJobProfile().JsonResponse(this);
+}

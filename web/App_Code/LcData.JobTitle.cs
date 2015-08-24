@@ -126,6 +126,43 @@ public static partial class LcData
             }
         }
 
+        /// <summary>
+        /// Only fields for public display of the data. Only active job titles included,
+        /// some extra field for Public REST API simplification (job title names)
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="jobTitleID"></param>
+        /// <returns></returns>
+        public static dynamic GetPublicUserJobTitles(int userID, int jobTitleID = -1)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(@"
+                    SELECT
+                        u.PositionID As jobTitleID,
+                        u.PositionIntro As intro,
+                        u.CancellationPolicyID As cancellationPolicyID,
+                        u.InstantBooking As instantBooking,
+                        positions.PositionSingular As jobTitleSingularName,
+                        positions.PositionPlural As jobTitlePluralName
+                    FROM
+                        userprofilepositions as u
+                         INNER JOIN
+                        positions on u.positionID = positions.positionID AND positions.languageID = @1 and positions.countryID = @2
+                    WHERE
+                        u.UserID = @0
+                         AND u.LanguageID = @1
+                         AND u.CountryID = @2
+                         AND u.Active = 1
+                         AND u.StatusID = 1 -- Only active/enabled positions
+                         AND (@3 = -1 OR @3 = u.PositionID)
+                         -- Double check for approved positions
+                         AND positions.Active = 1
+                         AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
+                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), jobTitleID);
+            }
+        }
+
         public static bool SoftDeleteUserJobTitle(int userID, int jobTitleID)
         {
             using (var db = Database.Open("sqlloco")) {
