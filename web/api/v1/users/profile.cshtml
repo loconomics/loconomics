@@ -1,0 +1,19 @@
+﻿@using WebMatrix.WebData;
+@functions{
+    public class RestUserProfile : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0); // WebSecurity.CurrentUserId
+            if (userID <= 0)
+            {
+                throw new HttpException(404, "User Not Found");
+            }
+
+            return userID;
+        }
+    }
+}
+@{
+    new RestUserProfile().JsonResponse(this);
+}

@@ -13,7 +13,7 @@
         BuiltInOAuthClient.Facebook, 
         consumerKey: "a",   // for Facebook, consumerKey is called AppID in the SDK 
         consumerSecret: "b");*/
-    
+
     WebMail.SmtpServer = "mail.loconomics.com";
     WebMail.SmtpPort = 25;
     WebMail.EnableSsl = false;
@@ -24,7 +24,7 @@
     // Facebook connection options to the Developer App Version 'Loconomics', SiteUrl: http://loconomics.com/
     // Facebook App Link: https://developers.facebook.com/apps/180579422039773
     Facebook.Initialize("180579422039773", "fab30a2288ce64be2b3b1e0f1113fb25", "sqlloco");
-    
+
     /* Routing rules
      */
     // Public Profile URL optimized for SEO:
@@ -33,6 +33,6 @@
     RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/CustomURL.cshtml");
     // REST API, locale independent:
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/icalendar/{page}", "~/api/v1/icalendar/{page}.cshtml");
+    RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/users/{userID}/{page}/{*urldata}", "~/api/v1/users/{page}.cshtml");
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/{page}/{*urldata}", "~/api/v1/{page}.cshtml");
-    
 }
