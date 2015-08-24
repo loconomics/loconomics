@@ -45,7 +45,7 @@
         {
             // Parameters
             // Required providerUserID
-            var userID = Request["freelancerUserID"].AsInt(WebSecurity.CurrentUserId);
+            var userID = WebSecurity.CurrentUserId;
             
             if (UrlData.Count == 0) {
                 return LcData.GetRestFreelancerPricing(userID, -1);
@@ -248,7 +248,7 @@
     }
 }
 @{
-    // Allow anyone to access, but will be force to provider on editing capabilities
-    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    // Allow provider to access, later will force access to owner provider on editing capabilities
+    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
     new RestFreelancerPricing().JsonResponse(this);
 }
