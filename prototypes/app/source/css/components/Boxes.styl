@@ -35,7 +35,7 @@ PaddedBox() {
     PaddedBox()
 }
 
-createBoxesSize($media, $name) {
+createBoxesSize($media, $name, $mediaMax) {
     @media $media {
         .Boxes-{$name} {
             Boxes()
@@ -49,6 +49,26 @@ createBoxesSize($media, $name) {
     }
 }
 
-createBoxesSize($mediaMinSm, 'sm');
-createBoxesSize($mediaMinMd, 'md');
-createBoxesSize($mediaMinLg, 'lg');
+createBoxesOnlySize($media, $name, $mediaMax) {
+    $mediaOnly = $media + ' and ' + $mediaMax
+    
+    @media $mediaOnly {
+        .Boxes-{$name}-only {
+            Boxes()
+        }
+        .Box-{$name}-only {
+            Box()
+        }
+        .PaddedBox-{$name}-only {
+            PaddedBox()
+        }
+    }
+}
+
+createBoxesSize($mediaMinSm, 'sm', $mediaMaxSm);
+createBoxesSize($mediaMinMd, 'md', $mediaMaxMd);
+createBoxesSize($mediaMinLg, 'lg', $mediaMaxLg);
+createBoxesOnlySize('screen',    'xs', $mediaMaxXs); // or any smaller rather than $mediaMinXs
+createBoxesOnlySize($mediaMinSm, 'sm', $mediaMaxSm);
+createBoxesOnlySize($mediaMinMd, 'md', $mediaMaxMd);
+createBoxesOnlySize($mediaMinLg, 'lg', 'screen'); // or any larger rather than $mediaMaxLg);

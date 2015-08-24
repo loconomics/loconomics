@@ -875,7 +875,7 @@
                     <input
                     type="checkbox" data-bind="checked: makeRepeatBooking" hidden />Make this a repeat booking</label>
                 </div>
-                <div class="PaddedBox-xs">
+                <div class="PaddedBox-xs-only isolated-sm">
                   <div>
                     <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
                   </div>
@@ -884,8 +884,8 @@
               <div data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }">
                  <h1 class="SectionTitle">Select location</h1>
 
-                <div class="Box" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
-                <div class="isolated">
+                <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                <div class="PaddedBox-xs-only isolated-sm">
                   <div>
                     <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
                   </div>
@@ -3955,6 +3955,20 @@
               Send us your ideas
           </p></div>
       </a>
+    </script>
+    <script type="text/html" id="freelancer-info-template">
+      <div class="FreelancerInfo FreelancerInfo--md" data-bind="css: modClasses, if: profile() && jobTitle()">
+          <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: photoUrl }"></div>
+          <h3 class="FreelancerInfo-name" data-bind="text: profile().fullName">Joshua Danielson</h3>
+          <div class="FreelancerInfo-jobTitle" data-bind="text: jobTitle().jobTitleName">Massage Therapist</div>
+          <div class="FreelancerInfo-businessName" data-bind="text: profile().businessName">Tact Massage Therapy</div>
+          <div class="FreelancerInfo-meta">
+              <app-stars-rating params="rating: 4.5, total: 1283" class="text-secondary"></app-stars-rating>
+              <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" aria-description="4 Verifications"></i> (14)</span>
+              <span class="BackgroundCheckRating"><i class="fa ion ion-ios-checkmark" aria-hidden="true" aria-description="Background Check: OK"></i></span>
+              <span class="FreelancerInfo-favorite"><i class="fa ion ion-ios-heart ion-ios-heart-outlineDISABLED" aria-hidden="true"></i></span>
+          </div>
+      </div>
     </script>
     <!-- Knockout Template freelancer-pricing -->
     <script type="text/html" id="freelancer-pricing-template">

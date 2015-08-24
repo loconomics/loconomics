@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-08-21
+/*! LoconomicsApp 2015-08-24
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -6388,11 +6388,95 @@ app-stars-rating {
     padding: 15px;
   }
 }
+@media screen and (max-width: 767px) {
+
+/* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes-xs-only {
+    background: #eee;
+  }
+
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Box-xs-only {
+    background: White;
+    overflow: hidden;
+    outline: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+  }
+
+/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .PaddedBox-xs-only {
+    padding: 15px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+
+/* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes-sm-only {
+    background: #eee;
+  }
+
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Box-sm-only {
+    background: White;
+    overflow: hidden;
+    outline: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+  }
+
+/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .PaddedBox-sm-only {
+    padding: 15px;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+
+/* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes-md-only {
+    background: #eee;
+  }
+
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Box-md-only {
+    background: White;
+    overflow: hidden;
+    outline: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+  }
+
+/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .PaddedBox-md-only {
+    padding: 15px;
+  }
+}
+@media (min-width: 1200px) and screen {
+
+/* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Boxes-lg-only {
+    background: #eee;
+  }
+
+/* line 59 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .Box-lg-only {
+    background: White;
+    overflow: hidden;
+    outline: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+  }
+
+/* line 62 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\components\Boxes.styl */
+  .PaddedBox-lg-only {
+    padding: 15px;
+  }
+}
 
 /* line 56 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 55 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
+/* line 75 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\styleguide\prototypes\app\source\css\activities\calendar.styl */
 

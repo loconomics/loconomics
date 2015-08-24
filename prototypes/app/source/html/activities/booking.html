@@ -104,7 +104,7 @@
                         </label>
                     </div>
 
-                    <div class="PaddedBox-xs">
+                    <div class="PaddedBox-xs-only isolated-sm">
                         <div>
                             <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
                         </div>
@@ -113,8 +113,8 @@
                 
                 <div data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }">
                     <h1 class="SectionTitle">Select location</h1>
-                    <div class="Box" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
-                    <div class="isolated">
+                    <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                    <div class="PaddedBox-xs-only isolated-sm">
                         <div>
                             <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
                         </div>
