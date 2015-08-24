@@ -1,0 +1,76 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetchs user ratings
+
+    Options:
+    
+    - GET /
+        Average ratings as user
+    - GET /client
+        Average ratings as client
+    - GET /freelancer
+        Average ratings as freelancer (any job title)
+    - GET /{jobTitleID}
+        Average ratings for the given jobTitleID
+
+    EXAMPLES {
+        'User rating': {
+            url: '/api/v1/en-US/users/141/ratings',
+            get: {}
+        },
+        'Client rating': {
+            url: '/api/v1/en-US/users/141/ratings/client',
+            get: {}
+        },
+        'Freelancer rating': {
+            url: '/api/v1/en-US/users/141/ratings/freelancer',
+            get: {}
+        },
+        'Job title rating': {
+            url: '/api/v1/en-US/users/141/ratings/106',
+            get: {}
+        }
+    }
+*@
+@functions{
+    public class RestUserRatings : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+            if (userID <= 0)
+            {
+                throw new HttpException(404, "User Not Found");
+            }
+            
+            // All user rating:
+            var jobTitleID = -1;
+            var par = UrlData[0];
+            
+            if (!String.IsNullOrEmpty(par)) {
+                if (UrlData[0] == "client") {
+                    jobTitleID = 0;
+                }
+                else if (UrlData[0] == "freelancer") {
+                    jobTitleID = -2;
+                }
+                else if (UrlData[0].IsInt()) {
+                    jobTitleID = UrlData[0].AsInt();
+                }
+                else {
+                    throw new HttpException(404, "User Not Found");
+                }
+            }
+
+            var data = LcRestPublicUserRating.Get(userID, jobTitleID);
+            if (data == null) {
+                throw new HttpException(404, "User Not Found");
+            }
+
+            return data;
+        }
+    }
+}
+@{
+    new RestUserRatings().JsonResponse(this);
+}

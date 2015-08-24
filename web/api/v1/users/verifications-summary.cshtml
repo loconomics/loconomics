@@ -1,0 +1,95 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetchs user verifications summary
+
+    Options:
+    
+    - GET /
+        Average ratings as user
+    - GET /client
+        Average ratings as client
+    - GET /freelancer
+        Average ratings as freelancer (any job title)
+    - GET /{jobTitleID}
+        Average ratings for the given jobTitleID
+
+    - ALL @result {
+        total:long Total count of verifications (active/confirmed verifications)
+        groups: [{
+            "{groupID}": {
+                verificationsCount:long Number of verifications on this group
+                groupName:string Name of the group translated for display
+                groupID:string ID as text of the group, same as the used as index in the returned collection
+            }
+        }]
+    }
+
+    NOTE: Current supported verifications groups on server are (per groupID):
+        - share: includes verifications from 'user reviews' or 'booking reviews'
+        - license: includes license/certification verifications
+        - verifications: includes any other verification
+
+    NOTE2: Not all the groups of verifications must be expected in the result, even no one
+        if the user has no verifications; in other words, only groups with verifications are returned
+
+    EXAMPLES {
+        'User verifications summary': {
+            url: '/api/v1/en-US/users/141/verifications-summary',
+            get: {}
+        },
+        'Client verifications summary': {
+            url: '/api/v1/en-US/users/141/verifications-summary/client',
+            get: {}
+        },
+        'Freelancer verifications summary': {
+            url: '/api/v1/en-US/users/141/verifications-summary/freelancer',
+            get: {}
+        },
+        'Job title verifications summary': {
+            url: '/api/v1/en-US/users/141/verifications-summary/106',
+            get: {}
+        }
+    }
+*@
+@functions{
+    public class RestUserVerificationsSummary : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+            if (userID <= 0)
+            {
+                throw new HttpException(404, "User Not Found");
+            }
+            
+            // All user rating:
+            var jobTitleID = -1;
+            var par = UrlData[0];
+            
+            if (!String.IsNullOrEmpty(par)) {
+                if (UrlData[0] == "client") {
+                    jobTitleID = 0;
+                }
+                else if (UrlData[0] == "freelancer") {
+                    jobTitleID = -2;
+                }
+                else if (UrlData[0].IsInt()) {
+                    jobTitleID = UrlData[0].AsInt();
+                }
+                else {
+                    throw new HttpException(404, "User Not Found");
+                }
+            }
+
+            var data = LcRestPublicUserVerificationsSummary.Get(userID, jobTitleID);
+            if (data == null) {
+                throw new HttpException(404, "User Not Found");
+            }
+
+            return data;
+        }
+    }
+}
+@{
+    new RestUserVerificationsSummary().JsonResponse(this);
+}

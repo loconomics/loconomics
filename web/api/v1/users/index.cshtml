@@ -1,0 +1,60 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetchs a summary of the public user profile.
+    Returned object includes data from different APIs available also individually
+    on its own endpoints that follows the same (or adapted) name as the property
+    where they are included.
+    For information on the returned format of each one, check out each individual API.
+    The result includes: profile, rating, verificationsSummary, jobProfile (last only on freelancers)
+
+    IMPORTANT: this API is expected to be reach under the URL ~/users/{userID}
+    not using the trailing '/index'.
+
+    Options:
+    
+    - GET /
+        @returns {
+            profile: {}, // /users/{userID}/profile
+            rating: {}, // /users/{userID}/rating
+            verificationsSummary: {}, // /users/{userID}/verifications-summary
+            jobProfile: [{}] // /users/{userID}/jobProfile
+        }
+
+    EXAMPLES {
+        'Public user profile summary': {
+            url: '/api/v1/en-US/users/141',
+            get: {}
+        }
+    }
+*@
+@functions{
+    public class RestUserProfileSummary : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+            if (userID <= 0)
+            {
+                throw new HttpException(404, "User Not Found");
+            }
+            
+            var profile = LcRestPublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
+            if (profile == null)
+                throw new HttpException(404, "User Not Found");
+
+            // when freelancer, gets only job-titles related rating (-2), otherwise client rating only (0)
+            var rating = LcRestPublicUserRating.Get(userID, profile.isFreelancer ? -2 : 0);
+            
+            var verificationsSummary = LcRestPublicUserVerificationsSummary.Get(userID, profile.isFreelancer ? -2 : 0);
+
+            return new {
+                profile = profile,
+                rating = rating,
+                verificationsSummary = verificationsSummary
+            };
+        }
+    }
+}
+@{
+    new RestUserProfileSummary().JsonResponse(this);
+}
