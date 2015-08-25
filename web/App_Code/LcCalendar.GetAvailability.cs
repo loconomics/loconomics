@@ -77,6 +77,9 @@ public static partial class LcCalendar
             var data = LcCalendar.GetUserAvailability(userId, dates.Start, dates.End);
 
             // Create result
+            // TODO DEPRECATED defaultStatus, since now all dates in the requested range are being returned.
+            // I think no piece of software used the defaultStatus, but double check (maybe R6 dashboard calendar widget, but could get it
+            // hardcoded too).
             result["defaultStatus"] = "unavailable";
             if (editable) {
                 result["slots"] = getEditableMonthlySlots(dates.Start, dates.End, dateFormat, data);

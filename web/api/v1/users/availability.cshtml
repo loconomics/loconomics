@@ -1,0 +1,131 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetchs user availability, times the freelancer is available to be booked.
+
+    Availability can be checked by date or at times detail.
+
+    IMPORTANT: Date and Times are returned as UTC, but because of the format used no timezone string is
+    included in the values so consumers of this API must take care of parse each date and time explicitely
+    as of UTC, avoiding automatic checks of their language/platform/lib.
+    Explained in examples, we return values like '2015-08-25' on one place and '20:15:00' on others,
+    no offset/tz included like usually happens in a complete isodatetime like '2015-08-25T20:15:00Z'.
+
+    TODO: Implement preferred freelancer slot size, right now is just fixed to the minimum 15 minutes.
+
+    Options:
+    
+    - GET /times
+        It returns the calendar availability by time slots of the size preferred by the calendar owner*2
+        (slot sizes like 15 minutes, 30 minutes, 60 minutes,..) grouped by date.
+        The minimum slot size supported by the system right now is 15 minutes.
+        Each slot returned sets the starting of the slot, and between that time and that time plus slot size
+        is guarantee to be available*1.
+        The result is an object, with some set-up information and the object 'slots' that includes
+        the slots per date.
+        *1 The calendar status set by the time slots is specified in the 'status' property
+        and the calendar status of non specified slots is specified in the 'defaultStatus' property
+        *2 The slot size is specified in the 'slotSize' property
+
+        @params {
+            start:isodatetime (Optional) Beggining of the times range returned. By default, "today".
+            end:isodatetime (Optional) Ending of the times range returned. By default, "tomorrow".
+        }
+
+        IMPORTANT: The results guaranties that all dates in the requested range are explicitely returned,
+        even if empty (because has not available times / is not available at all the date).
+
+        @result {
+            "defaultStatus":string The status string for non specified times
+            "status":string The status string for specified times
+            "slots": {
+                dateAsIsodate: [timeAsIsotime]
+            }
+        }
+       
+        SAMPLE result {
+            "defaultStatus":"unavailable",
+            "status":"available",
+            "slots": {
+                "2015-07-26": [],
+                "2015-07-27": ["20:00:00", "20:15:00", "23:00:00"]
+            }
+        }
+
+    - GET /dates
+        It returns the calendar availability by dates. For each date, the calendar status is specified,
+        declaring 'available' if there are *some* times on that date available for booking
+        and declaring 'unavailable' if the entire date is not available.
+        The result is an object with the property 'slots' containing the dates in keys and status as string value.
+
+        @params {
+            start:isodatetime (Optional) Beggining of the times range returned. By default, "today".
+            end:isodatetime (Optional) Ending of the times range returned. By default, "tomorrow".
+        }
+
+        IMPORTANT: The results guaranties that all dates in the requested range are explicitely returned.
+
+        @result {
+            "slots": {
+                dateAsIsodate: statusString
+            }
+        }
+        
+        SAMPLE result {
+            "slots": {
+                "2015-07-26": "unavailable",
+                "2015-07-27": "available"
+            }
+        }
+
+    EXAMPLES {
+        'User Availability at times detail': {
+            url: '/api/v1/en-US/users/141/availability/times',
+            get: {
+                start: '2015-08-22T22:00:00Z',
+                end: '2015-08-23T22:00:00Z'
+            }
+        },
+        'User Availability at dates detail': {
+            url: '/api/v1/en-US/users/141/availability/dates',
+            get: {
+                start: '2015-08-22T22:00:00Z',
+                end: '2015-08-30T22:00:00Z'
+            }
+        }
+    }
+*@
+@functions{
+    public class RestUserAvailability : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+            if (userID <= 0)
+            {
+                throw new HttpException(404, "User Not Found");
+            }
+            
+            var startDate = Request["start"].AsDateTime(DateTime.Today);
+            var endDate = Request["end"].AsDateTime(DateTime.Today.AddDays(1));
+            
+            if (UrlData[0] == "dates") {
+                var data = LcCalendar.GetAvailability.Monthly(userID, false, startDate, endDate);
+                // TODO Remove this new object creation and just return data when the LcCalendar.GetAvailability.Monthly API
+                // gets updated removing the unneeded property 'defaultStatus':
+                return new {
+                    slots = data["slots"]
+                };
+                //return data;
+            }
+            else if (UrlData[0] == "times") {
+                var data = LcCalendar.GetAvailability.Weekly(userID, startDate, endDate, true);
+                return data;
+            }
+            
+            throw new HttpException(404, "User Not Found");
+        }
+    }
+}
+@{
+    new RestUserAvailability().JsonResponse(this);
+}
