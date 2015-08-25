@@ -581,6 +581,32 @@ public static class LcPayment
     }
     #endregion
 
+    #region Customer Payment Methods (saved cards)
+    public static List<CreditCard> GetSavedCreditCards(int userID)
+    {
+        var gateway = NewBraintreeGateway();
+        try
+        {
+            var gc = gateway.Customer.Find(GetCustomerId((int)userID));
+            var savedCards = gc.CreditCards;
+            
+            // Filter credit cards to avoid the temporary ones
+            var filteredCards = new List<CreditCard>();
+            foreach(var card in savedCards) {
+                if (card.Token != null && !card.Token.StartsWith(TempSavedCardPrefix)) {
+                    filteredCards.Add(card);
+                }
+            }
+            
+            return filteredCards;
+            //savedCards = filteredCards.ToArray<CreditCard>();
+        }
+        catch (Braintree.Exceptions.NotFoundException ex) {}
+
+        return null;
+    }
+    #endregion
+
     #region Marketplace
 
     public const string MarketplaceProviderFee = "2.9% plus $0.30";

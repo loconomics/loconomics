@@ -326,25 +326,9 @@
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
     //var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     var pricingSummaryDetails = LcData.Booking.GetPricingSummaryDetails(summary.PricingEstimateID, summary.PricingEstimateRevision);
-    Braintree.CreditCard[] savedCards = null;
-    {
-        var gateway = LcPayment.NewBraintreeGateway();
-        try{
-            var gc = gateway.Customer.Find(LcPayment.GetCustomerId((int)c.UserID));
-            savedCards = gc.CreditCards;
-            
-            // Filter credit cards to avoid the temporary ones
-            var filteredCards = new List<Braintree.CreditCard>();
-            foreach(var card in savedCards) {
-                if (card.Token != null && !card.Token.StartsWith(LcPayment.TempSavedCardPrefix)) {
-                    filteredCards.Add(card);
-                }
-            }
-            savedCards = filteredCards.ToArray<CreditCard>();
+    var savedCardsList = LcPayment.GetSavedCreditCards((int)c.UserID);
+    CreditCard[] savedCards = savedCardsList == null ? null : savedCardsList.ToArray<CreditCard>();
 
-        } catch (Braintree.Exceptions.NotFoundException ex) {
-        }
-    }
     // No selected credit card (new one)
     var selectedCreditCard = "";
     if (IsPost) {
