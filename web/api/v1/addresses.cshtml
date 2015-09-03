@@ -11,7 +11,8 @@
 
     Under each, different sets of addresses are managed, the single home address, the personal
     billing addresses (when booking a freelancer, as customer), and the service addresses
-    attached to a Job Title.
+    attached to a Job Title. Service addresses can be attached to the special JobTitleID:0, that
+    means is a customer address where a servicie is performed by other user (the freelancer).
 
     Technical back-end notes: Current database scheme is two tables for addresses, generic address and service specific address details.
     It's more complex than need to be (see issue #677), so in the API is treated as a unique, flat table,
@@ -179,9 +180,9 @@
                         
                         // Route: /services/:jobTitleID[/:addressID]
                         
-                        var jobTitleID = UrlData[1].AsInt(0);
-                        
-                        if (jobTitleID > 0) {
+                        if (UrlData[1].IsInt()) {
+                            
+                            var jobTitleID = UrlData[1].AsInt(0);
                             
                             if (UrlData.Count == 3) {
                                 var addressID = UrlData[2].AsInt(0);
@@ -293,7 +294,7 @@
         /// <param name="jobTitleID"></param>
         /// <param name="kind"></param>
         /// <returns></returns>
-        private LcRestAddress SetAddress(int userId, int jobTitleID, int addressID, string kind = null) {
+        private LcRestAddress SetAddress(int userId, int jobTitleID, int addressID, string kind) {
             // Validation
             if (!IsValidAddress(jobTitleID)) {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
@@ -302,14 +303,9 @@
             // Get data
             var address = GetFormAddress(userId, jobTitleID, addressID);
 
-            // Auto or validate kind
-            if (jobTitleID > 0) {
-                kind = LcRestAddress.AddressKind.Service;
-            }
-            else {
-                if (!LcRestAddress.AddressKind.IsValid(kind)) {
-                    throw new HttpException(500, "Server Error: Invalid address Kind specified.");
-                }
+            // validate kind
+            if (!LcRestAddress.AddressKind.IsValid(kind)) {
+                throw new HttpException(500, "Server Error: Invalid address Kind specified.");
             }
             // Set kind
             address.kind = kind;
@@ -352,16 +348,11 @@
 			}
         }
 
-        private LcRestAddress DeleteAddress(int userId, int jobTitleID, int addressID, string kind = null) {
+        private LcRestAddress DeleteAddress(int userId, int jobTitleID, int addressID, string kind) {
 
-            // Correct Kind first
-            if (jobTitleID > 0) {
-                kind = LcRestAddress.AddressKind.Service;
-            }
-            else {
-                if (!LcRestAddress.AddressKind.IsValid(kind)) {
-                    throw new HttpException(500, "Server Error: Invalid address Kind specified.");
-                }
+            // Validate Kind first
+            if (!LcRestAddress.AddressKind.IsValid(kind)) {
+                throw new HttpException(500, "Server Error: Invalid address Kind specified.");
             }
             
             // Grab a copy of the address
@@ -392,12 +383,14 @@
                         
                         // Route: /services/:jobTitleID
                         
+                        // jobTitleID can be 0, used when a customer creates an address where
+                        // a freelancer will performs the service, but address is owned by customer
                         var jobTitleID = UrlData[1].AsInt(0);
                         
-                        if (jobTitleID > 0 &&
-                            UrlData.Count == 2) {
+                        if (UrlData.Count == 2 &&
+                            UrlData[1].IsInt()) {
                             
-                            return SetAddress(userId, jobTitleID, LcRestAddress.NewAddressID);
+                            return SetAddress(userId, jobTitleID, LcRestAddress.NewAddressID, LcRestAddress.AddressKind.Service);
                         }
 
                         // Any other case, continue to Not Found
@@ -431,14 +424,16 @@
                         
                         // Route: /services/:jobTitleID/:addressID
                         
+                        // jobTitleID can be 0, used when a customer creates an address where
+                        // a freelancer will performs the service, but address is owned by customer
                         var jobTitleID = UrlData[1].AsInt(0);
                         var addressID = UrlData[2].AsInt(0);
                         
                         if (UrlData.Count == 3 &&
-                            jobTitleID > 0 &&
+                            UrlData[1].IsInt() &&
                             addressID > 0) {
 
-                            return SetAddress(userId, jobTitleID, addressID);
+                            return SetAddress(userId, jobTitleID, addressID, LcRestAddress.AddressKind.Service);
                         }
 
                         // Any other case, continue to Not Found
@@ -482,14 +477,16 @@
                         
                         // Route: /services/:jobTitleID/:addressID
                         
+                        // jobTitleID can be 0, used when a customer creates an address where
+                        // a freelancer will performs the service, but address is owned by customer
                         var jobTitleID = UrlData[1].AsInt(0);
                         var addressID = UrlData[2].AsInt(0);
                         
                         if (UrlData.Count == 3 &&
-                            jobTitleID > 0 &&
+                            UrlData[1].IsInt() &&
                             addressID > 0) {
 
-                            return DeleteAddress(userId, jobTitleID, addressID);
+                            return DeleteAddress(userId, jobTitleID, addressID, LcRestAddress.AddressKind.Service);
                         }
 
                         // Any other case, continue to Not Found
