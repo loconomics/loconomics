@@ -24,7 +24,7 @@
         loconomicsCommunityCommunication:bool Editable
         loconomicsDbmCampaigns:bool Editable
 
-        // Freelancer only preferences
+        // Service Professional only preferences
         profileSeoPermission:bool Editable
         loconomicsMarketingCampaigns:bool Editable
         coBrandedPartnerPermissions:bool Editable
@@ -65,8 +65,8 @@
             Validation.RequireField("phoneBookingCommunication", "Bookings by Phone preference is required");
             Validation.RequireField("loconomicsCommunityCommunication", "Loconomics community messages preference is required");
             Validation.RequireField("loconomicsDbmCampaigns", "Marketing e-mails about Loconomics Service Providers preference is required");
-            // freelancer only
-            if (profile.isFreelancer) {
+            // Service Professional only
+            if (profile.isServiceProfessional) {
                 Validation.RequireField("profileSeoPermission", "Include my profile in search listings preference is required");
                 Validation.RequireField("loconomicsMarketingCampaigns", "Loconomics marketing messages preference is required");
                 Validation.RequireField("coBrandedPartnerPermissions", "Co-branded promotions preference is required");
@@ -85,9 +85,9 @@
                 loconomicsCommunityCommunication = Request["loconomicsCommunityCommunication"].AsBool(),
                 loconomicsDbmCampaigns = Request["loconomicsDbmCampaigns"].AsBool(),
 
-                profileSeoPermission = profile.isFreelancer ? Request["profileSeoPermission"].AsBool() : false,
-                loconomicsMarketingCampaigns = profile.isFreelancer ? Request["loconomicsMarketingCampaigns"].AsBool() : false,
-                coBrandedPartnerPermissions = profile.isFreelancer ? Request["coBrandedPartnerPermissions"].AsBool() : false
+                profileSeoPermission = profile.isServiceProfessional ? Request["profileSeoPermission"].AsBool() : false,
+                loconomicsMarketingCampaigns = profile.isServiceProfessional ? Request["loconomicsMarketingCampaigns"].AsBool() : false,
+                coBrandedPartnerPermissions = profile.isServiceProfessional ? Request["coBrandedPartnerPermissions"].AsBool() : false
             };
 
             LcRestPrivacySettings.UpdatePrivacySettings(settings);

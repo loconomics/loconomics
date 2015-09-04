@@ -11,7 +11,7 @@ using WebMatrix.Data;
 /// and static methods for database operations.
 /// Some fields are empty/null because of level of rights, exposed
 /// only to requester users that has a relationship with the requested
-/// user profile (thats, there is a ProviderCustomer record for the pair).
+/// user profile (thats, there is a ServiceProfessionalClient record for the pair).
 /// Records are not returned if profile is not enabled
 /// </summary>
 public class LcRestPublicUserProfile
@@ -23,15 +23,15 @@ public class LcRestPublicUserProfile
     public string secondLastName;
     public string businessName;
     public string publicBio;
-    public string freelancerProfileUrlSlug;
-    public string freelancerWebsiteUrl;
+    public string serviceProfessionalProfileUrlSlug;
+    public string serviceProfessionalWebsiteUrl;
     
     /// Fields protected, empty/null except for users that has a relationship together
     public string email;
     public string phone;
    
-    public bool isFreelancer;
-    public bool isCustomer;
+    public bool isServiceProfessional;
+    public bool isClient;
     // TODO To decide if expose this publicly
     //public bool isMember;
 
@@ -51,14 +51,14 @@ public class LcRestPublicUserProfile
 
             publicBio = record.publicBio,
 
-            freelancerProfileUrlSlug = record.freelancerProfileUrlSlug,
-            freelancerWebsiteUrl = record.freelancerWebsiteUrl,
+            serviceProfessionalProfileUrlSlug = record.serviceProfesionalProfileUrlSlug,
+            serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUrl,
             businessName = record.businessName,
 
             phone = record.phone,
 
-            isFreelancer = record.isFreelancer,
-            isCustomer = record.isCustomer,
+            isServiceProfessional = record.isServiceProfessional,
+            isClient = record.isClient,
             //isMember = record.isMember,
 
             updatedDate = record.updatedDate
@@ -79,15 +79,15 @@ public class LcRestPublicUserProfile
             ,publicBio
 
             -- User Type
-            ,isProvider as isFreelancer
-            ,isCustomer
+            ,isProvider as isServiceProfessional
+            ,isCustomer as isClient
             ,isMember
 
             ,CASE WHEN PC.Active = 1 THEN UP.email ELSE null END as Email
             ,CASE WHEN PC.Active = 1 THEN Users.MobilePhone ELSE null END As phone
-            ,CASE WHEN PC.Active = 1 THEN providerWebsiteUrl ELSE null END as freelancerWebsiteUrl
+            ,CASE WHEN PC.Active = 1 THEN providerWebsiteUrl ELSE null END as serviceProfessionalWebsiteUrl
             
-            ,providerProfileUrl as freelancerProfileUrlSlug
+            ,providerProfileUrl as serviceProfessionalProfileUrlSlug
 
             ,Users.updatedDate
 
@@ -96,10 +96,10 @@ public class LcRestPublicUserProfile
             UserProfile As UP
                 ON UP.UserID = Users.UserID
                 LEFT JOIN
-            ProviderCustomer As PC
+            ServiceProfessionalClient As PC
                 ON
-                (   PC.ProviderUserID = @0 AND PC.CustomerUserID = @1
-                 OR PC.ProviderUserID = @1 AND PC.CustomerUserID = @0 )
+                (   PC.ServiceProfessionalUserID = @0 AND PC.ClientUserID = @1
+                 OR PC.ServiceProfessionalUserID = @1 AND PC.ClientUserID = @0 )
         WHERE Users.UserID = @0
           AND Users.Active = 1
     ";

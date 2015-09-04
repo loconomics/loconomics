@@ -1,9 +1,9 @@
 ﻿@using WebMatrix.WebData;
 @*
-    Fetch public freelancer service addresses per job title.
+    Fetch public service professional service addresses per job title.
 
-    TODO Force constraints for active address, active freelancer profile when fetching this data,
-    right now the same freelancer API is being used and is not completely secure for public access.
+    TODO Force constraints for active address, active service professional profile when fetching this data,
+    right now the same service professional API is being used and is not completely secure for public access.
 
     TODO Double check if an API to access a specific addressID is needed
 
@@ -34,7 +34,7 @@
         longitude:float Editable Note:if not specified, can be calculated server-side using Geolocation where possible.
         specialInstructions:string Editable
         isServiceLocation:bool Editable Flag marking the address as a location where services are performed.
-        isServiceArea:bool Editable Flag marking the address as the reference point for an area where the freelancer travels to performa services.
+        isServiceArea:bool Editable Flag marking the address as the reference point for an area where the service professional travels to perform services.
         serviceRadius:decimal Editable Only required if isServiceArea has value 1:true. Sets the approximate distance of the service area (in miles for USA).
         createdDate:datetime Auto Note: since internally there are two records internally with this field duplicated, the public value is get from the
                                     [address] table (the first record to be created). 
@@ -56,7 +56,7 @@
     public class RestPublicServiceAddresses : RestWebPage
     {
         /// <summary>
-        /// Retrieve the full list of freelancer service addresses by jobTitleID
+        /// Retrieve the full list of service professional service addresses by jobTitleID
         /// </summary>
         /// <returns></returns>
         public override dynamic Get()

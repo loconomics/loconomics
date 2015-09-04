@@ -44,6 +44,7 @@ using WebMatrix.Data;
 ///             Must contain information in order to be a valid request.
 ///         - Returns an updated copy of the data for the dates range of the input data.
 /// </summary>
+[Obsolete]
 public class RestAvailability : RestWebPage
 {
     private bool UseUtc = false;

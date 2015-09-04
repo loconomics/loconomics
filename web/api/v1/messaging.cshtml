@@ -15,8 +15,8 @@
                 *createdDate* to detect the sort if several messages were included, but maybe on the future, allowing to
                 send several quick messages in a same request and post the same Thread structure as used locally even if
                 the read-only/auto fields are discarded.
-            - customerUserID:int Required
-            - freelancerUserID:int Required
+            - clientUserID:int Required
+            - serviceProfessionalUserID:int Required
             - jobTitleID:int Required
             - subject:string Required
             - bodyText:string Required                
@@ -39,8 +39,8 @@
     ### Structures
         - thread {
             threadID:int Auto
-            customerUserID:int
-            freelancerUserID:int
+            clientUserID:int
+            serviceProfessionalUserID:int
             jobTitleID:int
             statusID:int Auto
             subject:string
@@ -102,8 +102,8 @@
             // We need to double check that the user is involved in the thread to
             // avoid security/privacy leaks.
             var thread = GetThread(threadID);
-            if (thread.customerUserID == userId ||
-                thread.freelancerUserID == userId) {
+            if (thread.clientUserID == userId ||
+                thread.serviceProfessionalUserID == userId) {
                 var message = LcMessaging.GetRestThreadMessages(threadID, 1, messageID + 1, messageID - 1);
                 if (message.Count == 0) {
                     throw new HttpException(404, "Not found");
@@ -152,8 +152,8 @@
                 
                 // Parameters
                 int userId = WebSecurity.CurrentUserId;
-                int customerUserID = Request.Form["customerUserID"].AsInt(0);
-                int freelancerUserID = Request.Form["freelancerUserID"].AsInt(0);
+                int clientUserID = Request.Form["clientUserID"].AsInt(0);
+                int serviceProfessionalUserID = Request.Form["serviceProfessionalUserID"].AsInt(0);
                 int jobTitleID = Request.Form["jobTitleID"].AsInt(0);
                 string subject = Request.Form["subject"];
                 string bodyText = Request.Form["bodyText"];
@@ -161,23 +161,23 @@
                 // Auto values and validation for userID's.
                 // Both userID fields are exclusive, if one is set, the other
                 // one gets as value the current userId. If both are set
-                // freelanceUserID takes precedence and customer is set to userId,
+                // freelanceUserID takes precedence and client is set to userId,
                 // except if is the own userId
-                if (freelancerUserID > 0 &&
-                    freelancerUserID != userId ||
-                    customerUserID == 0) {
-                    customerUserID = userId;
+                if (serviceProfessionalUserID > 0 &&
+                    serviceProfessionalUserID != userId ||
+                    clientUserID == 0) {
+                    clientUserID = userId;
                 } else {
-                    freelancerUserID = userId;
+                    serviceProfessionalUserID = userId;
                 }
                 // Validation after auto-set values:
-                if (freelancerUserID == 0 ||
-                    customerUserID == 0) {
+                if (serviceProfessionalUserID == 0 ||
+                    clientUserID == 0) {
                     ModelState.AddFormError("You must specify a recipient.");
                 }
                 // Validate special case
-                if (freelancerUserID == userId &&
-                    customerUserID == userId) {
+                if (serviceProfessionalUserID == userId &&
+                    clientUserID == userId) {
                     ModelState.AddFormError("Please, don't send messages to yourself :-)");
                 }
                 
@@ -197,7 +197,7 @@
                 }
   
                 // Create thread with initial message
-                var newThreadID = LcMessaging.PostRestThread(customerUserID, freelancerUserID, jobTitleID, subject, bodyText, userId);
+                var newThreadID = LcMessaging.PostRestThread(clientUserID, serviceProfessionalUserID, jobTitleID, subject, bodyText, userId);
                 if (newThreadID == 0) {
                     throw new HttpException(400, "The recipient does not exists.");
                 }

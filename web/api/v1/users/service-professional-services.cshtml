@@ -1,0 +1,77 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetchs public service professional pricing per job title.
+
+    TODO Force constraints for active pricing, active service professional profile when fetching this data,
+    right now the same service professional API is being used and is not completely secure for public access.
+
+    TODO Double check if an API to access a specific serviceProfessionalServiceID is needed
+
+    TODO Clean-up of fields that are not needed publicly.
+
+    TODO New query param or entry point /service-professional-services/{jobTitleID}/for-me The idea of this is
+    about to include special services available only for the currently logged client (*client services*, like multi-session
+    packages previously paid, VIP prices, first-time only services). Doubt if include only that services to be aggregated to the
+    public list by the API consumer or to include all services (public and special), replacing any public service 
+    by a same ID special service (that will happen with multi-session and special prices on VIP services).
+    Include clientUserID field to the output, will be zero/null for public services and the logged userID for client services.
+
+    Options:
+    
+    - GET /{jobTitleID}
+        List all active pricings for that active job title
+
+    ALL @returns ServiceProfessionalService {
+        "serviceProfessionalServiceID": 73,
+        "serviceTypeID": 1,
+        "serviceProfessionalUserID": 141,
+        "jobTitleID": 16,
+        "name": "Testing 2",
+        "description": "Testing 2",
+        "price": 0,
+        "serviceDurationMinutes": 0,
+        "firstTimeClientsOnly": false,
+        "numberOfSessions": 1,
+        "priceRate": 14,
+        "priceRateUnit": "hour",
+        "isPhone": false,
+        "serviceAttributes": [
+            442,
+            441,
+            446
+        ]
+    }
+        
+    EXAMPLES {
+        'Public Service Professional Services per job title': {
+            url: '/api/v1/en-US/users/141/service-professional-services/106',
+            get: {}
+        }
+    }
+*@
+@functions{
+    public class RestPublicServiceProfessionalServices : RestWebPage
+    {
+        /// <summary>
+        /// Retrieve the full list of service professional services by jobTitleID
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+
+            // Item ID
+            if (UrlData.Count == 1 && UrlData[0].IsInt()) {
+                return LcData.GetRestFreelancerPricing(userID, UrlData[0].AsInt(0));
+            }
+            else if (UrlData.Count == 1) {
+                throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+    }
+}
+@{
+    new RestPublicServiceProfessionalServices().JsonResponse(this);
+}

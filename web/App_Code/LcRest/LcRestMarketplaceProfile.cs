@@ -16,22 +16,22 @@ public class LcRestMarketplaceProfile
 
     public string publicBio;
     /// <summary>
-    /// Slug or URL fragment choosen by the freelancer
+    /// Slug or URL fragment choosen by the service professional
     /// as a custom URL belonging the loconomics.com domain.
     /// About the slug term: https://en.wikipedia.org/wiki/Semantic_URL#Slug
     /// </summary>
-    public string freelancerProfileUrlSlug;
+    public string serviceProfessionalProfileUrlSlug;
     /// <summary>
     /// This full URL is not editable directly, just
     /// a computed using the Loconomics URL and
-    /// the freelancer choosen 'slug', or fallback
+    /// the service professional choosen 'slug', or fallback
     /// to the standard URL.
     /// </summary>
-    public string freelancerProfileUrl
+    public string serviceProfessionalProfileUrl
     {
         get
         {
-            var url = BuildFreelancerCustomURL(freelancerProfileUrlSlug);
+            var url = BuildServiceProfessionalCustomURL(serviceProfessionalProfileUrlSlug);
             if (String.IsNullOrWhiteSpace(url))
             {
                 // Gets the standard, base URL provided by Loconomics.
@@ -49,9 +49,9 @@ public class LcRestMarketplaceProfile
     }
     /// <summary>
     /// A full URL outside Loconomics for
-    /// a professional website of the freelancer.
+    /// a professional website of the serviceProfessional.
     /// </summary>
-    public string freelancerWebsiteUrl;
+    public string serviceProfessionalWebsiteUrl;
     public string bookCode;
 
     public DateTime createdDate;
@@ -64,15 +64,15 @@ public class LcRestMarketplaceProfile
         return new LcRestMarketplaceProfile {
             userID = record.userID,
             publicBio = record.publicBio,
-            freelancerProfileUrlSlug = record.freelancerProfileUrlSlug,
-            freelancerWebsiteUrl = record.freelancerWebsiteUrl,
+            serviceProfessionalProfileUrlSlug = record.serviceProfessionalProfileUrlSlug,
+            serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUr,
             bookCode = record.bookCode,
             createdDate = record.createdDate,
             updatedDate = record.updatedDate
         };
     }
 
-    public static string BuildFreelancerCustomURL(string slug)
+    public static string BuildServiceProfessionalCustomURL(string slug)
     {
         if (String.IsNullOrWhiteSpace(slug))
             return "";
@@ -86,8 +86,8 @@ public class LcRestMarketplaceProfile
             Users.userID
 
             ,publicBio
-            ,providerProfileUrl as freelancerProfileUrlSlug
-            ,providerWebsiteUrl as freelancerWebsiteUrl
+            ,providerProfileUrl as serviceProfessionalProfileUrlSlug
+            ,providerWebsiteUrl as serviceProfessionalWebsiteUrl
             ,bookCode   
                         
             ,createdDate
@@ -153,8 +153,8 @@ public class LcRestMarketplaceProfile
             db.Execute(sqlUpdateProfile,
                 profile.userID,
                 profile.publicBio,
-                profile.freelancerProfileUrlSlug,
-                profile.freelancerWebsiteUrl
+                profile.serviceProfessionalProfileUrlSlug,
+                profile.serviceProfessionalWebsiteUrl
             );
         }
     }

@@ -344,7 +344,7 @@ public class LcRestAddress
     ///
     /// Original notes:
     /// Validate that 'travel from location' is unique
-    /// Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
+    /// Issue #86, details. for now, only allow one 'travel from' location for a simpler client visualization of provider working zones.
     /// 
     /// Update 2015-03-07: Per comments on #677 2015-03-07 (following https://github.com/dani0198/Loconomics/issues/677#issuecomment-77714980),
     /// this contraint is not used with the creation of the App and the REST API, but code is preserved (the call to this function was

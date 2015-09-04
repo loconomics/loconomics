@@ -226,7 +226,7 @@ public static class LcAuthHelper
             var rememberMe = Request.Form["rememberMe"].AsBool();
             var returnProfile = Request.Form["returnProfile"].AsBool();
             var profileTypeStr = Request.Form["profileType"] ?? "";
-            var isProvider = new string[] { "FREELANCE", "FREELANCER", "PROVIDER" }.Contains(profileTypeStr.ToUpper());
+            var isProvider = new string[] { "SERVICE-PROFESSIONAL", "FREELANCE", "FREELANCER", "PROVIDER" }.Contains(profileTypeStr.ToUpper());
             var utm = Request.Url.Query;
 
             // If the user exists, try to log-in with the given password,

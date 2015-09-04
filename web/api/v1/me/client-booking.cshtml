@@ -1,6 +1,6 @@
 ﻿@using WebMatrix.WebData;
 @*
-    Allows a client to create a booking, in other words: to book a freelancer.
+    Allows a client to create a booking, in other words: to book a service professional.
     There is only POST access, no editing, no fetching.
     On creation, the just created booking details are returned and later can
     be fetched using the /bookings API.
@@ -14,7 +14,7 @@
         @result RestBooking. See the /bookings API for details.
         
     EXAMPLES {
-        'Book a freelancer (client booking)': {
+        'Book a service professional (client booking)': {
             url: '/api/v1/en-US/me/client-booking',
             post: {
             }
@@ -47,18 +47,18 @@
             int userID = WebSecurity.CurrentUserId;
             int itemID = 0;
             
-            Validation.RequireField("freelancerUserID", LcRessources.RequiredField("Freelancer"));
+            Validation.RequireField("serviceProfessionalUserID", LcRessources.RequiredField("Service Professional"));
             Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
             Validation.RequireField("serviceAddressID", LcRessources.RequiredField("Service Address"));
             Validation.RequireField("billingAddressID", LcRessources.RequiredField("Billing Address"));
-            Validation.Add("freelancerUserID", Validator.Integer("Freelancer"));
+            Validation.Add("serviceProfessionalUserID", Validator.Integer("Service Professional"));
             Validation.Add("jobTitleID", Validator.Integer("Job Title"));
             Validation.Add("serviceAddressID", Validator.Integer("Location"));
             Validation.Add("billingAddressID", Validator.Integer("Billing Address"));
             Validation.Add("gratuityAmount", Validator.Decimal("Gratuity must be a number"));
             Validation.Add("gratuityPercentage", Validator.Decimal("Gratuity must be a number"));
             
-            var freelancerUserID = Request.Form["freelancerUserID"].AsInt();
+            var serviceProfessionalUserID = Request.Form["serviceProfessionalUserID"].AsInt();
             var jobTitleID = Request.Form["jobTitleID"].AsInt();
             var serviceAddressesID = Request.Form["serviceAddressesID"].AsInt();
             var billingAddressID = Request.Form["billingAddressID"].AsInt();
@@ -66,7 +66,7 @@
             var gratuityPercentage = Request.Form["gratuityPercentage"].AsDecimal();
 
             /* TODO: Update to receive an array of object like
-                * { freelancerPricingID: 0, totalPrice: 0, customerInputData: null,... }
+                * { serviceProfessionalUserID: 0, totalPrice: 0, clientInputData: null,... }
                 * like the pricing estimate detail object.
             */
             if (!Request.Form.AllKeys.Contains<string>("pricing[]")) {
@@ -104,7 +104,7 @@
             {
                 itemID = LcData.Booking.InsSimplifiedProviderBooking(
                     userID,
-                    Request["customerUserID"].AsInt(),
+                    Request["clientUserID"].AsInt(),
                     Request["addressID"].AsInt(),
                     startTime.Value,
                     pricingIds,

@@ -59,7 +59,7 @@ public class LcRestPrivacySettings
             ,loconomicsCommunityCommunication
             ,loconomicsDbmCampaigns
 
-            -- Freelancer only
+            -- Service Professional only
             ,profileSeoPermission
             ,loconomicsMarketingCampaigns
             ,coBrandedPartnerPermissions

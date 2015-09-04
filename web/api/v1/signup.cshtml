@@ -9,9 +9,9 @@
         - username:string
         - password:string
         - returnProfile:bool as in Login
-        - profileType:string Enumeration: 'freelancer', 'customer'
+        - profileType:string Enumeration: 'service-professional', 'client'
             NOTE: Currently allowed: 'freelancer', 'freelance', 'provider' as aliases,
-                any other value or not value will create a 'customer' profile.
+                any other value or not value will create a 'client' profile.
 
     - POST /facebook:
         - accessToken:string Given by the Facebook API on the browser/app

@@ -5,12 +5,12 @@ using System.Web;
 using WebMatrix.Data;
 
 /// <summary>
-/// Descripción breve de LcRestCustomer
+/// Access to client info through the REST API
 /// </summary>
-public class LcRestCustomer
+public class LcRestClient
 {
     #region Fields
-    public int customerUserID;
+    public int clientUserID;
     public string email;
     public string firstName;
     public string lastName;
@@ -19,13 +19,13 @@ public class LcRestCustomer
     public bool canReceiveSms;
     public int? birthMonthDay;
     public int? birthMonth;
-    public string notesAboutCustomer;
+    public string notesAboutClient;
     public DateTime? createdDate;
     public DateTime? updatedDate;
     /// <summary>
     /// Editable is a special computed value, is true only
-    /// when the customer account status is 6:Freelancer's Client (AKA 'client created and managed by a freelancer')
-    /// and the customer's user.ReferredByUserID is the freelancer querying
+    /// when the client account status is 6:ServiceProfessional's Client (AKA 'client created and managed by a service professional')
+    /// and the client's user.ReferredByUserID is the service professional querying
     /// the data.
     /// </summary>
     public bool editable;
@@ -81,11 +81,11 @@ public class LcRestCustomer
     #endregion
 
     #region Static Constructors
-    public static LcRestCustomer FromDB(dynamic record)
+    public static LcRestClient FromDB(dynamic record)
     {
         if (record == null) return null;
-        return new LcRestCustomer {
-            customerUserID = record.customerUserID,
+        return new LcRestClient {
+            clientUserID = record.clientUserID,
             email = GetEmailFromDb(record.email),
             firstName = record.firstName,
             lastName = record.lastName,
@@ -94,7 +94,7 @@ public class LcRestCustomer
             canReceiveSms = record.canReceiveSms,
             birthMonthDay = record.birthMonthDay,
             birthMonth = record.birthMonth,
-            notesAboutCustomer = record.notesAboutCustomer,
+            notesAboutClient = record.notesAboutClient,
             createdDate = record.createdDate,
             updatedDate = record.updatedDate,
             editable = record.editable
@@ -106,7 +106,7 @@ public class LcRestCustomer
     private const string sqlSelect = @"SELECT ";
     private const string sqlSelectOne = @"SELECT TOP 1 ";
     private const string sqlFields = @"
-                pc.CustomerUserID as customerUserID
+                pc.ClientUserID as clientUserID
                 ,up.Email as email
                 ,uc.FirstName as firstName
                 ,uc.LastName as lastName
@@ -115,14 +115,14 @@ public class LcRestCustomer
                 ,uc.CanReceiveSms as canReceiveSms
                 ,uc.BirthMonthDay as birthMonthDay
                 ,uc.BirthMonth as birthMonth
-                ,pc.NotesAboutCustomer as notesAboutCustomer
+                ,pc.NotesAboutClient as notesAboutClient
                 ,pc.CreatedDate as createdDate
                 ,pc.UpdatedDate as updatedDate
                 ,(CASE WHEN uc.AccountStatusID = 6 AND uc.ReferredByUserID = @0 THEN Cast(1 as bit) ELSE Cast(0 as bit) END) as editable
-        FROM    ProviderCustomer As pc
+        FROM    ProviderClient As pc
                  INNER JOIN
                 Users As uc
-                  ON uc.UserID = pc.CustomerUserID
+                  ON uc.UserID = pc.ClientUserID
                  INNER JOIN
                 UserProfile As up
                   ON up.UserID = uc.UserID
@@ -130,24 +130,24 @@ public class LcRestCustomer
                  AND uc.Active = 1
                  AND pc.ProviderUserID = @0
     ";
-    private const string sqlAndCustomerUserID = @"
-        AND pc.CustomerUserID = @1
+    private const string sqlAndClientUserID = @"
+        AND pc.ClientUserID = @1
     ";
     #endregion
 
     #region Fetch
-    public static List<LcRestCustomer> GetFreelancerCustomers(int freelancerUserID)
+    public static List<LcRestClient> GetServiceProfessionalClients(int serviceProfessionalUserID)
     {
         using (var db = Database.Open("sqlloco"))
         {
             return db.Query(sqlSelect + sqlFields,
-                freelancerUserID)
+                serviceProfessionalUserID)
                 .Select(FromDB)
                 .ToList();
         }
     }
 
-    public static LcRestCustomer GetFreelancerCustomer(int freelancerUserID, int customerUserID)
+    public static LcRestClient GetServiceProfessionalClient(int serviceProfessionalUserID, int clientUserID)
     {
         using (var db = Database.Open("sqlloco"))
         {
@@ -158,14 +158,14 @@ public class LcRestCustomer
             // takes care to return null if not exists, but on this case is not possible
             // --or must not if not corrupted user profile)
             return GetSingleFrom(db.Query(
-                sqlSelectOne + sqlFields + sqlAndCustomerUserID,
-                freelancerUserID,
-                customerUserID
+                sqlSelectOne + sqlFields + sqlAndClientUserID,
+                serviceProfessionalUserID,
+                clientUserID
             ));
         }
     }
 
-    private static LcRestCustomer GetSingleFrom(IEnumerable<dynamic> dbRecords)
+    private static LcRestClient GetSingleFrom(IEnumerable<dynamic> dbRecords)
     {
         var add = dbRecords
             .Select(FromDB)
@@ -183,29 +183,29 @@ public class LcRestCustomer
     /// A public search performs a search in all the database/marketplace users
     /// for an exact match of full name OR email OR phone. Only if one of them
     /// matches completely, the record is included in the results.
-    /// The given freelancerUserID is used to exclude results: if the match is
-    /// already a freelancer's customer, is excluded. The proposal of the search
-    /// if to look for people out of the freelancers agenda that are know by the
-    /// freelancer by a good identifier.
-    /// The LcRestCustomer class is used for the returned data,
-    /// and since the customer is not in the freelancer agend that means that
-    /// there is no data from [ProviderCustomer] table so some fields comes
+    /// The given serviceProfessionalUserID is used to exclude results: if the match is
+    /// already a service professional's client, is excluded. The proposal of the search
+    /// if to look for people out of the service professional agenda that are know by the
+    /// service professional by a good identifier.
+    /// The LcRestClient class is used for the returned data,
+    /// and since the client is not in the service professional agend that means that
+    /// there is no data from [ProviderClient] table so some fields comes
     /// with values as null/default, with the special Editable:false because
-    /// freelancer will clearly not be able to edit the record. The control
+    /// serviceProfessional will clearly not be able to edit the record. The control
     /// fields (createdDate, updatedDate) as null clearly state that the record
-    /// does not exists in the Freelancer customers agenda.
+    /// does not exists in the ServiceProfessional clients agenda.
     /// </summary>
     /// <param name="fullName"></param>
     /// <param name="email"></param>
     /// <param name="phone"></param>
     /// <returns></returns>
-    public static List<LcRestCustomer> PublicSearch(int excludedFreelancerUserID, string fullName, string email, string phone)
+    public static List<LcRestClient> PublicSearch(int excludedServiceProfessionalUserID, string fullName, string email, string phone)
     {
         using (var db = Database.Open("sqlloco"))
         {
             return db.Query(@"
                 SELECT
-                        uc.UserID as customerUserID
+                        uc.UserID as clientUserID
                         ,up.Email as email
                         ,uc.FirstName as firstName
                         ,uc.LastName as lastName
@@ -218,7 +218,7 @@ public class LcRestCustomer
                         -- so avoid processing the with fixed null
                         -- except for CreatedDate that is used to filter
                         -- existant records
-                        ,null as notesAboutCustomer
+                        ,null as notesAboutClient
                         ,pc.CreatedDate as createdDate
                         ,null as updatedDate
                         -- All records are no editable, because the editable ones will get
@@ -229,14 +229,14 @@ public class LcRestCustomer
                         UserProfile As up
                           ON up.UserID = uc.UserID
                          LEFT JOIN
-                        -- left join relation only to exclude the ones already related to the freelancer
-                        ProviderCustomer As pc
-                          ON uc.UserID = pc.CustomerUserID
+                        -- left join relation only to exclude the ones already related to the serviceProfessional
+                        ProviderClient As pc
+                          ON uc.UserID = pc.ClientUserID
                             AND pc.ProviderUserID = @0
                 WHERE   uc.Active = 1
-                         -- Exclude the freelancer user
+                         -- Exclude the serviceProfessional user
                          AND uc.UserID <> @0
-                         -- Exclude users related to the freelancer
+                         -- Exclude users related to the serviceProfessional
                          AND PC.createdDate is null
                          -- Search by
                          AND (
@@ -250,7 +250,7 @@ public class LcRestCustomer
                            @3 is not null AND uc.MobilePhone like @3
                          )
                 ",
-                excludedFreelancerUserID,
+                excludedServiceProfessionalUserID,
                 N.DW(fullName),
                 N.DW(email),
                 N.DW(phone)
@@ -291,40 +291,40 @@ public class LcRestCustomer
 
     #region Create/Update
     /// <summary>
-    /// It creates or updates a customer record for the freelancer and
+    /// It creates or updates a client record for the serviceProfessional and
     /// returns the generated/updated ID.
     /// In case the user cannot be created because the email already exists,
-    /// the existent user record is used and only the Freelancer fields are set
-    /// (automatically select and use the existent customer).
+    /// the existent user record is used and only the ServiceProfessional fields are set
+    /// (automatically select and use the existent client).
     /// </summary>
-    /// <param name="freelancerUserID"></param>
-    /// <param name="customer"></param>
+    /// <param name="serviceProfessionalUserID"></param>
+    /// <param name="client"></param>
     /// <returns></returns>
-    public static int SetCustomer(int freelancerUserID, LcRestCustomer customer)
+    public static int SetClient(int serviceProfessionalUserID, LcRestClient client)
     {
         // If it has ID, we need to read it from database
-        // to ensure it can be edited, else only the freelancer fields
+        // to ensure it can be edited, else only the serviceProfessional fields
         // can be saved.
-        if (customer.customerUserID > 0)
+        if (client.clientUserID > 0)
         {
-            var savedCustomer = GetFreelancerCustomer(freelancerUserID, customer.customerUserID);
+            var savedClient = GetServiceProfessionalClient(serviceProfessionalUserID, client.clientUserID);
 
-            if (savedCustomer == null)
+            if (savedClient == null)
             {
-                // DOUBLE CHECK: If the customer was not found by ID for the given freelancer,
-                // can be a situation of customer added from a marketplace user, so
+                // DOUBLE CHECK: If the client was not found by ID for the given serviceProfessional,
+                // can be a situation of client added from a marketplace user, so
                 // perform a search by the given identificable data, confirming the ID in the
                 // results (if any), and create them the link with the provider
                 // On any other case, it's just a fake ID and must return 'not found'
-                var searchedCustomer = PublicSearch(freelancerUserID, customer.GetFullName(), customer.email, customer.phone);
-                if (searchedCustomer.Count > 0)
+                var searchedClient = PublicSearch(serviceProfessionalUserID, client.GetFullName(), client.email, client.phone);
+                if (searchedClient.Count > 0)
                 {
                     // Get the one that matches the given ID.
-                    savedCustomer = searchedCustomer.Find(cust => cust.customerUserID == customer.customerUserID);
+                    savedClient = searchedClient.Find(cust => cust.clientUserID == client.clientUserID);
 
-                    // If was found, just set the link with the freelancer and that's all!!
-                    SetFreelancerCustomer(freelancerUserID, customer);
-                    return customer.customerUserID;
+                    // If was found, just set the link with the serviceProfessional and that's all!!
+                    SetServiceProfessionalClient(serviceProfessionalUserID, client);
+                    return client.clientUserID;
                 }
 
                 // Does not exists, return 0 to state user was not found.
@@ -332,97 +332,97 @@ public class LcRestCustomer
                 return 0;
             }
 
-            // Only set customer user if editable by the freelancer
-            if (savedCustomer.editable)
+            // Only set client user if editable by the serviceProfessional
+            if (savedClient.editable)
             {
                 // Check first if the email to set is available
-                // (excluding the own customer record for false positives)
-                var emailOwnerID = CheckEmailAvailability(customer.email, customer.customerUserID);
+                // (excluding the own client record for false positives)
+                var emailOwnerID = CheckEmailAvailability(client.email, client.clientUserID);
 
                 if (emailOwnerID > 0)
                 {
                     // Notify error
-                    throw new ValidationException("The given e-mail already exists for other customer at loconomics.com and cannot be saved." +
-                        " You can perform a search by that email and add it as your customer.", "email", "customer");
+                    throw new ValidationException("The given e-mail already exists for other client at loconomics.com and cannot be saved." +
+                        " You can perform a search by that email and add it as your client.", "email", "client");
                 }
 
-                // Set Customer User
-                SetCustomerUser(freelancerUserID, customer);
+                // Set Client User
+                SetClientUser(serviceProfessionalUserID, client);
             }
 
             // Set relationship data
-            SetFreelancerCustomer(freelancerUserID, customer);
+            SetServiceProfessionalClient(serviceProfessionalUserID, client);
         }
         else
         {
-            // Request to create a new customer user,
+            // Request to create a new client user,
             // but requires check if a user with that email already exists.
-            var emailOwnerID = CheckEmailAvailability(customer.email);
+            var emailOwnerID = CheckEmailAvailability(client.email);
             if (emailOwnerID == 0)
             {
                 // Create new user, getting the generated ID
-                customer.customerUserID = SetCustomerUser(freelancerUserID, customer);
-                // Create link with freelancer
-                SetFreelancerCustomer(freelancerUserID, customer);
+                client.clientUserID = SetClientUser(serviceProfessionalUserID, client);
+                // Create link with serviceProfessional
+                SetServiceProfessionalClient(serviceProfessionalUserID, client);
             }
             else
             {
-                // It exists, cannot create duplicated, but link to freelancer with its info
-                // using its ID (the rest data provided by freelancer will be discarded, except
-                // freelancer fields).
-                customer.customerUserID = emailOwnerID;
-                SetFreelancerCustomer(freelancerUserID, customer);
+                // It exists, cannot create duplicated, but link to serviceProfessional with its info
+                // using its ID (the rest data provided by serviceProfessional will be discarded, except
+                // serviceProfessional fields).
+                client.clientUserID = emailOwnerID;
+                SetServiceProfessionalClient(serviceProfessionalUserID, client);
             }
         }
 
         // Return new/updated record
-        return customer.customerUserID;
+        return client.clientUserID;
     }
 
     /// <summary>
-    /// Updates or creates a ProviderCustomer record with the given data
+    /// Updates or creates a ProviderClient record with the given data
     /// </summary>
-    /// <param name="freelancerUserID"></param>
-    /// <param name="customer"></param>
-    private static void SetFreelancerCustomer(int freelancerUserID, LcRestCustomer customer)
+    /// <param name="serviceProfessionalUserID"></param>
+    /// <param name="client"></param>
+    private static void SetServiceProfessionalClient(int serviceProfessionalUserID, LcRestClient client)
     {
         using (var db = Database.Open("sqlloco"))
         {
             db.Execute(@"
-                IF EXISTS (SELECT * FROM ProviderCustomer WHERE ProviderUserID = @0 AND CustomerUserID = @1)
-                    UPDATE ProviderCustomer SET
-                        NotesAboutCustomer = @2,
+                IF EXISTS (SELECT * FROM ProviderClient WHERE ProviderUserID = @0 AND ClientUserID = @1)
+                    UPDATE ProviderClient SET
+                        NotesAboutClient = @2,
                         UpdatedDate = getdate()
                     WHERE
                         ProviderUserID = @0
-                         AND CustomerUserID = @1
+                         AND ClientUserID = @1
                 ELSE
-                    INSERT INTO ProviderCustomer (
+                    INSERT INTO ProviderClient (
                         ProviderUserID,
-                        CustomerUserID,
-                        NotesAboutCustomer,
+                        ClientUserID,
+                        NotesAboutClient,
                         ReferralSourceID,
                         CreatedDate,
                         UpdatedDate,
                         Active
                     ) VALUES (
                         @0, @1, @2,
-                        12, -- source: created by freelancer (12:ProviderExistingClient)
+                        12, -- source: created by serviceProfessional (12:ProviderExistingClient)
                         getdate(),
                         getdate(),
                         1 -- Active
                     )
-            ", freelancerUserID,
-             customer.customerUserID,
-             customer.notesAboutCustomer ?? "");
+            ", serviceProfessionalUserID,
+             client.clientUserID,
+             client.notesAboutClient ?? "");
         }
     }
 
     /// <summary>
-    /// Create or updates a User account for the given customer information.
+    /// Create or updates a User account for the given client information.
     /// </summary>
-    /// <param name="customer"></param>
-    private static int SetCustomerUser(int freelancerUserID, LcRestCustomer customer)
+    /// <param name="client"></param>
+    private static int SetClientUser(int serviceProfessionalUserID, LcRestClient client)
     {
         using (var db = Database.Open("sqlloco"))
         {
@@ -446,8 +446,8 @@ public class LcRestCustomer
                     WHERE
                         UserID = @UserID
                         -- Extra check to avoid being edited without right
-                         AND AccountStatusID = 6 -- Is editable by freelancer
-                         AND ReferredByUserID = @9 -- Is the owner freelancer
+                         AND AccountStatusID = 6 -- Is editable by serviceProfessional
+                         AND ReferredByUserID = @9 -- Is the owner serviceProfessional
 
                     -- If could be updated
                     IF @@ROWCOUNT = 1 BEGIN
@@ -477,7 +477,7 @@ public class LcRestCustomer
 		                SecondLastName,
 		                GenderID,
 		                IsProvider,
-		                IsCustomer,
+		                IsClient,
                         MobilePhone,
                         CanReceiveSms,
                         BirthMonth,
@@ -496,7 +496,7 @@ public class LcRestCustomer
                         @4,
                         -1, -- GenderID as 'unknow'
                         0, -- No provider
-                        1, -- Is customer
+                        1, -- Is client
                         @5,
                         @6,
                         @7,
@@ -505,8 +505,8 @@ public class LcRestCustomer
                         getdate(),
                         'sys',
                         1, -- Active
-                        6, -- Is a Freelancer's Client (it means is still editable by the freelancer that create it)
-                        @9 -- Freelancer's ID that create this
+                        6, -- Is a ServiceProfessional's Client (it means is still editable by the serviceProfessional that create it)
+                        @9 -- ServiceProfessional's ID that create this
                     )
 
                     -- NOTE: since there is no Membership record with password, is not an actual Loconomics User Account
@@ -517,62 +517,62 @@ public class LcRestCustomer
 
                 SELECT @UserID
             ",
-             customer.customerUserID,
-             GetEmailForDb(customer.email),
-             customer.firstName,
-             customer.lastName,
-             customer.secondLastName,
-             customer.phone,
-             customer.canReceiveSms,
-             customer.birthMonth,
-             customer.birthMonthDay,
-             freelancerUserID);
+             client.clientUserID,
+             GetEmailForDb(client.email),
+             client.firstName,
+             client.lastName,
+             client.secondLastName,
+             client.phone,
+             client.canReceiveSms,
+             client.birthMonth,
+             client.birthMonthDay,
+             serviceProfessionalUserID);
         }
     }
     #endregion
 
     #region Delete
     /// <summary>
-    /// Delete a freelancer customer, with care of:
-    /// - Delete relationship ([ProviderCustomer]) ever
-    /// - Delete customer user account only if the record is editable by the Freelancer
-    /// - and is not used by other Freelancers, in that case is left 'as is'.
+    /// Delete a serviceProfessional client, with care of:
+    /// - Delete relationship ([ProviderClient]) ever
+    /// - Delete client user account only if the record is editable by the ServiceProfessional
+    /// - and is not used by other ServiceProfessionals, in that case is left 'as is'.
     /// </summary>
-    /// <param name="freelancerUserID"></param>
-    /// <param name="customerUserID"></param>
-    public static void Delete(int freelancerUserID, int customerUserID)
+    /// <param name="serviceProfessionalUserID"></param>
+    /// <param name="clientUserID"></param>
+    public static void Delete(int serviceProfessionalUserID, int clientUserID)
     {
         using (var db = Database.Open("sqlloco"))
         {
             db.Execute(@"
-                DELETE FROM ProviderCustomer
+                DELETE FROM ProviderClient
                 WHERE ProviderUserID = @0
-                      AND CustomerUserID = @1
+                      AND ClientUserID = @1
 
-                -- If there is no more providers linked to this customer
+                -- If there is no more providers linked to this client
                 IF 0 = (
-                        SELECT count(*) FROM ProviderCustomer WHERE CustomerUserID = @1
+                        SELECT count(*) FROM ProviderClient WHERE ClientUserID = @1
                     )
-                    -- And freelancer own this user record (is editable for him)
+                    -- And serviceProfessional own this user record (is editable for him)
                     AND EXISTS (
                         SELECT * FROM users
-                        WHERE UserID = @1 -- The customer
-                            AND ReferredByUserID = @0 -- This freelancer
-                            AND AccountStatusID = 6 -- In 'editable by freelancer creator' state
+                        WHERE UserID = @1 -- The client
+                            AND ReferredByUserID = @0 -- This serviceProfessional
+                            AND AccountStatusID = 6 -- In 'editable by serviceProfessional creator' state
                 ) BEGIN          
                     -- Try to delete the User record, but only if
-                    -- is owned by the freelancer
+                    -- is owned by the serviceProfessional
                     DELETE FROM users
                     WHERE UserID = @1
                         AND ReferredByUserID = @0
-                        AND AccountStatusID = 6 -- In 'editable by freelancer creator' state
+                        AND AccountStatusID = 6 -- In 'editable by serviceProfessional creator' state
 
                     -- Delete the userprofile record
                     DELETE FROM userprofile
                     WHERE UserID = @1
                 END
             ",
-            freelancerUserID, customerUserID);
+            serviceProfessionalUserID, clientUserID);
         }
     }
     #endregion

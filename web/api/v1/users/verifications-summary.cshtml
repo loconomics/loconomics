@@ -8,8 +8,8 @@
         Average ratings as user
     - GET /client
         Average ratings as client
-    - GET /freelancer
-        Average ratings as freelancer (any job title)
+    - GET /service-professional
+        Average ratings as service professional (any job title)
     - GET /{jobTitleID}
         Average ratings for the given jobTitleID
 
@@ -41,8 +41,8 @@
             url: '/api/v1/en-US/users/141/verifications-summary/client',
             get: {}
         },
-        'Freelancer verifications summary': {
-            url: '/api/v1/en-US/users/141/verifications-summary/freelancer',
+        'Service Professional verifications summary': {
+            url: '/api/v1/en-US/users/141/verifications-summary/service-professional',
             get: {}
         },
         'Job title verifications summary': {
@@ -70,7 +70,8 @@
                 if (UrlData[0] == "client") {
                     jobTitleID = 0;
                 }
-                else if (UrlData[0] == "freelancer") {
+                else if (UrlData[0] == "service-professional")
+                {
                     jobTitleID = -2;
                 }
                 else if (UrlData[0].IsInt()) {

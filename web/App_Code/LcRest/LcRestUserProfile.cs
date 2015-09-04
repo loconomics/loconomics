@@ -26,8 +26,8 @@ public class LcRestUserProfile
     public int? birthMonthDay;
     public int? birthMonth;
    
-    public bool isFreelancer;
-    public bool isCustomer;
+    public bool isServiceProfessional;
+    public bool isClient;
     public bool isMember;
 
     /// <summary>
@@ -57,8 +57,8 @@ public class LcRestUserProfile
             birthMonthDay = record.birthMonthDay,
             birthMonth = record.birthMonth,
 
-            isFreelancer = record.isFreelancer,
-            isCustomer = record.isCustomer,
+            isServiceProfessional = record.isServiceProfessional,
+            isClient = record.isClient,
             isMember = record.isMember,
 
             onboardingStep = record.onboardingStep,
@@ -82,8 +82,8 @@ public class LcRestUserProfile
             ,businessName
 
             -- User Type
-            ,isProvider as isFreelancer
-            ,isCustomer
+            ,isProvider as isServiceProfessional
+            ,isCustomer as isClient
             ,isMember
 
             ,alternativeEmail

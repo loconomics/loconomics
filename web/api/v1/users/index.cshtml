@@ -44,7 +44,7 @@
             if (profile == null)
                 throw new HttpException(404, "User Not Found");
 
-            // when freelancer, gets only job-titles related rating (-2), otherwise client rating only (0)
+            // when service professional, gets only job-titles related rating (-2), otherwise client rating only (0)
             var rating = LcRestPublicUserRating.Get(userID, profile.isFreelancer ? -2 : 0);
             
             var verificationsSummary = LcRestPublicUserVerificationsSummary.Get(userID, profile.isFreelancer ? -2 : 0);

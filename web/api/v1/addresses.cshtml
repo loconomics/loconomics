@@ -10,9 +10,9 @@
     The kind string-flag is attached to the address info as read-only for any of that types.
 
     Under each, different sets of addresses are managed, the single home address, the personal
-    billing addresses (when booking a freelancer, as customer), and the service addresses
+    billing addresses (when booking a service professional, as client), and the service addresses
     attached to a Job Title. Service addresses can be attached to the special JobTitleID:0, that
-    means is a customer address where a servicie is performed by other user (the freelancer).
+    means is a client address where a servicie is performed by other user (the service professional).
 
     Technical back-end notes: Current database scheme is two tables for addresses, generic address and service specific address details.
     It's more complex than need to be (see issue #677), so in the API is treated as a unique, flat table,
@@ -87,7 +87,7 @@
             longitude:float Editable Note:if not specified, can be calculated server-side using Geolocation where possible.
             specialInstructions:string Editable
             isServiceLocation:bool Editable Flag marking the address as a location where services are performed.
-            isServiceArea:bool Editable Flag marking the address as the reference point for an area where the freelancer travels to performa services.
+            isServiceArea:bool Editable Flag marking the address as the reference point for an area where the service professional travels to performa services.
             serviceRadius:decimal Editable Only required if isServiceArea has value 1:true. Sets the approximate distance of the service area (in miles for USA).
             createdDate:datetime Auto Note: since internally there are two records internally with this field duplicated, the public value is get from the
                                         [address] table (the first record to be created). 
@@ -314,7 +314,7 @@
             // Per comment on #677 2015-03-07 (https://github.com/dani0198/Loconomics/issues/677#issuecomment-77714980)
             // The constraint that makes only one service radius allowed at a time is removed but with code copy, so next lines are commented:
             // // Validate that the service radius is unique
-            // // Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
+            // // Issue #86, details. for now, only allow one 'travel from' location for a simpler client visualization of provider working zones.
             // if (kind == LcRestAddress.AddressKind.Service &&
             //     address.isServiceArea && !LcRestAddress.IsNewServiceAreaAllowed(userId, jobTitleID, addressID)) {
             //     throw new HttpException(400, "You already have a service radius location (can be only one).");
@@ -383,8 +383,8 @@
                         
                         // Route: /services/:jobTitleID
                         
-                        // jobTitleID can be 0, used when a customer creates an address where
-                        // a freelancer will performs the service, but address is owned by customer
+                        // jobTitleID can be 0, used when a client creates an address where
+                        // a service professional will performs the service, but address is owned by client
                         var jobTitleID = UrlData[1].AsInt(0);
                         
                         if (UrlData.Count == 2 &&
@@ -424,8 +424,8 @@
                         
                         // Route: /services/:jobTitleID/:addressID
                         
-                        // jobTitleID can be 0, used when a customer creates an address where
-                        // a freelancer will performs the service, but address is owned by customer
+                        // jobTitleID can be 0, used when a client creates an address where
+                        // a service professional will performs the service, but address is owned by client
                         var jobTitleID = UrlData[1].AsInt(0);
                         var addressID = UrlData[2].AsInt(0);
                         
@@ -477,8 +477,8 @@
                         
                         // Route: /services/:jobTitleID/:addressID
                         
-                        // jobTitleID can be 0, used when a customer creates an address where
-                        // a freelancer will performs the service, but address is owned by customer
+                        // jobTitleID can be 0, used when a client creates an address where
+                        // a service professional will performs the service, but address is owned by client
                         var jobTitleID = UrlData[1].AsInt(0);
                         var addressID = UrlData[2].AsInt(0);
                         

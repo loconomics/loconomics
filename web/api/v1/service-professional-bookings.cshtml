@@ -1,12 +1,12 @@
 ﻿@*
-    It allows freelancers to create and update bookings.
+    It allows serviceProfessionals to create and update bookings.
     It has a different set of possibilities than a client or the normal booking process.
     NOTE: To query/get bookings, use the general 'bookings' API.
 
     TODO: To implement "payment processing enabled", implemented only for "scheduling software"
 *@
 @functions{
-    public class RestFreelancerBookings : RestWebPage
+    public class RestServiceProfessionalBookings : RestWebPage
     { 
         /// <summary>
         /// It returns an item.
@@ -34,13 +34,13 @@
             int userID = WebSecurity.CurrentUserId;
             
             Validation.RequireField("startTime", LcRessources.RequiredField("Start Date and Time"));
-            Validation.RequireField("customerUserID", LcRessources.RequiredField("Customer"));
+            Validation.RequireField("clientUserID", LcRessources.RequiredField("Client"));
             Validation.RequireField("addressID", LcRessources.RequiredField("Location"));
-            Validation.Add("customerUserID", Validator.Integer("Choose a valid client"));
+            Validation.Add("clientUserID", Validator.Integer("Choose a valid client"));
             Validation.Add("addressID", Validator.Integer("Choose a valid location"));
 
             /* TODO: Update to receive an array of object like
-                * { freelancerPricingID: 0, totalPrice: 0, customerInputData: null,... }
+                * { serviceProfessionalServiceID: 0, totalPrice: 0, clientInputData: null,... }
                 * like the pricing estimate detail object.
             */
             if (!Request.Form.AllKeys.Contains<string>("pricing[]")) {
@@ -76,7 +76,7 @@
                 if (itemID == 0) {
                     itemID = LcData.Booking.InsSimplifiedProviderBooking(
                         userID,
-                        Request["customerUserID"].AsInt(),
+                        Request["clientUserID"].AsInt(),
                         Request["addressID"].AsInt(),
                         startTime.Value,
                         pricingIds,
@@ -89,7 +89,7 @@
                     var itemExists = LcData.Booking.UpdSimplifiedProviderBooking(
                         itemID,
                         userID,
-                        Request["customerUserID"].AsInt(),
+                        Request["clientUserID"].AsInt(),
                         Request["addressID"].AsInt(),
                         startTime.Value,
                         pricingIds,
@@ -146,5 +146,5 @@
 }
 @{
     Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
-    new RestFreelancerBookings().JsonResponse(this);
+    new RestServiceProfessionalBookings().JsonResponse(this);
 }

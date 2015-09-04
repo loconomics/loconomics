@@ -29,7 +29,9 @@ public static partial class LcData
             None = 0,
             Anonymous = 1,
             Customer = 2,
+            Client = 2,
             Provider = 4,
+            ServiceProfessional = 4,
             Admin = 8,
             User = 15,
             System = 16
