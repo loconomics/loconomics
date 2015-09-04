@@ -1,6 +1,6 @@
 ﻿@using WebMatrix.WebData;
 @*
-    Addresses API: addresses organized by Kind of address.
+    Addresses API: addresses organized by Kind of address for the logged user.
 
     Kind:
         /home
@@ -97,6 +97,76 @@
                                     from each path will have the same value for Kind matching that API path. Is just an informative field and cannot be 
                                     specified by the user.
         }
+
+    EXAMPLES {
+        "Addresses: home (ever single)": {
+            "url": "/api/v1/en-US/me/addresses/home",
+            "get": { },
+            "put": {
+                "addressName":"Home",
+                "addressLine1":"Avda Castelao",
+                "addressLine2":"44",
+                "postalCode":"90001",
+                "specialInstructions":""
+            }
+        },
+        "Addresses: service addresses per Job Title": {
+            "url": "/api/v1/en-US/me/addresses/service/106",
+            "get": { },
+            "post": {
+                "addressName":"Workshop",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "isServiceLocation":true,
+                "isServiceArea":false,
+                "serviceRadius":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            }
+        },
+        "Addresses: service addresses per Job Title (single)": {
+            "url": "/api/v1/en-US/me/addresses/service/106/95",
+            "get": { },
+            "put": {
+                "addressName":"Billing",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "isServiceLocation":true,
+                "isServiceArea":false,
+                "serviceRadius":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            },
+            delete: { }
+        },
+        "Addresses: billing addresses": {
+            "url": "/api/v1/en-US/me/addresses/billing",
+            "get": { },
+            "post": {
+                "addressName":"Workshop",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            }
+        },
+        "Addresses: billing addresses (single)": {
+            "url": "/api/v1/en-US/me/addresses/billing/71",
+            "get": { },
+            "put": {
+                "addressName":"Workshop",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            },
+            "delete": { }
+        }
+    }
 *@
 @functions{
     public class RestAddresses : RestWebPage

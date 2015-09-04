@@ -11,6 +11,26 @@
             additional optional fields like 'device' and 'model' from something like PhoneGap Device Plugin.
 
     - @Result:LcRestFeedback object with the feedbackID filled automatically
+
+    EXAMPLES {
+        "Feedback Support": {
+            "url": "/api/v1/en-US/feedback/support",
+            "post": {
+                "message": "A problem with that you know",
+                "vocElementID": 1,
+                "userDevice": "{ \"userAgent\": \"Mozilla/5.0 Some Browser\" }"
+            }
+        },
+        "Feedback Ideas": {
+            "url": "/api/v1/en-US/feedback/ideas",
+            "post": {
+                "message": "I have an idea!",
+                "vocElementID": 1,
+                "becomeACollaborator": true,
+                "userDevice": "{ \"userAgent\": \"Mozilla/5.0 Some Browser\" }"
+            }
+        }
+    }
 *@
 @functions{
     public class RestFeedback : RestWebPage

@@ -5,6 +5,8 @@
     was a customer as is requesting the 'freelancer' type, will become
     a freelance and get logged).
 
+    TODO Coordinate with login about changes in things like old redirectUrl
+
     - POST:
         - username:string
         - password:string
@@ -20,6 +22,19 @@
         - profileType:string as in normal Signup
 
     - return: same as Login, or 400 with validation errors.
+
+    EXAMPLES {
+        "Signup": {
+            "url": "/api/v1/en-US/signup",
+            "post": {
+                 "username": "some user email",
+                 "password": "",
+                 "profileType": "freelancer",
+                 "returnProfile": false,
+                 "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given "redirect", as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
+            }
+        }
+    }
 *@
 @functions{
     public class RestSignup : RestWebPage

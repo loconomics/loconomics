@@ -1,6 +1,8 @@
 ﻿@using WebMatrix.WebData;
 @*
-    Accessing the current user (service professional) clients list.
+    Get and set the current user (service professional) clients list.
+    Read and edit API for logged user, with additional API to perform a public search
+    of users that may be know by the user.
 
     Options:
     
@@ -8,8 +10,9 @@
 
     - GET /@clientUserID: get the client information for the given userID and the service professional user requesting the data
 
-    - GET /search: Public search of users know externally by the service professional with exact match of one of the optional identifiable fields: fullName, email, phone.
+    - GET /public-search: Public search of users know externally by the service professional with exact match of one of the optional identifiable fields: fullName, email, phone.
         The set of results does not exists as frelancer's clients, so control fields are null ever (createdDate, updatedDate) and Editable is false.
+        Even if is named 'public' is required that users accessing this API to be logged and being service professionals.
 
     - POST: create a new client. Pass in all fields of class LsRestClient less the control fields, 'serviceProfessionalUserID' and the 'editable' field.
         A look up by email and phone are performed (exact macth) so not duplicated records can happens, throwing a Conflict HTTP error that provides the public
@@ -24,6 +27,48 @@
     - DELETE /@clientUserID
 
     - @Result list or item of type LcRestClient
+
+    EXAMPLES {
+        "Clients (list and create)": {
+            "url": "/api/v1/en-US/me/clients",
+            "get": { },
+            "post": {
+                "firstName": "John",
+                "lastName": "Smith",
+                "secondLastName": "",
+                "email": "john@smith.net",
+                "phone": "1234567",
+                "canReceiveSms": true,
+                "birthMonth": 2,
+                "birthMonthDay": 29,
+                "notesAboutCustomer": ""
+            }
+        },
+        "Clients (item)": {
+            "url": "/api/v1/en-US/me/clients/141",
+            "get": { },
+            "put": {
+                "firstName": "John",
+                "lastName": "Smith",
+                "secondLastName": "",
+                "email": "john@smith.net",
+                "phone": "1234567",
+                "canReceiveSms": true,
+                "birthMonth": 2,
+                "birthMonthDay": 29,
+                "notesAboutCustomer": ""
+            },
+            "delete": { }
+        },
+        "Clients Public Search": {
+            "url": "/api/v1/en-US/me/clients/public-search",
+            "get": {
+                "fullName": "John Smith",
+                "email": "john@smith.net",
+                "phone": "1234"
+            }
+        }
+    }
 *@
 @functions{
     public class RestClients : RestWebPage
@@ -174,6 +219,6 @@
     }
 }
 @{
-    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
     new RestClients().JsonResponse(this);
 }

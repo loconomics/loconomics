@@ -1,6 +1,6 @@
 ﻿@*
-    Service Professional Services REST API: it allows to fetch services available for the
-    service professional and let him update the data (by the owner only).
+    Service Professional Services REST API: read and update the logged user
+    services.
 
     Input and Output record scheme example:
     {
@@ -37,6 +37,66 @@
                             // and if any will be discarded with this --technically, not a need
                             // but helps to avoid mistakes and allows the special validation.
     }
+
+    EXAMPLES {
+        "Freelancer Pricing - All user pricing": {
+            "url": "/api/v1/en-US/me/service-professional-services",
+            "get": {
+                "freelancerUserID": 141,
+                "api comment": "Avoid the freelancerUserID parameter to get the own pricing."
+            }
+        },
+        "Freelancer Pricing - Per Job Title": {
+            "url": "/api/v1/en-US/me/service-professional-services/106",
+            "get": {
+                "freelancerUserID": 141,
+                "api comment": "Avoid the freelancerUserID parameter to get the own pricing."
+            },
+            "post": {
+                "pricingTypeID": 3,
+                "name": "Testing 2",
+                "description": "Testing 2",
+                "price": 20,
+                "serviceDurationMinutes": 60, // In minutes! Different than pricing-estimate (there is in hours)
+                "firstTimeClientsOnly": false,
+                "numberOfSessions": 1,
+                "priceRate": 14,
+                "priceRateUnit": "hour",
+                "isPhone": false,
+                "createdDate": "2013-08-28T21:05:59.947",
+                "updatedDate": "2013-08-28T21:08:02.113",
+                "serviceAttributes": [
+                    501
+                ],
+                "noPriceRate": false,
+                "api comment": "Pricing is assigned to the logged user, cannot be added to other user so no user parameter is needed. serviceDurationMinutes parameter as an integer. Different validation rules apply depending on the pricing type"
+            }
+        },
+        "Freelancer Pricing - Job Title - Pricing item": {
+            "url": "/api/v1/en-US/me/service-professional-services/106/73",
+            "get": { },
+            "put": {
+                "pricingTypeID": 3,
+                "name": "Testing 2",
+                "description": "Testing 2",
+                "price": 20,
+                "serviceDurationMinutes": 60, // In minutes! Different than pricing-estimate (there is in hours)
+                "firstTimeClientsOnly": false,
+                "numberOfSessions": 1,
+                "priceRate": 14,
+                "priceRateUnit": "hour",
+                "isPhone": false,
+                "createdDate": "2013-08-28T21:05:59.947",
+                "updatedDate": "2013-08-28T21:08:02.113",
+                "serviceAttributes": [
+                    501
+                ],
+                "noPriceRate": false,
+                "api comment": "Pricing is assigned to the logged user, cannot be added to other user so no user parameter is needed. serviceDurationMinutes parameter as an integer. Different validation rules apply depending on the pricing type"
+            },
+            "delete": {}
+        }
+    }
 *@
 @functions{
     public class RestServiceProfessionalService : RestWebPage
@@ -44,16 +104,15 @@
         public override dynamic Get()
         {
             // Parameters
-            // Required providerUserID
             var userID = WebSecurity.CurrentUserId;
             
             if (UrlData.Count == 0) {
-                return LcData.GetRestServiceProfessionalService(userID, -1);
+                return LcRestServiceProfessionalServices.GetList(userID, -1);
             }
             else if (UrlData.Count == 1) {
                 // Route: /:jobTitleID
                 var jobTitleID = UrlData[0].AsInt(0);
-                return LcData.GetRestServiceProfessionalService(userID, jobTitleID);
+                return LcRestServiceProfessionalServices.GetList(userID, jobTitleID);
             }
             else if (UrlData.Count == 2) {
                 // Route: /:jobTitleID[/:serviceProfessionalServiceID]
@@ -69,7 +128,7 @@
         {
             if (itemID > 0)
             {
-                var item = LcData.GetRestServiceProfessionalService(itemID);
+                var item = LcRestServiceProfessionalServices.Get(itemID);
                 if (item != null) {
                     return item;
                 }
@@ -249,6 +308,6 @@
 }
 @{
     // Allow provider to access, later will force access to owner provider on editing capabilities
-    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
     new RestServiceProfessionalService().JsonResponse(this);
 }

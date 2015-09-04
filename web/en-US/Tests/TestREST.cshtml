@@ -191,7 +191,7 @@
             get: {}
         },
         'Freelancer Bookings (post only)': {
-            url: '/api/v1/en-US/freelancer-bookings',
+            url: '/api/v1/en-US/me/service-professional-booking',
             post: {
                 'customerUserID': 141,
                 'addressID': 1,
@@ -203,7 +203,7 @@
             }
         },
         'Freelancer Bookings (single only)': {
-            url: '/api/v1/en-US/freelancer-bookings/73',
+            url: '/api/v1/en-US/me/service-professional-booking/73',
             put: {
                 'customerUserID': 141,
                 'addressID': 19,
@@ -238,14 +238,14 @@
             }
         },
         'Freelancer Pricing - All user pricing': {
-            url: '/api/v1/en-US/freelancer-pricing',
+            url: '/api/v1/en-US/me/service-professional-services',
             get: {
                 "freelancerUserID": 141,
                 'api comment': 'Avoid the freelancerUserID parameter to get the own pricing.'
             }
         },
         'Freelancer Pricing - Per Job Title': {
-            url: '/api/v1/en-US/freelancer-pricing/106',
+            url: '/api/v1/en-US/me/service-professional-services/106',
             get: {
                 "freelancerUserID": 141,
                 'api comment': 'Avoid the freelancerUserID parameter to get the own pricing.'
@@ -272,7 +272,7 @@
             }
         },
         'Freelancer Pricing - Job Title - Pricing item': {
-            url: '/api/v1/en-US/freelancer-pricing/106/73',
+            url: '/api/v1/en-US/me/service-professional-services/106/73',
             get: { },
             put: {
                 "pricingTypeID": 3,
@@ -307,12 +307,12 @@
                 api_comment: 'The parameter "term" is allowed too as an alias for "search", just for easier integration with some UI components'
             }
         },
-        'Pricing Types': {
-            url: '/api/v1/en-US/pricing-types',
+        'Service Types': {
+            url: '/api/v1/en-US/service-types',
             get: { }
         },
-        'Pricing Types (item)': {
-            url: '/api/v1/en-US/pricing-types/3',
+        'Service Types (item)': {
+            url: '/api/v1/en-US/service-types/3',
             get: { }
         },
         'User Job Profile': {
@@ -500,8 +500,8 @@
                 "coBrandedPartnerPermissions": false
             }
         },
-        'Customers (list and create)': {
-            url: '/api/v1/en-US/customers',
+        'Clients (list and create)': {
+            url: '/api/v1/en-US/me/clients',
             get: { },
             post: {
                 firstName: 'John',
@@ -515,8 +515,8 @@
                 notesAboutCustomer: ''
             }
         },
-        'Customers (item)': {
-            url: '/api/v1/en-US/customers/141',
+        'Clients (item)': {
+            url: '/api/v1/en-US/me/clients/141',
             get: { },
             put: {
                 firstName: 'John',
@@ -531,8 +531,8 @@
             },
             delete: { }
         },
-        'Customers Public Search': {
-            url: '/api/v1/en-US/customers/public-search',
+        'Clients Public Search': {
+            url: '/api/v1/en-US/me/clients/public-search',
             get: {
                 fullName: 'John Smith',
                 email: 'john@smith.net',

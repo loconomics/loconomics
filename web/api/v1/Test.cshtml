@@ -1,5 +1,33 @@
 ﻿@*
-    Testing page for building a REST API
+    Testing Area for building a REST API
+
+    EXAMPLES {
+        "Test": {
+            "url": "/api/v1/en-US/Test",
+            "get": {
+                "name": "userpos"
+            },
+            "post": {
+                "name": "Me",
+                "num": "23g",
+                "short": "No longer than 5"
+            }
+        },
+        "Test item": {
+            "url": "/api/v1/en-US/Test/20",
+            "put": {
+                "name": "Me",
+                "num": 10
+            },
+            "delete": {}
+        },
+        "Test Server Error": {
+            "url": "/api/v1/en-US/Test",
+            "all": {
+                "givemeerror": "Something goes wrong"
+            }
+        }
+    }
 *@
 @functions{
     public class RestTest : RestWebPage

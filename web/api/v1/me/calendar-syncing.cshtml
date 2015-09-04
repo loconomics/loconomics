@@ -16,6 +16,20 @@
         "icalExportURL":string, // (Loconomics generated URL using the internal privateCalendarToken and the userID)
         "icalImportURL":string // (google calendar public or private URL or any icalendar URL)
     }
+
+    EXAMPLES {
+        "Calendar Syncing": {
+            "url": "/api/v1/en-US/me/calendar-syncing",
+            "get": { },
+            "put": {
+                "icalImportUrl": "http://calendar.google.com/something/ical.ics"
+            }
+        },
+        "Calendar Syncing Reset Export URL": {
+            "url": "/api/v1/en-US/me/calendar-syncing/reset-export-url",
+            "post": { }
+        }
+    }
 *@
 @functions{
     public class RestCalendarSyncing : RestWebPage
@@ -66,5 +80,6 @@
     }
 }
 @{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
     new RestCalendarSyncing().JsonResponse(this);
 }

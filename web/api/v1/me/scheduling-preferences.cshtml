@@ -1,5 +1,5 @@
 ﻿@*
-    Reading and updating the User Scheduling Preferences.
+    Reading and updating the logged User Scheduling Preferences.
 
     Options:
 
@@ -14,6 +14,18 @@
         "advanceTime":decimal, // Hours before allow do a booking
         "betweenTime":decimal, // Hours to add as unavailable between bookings
         "incrementsSizeInMinutes":int // Size in minutes of the increments in which availability slots are displayed.
+    }
+
+    EXAMPLES {
+        "Scheduling Preferences": {
+            "url": "/api/v1/en-US/me/scheduling-preferences",
+            "get": { },
+            "put": {
+                "advanceTime": 0.5,
+                "betweenTime": 1,
+                "incrementsSizeInMinutes": 30
+            }
+        }
     }
 *@
 @functions{

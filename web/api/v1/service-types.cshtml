@@ -1,5 +1,8 @@
 ﻿@*
-    Retrieving Pricing Types information
+    Retrieving Service Types information
+
+    TODO Complete docs
+    TODO Rename back-end from old 'pricing types' (LcPricingModel.PackageBasePricingTypeConfigs)
 
     Options:
 
@@ -10,13 +13,24 @@
     - @Result {
         **
     }
+
+    EXAMPLE {
+        "Service Types": {
+            "url": "/api/v1/en-US/service-types",
+            "get": { }
+        },
+        "Service Types (item)": {
+            "url": "/api/v1/en-US/service-types/3",
+            "get": { }
+        }
+    }
 *@
 @functions{
-    public class RestPricingTypes : RestWebPage
+    public class RestServiceTypes : RestWebPage
     {
         private dynamic ConvertPricingType(LcPricingModel.PackageBaseConfig pricing) {
             return new {
-                pricingTypeID = pricing.PricingTypeID,
+                serviceTypeID = pricing.PricingTypeID,
                 singularName = pricing.SingularName,
                 pluralName = pricing.PluralName,
                 slugName = pricing.SlugName,
@@ -129,5 +143,5 @@
     }
 }
 @{   
-    new RestPricingTypes().JsonResponse(this);
+    new RestServiceTypes().JsonResponse(this);
 }

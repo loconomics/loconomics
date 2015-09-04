@@ -1,0 +1,27 @@
+﻿@*
+    Getting logged user Upcoming Bookings Information:
+    - Next booking
+    - Stats about upcoming ones
+
+    EXAMPLES {
+        "Upcoming Bookings": {
+            "url": "/api/v1/en-US/me/upcoming-bookings",
+            "get": {
+                "api comment": "The result is an object with: nextWeek, tomorrow, today, nextBookingID; first three will contain the quantity of bookings and the time it starts/ends depending on the case."
+            }
+        }
+    }
+*@
+@functions{
+    public class RestUpcommingBookings : RestWebPage
+    {
+        public override dynamic Get()
+        {
+ 	         return LcData.Booking.GetUpcomingBookingsInfo(WebSecurity.CurrentUserId);
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestUpcommingBookings().JsonResponse(this);
+}

@@ -1,5 +1,5 @@
 ﻿@*
-    Reading and updating the user Marketplace Profile.
+    Reading and updating the logged user Marketplace Profile.
     Internally, is a subset of profile fields specifically used on
     the marketplace public profile, most of them serviceProfessional specific.
     The API /profile does not include this information.
@@ -25,6 +25,18 @@
         bookCode:string Auto
         createdDate:datetime Auto
         updatedDate:datetime Auto
+    }
+
+    EXAMPLES {
+        "Marketplace Profile (get and update)": {
+            "url": "/api/v1/en-US/me/marketplace-profile",
+            "get": { },
+            "put": {
+                "publicBio": "I have little to tell. That's all.",
+                "freelancerProfileUrlSlug": "my-custom-loconomics-url",
+                "freelancerWebsiteUrl": "http://loconomics.com"
+            }
+        }
     }
 *@
 @functions{

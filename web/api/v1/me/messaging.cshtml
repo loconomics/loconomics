@@ -1,5 +1,6 @@
 ﻿@*
-    Messaging API: threads and messages.
+    Messaging API: read and update threads and messages of the logged user, interacting
+    with a service professional or client.
 
     ### API
     /messaging
@@ -59,6 +60,40 @@
             createdDate:datetime Auto
             updatedDate:datetime Auto
         }
+
+    EXAMPLES {
+        "Messaging: Threads": {
+            "url": "/api/v1/en-US/me/messaging",
+            "get": {
+                "limit": 20,
+                "untilID": null,
+                "sinceID": null,
+                "messagesLimit": 1
+            },
+            "post": {
+                "customerUserID": 141,
+                "freelancerUserID": 141,
+                "jobTitleID": 106,
+                "subject": 'Testing conversation',
+                "bodyText": 'Testing first message'
+            }
+        },
+        "Messaging: Single Thread": {
+            "url": "/api/v1/en-US/me/messaging/225",
+            "get": {
+                "limit": 20,
+                "untilID": null,
+                "sinceID": null
+            },
+            "post": {
+                "bodyText": "Answering to testing message (second)"
+            }
+        },
+        "Messaging: Single Message": {
+            "url": "/api/v1/en-US/me/messaging/225/525",
+            "get": { }
+        }
+    }
 *@
 @functions{
     public class RestMessaging : RestWebPage

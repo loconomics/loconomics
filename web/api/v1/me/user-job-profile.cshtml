@@ -1,6 +1,40 @@
 ﻿@*
-    Allows to retrieve the relationship and data from an user/freelance and
-    its jobs titles, which collection is called the "User Job Profile".
+    Get the list and details of job titles attached to the logged user (a service professional).
+    The collection of job titles is called the "User Job Profile".
+    It allows to edit the data of each one, and special actions on each like deactive/reactive
+
+    TODO Complete docs
+
+    EXAMPLES {
+        "User Job Profile": {
+            "url": "/api/v1/en-US/me/user-job-profile",
+            "get": { },
+            "post": {
+                "jobTitleID": 106,
+                "intro": "Job title introduction",
+                "cancellationPolicyID": 1,
+                "instantBooking": true
+            }
+        },
+        "User Job Profile (item -- Job Title)": {
+            "url": "/api/v1/en-US/me/user-job-profile/106",
+            "get": { },
+            "put": {
+                "intro": "Job title introduction",
+                "cancellationPolicyID": 1,
+                "instantBooking": true
+            },
+            "delete": { }
+        },
+        "User Job Profile - Deactivation": {
+            "url": "/api/v1/en-US/me/user-job-profile/106/deactivate",
+            "post": { }
+        },
+        "User Job Profile - Reactivation": {
+            "url": "/api/v1/en-US/me/user-job-profile/106/reactivate",
+            "post": { }
+        }
+    }
 *@
 @functions{
     public class RestUserJobProfile : RestWebPage
@@ -321,6 +355,6 @@
     }
 }
 @{
-    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
     new RestUserJobProfile().JsonResponse(this);
 }

@@ -11,14 +11,16 @@
     has a formal relationship with the requested user
     (NOTE: internally, there is an active link in the ProviderCustomer table).
 
+    TODO Split info between basic profile and marketplace-profile, like at the /me API?
+
     Options:
     
     - GET /
         
     EXAMPLES {
-        'User Public Profile (basic data and contact)': {
-            url: '/api/v1/en-US/users/141/profile',
-            get: {}
+        "User Public Profile (basic data and contact)": {
+            "url": "/api/v1/en-US/users/141/profile",
+            "get": {}
         }
     }
 *@

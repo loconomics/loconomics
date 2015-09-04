@@ -1,7 +1,6 @@
 ﻿@*
     Retrieving the Job Title information for a single record.
 
-    TODO: Add autocomplete
     TODO: Add posibility to create a job title given a name, see #650
 
     Options:
@@ -35,6 +34,20 @@
     - Autocomplete {
         "label":string, // The job title singularName
         "value":int // The jobTitleID
+    }
+
+    EXAMPLES {
+        "Job Titles (item)": {
+            "url": "/api/v1/en-US/job-titles/106",
+            "get": { }
+        },
+        "Job Titles Autocomplete Search": {
+            "url": "/api/v1/en-US/job-titles/autocomplete",
+            "get": {
+                "search": "massag",
+                "api_comment": "The parameter 'term' is allowed too as an alias for 'search', just for easier integration with some UI components"
+            }
+        }
     }
 *@
 @functions{

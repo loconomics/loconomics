@@ -1,5 +1,5 @@
 ﻿@*
-    Reading and updating the user Privacy Settings.
+    Reading and updating the logged user Privacy Settings.
 
     Options:
 
@@ -32,6 +32,22 @@
         // Control fields
         createdDate:datetime Auto
         updatedDate:datetime Auto
+    }
+
+    EXAMPLES {
+        "Privacy Settings (get and update)": {
+            "url": "/api/v1/en-US/me/privacy-settings",
+            "get": { },
+            "put": {
+                "smsBookingCommunication": false,
+                "phoneBookingCommunication": true,
+                "loconomicsCommunityCommunication": true,
+                "loconomicsDbmCampaigns": false,
+                "profileSeoPermission": true,
+                "loconomicsMarketingCampaigns": true,
+                "coBrandedPartnerPermissions": false
+            }
+        }
     }
 *@
 @functions{

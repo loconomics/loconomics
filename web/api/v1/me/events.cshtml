@@ -1,5 +1,6 @@
 ﻿@*
-    Read and write events, simplified with the data usually used in user interface
+    Read and write events for logged user, simplified from the full icalendar spec,
+    with the data usually used in user interface in a more comfortable structure
     and some extra convenience options.
 
     NOTE: This is a convenience API, a full API for all the back-end data resides
@@ -61,6 +62,52 @@
         server side edition (UpdateDate field, for example)
     - Events marked with ReadOnly:true will not be modified even if a request is performed, a 400 error happens.
     - Events with a read-only EventTypeID will fail to insert/edit/delete with a 400 error.
+
+    EXAMPLES {
+        "Events and to add event": {
+            "url": "/api/v1/en-US/me/events",
+            "get": {
+                 "types": [3, 5],
+                 "start": "2014-06-01T12:00:00",
+                 "end": "2014-09-30T10:00:00Z",
+                 "api comment": "types is optional, and will return all the types except "work hours" by default (To review if this is the most optimal). Optional start and end dates to reduce the results, accepting ISO strings."
+            },
+            "post": {
+                "EventTypeID":3,
+                "Summary":"Housekeeper services for JoshuaProvider D.",
+                "AvailabilityTypeID":3,
+                "StartTime":"2014-03-25T09:00:00",
+                "EndTime":"2014-03-25T19:00:00",
+                "IsAllDay":false,
+                "TimeZone":"-8",
+                "Location":"null",
+                "Description":"test description of a REST event"
+            }
+        },
+        "Event (single)": {
+            "url": "/api/v1/en-US/me/events/353",
+            "get": {},
+            "put": {
+                "EventTypeID":3,
+                "Summary":"Housekeeper services for JoshuaProvider D.",
+                "AvailabilityTypeID":3,
+                "StartTime":"2014-03-25T09:00:00",
+                "EndTime":"2014-03-25T19:00:00",
+                "IsAllDay":false,
+                "TimeZone":"-8",
+                "Location":"null",
+                "Description":"test description of a REST event",
+                "RecurrenceRule":{
+                    "FrequencyTypeID":502,
+                    "Interval":1,
+                    "Ending":"never",
+                    "SelectedWeekDays":[1,3,5],
+                    "MonthlyWeekDay":false
+                }
+            },
+            "delete": {}
+        }
+    }
 *@
 @functions{
     public class RestEvents : RestWebPage

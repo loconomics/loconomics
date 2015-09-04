@@ -1,9 +1,39 @@
 ﻿@*
-    It allows serviceProfessionals to create and update bookings.
+    It allows serviceProfessionals to create and update a booking.
     It has a different set of possibilities than a client or the normal booking process.
     NOTE: To query/get bookings, use the general 'bookings' API.
 
-    TODO: To implement "payment processing enabled", implemented only for "scheduling software"
+    TODO To implement "payment processing enabled", implemented only for "scheduling software"
+    TODO Complete documentation details (methods, params)
+
+    EXAMPLES {
+        "Freelancer Bookings (post only)": {
+            "url": "/api/v1/en-US/me/service-professional-booking",
+            "post": {
+                "customerUserID": 141,
+                "addressID": 1,
+                "startTime": "2015-01-01T10:00:00Z",
+                "services": [ 8, 35 ],
+                "preNotesToClient": "",
+                "preNotesToSelf": "",
+                "api comment": "Fields of the Simplified Freelancer Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing."
+            }
+        },
+        "Freelancer Bookings (single only)": {
+            "url": "/api/v1/en-US/me/service-professional-booking/73",
+            "put": {
+                "customerUserID": 141,
+                "addressID": 19,
+                "startTime": "2015-02-08T10:30:00Z",
+                "services": [ 8, 35 ],
+                "preNotesToClient": "",
+                "preNotesToSelf": "",
+                "postNotesToClient": "",
+                "postNotesToSelf": "",
+                "api comment": "Fields of the Simplified Freelancer Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing."
+            }
+        }
+    }
 *@
 @functions{
     public class RestServiceProfessionalBookings : RestWebPage

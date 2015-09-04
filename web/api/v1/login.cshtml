@@ -2,6 +2,8 @@
     Log-in a user creating a session and returning the authentication
     key for further API requests.
 
+    TODO Review the output redirectUrl, is needed this info? Is not used on mobile, and that will replace everything in UI, remove it I think
+
     - POST:
         - username:string
         - password:string
@@ -14,6 +16,18 @@
             "authKey": "authentication key to hold in session and send on further API request to detect the session",
             "profile": null // Object with a copy of the user basic profile data if requested with returnProfile param
         }
+
+    EXAMPLES {
+        "Login"': {
+            "url": "/api/v1/en-US/login",
+            "post": {
+                 "username": "some user email",
+                 "password": "",
+                 "returnProfile": false,
+                 "api comment": "Param returnProfile allows to return a 'profile' property with the user profile data (table [users]). The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for service professionals in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
+            }
+        }
+    }
 *@
 @functions{
     public class RestLogin : RestWebPage
