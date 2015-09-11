@@ -134,6 +134,65 @@ public static partial class LcCalendar
         }
         return false;
     }
+
+    public static dynamic GetBasicEventInfo(int eventID, Database db)
+    {
+        return db.QuerySingle(@"
+                 SELECT ID,
+                        StartTime,
+                        EndTime,
+                        UserId,
+                        CalendarAvailabilityTypeID
+                FROM    CalendarEvents
+                WHERE   ID = @0
+            ", eventID);
+    }
+
+    /// <summary>
+    /// Checks and returns the availability (true:available, false:not-available) for an eventID
+    /// start and end time taking care to not use the event itself in the check. Optionally,
+    /// different dates than the event ones can be checked out; the event dates will not be taken into consideration
+    /// in this case too.
+    /// Usefull to check availability on 'edit' actions, like editing a booking, so the already created event doesn't
+    /// confuse the results.
+    /// </summary>
+    /// <param name="eventID"></param>
+    /// <param name="db"></param>
+    /// <param name="startTime"></param>
+    /// <param name="endTime"></param>
+    /// <returns></returns>
+    public static bool DoubleCheckEventAvailability(int eventID, DateTime? startTime = null, DateTime? endTime = null, bool excludeAdvanceTime = false)
+    {
+        // We require an owned connection, to avoid conflict with other transactions
+        using (var db = Database.Open("sqlloco"))
+        {
+            var dateInfo = GetBasicEventInfo(eventID, db);
+
+            // Change the event to be 'transparent'(4) for a while to don't
+            // affect the availability check.
+            // And get the required information from the event to do the
+            // availability check
+            db.QuerySingle(@"
+                UPDATE  CalendarEvents SET
+                        CalendarAvailabilityTypeID = 4
+                WHERE   ID = @0
+                ", eventID);
+
+            var checkStartTime = startTime ?? dateInfo.StartTime;
+            var checkEndTime = endTime ?? dateInfo.EndTime;
+
+            var isAvailable = LcCalendar.CheckUserAvailability(dateInfo.UserId, checkStartTime, checkEndTime, excludeAdvanceTime);
+
+            // restore event to its previous state, so gets 'untouched'
+            db.Execute(@"
+                UPDATE  CalendarEvents SET
+                        CalendarAvailabilityTypeID = @1
+                WHERE   ID = @0
+                ", eventID, dateInfo.CalendarAvailabilityTypeID);
+
+            return isAvailable;
+        }
+    }
     #endregion
 
     #region Provider Work Hours (AKA Weekly Schedule)

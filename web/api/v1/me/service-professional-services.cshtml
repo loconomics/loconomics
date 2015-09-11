@@ -107,12 +107,12 @@
             var userID = WebSecurity.CurrentUserId;
             
             if (UrlData.Count == 0) {
-                return LcRestServiceProfessionalServices.GetList(userID, -1);
+                return LcRest.ServiceProfessionalService.GetList(userID, -1);
             }
             else if (UrlData.Count == 1) {
                 // Route: /:jobTitleID
                 var jobTitleID = UrlData[0].AsInt(0);
-                return LcRestServiceProfessionalServices.GetList(userID, jobTitleID);
+                return LcRest.ServiceProfessionalService.GetList(userID, jobTitleID);
             }
             else if (UrlData.Count == 2) {
                 // Route: /:jobTitleID[/:serviceProfessionalServiceID]
@@ -128,7 +128,7 @@
         {
             if (itemID > 0)
             {
-                var item = LcRestServiceProfessionalServices.Get(itemID);
+                var item = LcRest.ServiceProfessionalService.Get(itemID, userID, jobTitleID);
                 if (item != null) {
                     return item;
                 }

@@ -33,7 +33,7 @@
             var startTime = DateTimeFromISO(Request.QueryString["start"]) ?? DateTime.Today;
             var endTime = DateTimeFromISO(Request.QueryString["end"]) ?? startTime.AddDays(1);
             
-            return LcData.Booking.GetRestBookings(userId, startTime, endTime);
+            return LcRest.Booking.GetList(userId, startTime, endTime);
         }
         
         public dynamic GetItem(int itemID)
@@ -43,7 +43,7 @@
 
             if (itemID > 0)
             {                
-                var item = LcData.Booking.GetRestBooking(itemID, userID);
+                var item = LcRest.Booking.Get(itemID, false, userID);
                 if (item != null) {
                     return item;
                 }

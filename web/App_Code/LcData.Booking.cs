@@ -1380,7 +1380,7 @@ public static partial class LcData
                 // affect the availability check.
                 // And get the required information from the event to do the
                 // availability check
-                if (!DoubleCheckEventAvailability(dateID))
+                if (!LcCalendar.DoubleCheckEventAvailability(dateID))
                 {
                     return new SqlGenericResult
                     {
@@ -1398,7 +1398,7 @@ public static partial class LcData
                 // On no errors:
                 if (result.Error == 0)
                 {
-                    var dateInfo = GetBasicEventInfo(dateID, db);
+                    var dateInfo = LcCalendar.GetBasicEventInfo(dateID, db);
 
                     // SINCE #508, Customer is not charged on confirming the booking, else the date of the service;
                     // NOW here we authorize a transaction for lower than 7 days for service date from now, or

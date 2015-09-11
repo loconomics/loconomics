@@ -1,0 +1,11 @@
+﻿@* Placeholder testing area
+ *@
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    dynamic data = null;
+
+    data = LcRest.Booking.GetList(141, DateTime.Today.AddDays(-200), DateTime.Today);
+}    
+@Json.Encode(data)

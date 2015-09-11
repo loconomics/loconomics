@@ -19,7 +19,7 @@ COMMIT
 GO
 
 -- Rename pricingestimate
--- First, the its KEYS
+-- First, the KEYS
 BEGIN TRANSACTION
 GO
 EXECUTE sp_rename N'dbo.pricingestimate.PricingEstimateID', N'Tmp_PricingSummaryID', 'COLUMN' 
@@ -38,6 +38,12 @@ GO
 EXECUTE sp_rename N'dbo.pricingestimatedetail.PricingEstimateID', N'Tmp_PricingSummaryID_2', 'COLUMN' 
 GO
 EXECUTE sp_rename N'dbo.pricingestimatedetail.PricingEstimateRevision', N'Tmp_PricingSummaryRevision_3', 'COLUMN' 
+GO
+EXECUTE sp_rename N'dbo.pricingestimatedetail.ProviderPackageID', N'ServiceProfessionalServiceID', 'COLUMN' 
+GO
+EXECUTE sp_rename N'dbo.pricingestimatedetail.ServiceDuration', N'ServiceDurationHours', 'COLUMN' 
+GO
+EXECUTE sp_rename N'dbo.pricingestimatedetail.FirstSessionDuration', N'FirstSessionDurationHours', 'COLUMN' 
 GO
 EXECUTE sp_rename N'dbo.pricingestimatedetail.ProviderPricingDataInput', N'Tmp_ServiceProfessionalDataInput_4', 'COLUMN' 
 GO
@@ -161,8 +167,8 @@ GO
 
 CREATE TABLE [dbo].[booking](
 	[BookingID] [int] IDENTITY(1,1) NOT NULL,
-	[ClientUserID] [int] NULL,
-	[ServiceProfessionalUserID] [int] NULL,
+	[ClientUserID] [int] NOT NULL,
+	[ServiceProfessionalUserID] [int] NOT NULL,
 	[JobTitleID] [int] NOT NULL,
     [LanguageID] [int] NOT NULL,
     [CountryID] [int] NOT NULL,
