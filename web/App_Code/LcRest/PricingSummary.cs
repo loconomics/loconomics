@@ -14,8 +14,8 @@ namespace LcRest
         #region Fields
         public int pricingSummaryID;
         public int pricingSummaryRevision;
-        public decimal? serviceDurationHours;
-        public decimal? firstSessionDurationHours;
+        public decimal? serviceDurationMinutes;
+        public decimal? firstSessionDurationMinutes;
         public decimal? subtotalPrice;
         public decimal? feePrice;
         public decimal? totalPrice;
@@ -41,8 +41,8 @@ namespace LcRest
             {
                 pricingSummaryID = record.pricingSummaryID,
                 pricingSummaryRevision = record.pricingSummaryRevision,
-                serviceDurationHours = record.serviceDurationHours,
-                firstSessionDurationHours = record.firstSessionDurationHours,
+                serviceDurationMinutes = record.serviceDurationMinutes,
+                firstSessionDurationMinutes = record.firstSessionDurationMinutes,
                 subtotalPrice = record.subtotalPrice,
                 feePrice = record.feePrice,
                 totalPrice = record.totalPrice,
@@ -62,8 +62,8 @@ namespace LcRest
             SELECT
                 pricingEstimateID,
                 pricingEstimateRevision,
-                serviceDurationHours,
-                firstSessionDurationHours,
+                serviceDurationMinutes,
+                firstSessionDurationMinutes,
                 subtotalPrice,
                 feePrice,                        
                 totalPrice,
@@ -122,8 +122,8 @@ namespace LcRest
             INSERT INTO PricingSummary (
                 PricingSummaryID,
                 PricingSummaryRevision,
-                ServiceDurationHours,
-                FirstSessionDurationHours,
+                ServiceDurationMinutes,
+                FirstSessionDurationMinutes,
                 SubtotalPrice,
                 FeePrice,
                 TotalPrice,
@@ -158,7 +158,7 @@ namespace LcRest
             using (var db = new LcDatabase(sharedDb))
             {
                 return FromDB(db.QuerySingle(sqlInsertItem,
-                    data.pricingSummaryID, data.serviceDurationHours, data.firstSessionDurationHours,
+                    data.pricingSummaryID, data.serviceDurationMinutes, data.firstSessionDurationMinutes,
                     data.subtotalPrice, data.feePrice,
                     data.totalPrice, data.pFeePrice));
             }
@@ -176,13 +176,13 @@ namespace LcRest
         /// <param name="totalPrice"></param>
         /// <param name="servicesData"></param>
         /// <returns></returns>
-        public static PricingSummary SetForServiceProfessionalBooking(int pricingSummaryID, decimal totalDurationHours, decimal totalPrice, Dictionary<int, dynamic> servicesData, Database db)
+        public static PricingSummary SetForServiceProfessionalBooking(int pricingSummaryID, decimal totalDurationMinutes, decimal totalPrice, Dictionary<int, dynamic> servicesData, Database db)
         {
             var summary = Set(new PricingSummary
             {
                 pricingSummaryID = pricingSummaryID,
-                serviceDurationHours = totalDurationHours,
-                firstSessionDurationHours = totalDurationHours,
+                serviceDurationMinutes = totalDurationMinutes,
+                firstSessionDurationMinutes = totalDurationMinutes,
                 subtotalPrice = totalPrice,
                 totalPrice = totalPrice,
                 feePrice = 0,

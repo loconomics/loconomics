@@ -18,12 +18,9 @@ namespace LcRest
         public string serviceProfessionalDataInput;
         public string clientDataInput;
         public decimal? hourlyPrice;
-        public decimal? subtotalPrice;
-        public decimal? feePrice;
-        public decimal? totalPrice;
-        public decimal? serviceDurationHours;
-        public decimal? firstSessionDurationHours;
-        //public int pricingGroupID;
+        public decimal? price;
+        public decimal? serviceDurationMinutes;
+        public decimal? firstSessionDurationMinutes;
         public DateTime createdDate;
         public DateTime updatedDate;
         #endregion
@@ -41,12 +38,9 @@ namespace LcRest
                 serviceProfessionalDataInput = record.serviceProfessionalDataInput,
                 clientDataInput = record.clientDataInput,
                 hourlyPrice = record.hourlyPrice,
-                subtotalPrice = record.subtotalPrice,
-                feePrice = record.feePrice,
-                totalPrice = record.totalPrice,
-                serviceDurationHours = record.serviceDurationHours,
-                firstSessionDurationHours = record.firstSessionDurationHours,
-                //pricingGroupID = record.pricingGroupID,
+                price = record.price,
+                serviceDurationMinutes = record.serviceDurationMinutes,
+                firstSessionDurationMinutes = record.firstSessionDurationMinutes,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
             };
@@ -61,13 +55,10 @@ namespace LcRest
                 serviceProfessionalServiceID,
                 serviceProfessionalDataInput,
                 clientDataInput,
-                hourlyPrice,                        
-                subtotalPrice,
-                feePrice,
-                totalPrice,
-                serviceDurationHours,
-                firstSessionDurationHours,
-                pricingGroupID,
+                hourlyPrice,
+                price,
+                serviceDurationMinutes,
+                firstSessionDurationMinutes,
                 createdDate,
                 updatedDate
             FROM
@@ -93,26 +84,20 @@ namespace LcRest
                 PricingSummaryID,
                 PricingSummaryRevision,
                 ServiceProfessionalServiceID,
-                SubtotalPrice,
-                FeePrice,
-                TotalPrice,
-                ServiceDuration,
-                FirstSessionDuration,
+                price,
+                ServiceDurationMinutes,
+                FirstSessionDurationMinutes,
                 CreatedDate,
                 UpdatedDate,
-                ModifiedBy,
-                PricingGroupID -- unused but not null
+                ModifiedBy
             ) VALUES (
                 @0, -- ID
                 @1, -- revision
                 @2, -- serviceID
                 @3, -- subtotal
-                @4, -- fees
-                @5, -- price
-                @6, -- duration
-                @7, -- first duration
-                getdate(), getdate(), 'sys',
-                0 -- unused pricing group id
+                @4, -- duration
+                @5, -- first duration
+                getdate(), getdate(), 'sys'
             )
         ";
         #endregion
@@ -129,8 +114,8 @@ namespace LcRest
                 return FromDB(db.QuerySingle(sqlInsertItem,
                     data.pricingSummaryID, data.pricingSummaryRevision,
                     data.serviceProfessionalServiceID,
-                    data.subtotalPrice, data.feePrice, data.totalPrice,
-                    data.serviceDurationHours, data.firstSessionDurationHours
+                    data.price,
+                    data.serviceDurationMinutes, data.firstSessionDurationMinutes
                     ));
             }
         }
@@ -144,7 +129,7 @@ namespace LcRest
         /// The summary must be pre-populated with IDs and exist on database previous to this.
         /// </summary>
         /// <param name="summary">Presaved summary</param>
-        /// <param name="servicesData">Dictionary indexed by the serviceID that contains objects like: { decimal Price, decimal DurationHours }</param>
+        /// <param name="servicesData">Dictionary indexed by the serviceID that contains objects like: { decimal Price, decimal DurationMinutes }</param>
         /// <returns></returns>
         public static List<PricingSummaryDetail> SetForServiceProfessionalBooking(PricingSummary summary, Dictionary<int, dynamic> servicesData, Database db)
         {
@@ -154,17 +139,15 @@ namespace LcRest
             {
                 var serviceData = servicesData[serviceID];
                 var price = serviceData.Price ?? 0;
-                var duration = serviceData.DurationHours ?? 0;
+                var duration = serviceData.DurationMinutes ?? 0;
 
                 var detail = Set(new PricingSummaryDetail
                 {
                     pricingSummaryID = summary.pricingSummaryID,
                     pricingSummaryRevision = summary.pricingSummaryRevision,
-                    serviceDurationHours = duration,
-                    firstSessionDurationHours = duration,
-                    subtotalPrice = price,
-                    totalPrice = price,
-                    feePrice = 0,
+                    serviceDurationMinutes = duration,
+                    firstSessionDurationMinutes = duration,
+                    price = price,
                     serviceProfessionalServiceID = serviceID
                 }, db);
 

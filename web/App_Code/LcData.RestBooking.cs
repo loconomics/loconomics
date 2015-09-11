@@ -180,7 +180,7 @@ public static partial class LcData
                 );
 
                 // 3º: Creating the pricing estimate records (summary and details) with the provided and calculated data
-                LcRest.PricingSummary summary = LcRest.PricingSummary.SetForServiceProfessionalBooking(0, (decimal)pricingCalculations.totalDurationInHours, (decimal)totalPrice, servicesData, db);
+                LcRest.PricingSummary summary = LcRest.PricingSummary.SetForServiceProfessionalBooking(0, (decimal)pricingCalculations.totalDurationInMinutes, (decimal)totalPrice, servicesData, db);
 
                 // 4º: creating booking request and booking records
                 var ids = db.QuerySingle(sqlRestInsProviderBooking,
@@ -277,7 +277,7 @@ public static partial class LcData
                 // 1º: calculating pricing and timing by checing services included
                 var pricingCalculations = CalculateSimplifiedBookingPricing(services, providerUserID, db);
                 var totalPrice = pricingCalculations.totalPrice;
-                var totalDuration = pricingCalculations.totalDuration;
+                var totalDuration = pricingCalculations.totalDurationInMinutes;
                 var servicesData = pricingCalculations.servicesData;
                 var positionID = pricingCalculations.positionID;
 
@@ -309,7 +309,7 @@ public static partial class LcData
                 }
 
                 // 3º: Updating pricing estimate records
-                LcRest.PricingSummary.SetForServiceProfessionalBooking(booking.pricingSummaryID, pricingCalculations.totalDurationInHours, totalPrice, servicesData, db);
+                LcRest.PricingSummary.SetForServiceProfessionalBooking(booking.pricingSummaryID, pricingCalculations.totalDurationInMinutes, totalPrice, servicesData, db);
 
                 // 4º: Updating booking request and booking records
                 db.Execute(sqlRestUpdProviderBooking, bookingID, customerUserID, positionID, addressID,
@@ -356,15 +356,13 @@ public static partial class LcData
                 servicesData[service.serviceProfessionalServiceID] = new
                 {
                     Price = service.price ?? 0,
-                    Duration = service.serviceDurationMinutes,
-                    DurationHours = Math.Round((decimal)service.serviceDurationMinutes / 60, 2)
+                    DurationMinutes = service.serviceDurationMinutes
                 };
             }
 
             return new {
                 totalPrice = totalPrice,
-                totalDuration = totalDuration,
-                totalDurationInHours = Math.Round(totalDuration / 60, 2),
+                totalDurationInMinutes = totalDuration,
                 servicesData = servicesData
             };
         }
