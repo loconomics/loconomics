@@ -8,7 +8,7 @@ namespace LcEnum
     /// <summary>
     /// 
     /// </summary>
-    public enum BookingType : short
+    public enum BookingType : int
     {
         marketplaceBooking = 1,
         bookNowBooking = 2,

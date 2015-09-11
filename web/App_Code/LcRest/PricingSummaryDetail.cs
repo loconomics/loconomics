@@ -119,43 +119,6 @@ namespace LcRest
                     ));
             }
         }
-
-        /// <summary>
-        /// This method is paired with the one at PricingSummary with the same name,
-        /// expected to be used with it only, but anyway instructions to be used:
-        /// Simplified method for use on service professional bookings.
-        /// Create Pricing Summary Detail records for the given simplified data,
-        /// returning them as a list suitable to add to the given pricingSummary object.
-        /// The summary must be pre-populated with IDs and exist on database previous to this.
-        /// </summary>
-        /// <param name="summary">Presaved summary</param>
-        /// <param name="servicesData">Dictionary indexed by the serviceID that contains objects like: { decimal Price, decimal DurationMinutes }</param>
-        /// <returns></returns>
-        public static List<PricingSummaryDetail> SetForServiceProfessionalBooking(PricingSummary summary, Dictionary<int, dynamic> servicesData, Database db)
-        {
-            var details = new List<PricingSummaryDetail>();
-
-            foreach (var serviceID in servicesData.Keys)
-            {
-                var serviceData = servicesData[serviceID];
-                var price = serviceData.Price ?? 0;
-                var duration = serviceData.DurationMinutes ?? 0;
-
-                var detail = Set(new PricingSummaryDetail
-                {
-                    pricingSummaryID = summary.pricingSummaryID,
-                    pricingSummaryRevision = summary.pricingSummaryRevision,
-                    serviceDurationMinutes = duration,
-                    firstSessionDurationMinutes = duration,
-                    price = price,
-                    serviceProfessionalServiceID = serviceID
-                }, db);
-
-                details.Add(detail);
-            }
-
-            return details;
-        }
         #endregion
     }
 }

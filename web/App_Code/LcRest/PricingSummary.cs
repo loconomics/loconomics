@@ -164,34 +164,112 @@ namespace LcRest
             }
         }
 
-        /// <summary>
-        /// Simplified method for use on service professional bookings
-        /// Create or update a Pricing Estimate, generating a new revision for each update (new records but sharing
-        /// pricingEstimateID --the given one-- and increasing the revision).
-        /// If the given pricingEstimateID is zero, a new pricing is created. At any time, the returned
-        /// data is the pricingEstimateID (auto created or the same provided on updates).
-        /// </summary>
-        /// <param name="pricingEstimateID"></param>
-        /// <param name="totalDuration"></param>
-        /// <param name="totalPrice"></param>
-        /// <param name="servicesData"></param>
-        /// <returns></returns>
-        public static PricingSummary SetForServiceProfessionalBooking(int pricingSummaryID, decimal totalDurationMinutes, decimal totalPrice, Dictionary<int, dynamic> servicesData, Database db)
+        public static void SetDetails(PricingSummary summary, Database sharedDb = null)
         {
-            var summary = Set(new PricingSummary
+            foreach (var detail in summary.details)
             {
-                pricingSummaryID = pricingSummaryID,
-                serviceDurationMinutes = totalDurationMinutes,
-                firstSessionDurationMinutes = totalDurationMinutes,
-                subtotalPrice = totalPrice,
-                totalPrice = totalPrice,
-                feePrice = 0,
-                pFeePrice = 0
-            }, db);
+                // Enforce IDs to be up-to-date
+                detail.pricingSummaryID = summary.pricingSummaryID;
+                detail.pricingSummaryRevision = summary.pricingSummaryRevision;
+                // Save each detail
+                PricingSummaryDetail.Set(detail, sharedDb);
+            }
+        }
+        #endregion
 
-            summary.details = PricingSummaryDetail.SetForServiceProfessionalBooking(summary, servicesData, db);
+        #region Instance calculations
+        /// <summary>
+        /// Generates the pricing details list (List of PricingSummaryDetail)
+        /// for a given list service professional services, fetching from database
+        /// the data for each service and computing it as a PricingSummaryDetail.
+        /// It replaces any previous details list.
+        /// Its recommended a manual call of Calculate* methods to update the summary after this
+        /// 
+        /// TODO Add possibility to include serviceProfessional defined price per service (it allows for 
+        /// serviceProfessional bookings to set a different price than the default one for the service)
+        /// 
+        /// TODO Add calculation delegation for ProviderPackageMods and support 
+        /// for fields clientDataInput/serviceProfessionalDataInput (special pricings like housekeeper)
+        /// </summary>
+        /// <param name="serviceProfessionalUserID"></param>
+        /// <param name="services"></param>
+        /// <returns>Returns the jobTitleID shared by the given services. 0 if no services.
+        /// An exceptions happens if services from different jobTitles are provided</returns>
+        public int SetDetailServices(int serviceProfessionalUserID, IEnumerable<int> services)
+        {
+            var details = new List<PricingSummaryDetail>();
+            var jobTitleID = 0;
 
-            return summary;
+            foreach (var service in ServiceProfessionalService.GetListByIds(serviceProfessionalUserID, services))
+            {
+                if (jobTitleID == 0)
+                    jobTitleID = service.jobTitleID;
+
+                var allSessionsMinutes = service.numberOfSessions > 0 ? service.serviceDurationMinutes * service.numberOfSessions : service.serviceDurationMinutes;
+
+                var detail = new PricingSummaryDetail
+                {
+                    pricingSummaryID = pricingSummaryID,
+                    pricingSummaryRevision = pricingSummaryRevision,
+                    serviceDurationMinutes = allSessionsMinutes,
+                    firstSessionDurationMinutes = service.serviceDurationMinutes,
+                    price = service.price,
+                    serviceProfessionalServiceID = service.serviceProfessionalServiceID,
+                    hourlyPrice = service.priceRateUnit == "hour" ? service.priceRate : null
+                };
+
+                details.Add(detail);
+            }
+
+            this.details = details;
+
+            return jobTitleID;
+        }
+
+        /// <summary>
+        /// It calculates summary price and duration from the current
+        /// list of details.
+        /// Directly touches: subtotalPrice, firstSessionDurationMinutes and serviceDurationMinutes
+        /// </summary>
+        public void CalculateDetails()
+        {
+            this.subtotalPrice = 0;
+            this.firstSessionDurationMinutes = 0;
+            this.serviceDurationMinutes = 0;
+
+            if (details != null)
+            {
+                foreach (var detail in details)
+                {
+                    this.subtotalPrice += detail.price;
+                    this.serviceDurationMinutes += detail.serviceDurationMinutes;
+                    this.firstSessionDurationMinutes = detail.firstSessionDurationMinutes;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Just sum subtotal and fee to update the totalPrice field,
+        /// if not null.
+        /// </summary>
+        public void CalculateTotalPrice()
+        {
+            if (!this.subtotalPrice.HasValue ||
+                !this.feePrice.HasValue)
+            {
+                this.totalPrice = null;
+            }
+            else
+            {
+                this.totalPrice = this.subtotalPrice.Value + this.feePrice.Value;
+            }
+        }
+
+        public void CalculateFees()
+        {
+            this.feePrice = 0;
+            this.pFeePrice = 0;
+            // TODO
         }
         #endregion
     }

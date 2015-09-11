@@ -103,8 +103,9 @@
 
             try
             {
+                var locale = LcRestLocale.Current;
                 if (itemID == 0) {
-                    itemID = LcData.Booking.InsSimplifiedProviderBooking(
+                    itemID = LcRest.Booking.InsServiceProfessionalBooking(
                         userID,
                         Request["clientUserID"].AsInt(),
                         Request["addressID"].AsInt(),
@@ -112,14 +113,15 @@
                         pricingIds,
                         Request["preNotesToClient"],
                         Request["preNotesToSelf"],
-                        Request["allowBookUnavailableTime"].AsBool(false)
-                    );
+                        Request["allowBookUnavailableTime"].AsBool(false),
+                        locale.languageID,
+                        locale.countryID
+                    ).bookingID;
                 }
                 else {
-                    var itemExists = LcData.Booking.UpdSimplifiedProviderBooking(
+                    var itemExists = LcRest.Booking.UpdServiceProfessionalBooking(
                         itemID,
                         userID,
-                        Request["clientUserID"].AsInt(),
                         Request["addressID"].AsInt(),
                         startTime.Value,
                         pricingIds,

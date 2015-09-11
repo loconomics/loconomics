@@ -630,8 +630,11 @@ public static partial class LcData
         }
         /* Get a data object with the Position row of the user 'userId' with PositionId 'posId' from the database
          */
-        public static dynamic GetUserPos(int userId, int posId) {
-        
+        public static dynamic GetUserPos(int userId, int posId, int langID = 0, int countryID = 0)
+        {
+            if (langID == 0) langID = LcData.GetCurrentLanguageID();
+            if (countryID == 0) countryID = LcData.GetCurrentCountryID();
+
             // Implemented a basic, per-page, cache, faster and simplified for each page
             var u = HelperPage.PageData["userpos:" + userId.ToString() + ":" + posId.ToString()];
             if (u == null){
@@ -642,7 +645,7 @@ public static partial class LcData
                         FROM    dbo.userprofilepositions a join positions c on a.PositionID = c.PositionID 
                         WHERE   a.UserID = @0 and a.PositionID = @1 and c.LanguageID = @2 and c.CountryID = @3
                                 AND c.Active = 1 AND a.Active = 1 AND a.StatusID > 0";
-                    u = db.QuerySingle(sqlpositions, userId, posId, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                    u = db.QuerySingle(sqlpositions, userId, posId, langID, countryID);
                 }
                 HelperPage.PageData["userpos:" + userId.ToString() + ":" + posId.ToString()] = u;
             }
