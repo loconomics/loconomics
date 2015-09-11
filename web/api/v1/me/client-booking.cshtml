@@ -101,7 +101,8 @@
 
             try
             {
-                itemID = LcData.Booking.InsSimplifiedProviderBooking(
+                // TODO Implement client booking
+                itemID = LcRest.Booking.InsServiceProfessionalBooking(
                     userID,
                     Request["clientUserID"].AsInt(),
                     Request["addressID"].AsInt(),

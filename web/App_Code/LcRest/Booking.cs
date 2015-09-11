@@ -502,7 +502,6 @@ namespace LcRest
         /// attached to the current booking isntance, given the services to include.
         /// It's must be saved later on database.
         /// 
-        /// TODO Complete calculation cases for clients, fees
         /// TODO Complete PricingSummary TODOs
         /// </summary>
         /// <param name="services"></param>
@@ -519,8 +518,7 @@ namespace LcRest
 
             var jobTitleID = summary.SetDetailServices(serviceProfessionalUserID, services);
             summary.CalculateDetails();
-            summary.CalculateFees();
-            summary.CalculateTotalPrice();
+            summary.CalculateFees(BookingType.Get(this.bookingTypeID), this.firstTimeBooking);
 
             pricingSummary = summary;
 

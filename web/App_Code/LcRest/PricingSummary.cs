@@ -265,11 +265,66 @@ namespace LcRest
             }
         }
 
-        public void CalculateFees()
+        /// <summary>
+        /// Calculate service fees (feePrice), based on subtotalPrice, and feels the feePrice property.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="firstTimeBooking"></param>
+        public void CalculateServiceFees(BookingType type, bool firstTimeBooking)
         {
-            this.feePrice = 0;
-            this.pFeePrice = 0;
-            // TODO
+            // Only are applied on firstTimeBookings, otherwise is zero
+            if (firstTimeBooking)
+            {
+                // Can only be calculated if there is a subtotal price previously calculated
+                // otherwise feePrice will remain without value to mark it as not possible to calculate.
+                if (subtotalPrice.HasValue)
+                {
+                    var amount = Math.Round(type.firstTimeServiceFeeFixed + (type.firstTimeServiceFeePercentage * subtotalPrice.Value), 2);
+                    feePrice = Math.Min(Math.Max(amount, type.firstTimeServiceFeeMinimum), type.firstTimeServiceFeeMaximum);
+                }
+                else
+                {
+                    feePrice = null;
+                }
+            }
+            else
+            {
+                // No fees on other cases, just 0 :-)
+                feePrice = 0;
+            }
+        }
+
+        public void CalculatePaymentProcessingFees(BookingType type)
+        {
+            // Can only calculate with a notnull totalPrice, otherwise pFeePrice is null to state the impossibility of the calculation
+            if (totalPrice.HasValue)
+            {
+                // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
+                // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
+                // or present more precision to the service professional (who will show how much received on their bank account).
+                pFeePrice = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage * totalPrice.Value), 2);
+            }
+            else
+            {
+                pFeePrice = null;
+            }
+        }
+
+        /// <summary>
+        /// Calculates service fee, totalPrice and payment processing fees.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="firstTimeBooking"></param>
+        public void CalculateFees(BookingType type, bool firstTimeBooking)
+        {
+            // Calculate service fees (feePrice), based on subtotalPrice
+            CalculateServiceFees(type, firstTimeBooking);
+
+            // Total Price must be calculated before calculate the deducted payment processing fees (pFeePrice)
+            // because is calculated on top of that (since is deducted by the payment processing platform over the total)
+            CalculateTotalPrice();
+
+            CalculatePaymentProcessingFees(type);
         }
         #endregion
     }
