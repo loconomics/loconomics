@@ -8,6 +8,9 @@ using System.Web;
 /// </summary>
 public static partial class LcPricingModel
 {
+    /// <summary>
+    /// TODO Rename and move to LcRest -> PricingBaseConfig/PricingBase?
+    /// </summary>
     public class PackageBaseConfig
     {
         #region About Pricing Type

@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebMatrix.Data;
+using System.Web.Helpers;
 
 namespace LcRest
 {
     /// <summary>
     /// Descripción breve de LcRestPricingSummaryDetail
+    /// 
+    /// TODO: For hourly and special pricings, implement the *DataInput fields as dynaminc and saving them as JSON encoded strings, managing
+    /// the load with another helper class for variables and setting in the details the current
+    /// service professional values and client choosen values. See sample SetDataInput method, commented
     /// </summary>
     public class PricingSummaryDetail
     {
@@ -43,6 +48,48 @@ namespace LcRest
                 firstSessionDurationMinutes = record.firstSessionDurationMinutes,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
+            };
+        }
+
+        /// <summary>
+        /// Create a pricing summary detail for a given service professional service, copying
+        /// the needed data and performing the calculations that apply to that service/pricing-type
+        /// to fill the detail fields.
+        /// 
+        /// TODO: Adapt and add special pricing calculations, with variables, hourlyPrice*serviceDurationMinutes/60 and hourlySurcharge,
+        /// needed for Housekeepr and Babysitter/hourly-pricings. There was previous code at LcPricingModel, needs some refactor for the new way
+        /// common interfaces for LcRest classes, calculations and save data. Some comments added to guide the process.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public static PricingSummaryDetail FromServiceProfessionalService(ServiceProfessionalService service)
+        {
+            var allSessionsMinutes = service.numberOfSessions > 0 ? service.serviceDurationMinutes * service.numberOfSessions : service.serviceDurationMinutes;
+
+            // Complex calculations based on pricing type
+            //var config = LcPricingModel.PackageBasePricingTypeConfigs[service.pricingTypeID];
+            //config.PriceCalculation == LcEnum.PriceCalculationType.FixedPrice/HourlyPrice
+            // Calculate time and price required for selected package
+            /*if (config.Mod != null)
+            {
+                // Applying calculation from the PackageMod
+                // TODO: needs refactor, on interface and implementations because: there is no more 'fees' and subtotals per detail, that's done in the summary only.
+                config.Mod.CalculateCustomerData(customerID, thePackage, fee, modelData, ModelState);
+            }
+            if (config.PriceCalculation == LcEnum.PriceCalculationType.HourlyPrice)
+            {
+                // Discard value of priceRateUnit, is forced to be HOUR for this pricing-type
+                hourlyPrice = service.priceRate ?? 0
+            }
+            */
+
+            return new PricingSummaryDetail
+            {
+                serviceDurationMinutes = allSessionsMinutes,
+                firstSessionDurationMinutes = service.serviceDurationMinutes,
+                price = service.price,
+                serviceProfessionalServiceID = service.serviceProfessionalServiceID,
+                hourlyPrice = !String.IsNullOrEmpty(service.priceRateUnit) && service.priceRateUnit.ToUpper() == "HOUR" ? service.priceRate : null
             };
         }
         #endregion
@@ -81,22 +128,28 @@ namespace LcRest
         #region SQL
         const string sqlInsertItem = @"
             INSERT INTO PricingSummaryDetail (
-                PricingSummaryID,
-                PricingSummaryRevision,
-                ServiceProfessionalServiceID,
+                pricingSummaryID,
+                pricingSummaryRevision,
+                serviceProfessionalServiceID,
+                serviceProfessionalDataInput,
+                clientDataInput,
+                hourlyPrice,
                 price,
-                ServiceDurationMinutes,
-                FirstSessionDurationMinutes,
-                CreatedDate,
-                UpdatedDate,
-                ModifiedBy
+                serviceDurationMinutes,
+                firstSessionDurationMinutes,
+                createdDate,
+                updatedDate,
+                modifiedBy
             ) VALUES (
                 @0, -- ID
                 @1, -- revision
                 @2, -- serviceID
-                @3, -- subtotal
-                @4, -- duration
-                @5, -- first duration
+                @3, -- prof input
+                @4, -- client iput
+                @5, -- hourly
+                @6, -- subtotal
+                @7, -- duration
+                @8, -- first duration
                 getdate(), getdate(), 'sys'
             )
         ";
@@ -114,11 +167,36 @@ namespace LcRest
                 return FromDB(db.QuerySingle(sqlInsertItem,
                     data.pricingSummaryID, data.pricingSummaryRevision,
                     data.serviceProfessionalServiceID,
+                    data.serviceProfessionalDataInput,
+                    data.clientDataInput,
+                    data.hourlyPrice,
                     data.price,
                     data.serviceDurationMinutes, data.firstSessionDurationMinutes
                     ));
             }
         }
+
+        /*
+        public void SetDataInput(dynamic serviceProfessionalData, dynamic clientData)
+        {
+            string profInput = Json.Encode(serviceProfessionalData ?? "");
+            string clientInput = "";
+
+            // Supporting PricingVariables
+            if (clientData is LcPricingModel.PricingVariables)
+            {
+                clientInput = clientData.ToString();
+                // TODO Save????? What does, must be on Set or here?
+                ((LcPricingModel.PricingVariables)clientData).Save(estimateID, revisionID, WebMatrix.WebData.WebSecurity.CurrentUserId);
+            }
+            else
+            {
+                clientInput = Json.Encode(clientData ?? "");
+            }
+
+            clientDataInput = clientInput;
+            serviceProfessionalDataInput = serviceProfessionalData;
+        }*/
         #endregion
     }
 }

@@ -8,6 +8,7 @@ using System.Web;
 /// </summary>
 public static partial class LcPricingModel
 {
+    [Obsolete("Rules applied here, from decissions at Barcelona 2013 weekend, were superseed by decisions with Josh on 2015/09, applied at new internal API LcRest.PricingSummary")]
     public class Price
     {
         int roundedDecimals;

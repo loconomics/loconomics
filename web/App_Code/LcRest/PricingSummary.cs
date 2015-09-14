@@ -205,20 +205,7 @@ namespace LcRest
                 if (jobTitleID == 0)
                     jobTitleID = service.jobTitleID;
 
-                var allSessionsMinutes = service.numberOfSessions > 0 ? service.serviceDurationMinutes * service.numberOfSessions : service.serviceDurationMinutes;
-
-                var detail = new PricingSummaryDetail
-                {
-                    pricingSummaryID = pricingSummaryID,
-                    pricingSummaryRevision = pricingSummaryRevision,
-                    serviceDurationMinutes = allSessionsMinutes,
-                    firstSessionDurationMinutes = service.serviceDurationMinutes,
-                    price = service.price,
-                    serviceProfessionalServiceID = service.serviceProfessionalServiceID,
-                    hourlyPrice = service.priceRateUnit == "hour" ? service.priceRate : null
-                };
-
-                details.Add(detail);
+                details.Add(PricingSummaryDetail.FromServiceProfessionalService(service));
             }
 
             this.details = details;

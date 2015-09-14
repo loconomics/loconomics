@@ -10,6 +10,7 @@ using System.Web.Helpers;
 /// </summary>
 public static partial class LcPricingModel
 {
+    [Obsolete("TODO: Adapt to LcRest, integrate with PricingSummaryDetail (further comments there)")]
     public class PricingVariableDefinition
     {
         public int PricingVariableID { get; internal set; }

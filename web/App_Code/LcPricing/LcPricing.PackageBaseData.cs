@@ -9,6 +9,7 @@ using WebMatrix.Data;
 /// </summary>
 public static partial class LcPricingModel
 {
+    [Obsolete("TODO Refactor service attributes to LcRest, and saving stuff to LcRest.ServiceProfessionalService")]
     public class PackageBaseData
     {
         public int ID;

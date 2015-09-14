@@ -11,6 +11,7 @@ using System.Text;
 /// </summary>
 public static partial class LcPricingModel
 {
+    [Obsolete("TODO Refactor as PricingMod/ServiceMode with new rules that exclude fees; think about ModelState and input Request data")]
     public class PackageModHousekeeper : PackageMod
     {
         double formulaA, formulaB, formulaC;

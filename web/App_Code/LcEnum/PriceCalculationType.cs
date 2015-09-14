@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-/// <summary>
-/// Extension of LcPricingModel
-/// </summary>
-public static partial class LcPricingModel
+namespace LcEnum
 {
-    [Obsolete("Moved to LcEnum.PriceCalculationType")]
+    /// <summary>
+    /// Enum for the different calculation logic or constraint rules to apply
+    /// to pricing types.
+    /// </summary>
     public enum PriceCalculationType : short
     {
         FixedPrice,
