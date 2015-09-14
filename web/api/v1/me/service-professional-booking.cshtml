@@ -10,7 +10,8 @@
         "Freelancer Bookings (post only)": {
             "url": "/api/v1/en-US/me/service-professional-booking",
             "post": {
-                "customerUserID": 141,
+                "clientUserID": 141,
+                "jobTitleID": 106,
                 "addressID": 1,
                 "startTime": "2015-01-01T10:00:00Z",
                 "services": [ 8, 35 ],
@@ -22,7 +23,6 @@
         "Freelancer Bookings (single only)": {
             "url": "/api/v1/en-US/me/service-professional-booking/73",
             "put": {
-                "customerUserID": 141,
                 "addressID": 19,
                 "startTime": "2015-02-08T10:30:00Z",
                 "services": [ 8, 35 ],
@@ -106,8 +106,9 @@
                 var locale = LcRestLocale.Current;
                 if (itemID == 0) {
                     itemID = LcRest.Booking.InsServiceProfessionalBooking(
-                        userID,
                         Request["clientUserID"].AsInt(),
+                        userID,
+                        Request["jobTitleID"].AsInt(),
                         Request["addressID"].AsInt(),
                         startTime.Value,
                         pricingIds,

@@ -101,17 +101,22 @@
 
             try
             {
+                var locale = LcRestLocale.Current;
+                
                 // TODO Implement client booking
-                itemID = LcRest.Booking.InsServiceProfessionalBooking(
+                var booking = LcRest.Booking.InsClientBooking(
                     userID,
-                    Request["clientUserID"].AsInt(),
+                    Request["serviceProfessionalUserID"].AsInt(),
+                    Request["jobTitleID"].AsInt(),
                     Request["addressID"].AsInt(),
                     startTime.Value,
+                    Request["alternative1StartTime"].IsDateTime() ? (DateTime?)Request["alternative1StartTime"].AsDateTime() : null,
+                    Request["alternative2StartTime"].IsDateTime() ? (DateTime?)Request["alternative2StartTime"].AsDateTime() : null,
                     pricingIds,
-                    Request["preNotesToClient"],
-                    Request["preNotesToSelf"],
-                    Request["allowBookUnavailableTime"].AsBool(false)
+                    locale.languageID,
+                    locale.countryID
                 );
+                itemID = booking.bookingID;
                 
                 // Send communication to client (email)
                 LcMessaging.SendProviderBooking(itemID); 

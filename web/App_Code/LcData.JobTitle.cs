@@ -5,10 +5,13 @@ using System.Web;
 using WebMatrix.Data;
 
 /// <summary>
-/// Descripción breve de LcData
+/// 
 /// </summary>
 public static partial class LcData
 {
+    /// <summary>
+    /// TODO Refactor into LcRest classes, replacing dynamics with defined classes
+    /// </summary>
 	public static class JobTitle
     {
         public static dynamic GetJobTitle(int jobTitleID)
@@ -133,7 +136,7 @@ public static partial class LcData
         /// <param name="userID"></param>
         /// <param name="jobTitleID"></param>
         /// <returns></returns>
-        public static dynamic GetPublicUserJobTitles(int userID, int jobTitleID = -1)
+        public static dynamic GetPublicUserJobTitles(int userID, int languageID, int countryID, int jobTitleID = -1)
         {
             using (var db = Database.Open("sqlloco"))
             {
@@ -159,7 +162,7 @@ public static partial class LcData
                          -- Double check for approved positions
                          AND positions.Active = 1
                          AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
-                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), jobTitleID);
+                ", userID, languageID, countryID, jobTitleID);
             }
         }
 

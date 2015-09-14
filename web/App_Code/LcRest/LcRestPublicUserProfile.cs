@@ -4,69 +4,72 @@ using System.Linq;
 using System.Web;
 using WebMatrix.Data;
 
-/// <summary>
-/// Public User profile information from a subset of [users] table
-/// for the REST API when accessed by other users (public fields are
-/// more limited than ones the owner user can see),
-/// and static methods for database operations.
-/// Some fields are empty/null because of level of rights, exposed
-/// only to requester users that has a relationship with the requested
-/// user profile (thats, there is a ServiceProfessionalClient record for the pair).
-/// Records are not returned if profile is not enabled
-/// </summary>
-public class LcRestPublicUserProfile
+namespace LcRest
 {
-    #region Fields
-    public int userID;
-    public string firstName;
-    public string lastName;
-    public string secondLastName;
-    public string businessName;
-    public string publicBio;
-    public string serviceProfessionalProfileUrlSlug;
-    public string serviceProfessionalWebsiteUrl;
-    
-    /// Fields protected, empty/null except for users that has a relationship together
-    public string email;
-    public string phone;
-   
-    public bool isServiceProfessional;
-    public bool isClient;
-    // TODO To decide if expose this publicly
-    //public bool isMember;
-
-    public DateTime updatedDate;
-    #endregion
-
-    public static LcRestPublicUserProfile FromDB(dynamic record)
+    /// <summary>
+    /// Public User profile information from a subset of [users] table
+    /// for the REST API when accessed by other users (public fields are
+    /// more limited than ones the owner user can see),
+    /// and static methods for database operations.
+    /// Some fields are empty/null because of level of rights, exposed
+    /// only to requester users that has a relationship with the requested
+    /// user profile (thats, there is a ServiceProfessionalClient record for the pair).
+    /// Records are not returned if profile is not enabled
+    /// </summary>
+    public class PublicUserProfile
     {
-        if (record == null) return null;
-        return new LcRestPublicUserProfile {
-            userID = record.userID,
-            email = record.email,
+        #region Fields
+        public int userID;
+        public string firstName;
+        public string lastName;
+        public string secondLastName;
+        public string businessName;
+        public string publicBio;
+        public string serviceProfessionalProfileUrlSlug;
+        public string serviceProfessionalWebsiteUrl;
 
-            firstName = record.firstName,
-            lastName = record.lastName,
-            secondLastName = record.secondLastName,
+        /// Fields protected, empty/null except for users that has a relationship together
+        public string email;
+        public string phone;
 
-            publicBio = record.publicBio,
+        public bool isServiceProfessional;
+        public bool isClient;
+        // TODO To decide if expose this publicly
+        //public bool isMember;
 
-            serviceProfessionalProfileUrlSlug = record.serviceProfesionalProfileUrlSlug,
-            serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUrl,
-            businessName = record.businessName,
+        public DateTime updatedDate;
+        #endregion
 
-            phone = record.phone,
+        public static PublicUserProfile FromDB(dynamic record)
+        {
+            if (record == null) return null;
+            return new PublicUserProfile
+            {
+                userID = record.userID,
+                email = record.email,
 
-            isServiceProfessional = record.isServiceProfessional,
-            isClient = record.isClient,
-            //isMember = record.isMember,
+                firstName = record.firstName,
+                lastName = record.lastName,
+                secondLastName = record.secondLastName,
 
-            updatedDate = record.updatedDate
-        };
-    }
+                publicBio = record.publicBio,
 
-    #region SQL
-    private const string sqlSelectProfile = @"
+                serviceProfessionalProfileUrlSlug = record.serviceProfesionalProfileUrlSlug,
+                serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUrl,
+                businessName = record.businessName,
+
+                phone = record.phone,
+
+                isServiceProfessional = record.isServiceProfessional,
+                isClient = record.isClient,
+                //isMember = record.isMember,
+
+                updatedDate = record.updatedDate
+            };
+        }
+
+        #region SQL
+        private const string sqlSelectProfile = @"
         SELECT TOP 1
             -- ID
             Users.userID
@@ -103,15 +106,16 @@ public class LcRestPublicUserProfile
         WHERE Users.UserID = @0
           AND Users.Active = 1
     ";
-    #endregion
+        #endregion
 
-    #region Fetch
-    public static LcRestPublicUserProfile Get(int userID, int requesterUserID)
-    {
-        using (var db = Database.Open("sqlloco"))
+        #region Fetch
+        public static PublicUserProfile Get(int userID, int requesterUserID)
         {
-            return FromDB(db.QuerySingle(sqlSelectProfile, userID, requesterUserID));
+            using (var db = Database.Open("sqlloco"))
+            {
+                return FromDB(db.QuerySingle(sqlSelectProfile, userID, requesterUserID));
+            }
         }
+        #endregion
     }
-    #endregion
 }

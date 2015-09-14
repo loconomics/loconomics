@@ -83,10 +83,11 @@ namespace LcRest
         public EventDates serviceDate;
         public EventDates alternativeDate1;
         public EventDates alternativeDate2;
+        private dynamic userJobTitle;
         #endregion
 
         #region Instances
-        public Booking() { }
+        private Booking() { }
 
         public static Booking FromDB(dynamic booking, bool internalUse, int? forUserID = null)
         {
@@ -150,6 +151,100 @@ namespace LcRest
                 reviewedByServiceProfessional = booking.reviewedByServiceProfessional,
                 reviewedByClient = booking.reviewedByClient
             };
+        }
+
+        /// <summary>
+        /// Creates a new Booking instance prefilling data from database queries for the given info.
+        /// Prefilled fields, that must not be manually updated because are strict rules and
+        /// most are never allowed to be updated, or only after check some constraints
+        /// - clientUserID
+        /// - serviceProfessionalUserID
+        /// - jobTitleID
+        /// - languageID
+        /// - countryID
+        /// - bookingStatusID (defaults to 'incomplete' status, must be later overwritted when saving it)
+        /// - bookingTypeID
+        /// - cancellationTypeID
+        /// - instantBooking
+        /// - firstTimeBooking
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <param name="serviceProfessionalUserID"></param>
+        /// <param name="jobTitleID"></param>
+        /// <param name="bookCode"></param>
+        /// <returns></returns>
+        public static Booking NewFor(int clientID, int serviceProfessionalID, int jobTitleID, int langID, int countryID, string bookCode)
+        {
+            var booking = new Booking();
+            booking.clientUserID = clientID;
+            booking.serviceProfessionalUserID = serviceProfessionalID;
+            booking.jobTitleID = jobTitleID;
+            booking.languageID = langID;
+            booking.countryID = countryID;
+
+            // Check service-job exists and enabled, and get its public preferences
+            booking.FillUserJobTitle();
+            if (booking.userJobTitle == null)
+            {
+                // Cannot create booking, returns null as meaning 'not found'
+                return null;
+            }
+
+            // Checks:
+            booking.bookingStatusID = (int)LcEnum.BookingStatus.incomplete;
+            // Only supports auto-detect client BookNow and Marketplace bookings. ServiceProfessional booking must be overwritted on its own API and
+            // other types are not yet implemented
+            booking.bookingTypeID = (int)(IsValidBookCode(serviceProfessionalID, bookCode) ? LcEnum.BookingType.bookNowBooking : LcEnum.BookingType.marketplaceBooking);
+            booking.cancellationPolicyID = booking.userJobTitle.cancellationPolicyID;
+            booking.instantBooking = booking.userJobTitle.instantBooking;
+            booking.firstTimeBooking = IsFirstTimeBooking(serviceProfessionalID, clientID);            
+
+            return booking;
+        }
+        #endregion
+
+        #region Constraints queries
+        private static bool IsValidBookCode(int serviceProfessionalID, string bookCode)
+        {
+            using (var db = new LcDatabase())
+            {
+                // If there is a book-code
+                if (bookCode != null)
+                {
+                    // Check that match the provider book-code
+                    return (
+                        null != db.QueryValue(@"
+                            SELECT 'found' as A FROM Users 
+                            WHERE UserID = @0 AND BookCode like @1
+                        ", serviceProfessionalID, bookCode)
+                    );
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        private static bool IsFirstTimeBooking(int serviceProfessionalID, int clientID)
+        {
+            using (var db = new LcDatabase())
+            {
+                // Find if there is almost one booking already between both users
+                // Limiting the valid bookings to the ones in next statuses
+                var statuses = String.Join(",",
+                    ((short)LcEnum.BookingStatus.confirmed).ToString(),
+                    ((short)LcEnum.BookingStatus.servicePerformed).ToString(),
+                    ((short)LcEnum.BookingStatus.completed).ToString()
+                );
+                var sql = @"
+                    SELECT TOP 1 CASE
+                        WHEN EXISTS (SELECT * FROM Booking As B 
+                            WHERE B.BookingStatusID IN (" + statuses + @") AND B.ClientUserID = @0 AND B.ServiceProfessionalUserID = @1)
+                        THEN Cast(0 as bit)
+                        ELSE Cast(1 as bit) END
+                ";
+                return (bool)db.QueryValue(sql, clientID, serviceProfessionalID);
+            }
         }
         #endregion
 
@@ -268,8 +363,30 @@ namespace LcRest
         /// </summary>
         public void FillLinks()
         {
+            FillPricingSummary();
+            FillUserJobTitle();
+        }
+
+        public void FillPricingSummary()
+        {
             pricingSummary = PricingSummary.Get(pricingSummaryID, pricingSummaryRevision);
             pricingSummary.FillLinks();
+        }
+
+        /// <summary>
+        /// TODO: Adapt API to return a REST class rather than dynamic
+        /// </summary>
+        public void FillUserJobTitle()
+        {
+            var data = LcData.JobTitle.GetPublicUserJobTitles(serviceProfessionalUserID, languageID, countryID, jobTitleID);
+            if (data == null || data.Count == 0)
+            {
+                userJobTitle = null;
+            }
+            else
+            {
+                userJobTitle = data[0];
+            }
         }
         #endregion
 
@@ -564,8 +681,9 @@ namespace LcRest
         /// <param name="countryID"></param>
         /// <returns></returns>
         public static Booking InsServiceProfessionalBooking(
-            int serviceProfessionalUserID,
             int clientUserID,
+            int serviceProfessionalUserID,
+            int jobTitleID,
             int serviceAddressID,
             DateTime startTime,
             IEnumerable<int> services,
@@ -589,14 +707,15 @@ namespace LcRest
                 if (services == null)
                     throw new ConstraintException("Create a booking require select almost one service");
 
-                // 1º: calculating pricing and timing by checking services included
-                var booking = new Booking();
-                booking.CreatePricing(services);
-
-                // 1-after Checks:
-                var position = LcData.UserInfo.GetUserPos(serviceProfessionalUserID, booking.jobTitleID, languageID, countryID);
-                if (position == null)
+                // 1º: start booking, calculate pricing and timing by checking services included
+                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null);
+                if (booking == null)
                     throw new ConstraintException("Impossible to create a booking for that Job Title.");
+
+                // Booking type enforced by this API, required before calculate correctly the pricing:
+                booking.bookingTypeID = (int)LcEnum.BookingType.serviceProfessionalBooking;
+                if (booking.CreatePricing(services))
+                    throw new ConstraintException("Choosen services does not belongs to the Job Title");
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.serviceDurationMinutes ?? 0));
@@ -607,7 +726,7 @@ namespace LcRest
 
                 // Event data
                 var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
-                string eventSummary = String.Format("{0} services for {1}", position.PositionSingular, ASP.LcHelpers.GetUserDisplayName(customer));
+                string eventSummary = String.Format("{0} services for {1}", booking.userJobTitle.PositionSingular, ASP.LcHelpers.GetUserDisplayName(customer));
 
                 // Transaction begins
                 db.Execute("BEGIN TRANSACTION");
@@ -630,13 +749,8 @@ namespace LcRest
                 PricingSummary.SetDetails(booking.pricingSummary, db.Db);
 
                 // 4º: persisting booking on database
-                booking.clientUserID = clientUserID;
-                booking.serviceProfessionalUserID = serviceProfessionalUserID;
-                booking.languageID = languageID;
-                booking.countryID = countryID;
-                booking.bookingTypeID = (int)LcEnum.BookingType.serviceProfessionalBooking;
+                booking.bookingStatusID = (int)LcEnum.BookingStatus.confirmed;
                 booking.serviceAddressID = serviceAddressID;
-                booking.cancellationPolicyID = LcData.Booking.GetProviderCancellationPolicyID(serviceProfessionalUserID, booking.jobTitleID, db.Db);
                 booking.serviceDateID = serviceDateID;
                 booking.preNotesToClient = preNotesToClient;
                 booking.preNotesToSelf = preNotesToSelf;
@@ -688,14 +802,13 @@ namespace LcRest
                 if (services == null)
                     throw new ConstraintException("Create a booking require select almost one service");
 
+                booking.FillUserJobTitle();
+                if (booking.userJobTitle == null)
+                    throw new ConstraintException("Impossible to update the booking for that Job Title.");
+
                 // 1º: calculating pricing and timing by checking services included
                 if (booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
-
-                // 1-after Checks:
-                var position = LcData.UserInfo.GetUserPos(serviceProfessionalUserID, booking.jobTitleID, booking.languageID, booking.countryID);
-                if (position == null)
-                    throw new ConstraintException("Impossible to create a booking for that Job Title.");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.serviceDurationMinutes ?? 0));
@@ -753,7 +866,162 @@ namespace LcRest
         }
         #endregion
 
-        #region Client Updates Manipulations
+        #region Client Manipulations
+        /// <summary>
+        /// Utility for client bookings, to check service professional availability for the given input
+        /// data, thow a ConstraintException if not available and returns the calculated endTime if available.
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="serviceDurationMinutes"></param>
+        /// <param name="serviceProfessionalUserID"></param>
+        /// <returns></returns>
+        private static DateTime CheckAvailability(DateTime startTime, decimal? serviceDurationMinutes, int serviceProfessionalUserID)
+        {
+            var endTime = startTime.AddMinutes((double)(serviceDurationMinutes ?? 0));
+            // Because this API is only for providers, we avoid the advance time from the checking
+            var isAvailable = LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, true);
+            if (!isAvailable)
+                throw new ConstraintException(String.Format("The time {0} is not available, it conflicts with a recent appointment!", startTime));
+
+            return endTime;
+        }
+        /// <summary>
+        /// Create an save a client booking.
+        /// TODO Payment info.
+        /// </summary>
+        /// <param name="clientUserID"></param>
+        /// <param name="serviceProfessionalUserID"></param>
+        /// <param name="jobTitleID"></param>
+        /// <param name="serviceAddressID"></param>
+        /// <param name="serviceStartTime"></param>
+        /// <param name="alternative1StartTime"></param>
+        /// <param name="alternative2StartTime"></param>
+        /// <param name="services"></param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public static Booking InsClientBooking(
+            int clientUserID,
+            int serviceProfessionalUserID,
+            int jobTitleID,
+            int serviceAddressID,
+            DateTime serviceStartTime,
+            DateTime? alternative1StartTime,
+            DateTime? alternative2StartTime,
+            IEnumerable<int> services,
+            int languageID,
+            int countryID
+        )
+        {
+            using (var db = new LcDatabase())
+            {
+                // 0: previous data and checks
+                var provider = LcData.UserInfo.GetUserRowWithContactData(serviceProfessionalUserID);
+                var customer = LcData.UserInfo.GetUserRow(clientUserID);
+
+                if (provider == null)
+                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
+                if (customer == null)
+                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
+                if (services == null)
+                    throw new ConstraintException("Create a booking require select almost one service");
+
+                // 1º: start booking, calculate pricing and timing by checking services included
+                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null);
+                if (booking == null)
+                    throw new ConstraintException("Impossible to create a booking for that Job Title.");
+
+                // Booking type enforced by this API, required before calculate correctly the pricing:
+                booking.bookingTypeID = (int)LcEnum.BookingType.serviceProfessionalBooking;
+                if (booking.CreatePricing(services))
+                    throw new ConstraintException("Choosen services does not belongs to the Job Title");
+
+                // 2º: Preparing event date-times, checking availability and creating event
+                var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.serviceDurationMinutes, serviceProfessionalUserID);
+                DateTime? alternative1EndTime = null;
+                DateTime? alternative2EndTime = null;
+                if (!booking.instantBooking)
+                {
+                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTime?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.serviceDurationMinutes, serviceProfessionalUserID) : null;
+                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTime?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.serviceDurationMinutes, serviceProfessionalUserID) : null;
+                }
+
+                // Event data
+                var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
+                string eventSummary = String.Format("{0} services by {1}", booking.userJobTitle.PositionSingular, ASP.LcHelpers.GetUserDisplayName(provider));
+
+                // Transaction begins
+                db.Execute("BEGIN TRANSACTION");
+
+                // Create events
+                var serviceDateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
+                    serviceProfessionalUserID,
+                    booking.instantBooking ? LcEnum.CalendarAvailabilityType.busy : LcEnum.CalendarAvailabilityType.tentative,
+                    eventSummary, // summary
+                    "", // initial empty description (current tools to generate it require the booking to exists in database)
+                    serviceStartTime,
+                    serviceEndTime,
+                    timeZone
+                );
+                int? alternative1DateID = null;
+                int? alternative2DateID = null;
+                if (!booking.instantBooking)
+                {
+                    if (alternative1EndTime.HasValue)
+                    {
+                        alternative1DateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
+                            serviceProfessionalUserID,
+                            LcEnum.CalendarAvailabilityType.tentative,
+                            eventSummary, // summary
+                            "", // initial empty description (current tools to generate it require the booking to exists in database)
+                            alternative1StartTime,
+                            alternative1EndTime,
+                            timeZone
+                        );
+                    }
+                    if (alternative2EndTime.HasValue)
+                    {
+                        alternative2DateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
+                            serviceProfessionalUserID,
+                            LcEnum.CalendarAvailabilityType.tentative,
+                            eventSummary, // summary
+                            "", // initial empty description (current tools to generate it require the booking to exists in database)
+                            alternative2StartTime,
+                            alternative2EndTime,
+                            timeZone
+                        );
+                    }
+                }
+
+                // 3º: Save pricing
+                // save Summary on db, will set the ID and Revision on the returned summary
+                booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
+                // save Details, they are updated with latest ID and Revision
+                PricingSummary.SetDetails(booking.pricingSummary, db.Db);
+
+                // 4º: persisting booking on database
+                booking.bookingStatusID = (int)(booking.instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
+                booking.serviceAddressID = serviceAddressID;
+                booking.serviceDateID = serviceDateID;
+                Booking.Set(booking, serviceProfessionalUserID, db.Db);
+
+                // Persisting all or nothing:
+                db.Execute("COMMIT TRANSACTION");
+
+                // LAST:
+                // Update the CalendarEvent to include contact data,
+                // but this is not so important as the rest because of that it goes
+                // inside a try-catch, it doesn't matter if fails, is just a commodity
+                // (customer and provider can access contact data from the booking).
+                try
+                {
+                    booking.UpdateEventDetails(db.Db);
+                }
+                catch {}
+
+                return booking;
+            }
+        }
         #endregion
     }
 }
