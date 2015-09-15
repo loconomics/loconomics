@@ -4,12 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Configuration;
 using Braintree;
-using System.Web.WebPages;
 
 /// <summary>
 /// Descripción breve de LcPayment
 /// </summary>
-public static class LcPayment
+public static partial class LcPayment
 {
     #region Gateway and config
     public static BraintreeGateway NewBraintreeGateway(BraintreeGateway gateway)
@@ -224,6 +223,7 @@ public static class LcPayment
 
     public const string TransactionIdIsCardPrefix = "CARD:";
 
+    [Obsolete("Use LcPayment.InputPaymentMethod class, and SaveInVault method")]
     public static string SaveCardInVault(string customerIdOnBraintree, ref string creditCardToken,
         string nameOnCard, string cardNumber,
         string cardExpMonth, string cardExpYear, string cardCvv,

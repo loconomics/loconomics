@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebMatrix.Data;
+using Braintree;
+using System.Web.WebPages;
 
 namespace LcRest
 {
@@ -44,6 +46,7 @@ namespace LcRest
         public bool recurrent;
         public bool multiSession;
         public bool pricingAdjustmentApplied;
+        public bool paymentEnabled;
         public bool paymentCollected;
         public bool paymentAuthorized;
         public int? awaitingResponseFromUserID;
@@ -130,6 +133,7 @@ namespace LcRest
                 recurrent = booking.recurrent,
                 multiSession = booking.multiSession,
                 pricingAdjustmentApplied = booking.pricingAdjustmentApplied,
+                paymentEnabled = booking.paymentEnabled,
                 paymentCollected = booking.paymentCollected,
                 paymentAuthorized = booking.paymentAuthorized,
                 awaitingResponseFromUserID = booking.awaitingResponseFromUserID,
@@ -190,11 +194,27 @@ namespace LcRest
                 return null;
             }
 
-            // Checks:
-            booking.bookingStatusID = (int)LcEnum.BookingStatus.incomplete;
             // Only supports auto-detect client BookNow and Marketplace bookings. ServiceProfessional booking must be overwritted on its own API and
             // other types are not yet implemented
             booking.bookingTypeID = (int)(IsValidBookCode(serviceProfessionalID, bookCode) ? LcEnum.BookingType.bookNowBooking : LcEnum.BookingType.marketplaceBooking);
+
+            // Check payment enabled on the
+            // Payment is required for client bookings, but avoided on bookNow bookings.
+            // TODO Per #590, a new check by job-title and bookNow preference may be required, allowing
+            // optionally enabling payment through bookNow.
+            booking.paymentEnabled = false;
+            if (booking.bookingTypeID != (int)LcEnum.BookingType.bookNowBooking)
+            {
+                booking.paymentEnabled = IsMarketplacePaymentAccountActive(serviceProfessionalID);
+                if (!booking.paymentEnabled)
+                {
+                    // Cannot create booking, payment required and is not ready, return null as meaning 'not found'
+                    return null;
+                }
+            }
+
+            // Checks:
+            booking.bookingStatusID = (int)LcEnum.BookingStatus.incomplete;
             booking.cancellationPolicyID = booking.userJobTitle.cancellationPolicyID;
             booking.instantBooking = booking.userJobTitle.instantBooking;
             booking.firstTimeBooking = IsFirstTimeBooking(serviceProfessionalID, clientID);            
@@ -204,6 +224,26 @@ namespace LcRest
         #endregion
 
         #region Constraints queries
+        /// <summary>
+        /// Checks if the service professional has its marketplace payment account active,
+        /// meaning that there is an active merchantAccount at Braintree for the user.
+        /// This method says nothing about the payment being optionally enabled for
+        /// bookNow buttons in a per jobTitle basis (to be done at #590 on a new method),
+        /// but that depends on this to be true.
+        /// </summary>
+        /// <param name="serviceProfessionalID"></param>
+        /// <param name="jobTitleID"></param>
+        /// <param name="bookCode"></param>
+        /// <returns></returns>
+        private static bool IsMarketplacePaymentAccountActive(int serviceProfessionalID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(@"
+                    SELECT dbo.isMarketplacePaymentAccountActive(@0)
+                ", serviceProfessionalID);
+            }
+        }
         private static bool IsValidBookCode(int serviceProfessionalID, string bookCode)
         {
             using (var db = new LcDatabase())
@@ -284,6 +324,7 @@ namespace LcRest
                 recurrent,
                 multiSession,
                 pricingAdjustmentApplied,
+                paymentEnabled,
                 paymentCollected,
                 paymentAuthorized,
                 awaitingResponseFromUserID,
@@ -426,6 +467,7 @@ namespace LcRest
                 ,[Recurrent]
                 ,[MultiSession]
                 
+                ,[PaymentEnabled]
                 ,[PaymentCollected]
                 ,[PaymentAuthorized]
                 ,[AwaitingResponseFromUserID]
@@ -450,8 +492,8 @@ namespace LcRest
                 @9, @10, @11, @12, @13, @14, @15, @16,
                 -- instant.. 
                 @17, @18, @19, @20, @21, @22,
-                @23, @24, @25,
-                @26, @27, @28,
+                @23, @24, @25, @26
+                @27, @28, @29,
                 getdate(), getdate(), 'sys'
             )
             SET @BookingID = @@Identity
@@ -507,6 +549,7 @@ namespace LcRest
                 ,PaymentTransactionID = @2
                 ,PaymentCollected = @3
                 ,PaymentAuthorized = @4
+                ,PaymentLastFourCardNumberDigits = @5
                 ,[UpdatedDate] = getdate()
                 ,[ModifiedBy] = 'sys'
             WHERE BookingID = @0
@@ -537,7 +580,8 @@ namespace LcRest
         {
             using (var db = new LcDatabase(sharedDb))
             {
-                var lastFour = String.IsNullOrWhiteSpace(booking.paymentLastFourCardNumberDigits) ? null : LcEncryptor.Encrypt(booking.paymentLastFourCardNumberDigits);
+                var lastFour = String.IsNullOrWhiteSpace(booking.paymentLastFourCardNumberDigits) ? null :
+                    LcEncryptor.Encrypt(ASP.LcHelpers.GetLastStringChars(booking.paymentLastFourCardNumberDigits, 4));
 
                 if (booking.bookingID == 0)
                 {
@@ -568,6 +612,7 @@ namespace LcRest
                         booking.recurrent,
                         booking.multiSession,
 
+                        booking.paymentEnabled,
                         booking.paymentCollected,
                         booking.paymentAuthorized,
                         booking.awaitingResponseFromUserID,
@@ -584,6 +629,7 @@ namespace LcRest
                     if (byServiceProfessional)
                     {
                         db.Execute(sqlUpdBookingByServiceProfessional,
+                            booking.bookingID,
                             booking.serviceAddressID,
                             booking.serviceDateID,
                             booking.alternativeDate1ID,
@@ -598,6 +644,7 @@ namespace LcRest
                     else if (byClient)
                     {
                         db.Execute(sqlUpdBookingByClient,
+                            booking.bookingID,
                             booking.serviceAddressID,
                             booking.serviceDateID,
                             booking.pricingSummaryRevision,
@@ -609,6 +656,35 @@ namespace LcRest
                         throw new ConstraintException("Booking update not allowed");
                     }
                 }
+            }
+        }
+
+        public static void SetPaymentStatus(Booking booking, Database sharedDb = null)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                var lastFour = String.IsNullOrWhiteSpace(booking.paymentLastFourCardNumberDigits) ? null :
+                    LcEncryptor.Encrypt(ASP.LcHelpers.GetLastStringChars(booking.paymentLastFourCardNumberDigits, 4));
+                
+                db.Execute(sqlUpdBookingPayment,
+                    booking.bookingID,
+                    booking.bookingStatusID,
+                    booking.paymentTransactionID,
+                    booking.paymentCollected,
+                    booking.paymentAuthorized,
+                    lastFour
+                );
+            }
+        }
+
+        public static void SetStatus(Booking booking, Database sharedDb = null)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                db.Execute(sqlUpdateStatus,
+                    booking.bookingID,
+                    booking.bookingStatusID
+                );
             }
         }
         #endregion
@@ -661,6 +737,111 @@ namespace LcRest
                 ", this.serviceDateID, description, location);
             }
         }
+
+        /// <summary>
+        /// The emulation allows to shortcut Braintree, for local dev environments where is
+        /// not possible even to use Braintree Sandbox
+        /// </summary>
+        private const bool TESTING_EMULATEBRAINTREE = ASP.LcHelpers.Channel == "localdev";
+
+        /// <summary>
+        /// It adds payment information to the current booking,
+        /// performing the needed tasks and saving information at database and Braintree.
+        /// This means to save payment/card details for later,
+        /// and save transactionID, last-four and related flags on our database.
+        /// I the flag paymentEnabled is false, throws an exception because service professional cannot receive payments
+        /// throw Braintree is choosen to do not enabled it.
+        /// If the flag paymentCollected is true already or there is a transactionID, throws an exception because a second
+        /// payment cannot be done; the instance must have updated info to ensure this check is secure
+        /// and avoids double payment.
+        /// Throws any error from Braintree or LcPayment API.
+        /// </summary>
+        /// <param name="savePayment">Lets the user choose if save and remember this payment method at Braintre for later
+        /// use (can be fetched with the API /me/payment-methods). When using a presaved paymentMethodID, passing this
+        /// flag as true and the input data will update the saved data.</param>
+        /// <param name="paymentData">The data for the payment method to use, pre-saved or new</param>
+        public Dictionary<string, string> CollectPayment(LcPayment.InputPaymentMethod paymentData, bool savePayment)
+        {
+            if (!paymentEnabled)
+                throw new ConstraintException("Payment not enabled for this booking");
+            if (paymentCollected || !String.IsNullOrEmpty(paymentTransactionID))
+                throw new ConstraintException("Payment already collected for this booking");
+            
+            // The input paymentID must be one generated by Braintree, reset any (malicious) attempt
+            // to provide a special temp ID generated by this method
+            if (paymentData.IsTemporaryID())
+                paymentData.paymentMethodID = null;
+
+            // The steps on emulation allows a quick view of what the overall process does and data set.
+            if (TESTING_EMULATEBRAINTREE)
+            {
+                paymentTransactionID = LcPayment.CreateFakeTransactionId();
+                paymentLastFourCardNumberDigits = null;
+                paymentCollected = true;
+                paymentAuthorized = false;
+            }
+            else
+            {
+                BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
+                // Find or create Customer on Braintree
+                var client = LcPayment.GetOrCreateBraintreeCustomer(clientUserID);
+
+                // Quick way for saved pyament method that does not needs to be updated
+                var hasID = !String.IsNullOrWhiteSpace(paymentData.paymentMethodID);
+                if (hasID && !savePayment)
+                {
+                    // Just double check payment exists to avoid mistake/malicious attempts:
+                    if (!paymentData.ExistsOnVault())
+                    {
+                        // Since we have not input data to save, we can only throw an error
+                        // invalidSavedPaymentMethod
+                        throw new ConstraintException("Choosen payment method have expired");
+                    }
+                }
+                else
+                {
+                    // Creates or updates a payment method with the given data
+
+                    // We create a temp ID if needed
+                    // (when an ID is provided, thats used -and validated and autogenerated if is not found while saving-,
+                    // and an empty ID for a payment to save is just left empty to be autogenerated as a persistent payment method)
+                    if (!hasID && !savePayment)
+                    {
+                        paymentData.paymentMethodID = LcPayment.TempSavedCardPrefix + ASP.LcHelpers.Channel + "_" + bookingID.ToString();
+                    }
+
+                    // Validate
+                    var validationResults = paymentData.Validate();
+                    if (validationResults.Count > 0)
+                        return validationResults;
+
+                    // Save on Braintree secure Vault
+                    // It updates the ID if a new one was generated
+                    var saveCardError = paymentData.SaveInVault(client.Id);
+                    if (!String.IsNullOrEmpty(saveCardError))
+                    {
+                        // paymentDataError
+                        throw new ConstraintException(saveCardError);
+                    }
+                }
+
+                // We have a valid payment ID at this moment, create the transactionID with that
+                paymentTransactionID = LcPayment.TransactionIdIsCardPrefix + paymentData.paymentMethodID;
+                // Set card number (is processed later while saving to ensure only 4 and encrypted are persisted)
+                paymentLastFourCardNumberDigits = paymentData.cardNumber;
+                // Flags
+                paymentCollected = true;
+                paymentAuthorized = false;
+            }
+
+            // Update status:
+            bookingStatusID = (int)(instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
+            // Persist on database:
+            SetPaymentStatus(this);
+            // No errors:
+            return null;
+        }
+
         #endregion
 
         #region Service Professional Manipulations
@@ -701,9 +882,9 @@ namespace LcRest
                 var customer = LcData.UserInfo.GetUserRow(clientUserID);
 
                 if (provider == null)
-                    throw new ConstraintException("Impossible to retrieve the provider information. It exists?");
+                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
                 if (customer == null)
-                    throw new ConstraintException("Impossible to retrieve the customer information. It exists?");
+                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
                 if (services == null)
                     throw new ConstraintException("Create a booking require select almost one service");
 
@@ -932,7 +1113,6 @@ namespace LcRest
                     throw new ConstraintException("Impossible to create a booking for that Job Title.");
 
                 // Booking type enforced by this API, required before calculate correctly the pricing:
-                booking.bookingTypeID = (int)LcEnum.BookingType.serviceProfessionalBooking;
                 if (booking.CreatePricing(services))
                     throw new ConstraintException("Choosen services does not belongs to the Job Title");
 
@@ -954,7 +1134,7 @@ namespace LcRest
                 db.Execute("BEGIN TRANSACTION");
 
                 // Create events
-                var serviceDateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
+                booking.serviceDateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
                     serviceProfessionalUserID,
                     booking.instantBooking ? LcEnum.CalendarAvailabilityType.busy : LcEnum.CalendarAvailabilityType.tentative,
                     eventSummary, // summary
@@ -963,13 +1143,11 @@ namespace LcRest
                     serviceEndTime,
                     timeZone
                 );
-                int? alternative1DateID = null;
-                int? alternative2DateID = null;
                 if (!booking.instantBooking)
                 {
                     if (alternative1EndTime.HasValue)
                     {
-                        alternative1DateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
+                        booking.alternativeDate1ID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
                             serviceProfessionalUserID,
                             LcEnum.CalendarAvailabilityType.tentative,
                             eventSummary, // summary
@@ -981,7 +1159,7 @@ namespace LcRest
                     }
                     if (alternative2EndTime.HasValue)
                     {
-                        alternative2DateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
+                        booking.alternativeDate2ID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
                             serviceProfessionalUserID,
                             LcEnum.CalendarAvailabilityType.tentative,
                             eventSummary, // summary
@@ -1000,10 +1178,19 @@ namespace LcRest
                 PricingSummary.SetDetails(booking.pricingSummary, db.Db);
 
                 // 4º: persisting booking on database
-                booking.bookingStatusID = (int)(booking.instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
+                // Explicitly set incomplete status when payment is enabled (since payment info was not added still, it requires
+                // a call to another method after this).
+                // On no payment, depends on instantBooking
+                if (booking.paymentEnabled)
+                {
+                    booking.bookingStatusID = (int)LcEnum.BookingStatus.incomplete;
+                }
+                else
+                {
+                    booking.bookingStatusID = (int)(booking.instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
+                }
                 booking.serviceAddressID = serviceAddressID;
-                booking.serviceDateID = serviceDateID;
-                Booking.Set(booking, serviceProfessionalUserID, db.Db);
+                Booking.Set(booking, clientUserID, db.Db);
 
                 // Persisting all or nothing:
                 db.Execute("COMMIT TRANSACTION");

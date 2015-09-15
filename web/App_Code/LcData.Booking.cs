@@ -1506,7 +1506,7 @@ public static partial class LcData
                         }
                         else
                         {
-                            return "Transaction or card identifier gets lost, payment will cannot be performed.";
+                            return "Transaction or card identifier gets lost, payment cannot be performed.";
                         }
                     }
                 }

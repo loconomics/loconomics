@@ -533,6 +533,13 @@ public class LcRestAddress
         }
     }
 
+    /// <summary>
+    /// TODO: Why not fill the public fields in a !publicInterface call?
+    /// </summary>
+    /// <param name="postalCode"></param>
+    /// <param name="countryID"></param>
+    /// <param name="publicInterface"></param>
+    /// <returns></returns>
     public static dynamic GetPostalCodeData(string postalCode, int countryID, bool publicInterface)
     {
         // Get the information by postal code and country from database

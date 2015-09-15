@@ -23,6 +23,25 @@
 @functions{
     public class RestMeClientBooking : RestWebPage
     {
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0)
+                throw new HttpException(404, "Not Found");
+            
+            // Query to fetch information in order to start
+            // creation of a booking
+            var clientID = WebSecurity.CurrentUserId;
+            var serviceProfessionalID = Request["serviceProfessionaID"].AsInt();
+            var jobTitleID = Request["jobTitleID"].AsInt();
+            var bookCode = Request["bookCode"];
+            var locale = LcRestLocale.Current;
+            var newBooking = LcRest.Booking.NewFor(clientID, serviceProfessionalID, jobTitleID, locale.languageID, locale.countryID, bookCode);
+            if (newBooking == null)
+                throw new HttpException(404, "Not Found");
+
+            return newBooking;
+        }
+
         public override dynamic Post()
         {
             if (UrlData.Count > 0)
@@ -49,20 +68,28 @@
             Validation.RequireField("serviceProfessionalUserID", LcRessources.RequiredField("Service Professional"));
             Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
             Validation.RequireField("serviceAddressID", LcRessources.RequiredField("Service Address"));
-            Validation.RequireField("billingAddressID", LcRessources.RequiredField("Billing Address"));
             Validation.Add("serviceProfessionalUserID", Validator.Integer("Service Professional"));
-            Validation.Add("jobTitleID", Validator.Integer("Job Title"));
-            Validation.Add("serviceAddressID", Validator.Integer("Location"));
-            Validation.Add("billingAddressID", Validator.Integer("Billing Address"));
-            Validation.Add("gratuityAmount", Validator.Decimal("Gratuity must be a number"));
-            Validation.Add("gratuityPercentage", Validator.Decimal("Gratuity must be a number"));
+            Validation.Add("jobTitleID", Validator.Integer(LcRessources.RequiredField("Job Title")));
+            Validation.Add("serviceAddressID", Validator.Integer(LcRessources.RequiredField("Location")));
+            Validation.Add("billingAddressID", Validator.Integer(LcRessources.RequiredField("Billing Address")));
+            
+            // TODO Implement gratuity as of #659
+            //Validation.Add("gratuityAmount", Validator.Decimal("Gratuity must be a number"));
+            //Validation.Add("gratuityPercentage", Validator.Decimal("Gratuity must be a number"));
             
             var serviceProfessionalUserID = Request.Form["serviceProfessionalUserID"].AsInt();
             var jobTitleID = Request.Form["jobTitleID"].AsInt();
             var serviceAddressesID = Request.Form["serviceAddressesID"].AsInt();
             var billingAddressID = Request.Form["billingAddressID"].AsInt();
-            var gratuityAmount = Request.Form["gratuityAmount"].AsDecimal();
-            var gratuityPercentage = Request.Form["gratuityPercentage"].AsDecimal();
+            var bookCode = Request.Form["bookCode"];
+            //var gratuityAmount = Request.Form["gratuityAmount"].AsDecimal();
+            //var gratuityPercentage = Request.Form["gratuityPercentage"].AsDecimal();
+            // TODO To implement on recurring bookings. It's expected that more fields are required, to know the recurrence repeatition pattern/rules
+            //var makeRepeatBooking = Request.Form["makeRepeatBooking"].AsBool();
+            
+            var locale = LcRestLocale.Current;
+            // Get booking presets for current data, to know some fixed settings like instantBooking
+            var booking = LcRest.Booking.NewFor(userID, serviceProfessionalUserID, jobTitleID, locale.languageID, locale.countryID, bookCode);
 
             /* TODO: Update to receive an array of object like
                 * { serviceProfessionalUserID: 0, totalPrice: 0, clientInputData: null,... }
@@ -87,12 +114,32 @@
                 }
             }
             
-            // For instant booking
-            Validation.RequireField("startTime", LcRessources.RequiredField("Start Date and Time"));
-            // TODO For booking request: implement dates, detection of request vs instant
-            var startTime = DateTimeFromISO(Request["startTime"]);
-            if (!startTime.HasValue) {
-                ModelState.AddError("startTime", "Start date/time is not valid");
+            // Date/times: main and alternative1/2
+            var requiredStartTimeName = "Start date and time";
+            
+            DateTime? alternative1StartTime = null;
+            DateTime? alternative2StartTime = null;
+            if (!booking.instantBooking) {
+                requiredStartTimeName = "Preferred start date and time";
+                if (!Request.Form["alternative1StartTime"].IsEmpty()) {
+                    alternative1StartTime = DateTimeFromISO(Request.Form["alternative1StartTime"]);
+                    if (!alternative1StartTime.HasValue) {
+                        ModelState.AddError("alternative1StartTime", "Alternative date and time 1 is not valid");
+                    }
+                }
+                if (!Request.Form["alternative2StartTime"].IsEmpty()) {
+                    alternative2StartTime = DateTimeFromISO(Request.Form["alternative2StartTime"]);
+                    if (!alternative2StartTime.HasValue)
+                    {
+                        ModelState.AddError("alternative2StartTime", "Alternative date and time 2 is not valid");
+                    }
+                }
+            }
+
+            var serviceStartTime = DateTimeFromISO(Request.Form["serviceStartTime"]);
+            if (!serviceStartTime.HasValue)
+            {
+                ModelState.AddError("startTime", requiredStartTimeName + " is not valid");
             }
 
             if (!Validation.IsValid()) {
@@ -100,26 +147,60 @@
             }
 
             try
-            {
-                var locale = LcRestLocale.Current;
-                
-                // TODO Implement client booking
-                var booking = LcRest.Booking.InsClientBooking(
+            {               
+                // Create booking
+                booking = LcRest.Booking.InsClientBooking(
                     userID,
                     Request["serviceProfessionalUserID"].AsInt(),
                     Request["jobTitleID"].AsInt(),
                     Request["addressID"].AsInt(),
-                    startTime.Value,
-                    Request["alternative1StartTime"].IsDateTime() ? (DateTime?)Request["alternative1StartTime"].AsDateTime() : null,
-                    Request["alternative2StartTime"].IsDateTime() ? (DateTime?)Request["alternative2StartTime"].AsDateTime() : null,
+                    serviceStartTime.Value,
+                    alternative1StartTime,
+                    alternative2StartTime,
                     pricingIds,
                     locale.languageID,
                     locale.countryID
                 );
                 itemID = booking.bookingID;
                 
+                // Collect payment
+                var address = new LcData.Address {
+                    AddressLine1 = Request["billingAddress.addressLine1"],
+                    AddressLine2 = Request["billingAddress.addressLine2"],
+                    PostalCode = Request["billingAddress.postalCode"],
+                    CountryID = locale.countryID
+                };
+                var autoAddress = LcRestAddress.GetPostalCodeData(address.PostalCode, address.CountryID, true);
+                if (autoAddress != null) {
+                    address.StateProvinceCode = autoAddress.stateProvinceCode;
+                    address.City = autoAddress.city;
+                }
+                
+                var paymentErrors = booking.CollectPayment(new LcPayment.InputPaymentMethod
+                {
+                    paymentMethodID = Request["paymentMethod.paymentMethodID"],
+                    cardNumber = Request["paymentMethod.cardNumber"],
+                    nameOnCard = Request["paymentMethod.nameOnCard"],
+                    expirationMonth = Request["paymentMethod.expirationMonth"],
+                    expirationYear = Request["paymentMethod.expirationYear"],
+                    securityCode = Request["paymentMethod.securityCode"],
+                    billingAddress = address
+                }, Request["savePayment"].AsBool());
+
+                if (paymentErrors != null && paymentErrors.Count > 0)
+                {
+                    // At this point, we show errors and the API consumer must attempt
+                    // calls only to update the provided payment data for the generated bookingID
+                    // not to pass all the data again since the other details are saved and
+                    // available time reserved.
+                    foreach(var paymentErr in paymentErrors) {
+                        ModelState.AddError(paymentErr.Key, paymentErr.Value);
+                    }
+                    // TODO Needs return the errors and the bookingID
+                }
+                
                 // Send communication to client (email)
-                LcMessaging.SendProviderBooking(itemID); 
+                //LcMessaging.SendProviderBooking(itemID);
             }
             catch (ConstraintException delEx)
             {
