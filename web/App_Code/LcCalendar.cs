@@ -135,6 +135,13 @@ public static partial class LcCalendar
         return false;
     }
 
+    /// <summary>
+    /// Get basic fields for a calendar event.
+    /// Alternative, check the more basic, new API LcRest.EventDates.Get
+    /// </summary>
+    /// <param name="eventID"></param>
+    /// <param name="db"></param>
+    /// <returns></returns>
     public static dynamic GetBasicEventInfo(int eventID, Database db)
     {
         return db.QuerySingle(@"

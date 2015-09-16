@@ -40,7 +40,7 @@
                 throw new HttpException(404, "User Not Found");
             }
             
-            var profile = LcRestPublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
+            var profile = LcRest.PublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
             if (profile == null)
                 throw new HttpException(404, "User Not Found");
 
@@ -49,7 +49,9 @@
 
             var verificationsSummary = LcRestPublicUserVerificationsSummary.Get(userID, profile.isServiceProfessional ? -2 : 0);
 
-            var jobProfile = profile.isServiceProfessional ? LcData.JobTitle.GetPublicUserJobTitles(userID) : null;
+            var locale = LcRestLocale.Current;
+
+            var jobProfile = profile.isServiceProfessional ? LcData.JobTitle.GetPublicUserJobTitles(userID, locale.languageID, locale.countryID) : null;
             
             var extendedJobProfile = jobProfile == null ? null : ((IList<dynamic>)jobProfile).Select(x => {
                 return new {

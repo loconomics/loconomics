@@ -9,7 +9,7 @@ using System.Web.WebPages;
 namespace LcRest
 {
     /// <summary>
-    /// TODO serviceAddress, dates Links
+    /// Represents a booking, as exposed publicly on REST API, and methods to manage it
     /// </summary>
     public class Booking
     {
@@ -32,7 +32,7 @@ namespace LcRest
 
         public int pricingSummaryID;
         public int pricingSummaryRevision;
-        private string paymentTransactionID;
+        internal string paymentTransactionID;
         public string paymentLastFourCardNumberDigits;
         public decimal? totalPricePaidByClient;
         public decimal? totalServiceFeesPaidByClient;
@@ -51,12 +51,12 @@ namespace LcRest
         public bool paymentAuthorized;
         public int? awaitingResponseFromUserID;
         public bool pricingAdjustmentRequested;
-        private string supportTicketNumber;
+        internal string supportTicketNumber;
 	
-        private string messagingLog;
-        private DateTime? createdDate;
+        internal string messagingLog;
+        internal DateTime? createdDate;
         public DateTime? updatedDate;
-        private string modifiedBy;
+        internal string modifiedBy;
 
 	    public string specialRequests;
         public string preNotesToClient;
@@ -399,6 +399,242 @@ namespace LcRest
             }
         }
 
+        #region Queries
+
+        /// <summary>
+        /// Returns a list of bookings that are in status 'incomplete' and ready to become timedout
+        /// </summary>
+        /// <param name="dbShared"></param>
+        /// <returns></returns>
+        public static IEnumerable<Booking> QueryIncomplete2TimedoutBookings(Database dbShared = null)
+        {
+            using (var db = new LcDatabase(dbShared)) {
+                return db.Query(@"
+                    SELECT  *
+                    FROM    Booking
+                    WHERE   BookingStatusID = @0
+                             AND
+                            -- Not expired previously: it has dates info still
+                            (ServiceDateID is not null OR AlternativeDate1ID is not null OR AlternativeDate2ID is not null)
+                             AND
+                            -- is old enough to be considered not active: 1 day
+                            UpdatedDate < dateadd(d, -1, getdate())
+                ", (int)LcEnum.BookingStatus.incomplete).Select<dynamic, Booking>(x => FromDB(x, true));
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of bookings with payment enabled and waiting for client to be charged for the service
+        /// price.
+        /// Used by scheduled task to automatically trigger the payment process to charge client almost 1 hour after
+        /// service ended
+        /// </summary>
+        /// <param name="dbShared"></param>
+        /// <returns></returns>
+        public static IEnumerable<Booking> QueryPendingOfClientChargeBookings(Database dbShared = null)
+        {
+            using (var db = new LcDatabase(dbShared))
+            {
+                var validStatuses = String.Join(",", new List<int> {
+                    (int)LcEnum.BookingStatus.confirmed,
+                    (int)LcEnum.BookingStatus.servicePerformed
+                });
+
+                return db.Query(@"
+                    SELECT  B.*
+                    FROM    Booking As B
+                             INNER JOIN
+                            CalendarEvents As E
+                              ON B.ServiceDateID = E.Id
+                             INNER JOIN
+                    WHERE   
+                            -- With payment enabled
+                            B.PaymentEnabled = 1
+                             AND
+                            B.BookingStatusID IN (" + validStatuses + @")
+                             AND
+                            -- almost 1 hour after service ended (more than that is fine)
+                            getdate() >= dateadd(hh, 1, E.EndTime)
+                            /* AND
+                             getdate() < dateadd(hh, 2, E.EndTime)
+                            */
+
+                             AND
+                            -- Still not charged
+                            B.TotalPricePaidByClient is null
+                ").Select<dynamic, Booking>(x => FromDB(x, true));
+            }
+        }
+
+        /// <summary>
+        /// When a booking with payment is confirmed (instant booking or after confirm request), 
+        /// the payment is authorized with the exception of services for more than 7 days in advance,
+        /// that ones are postponed because of authorization expirations.
+        /// This query returns that bookings on a secure time frame to avoid expirations and prevent
+        /// take action if any problem: 48 hours before the service start.
+        /// </summary>
+        /// <param name="dbShared"></param>
+        /// <returns></returns>
+        public static IEnumerable<Booking> QueryPostponedPaymentAuthorizations(Database dbShared = null)
+        {
+            using (var db = new LcDatabase(dbShared))
+            {
+                var validStatuses = String.Join(",", new List<int> {
+                    (int)LcEnum.BookingStatus.confirmed,
+                    (int)LcEnum.BookingStatus.servicePerformed,
+                    (int)LcEnum.BookingStatus.completed
+                });
+
+                return db.Query(@"
+                SELECT  B.*
+                FROM    Booking As B
+                         INNER JOIN
+                        CalendarEvents As E
+                          ON B.ServiceDateID = E.Id
+                WHERE   BookingStatusID IN (" + validStatuses + @")
+                         AND
+                        -- at 48 hours before service starts (after that is fine)
+                        getdate() >= dateadd(hh, -48, E.StartTime)
+                        /* AND
+                         getdate() < dateadd(hh, -49, E.StartTime)
+                        */
+
+                         AND
+                        -- Still not charged or authorized
+                        B.TotalPricePaidByClient is null
+                         AND
+                        B.PaymentAuthorized = 0
+                ").Select<dynamic, Booking>(x => FromDB(x, true));
+            }
+        }
+
+        #region SQLs QueryPendingOfPaymentRelease
+        private const string sqlPendingOfPaymentReleaseForVeteranServiceProfessionals = @"
+            SELECT  B.*
+            FROM    Booking As B
+                        INNER JOIN
+                    CalendarEvents As E
+                        ON B.ServiceDateID = E.Id
+            WHERE   PaymentEnabled = 1
+                     AND
+                    BookingStatusID = @0
+                        AND
+                    -- at 24 hours, 1 day, after service ended (more than that is fine)
+                    getdate() >= dateadd(hh, 24, E.EndTime)
+                    /* AND
+                        getdate() < dateadd(hh, 25, E.EndTime)
+                    */
+                        AND
+                    (SELECT count(*)
+                        FROM Booking As B2
+                        WHERE
+                        B2.ServiceProfessionalUserID = B.ServiceProfessionalUserID
+                         AND
+                        B2.BookingStatusID = @1
+                    ) > 0 -- There are complete bookings (almost 1)
+        ";
+        private const string sqlPendingOfPaymentReleaseForNewServiceProfessionals = @"
+            SELECT  B.*
+            FROM    Booking As B
+                        INNER JOIN
+                    CalendarEvents As E
+                        ON B.ServiceDateID = E.Id
+            WHERE   PaymentEnabled = 1
+                     AND
+                    BookingStatusID = @0
+                        AND
+                    -- at 120 hours, 5 days, after service ended (more than that is fine)
+                    getdate() >= dateadd(hh, 120, E.EndTime)
+                    /* AND
+                        getdate() < dateadd(hh, 121, E.EndTime)
+                    */
+                        AND
+                    (SELECT count(*)
+                        FROM Booking As B2
+                        WHERE
+                        B2.ServiceProfessionalUserID = B.ServiceProfessionalUserID
+                         AND
+                        B2.BookingStatusID = @1
+                    ) = 0 -- There is no complete bookings
+        ";
+        #endregion
+        public static IEnumerable<Booking> QueryPendingOfPaymentReleaseBookings(bool forNewServiceProfessionals, Database dbShared = null)
+        {
+            using (var db = new LcDatabase(dbShared))
+            {
+                var sql = forNewServiceProfessionals ?
+                    sqlPendingOfPaymentReleaseForNewServiceProfessionals :
+                    sqlPendingOfPaymentReleaseForVeteranServiceProfessionals;
+
+                return db.Query(sql, (int)LcEnum.BookingStatus.servicePerformed, (int)LcEnum.BookingStatus.completed)
+                .Select<dynamic, Booking>(x => FromDB(x, true));
+            }
+        }
+
+        /// <summary>
+        /// Return a list of bookings in Confirmed status that are ready to update to status ServicePerformed.
+        /// Conditions: being confirmed (not other statuses allowed) and 48 hours after service endTime.
+        /// </summary>
+        /// <param name="dbShared"></param>
+        /// <returns></returns>
+        public static IEnumerable<Booking> QueryConfirmed2ServicePerformedBookings(Database dbShared = null)
+        {
+            using (var db = new LcDatabase(dbShared))
+            {
+                var validStatuses = String.Join(",", new List<int> {
+                    (int)LcEnum.BookingStatus.confirmed,
+                    (int)LcEnum.BookingStatus.servicePerformed,
+                    (int)LcEnum.BookingStatus.completed
+                });
+
+                return db.Query(@"
+                    SELECT  B.*
+                    FROM    Booking As B
+                             INNER JOIN
+                            CalendarEvents As E
+                              ON B.ServiceDateID = E.Id
+                    WHERE   BookingStatusID = @0
+                             AND
+                            -- at 48 hours after service ended (more than 48 hours is fine)
+                            getdate() >= dateadd(hh, 48, E.EndTime)
+                            /* AND
+                             getdate() < dateadd(hh, 49, E.EndTime)
+                            */
+                ", (int)LcEnum.BookingStatus.confirmed).Select<dynamic, Booking>(x => FromDB(x, true));
+            }
+        }
+
+        /// <summary>
+        /// List bookings in status Request that must update as requestExpired because of
+        /// * If:: Provider didn't reply
+        /// * If:: Request not updated/changed
+        /// </summary>
+        /// <param name="dbShared"></param>
+        /// <returns></returns>
+        public static IEnumerable<Booking> QueryRequest2ExpiredBookings(Database dbShared = null)
+        {
+            using (var db = new LcDatabase(dbShared))
+            {
+                var validStatuses = String.Join(",", new List<int> {
+                    (int)LcEnum.BookingStatus.confirmed,
+                    (int)LcEnum.BookingStatus.servicePerformed,
+                    (int)LcEnum.BookingStatus.completed
+                });
+
+                return db.Query(@"
+                    SELECT  *
+                    FROM    Booking
+                    WHERE   BookingStatusID = @1
+                             AND
+                            -- passed x hours from request or some change (some provider communication or customer change)
+                            UpdatedDate < dateadd(hh, 0 - @0, getdate())
+                ", LcData.Booking.ConfirmationLimitInHours, (int)LcEnum.BookingStatus.request)
+                 .Select<dynamic, Booking>(x => FromDB(x, true));
+            }
+        }
+        #endregion
+
+        #region Links
         /// <summary>
         /// Load from database all the links data
         /// </summary>
@@ -406,12 +642,27 @@ namespace LcRest
         {
             FillPricingSummary();
             FillUserJobTitle();
+            FillServiceDates();
+            FillServiceAddress();
         }
 
         public void FillPricingSummary()
         {
             pricingSummary = PricingSummary.Get(pricingSummaryID, pricingSummaryRevision);
             pricingSummary.FillLinks();
+        }
+
+        public void FillServiceAddress()
+        {
+            if (serviceAddressID.HasValue)
+            {
+                var users = new int[] { serviceProfessionalUserID, clientUserID };
+                serviceAddress = LcRestAddress.GetAddress(serviceAddressID.Value, users.AsEnumerable<int>());
+            }
+            else
+            {
+                serviceAddress = null;
+            }
         }
 
         /// <summary>
@@ -429,6 +680,26 @@ namespace LcRest
                 userJobTitle = data[0];
             }
         }
+
+        /// <summary>
+        /// Fill the serviceDate and alternativeDate fields based on its ID (if there is one).
+        /// </summary>
+        public void FillServiceDates()
+        {
+            if (serviceDateID.HasValue)
+                serviceDate = EventDates.Get(serviceDateID.Value);
+            else
+                serviceDate = null;
+            if (alternativeDate1ID.HasValue)
+                alternativeDate1 = EventDates.Get(alternativeDate1ID.Value);
+            else
+                alternativeDate1 = null;
+            if (alternativeDate2ID.HasValue)
+                alternativeDate2 = EventDates.Get(alternativeDate2ID.Value);
+            else
+                alternativeDate2 = null;
+        }
+        #endregion
         #endregion
 
         #region Set
@@ -545,11 +816,10 @@ namespace LcRest
         /// </summary>
         private const string sqlUpdBookingPayment = @"
             UPDATE Booking SET
-                ,BookingStatusID = @1
-                ,PaymentTransactionID = @2
-                ,PaymentCollected = @3
-                ,PaymentAuthorized = @4
-                ,PaymentLastFourCardNumberDigits = @5
+                ,PaymentTransactionID = @1
+                ,PaymentCollected = @2
+                ,PaymentAuthorized = @3
+                ,PaymentLastFourCardNumberDigits = @4
                 ,[UpdatedDate] = getdate()
                 ,[ModifiedBy] = 'sys'
             WHERE BookingID = @0
@@ -563,6 +833,12 @@ namespace LcRest
                 ,[UpdatedDate] = getdate()
                 ,[ModifiedBy] = 'sys'
             WHERE BookingID = @0
+        ";
+        private const string sqlUpdClientPayment = @"
+            UPDATE  Booking
+            SET     TotalPricePaidByClient = @1,
+                    TotalServiceFeesPaidByClient = @2
+            WHERE   BookingId = @0
         ";
         #endregion
 
@@ -659,7 +935,7 @@ namespace LcRest
             }
         }
 
-        public static void SetPaymentStatus(Booking booking, Database sharedDb = null)
+        public static void SetPaymentState(Booking booking, Database sharedDb = null)
         {
             using (var db = new LcDatabase(sharedDb))
             {
@@ -668,11 +944,30 @@ namespace LcRest
                 
                 db.Execute(sqlUpdBookingPayment,
                     booking.bookingID,
-                    booking.bookingStatusID,
                     booking.paymentTransactionID,
                     booking.paymentCollected,
                     booking.paymentAuthorized,
                     lastFour
+                );
+            }
+        }
+
+        /// <summary>
+        /// Autoset the booking fields for prices finally paid by client
+        /// after complete the client payment process (charge customer, settling transaction)
+        /// </summary>
+        /// <param name="booking"></param>
+        public static void SetClientPayment(Booking booking)
+        {
+            if (booking.pricingSummary == null)
+                booking.FillPricingSummary();
+
+            using (var db = new LcDatabase())
+            {
+                db.Execute(sqlUpdClientPayment,
+                    booking.bookingID,
+                    booking.pricingSummary.totalPrice ?? 0,
+                    booking.pricingSummary.feePrice ?? 0
                 );
             }
         }
@@ -685,6 +980,28 @@ namespace LcRest
                     booking.bookingID,
                     booking.bookingStatusID
                 );
+            }
+        }
+
+        /// <summary>
+        /// Update given booking at database to a state that is considered 'timedout'.
+        /// Right now there is not an explicit 'timedout' status, but there are other changes to do:
+        /// removing the Events registered, so they
+        /// do not take time from the service professional (they are 'tentative' from its
+        /// creation to prevent collisions).
+        /// </summary>
+        /// <param name="booking"></param>
+        /// <param name="sharedDb"></param>
+        public static void SetAsTimedout(Booking booking, Database sharedDb = null)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                if (booking.serviceDateID.HasValue)
+                    LcCalendar.DelUserAppointment(booking.serviceProfessionalUserID, booking.serviceDateID.Value);
+                if (booking.alternativeDate1ID.HasValue)
+                    LcCalendar.DelUserAppointment(booking.serviceProfessionalUserID, booking.alternativeDate1ID.Value);
+                if (booking.alternativeDate2ID.HasValue)
+                    LcCalendar.DelUserAppointment(booking.serviceProfessionalUserID, booking.alternativeDate2ID.Value);
             }
         }
         #endregion
@@ -737,12 +1054,25 @@ namespace LcRest
                 ", this.serviceDateID, description, location);
             }
         }
+        #endregion
 
+        #region Payment related
+        /** PAYMENT PHASES
+         *  1- CollectPayment
+         *  2- AuthorizeTransaction
+         *  3- SettleTransaction
+         *  4- ReleasePayment
+         *  
+         *  A booking confirmation or instant booking runs ProcessConfirmedBookingPayment 
+         *    that runs AuhorizeTransaction is less than 7 days for service.
+         *  A booking cancellation executes a RefundPayment based on cancellation policy, replacing step 2 or 3 of the process.
+         *  A booking denial executes a RefundPayment with full refund, replacing step 2 or 3 of the process.
+         **/
         /// <summary>
         /// The emulation allows to shortcut Braintree, for local dev environments where is
         /// not possible even to use Braintree Sandbox
         /// </summary>
-        private const bool TESTING_EMULATEBRAINTREE = ASP.LcHelpers.Channel == "localdev";
+        private readonly bool TESTING_EMULATEBRAINTREE = ASP.LcHelpers.Channel == "localdev";
 
         /// <summary>
         /// It adds payment information to the current booking,
@@ -837,11 +1167,131 @@ namespace LcRest
             // Update status:
             bookingStatusID = (int)(instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
             // Persist on database:
-            SetPaymentStatus(this);
+            SetPaymentState(this);
             // No errors:
             return null;
         }
 
+        /// <summary>
+        /// This step must be run after a booking with payment is confirmed (instant or by request).
+        /// Try to authorize the payment through the payment processor, but only if the service date
+        /// is in the authorization time frame (7 days), otherwise left it expecing the scheduled task
+        /// to perform the authorization.
+        /// It returns if the task was done or not.
+        /// Is not done if out the time frame, is not a confirmed booking, no serviceDate, no paymentCollected
+        /// </summary>
+        /// <returns></returns>
+        public bool ProcessConfirmedBookingPayment()
+        {
+            if (bookingStatusID != (int)LcEnum.BookingStatus.confirmed ||
+                !serviceDateID.HasValue ||
+                !paymentCollected)
+                return false;
+            
+            FillServiceDates();
+            if ((serviceDate.startTime - DateTime.Now) < TimeSpan.FromDays(7)) {
+                return AuthorizeTransaction();
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// If the given transactionID is a Card Token, it performs a transaction to authorize, without charge/settle,
+        /// the amount on the card.
+        /// This process ensures the money is available for the later moment the charge happens (withing the authorization
+        /// period, the worse case 7 days) using 'SettleBookingTransaction', or manage preventively any error that arises.
+        /// The transactionID generated (if any) is updated on database properly.
+        /// </summary>
+        /// <returns>Returns if the task was performed or not, without error.
+        /// If the task cannot be performed because an error, is throwed.
+        /// There are cases where the authorization does not apply, like when the transaction was already run, and returns
+        /// false as a good result. If is expected to have a cardToken and is empty, throws an error.
+        /// If the authorization through Braintree fails, throw the error</returns>
+        public bool AuthorizeTransaction()
+        {
+            if (paymentCollected && !paymentAuthorized && !LcPayment.IsFakeTransaction(paymentTransactionID))
+            {
+                if (paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                {
+                    var cardToken = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
+
+                    if (!String.IsNullOrWhiteSpace(cardToken))
+                    {
+                        // We need pricing info, if not preloaded
+                        if (pricingSummary == null)
+                            FillPricingSummary();
+
+                        // Transaction authorization, so NOT charge/settle now
+                        paymentTransactionID = LcPayment.AuthorizeBookingTransaction(this, cardToken);
+                        paymentAuthorized = true;
+
+                        SetPaymentState(this);
+
+                        return true;
+                    }
+                    else
+                    {
+                        throw new ConstraintException("Transaction or card identifier gets lost, payment cannot be performed.");
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Request payment from client payment method to Braintree. It manages if was previously authorized or not.
+        /// AKA: ChargePaymentToClient
+        /// </summary>
+        /// <returns></returns>
+        public bool SettleTransaction()
+        {
+            if (paymentCollected)
+            {
+                if (!paymentAuthorized)
+                {
+                    // First, request payment authorization from collected payment method (AKA saved credit card)
+                    AuthorizeTransaction();
+                }
+
+                // Require payment from authorized transaction
+                var settleError = LcPayment.SettleTransaction(paymentTransactionID);
+                if (!String.IsNullOrEmpty(settleError))
+                    throw new Exception(settleError);
+
+                // Update booking database information, setting price payed by customer
+                SetClientPayment(this);
+
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Release the payment from the current booking to the service professional.
+        /// Payment must be enabled and collected or will skipt returning false.
+        /// Payment must be previously settle in order to run successfully, or error from Braintree
+        /// will happens.
+        /// Its the final step in the payment process.
+        /// </summary>
+        /// <returns></returns>
+        public bool ReleasePayment()
+        {
+            if (paymentEnabled && paymentCollected)
+            {
+                var errmsg = LcPayment.ReleaseTransactionFromEscrow(paymentTransactionID);
+                if (!String.IsNullOrEmpty(errmsg))
+                    throw new Exception(errmsg);
+
+                // Booking is complete
+                bookingStatusID = (int)LcEnum.BookingStatus.completed;
+                SetStatus(this);
+
+                return true;
+            }
+            return false;
+        }
         #endregion
 
         #region Service Professional Manipulations

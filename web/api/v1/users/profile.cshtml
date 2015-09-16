@@ -35,7 +35,7 @@
                 throw new HttpException(404, "User Not Found");
             }
             
-            var profile = LcRestPublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
+            var profile = LcRest.PublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
             if (profile == null)
                 throw new HttpException(404, "User Not Found");
 

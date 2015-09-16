@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Configuration;
 using Braintree;
+using System.Web.WebPages;
 
 /// <summary>
 /// Descripción breve de LcPayment
@@ -75,6 +76,96 @@ public static partial class LcPayment
     #endregion
 
     #region Actions: Create or prepare transactions and cards
+
+    /// <summary>
+    /// Performs a transaction to authorize the transaction on the client payment method, but
+    /// not charging still, using the data from the given booking and the saved paymentMethodID.
+    /// Booking is NOT checked before perform the task, use the LcRest.Booking API to securely run pre-condition
+    /// checks before authorize transaction. The booking must have the data loaded for the pricingSummary.
+    /// It returns the transactionID generated, original booking object is not updated.
+    /// Errors in the process are throwed.
+    /// </summary>
+    /// <param name="booking"></param>
+    /// <param name="paymentMethodID">AKA creditCardToken</param>
+    public static string AuthorizeBookingTransaction(LcRest.Booking booking, string paymentMethodID)
+    {
+        if (booking.pricingSummary == null ||
+            !booking.pricingSummary.totalPrice.HasValue ||
+            booking.pricingSummary.totalPrice.Value <= 0)
+        {
+            throw new ConstraintException("To authorize a booking payment is required a price to charge.");
+        }
+
+        var gateway = NewBraintreeGateway();
+
+        TransactionRequest request = new TransactionRequest
+        {
+            Amount = booking.pricingSummary.totalPrice.Value,
+            CustomerId = GetCustomerId(booking.clientUserID),
+            PaymentMethodToken = paymentMethodID,
+            // Now, with Marketplace #408, the receiver of the money for each transaction is
+            // the provider through account at Braintree, and not the Loconomics account:
+            //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+            MerchantAccountId = GetProviderPaymentAccountId(booking.serviceProfessionalUserID),
+            // Marketplace #408: since provider receive the money directly, Braintree must discount
+            // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
+            ServiceFeeAmount = booking.pricingSummary.feePrice.Value,
+            Options = new TransactionOptionsRequest
+            {
+                // Marketplace #408: don't pay provider still, wait for the final confirmation 'release scrow'
+                HoldInEscrow = true,
+                // Do not submit, just authorize:
+                SubmitForSettlement = false
+            }
+        };
+
+        var r = gateway.Transaction.Sale(request);
+
+        // Everything goes fine
+        if (r.IsSuccess())
+        {
+            // Save the transactionID
+            if (r.Target != null
+                && !String.IsNullOrEmpty(r.Target.Id))
+            {
+                // If the card is a TEMPorarly card (just to perform this transaction)
+                // it must be removed now since was successful used
+                // IMPORTANT: Since an error on this subtask is not important to the
+                // user and will break a success process creating a new problem if throwed (because transactionID
+                // gets lost),
+                // is catched and managed internally by Loconomics stuff that can check and fix transparentely
+                // this minor error.
+                try
+                {
+                    if (paymentMethodID.StartsWith(TempSavedCardPrefix))
+                        gateway.CreditCard.Delete(paymentMethodID);
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        LcMessaging.NotifyError("LcPayment.AuthorizeBookingTransaction..DeleteBraintreeTempCard(" + paymentMethodID + ");bookingID=" + booking.bookingID, "", ex.Message);
+                        LcLogger.LogAspnetError(ex);
+                    }
+                    catch { }
+                }
+
+                // r.Target.Id => transactionID
+                return r.Target.Id;
+            }
+            else
+            {
+                // Transaction worked but impossible to know the transactionID (weird, is even possible?),
+                // recommended to do not touch the DB (to still know the credit card token) and notify error
+                throw new Exception("Impossible to know transaction details, please contact support. BookingID #" + booking.bookingID.ToString());
+            }
+        }
+        else
+        {
+            throw new Exception(r.Message);
+        }
+    }
+
     /// <summary>
     /// Performs a Transaction.Sale for bookingID amount with the
     /// given creditCardToken.
@@ -85,6 +176,7 @@ public static partial class LcPayment
     /// <param name="chargeNow">AKA 'submit for settlement' or just 'settle' the transaction,
     /// charging the customer credit card right now (on true) or wait for later (false).</param>
     /// <returns></returns>
+    [Obsolete("This makes use of database access to touch bookings, thats deprecated preferring methods that only manage payment stuff (AuthorizeBookingTransaction), left database work to specialized code")]
     public static string SaleBookingTransaction(int bookingID, string creditCardToken, bool chargeNow)
     {
         Result<Transaction> r = null;

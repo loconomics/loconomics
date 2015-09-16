@@ -1480,6 +1480,7 @@ public static partial class LcData
         /// <param name="bookingID"></param>
         /// <param name="db"></param>
         /// <returns>An error message or null on success</returns>
+        [Obsolete("Use LcRest.Booking methods, updated for new DB scheme, constraints and flags")]
         public static string AuthorizeBookingTransaction(string paymentTransactionID, int bookingID, Database db = null)
         {
             var owned = db == null;
@@ -1533,6 +1534,7 @@ public static partial class LcData
         /// <param name="db"></param>
         /// <returns>A string with an error message or null on success.
         /// </returns>
+        [Obsolete("Use LcRest.Booking methods, that enforce new constraints, save data and use updated LcPayment methods")]
         public static string SettleBookingTransaction(string paymentTransactionID, int bookingID, Database db = null)
         {
             var owned = db == null;
@@ -1620,28 +1622,26 @@ public static partial class LcData
         /// is refunded if needed.
         /// List of BookingRequestStatusID:
         /// BookingRequestStatusID	BookingRequestStatusName
-        /// 3	timed out
-        /// 4	cancelled
-        /// 5	denied
-        /// 6	expired
-        /// 8	denied with alternatives
+        /// 3	cancelled
+        /// 4	denied
+        /// 5	expired
         /// </summary>
         /// <param name="BookingRequestID"></param>
-        public static SqlGenericResult InvalidateBookingRequest(int BookingRequestID, int BookingRequestStatusID)
+        public static SqlGenericResult InvalidateBookingRequest(int BookingID, int BookingStatusID)
         {
-            if (!(new int[] { 3, 4, 5, 6, 8 }).Contains<int>(BookingRequestStatusID))
+            if (!(new int[] { 3, 4, 5 }).Contains<int>(BookingStatusID))
             {
                 throw new Exception(String.Format(
-                    "BookingRequestStatusID '{0}' is not valid to invalidate the booking request",
-                    BookingRequestStatusID));
+                    "BookingStatusID '{0}' is not valid to invalidate the booking request",
+                    BookingStatusID));
             }
 
             var sqlGetTransactionAndUsers = @"
                 SELECT  PaymentTransactionID,
-                        CustomerUserID,
-                        ProviderUserID
-                FROM    BookingRequest
-                WHERE   BookingRequestID = @0
+                        ClientUserID,
+                        ServiceProfessionalUserID
+                FROM    Booking
+                WHERE   BookingID = @0
             ";
 
             var sqlInvalidateBookingRequest = @"EXEC InvalidateBookingRequest @0, @1";
@@ -1649,10 +1649,10 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 // Check cancellation policy and get quantities to refund
-                var refund = GetCancellationAmountsForBookingRequest(BookingRequestID, BookingRequestStatusID, db);
+                var refund = GetCancellationAmountsForBookingRequest(BookingID, BookingStatusID, db);
 
                 // Get booking info
-                var booking = db.QuerySingle(sqlGetTransactionAndUsers, BookingRequestID);
+                var booking = db.QuerySingle(sqlGetTransactionAndUsers, BookingID);
 
                 string result = ManageRefundTransaction(booking.PaymentTransactionID, refund, booking.CustomerUserID, booking.ProviderUserID);
 
@@ -1666,8 +1666,8 @@ public static partial class LcData
 
                 // Invalidate in database the booking request:    
                 return db.QuerySingle(sqlInvalidateBookingRequest,
-                    BookingRequestID,
-                    BookingRequestStatusID);
+                    BookingID,
+                    BookingStatusID);
             }
         }
 

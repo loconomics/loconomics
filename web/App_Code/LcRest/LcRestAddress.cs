@@ -196,8 +196,8 @@ public class LcRestAddress
                   -- because of internally reused addressID.
                   ON @2 > 0 AND L.AddressID = SA.AddressID
         WHERE   L.Active = 1
-                 AND L.UserID = @1
     ";
+    private const string sqlAndUserID = @" AND L.UserID = @1 ";
     private const string sqlAndJobTitleID = @"
         AND coalesce(SA.PositionID, 0) = @2
     ";
@@ -231,7 +231,7 @@ public class LcRestAddress
     {
         using (var db = Database.Open("sqlloco"))
         {
-            return db.Query(sqlSelect + sqlFields + sqlAndJobTitleID + sqlcondOnlyActiveServiceAddress,
+            return db.Query(sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlcondOnlyActiveServiceAddress,
                 LcData.GetCurrentLanguageID(), userID, jobTitleID)
                 .Select(FromDB)
                 .ToList();
@@ -245,7 +245,7 @@ public class LcRestAddress
             // Parameter jobTitleID needs to be specified as 0 to avoid to join
             // the service-address table
             // Null value as 3th parameter since that placeholder is reserved for addressID
-            return db.Query(sqlSelect + sqlFields + sqlAndJobTitleID + sqlAndTypeID,
+            return db.Query(sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlAndTypeID,
                 LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, null, AddressType.Billing)
                 .Select(FromDB)
                 .ToList();
@@ -269,8 +269,30 @@ public class LcRestAddress
         using (var db = Database.Open("sqlloco"))
         {
             return GetSingleFrom(db.Query(
-                sqlSelectOne + sqlFields + sqlAndJobTitleID + sqlAndAddressID + sqlcondOnlyActiveServiceAddress,
+                sqlSelectOne + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlAndAddressID + sqlcondOnlyActiveServiceAddress,
                 LcData.GetCurrentLanguageID(), userID, jobTitleID, addressID
+            ));
+        }
+    }
+
+    /// <summary>
+    /// Returns the address for the ID only if is owned by one of the given userIds.
+    /// This is usefull at bookings, when the address for the service can be a service professional service address
+    /// or a personal client address, there is no knowledgment of who is the owner in the booking info so 
+    /// can be any of both.
+    /// </summary>
+    /// <param name="addressID"></param>
+    /// <param name="anyFromUserIds"></param>
+    /// <returns></returns>
+    public static LcRestAddress GetAddress(int addressID, IEnumerable<int> anyFromUserIds)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            var idList = String.Join(",", anyFromUserIds);
+            var sqlAndUserIdInList = " AND L.UserID IN (" + idList + ") ";
+            return GetSingleFrom(db.Query(
+                sqlSelectOne + sqlFields + sqlAndUserIdInList + sqlAndAddressID,
+                LcData.GetCurrentLanguageID(), addressID
             ));
         }
     }
@@ -282,7 +304,7 @@ public class LcRestAddress
             // Parameter jobTitleID needs to be specified as 0 to avoid to join
             // the service-address table
             return GetSingleFrom(db.Query(
-                sqlSelectOne + sqlFields + sqlAndJobTitleID + sqlAndAddressID + sqlAndTypeID,
+                sqlSelectOne + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlAndAddressID + sqlAndTypeID,
                 LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, addressID, AddressType.Billing
             ));
         }
@@ -299,7 +321,7 @@ public class LcRestAddress
             // user exists, just default/null values per field are returned but a record
             // is returned.
             var add = GetSingleFrom(db.Query(
-                sqlSelectOne + sqlFields + sqlAndJobTitleID + sqlAndTypeID,
+                sqlSelectOne + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlAndTypeID,
                 LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, null, AddressType.Home
             ));
 

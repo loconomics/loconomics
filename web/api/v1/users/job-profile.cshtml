@@ -53,8 +53,10 @@
             else if (UrlData.Count > 1) {
                 throw new HttpException(404, "Not Found");
             }
+
+            var locale = LcRestLocale.Current;
             
-            return LcData.JobTitle.GetPublicUserJobTitles(userID);
+            return LcData.JobTitle.GetPublicUserJobTitles(userID, locale.languageID, locale.countryID);
         }
         
         /// <summary>
@@ -64,9 +66,10 @@
         /// <returns></returns>
         private dynamic GetItem(int userID, int itemID)
         {
+            var locale = LcRestLocale.Current;
             if (itemID > 0)
-            {              
-                var items = LcData.JobTitle.GetPublicUserJobTitles(userID, itemID);  
+            {
+                var items = LcData.JobTitle.GetPublicUserJobTitles(userID, locale.languageID, locale.countryID, itemID);  
                 var item = items == null || items.Count == 0 ? null : items[0];
                 if (item != null) {
                     return item;
