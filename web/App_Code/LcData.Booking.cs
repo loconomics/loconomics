@@ -1865,6 +1865,7 @@ public static partial class LcData
         /// <summary>
         /// Currently, default cancellation policy is Flexible:3
         /// </summary>
+        [Obsolete("Use LcRest.CancellationPolicy.DefaultCancellationPolicyID")]
         public const int DefaultCancellationPolicyID = 3;
         private const string sqlViewPricingAndPolicy = @"
             SELECT  R.PricingEstimateID

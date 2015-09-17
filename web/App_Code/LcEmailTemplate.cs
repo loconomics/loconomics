@@ -33,6 +33,7 @@ public static class LcEmailTemplate
         /// Making publicly available an internal property of booking.
         /// </summary>
         public LcRest.PublicUserJobTitle userJobTitle;
+        public LcRest.CancellationPolicy cancellationPolicy;
 
         private LcRest.PublicUserProfile _serviceProfessional;
         public LcRest.PublicUserProfile serviceProfessional
@@ -53,6 +54,27 @@ public static class LcEmailTemplate
                 if (_client == null)
                     _client = LcRest.PublicUserProfile.Get(booking.clientUserID, booking.serviceProfessionalUserID);
                 return _client;
+            }
+        }
+
+        /// <summary>
+        /// Gets the limit date-time to allow a cancellation for current booking,
+        /// and different rules to get money refunded depending
+        /// on the policy and that date.
+        /// </summary>
+        public DateTime cancellationLimitDate
+        {
+            get
+            {
+                // Default base date is an example with plus 7 days from now.
+                var baseDate = DateTime.Now.AddDays(7);
+
+                if (booking.serviceDate != null)
+                {
+                    baseDate = booking.serviceDate.startTime;
+                }
+
+                return baseDate.AddHours(0 - cancellationPolicy.hoursRequired);
             }
         }
 
@@ -139,13 +161,27 @@ public static class LcEmailTemplate
             }
         }
 
+        // Cancellation policy
+        var policy = LcRest.CancellationPolicy.Get(b.cancellationPolicyID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+
         return new BookingEmailInfo
         {
             booking = b,
             servicePricing = servicePricing,
-            userJobTitle = b.userJobTitle
+            userJobTitle = b.userJobTitle,
+            cancellationPolicy = policy
             //,SentTo = sentTo
             //,SentToUserID = toUserID
         };
+    }
+
+    public static string GetLocationForGoogleMaps(LcRestAddress address)
+    {
+        return ASP.LcHelpers.JoinNotEmptyStrings(", ", address.addressLine1, address.city, address.stateProvinceCode, address.countryCode);
+    }
+
+    public static string GetLocationGoogleMapsUrl(LcRestAddress address)
+    {
+        return "http://maps.google.com/?q=" + Uri.EscapeDataString(GetLocationForGoogleMaps(address));
     }
 }

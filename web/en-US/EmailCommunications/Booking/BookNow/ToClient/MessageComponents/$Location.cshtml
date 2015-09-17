@@ -5,7 +5,6 @@
     // All the data for this component:
     var info = LcEmailTemplate.GetBookingInfo(PageData);
 }
-<!-- $Location Needs switch statement to hide special instructinos if none are entered-->
 <!-- COMPACT ARTICLE SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -19,7 +18,13 @@
                                 <td align="left" style="padding: 0 25px 5px 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Location</td>
                             </tr>
                             <tr>
-                                 <td align="left" style="padding: 10px 25px 15px 0; text-align: justify; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy"><strong>Pamela's Studio</strong><br><a href="http://maps.google.com/?q=1200 Pennsylvania Ave SE, Washington, District of Columbia, 20003">1100 Diamond Street<br>San Francisco, CA 94114</a><br><strong>Special instructions:</strong><br>The entrance is actually on Treat Ave between 17th and 18th. Ring #438, I'll buzz you in, and come to the 4th floor. </td>
+                                 <td align="left" style="padding: 10px 25px 15px 0; text-align: justify; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy"><strong>@info.booking.serviceAddress.addressName</strong><br><a target="_blank" href="@LcEmailTemplate.GetLocationGoogleMapsUrl(info.booking.serviceAddress)">@info.booking.serviceAddress.addressLine1<br>@info.booking.serviceAddress.city, @info.booking.serviceAddress.stateProvinceCode @info.booking.serviceAddress.postalCode</a>
+                                 @if (!String.IsNullOrEmpty(info.booking.serviceAddress.specialInstructions))
+                                 {
+                                    <br /><strong>Special instructions:</strong>
+                                    <br />@(info.booking.serviceAddress.specialInstructions)
+                                 }
+                                 </td>
                             </tr>
                         </table>
                     </td>

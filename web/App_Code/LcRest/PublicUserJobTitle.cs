@@ -13,7 +13,7 @@ namespace LcRest
         #region Fields
         public int jobTitleID;
         public string intro;
-        public int cancellationPolicyID;
+        public int cancellationPolicyID = CancellationPolicy.DefaultCancellationPolicyID;
         public bool instantBooking;
         public string jobTitleSingularName;
         public string jobTitlePluralName;
@@ -30,7 +30,7 @@ namespace LcRest
             {
                 jobTitleID = record.jobTitleID,
                 intro = record.intro,
-                cancellationPolicyID = record.cancellationPolicyID,
+                cancellationPolicyID = record.cancellationPolicyID ?? CancellationPolicy.DefaultCancellationPolicyID,
                 instantBooking = record.instantBooking,
                 jobTitleSingularName = record.jobTitleSingularName,
                 jobTitlePluralName = record.jobTitlePluralName

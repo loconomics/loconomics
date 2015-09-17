@@ -4,9 +4,11 @@
 @{
     // All the data for this component:
     var info = LcEmailTemplate.GetBookingInfo(PageData);
-}
 
-<!-- $NotesToServiceProfessional NEEDS SWTICH STATEMENT IN CASE THERE ARE NO NOTES THEN SHOW NOTHING-->
+    var thereAreNotes = !String.IsNullOrEmpty(info.booking.specialRequests);
+}
+@if (thereAreNotes)
+{
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td bgcolor="#ffffff" align="center" style="border-bottom: 1px solid #d2d2d2; padding: 0 15px 40px 15px;" class="section-padding">
@@ -19,7 +21,7 @@
                                 <td align="left" style="padding: 0 25px 5px 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Notes to @info.serviceProfessional.firstName</td>
                             </tr>
                             <tr>
-                                 <td align="left" style="padding: 10px 25px 15px 0; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Please take the recycling out, and change the sheets in the guest room.</td>
+                                 <td align="left" style="padding: 10px 25px 15px 0; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">@info.booking.specialRequests</td>
                             </tr>
                         </table>
                     </td>
@@ -29,5 +31,5 @@
         </td>
     </tr>
 </table>
-
 <!-- $NotesToServiceProfessional END -->
+}

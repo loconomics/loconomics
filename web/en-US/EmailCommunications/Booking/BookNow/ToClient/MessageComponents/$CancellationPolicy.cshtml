@@ -4,36 +4,10 @@
 @{
     // All the data for this component:
     var info = LcEmailTemplate.GetBookingInfo(PageData);
+    var policy = info.cancellationPolicy;
 }
-@using WebMatrix.Data;
-@{
-    var policyID = PageData["CancellationPolicyID"] ?? LcData.Booking.DefaultCancellationPolicyID;
-    if (Request["CancellationPolicyID"].IsInt()) {
-        policyID = Request["CancellationPolicyID"].AsInt();
-    }
-    // possible values: customer, provider
-    var forUserType = PageData["DisplayForUserType"] ?? Request["DisplayForUserType"] ?? "customer";
-    var bookingDate = PageData["BookingDate"];
-    var customerName = PageData["DisplayedCustomerName"] ?? "the customer";
-    
-    var forEmail = PageData["ForEmail"] ?? false;
-
-    dynamic policy = null;
-    using (var db = Database.Open("sqlloco")) {
-        policy = db.QuerySingle(@"
-            SELECT *
-            FROM CancellationPolicy
-            WHERE CancellationPolicyID = @0
-                AND LanguageID = @1 AND CountryID = @2
-        ", policyID,
-         LcData.GetCurrentLanguageID(),
-         LcData.GetCurrentCountryID());
-    }
-}
-
 @if (policy != null)
 {
-    DateTime refundLimitDate = (bookingDate ?? DateTime.Now.AddDays(7)).AddHours(- policy.HoursRequired);
 <!-- $CancellationPolicyClientCopy -->
 <!-- COMPACT ARTICLE SECTION -->
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -49,18 +23,18 @@
 									<td align="left" style="padding: 0 0 5px 25px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Cancellation Policy</td>
 								</tr>
 								<tr>
-									 <td align="left" style="padding: 10px 0 15px 25px; text-align: justify; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">@policy.CancellationPolicyDescription 
-									 @if (refundLimitDate <= DateTime.Now)
+									 <td align="left" style="padding: 10px 0 15px 25px; text-align: justify; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">@policy.description
+									 @if (info.cancellationLimitDate <= DateTime.Now)
 										{
-											var tpl = "Since your requested time is within {1} hours, you will not be able to cancel this appointment.";
+											var tpl = "Since your requested time is within {0} hours, you will not be able to cancel this appointment.";
 											<span>
-												@String.Format(tpl, policy.HoursRequired)
+												@String.Format(tpl, policy.hoursRequired)
 											</span>
 										}
 										else
 										{
 											<span>
-												 Cancel or reschedule by <strong>@(refundLimitDate.ToShortTimeString()) on @refundLimitDate.ToLongDateString()</strong> to receive a @(policy.RefundIfCancelledBefore.ToString("0.##%")) refund. Click <a href="https://loconomics.com/">here</a> to make changes.
+												 Cancel or reschedule by <strong>@(info.cancellationLimitDate.ToShortTimeString()) on @info.cancellationLimitDate.ToLongDateString()</strong> to receive a @(policy.refundIfCancelledBefore.ToString("0.##%")) refund. Click <a href="https://loconomics.com/">here</a> to make changes.
 											</span>
 										}
 									</td>

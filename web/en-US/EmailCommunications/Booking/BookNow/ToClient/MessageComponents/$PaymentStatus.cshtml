@@ -5,8 +5,8 @@
     // All the data for this component:
     var info = LcEmailTemplate.GetBookingInfo(PageData);
 }
-
-<!-- $PaymentStatus NEEDS switch statement if no payment is collected. The language here will change depending on the communication. I'll edit those based on this one.-->
+@if (info.booking.paymentCollected)
+{
 <!-- COMPACT ARTICLE SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -21,7 +21,29 @@
                                 <td align="left" style="padding: 0 0 5px 25px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Payment</td>
                             </tr>
                             <tr>
-                                 <td align="left" style="padding: 10px 0 15px 25px; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Your Visa card ending in 4739 has been authorized for $110.00. It will be charged after @info.serviceProfessional.firstName completes your services.</td>
+                                 <td align="left" style="padding: 10px 0 15px 25px; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+
+                                     @* To JOSH: the language 'have been authorized' is not correct if the service is more than 7 days from booking creation, on that case we COLLECTED the payment data (temporary saving the card at Braintree)
+                                        and we will authorize in a scheduled task 48 hours before the service start.
+                                        Maybe you still wan to communicate that is 'authorized' even if is not really, just to remark that, at some point, will really being authorized,
+                                        BUT if that is not the case and you want to be accuracy, we know if was or not authorized with the flag info.booking.paymentAuthorized and offer an alternative language with a 'if', for example
+                                        @if (info.booking.paymentAuthorized) {
+                                            <span>Regular text for payment authorized</span>
+                                        }
+                                        else {
+                                            <span>Alternative text for payment collected but not still authorized (will be 48hours before service)</span>
+                                        }
+
+                                        AS YOU WANT. I left regular option, same text ever, on next lines:
+                                     *@
+
+                                    Your card
+                                    @if (!String.IsNullOrEmpty(info.booking.paymentLastFourCardNumberDigits)) {
+                                        <span>ending in @(info.booking.paymentLastFourCardNumberDigits)</span>
+                                    }
+                                    has been authorized for @(info.booking.pricingSummary.totalPrice.Value.ToString("c")).
+                                    It will be charged after @info.serviceProfessional.firstName completes your services.
+                                </td>
                             </tr>
                         </table>
                     </td>
@@ -31,3 +53,4 @@
     </tr>
 </table>
 <!-- $PaymentStatus END -->
+}
