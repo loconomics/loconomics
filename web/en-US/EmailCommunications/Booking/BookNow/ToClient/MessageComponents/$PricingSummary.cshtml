@@ -4,6 +4,7 @@
 @{
     // All the data for this component:
     var info = LcEmailTemplate.GetBookingInfo(PageData);
+    var hasFirstTimeFees = info.booking.pricingSummary.feePrice.HasValue && info.booking.pricingSummary.feePrice.Value != 0;
 }
 
 <!-- $PricingSummaryClientCopy We'll need one for ServiceProfessionals as well that shows the payment processing fees.-->
@@ -31,8 +32,11 @@
     <tr>
         <td bgcolor="#ffffff" align="center" style="padding: 15px 15px 15px 15px;" class="section-padding">
             <table border="0" cellpadding="0" cellspacing="0" width="500" class="responsive-table">
+                <tr><td style="padding: 10px 0 0 0; border-top: 1px dashed #aaaaaa;"></td></tr>
+                @foreach (var servicePricing in info.servicePricing)
+                {
                 <tr>
-                    <td style="padding: 10px 0 0 0; border-top: 1px dashed #aaaaaa;">
+                    <td>
                         <!-- TWO COLUMNS -->
                         <table cellspacing="0" cellpadding="0" border="0" width="100%">
                             <tr>
@@ -43,7 +47,7 @@
                                             <td style="padding: 0 0 10px 0;">
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">Deep Tissue Massage</td>
+                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">@servicePricing.service.name</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -55,7 +59,7 @@
                                             <td style="padding: 0 0 10px 0;">
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="right" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">$105.00</td>
+                                                        <td align="right" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">@((servicePricing.pricing.price ?? 0).ToString("c"))</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -66,76 +70,45 @@
                         </table>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <!-- TWO COLUMNS -->
-                        <table cellspacing="0" cellpadding="0" border="0" width="100%">
-                            <tr>
-                                <td valign="top" style="padding: 0;" class="mobile-wrapper">
-                                    <!-- LEFT COLUMN -->
-                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left">
-                                        <tr>
-                                            <td style="padding: 0 0 10px 0;">
-                                                <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                                                    <tr>
-                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">Special oils</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <!-- RIGHT COLUMN -->
-                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right">
-                                        <tr>
-                                            <td style="padding: 0 0 10px 0;">
-                                                <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                                                    <tr>
-                                                        <td align="right" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">$15.00</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <!-- TWO COLUMNS -->
-                        <table cellspacing="0" cellpadding="0" border="0" width="100%">
-                            <tr>
-                                <td valign="top" style="padding: 0;" class="mobile-wrapper">
-                                    <!-- LEFT COLUMN -->
-                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left">
-                                        <tr>
-                                            <td style="padding: 0 0 10px 0;">
-                                                <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                                                    <tr>
-                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">First-time booking fee*</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <!-- RIGHT COLUMN -->
-                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right">
-                                        <tr>
-                                            <td style="padding: 0 0 10px 0;">
-                                                <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                                                    <tr>
-                                                        <td align="right" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">$10.00</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                }
+                @if (hasFirstTimeFees)
+                {
+                    <tr>
+                        <td>
+                            <!-- TWO COLUMNS -->
+                            <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td valign="top" style="padding: 0;" class="mobile-wrapper">
+                                        <!-- LEFT COLUMN -->
+                                        <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left">
+                                            <tr>
+                                                <td style="padding: 0 0 10px 0;">
+                                                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                                        <tr>
+                                                            <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">First-time booking fee*</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!-- RIGHT COLUMN -->
+                                        <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right">
+                                            <tr>
+                                                <td style="padding: 0 0 10px 0;">
+                                                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                                        <tr>
+                                                            <td align="right" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">@(info.booking.pricingSummary.feePrice.Value.ToString("c"))</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                }
                 <tr>
                     <td style="padding: 10px 0 0px 0; border-top: 1px solid #eaeaea; border-bottom: 1px dashed #aaaaaa;">
                         <!-- TWO COLUMNS -->
@@ -160,7 +133,7 @@
                                             <td>
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="right" style="font-family: Arial, sans-serif; color: #7ca230; font-size: 16px; font-weight: bold;">$130.00</td>
+                                                        <td align="right" style="font-family: Arial, sans-serif; color: #7ca230; font-size: 16px; font-weight: bold;">@((info.booking.pricingSummary.totalPrice ?? 0).ToString("c"))</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -175,6 +148,7 @@
         </td>
     </tr>
 </table>
+@if (hasFirstTimeFees) {
 <!-- ONE COLUMN SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -200,3 +174,4 @@
         </td>
     </tr>
 </table>
+}

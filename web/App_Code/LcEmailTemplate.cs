@@ -17,9 +17,18 @@ public static class LcEmailTemplate
         }
     }
 
+    public class ServicePricing
+    {
+        public LcRest.ServiceProfessionalService service;
+        public LcRest.PricingSummaryDetail pricing;
+
+        public ServicePricing() { }
+    }
+
     public class BookingEmailInfo
     {
         public LcRest.Booking booking;
+        public List<ServicePricing> servicePricing;
         /// <summary>
         /// Making publicly available an internal property of booking.
         /// </summary>
@@ -106,9 +115,34 @@ public static class LcEmailTemplate
 
         b.FillLinks();
 
+        // The service details from database
+        var servicePricing = new List<ServicePricing>();
+        if (b.pricingSummary.details != null && b.pricingSummary.details.Count() > 0)
+        {
+            var services = LcRest.ServiceProfessionalService.GetFromPricingSummary(b.pricingSummaryID, b.pricingSummaryRevision);
+
+            if (services != null)
+            {
+                // Mix booking pricing details and service details in a list, by the common serviceProfessionaServiceID
+                // so is easiest from templates to access all that info while we keep in one database call
+                // the query for all the pricing details (rather than one call per each).
+                foreach (var service in services)
+                {
+                    var pricingDetail = b.pricingSummary.details.First(pd => pd.serviceProfessionalServiceID == service.serviceProfessionalServiceID);
+
+                    servicePricing.Add(new ServicePricing
+                    {
+                        service = service,
+                        pricing = pricingDetail
+                    });
+                }
+            }
+        }
+
         return new BookingEmailInfo
         {
             booking = b,
+            servicePricing = servicePricing,
             userJobTitle = b.userJobTitle
             //,SentTo = sentTo
             //,SentToUserID = toUserID

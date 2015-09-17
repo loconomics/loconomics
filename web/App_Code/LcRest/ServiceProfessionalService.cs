@@ -38,7 +38,38 @@ namespace LcRest
 
         #region Instances
         public ServiceProfessionalService() { }
+
         public static ServiceProfessionalService FromDB(dynamic record, IEnumerable<dynamic> attributes = null)
+        {
+            if (record == null) return null;
+
+            return new ServiceProfessionalService
+            {
+                serviceProfessionalServiceID = record.serviceProfessionalServiceID,
+                pricingTypeID = record.pricingTypeID,
+                serviceProfessionalUserID = record.serviceProfessionalUserID,
+                jobTitleID = record.jobTitleID,
+                name = record.name,
+                description = record.description,
+                price = record.price,
+                serviceDurationMinutes = record.serviceDurationMinutes,
+                firstTimeClientsOnly = record.firstTimeClientsOnly,
+                numberOfSessions = record.numberOfSessions,
+                priceRate = record.priceRate,
+                priceRateUnit = record.priceRateUnit,
+                isPhone = record.isPhone,
+                createdDate = record.createdDate,
+                updatedDate = record.updatedDate,
+
+                // Array of IDs of serviceAttributes
+                serviceAttributes = (attributes == null ? null : attributes.Select(att =>
+                {
+                    return (int)att.serviceAttributeID;
+                }).ToList<int>())
+            };
+        }
+
+        public static ServiceProfessionalService FromDbProviderPackage(dynamic record, IEnumerable<dynamic> attributes = null)
         {
             if (record == null) return null;
 
@@ -72,7 +103,7 @@ namespace LcRest
         #region Fetch
         public static ServiceProfessionalService Get(int serviceProfessionalServiceID, int? serviceProfessionalUserID, int? jobTitleID = null)
         {
-            var service = FromDB(LcData.GetProviderPackage(serviceProfessionalServiceID));
+            var service = FromDbProviderPackage(LcData.GetProviderPackage(serviceProfessionalServiceID));
             if (service == null ||
                 serviceProfessionalUserID.HasValue && service.serviceProfessionalUserID != serviceProfessionalUserID.Value ||
                 jobTitleID.HasValue && service.jobTitleID != jobTitleID.Value)
@@ -101,7 +132,7 @@ namespace LcRest
             {
                 var pakID = (int)pak.ProviderPackageID;
                 var hasAtts = packages.PackagesDetailsByPackage.ContainsKey(pakID);
-                return FromDB(pak, hasAtts ? packages.PackagesDetailsByPackage[(int)pak.ProviderPackageID] : null);
+                return FromDbProviderPackage(pak, hasAtts ? packages.PackagesDetailsByPackage[(int)pak.ProviderPackageID] : null);
             }).ToList();
         }
 
@@ -144,6 +175,60 @@ namespace LcRest
 
                     yield return service;
                 }
+            }
+        }
+
+        #region SQL GetFromPricingSummary
+        /// <summary>
+        /// Query the services data, as from the current service professional set-up,
+        /// that are linked in the given pricing summary. Take care that 
+        /// the pricing summary detail may have saved different values for some
+        /// fields for price and duration.
+        /// </summary>
+        const string sqlGetFromPricingSummary = @"
+            SELECT  P.serviceProfessionalServiceID
+                    ,PP.ProviderUserID As serviceProfessionalUserID
+                    ,PP.pricingTypeID
+                    ,PP.PositionID As jobTitleID
+                    ,PP.languageID
+                    ,PP.countryID
+
+                    ,PP.ProviderPackageName As name
+                    ,PP.ProviderPackageDescription As description
+                    ,PP.ProviderPackagePrice As price
+                    ,PP.providerPackageServiceDuration As serviceDurationMinutes
+
+                    ,PP.firstTimeClientsOnly
+                    ,PP.numberOfSessions
+                    ,PP.priceRate
+                    ,PP.priceRateUnit
+                    ,PP.isPhone
+
+                    ,PP.createdDate
+                    ,PP.updatedDate
+            FROM    PricingSummaryDetail As P
+                     INNER JOIN
+                    ProviderPackage As PP
+                      ON PP.ProviderPackageID = P.ServiceProfessionalServiceID
+                     INNER JOIN
+                    PricingType As PT
+                        ON PP.PricingTypeID = PT.PricingTypeID
+                        AND PP.LanguageID = PT.LanguageID
+                        AND PP.CountryID = PT.CountryID
+            WHERE   P.PricingSummaryID = @0
+                     AND 
+                    P.PricingSummaryRevision = @1
+            ORDER BY PT.DisplayRank
+        ";
+        #endregion
+        public static IEnumerable<ServiceProfessionalService> GetFromPricingSummary(int pricingSummaryID, int pricingSummaryRevision)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlGetFromPricingSummary, pricingSummaryID, pricingSummaryRevision)
+                .Select<dynamic, ServiceProfessionalService>(pak => {
+                    return FromDB(pak, null);
+                });
             }
         }
         #endregion

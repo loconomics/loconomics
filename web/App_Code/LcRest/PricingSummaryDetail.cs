@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using WebMatrix.Data;
 using System.Web.Helpers;
+using Newtonsoft.Json;
 
 namespace LcRest
 {
@@ -29,6 +30,11 @@ namespace LcRest
         public DateTime createdDate;
         public DateTime updatedDate;
         #endregion
+
+        /*#region Links
+        [JsonIgnoreAttribute]
+        public ServiceProfessionalService serviceProfessionalService;
+        #endregion*/
 
         #region Instances
         public PricingSummaryDetail() { }

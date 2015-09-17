@@ -234,11 +234,13 @@ public static partial class LcData
 
         #region Query Booking information
         #region SQLs
+        [Obsolete("Not working after DB changes")]
         public const string sqlGetBookingRequestPricingEstimate = @"
             SELECT  PricingEstimateID
             FROM    BookingRequest
             WHERE   BookingRequestID = @0
         ";
+        [Obsolete("Not working after DB changes")]
         public const string sqlGetPricingPackagesInPricingEstimate = @"
             SELECT  PP.ProviderPackageID
                     ,PP.ProviderUserID
@@ -751,6 +753,7 @@ public static partial class LcData
         }
         #endregion
 
+        [Obsolete("Use LcRest.ServiceProfessionalService.GetFromPricingEstimate")]
         public static IEnumerable<LcPricingModel.PackageBaseData> GetPricingEstimatePackages(int pricingEstimateID, int pricingEstimateRevision = 0)
         {
             using (var db = Database.Open("sqlloco"))
