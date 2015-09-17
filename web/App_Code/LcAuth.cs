@@ -323,7 +323,7 @@ public static class LcAuth
     /// <summary>
     /// Get for the given userID the params and values for autologin in URL string format,
     /// ready to be appended to an URL
-    /// (without & or ? as prefix, but & as separator and last character).
+    /// (without &amp; or ? as prefix, but &amp; as separator and last character).
     /// To be used mainly by Email templates.
     /// </summary>
     /// <returns></returns>

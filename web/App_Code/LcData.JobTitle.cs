@@ -136,6 +136,7 @@ public static partial class LcData
         /// <param name="userID"></param>
         /// <param name="jobTitleID"></param>
         /// <returns></returns>
+        [Obsolete("Use LcRest.PublicUserJobTitle.Get* methods for updated and typed results")]
         public static dynamic GetPublicUserJobTitles(int userID, int languageID, int countryID, int jobTitleID = -1)
         {
             using (var db = Database.Open("sqlloco"))

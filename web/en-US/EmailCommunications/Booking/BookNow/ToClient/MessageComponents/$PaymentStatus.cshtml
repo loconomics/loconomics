@@ -3,10 +3,10 @@
 @using WebMatrix.Data;
 @{
     // All the data for this component:
-    var info = PageData[0];
+    var info = LcEmailTemplate.GetBookingInfo(PageData);
 }
 
-<!-- $PaymentStatus The language here will change depending on the communication. I'll edit those based on this one.-->
+<!-- $PaymentStatus NEEDS switch statement if no payment is collected. The language here will change depending on the communication. I'll edit those based on this one.-->
 <!-- COMPACT ARTICLE SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -21,7 +21,7 @@
                                 <td align="left" style="padding: 0 0 5px 25px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Payment</td>
                             </tr>
                             <tr>
-                                 <td align="left" style="padding: 10px 0 15px 25px; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Your Visa card ending in 4739 has been authorized for $110.00. It will be charged after @ServiceProfessionalFirstName completes your services.</td>
+                                 <td align="left" style="padding: 10px 0 15px 25px; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Your Visa card ending in 4739 has been authorized for $110.00. It will be charged after @info.serviceProfessional.firstName completes your services.</td>
                             </tr>
                         </table>
                     </td>

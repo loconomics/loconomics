@@ -5,29 +5,17 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
+    Layout = "_EmailLayout.cshtml";
 
     // All the data for this email:
-    var info = LcEmailTemplateHelper.GetBookingInfo();
+    var info = LcEmailTemplate.GetBookingInfo();
 
-    // Data for the EmailLayout:
-    PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
-    PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(info.Booking.BookingRequestStatusID, info.PairUser, info.SentTo);
-    PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
-    PageData["showSign"] = true;
-    PageData["helpReference"] = "booking request #" + info.BookingRequestID.ToString();
-    PageData["autologinQuery"] = "";
-    switch (info.SentTo) {
-        case LcData.UserInfo.UserType.Provider:
-            PageData["needHelpAddress"] = "support@loconomics.com";
-            PageData["autologinQuery"] = LcAuth.GetAutologinUrlParams(info.SentToUserID);
-            break;
-        case LcData.UserInfo.UserType.Customer:
-            PageData["needHelpAddress"] = "support@loconomics.com";
-            break;
-    }
+    // NOTE: next commented code is useful when building links like in the 'confirm/deny/cancel booking' buttons, to
+    // avoid the users to need to manually log-in in the website (if the app is not triggered):
+    // var autologinQueryToAddToUrls = LcAuth.GetAutologinUrlParams(info.Booking.clientID);
     
-    DateTime confirmationLimitDate = info.ConfirmationLimitDate;
+    // NOTE: For booking requests, we were displaying the info.booking.requestConfirmationLimitDate so clients
+    // know when will expire the request and service professionals knows the limit date-time to confirm it;
 }
 <!-- HEADER -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -35,7 +23,7 @@
         <td bgcolor="#00989a">
             <!-- HIDDEN PREHEADER TEXT -->
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.CustomerUser.FirstName), Thanks for requesting my @info.Booking.PositionSingular services. I’m either away or busy with a client but will confirm your appointment time as soon as I can.
+                Hi, @(info.client.firstName), Thanks for requesting my @info.userJobTitle.jobTitleSingularName services. I’m either away or busy with a client but will confirm your appointment time as soon as I can.
             </div>
             <div align="center" style="padding: 0px 15px 0px 15px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="500" class="wrapper">
@@ -75,13 +63,13 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.CustomerUser.FirstName),</td>
+                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thanks for requesting my <strong>@info.Booking.PositionSingular</strong> services. I’m either away or busy with a client but will confirm your appointment time as soon as I can.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thanks for requesting my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. I’m either away or busy with a client but will confirm your appointment time as soon as I can.</td>
                             </tr>
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.ProviderUser.FirstName)<br>Tact Massage Therapy<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> (415) 902-6025<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"> joshdanielson@gmail.com</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>Tact Massage Therapy<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> (415) 902-6025<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"> joshdanielson@gmail.com</td>
                             </tr>
                         </table>
                             <tr>
@@ -125,7 +113,7 @@
         </td>
     </tr>
 </table>
-@RenderPage("MessageComponents/$Pricing.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true)
+@RenderPage("MessageComponents/$Pricing.cshtml", info)
 <!-- COMPACT ARTICLE SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -135,31 +123,19 @@
                 <tr>
                     <td align="center" style="padding: 0 0 5px 25px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy" colspan="2">Services Requested</td>
                 </tr>
-                @RenderPage("MessageComponents/$Services.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true)
+                @RenderPage("MessageComponents/$Services.cshtml", info)
                 </table>
         </td>
     </tr>
 </table>
-<!-- ERROR MESSAGE: 
-Exception Details: System.InvalidOperationException: Invalid column name "Booking".
-
-Source Error:
-
-
-Line 20:                                 <td align="left" style="padding: 0 0 5px 25px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Time(s) Requested</td>
-Line 21:                             </tr>
-Line 22:  							@@if (info.Booking.PreferredDateStart is DateTime || info.Booking.PreferredDateEnd is DateTime)
-Line 23:                     		
-Line 24:                             <tr>
-
-
-Source File: e:\web\loconomi\dev\en-US\Booking\$TimesRequested.cshtml    Line: 22 
-
-@@RenderPage("MessageComponents/$TimesRequested.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true) -->
-@RenderPage("MessageComponents/$Location.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true)
-@RenderPage("MessageComponents/$PaymentStatus.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true)
-@RenderPage("MessageComponents/$NotesToServiceProfessional.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true)
-@RenderPage("MessageComponents/$CancellationPolicy.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true)
+@if (info.isBookingRequest)
+{
+    @RenderPage("MessageComponents/$TimesRequested.cshtml", info)
+}
+@RenderPage("MessageComponents/$Location.cshtml", info)
+@RenderPage("MessageComponents/$PaymentStatus.cshtml", info)
+@RenderPage("MessageComponents/$NotesToServiceProfessional.cshtml", info)
+@RenderPage("MessageComponents/$CancellationPolicy.cshtml", info)
 <!-- ONE COLUMN SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -262,7 +238,7 @@ Source File: e:\web\loconomi\dev\en-US\Booking\$TimesRequested.cshtml    Line: 2
             <table width="500" border="0" cellspacing="0" cellpadding="0" align="center" class="responsive-table">
                 <tr>
                     <td align="center" valign="middle" style="font-size: 12px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color:#666666;">
-                        <span class="appleFooter" style="color:#666666;">This e-mail was sent on behalf of Pamela Lee<br>by <a href="https://loconomics.com/">Loconomics Cooperative, Inc.</a> Please do not reply.<br>3150 18th Street, Suite 438, San Francisco, CA 94110, USA</span><br><a href="#" target="_blank" class="original-only" style="color: #666666; text-decoration: none;">Privacy Policy</a><span class="original-only" style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><a href="#" target="_blank" class="original-only" style="color: #666666; text-decoration: none;">Unsubscribe</a><span class="original-only" style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><a style="color: #666666; text-decoration: none;">View this email in your browser</a>
+                        <span class="appleFooter" style="color:#666666;">This e-mail was sent on behalf of @info.serviceProfessional.firstName @info.serviceProfessional.lastName <br>by <a href="https://loconomics.com/">Loconomics Cooperative, Inc.</a> Please do not reply.<br>3150 18th Street, Suite 438, San Francisco, CA 94110, USA</span><br><a href="#" target="_blank" class="original-only" style="color: #666666; text-decoration: none;">Privacy Policy</a><span class="original-only" style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><a href="#" target="_blank" class="original-only" style="color: #666666; text-decoration: none;">Unsubscribe</a><span class="original-only" style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><a href="@info.viewEmailUrl" style="color: #666666; text-decoration: none;" target="_blank">View this email in your browser</a>
                     </td>
                 </tr>
             </table>
@@ -270,5 +246,3 @@ Source File: e:\web\loconomi\dev\en-US\Booking\$TimesRequested.cshtml    Line: 2
     </tr>
 </table>
 
-</body>
-</html>

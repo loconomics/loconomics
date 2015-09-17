@@ -1,22 +1,5 @@
 ﻿@{
     Response.ContentEncoding = System.Text.Encoding.UTF8;
-    
-    var emailTo = PageData["emailTo"] ?? Request["EmailTo"];
-    var threadID = PageData["threadID"];
-    var messageID = PageData["messageID"];
-    var messageTitle = PageData["messageTitle"];
-    var messageSubtitle = PageData["messageSubtitle"];
-    var needHelpAddress = PageData["needHelpAddress"];
-    var helpReference = PageData["helpReference"];
-    var showSign = PageData["showSign"] ?? false;
-    var viewOnSiteUrl = PageData["viewOnSiteUrl"];
-    if (threadID != null) {
-        viewOnSiteUrl = LcUrl.LangUrl + "dashboard/messages/inquiry/" + threadID + "/";
-        if (messageID != null) {
-            viewOnSiteUrl += "/" + messageID + "/";
-        }
-    }
-    var isNotAUser = (bool)(PageData["isNotAUser"] ?? false);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -141,4 +124,7 @@
     }
 </style>
 </head>
+<body>
 @RenderBody()
+</body>
+</html>

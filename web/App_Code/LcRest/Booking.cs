@@ -80,13 +80,33 @@ namespace LcRest
         public bool reviewedByClient;
         #endregion
 
+        #region Computed properties
+        /// <summary>
+        /// For booking requests, lests know what date is
+        /// the limit the service professional has to confirm
+        /// the request, or will expire.
+        /// </summary>
+        public DateTime? requestConfirmationLimitDate
+        {
+            get
+            {
+                if (bookingStatusID == (int)LcEnum.BookingStatus.request &&
+                    updatedDate.HasValue)
+                {
+                    return updatedDate.Value.AddHours(LcData.Booking.ConfirmationLimitInHours);
+                }
+                return null;
+            }
+        }
+        #endregion
+
         #region Links
         public PricingSummary pricingSummary;
         public LcRestAddress serviceAddress;
         public EventDates serviceDate;
         public EventDates alternativeDate1;
         public EventDates alternativeDate2;
-        private dynamic userJobTitle;
+        internal PublicUserJobTitle userJobTitle;
         #endregion
 
         #region Instances
@@ -120,7 +140,7 @@ namespace LcRest
                 pricingSummaryID = booking.pricingSummaryID,
                 pricingSummaryRevision = booking.pricingSummaryRevision,
                 paymentTransactionID = internalUse ? booking.paymentTransactionID : null,
-                paymentLastFourCardNumberDigits = forClient ? LcEncryptor.Decrypt(booking.paymentLastFourCardNumberDigits) : null,
+                paymentLastFourCardNumberDigits = forClient || internalUse ? LcEncryptor.Decrypt(booking.paymentLastFourCardNumberDigits) : null,
                 totalPricePaidByClient = booking.totalPricePaidByClient,
                 totalServiceFeesPaidByClient = booking.totalServiceFeesPaidByClient,
                 totalPaidToServiceProfessional = booking.totalPaidToServiceProfessional,
@@ -149,8 +169,8 @@ namespace LcRest
                 preNotesToClient = booking.PreNotesToClient,
                 postNotesToClient = booking.PostNotesToClient,
 
-                preNotesToSelf = (forServiceProfessional ? booking.preNotesToSelf : ""),
-                postNotesToSelf = (forServiceProfessional ? booking.postNotesToSelf : ""),
+                preNotesToSelf = (forServiceProfessional || internalUse ? booking.preNotesToSelf : ""),
+                postNotesToSelf = (forServiceProfessional || internalUse ? booking.postNotesToSelf : ""),
 
                 reviewedByServiceProfessional = booking.reviewedByServiceProfessional,
                 reviewedByClient = booking.reviewedByClient
@@ -666,19 +686,11 @@ namespace LcRest
         }
 
         /// <summary>
-        /// TODO: Adapt API to return a REST class rather than dynamic
+        /// 
         /// </summary>
-        public void FillUserJobTitle()
+        internal void FillUserJobTitle()
         {
-            var data = LcData.JobTitle.GetPublicUserJobTitles(serviceProfessionalUserID, languageID, countryID, jobTitleID);
-            if (data == null || data.Count == 0)
-            {
-                userJobTitle = null;
-            }
-            else
-            {
-                userJobTitle = data[0];
-            }
+            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID);
         }
 
         /// <summary>
@@ -1357,7 +1369,7 @@ namespace LcRest
 
                 // Event data
                 var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
-                string eventSummary = String.Format("{0} services for {1}", booking.userJobTitle.PositionSingular, ASP.LcHelpers.GetUserDisplayName(customer));
+                string eventSummary = String.Format("{0} services for {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(customer));
 
                 // Transaction begins
                 db.Execute("BEGIN TRANSACTION");
@@ -1578,7 +1590,7 @@ namespace LcRest
 
                 // Event data
                 var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
-                string eventSummary = String.Format("{0} services by {1}", booking.userJobTitle.PositionSingular, ASP.LcHelpers.GetUserDisplayName(provider));
+                string eventSummary = String.Format("{0} services by {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(provider));
 
                 // Transaction begins
                 db.Execute("BEGIN TRANSACTION");

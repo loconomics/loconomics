@@ -55,8 +55,8 @@
             }
 
             var locale = LcRestLocale.Current;
-            
-            return LcData.JobTitle.GetPublicUserJobTitles(userID, locale.languageID, locale.countryID);
+
+            return LcRest.PublicUserJobTitle.GetList(userID, locale.languageID, locale.countryID);
         }
         
         /// <summary>
@@ -69,8 +69,7 @@
             var locale = LcRestLocale.Current;
             if (itemID > 0)
             {
-                var items = LcData.JobTitle.GetPublicUserJobTitles(userID, locale.languageID, locale.countryID, itemID);  
-                var item = items == null || items.Count == 0 ? null : items[0];
+                var item = LcRest.PublicUserJobTitle.Get(userID, locale.languageID, locale.countryID, itemID);  
                 if (item != null) {
                     return item;
                 }

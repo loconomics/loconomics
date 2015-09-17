@@ -20,7 +20,7 @@ namespace LcRest
             endTime = end;
         }
 
-        public EventDates FromDB(dynamic record)
+        public static EventDates FromDB(dynamic record)
         {
             if (record == null) return null;
             return new EventDates(record.startTime, record.endTime);
@@ -29,12 +29,12 @@ namespace LcRest
         public static EventDates Get(int calendarEventID)
         {
             using (var db = new LcDatabase()) {
-                return db.QuerySingle(@"
+                return FromDB(db.QuerySingle(@"
                         SELECT startTime,
                             endTime
                     FROM    CalendarEvents
                     WHERE   ID = @0
-                ", calendarEventID);
+                ", calendarEventID));
             }
         }
     }

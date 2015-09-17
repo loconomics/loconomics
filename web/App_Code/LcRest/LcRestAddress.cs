@@ -292,7 +292,10 @@ public class LcRestAddress
             var sqlAndUserIdInList = " AND L.UserID IN (" + idList + ") ";
             return GetSingleFrom(db.Query(
                 sqlSelectOne + sqlFields + sqlAndUserIdInList + sqlAndAddressID,
-                LcData.GetCurrentLanguageID(), addressID
+                LcData.GetCurrentLanguageID(),
+                null, // There is no @1 on this SQL
+                NotAJobTitleID, // @2 has special meaning on the SQL, avoid some bad results
+                addressID
             ));
         }
     }

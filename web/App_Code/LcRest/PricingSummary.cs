@@ -60,8 +60,8 @@ namespace LcRest
         #region Fetch
         const string sqlGetItem = @"
             SELECT
-                pricingEstimateID,
-                pricingEstimateRevision,
+                pricingSummaryID,
+                pricingSummaryRevision,
                 serviceDurationMinutes,
                 firstSessionDurationMinutes,
                 subtotalPrice,

@@ -2,20 +2,10 @@
  *@
 @using WebMatrix.Data;
 @{
-	// All the data for this component:
-	var info = PageData[0];
+    // All the data for this component:
+    var info = LcEmailTemplate.GetBookingInfo(PageData);
 }
-@helper printConfirmedDate(LcEmailTemplateHelper.BookingEmailInfo info){
-    if (info.Booking.ConfirmedDateStart is DateTime && info.Booking.ConfirmedDateEnd is DateTime)
-    {
-        <span>@LcHelpers.DateTimeRangeToString(info.Booking.ConfirmedDateStart, info.Booking.ConfirmedDateEnd)</span>
-    }
-    else
-    {
-        // Null values:
-        <span>Date not available</span>
-    }
-}
+
 <!-- $TimeConfirmed -->
 <!-- COMPACT ARTICLE SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -31,7 +21,17 @@
                                 <td align="left" style="padding: 0 0 5px 25px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Time</td>
                             </tr>
                        		<tr>
-                           		<td align="left" style="padding: 10px 0 15px 25px; text-align: left; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">@printConfirmedDate(info)</td>
+                           		<td align="left" style="padding: 10px 0 15px 25px; text-align: left; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+                                    @if (info.booking.serviceDate != null)
+                                    {
+                                        <span>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</span>
+                                    }
+                                    else
+                                    {
+                                        // Null values:
+                                        <span>Date not available</span>
+                                    }
+                                </td>
                        		</tr>
                         </table>
                     </td>

@@ -97,8 +97,8 @@ namespace LcRest
         #region Fetch
         const string sqlGetItem = @"
             SELECT
-                pricingEstimateID,
-                pricingEstimateRevision,
+                pricingSummaryID,
+                pricingSummaryRevision,
                 serviceProfessionalServiceID,
                 serviceProfessionalDataInput,
                 clientDataInput,
@@ -109,11 +109,10 @@ namespace LcRest
                 createdDate,
                 updatedDate
             FROM
-                PricingSummary
+                PricingSummaryDetail
             WHERE
                 PricingSummaryID = @0
                 AND PricingSummaryRevision = @1
-                AND Active = 1
         ";
         public static IEnumerable<PricingSummaryDetail> GetList(int id, int revision)
         {

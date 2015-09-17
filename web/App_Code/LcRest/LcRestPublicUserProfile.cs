@@ -54,7 +54,7 @@ namespace LcRest
 
                 publicBio = record.publicBio,
 
-                serviceProfessionalProfileUrlSlug = record.serviceProfesionalProfileUrlSlug,
+                serviceProfessionalProfileUrlSlug = record.serviceProfessionalProfileUrlSlug,
                 serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUrl,
                 businessName = record.businessName,
 
