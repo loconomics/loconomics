@@ -190,7 +190,7 @@
                     }
 
                     // Search
-                    var jobTitle = LcData.JobTitle.SearchJobTitles(jobTitleName, LcRestLocale.Current).FirstOrDefault();
+                    var jobTitle = LcData.JobTitle.SearchJobTitles(jobTitleName, LcRest.Locale.Current).FirstOrDefault();
                     if (jobTitle != null) {
                         // Use the first one
                         jobTitleID = jobTitle.value;
@@ -198,7 +198,7 @@
                     }
                     else {
                         //  Create a new job-title based on the given name #650
-                        jobTitleID = LcData.JobTitle.CreateJobTitleByName(jobTitleName, LcRestLocale.Current.languageID, LcRestLocale.Current.countryID, userID);
+                        jobTitleID = LcData.JobTitle.CreateJobTitleByName(jobTitleName, LcRest.Locale.Current.languageID, LcRest.Locale.Current.countryID, userID);
                         // Check well know custom error codes
                         if (jobTitleID == -1) {
                             throw new HttpException(400, String.Format("The Job Title '{0}' is not allowed.", jobTitleName));
@@ -222,8 +222,8 @@
                         data.policyID,
                         data.intro,
                         data.instantBooking,
-                        LcRestLocale.Current.languageID,
-                        LcRestLocale.Current.countryID
+                        LcRest.Locale.Current.languageID,
+                        LcRest.Locale.Current.countryID
                     );
                 }
                 else {
@@ -318,8 +318,8 @@
                 data.policyID,
                 data.intro,
                 data.instantBooking,
-                LcRestLocale.Current.languageID,
-                LcRestLocale.Current.countryID
+                LcRest.Locale.Current.languageID,
+                LcRest.Locale.Current.countryID
             );
 
             // Return the updated item

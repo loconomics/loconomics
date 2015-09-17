@@ -77,7 +77,7 @@
     {
         private dynamic GetData()
         {
-            return LcRestUserProfile.GetUserProfile(WebSecurity.CurrentUserId);
+            return LcRest.UserProfile.Get(WebSecurity.CurrentUserId);
         }
         
         public override dynamic Get()
@@ -128,7 +128,7 @@
             }
 
             // Parameters
-            var profile = new LcRestUserProfile {
+            var profile = new LcRest.UserProfile {
                 userID = WebSecurity.CurrentUserId,
                 firstName = Request.Form["firstName"],
                 lastName = Request.Form["lastName"],
@@ -141,7 +141,7 @@
                 birthMonth = Request.Form["birthMonth"].AsInt()
             };
 
-            LcRestUserProfile.UpdateUserProfile(profile);
+            LcRest.UserProfile.Set(profile);
             
             return GetData();
         }

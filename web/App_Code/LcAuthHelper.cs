@@ -101,10 +101,10 @@ public static class LcAuthHelper
     private static LoginResult GetLoginResultForID(int userID, bool returnProfile)
     {
         var authKey = LcAuth.GetAutologinKey(userID);
-        LcRestUserProfile profile = null;
+        LcRest.UserProfile profile = null;
             
         if (returnProfile) {
-            profile = LcRestUserProfile.GetUserProfile(userID);
+            profile = LcRest.UserProfile.Get(userID);
         }
 
         return new LoginResult {

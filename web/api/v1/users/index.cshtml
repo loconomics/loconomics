@@ -45,11 +45,11 @@
                 throw new HttpException(404, "User Not Found");
 
             // when service professional, gets only job-titles related rating (-2), otherwise client rating only (0)
-            var rating = LcRestPublicUserRating.Get(userID, profile.isServiceProfessional ? -2 : 0);
+            var rating = LcRest.PublicUserRating.Get(userID, profile.isServiceProfessional ? -2 : 0);
 
-            var verificationsSummary = LcRestPublicUserVerificationsSummary.Get(userID, profile.isServiceProfessional ? -2 : 0);
+            var verificationsSummary = LcRest.PublicUserVerificationsSummary.Get(userID, profile.isServiceProfessional ? -2 : 0);
 
-            var locale = LcRestLocale.Current;
+            var locale = LcRest.Locale.Current;
 
             var jobProfile = profile.isServiceProfessional ? LcData.JobTitle.GetPublicUserJobTitles(userID, locale.languageID, locale.countryID) : null;
             
@@ -61,8 +61,8 @@
                     instantBooking = x.instantBooking,
                     jobTitleSingularName = x.jobTitleSingularName,
                     jobTitlePluralName = x.jobTitlePluralName,
-                    rating = LcRestPublicUserRating.Get(userID, x.jobTitleID),
-                    verificationsSummary = LcRestPublicUserVerificationsSummary.Get(userID, x.jobTitleID)
+                    rating = LcRest.PublicUserRating.Get(userID, x.jobTitleID),
+                    verificationsSummary = LcRest.PublicUserVerificationsSummary.Get(userID, x.jobTitleID)
                 };
             });
 

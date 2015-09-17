@@ -70,7 +70,7 @@
                 
                 var search = Request["search"] ?? Request["term"];
                 
-                return LcData.JobTitle.SearchJobTitles(search, LcRestLocale.Current);
+                return LcData.JobTitle.SearchJobTitles(search, LcRest.Locale.Current);
             }
 
             throw new HttpException(404, "Not Found");

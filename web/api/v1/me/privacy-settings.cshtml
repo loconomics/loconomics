@@ -55,7 +55,7 @@
     {
         private dynamic GetData()
         {
-            return LcRestPrivacySettings.GetPrivacySettings(WebSecurity.CurrentUserId);
+            return LcRest.PrivacySettings.Get(WebSecurity.CurrentUserId);
         }
         
         public override dynamic Get()
@@ -74,7 +74,7 @@
             }
             
             var userId = WebSecurity.CurrentUserId;
-            var profile = LcRestUserProfile.GetUserProfile(userId);
+            var profile = LcRest.UserProfile.Get(userId);
 
             // Validation
             Validation.RequireField("smsBookingCommunication", "Bookings by SMS preference is required");
@@ -93,7 +93,7 @@
             }
 
             // Parameters
-            var settings = new LcRestPrivacySettings {
+            var settings = new LcRest.PrivacySettings {
                 userID = userId,
 
                 smsBookingCommunication = Request["smsBookingCommunication"].AsBool(), 
@@ -106,7 +106,7 @@
                 coBrandedPartnerPermissions = profile.isServiceProfessional ? Request["coBrandedPartnerPermissions"].AsBool() : false
             };
 
-            LcRestPrivacySettings.UpdatePrivacySettings(settings);
+            LcRest.PrivacySettings.Set(settings);
             
             return GetData();
         }

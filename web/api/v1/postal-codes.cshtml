@@ -32,7 +32,7 @@
             {
                 var postalCode = UrlData[0];
 
-                var item = LcRestAddress.GetPostalCodeData(postalCode, LcRestLocale.Current.countryID, true);
+                var item = LcRest.Address.GetPostalCodeData(postalCode, LcRest.Locale.Current.countryID, true);
                 
                 if (item != null)
                     return item;

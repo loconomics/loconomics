@@ -10,7 +10,7 @@
         userDevice:string A JSON object encoded as string with a userAgent property from the webview/browser and
             additional optional fields like 'device' and 'model' from something like PhoneGap Device Plugin.
 
-    - @Result:LcRestFeedback object with the feedbackID filled automatically
+    - @Result:LcRest.Feedback object with the feedbackID filled automatically
 
     EXAMPLES {
         "Feedback Support": {
@@ -51,7 +51,7 @@
                         return base.Post();
                 }
                 
-                var feedback = new LcRestFeedback {
+                var feedback = new LcRest.Feedback {
                     vocExperienceCategoryID = vocExperienceCategoryID,
                     userID = WebSecurity.CurrentUserId,
                     message = Request["message"],
@@ -60,7 +60,7 @@
                     userDevice = Request["userDevice"]
                 };
 
- 	            LcRestFeedback.PostFeedback(feedback);
+ 	            LcRest.Feedback.PostFeedback(feedback);
 
                 // On support request, send an email
                 if (vocExperienceCategoryID == 2) {

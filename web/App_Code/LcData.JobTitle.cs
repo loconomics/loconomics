@@ -83,7 +83,7 @@ public static partial class LcData
         /// <param name="searchText"></param>
         /// <param name="locale"></param>
         /// <returns></returns>
-        public static IEnumerable<AutocompleteResult> SearchJobTitles(string searchText, LcRestLocale locale)
+        public static IEnumerable<AutocompleteResult> SearchJobTitles(string searchText, LcRest.Locale locale)
         {
             using (var db = Database.Open("sqlloco"))
             {

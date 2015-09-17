@@ -44,7 +44,7 @@
     {
         private dynamic GetData()
         {
-            return LcRestMarketplaceProfile.GetUserProfile(WebSecurity.CurrentUserId);
+            return LcRest.MarketplaceProfile.Get(WebSecurity.CurrentUserId);
         }
         
         public override dynamic Get()
@@ -98,7 +98,7 @@
             // NOTE: more expensive check, and irrelevant on previous validation errors, so is done
             // after the first check
             var profileUrlSlug = Request.Form["serviceProfessionalProfileUrlSlug"].Trim();
-            if (!LcRestMarketplaceProfile.IsProfileUrlAvailable(userID, profileUrlSlug)) {
+            if (!LcRest.MarketplaceProfile.IsProfileUrlAvailable(userID, profileUrlSlug)) {
                 ModelState.AddError("serviceProfessionalProfileUrlSlug", "We're sorry, that custom URL is unavailable, please choose other.");
             }
 
@@ -108,7 +108,7 @@
             }
 
             // Parameters
-            var profile = new LcRestMarketplaceProfile {
+            var profile = new LcRest.MarketplaceProfile {
                 userID = userID,
                 publicBio = Request.Form["publicBio"],
                 serviceProfessionalProfileUrlSlug = profileUrlSlug,
@@ -116,7 +116,7 @@
             };
 
             // Update!
-            LcRestMarketplaceProfile.UpdateUserProfile(profile);
+            LcRest.MarketplaceProfile.Set(profile);
             
             return GetData();
         }

@@ -34,7 +34,7 @@
             var serviceProfessionalID = Request["serviceProfessionaID"].AsInt();
             var jobTitleID = Request["jobTitleID"].AsInt();
             var bookCode = Request["bookCode"];
-            var locale = LcRestLocale.Current;
+            var locale = LcRest.Locale.Current;
             var newBooking = LcRest.Booking.NewFor(clientID, serviceProfessionalID, jobTitleID, locale.languageID, locale.countryID, bookCode);
             if (newBooking == null)
                 throw new HttpException(404, "Not Found");
@@ -87,7 +87,7 @@
             // TODO To implement on recurring bookings. It's expected that more fields are required, to know the recurrence repeatition pattern/rules
             //var makeRepeatBooking = Request.Form["makeRepeatBooking"].AsBool();
             
-            var locale = LcRestLocale.Current;
+            var locale = LcRest.Locale.Current;
             // Get booking presets for current data, to know some fixed settings like instantBooking
             var booking = LcRest.Booking.NewFor(userID, serviceProfessionalUserID, jobTitleID, locale.languageID, locale.countryID, bookCode);
 
@@ -170,7 +170,7 @@
                     PostalCode = Request["billingAddress.postalCode"],
                     CountryID = locale.countryID
                 };
-                var autoAddress = LcRestAddress.GetPostalCodeData(address.PostalCode, address.CountryID, true);
+                var autoAddress = LcRest.Address.GetPostalCodeData(address.PostalCode, address.CountryID, true);
                 if (autoAddress != null) {
                     address.StateProvinceCode = autoAddress.stateProvinceCode;
                     address.City = autoAddress.city;

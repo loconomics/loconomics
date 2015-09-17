@@ -62,7 +62,7 @@
                 }
             }
 
-            var data = LcRestPublicUserRating.Get(userID, jobTitleID);
+            var data = LcRest.PublicUserRating.Get(userID, jobTitleID);
             if (data == null) {
                 throw new HttpException(404, "User Not Found");
             }

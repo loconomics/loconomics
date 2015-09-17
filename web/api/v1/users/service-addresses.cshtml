@@ -65,7 +65,7 @@
 
             // Item ID
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
-                return LcRestAddress.GetServiceAddresses(userID, UrlData[0].AsInt(0));
+                return LcRest.Address.GetServiceAddresses(userID, UrlData[0].AsInt(0));
             }
             else if (UrlData.Count == 1) {
                 throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");

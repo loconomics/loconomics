@@ -201,7 +201,7 @@
             @user.MobilePhone <text>(mobile) or </text> @user.AlternatePhone <text>(other)</text>
         }
         <br />
-        E-mail: <a href="mailto:@user.Email">@LcRestClient.GetEmailFromDb(user.Email)</a>
+        E-mail: <a href="mailto:@user.Email">@LcRest.Client.GetEmailFromDb(user.Email)</a>
     </div>
 }
 @helper PrintUserProfileLink(dynamic userdata, string label = null) {/*

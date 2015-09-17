@@ -12,7 +12,7 @@
     dynamic locations = null;
 
     // Don't include soft delete (further docs in the field definition)
-    var sqlcondOnlyActiveServiceAddress = LcRestAddress.sqlcondOnlyActiveServiceAddress;
+    var sqlcondOnlyActiveServiceAddress = LcRest.Address.sqlcondOnlyActiveServiceAddress;
 
     using (var db = Database.Open("sqlloco")) {
         locations = db.Query(LcData.sqlGetServiceAddresses + sqlcondOnlyActiveServiceAddress,

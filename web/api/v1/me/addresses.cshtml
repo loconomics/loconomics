@@ -178,7 +178,7 @@
             
             // TODO: Strictly, if jobTitleID does not exists for the user, the result must be a Not Found rather than empty
 
-            return LcRestAddress.GetServiceAddresses(userId, jobTitleID);
+            return LcRest.Address.GetServiceAddresses(userId, jobTitleID);
         }
         
         private dynamic GetBillingAddresses()
@@ -188,7 +188,7 @@
             
             // TODO: Strictly, if jobTitleID does not exists for the user, the result must be a Not Found rather than empty
 
-            return LcRestAddress.GetBillingAddresses(userId);
+            return LcRest.Address.GetBillingAddresses(userId);
         }
         
         private dynamic GetHomeAddress()
@@ -196,7 +196,7 @@
             // Parameters
             int userId = WebSecurity.CurrentUserId;
 
-            return LcRestAddress.GetHomeAddress(userId);
+            return LcRest.Address.GetHomeAddress(userId);
         }
 
         private dynamic GetServiceAddress(int jobTitleID, int addressID)
@@ -204,7 +204,7 @@
             // Parameters
             int userId = WebSecurity.CurrentUserId;
 
-            var address = LcRestAddress.GetServiceAddress(userId, jobTitleID, addressID);
+            var address = LcRest.Address.GetServiceAddress(userId, jobTitleID, addressID);
             if (address != null)
                 return address;
 
@@ -216,22 +216,22 @@
             // Parameters
             int userId = WebSecurity.CurrentUserId;
 
-            var address = LcRestAddress.GetBillingAddress(userId, addressID);
+            var address = LcRest.Address.GetBillingAddress(userId, addressID);
             if (address != null)
                 return address;
 
             throw new HttpException(404, "Not found");
         }
         
-        private LcRestAddress GetAddress(int userId, int jobTitleID, int addressID, string kind = null) {
+        private LcRest.Address GetAddress(int userId, int jobTitleID, int addressID, string kind = null) {
             switch (kind) {
-                case LcRestAddress.AddressKind.Service:
+                case LcRest.Address.AddressKind.Service:
                     return GetServiceAddress(jobTitleID, addressID);
 
-                case LcRestAddress.AddressKind.Billing:
+                case LcRest.Address.AddressKind.Billing:
                     return GetBillingAddress(addressID);
 
-                case LcRestAddress.AddressKind.Home:
+                case LcRest.Address.AddressKind.Home:
                     return GetHomeAddress();
 
                 default:
@@ -310,7 +310,7 @@
             Validation.Add("addressLine2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
             Validation.Add("specialInstructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
            
-            if (jobTitleID != LcRestAddress.NotAJobTitleID) {
+            if (jobTitleID != LcRest.Address.NotAJobTitleID) {
                 // One of the service flags is required
                 if (!Request.Form["isServiceLocation"].AsBool() &&
                     !Request.Form["isServiceArea"].AsBool()) {
@@ -322,7 +322,7 @@
             // address or is service location, thats excludes the service area addresses
             // from the need of that fields.
             var isServiceLocation = Request.Form["isServiceLocation"].AsBool(false);
-            if (jobTitleID != LcRestAddress.NotAJobTitleID || isServiceLocation) {
+            if (jobTitleID != LcRest.Address.NotAJobTitleID || isServiceLocation) {
                 Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
                 Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
             }
@@ -335,11 +335,11 @@
         /// data, and the formal parameters
         /// </summary>
         /// <returns></returns>
-        private LcRestAddress GetFormAddress(int userId, int jobTitleID, int addressID = 0) {
+        private LcRest.Address GetFormAddress(int userId, int jobTitleID, int addressID = 0) {
             
-            var locale = LcRestLocale.Current;
+            var locale = LcRest.Locale.Current;
 
-            return new LcRestAddress {
+            return new LcRest.Address {
                 addressID = addressID,
                 userID = userId,
                 jobTitleID = jobTitleID,
@@ -364,7 +364,7 @@
         /// <param name="jobTitleID"></param>
         /// <param name="kind"></param>
         /// <returns></returns>
-        private LcRestAddress SetAddress(int userId, int jobTitleID, int addressID, string kind) {
+        private LcRest.Address SetAddress(int userId, int jobTitleID, int addressID, string kind) {
             // Validation
             if (!IsValidAddress(jobTitleID)) {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
@@ -374,7 +374,7 @@
             var address = GetFormAddress(userId, jobTitleID, addressID);
 
             // validate kind
-            if (!LcRestAddress.AddressKind.IsValid(kind)) {
+            if (!LcRest.Address.AddressKind.IsValid(kind)) {
                 throw new HttpException(500, "Server Error: Invalid address Kind specified.");
             }
             // Set kind
@@ -385,14 +385,14 @@
             // The constraint that makes only one service radius allowed at a time is removed but with code copy, so next lines are commented:
             // // Validate that the service radius is unique
             // // Issue #86, details. for now, only allow one 'travel from' location for a simpler client visualization of provider working zones.
-            // if (kind == LcRestAddress.AddressKind.Service &&
-            //     address.isServiceArea && !LcRestAddress.IsNewServiceAreaAllowed(userId, jobTitleID, addressID)) {
+            // if (kind == LcRest.Address.AddressKind.Service &&
+            //     address.isServiceArea && !LcRest.Address.IsNewServiceAreaAllowed(userId, jobTitleID, addressID)) {
             //     throw new HttpException(400, "You already have a service radius location (can be only one).");
             // }
                             
             // Set address: even for updates, the ID is returned as treated as can be new (thats only on creation)
 			try {
-				var newAddressID = LcRestAddress.SetAddress(address);
+				var newAddressID = LcRest.Address.SetAddress(address);
 				if (newAddressID == 0) {
 					// NOTE: Very, very strange this errors happens with current logic, just an important unexpected database error.
 					// OR a code udpate on the SQL code broke the creation or retrieval off the @AddressID
@@ -418,10 +418,10 @@
 			}
         }
 
-        private LcRestAddress DeleteAddress(int userId, int jobTitleID, int addressID, string kind) {
+        private LcRest.Address DeleteAddress(int userId, int jobTitleID, int addressID, string kind) {
 
             // Validate Kind first
-            if (!LcRestAddress.AddressKind.IsValid(kind)) {
+            if (!LcRest.Address.AddressKind.IsValid(kind)) {
                 throw new HttpException(500, "Server Error: Invalid address Kind specified.");
             }
             
@@ -434,7 +434,7 @@
             if (address != null &&
                 address.kind == kind) {
                 // Delete
-                LcRestAddress.DelAddress(userId, jobTitleID, addressID);
+                LcRest.Address.DelAddress(userId, jobTitleID, addressID);
                 return address;
             }
 
@@ -460,7 +460,7 @@
                         if (UrlData.Count == 2 &&
                             UrlData[1].IsInt()) {
                             
-                            return SetAddress(userId, jobTitleID, LcRestAddress.NewAddressID, LcRestAddress.AddressKind.Service);
+                            return SetAddress(userId, jobTitleID, LcRest.Address.NewAddressID, LcRest.Address.AddressKind.Service);
                         }
 
                         // Any other case, continue to Not Found
@@ -471,7 +471,7 @@
                         // Route: /billing/
 
                         if (UrlData.Count == 1) {
-                            return SetAddress(userId, LcRestAddress.NotAJobTitleID, LcRestAddress.NewAddressID, LcRestAddress.AddressKind.Billing);
+                            return SetAddress(userId, LcRest.Address.NotAJobTitleID, LcRest.Address.NewAddressID, LcRest.Address.AddressKind.Billing);
                         }
 
                         // Any other case, continue to Not Found
@@ -503,7 +503,7 @@
                             UrlData[1].IsInt() &&
                             addressID > 0) {
 
-                            return SetAddress(userId, jobTitleID, addressID, LcRestAddress.AddressKind.Service);
+                            return SetAddress(userId, jobTitleID, addressID, LcRest.Address.AddressKind.Service);
                         }
 
                         // Any other case, continue to Not Found
@@ -518,7 +518,7 @@
                         if (UrlData.Count == 2 &&
                             addressID > 0) {
                             
-                            return SetAddress(userId, LcRestAddress.NotAJobTitleID, addressID, LcRestAddress.AddressKind.Billing);
+                            return SetAddress(userId, LcRest.Address.NotAJobTitleID, addressID, LcRest.Address.AddressKind.Billing);
                         }
 
                         // Any other case, continue to Not Found
@@ -528,7 +528,7 @@
                         
                         // Route: /home
                         
-                        return SetAddress(userId, LcRestAddress.NotAJobTitleID, LcRestAddress.NotAnAddressID, LcRestAddress.AddressKind.Home);
+                        return SetAddress(userId, LcRest.Address.NotAJobTitleID, LcRest.Address.NotAnAddressID, LcRest.Address.AddressKind.Home);
                     }
                 }
             }
@@ -556,7 +556,7 @@
                             UrlData[1].IsInt() &&
                             addressID > 0) {
 
-                            return DeleteAddress(userId, jobTitleID, addressID, LcRestAddress.AddressKind.Service);
+                            return DeleteAddress(userId, jobTitleID, addressID, LcRest.Address.AddressKind.Service);
                         }
 
                         // Any other case, continue to Not Found
@@ -571,7 +571,7 @@
                         if (UrlData.Count == 2 &&
                             addressID > 0) {
                             
-                            return DeleteAddress(userId, LcRestAddress.NotAJobTitleID, addressID, LcRestAddress.AddressKind.Billing);
+                            return DeleteAddress(userId, LcRest.Address.NotAJobTitleID, addressID, LcRest.Address.AddressKind.Billing);
                         }
 
                         // Any other case, continue to Not Found

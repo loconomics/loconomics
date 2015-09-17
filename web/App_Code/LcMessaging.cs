@@ -932,7 +932,7 @@ public class LcMessaging
             // #520: MessageTypeID:15 "Booking Provider Update"
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 15, message, ProviderUserID, BookingID, "Booking");
 
-            var cemail = LcRestClient.GetEmailFromDb(customer.Email);
+            var cemail = LcRest.Client.GetEmailFromDb(customer.Email);
             if (!String.IsNullOrEmpty(cemail))
             {
                 SendMail(cemail, LcData.Booking.GetBookingTitleFor(1, provider, LcData.UserInfo.UserType.Customer),
@@ -1100,7 +1100,7 @@ public class LcMessaging
             }
             if (onlyTo == 'b' || onlyTo == 'c')
             {
-                var cemail = LcRestClient.GetEmailFromDb(customer.Email);
+                var cemail = LcRest.Client.GetEmailFromDb(customer.Email);
                 if (!String.IsNullOrEmpty(cemail))
                 {
                     SendMail(cemail, LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, provider, LcData.UserInfo.UserType.Customer),

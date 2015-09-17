@@ -4,72 +4,75 @@ using System.Linq;
 using System.Web;
 using WebMatrix.Data;
 
-/// <summary>
-/// User profile information from a subset of [users] table
-/// for the REST API, and static methods for database
-/// operations
-/// </summary>
-public class LcRestUserProfile
+namespace LcRest
 {
-    #region Fields
-    public int userID;
-    public string email;
-
-    public string firstName;
-    public string lastName;
-    public string secondLastName;
-    public string businessName;
-
-    public string alternativeEmail;
-    public string phone;
-    public bool canReceiveSms;
-    public int? birthMonthDay;
-    public int? birthMonth;
-   
-    public bool isServiceProfessional;
-    public bool isClient;
-    public bool isMember;
-
     /// <summary>
-    /// Used in the app with a different set of names, but the first one is the same: 'welcome'.
+    /// User profile information from a subset of [users] table
+    /// for the REST API, and static methods for database
+    /// operations
     /// </summary>
-    public string onboardingStep;
-    public int accountStatusID;
-    public DateTime createdDate;
-    public DateTime updatedDate;
-    #endregion
-
-    public static LcRestUserProfile FromDB(dynamic record)
+    public class UserProfile
     {
-        if (record == null) return null;
-        return new LcRestUserProfile {
-            userID = record.userID,
-            email = record.email,
+        #region Fields
+        public int userID;
+        public string email;
 
-            firstName = record.firstName,
-            lastName = record.lastName,
-            secondLastName = record.secondLastName,
-            businessName = record.businessName,
+        public string firstName;
+        public string lastName;
+        public string secondLastName;
+        public string businessName;
 
-            alternativeEmail = record.alternativeEmail,
-            phone = record.phone,
-            canReceiveSms = record.canReceiveSms,
-            birthMonthDay = record.birthMonthDay,
-            birthMonth = record.birthMonth,
+        public string alternativeEmail;
+        public string phone;
+        public bool canReceiveSms;
+        public int? birthMonthDay;
+        public int? birthMonth;
 
-            isServiceProfessional = record.isServiceProfessional,
-            isClient = record.isClient,
-            isMember = record.isMember,
+        public bool isServiceProfessional;
+        public bool isClient;
+        public bool isMember;
 
-            onboardingStep = record.onboardingStep,
-            accountStatusID = record.accountStatusID,
-            createdDate = record.createdDate,
-            updatedDate = record.updatedDate
-        };
-    }
+        /// <summary>
+        /// Used in the app with a different set of names, but the first one is the same: 'welcome'.
+        /// </summary>
+        public string onboardingStep;
+        public int accountStatusID;
+        public DateTime createdDate;
+        public DateTime updatedDate;
+        #endregion
 
-    #region SQL
-    private const string sqlSelectProfile = @"
+        public static UserProfile FromDB(dynamic record)
+        {
+            if (record == null) return null;
+            return new UserProfile
+            {
+                userID = record.userID,
+                email = record.email,
+
+                firstName = record.firstName,
+                lastName = record.lastName,
+                secondLastName = record.secondLastName,
+                businessName = record.businessName,
+
+                alternativeEmail = record.alternativeEmail,
+                phone = record.phone,
+                canReceiveSms = record.canReceiveSms,
+                birthMonthDay = record.birthMonthDay,
+                birthMonth = record.birthMonth,
+
+                isServiceProfessional = record.isServiceProfessional,
+                isClient = record.isClient,
+                isMember = record.isMember,
+
+                onboardingStep = record.onboardingStep,
+                accountStatusID = record.accountStatusID,
+                createdDate = record.createdDate,
+                updatedDate = record.updatedDate
+            };
+        }
+
+        #region SQL
+        private const string sqlSelectProfile = @"
         SELECT TOP 1
             -- ID
             Users.userID
@@ -105,7 +108,7 @@ public class LcRestUserProfile
             AND Active = 1
     ";
 
-    private const string sqlUpdateProfile = @"
+        private const string sqlUpdateProfile = @"
         DECLARE 
         @UserID int
         ,@FirstName varchar(50)
@@ -205,37 +208,39 @@ public class LcRestUserProfile
 
         COMMIT TRAN
     ";
-    #endregion
+        #endregion
 
-    #region Fetch
-    public static LcRestUserProfile GetUserProfile(int userID)
-    {
-        using (var db = Database.Open("sqlloco"))
+        #region Fetch
+        public static UserProfile Get(int userID)
         {
-            return FromDB(db.QuerySingle(sqlSelectProfile, userID));
+            using (var db = Database.Open("sqlloco"))
+            {
+                return FromDB(db.QuerySingle(sqlSelectProfile, userID));
+            }
         }
-    }
-    #endregion
+        #endregion
 
-    #region Create/Update
-    public static void UpdateUserProfile(LcRestUserProfile profile)
-    {
-        using (var db = Database.Open("sqlloco")) {
+        #region Create/Update
+        public static void Set(UserProfile profile)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
 
-            db.Execute(sqlUpdateProfile,
-                profile.userID,
-                profile.firstName,
-                profile.lastName,
-                profile.secondLastName,
-                profile.businessName,
-                profile.alternativeEmail,
-                profile.phone,
-                profile.canReceiveSms,
-                profile.birthMonthDay,
-                profile.birthMonth
-            );
+                db.Execute(sqlUpdateProfile,
+                    profile.userID,
+                    profile.firstName,
+                    profile.lastName,
+                    profile.secondLastName,
+                    profile.businessName,
+                    profile.alternativeEmail,
+                    profile.phone,
+                    profile.canReceiveSms,
+                    profile.birthMonthDay,
+                    profile.birthMonth
+                );
+            }
         }
-    }
-    #endregion
+        #endregion
 
+    }
 }

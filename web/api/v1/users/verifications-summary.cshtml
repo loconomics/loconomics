@@ -82,7 +82,7 @@
                 }
             }
 
-            var data = LcRestPublicUserVerificationsSummary.Get(userID, jobTitleID);
+            var data = LcRest.PublicUserVerificationsSummary.Get(userID, jobTitleID);
             if (data == null) {
                 throw new HttpException(404, "User Not Found");
             }

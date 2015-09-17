@@ -109,7 +109,7 @@
             
             // Validate that 'travel from location' is unique
             // Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
-            if (itravel && !LcRestAddress.IsNewServiceAreaAllowed(u.UserID, positionID, locationID)) {
+            if (itravel && !LcRest.Address.IsNewServiceAreaAllowed(u.UserID, positionID, locationID)) {
                 ModelState.AddFormError("You already have a service radius location (can be only one).");
             }
             

@@ -937,8 +937,8 @@
         }
         @{
             var email = data[dataPrefix + "Email"];
-            if (!String.IsNullOrEmpty(LcRestClient.GetEmailFromDb(email))) {
-                <div class="user-email">E-mail: <span class="value"><a href="mailto:@email">@LcRestClient.GetEmailFromDb(email)</a></span></div>
+            if (!String.IsNullOrEmpty(LcRest.Client.GetEmailFromDb(email))) {
+                <div class="user-email">E-mail: <span class="value"><a href="mailto:@email">@LcRest.Client.GetEmailFromDb(email)</a></span></div>
             }
         }
         @{

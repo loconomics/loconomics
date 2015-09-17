@@ -175,12 +175,12 @@ public static class LcEmailTemplate
         };
     }
 
-    public static string GetLocationForGoogleMaps(LcRestAddress address)
+    public static string GetLocationForGoogleMaps(LcRest.Address address)
     {
         return ASP.LcHelpers.JoinNotEmptyStrings(", ", address.addressLine1, address.city, address.stateProvinceCode, address.countryCode);
     }
 
-    public static string GetLocationGoogleMapsUrl(LcRestAddress address)
+    public static string GetLocationGoogleMapsUrl(LcRest.Address address)
     {
         return "http://maps.google.com/?q=" + Uri.EscapeDataString(GetLocationForGoogleMaps(address));
     }

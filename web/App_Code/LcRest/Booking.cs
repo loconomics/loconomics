@@ -102,7 +102,7 @@ namespace LcRest
 
         #region Links
         public PricingSummary pricingSummary;
-        public LcRestAddress serviceAddress;
+        public Address serviceAddress;
         public EventDates serviceDate;
         public EventDates alternativeDate1;
         public EventDates alternativeDate2;
@@ -677,7 +677,7 @@ namespace LcRest
             if (serviceAddressID.HasValue)
             {
                 var users = new int[] { serviceProfessionalUserID, clientUserID };
-                serviceAddress = LcRestAddress.GetAddress(serviceAddressID.Value, users.AsEnumerable<int>());
+                serviceAddress = Address.GetAddress(serviceAddressID.Value, users.AsEnumerable<int>());
             }
             else
             {

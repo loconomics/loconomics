@@ -54,7 +54,7 @@
                 throw new HttpException(404, "Not Found");
             }
 
-            var locale = LcRestLocale.Current;
+            var locale = LcRest.Locale.Current;
 
             return LcRest.PublicUserJobTitle.GetList(userID, locale.languageID, locale.countryID);
         }
@@ -66,7 +66,7 @@
         /// <returns></returns>
         private dynamic GetItem(int userID, int itemID)
         {
-            var locale = LcRestLocale.Current;
+            var locale = LcRest.Locale.Current;
             if (itemID > 0)
             {
                 var item = LcRest.PublicUserJobTitle.Get(userID, locale.languageID, locale.countryID, itemID);  

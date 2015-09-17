@@ -53,7 +53,7 @@
                 <div>Name: <span>@data[dataPrefix + "FirstName"] @data[dataPrefix + "MiddleIn"] @data[dataPrefix + "LastName"]</span></div>
                 <div>Address: <span>@LcHelpers.JoinNotEmptyStrings(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</span></div>
                 <div>Mobile phone: <span>@data[dataPrefix + "MobilePhone"]</span></div>
-                <div>Email address: <span>@LcRestClient.GetEmailFromDb(data[dataPrefix + "Email"])</span></div>
+                <div>Email address: <span>@LcRest.Client.GetEmailFromDb(data[dataPrefix + "Email"])</span></div>
             </div>
             if (withGoogleMap) {
                 @printGoogleMap(getLocationForGoogleMaps(data))

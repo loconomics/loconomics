@@ -103,7 +103,7 @@
 
             try
             {
-                var locale = LcRestLocale.Current;
+                var locale = LcRest.Locale.Current;
                 if (itemID == 0) {
                     itemID = LcRest.Booking.InsServiceProfessionalBooking(
                         Request["clientUserID"].AsInt(),
