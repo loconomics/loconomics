@@ -30,6 +30,10 @@ EXECUTE sp_rename N'dbo.pricingestimate.Tmp_PricingSummaryID', N'PricingSummaryI
 GO
 EXECUTE sp_rename N'dbo.pricingestimate.Tmp_PricingSummaryRevision_1', N'PricingSummaryRevision', 'COLUMN' 
 GO
+EXECUTE sp_rename N'dbo.pricingestimate.ServiceDuration', N'ServiceDurationHours', 'COLUMN' 
+GO
+EXECUTE sp_rename N'dbo.pricingestimate.FirstSessionDuration', N'FirstSessionDurationHours', 'COLUMN' 
+GO
 ALTER TABLE dbo.pricingestimate SET (LOCK_ESCALATION = TABLE)
 GO
 COMMIT
@@ -63,6 +67,8 @@ COMMIT
 -- Now, tables
 EXEC sp_rename 'pricingestimate', 'pricingSummary'
 EXEC sp_rename 'pricingestimatedetail', 'pricingSummaryDetail'
+
+GO
 
 -- Changes to BookingType table
 BEGIN TRANSACTION
