@@ -1,0 +1,26 @@
+/**
+    NumberField.
+    
+    Right align content as usually numbers follows that alignment.
+    
+    Creates fixed sized classes common used sizes, because
+    sometimes an auto/full width is excessive large for some kind of input.
+    
+    IMPORTANT: All sizes has an extra space to deal with type=number arrow buttons that
+    some browsers use. Too, is expected to being in use the Bootstrap form-control class
+**/
+.NumberField {
+    
+    text-align: right;
+    
+    // Just 3 digits maximum numbers
+    &.NumberField--xs,
+    &.NumberField--percentage {
+        width: 5em;
+    }
+    
+    &.NumberField--center {
+        margin: 0 auto;
+        display: inline-block;
+    }
+}

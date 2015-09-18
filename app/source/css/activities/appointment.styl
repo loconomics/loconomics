@@ -1,0 +1,19 @@
+/** Appointment activity styles */
+
+@import '../components/AppointmentCard.styl'
+
+[data-activity=appointment] {
+
+    &.in-edit {
+        
+        .CardsDeck-dots,
+        .CalendarDateHeader-switch {
+            visibility: hidden;
+        }
+        
+        .ActivityTitle-action {
+            pointer-events: none;
+            visibility: hidden;
+        }
+    }
+}

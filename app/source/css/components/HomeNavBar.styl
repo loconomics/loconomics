@@ -1,0 +1,205 @@
+/**
+    HomeNavBar
+    
+    Navbar for the home/search page, maybe other website pages
+**/
+// computed based on font-sizes line-height and height on logo and max-height buttons:
+$HomeNavBar-ContentHeight = 40px;
+$HomeNavBar-VGap = 12px;
+// Total height to reserve for the header
+$HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
+
+.HomeNavBar {
+    width: 100%;
+    height: $HomeNavBar-Height;
+    // IMPORTANT: Since the is-fixed option is used just once we scroll down the first pixel
+    // is better to keep it fixed from the beggining; performance considerations and perception,
+    // since in iOS (almost, maybe Chrome too) the js scroll handlers does not happen synchronously
+    // causing a small lag between starting scroll (moving up visible navbar) and changing to fixed
+    // so keeps in the same place. This fixes that and the engine does not need to change the layout
+    // computation.
+    //position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    
+    // General layout: flexible layout using 'table' so search expands all the needed while using
+    // only one line
+    display table
+
+    & > .HomeNavBar-menu
+    & > .HomeNavBar-brand
+    & > .HomeNavBar-nav
+    & > .HomeNavBar-searchBar {
+        float none
+        display table-cell
+        vertical-align top
+        white-space nowrap
+        // Automatic size, the minimum required
+        width auto
+    }
+    // Menu has fixed size
+    & > .HomeNavBar-brand {
+        width 56px
+    }
+    // Brand has fixed size
+    & > .HomeNavBar-brand {
+        width 100px
+    }
+    // Search grow the max, all remaining size for it
+    & > .HomeNavBar-searchBar {
+        width 100%
+    }
+    // Nav left with auto size, just the needed minimum size for one line
+
+    // Brand
+    $brandWidth = 100px;
+    $brandHeight = 38px;
+    $brandTop = $HomeNavBar-VGap;
+    $brandLeft = 28px;
+    .HomeNavBar-brand {
+        // positioning:
+        padding-top: $HomeNavBar-VGap;
+        padding-left: $brandLeft;
+        
+        @media $mediaMaxSm {
+            padding-left: $grid-gap;
+        }
+
+        > a {
+            display: inline-block;
+            text-indent: -99999px;
+            background: url("../images/logo-loconomics-white-mini.png") no-repeat center;
+            hr-image("../images/logo-loconomics-white-mini@2x.png", $brandWidth, $brandHeight);
+            width: $brandWidth;
+            height: $brandHeight;
+        }
+    }
+
+    .HomeNavBar-nav {
+        //position: absolute;
+        padding-top: $HomeNavBar-VGap;
+        padding-right: 40px;
+        float: right;
+        
+        @media $mediaMaxSm {
+            padding-right: $grid-gap;
+        }
+
+        > ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0;
+
+            > li {
+                display: inline-block;
+                margin: 0 0 0 16px;
+                
+                @media $mediaMaxSm {
+                    margin-left: 14px;
+                    
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
+
+                // For the help link to get dropdown in the correct place
+                position: relative;
+                > .dropdown-menu {
+                    right: 0;
+                    left: auto;
+                }
+
+                // Used along .btn.btn-link
+                > a {
+                    font-size: 16px;
+                    color: White;
+                    font-weight: bold;
+                    // With links using btn btn-link, just adjust line to get the desired block size
+                    line-height: 26px;
+                }
+            }
+        }
+    }
+
+    // Home collapsed menu styles
+    .HomeNavBar-menu {
+        // IMPORTANT Expected width no more than 56px, or update bar layout at beggining
+        // Only on mobile, so hide by default
+        display: none;
+
+        // Its style:
+        position: absolute;
+        left: 0;
+        top: 7px;
+
+        .dropdown-toggle {
+            font-size: 30px;
+            color: White;
+        }
+    }
+
+    .HomeNavBar-searchBar {
+        SearchBar($HomeNavBar-Height)
+
+        opacity: 0;
+        transition: opacity 300ms $cubic-easing;
+    }
+
+    // On mobile:
+    // - show menu button
+    // - hide standard navbar
+    // - move brand to center
+    @media $mediaMaxXs {
+        .HomeNavBar-menu {
+            display: block;
+        }
+
+        .HomeNavBar-nav {
+            display: none;
+        }
+        
+        .HomeNavBar-searchBar {
+            display: none;
+        }
+
+        .HomeNavBar-brand {
+            display: block;
+            padding: 0;
+            margin: $HomeNavBar-VGap auto 0;
+        }
+    }
+
+    ///
+    // States
+    // Transitions support
+    &,
+    .btn-link {
+        transition: all 300ms $cubic-easing;
+    }
+
+    // Fixed header (usually enabled with js on scroll)
+    &.is-fixed {
+        background: White;
+        position: fixed;
+
+        .btn-link {
+            color: $brand-primary !important;
+        }
+
+        .HomeNavBar-brand > a {
+            background-image: url("../images/logo-loconomics-teal-mini.png");
+            hr-image("../images/logo-loconomics-teal-mini@2x.png", $brandWidth, $brandHeight);
+        }
+    }
+
+    // Search visible
+    &.is-search {
+        .HomeNavBar-searchBar {
+            opacity: 1;
+        }
+    }
+}

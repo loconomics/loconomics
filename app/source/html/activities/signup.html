@@ -1,0 +1,35 @@
+<!-- Activity Signup -->
+<div class="container-fluid" data-activity="signup">
+  <div class="LeadContent">
+    <h3>Sign up for a free trial</h3>
+
+    <div>
+      <a href="#facebook" class="btn btn-default btn-block btn-facebook">Facebook</a>
+      <a href="#google" class="btn btn-default btn-block btn-google">Google</a>
+    </div>
+
+    <p class="isolated text-center">
+      or
+    </p>
+      
+    <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }" novalidate>
+      <div class="form-group" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
+        <label for="signupAccountEmail">Email address</label>
+        <input type="email" class="form-control" id="signupAccountEmail" placeholder="Enter email" data-bind="value: username, valueUpdate: 'keyup', popover: { content: username.error() || signupError(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+      </div>
+      <div class="form-group" data-bind="css: { 'has-warning': password.error }, 'has-success': !password.error()">
+        <label for="signupAccountPassword">Password</label>
+        <input type="password" class="form-control" id="signupAccountPassword" placeholder="Password" data-bind="value: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+      </div>
+      <button type="submit" data-loading-text="Creating account..." class="btn btn-primary btn-block" autocomplete="off">
+        Create account
+      </button>
+    </form>
+
+    <p class="isolated">
+      By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank">Terms of Use</a>,
+        <a href="https://loconomics.com/en-US/About/PrivacyPolicy" target="_blank">Privacy Policy</a> &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy" target="_blank">Co-op Membership Agreement</a>
+    </p>
+  </div>
+
+</div>

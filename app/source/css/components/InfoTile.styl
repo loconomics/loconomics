@@ -1,0 +1,34 @@
+/**
+    InfoTile: a two lines tile with an icon and text
+    inside a link or not.
+**/
+@import 'Tile.styl'
+
+.InfoTile {
+
+    Tile()
+    
+    // Two lines
+    $internalHeight = line-height-computed * 2;
+    $gap = 18px;
+    $heightLimit = $internalHeight + ($gap * 2);
+    
+    padding: $gap $Tile-hgap;
+
+    // Style
+    height: $heightLimit;
+    overflow: hidden;
+
+    .Tile-icon {
+        float: left;
+        width: 70px;
+        text-align: center;
+        &, > * {
+            height: $internalHeight;
+            line-height: $internalHeight;
+            font-size: 24px;
+        }
+    }
+
+    Tile-addContent(2);
+}

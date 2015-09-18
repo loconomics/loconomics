@@ -1,0 +1,116 @@
+/**
+    App specific styles, including anothers components mods
+    specific for when use in the app context.
+**/
+@import '../utils/styleguideVars.styl'
+@import 'AppNav.styl'
+
+/* More app specific styles */
+.App {
+    
+    // At the beggining, all content must be hidden except
+    // an splash screen, up to the app being flagged as 'ready'
+    > body > * {
+        visibility: hidden;
+        
+        &.SplashScreen {
+            visibility: visible;
+        }
+    }
+    &.is-ready > body > * {
+        visibility: inherit;
+        
+        &.SplashScreen {
+            visibility: hidden;
+        }
+    }
+
+    /** We use ever all the available screen **/
+    height: 100%;
+    // Fix for iOS smooth scrolling
+    overflow: auto;
+    // Smoother scrolling and inertia effect for iOS
+    // The property is inheret to every element with scroll enabled (overflow:auto|scroll)
+    // Be carefull since scrolling this way has a bug with fixed elements (typically navbar)
+    // on that cases is better to use 'absolute' positioning changing the scrolling to a
+    // content element rather than the document or the container of the absolute elements.
+    -webkit-overflow-scrolling: touch;
+
+    > body {
+        height: 100%;
+        /* Space for app-nav on top */
+        // media-app-navbar and big
+        padding-top: $app-navbar-height;
+        @media $media-big-navbar {
+            padding-top: $big-navbar-height;
+        }
+        
+        // DO NEVER EVER EVER PUT THE NEXT LINE ON BODY,
+        // WILL BREAK Webkit/Blink (iOS, Android, Chrome, Opera).
+        // scrolling is auto on html/documentElement so no need for this.
+        // This is keep for documentation purpose preventing future bugs:
+        // overflow: auto; // value 'scroll' will break too
+    }
+
+    /**
+        Custom Buttons --very specific
+    **/
+    .btn-google {
+        background-color: #CC0000;
+        color: white;
+        border: none;
+    }
+    .btn-facebook {
+        background-color: #085394;
+        color: white;
+        border: none;
+    }
+    
+    /**
+        Some small utilities,
+        they *may* upgrade to its own class as
+        part of the Styleguide elements.
+    **/
+    
+    /** Customized or extended Bootstrap components **/
+    /* bottom modal */
+    .modal.bottom {
+        .modal-dialog {
+            position: absolute;
+            padding: 10px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    }
+    
+    /* top modal: modals appear on top by default, but
+        needs an extra margin to avoid hide the top
+        nav (thats blocked but gets more nice UI)
+    */
+    .modal {
+        .modal-dialog {
+            padding-top: $app-navbar-height;
+            @media $media-big-navbar {
+                padding-top: $big-navbar-height;
+            }
+        }
+    }
+    
+    /* why modals has not the standard modal-backdrop? anyway, fix.. */
+    .modal {
+        background: rgba(0, 0, 0, .4);
+    }
+    
+    // Special icon color for feedback 'lamp'
+    app-feedback-entry {
+        .ion-lightbulb,
+        .ion-ios-lightbulb-outline {
+            color: #f0ad4e;
+        }
+    }
+    
+    .App-activities {
+
+    }
+}

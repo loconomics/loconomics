@@ -1,0 +1,80 @@
+/**
+    FreelancerInfo
+    
+    It presents a box/tile with summary information about a freelancer.
+    It comes in different sizes
+    
+    TODO Finish per design, options
+**/
+.FreelancerInfo {
+    text-align: center;
+    margin: 12px auto;
+    padding-left: 76px;
+    position: relative;
+    width: 320px;
+    height: 96px;
+    padding-right: 10px;
+
+    .Avatar {
+        position: absolute;
+        left: 10px;
+        top: floor((96px - 60px) / 2);
+    }
+    
+    .FreelancerInfo-name {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0;
+        padding: 5px 19px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    
+    .FreelancerInfo-jobTitle {
+        color: $gray-light;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    
+    .FreelancerInfo-businessName {
+        color: $gray-light;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    
+    .FreelancerInfo-meta {
+        display: block;
+        
+        // All icons same size
+        i {
+            font-size: 22px;
+        }
+        
+        .VerificationsRating {
+            color: $gray;
+            
+            vertical-align: bottom;
+            line-height: 22px;
+            font-size: 15px;
+            
+            margin: 0 5px;
+        }
+        
+        .BackgroundCheckRating {
+            color: $brand-success;
+        }
+        
+        .FreelancerInfo-favorite {
+            position: absolute;
+            top: 4px;
+            right: 10px;
+            
+            i {
+                color: $brand-secondary;
+            }
+        }
+    }
+}

@@ -1,0 +1,49 @@
+<!-- Scheduling activity -->
+<div data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }">
+    <h2 class="SectionTitle">Services, Pricing, &amp; Locations
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+    </h2>
+    <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle"></app-job-titles-list>
+    <a class="CompactLinkTile" href="/addJobTitles">
+        <div class="Tile-content text-muted">Add a job title</div>
+        <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+    </a>
+
+    <h2 class="SectionTitle">Availability</h2>
+    <ul class="TilesList TilesList--openEnd">
+        <li><a class="InfoTile" href="/weeklySchedule">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa fa-calendar" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Schedule</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/schedulingPreferences">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-settings" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Scheduling preferences</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/appointment/-3">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa fa-ban" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Block time off calendar</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/calendarSyncing">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-loop" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Sync existing calendars</p>
+            </div>
+        </a></li>
+    </ul>
+
+    <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
+</div>

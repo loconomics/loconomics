@@ -1,0 +1,92 @@
+<!-- marketplaceJobtitles activity -->
+<div data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }">
+    <h2 class="SectionTitle">
+        <span>Profile Status</span>
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+    </h2>
+    <div class="switchLine">
+        <span data-bind="text: jobTitleName"></span> <span>profile:</span> <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
+        <div class="pull-right">
+            <label>
+                <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }" />
+            </label>
+        </div>
+    </div>
+    <h2 class="SectionTitle">
+        <span>About your services</span>
+    </h2>
+    <ul class="TilesList">
+        <li><a class="InfoTile" href="/freelancerPricing" data-bind="attr: { href: getJobUrlTo('freelancerPricing') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Pricing and services</div>
+                <em data-bind="text: pricingCount"></em>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: getJobUrlTo('serviceAddresses') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Service locations</div>
+                <em data-bind="text: addressesCount"></em>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/servicesOverview" data-bind="attr: { href: getJobUrlTo('servicesOverview') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-clipboard" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Overview of services</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/cancellationPolicy" data-bind="attr: { href: getJobUrlTo('cancellationPolicy') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-close" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Cancellation policy</div>
+                <em data-bind="text: cancellationPolicyLabel"></em>
+            </div>
+        </a></li>
+        <li><button type="button" class="InfoTile" data-bind="click: toggleInstantBooking">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-bolt-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <div>Instant booking</div>
+                <strong data-bind="text: instantBookingLabel, css: { 'text-success': instantBooking, 'text-danger': !instantBooking() }"></strong>
+            </div>
+        </button></li>
+        <li><a class="InfoTile" href="/licensesCertifications" data-bind="attr: { href: getJobUrlTo('licensesCertifications') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa fa-certificate" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <div>Certifications/Licenses</div>
+                <em data-bind="text: licensesCertificationsSummary"></em>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/workPhotos" data-bind="attr: { href: getJobUrlTo('workPhotos') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-camera-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Photos of your work</div>
+                <em data-bind="text: workPhotosSummary"></em>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <p>Add Book Now button</p>
+            </div>
+        </a></li>
+    </ul>
+
+    <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
+</div>

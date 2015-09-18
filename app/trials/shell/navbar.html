@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" type="image/vnd.microsoft.icon" href="../../assets/images/favicon.ico" />
+
+        <title>Loconomics</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="../app/build/assets/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Styles build following the Styleguide -->
+        <link href="../app/build/assets/css/styleguide.css" rel="stylesheet">   
+        
+        <style>
+            
+            .AppNavBar {
+                /*display: table;*/
+            }
+            
+            .AppNavBar {
+                /*display: table-cell;
+                width: 1%;*/
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                vertical-align: middle;
+                padding: 8px 0;
+                height: 50px;
+                overflow: hidden;
+            }
+            
+            .AppNavBar > * {
+                line-height: 36px;
+            }
+            
+            .AppNavBar .navbar-toggle {
+                margin: 0;
+            }
+            
+            .navbar-primary-action {
+                text-align: left;
+                float: left;
+            }
+            
+            .navbar-secondary-action {
+                text-align: right;
+                float: right;
+            }
+            
+            .navbar-header {
+                text-align: center;
+            }
+            
+            .navbar-header > .navbar-brand {
+                float: none;
+            }
+            
+            .AppNavBar-backMode .navbar-header {
+                text-align: left;
+            }
+            
+        </style>
+        
+        <script src="../app/build/assets/js/styleguidelibs.js"></script>
+        <script src="../app/build/assets/js/libs.js"></script>
+        <script>
+
+        </script>
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="AppNav container-fluid">
+        <div class="AppNavBar">
+          
+          <div class="navbar-primary-action">
+            <a class="btn btn-link" href="#"><span class="navbar-action-icon glyphicon glyphicon-arrow-left"></span></a>
+          </div>
+          
+          <div class="navbar-header"><a class="navbar-brand" href="#">Loconomics</a></div>
+          
+          <div class="navbar-secondary-action">
+            
+            <button type="button" class="navbar-toggle collapsed btn btn-link" data-toggle="collapse" data-target="#menuIn" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+          </div>
+        </div>
+        <div id="menuIn" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="go-home"><a href="/home">Dashboard</a></li>
+            <li class="go-calendar"><a href="/calendar">Calendar</a></li>
+            <li class="go-inbox"><a href="/inbox">Inbox</a></li>
+            <li class="go-clients"><a href="/clients">Clients</a></li>
+            <li class="go-payments"><a href="/payments">Payments</a></li>
+            <li class="go-services"><a href="/services">Services</a></li>
+            <li class="go-account"><a href="/account">Account</a></li>
+            <li class="go-logout"><a href="/logout">Logout</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+      
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="AppNav container-fluid">
+        <div class="AppNavBar">
+          
+          <div class="navbar-primary-action">
+            <a class="btn btn-link" href="#"><span class="navbar-action-icon glyphicon glyphicon-plus"></span></a>
+          </div>
+          
+          <div class="navbar-header"><a class="navbar-brand" href="#">Section name</a></div>
+          
+          <div class="navbar-secondary-action">
+            <a class="btn btn-link" href="#"><span></span></a>
+          </div>
+        </div>
+      </div>
+    </nav>
+      
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="AppNav container-fluid">
+        <div class="AppNavBar">
+          
+          <div class="navbar-primary-action">
+            <a class="btn btn-link" href="#"><span class="navbar-action-icon glyphicon glyphicon-plus"></span></a>
+          </div>
+          <div class="navbar-secondary-action">
+            <a class="btn btn-link" href="#"><span>help</span></a>
+          </div>
+          <span>Section name</span>
+        </div>
+      </div>
+    </nav>
+      
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="AppNav container-fluid">
+        <div class="AppNavBar AppNavBar-backMode">
+          
+          <div class="navbar-primary-action">
+            <a class="btn btn-link" href="#"><span class="navbar-action-icon glyphicon glyphicon-arrow-left"></span></a>
+          </div>
+          <div class="navbar-secondary-action">
+            <a class="btn btn-link" href="#"><span></span></a>
+          </div>
+          
+          <span>Section name</span>
+
+        </div>
+      </div>
+    </nav>
+      
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="AppNav container-fluid">
+        <div class="AppNavBar AppNavBar-backMode">
+          
+          <div class="navbar-primary-action">
+            <a class="btn btn-link" href="#"><span class="navbar-action-icon glyphicon glyphicon-arrow-left"></span></a>
+          </div>
+          
+          <div class="navbar-header"><span>Section Name</span></div>
+          
+          <div class="navbar-secondary-action">
+            
+            <a class="btn btn-link hidden" href="#!login"><span class="glyphicon glyphicon-log-in"></span></a>                                                         
+            
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+        <h3>Some</h3>
+        <p>Content</p>
+    </div>
+  </body>
+</html>

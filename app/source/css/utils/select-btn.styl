@@ -1,0 +1,19 @@
+// Include styles to better display 'select' elements
+// as btn if the .btn class is set
+select.btn {
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   // Text align reassigned to default because cause a misalignment on selects
+   // is reassigned on btn-block
+   text-align: left;
+}
+
+select.btn-block {
+    // Webkit does not allow to change text-align on dropdowns, but still for others
+    text-align: center;
+}
+
+select.btn::-ms-expand { /* for IE 11 */
+    display: none;
+}

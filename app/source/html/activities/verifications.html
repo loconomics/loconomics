@@ -1,0 +1,44 @@
+<!-- Activity verifications -->
+<div data-activity="verifications">
+
+  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+      <span>
+        Verifications
+      </span>
+      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+  </h2>
+    <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+    </div>
+    
+    <div>
+        <ul class="TilesList" data-bind="foreach: userVerifications">
+            <li class="InfoTile">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+                </div>
+                <div class="Tile-content">
+                    <div data-bind="text: verification().name() || 'Verification'"></div>
+                    <em>
+                        <span data-bind="text: statusText, css: { 'text-warning': isStatus('pending'), 'text-success': isStatus('confirmed'), 'text-danger': isStatus('revoked') || isStatus('obsolete') }"></span>
+                        <span data-bind="text: lastVerifiedDate, format: { type: 'datetime', format: 'L LTS' }"></span>
+                    </em>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="TilesList">  
+        <button type="button" class="CompactLinkTile"
+           data-bind="popover: { content: facebookInfo, trigger: 'focus', container: '[data-activity=verifications]', placement: 'bottom', html: true }">
+            <div class="Tile-content text-muted">Connect with Facebook</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </button>
+        <button type="button" class="CompactLinkTile"
+           data-bind="popover: { content: emailInfo, trigger: 'focus', container: '[data-activity=verifications]', placement: 'bottom', html: true }">
+            <div class="Tile-content text-muted">Confirm e-mail address</div>
+            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+        </button>
+    </div>
+
+</div>

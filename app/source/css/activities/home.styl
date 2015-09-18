@@ -1,0 +1,393 @@
+/**
+    Home page styles (aka Search page)
+**/
+
+@import '../utils/input-group-addon-inset.styl';
+@import '../utils/arrows.styl';
+@import '../components/WebsiteFooter.styl';
+@import '../components/SideMenu.styl';
+@import '../components/SearchBar.styl';
+@import '../components/HomeNavBar.styl';
+
+[data-activity=home] {
+
+    
+    // NO NAVBAR, disabled on the JS activity, so this can replace the default:
+    top: 0 !important;
+    
+    // NOTE: all activities are absolute positioned, so is already a positioning context
+    
+    [role=main] {
+        $arrowSize = 30px;
+        $sectionTitleFontSize = 32px;
+        $sectionTitleLineHeight = ceil($sectionTitleFontSize * 1.1);
+        $sectionTitleFontSizeSmall = 28px;
+        $sectionTitleLineHeightSmall = ceil($sectionTitleFontSizeSmall * 1.1);
+
+        .home-section-title {
+            color: White;
+            font-size: $sectionTitleFontSize;
+            line-height: $sectionTitleLineHeight;
+            font-weight: bold;
+            margin: 0 auto;
+            padding: 0.4em $grid-gap;
+            text-align: center
+            
+            @media $mediaMaxXs {
+                font-size: $sectionTitleFontSizeSmall;
+                line-height: $sectionTitleLineHeightSmall;
+            }
+        }
+        
+        .home-search {
+            padding-top: $HomeNavBar-Height + 32px;
+            background: rgb(79, 184, 185) url('../images/home-header.jpg') no-repeat top center / cover;
+        
+            .home-title {
+                color: White;
+                font-size: 44px;
+                font-weight: bold;
+                margin: 0.4em auto;
+                text-align: center
+                
+                @media $mediaMaxSm {
+                    font-size: 38px;
+                }
+            }
+
+            .home-tagline {
+                color: White;
+                font-size: 24px;
+                margin: 0.5em auto;
+                text-align: center;
+            }
+
+            // Edge limit for phone
+            .home-title,
+            .home-tagline {
+                padding: 0 $grid-gap;
+            }
+
+            form {
+                margin: 40px auto;
+                max-width: 700px;
+
+                .form-control {
+                    background: White;
+                }
+
+                // Reduce column gaps by a 20px in total
+                // for sizes bigger than XS (so keep standar in phone where
+                // forms goes vertical)
+                @media $mediaMinSm {
+                    > * {
+                        padding-left: 10px;
+                        padding-right: 10px;
+                    }
+                }
+            }
+        }
+
+        
+        // How It Works section
+        .home-hiw {
+            text-align: center;
+            color: $gray;
+            background: White;
+            down-arrow($arrowSize, 0, none, White, center);
+            
+            $iconsSize = 90px;
+            
+            ul {
+                margin-top: ($iconsSize / 2) + 18px;
+                margin-bottom: 0;
+                padding-bottom: ($iconsSize / 2);
+                
+                > li {
+                    margin-top: (0 - $iconsSize / 2);
+                }
+            }
+            
+            h3 {
+                font-weight: bold;
+                font-size: 22px;
+            }
+            
+            // icons
+            i {
+                background: $brand-secondary-background;
+                font-size: floor($iconsSize / 1.60);
+                border-radius: 100%;
+                width: $iconsSize;
+                line-height: $iconsSize;
+                color: White;
+            }
+
+        }
+        
+        // Why book on Loconomics section
+        .home-booking {
+            $boxSize = 340px;
+            $boxMargin = 1.5%;
+
+            background: $brand-secondary-background;
+            text-align: center;
+            padding-top: 40px;
+
+            down-arrow($arrowSize, 0, none, $brand-secondary, center);
+
+            ul {
+                color: $gray;
+                text-align: center;
+                margin: 0 auto;
+                padding-bottom: 10px;
+                // 3 boxes limit: UPDATE on each size or margin change
+                max-width: 1200px;
+
+                li {
+                    background: White;
+                    //float: left;
+                    display: inline-block;
+                    width: $boxSize;
+                    margin: $boxMargin;
+                    padding: 16px;
+                    vertical-align: middle;
+                    
+                    // On small sizes 2 columns does not fits so
+                    // (using XS/mobile now -- is close enough to the actual needed size) 
+                    // it automatically gets 1 column but needs to manage size so it
+                    // shrinks automatically for smaller screens using current fixed size
+                    // as maximum size (to don't let to appear too wide on sizes in the middle
+                    // of the breakpoint and card size).
+                    // Margin is auto for centering and added gap on list container
+                    @media $mediaMaxXs {
+                        width: auto;
+                        display: block;
+                        max-width: $boxSize;
+                        margin: $grid-gap auto;
+                    }
+                    
+                    a {
+                        color: $brand-secondary;
+                        font-weight: bold;
+                    }
+                    
+                    h3 {
+                        font-size: 15px;
+                        font-weight: bold;
+                    }
+                }
+                
+                // Setting margin for small screens since the items margin is auto there
+                @media $mediaMaxXs {
+                    margin: 0 $grid-gap;
+                }
+                
+                // icons
+                i {
+                    color: $brand-secondary;
+                    font-size: 3em;
+                    display: block;
+                }
+            }
+            
+            .home-booking-more {
+                width: $boxSize;
+                margin: auto;
+                padding-bottom: 2em;
+                
+                @media $mediaMaxXs {
+                    width: auto;
+                    display: block;
+                    margin: 0 $grid-gap;
+                    
+                    > .btn {
+                        max-width: $boxSize;
+                        margin: 0 auto;
+                    }
+                }
+
+                .btn {
+                    border-color: White;
+                }
+            }
+        }
+        
+        .home-categories {
+            $boxSize = 240px;
+            $boxMargin = 1.5%;
+            
+            background: $gray-background;
+            text-align: center;
+            padding-top: 40px;
+            
+            h2 {
+                color: $gray;
+            }
+            
+            ul {
+                color: $gray;
+                text-align: center;
+                margin: 0 auto;
+                padding-bottom: 10px;
+                // 4 boxes limit: UPDATE on each size or margin change
+                max-width: 1200px;
+
+                li {
+                    // background photo setup (will have an image per category)
+                    background: White no-repeat top center / contain;
+                    background-size: contain;
+                    display: inline-block;
+                    width: $boxSize;
+                    margin: $boxMargin;
+                    padding: 12px;
+                    vertical-align: middle;
+                    
+                    /* DISABLED, background does not looks good, and not so needed
+                    // For a small size where only one card fits the space (~pixels)
+                    // use an automatic width so the card does not looks with lot of
+                    // margin space and fits on sizes smaller than original card size,
+                    // but keeping a maximum size so it does not looks too wide.
+                    // On the beggining, the XS breakpoint was used, but was too wide
+                    // and lot of devices still hold two columns easily, so custom breakpoint
+                    // for the current design and $boxSize and $boxMargin
+                    // Margin is auto for centering and added gap on list container
+                    //@media $mediaMaxXs {
+                    @media (max-width: 520px) {
+                        width: auto;
+                        display: block;
+                        max-width: 340px;
+                        margin: $grid-gap auto;
+                        // Don't allow the background to lost alignment with the icon
+                        // NOTE: side-effect, image lost aspect rate
+                        background-size: 100% 157px;
+                    }
+                    */
+
+                    // Category background images
+                    &.SearchCategory-home {
+                        background-image: url('../images/search-category-home.jpg');
+                    }
+                    &.SearchCategory-children {
+                        background-image: url('../images/search-category-children.jpg');
+                    }
+                    &.SearchCategory-pet {
+                        background-image: url('../images/search-category-pet.jpg');
+                    }
+                    &.SearchCategory-personal {
+                        background-image: url('../images/search-category-personal.jpg');
+                    }
+                    &.SearchCategory-transport {
+                        background-image: url('../images/search-category-transport.jpg');
+                    }
+                    &.SearchCategory-office {
+                        background-image: url('../images/search-category-office.jpg');
+                    }
+                    &.SearchCategory-senior {
+                        background-image: url('../images/search-category-senior.jpg');
+                    }
+                    &.SearchCategory-celebration {
+                        background-image: url('../images/search-category-celebration.jpg');
+                    }
+
+                    h3 {
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+                    
+                    app-stars-rating {
+                        display: block;
+                    }
+                    
+                    .StarsRating {
+                        color: $brand-secondary;
+                        display: block;
+                    }
+                    
+                    p {
+                        margin: 0px 0px 30px;
+                    }
+                    
+                    .btn {
+                        font-weight: bold;
+                        
+                        em {
+                            font-weight: normal;
+                            font-style: normal;
+                        }
+                    }
+                    
+                    // icons
+                    > i {
+                        color: White;
+                        font-size: 4em;
+                        display: inline-block;
+                        border-radius: 12px;
+                        background: $brand-primary;
+                        text-align: center;
+                        padding: 13px 20px;
+                        margin: 24px auto 8px;
+                    }
+                }
+                
+                // Setting margin for small screens since the items margin is auto there
+                //@media $mediaMaxXs {
+                @media (max-width: 520px) {
+                    margin: 0 $grid-gap;
+                }
+            }
+        }
+        
+        ///////////////
+        /// SPECIAL HOW-IT-WORKS OVERLAY EFFECT:
+        /// Move everything up to show title and half icons out of the
+        /// box and out of the background, while keeping separation with previous section;
+        // Manually calculated:
+        $offset = 126px;
+        .home-search {
+            // Add the space to home-search on bottom to hold the moved-up home-hiw
+            // while keeping background filling the whole area
+            padding-bottom: $offset;
+        }
+        .home-hiw {
+            margin-bottom: (0 - $offset);
+            
+            .home-section-title,
+            .home-section-listing {
+                position: relative;
+                top: (0 - $offset);
+            }
+            &:after,
+            &:before {
+                bottom: ($offset - $arrowSize);
+            }
+            
+            // Just rows in extra-small size (html is set to use 3 Bootstrap columns from col-sm and up)
+            @media $mediaMaxXs {
+                .home-section-title {
+                    // 2 lines height, even when only one required to keep offsets the same
+                    height: ($sectionTitleLineHeightSmall * 2);
+                    box-sizing: content-box;
+                }
+                
+                ul {
+                    // Just this to keep the effect of first icon half in/out the background
+                    margin-top: 0;
+                    // And add margin to separate each item, now in vertical
+                    > li {
+                        margin-top: -4px;
+                    }
+                }
+            }
+        }
+        .home-booking {
+            .home-section-title {
+                // Required to avoid an ugly side-effect from the negative margin offset on the
+                // previous box (home-hiw):
+                // IMPORTANT: The clear must go in the first element in this container (the title)
+                // because if goes in the container it will hide the previous container arrow
+                clear: both;
+            }
+        }
+    }
+}

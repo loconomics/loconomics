@@ -1,0 +1,16 @@
+<!-- Knockout Template service-addresses -->
+<script type="text/html" id="service-addresses-template">
+    <ul class="TilesList" data-bind="foreach: addresses">
+        <li><a class="ItemAddonTile" href="#" data-bind="click: $parent.selectAddress, css: { active: $parent.observerSelected($data) }">
+            <i class="Tile-marker fa ion ion-ios-location-outline" aria-hidden="true"></i>
+            <div class="Tile-content">
+                <div data-bind="text: addressName() || 'Service Area'"></div>
+                <em data-bind="text: singleLine"></em>
+            </div>
+            <div class="Tile-addon" aria-hidden="true">
+                <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
+                      data-bind="css: { 'ion-ios-circle-filled': $parent.observerSelected($data), 'ion-ios-circle-outline': !$parent.observerSelected($data)() }"></span>
+            </div>
+        </a></li>
+    </ul>
+</script>

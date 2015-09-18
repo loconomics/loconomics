@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" id="Loconomics">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Loconomics, styleguide">
+    <meta name="keywords" content="HTML, CSS, JS, JavaScript, framework, bootstrap, front-end, frontend, web development">
+    <meta name="author" content="Loconomics">
+
+    <title>
+        Loconomics Styleguide
+    </title>
+    <link rel="icon" type="image/vnd.microsoft.icon" href="/assets/images/favicon.ico" />
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Styles build following the Styleguide -->
+    <link href="/assets/css/styleguide.css" rel="stylesheet">    
+    <!-- Styles only in use on Desktop site, as additional to styleguide.css -->
+    <link href="/assets/css/styleguide-desktop.css" rel="stylesheet"> 
+    <!-- Documentation extras from getbootstrap.com -->
+    <link href="/assets/css/docs.css" rel="stylesheet">
+    <!-- Our documentation extras -->
+    <link href="/assets/css/sgdocs.css" rel="stylesheet">
+  </head>
+  <body>
+    <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <!-- Docs master nav -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+      <div class="container">
+        <div class="navbar-header">
+          <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="https://loconomics.com" class="navbar-brand">Loconomics</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+          <ul class="nav navbar-nav">
+            <li class="active">
+              <a href="/">Style Guide</a>
+            </li>
+            <li>
+              <a href="/css">CSS Components</a>
+            </li>
+            <li>
+              <a href="/javascript">Javascript Components</a>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://blog.loconomics.com" target="_blank">Blog</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+
+    <!-- Docs page layout -->
+    <div class="bs-docs-header" id="content">
+      <div class="container">
+        <h1>Loconomics Style Guide</h1>
+        <p>Based on Bootstrap customizing some basics styles and extended with our own set of components.</p>
+      </div>
+    </div>
+
+    <div class="container bs-docs-container">
+
+      <div class="row">
+        <div class="col-md-9" role="main">
+          <div class="bs-docs-section">
+            <h1 id="styleguide-overview" class="page-header">Overview</h1>
+
+            <h3 id="styleguide-bootstrap">Bootstrap</h3>
+            <p>This site is using a custom build of Bootstrap v3.2.0, following this styleguide values for customized colors and more.</p>
+            <p>It uses too the set of styles and helper classes of the Style Guide page from getbootstrap.com, with some minor changes.</p>
+
+            <h3 id="styleguide-colors-palette">Colors palette</h3>
+            <h4>Grayscale colors</h4>
+            <p>Bootstrap set of <a href="http://getbootstrap.com/css/#less-variables-colors" target="_blank">grayscale colors</a>.</p>
+            <dl class="medium-definitions">
+              <dt>@gray-darker:  lighten(#000, 13.5%);</dt><dd><span class="color-sample" style="background-color: #222"></span> <span style="color:#222">(#222)</span></dd>
+              <dt>@gray-dark:    lighten(#000, 20%);</dt><dd><span class="color-sample" style="background-color: #333"></span> <span style="color:#333">(#333)</span></dd>
+              <dt>@gray:         lighten(#000, 33.5%);</dt><dd><span class="color-sample" style="background-color: #555"></span> <span style="color:#555">(#555)</span></dd>
+              <dt>@gray-light:   lighten(#000, 46.7%);</dt><dd><span class="color-sample" style="background-color: #777"></span> <span class="text-muted">text-muted (#777)</span></dd>
+              <dt>@gray-lighter: lighten(#000, 93.5%);</dt><dd><span class="color-sample" style="background-color: #eee"></span> <span style="color:#eee">(#eee)</span></dd>
+            </dl>
+            
+            <h4>Semantic colors</h4>
+            <p>Loconomics set of semantic colors based on the <a href="http://getbootstrap.com/css/#less-variables-colors" target="_blank">Bootstrap ones</a>.</p>
+            <dl class="medium-definitions">
+              <dt>Primary (@brand-primary)</dt><dd><span class="color-sample" style="background-color:#00989A"></span> <span class="text-primary">text-primary (#00989A)</span></dd>
+              <dt>Success (@brand-success)</dt><dd><span class="color-sample" style="background-color:#99C027"></span> <span class="text-success">text-success (#99C027)</span></dd>
+              <dt>Info (@brand-info)</dt><dd><span class="color-sample" style="background-color:#B5E1E2"></span> <span class="text-info">text-info (#B5E1E2)</span></dd>
+              <dt>Warning (@brand-warning)</dt><dd><span class="color-sample" style="background-color:#E95D0F"></span> <span class="text-warning">text-warning (#E95D0F)</span></dd>
+              <dt>Danger (@brand-danger)</dt><dd><span class="color-sample" style="background-color:#FC0404"></span> <span class="text-danger">text-danger (#FC0404)</span></dd>
+            </dl>
+            
+            <h4>Background semantic colors</h4>
+            <p>How the semantic colors look when used on background; most of them lighter and others with different foreground color for better contrast.</p>
+            <div class="bs-example-bg-classes">
+              <p class="bg-primary">Primary (@brand-primary) as bg-primary</p>
+              <p class="bg-success">Success (@brand-success) as bg-success</p>
+              <p class="bg-info">Info (@brand-info) as bg-info</p>
+              <p class="bg-warning">Warning (@brand-warning) as bg-warning</p>
+              <p class="bg-danger">Danger (@brand-danger) as bg-danger</p>
+            </div>
+
+            <h4>Additional semantic colors</h4>
+            <p>Set of semantics extended by Loconomics, when the basic ones are not enough.</p>
+            <p class="bs-callout bs-callout-info">On development...</p>
+
+            <h3 id="styleguide-typography">Typography</h3>
+            <h4>Mobile</h4>
+            <p>We use the standard fonts used by Bootstrap, they are:</p>
+            <ul class="typography-list">
+              <li>
+                <strong>@font-family-sans-serif</strong> "Helvetica Neue", Helvetica, Arial, sans-serif:
+                <div class="typography-sample typo-sans-serif">This is the @font-family-base, applies by default to all the text (body copy).</div>
+              </li>
+              <li>
+                <strong>@font-family-serif</strong> Georgia, "Times New Roman", Times, serif:
+                <div class="typography-sample typo-serif">Alternative when a Serif font is wanted (useful for printing), not used by default.</div>
+              </li>
+              <li>
+                <strong>@font-family-monospace</strong> Menlo, Monaco, Consolas, "Courier New", monospace:
+                <div class="typography-sample typo-monospace">Alternative when a Monospace font is wanted, used for blocks of code and preformatted text.</div>
+              </li>
+            </ul>
+            
+            <h4>Desktop</h4>
+            <p>Only on desktop, we use downloaded web fonts for the site, with some fallbacks for the minor cases where formats WOFF, TrueType, SVG and Embedded-OpenType are not supported.</p>
+            <ul class="typography-list">
+              <li>
+                <strong>Alte Haas Grotesk</strong> (CSS fallbacks: Helvetica, Arial, sans-serif), as in following sample:
+                <div class="typography-sample typo-altehaasgrotesk">Alte Haas Grotesk is the main typography, applies by default to all the text (body copy).</div>
+              </li>
+              <li>
+                <strong>Hand Of Sean</strong> (CSS fallbacks: Arial, sans-serif), as in following sample:
+                <div class="typography-sample typo-handofsean">Hand Of Sean is used for the higher titles only.</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bs-docs-footer" role="contentinfo">
+      <div class="container">
+        <p>Created by <a href="https://loconomics.com">Loconomics</a> using <a href="http://getbootstrap.com">Bootstrap</a>.</p>
+      </div>
+    </footer>
+    
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/assets/javascript/styleguidelibs.js"></script>
+    <script src="/assets/javascript/sgdocs.js"></script>
+    <script src="/assets/javascript/google-code-prettify/run_prettify.js"></script>
+    <script src="/assets/javascript/styleguide.js"></script>
+  </body>
+</html>

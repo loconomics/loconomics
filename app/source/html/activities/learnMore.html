@@ -1,0 +1,24 @@
+<!-- Activity learnMoreFreelancers -->
+<div class="container-fluid" data-activity="learnMore">
+  <div class="LeadContent">
+    <div class="embed-responsive embed-responsive-16by9">
+      <video>No video for now</video>
+    </div>
+
+    <h3>Everything you need</h3>
+    <p class="lead" data-bind="visible: profile() === 'freelancer'">
+      Scheduling, payments, client management, marketing tools, 
+      and a community of like-minded individuals.
+      You share in the profits and decision makina.
+    </p>
+    <p class="lead" data-bind="visible: profile() === 'customer'">
+    </p>
+
+    <p>
+      <a href="#!signup" data-bind="attr: { href: '#!signup/' + profile() }" class="btn btn-default btn-block">Try it out for free<span data-bind="visible: profile() === 'freelancer'">*</span></a>
+    </p>
+    <p data-bind="visible: profile() === 'freelancer'">
+      *Your free trial last 90 days and annual membership fees are currently $199.
+    </p>
+  </div>
+</div>

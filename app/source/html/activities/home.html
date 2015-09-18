@@ -1,0 +1,224 @@
+<!-- Home activity (aka search) -->
+<div class="" data-activity="home">
+    <header class="HomeNavBar">
+        <div class="HomeNavBar-menu">
+            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+                <span class="sr-only">Menu</span>
+            </a>
+            <ul class="SideMenu">
+                <li><a href="#home-search">Search</a></li>
+                <li><a href="#">Download the App</a></li>
+                <li><a href="/signup">Sign Up</a></li>
+                <li><a href="/login">Log In</a></li>
+                <li><a href="#home-categories">Browse</a></li>
+                <li><a href="#home-hiw">How it Works</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#inline-help">Help</a></li>
+                <li data-bind="visible: !isAnonymous()"><a href="#!/dashboard">Dashboard</a></li>
+            </ul>
+        </div>
+        <div class="HomeNavBar-brand">
+            <a href="/">Loconomics</a>
+        </div>
+        <div class="HomeNavBar-searchBar SearchBar">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <label for="navbar-search" class="fa fa-2x ion ion-ios-search" style=""></label>
+                </span>
+                <input id="navbar-search" type="text" name="s" class="form-control" placeholder="Search for a (e.g. Garderner, Tutor...)" />
+            </div>
+        </div>
+        <nav class="HomeNavBar-nav">
+            <ul>
+                <li><a href="/signup" class="btn btn-link">Sign up</a></li>
+                <li><a href="/login" class="btn btn-link">Log in</a></li>
+                <li>
+                    <a href="#inline-help" class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Help <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#h">Visit the Help Center</a></li>
+                        <li><a href="#h">Getting Started Guide</a></li>
+                        <li><a href="#h">How much do I pay for a service?</a></li>
+                        <li><a href="#h">How does process payments?</a></li>
+                        <li><a href="#h">See all FAQs</a></li>
+                    </ul>
+                </li>
+                <li><a href="/signup/freelancer" class="btn btn-secondary">List your services</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div role="main">
+        <div class="home-search">
+            <h1 class="home-title">Make life better.</h1>
+            <p class="home-tagline">Book local, independent service providers safely and easily</p>
+            <form id="home-search" action="/" method="get" class="row">
+                <div class="form-group col-sm-6">
+                    <label for="homeSearch" class="sr-only">Search</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
+                        <input type="text" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)">
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="homeLocation" class="sr-only">Where?</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
+                        <input type="text" name="location" class="form-control inset" id="homeLocation" placeholder="Where?">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Search</button>
+                </div>
+            </form>
+        </div>
+        <div id="home-hiw" class="home-hiw">
+            <h2 class="home-section-title">How Loconomics works:</h2>
+            <div class="container home-section-listing">
+                <ul class="row list-unstyled">
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-ios-search"></i>
+                        <h3>Search and book</h3>
+                        <p>Find the perfect person to help you with your service needs. Profiles include clear pricing and verified reviews.</p>
+                    </li>
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-bowtie"></i>
+                        <h3>Service completed</h3>
+                        <p>Let the professional do the work and focus your efforts on enjoying the time and stress you've saved.</p>
+                    </li>
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-ios-star"></i>
+                        <h3>Review &amp; repeat</h3>
+                        <p>Help imporve your provider's services &amp; share the love of them with your neighbors. Karma is good.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="home-booking">
+            <h2 class="home-section-title">Why book on Loconomics?</h2>
+            <div class="home-section-listing">
+                <ul class="list-unstyled">
+                    <li>
+                        <i aria-hidden="true" class="fa ion ion-ios-color-filter-outline"></i>
+                        <h3>Worker-owned</h3>
+                        <p>Loconomics is owned by the professionals providing you great service. No middle-men.</p>
+                    </li>
+                    <li>
+                        <i aria-hidden="true" class="fa ion ion-ios-search"></i>
+                        <h3>All your needs</h3>
+                        <p>Book anything from house cleaning to reiki using the same simple booking process.</p>
+                    </li>
+                    <li>
+                        <i aria-hidden="true" class="fa fa-calendar-o"></i>
+                        <h3>Easy scheduling</h3>
+                        <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                    </li>
+                    <li>
+                        <i aria-hidden="true" class="fa ion ion-card"></i>
+                        <h3>Payments handled</h3>
+                        <p>No awkward cash exchanges, pay with credit card and include optional gratuity.</p>
+                    </li>
+                    <li>
+                        <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
+                        <h3>Background check policy</h3>
+                        <p>Choose your comfort level when booking providers using our <a href="/backgroundCheckPolicy" target="_blank">Background Check Policy</a>.</p>
+                    </li>
+                    <li>
+                        <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
+                        <h3>Favorites</h3>
+                        <p>Easily store and share your favorite professionals with your favorite people.</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="home-booking-more">
+                <a href="learnMore" class="btn btn-secondary btn-lg btn-block">Learn more</a>
+            </div>
+        </div>
+        <div id="home-categories" class="home-categories">
+            <h2 class="home-section-title">Browse by category</h2>
+            <div class="home-section-listing">
+                <ul class="list-unstyled">
+                    <li class="SearchCategory-home">
+                        <h3>Home</h3>
+                        <app-stars-rating params="rating: 4, total: 23"></app-stars-rating>
+                        <i aria-hidden="true" class="fa ion ion-ios-color-filter-outline"></i>
+                        <p>Loconomics is owned by the professionals providing you great service. No middle-men.</p>
+                        <a href="/?category=home" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+                    </li>
+                    <li class="SearchCategory-children">
+                        <h3>Children</h3>
+                        <app-stars-rating params="rating: 4, total: 23"></app-stars-rating>
+                        <i aria-hidden="true" class="fa ion ion-ios-search"></i>
+                        <p>Book anything from house cleaning to reiki using the same simple booking process.</p>
+                        <a href="/?category=children" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+                    </li>
+                    <li class="SearchCategory-pet">
+                        <h3>Pet</h3>
+                        <app-stars-rating params="rating: 4, total: 23"></app-stars-rating>
+                        <i aria-hidden="true" class="fa fa-calendar-o"></i>
+                        <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                        <a href="/?category=pet" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+                    </li>
+                    <li class="SearchCategory-personal">
+                        <h3>Personal</h3>
+                        <app-stars-rating params="rating: 4, total: 23"></app-stars-rating>
+                        <i aria-hidden="true" class="fa fa-calendar-o"></i>
+                        <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                        <a href="/?category=personal" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+                    </li>
+                    <li class="SearchCategory-transport">
+                        <h3>Transport</h3>
+                        <app-stars-rating params="rating: 4, total: 23"></app-stars-rating>
+                        <i aria-hidden="true" class="fa ion ion-card"></i>
+                        <p>No awkward cash exchanges, pay with credit card and include optional gratuity.</p>
+                        <a href="/?category=transport" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+                    </li>
+                    <li class="SearchCategory-office">
+                        <h3>Office</h3>
+                        <app-stars-rating params="rating: 4, total: 23"></app-stars-rating>
+                        <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
+                        <p>Choose your comfort level when booking providers using our <a href="/backgroundCheckPolicy" target="_blank">Background Check Policy</a>.</p>
+                        <a href="/?category=office" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+                    </li>
+                    <li class="SearchCategory-senior">
+                        <h3>Senior</h3>
+                        <app-stars-rating params="rating: 4, total: 23"></app-stars-rating>
+                        <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
+                        <p>Easily store and share your favorite professionals with your favorite people.</p>
+                        <a href="/?category=senior" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+                    </li>
+                    <li class="SearchCategory-celebration">
+                        <h3>Celebration</h3>
+                        <app-stars-rating params="rating: 4, total: 23"></app-stars-rating>
+                        <i aria-hidden="true" class="fa fa-calendar-o"></i>
+                        <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                        <a href="/?category=celebration" class="btn btn-secondary btn-block btn-lg">Book from <em data-bind="">$17/h</em></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <footer class="WebsiteFooter">
+        <ul class="list-unstyled WebsiteFooter-links">
+            <li><a href="/about">About</a></li>
+            <li><a href="http://blog.loconomics.com/category/press">Press</a></li>
+            <li><a href="http://blog.loconomics.com">Blog</a></li>
+            <li><a href="/feedback/faqs">Help</a></li>
+            <li><a href="/terms">Terms &amp; Privacy</a></li>
+        </ul>
+        <div class="WebsiteFooter-social">
+            <h6>Join us on:</h6>
+            <ul class="list-unstyled">
+                <li><a href="https://instagram.com/" target="_blank"><span class="sr-only">Instagram</span> <i aria-hidden="true" class="fa ion ion-social-instagram"></i></a></li>
+                <li><a href="https://facebook.com" target="_blank"><span class="sr-only">Facebook</span> <i aria-hidden="true" class="fa ion ion-social-facebook"></i></a></li>
+                <li><a href="https://twitter.com" target="_blank"><span class="sr-only">Twitter</span> <i aria-hidden="true" class="fa ion ion-social-twitter"></i></a></li>
+                <li><a href="https://plus.google.com" target="_blank"><span class="sr-only">Google Plus</span> <i aria-hidden="true" class="fa ion ion-social-googleplus"></i></a></li>
+                <li><a href="https://pinterest.com" target="_blank"><span class="sr-only">Pinterest</span> <i aria-hidden="true" class="fa ion ion-social-pinterest"></i></a></li>
+            </ul>
+        </div>
+        <p class="WebsiteFooter-copyright">
+            &copy; Loconomics Cooperative, Inc.
+        </p>
+    </footer>
+</div>

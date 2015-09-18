@@ -1,0 +1,65 @@
+/**
+    Calendar activity styles
+**/
+// @require 'ActivityTitle.styl';
+
+[data-activity=calendar] {
+    
+    #calendarDailyView {
+        padding-top: $SectionTitle-height;
+        min-height: 100%;
+    }
+    
+    .CalendarDateHeader {
+        display: block;
+        text-align: center;
+        
+        // We need full screen for the content
+        // absolute vs fixed because the iOS problem with scrolling
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    #calendarDatePicker {
+        /* positioning */
+        // absolute vs fixed because the iOS problem with scrolling
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        z-index: 100;
+        top: $SectionTitle-height;
+        // Set limits to avoid innusable full-width sizes:
+        min-width: 250px;
+        max-width: 500px;
+        // And keep centered with when greater to max width
+        margin: 0 auto;
+
+        /* pop-up decoration */
+        background: white;
+        box-shadow: 0 0 6px -1px #000;
+        border-radius: 4px;
+
+        /* repositioning the pop-arrow */
+        .DatePicker:after {
+            left: 50%;
+        }
+        .DatePicker:before {
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        /** smooth transition and visible state **/
+        opacity: 0;
+        transform: translateY(-15px);
+        transition: 500ms all;
+        pointer-events: none;
+
+        &.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+    }
+}

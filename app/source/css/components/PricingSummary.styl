@@ -1,0 +1,37 @@
+/**
+    PricingSummary component
+**/
+.PricingSummary {
+    
+    font-size: 16px;
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0px;
+        margin: 0 auto;
+        
+        td, th {
+            padding: 4px;
+            line-height: 1.42857;
+            vertical-align: top;
+        }
+        
+        tfoot {
+            border-top: 1px solid $gray-lighter;
+            
+            .PricingSummary-fees {
+                padding-top: 0;
+                font-size: 14px;
+            }
+        }
+        
+        .PricingSummary-price {
+            text-align: right;
+        }
+    }
+    
+    .PricingSummary-time {
+        
+    }
+}

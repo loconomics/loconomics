@@ -1,0 +1,34 @@
+/**
+    Avatar: style for the user profile photo
+    
+    Modifiers:
+    - colors: Avatar--primary, Avatar--secondary, ..all $brand-colors
+    - sizes: Avatar--xs, Avatar--sm, Avatar--md, Avatar-lg
+**/
+
+$Avatar-sizes = {
+    xs: 40px,
+    sm: 60px,
+    md: 90px,
+    lg: 125px
+};
+
+.Avatar
+    overflow hidden 
+    margin 0 auto
+
+    img  
+        border-radius 50%
+        border 2px solid White
+
+    // Avatar--primary, Avatar--secondary
+    for $colorName in $brand-colors
+        &.Avatar--{$colorName}
+            img
+                border 2px solid $brand-colors[$colorName]
+
+    for $sizeName in $Avatar-sizes 
+        &.Avatar--{$sizeName} 
+            &, img
+                height: $Avatar-sizes[$sizeName]
+                width: $Avatar-sizes[$sizeName]

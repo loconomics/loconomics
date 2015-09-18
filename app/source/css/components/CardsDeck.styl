@@ -1,0 +1,93 @@
+/**
+    CardsDeck component.
+    Its a container of Card's elements, even
+    if there is only one real Card with content updating or
+    several showing once at a time.
+**/
+
+.CardsDeck {
+    $verticalGap = 4px
+
+    background-color: $gray-background;
+
+    .Card {
+        margin: 10px 0;
+    }
+    
+    &.CardsDeck--slider {
+    
+        $switchWidth = 40px;
+    
+        padding: $verticalGap $switchWidth;
+        position: relative;
+        height: 100%;
+    
+        .CardsDeck-switch {
+            max-width: $switchWidth;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            
+            display: table;
+            height: 100%;
+            
+            > * {
+                display: table-cell;
+                vertical-align: middle;
+            }
+            
+            &,
+            a {
+                color: White;
+            }
+            
+            &.CardsDeck-switch--previous {
+                left: 0;
+            }
+            &.CardsDeck-switch--next {
+                right: 0;
+            }
+        }
+    
+    }
+    
+    &.CardsDeck--dotsSlider {
+    
+        $gapWidth = 16px;
+        $dotsReservedHeight = 20px;
+        $dotsColor = $gray; // #FFF;
+    
+        padding: $verticalGap $gapWidth $dotsReservedHeight $gapWidth;
+        position: relative;
+        min-height: 100%;
+    
+        .CardsDeck-dots {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 6px;
+            text-align: center;
+           
+            > * {                
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                margin: 1px;
+                text-indent: -999px;
+                border: 1px solid $dotsColor;
+                border-radius: 10px;
+                /*cursor: pointer;*/
+                background-color: transparent;
+                
+                &.is-active {
+                    margin: 0px;
+                    background-color: $dotsColor;
+                    height: 8px;
+                    width: 8px;
+                }
+            }
+        }
+    
+    }
+
+}

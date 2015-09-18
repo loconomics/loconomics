@@ -1,0 +1,69 @@
+/**
+    AppointmentCard Component.
+    Visualization of a Calendar Appointment/Booking in a Card.
+**/
+
+@import 'Card.styl';
+
+.AppointmentCard {
+
+    .Card-title {
+        /*h3 {
+            font-size: 1.1em;
+            font-weight: bold;
+        }*/
+        
+        > .LinkTile {
+            .Tile-icon {
+                transition: opacity 400ms;
+                opacity: 1;
+                margin-right: 12px;
+                > * {
+                    font-size: 14px !important;
+                }
+            }
+        }
+        
+        transition: background 400ms $cubic-easing;
+
+        addColor($colorName, $color) {
+            &.Card-title--{$colorName} {
+                background: $color;
+
+                * {
+                    color: White !important;
+                }
+            }
+        }
+        for $color in $brand-colors {
+            addColor($color, $brand-colors[$color])
+        }
+    }
+    
+    &.in-edit,
+    &.is-readonly {
+        .Card-title > .LinkTile {
+            .Tile-icon {
+                opacity: 0;
+            }
+        }
+    }
+    
+    .TilesList {
+        > li > .InfoTile {
+            // Reduce hgap so keeps the same gap with the window edges,
+            // compensate the card padding
+            padding-right: 6px;
+            padding-left: 6px;            
+        }
+    }
+    
+    .AppointmentCard-actions {
+        margin: 14px 30px;
+        
+        .btn {
+            border-radius: 0;
+            font-weight: bold;
+        }
+    }
+}

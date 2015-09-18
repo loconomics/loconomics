@@ -1,0 +1,17 @@
+<!-- Activity calendar -->
+<div data-activity="calendar" data-bind="css: { 'is-loading': isLoading }">
+
+  <h1 class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
+      <button type="button" class="btn btn-link">
+          <time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
+          <span class="caret"></span>
+          <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+      </button>
+  </h1>
+
+  <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
+
+  <!-- Daily View (appointments list) -->
+  <div id="calendarDailyView" class="TilesList" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
+
+</div>
