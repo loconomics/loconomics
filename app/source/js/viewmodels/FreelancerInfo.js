@@ -8,7 +8,7 @@ var Model = require('../models/Model'),
     UserJobTitle = require('../models/UserJobTitle'),
     ko = require('knockout');
 
-function FreelancerInfoVW(values) {
+function FreelancerInfoVM(values) {
     Model(this);
 
     this.model.defProperties({
@@ -53,4 +53,4 @@ function UserPublicProfile(values) {
         
         return nameParts.join(' ');
     }, this);
-};
+}

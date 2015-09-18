@@ -1,14 +1,16 @@
 # Bootstrap custom download
 
 The contents of this directory are from the Bootstrap Customizer and a few
-additions to work with the code.
+additions to work with the code:
+- variables.styl/less files generated from the config.json (at the /less and /styl folders)
+- js utilities to generated that variables files automatically
+- some source files generated from the bootstrap-source folder, like less mixims converted to Stylus format.
+
+On the sibling directory ../bootstrap-source it's a standard Bootstrap download with less and js source code.
 
 The /config2less-vars.js allows to create a Less file from the 
 downloaded config.json with the variables, suitable for custom compilations
 using the rest of the Bootstrap source code or plug-ins.
-
-**The complete source code for Bootstrap is not included here right now**.
-Just build files and some sources generated/manipulated (the /less and /styl folders).
 
 ## Creating files from custom config.json
 This is needed so CSS can be rebuild on the App to get any variable change on the custom Bootstrap download.
