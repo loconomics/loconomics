@@ -1,0 +1,32 @@
+﻿@{
+    LcHelpers.MemberPage();
+
+    var u = LcData.UserInfo.GetUserRow();
+    
+    var cancelled = false;
+
+    if (IsPost) {
+        // TODO Cancel membership
+        cancelled = true;
+    }
+
+    var idprefix = "cancel-membership";
+}
+<p class="DashboardSection-page-section-introduction">
+    LJDI: Introduction to cancel membership.
+</p>
+<fieldset class="DashboardCancelMembership ajax" data-source-url="@(LcUrl.LangPath)Dashboard/Membership/$CancelMembership/">
+    <ul>
+        <li>
+            @if (cancelled)
+            {
+                <p class="info">LJDI: Your Membership account was cancelled (NOT REALLY STILL)</p>
+            }
+            else
+            { 
+                <div>Effective date: @DateTime.Today.ToShortDateString()</div>
+                <button type="button" class="action cancel-action delete-action">LJDI: Cancel now my membership</button>
+            }
+        </li>
+    </ul>
+</fieldset>

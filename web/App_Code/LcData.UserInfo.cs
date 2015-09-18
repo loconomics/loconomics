@@ -24,17 +24,26 @@ public static partial class LcData
     public class UserInfo
     {
         #region User Type
+        [Obsolete("Needs refactor and move to LcEnum namespace")]
         public enum UserType : int
         {
             None = 0,
             Anonymous = 1,
+            [Obsolete("Use Client, same internal value")]
             Customer = 2,
             Client = 2,
+            [Obsolete("Use ServiceProfessional, same internal value")]
             Provider = 4,
             ServiceProfessional = 4,
-            Admin = 8,
-            User = 15,
-            System = 16
+            // All Members are Providers too,
+            // so an option 'only member' does NOT exists
+            // and its value gets reserved for use
+            // grouped with the Provider (then, in binary 4 + 8 => 12)
+            //OnlyMember = 8,
+            Member = 12,
+            Admin = 16,
+            User = 31,
+            System = 32
         }
         public static UserType ParseUserType(string strtype, UserType defaultTo = UserType.None)
         {
@@ -64,6 +73,8 @@ public static partial class LcData
                     return UserType.Anonymous;
                 case 'n':
                     return UserType.None;
+                case 'm':
+                    return UserType.Member;
                 default:
                     return defaultTo;
             }
@@ -119,6 +130,7 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
+                                ,IsMember
                                 ,AccountStatusID
 
                                 -- Only Providers:
@@ -200,6 +212,7 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
+                                ,IsMember
                                 ,AccountStatusID
 
                                 -- Only Providers:
@@ -687,7 +700,7 @@ public static partial class LcData
         }
         #endregion
 
-        #region Checkes
+        #region Checks
         public class UserPositionActivation
         {
             public List<string> Messages

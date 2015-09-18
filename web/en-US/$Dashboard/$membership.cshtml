@@ -1,0 +1,64 @@
+﻿@{
+    // Membership
+    LcHelpers.SecurePage();
+    
+    // Errors are managed through this page ModelState offered to imported pages as PageState
+    
+    var u = LcData.UserInfo.GetUserRow();
+    
+    // TODO: Detect payment need using NextPaymentDueDate and the notification timeframe
+    var showPayment = true;
+
+    // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
+}
+<h1 class="DashboardSection-page-header">Membership</h1>
+<p class="DashboardSection-page-introduction">
+    LJDI: Membership introduction
+</p>
+
+<div class="DashboardAboutYou BasicForm ajax-box">
+
+    <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$membership/">
+
+        @if (!u.IsMember) {
+            <div id="DashboardBecomeMember" class="DashboardSection-page-section">
+                <h2 class="DashboardSection-page-section-header">LJDI: Become a member</h2>
+                @RenderPage("Membership/$BecomeMember.cshtml", new { PageState = ModelState })
+            </div>
+        }
+        else {
+            @* Only Members *@
+
+            <div id="DashboardMemberTools" class="DashboardSection-page-section">
+                <h2 class="DashboardSection-page-section-header">LJDI: Member Tools</h2>
+                @RenderPage("Membership/$MemberTools.cshtml", new { PageState = ModelState })
+            </div>
+            
+            if (showPayment) {
+                <div id="DashboardMembershipPayment" class="DashboardSection-page-section">
+                    <h2 class="DashboardSection-page-section-header">LJDI: Membership Payment</h2>
+                    @RenderPage("Membership/$MembershipPayment.cshtml", new { PageState = ModelState })
+                </div>
+            }
+
+            <div id="DashboardCancelMembership" class="DashboardSection-page-section">
+                <h2 class="DashboardSection-page-section-header">LJDI: Cancel Membership</h2>
+                @RenderPage("Membership/$CancelMembership.cshtml", new { PageState = ModelState })
+            </div>
+        }
+
+        @* Light wrapper to avoid visibility problems (applying javascript educationCrudl *@
+        <div>
+            @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        </div>
+
+        <div class="actions">
+            <button class="main-action" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+@{
+    // On Post check validation status, returning a Json response or html
+    LcHelpers.CheckDashboardSuccessPost("membership");
+}
