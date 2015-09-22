@@ -17,9 +17,12 @@
 
     TODO: Implement preferred service professional slot size, right now is just fixed to the minimum 15 minutes.
 
+    TODO: Implement /times for results in a single array of date-time ranges, avoiding the problematic date grouping
+        and time-zone conversions.
+
     Options:
     
-    - GET /times
+    - GET /slots
         It returns the calendar availability by time slots of the size preferred by the calendar owner*2
         (slot sizes like 15 minutes, 30 minutes, 60 minutes,..) grouped by date.
         The minimum slot size supported by the system right now is 15 minutes.
@@ -70,13 +73,13 @@
         IMPORTANT: The results guaranties that all dates in the requested range are explicitely returned.
 
         @result {
-            "slots": {
+            "dates": {
                 dateAsIsodate: statusString
             }
         }
         
         SAMPLE result {
-            "slots": {
+            "dates": {
                 "2015-07-26": "unavailable",
                 "2015-07-27": "available"
             }
@@ -84,7 +87,7 @@
 
     EXAMPLES {
         "User Availability at times detail": {
-            "url": "/api/v1/en-US/users/141/availability/times",
+            "url": "/api/v1/en-US/users/141/availability/slots",
             "get": {
                 "start": "2015-08-22T22:00:00Z",
                 "end": "2015-08-23T22:00:00Z"
@@ -116,15 +119,19 @@
             if (UrlData[0] == "dates") {
                 var data = LcCalendar.GetAvailability.Monthly(userID, false, startDate, endDate);
                 // TODO Remove this new object creation and just return data when the LcCalendar.GetAvailability.Monthly API
-                // gets updated removing the unneeded property 'defaultStatus':
+                // gets updated removing the unneeded property 'defaultStatus', and updated 'slots' to 'dates':
                 return new {
-                    slots = data["slots"]
+                    dates = data["slots"]
                 };
                 //return data;
             }
-            else if (UrlData[0] == "times") {
+            else if (UrlData[0] == "slots") {
                 var data = LcCalendar.GetAvailability.Weekly(userID, startDate, endDate, true);
                 return data;
+            }
+            else if (UrlData[0] == "times") {
+                // TODO Implement time ranges in UTC:
+                throw new NotImplementedException("Availability by time ranges in UTC not implemented still");
             }
             
             throw new HttpException(404, "User Not Found");
