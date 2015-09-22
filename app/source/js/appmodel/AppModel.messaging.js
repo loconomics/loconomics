@@ -21,7 +21,7 @@ exports.create = function create(appModel) {
     });
 
     api.addLocalforageSupport('messaging');
-    api.addRestSupport(appModel.rest, 'messaging');
+    api.addRestSupport(appModel.rest, 'me/messaging');
     
     appModel.on('clearLocalData', function() {
         api.clearCache();

@@ -42,12 +42,10 @@ public static partial class LcData
         #region Query list of bookings
         #region SQLs
         private const string sqlGetBookingsByDateRange = @"
-        SELECT  R.BookingRequestID,
-                B.BookingID,
-                R.ProviderUserID,
-                R.CustomerUserID,
-                R.PricingEstimateID,
-                R.BookingRequestStatusID,
+        SELECT  B.BookingID,
+                B.ServiceProfessionalUserID,
+                B.ClientUserID,
+                B.PricingSummaryID,
                 B.BookingStatusID,
 
                 UC.FirstName As CustomerFirstName,
@@ -64,28 +62,25 @@ public static partial class LcData
                 (Pr.SubtotalPrice - Pr.PFeePrice) As ProviderPrice
         FROM    Booking As B
                  INNER JOIN
-                BookingRequest As R
-                  ON B.BookingRequestID = R.BookingRequestID
-                 INNER JOIN
-                PricingEstimate As Pr
-                  ON Pr.PricingEstimateID = R.PricingEstimateID
+                PricingSummary As Pr
+                  ON Pr.PricingSummaryID = B.PricingSummaryID AND Pr.PricingSummaryRevision = B.PricingSummaryRevision
                  INNER JOIN
                 Users As UC
-                  ON UC.UserID = R.CustomerUserID
+                  ON UC.UserID = B.ClientUserID
                  INNER JOIN
                 Users As UP
-                  ON UP.UserID = R.ProviderUserID
+                  ON UP.UserID = B.ServiceProfessionalUserID
                  LEFT JOIN
                 CalendarEvents As E
-                  ON E.Id = B.ConfirmedDateID
+                  ON E.Id = B.ServiceDateID
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
 					AND Pos.LanguageID = @3 AND Pos.CountryID = @4
         WHERE   (
-                 R.CustomerUserID=@0
+                 B.ClientUserID=@0
                   OR
-                 R.ProviderUserID=@0
+                 B.ServiceProfessionalUserID=@0
                 )
                  AND
                 (   @1 is null AND E.StartTime is null
@@ -94,7 +89,7 @@ public static partial class LcData
                      AND
                     Convert(date, E.StartTime) <= @2
                 )
-        ORDER BY E.StartTime DESC, B.UpdatedDate DESC, R.UpdatedDate DESC
+        ORDER BY E.StartTime DESC, B.UpdatedDate DESC
         ";
         private const string sqlGetBookingsSumByDateRange = @"
             SELECT  count(*) as count,
@@ -102,17 +97,14 @@ public static partial class LcData
                     max(E.EndTime) as endTime
             FROM    Booking As B
                      INNER JOIN
-                    BookingRequest As R
-                      ON B.BookingRequestID = R.BookingRequestID
-                     INNER JOIN
                     CalendarEvents As E
-                      ON E.Id = B.ConfirmedDateID
+                      ON E.Id = B.ServiceDateID
             WHERE   
                     -- Any bookings, as provider or customer
                     (
-                     R.CustomerUserID=@0
+                     B.ClientUserID=@0
                       OR
-                     R.ProviderUserID=@0
+                     B.ServiceProfessionalUserID=@0
                     )
                      AND
                     (   
@@ -126,17 +118,14 @@ public static partial class LcData
                     B.BookingID
             FROM    Booking As B
                      INNER JOIN
-                    BookingRequest As R
-                      ON B.BookingRequestID = R.BookingRequestID
-                     INNER JOIN
                     CalendarEvents As E
-                      ON E.Id = B.ConfirmedDateID
+                      ON E.Id = B.ServiceDateID
             WHERE   
                     -- Any bookings, as provider or customer
                     (
-                     R.CustomerUserID=@0
+                     B.ClientUserID=@0
                       OR
-                     R.ProviderUserID=@0
+                     B.ServiceProfessionalUserID=@0
                     )
                      AND
                     (   

@@ -33,7 +33,7 @@
     RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/CustomURL.cshtml");
     // REST API, locale independent:
     // NOTE: Any folder added to the API folder need to be registered, and before the catch-all pages route
-    RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/me/{page}", "~/api/v1/me/{page}.cshtml");
+    RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/me/{page}/{*urldata}", "~/api/v1/me/{page}.cshtml");
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/users/{userID}", "~/api/v1/users/index.cshtml");
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/users/{userID}/{page}/{*urldata}", "~/api/v1/users/{page}.cshtml");
     // Disabled experimental icalendar route
