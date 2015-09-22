@@ -75,7 +75,7 @@ function PricingType(values) {
         priceRateUnitListLabel: null,
         noPriceRateListMessage: null,
         
-        // Booking/PricingEstimate Texts
+        // Booking/PricingSummary Texts
         /// NameAndSummaryFormat is the default format for summaries with package name (required),
         /// other formats are good for better detail, but depends
         /// on other options configured per type.

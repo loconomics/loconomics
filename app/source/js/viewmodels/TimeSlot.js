@@ -71,9 +71,8 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
         actionIcon: (apt.sourceBooking() ? null : apt.sourceEvent() ? 'fa ion ion-ios-arrow-right' : !apt.id() ? 'fa ion ion-plus' : null),
         actionText: (
             apt.sourceBooking() && 
-            apt.sourceBooking().bookingRequest() && 
-            apt.sourceBooking().bookingRequest().pricingEstimate() ? 
-            numeral(apt.sourceBooking().bookingRequest().pricingEstimate().totalPrice() || 0).format('$0.00') :
+            apt.sourceBooking().pricingSummary() ? 
+            numeral(apt.sourceBooking().pricingSummary().totalPrice() || 0).format('$0.00') :
             null
         ),
         classNames: classNames

@@ -1,7 +1,9 @@
 /** Booking model.
 
-    Describes a booking with related BookingRequest 
-    and PricingEstimate objects.
+    Describes a booking and related data,
+    mainly the pricing summary and details, but
+    can hold other related data if optionally loaded
+    (address, dates, publicUserJobTitle)
  **/
 'use strict';
 

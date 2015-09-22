@@ -95,7 +95,7 @@ function PricingSummaryDetailView(pricingSummaryDetail, jobTitleID, app) {
 
     pricingSummaryDetail.serviceProfessionalService = ko.computed(function() {
         var pid = this.serviceProfessionalServiceID();
-        return app.model.serviceProfessionalService
+        return app.model.serviceProfessionalServices
             .getObservableItem(jobTitleID, pid, true)();
     }, pricingSummaryDetail)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });

@@ -235,7 +235,7 @@ function ViewModel(app) {
 
     this.isLoading = ko.computed(function() {
         return (
-            app.model.serviceProfessionalService.state.isLoading() ||
+            app.model.serviceProfessionalServices.state.isLoading() ||
             app.model.pricingTypes.state.isLoading() ||
             app.model.jobTitles.state.isLoading()
         );

@@ -90,7 +90,7 @@ exports.create = function create(appModel) {
             clientUserID: booking.clientUserID(),
             addressID: booking.addressID(),
             startTime: booking.startTime(),
-            pricing: booking.bookingRequest().pricingEstimate().details().pricing
+            pricing: booking.pricingSummary().details().pricing
             .map(function(pricing) {
                 // TODO: for now, the REST API allow only a list of IDs,
                 // not objects, so next line is replaced:

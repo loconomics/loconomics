@@ -274,7 +274,7 @@ function AppointmentCardViewModel(params) {
 
         editFieldOn('clients', {
             selectClient: true,
-            selectedClientID: this.item().sourceBooking().bookingRequest().clientUserID()
+            selectedClientID: this.item().sourceBooking().clientUserID()
         });
     }.bind(this);
 

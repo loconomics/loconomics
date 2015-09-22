@@ -53,7 +53,6 @@ function Appointment(values) {
             Model: Booking,
             defaultValue: null
         }
-        //sourceBookingRequest, maybe future?
     }, values);
 
     // Smart visualization of date and time
@@ -147,10 +146,10 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     var apt = Appointment.fromCalendarEvent(event);
     
     // Include booking in apt
-    apt.clientUserID(booking.bookingRequest().clientUserID());
-    apt.addressID(booking.bookingRequest().addressID());
-    apt.jobTitleID(booking.bookingRequest().jobTitleID());
-    apt.pricing(booking.bookingRequest().pricingEstimate().details());
+    apt.clientUserID(booking.clientUserID());
+    apt.addressID(booking.serviceAddressID());
+    apt.jobTitleID(booking.jobTitleID());
+    apt.pricing(booking.pricingSummary().details());
     apt.preNotesToClient(booking.preNotesToClient());
     apt.postNotesToClient(booking.postNotesToClient());
     apt.preNotesToSelf(booking.preNotesToSelf());
@@ -161,7 +160,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     // a booking
     apt.readOnly(false);
 
-    var prices = booking.bookingRequest() && booking.bookingRequest().pricingEstimate();
+    var prices = booking.pricingSummary();
     if (prices) {
         // TODO Setting service professional price, for clients must be
         // just totalPrice()

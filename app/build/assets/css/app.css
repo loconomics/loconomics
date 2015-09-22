@@ -759,6 +759,9 @@ body.has-appNav-open .SmartNavBar h1 {
 }
 
 /* line 112 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App .App-activities {
+  background: White;
+}
 
 /* line 11 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
 /** Utilities styles **/

@@ -93,10 +93,12 @@ MessageView.fromThread = function(app, thread) {
     if (msg.auxT() === 'Booking') {
         tag = 'Booking';
         classNames = 'text-success';
-    } else if (msg.auxT() === 'BookingRequest') {
+    }
+    // TODO For state==request must be
+    /*{
         tag = 'Booking request';
         classNames = 'text-warning';
-    }
+    }*/
     
     return new MessageView({
         sourceThread: thread,
