@@ -1,12 +1,12 @@
 /**
-    FreelancerInfo
+    ServiceProfessionalInfo
     
-    It presents a box/tile with summary information about a freelancer.
+    It presents a box/tile with summary information about a serviceProfessional.
     It comes in different sizes
     
     TODO Finish per design, options
 **/
-.FreelancerInfo {
+.ServiceProfessionalInfo {
     text-align: center;
     margin: 12px auto;
     padding-left: 76px;
@@ -21,7 +21,7 @@
         top: floor((96px - 60px) / 2);
     }
     
-    .FreelancerInfo-name {
+    .ServiceProfessionalInfo-name {
         font-size: 18px;
         font-weight: bold;
         margin: 0;
@@ -31,21 +31,21 @@
         overflow: hidden;
     }
     
-    .FreelancerInfo-jobTitle {
+    .ServiceProfessionalInfo-jobTitle {
         color: $gray-light;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
     }
     
-    .FreelancerInfo-businessName {
+    .serviceProfessionalInfo-businessName {
         color: $gray-light;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
     }
     
-    .FreelancerInfo-meta {
+    .ServiceProfessionalInfo-meta {
         display: block;
         
         // All icons same size
@@ -67,7 +67,7 @@
             color: $brand-success;
         }
         
-        .FreelancerInfo-favorite {
+        .ServiceProfessionalInfo-favorite {
             position: absolute;
             top: 4px;
             right: 10px;

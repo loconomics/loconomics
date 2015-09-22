@@ -13,7 +13,7 @@ var A = Activity.extends(function CmsActivity() {
     
     this.viewModel = new ViewModel(this.app);
     
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     
     this.navBar = Activity.createSectionNavBar('Client management');
 });
@@ -24,7 +24,7 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Keep data updated:
-    this.app.model.customers.sync()
+    this.app.model.clients.sync()
     .catch(function(err) {
         this.app.modals.showError({
             title: 'Error loading the clients list',
@@ -37,7 +37,7 @@ var numeral = require('numeral');
 
 function ViewModel(app) {
     
-    this.clients = app.model.customers.list;
+    this.clients = app.model.clients.list;
 
     this.clientsCount = ko.pureComputed(function() {
         var cs = this.clients();

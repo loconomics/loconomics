@@ -9,7 +9,7 @@ var A = Activity.extends(function WelcomeActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     
     var app = this.app;
     

@@ -12,10 +12,10 @@ exports.create = function create(appModel) {
         ttl: { minutes: 1 },
         localStorageName: 'privacySettings',
         fetch: function fetch() {
-            return appModel.rest.get('privacy-settings');
+            return appModel.rest.get('me/privacy-settings');
         },
         push: function push() {
-            return appModel.rest.put('privacy-settings', this.data.model.toPlainObject());
+            return appModel.rest.put('me/privacy-settings', this.data.model.toPlainObject());
         }
     });
     

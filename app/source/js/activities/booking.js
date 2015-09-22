@@ -1,7 +1,7 @@
 /**
     Booking activity
     
-    It allows a client to book a freelancer
+    It allows a client to book a serviceProfessional
 **/
 'use strict';
 
@@ -12,7 +12,7 @@ var A = Activity.extends(function BookingActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Booking');
     
@@ -49,12 +49,12 @@ A.prototype.show = function show(state) {
 
     var params = state && state.route && state.route.segments;
     
-    this.viewModel.freelancerID(params[0] |0);
+    this.viewModel.serviceProfessionalID(params[0] |0);
     this.viewModel.jobTitleID(params[1] |0);
     
-    // If there is not a freelancer, redirect to search/home page to pick one
-    // TODO Same if the freelancer is not found
-    if (this.viewModel.freelancerID() === 0 ||
+    // If there is not a serviceProfessional, redirect to search/home page to pick one
+    // TODO Same if the serviceProfessional is not found
+    if (this.viewModel.serviceProfessionalID() === 0 ||
         this.viewModel.jobTitleID() === 0) {
         this.app.shell.go('/home');
         return;
@@ -130,7 +130,7 @@ A.prototype.confirmLoad = function() {
     // TODO 
 };
 
-var FreelancerPricingVM = require('../viewmodels/FreelancerPricing'),
+var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalService'),
     BookingProgress = require('../viewmodels/BookingProgress'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
@@ -139,7 +139,7 @@ function ViewModel(app) {
     
     this.serviceAddresses = new ServiceAddresses();
     
-    this.freelancerID = ko.observable(0);
+    this.serviceProfessionalID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
     this.instantBooking = ko.observable(true);
     this.isLocked = ko.observable(false);
@@ -148,7 +148,7 @@ function ViewModel(app) {
     }, this);
     
     this.photoUrl = ko.pureComputed(function() {
-        return app.model.config.siteUrl + '/en-US/Profile/Photo/' + this.freelancerID();
+        return app.model.config.siteUrl + '/en-US/Profile/Photo/' + this.serviceProfessionalID();
     }, this);
     
     // Se inicializa con un estado previo al primer paso
@@ -159,11 +159,11 @@ function ViewModel(app) {
         this.progress.stepsList(this.instantBooking() ? instantBookingSteps : bookingRequestSteps);
     }, this);
     
-    this.freelancerPricing = new FreelancerPricingVM(app);
-    this.jobTitleID.subscribe(this.freelancerPricing.jobTitleID);
-    this.freelancerID.subscribe(this.freelancerPricing.freelancerID);
-    this.freelancerPricing.isSelectionMode(true);
-    //this.freelancerPricing.preSelectedPricing([]);
+    this.serviceProfessionalService = new ServiceProfessionalServiceVM(app);
+    this.jobTitleID.subscribe(this.serviceProfessionalService.jobTitleID);
+    this.serviceProfessionalID.subscribe(this.serviceProfessionalService.serviceProfessionalID);
+    this.serviceProfessionalService.isSelectionMode(true);
+    //this.serviceProfessionalService.preSelectedPricing([]);
     
     this.supportGratuity = ko.observable(false);
     this.customGratuity = ko.observable(0);

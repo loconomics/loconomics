@@ -14,7 +14,7 @@ exports.create = function create(appModel) {
         remote: {
             rest: appModel.rest,
             getCalendarEvents: function(filters) {
-                return appModel.rest.get('events', filters)
+                return appModel.rest.get('me/events', filters)
                 .then(function(rawItems) {
                     return rawItems && rawItems.map(function(rawItem) {
                         return new CalendarEvent(rawItem);
@@ -48,7 +48,7 @@ exports.create = function create(appModel) {
     api.getEvent = function getEvent(id) {
         if (!id) return Promise.reject('The calendarEventID is required to get an event');
 
-        return appModel.rest.get('events/' + id)
+        return appModel.rest.get('me/events/' + id)
         .then(function(event) {
             return new CalendarEvent(event);
         });
@@ -98,7 +98,7 @@ exports.create = function create(appModel) {
         var id = event.calendarEventID || '',
             method = id ? 'put' : 'post';
 
-        return appModel.rest[method]('events' + (id ? '/' : '') + id, event)
+        return appModel.rest[method]('me/events' + (id ? '/' : '') + id, event)
         .then(function(serverEvent) {
             return new CalendarEvent(serverEvent);
         });

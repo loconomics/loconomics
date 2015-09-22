@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-09-18
+/*! LoconomicsApp 2015-09-22
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -6145,10 +6145,10 @@ app-stars-rating {
   display: inline-block;
 }
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
+/* line 27 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
 
-/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo {
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo {
   text-align: center;
   margin: 12px auto;
   padding-left: 76px;
@@ -6158,15 +6158,15 @@ app-stars-rating {
   padding-right: 10px;
 }
 
-/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .Avatar {
+/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .Avatar {
   position: absolute;
   left: 10px;
   top: 18px;
 }
 
-/* line 24 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .FreelancerInfo-name {
+/* line 24 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .ServiceProfessionalInfo-name {
   font-size: 18px;
   font-weight: bold;
   margin: 0;
@@ -6177,8 +6177,8 @@ app-stars-rating {
   overflow: hidden;
 }
 
-/* line 34 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .FreelancerInfo-jobTitle {
+/* line 34 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .ServiceProfessionalInfo-jobTitle {
   color: #777;
   white-space: nowrap;
   -o-text-overflow: ellipsis;
@@ -6186,8 +6186,8 @@ app-stars-rating {
   overflow: hidden;
 }
 
-/* line 41 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .FreelancerInfo-businessName {
+/* line 41 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .serviceProfessionalInfo-businessName {
   color: #777;
   white-space: nowrap;
   -o-text-overflow: ellipsis;
@@ -6195,18 +6195,18 @@ app-stars-rating {
   overflow: hidden;
 }
 
-/* line 48 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .FreelancerInfo-meta {
+/* line 48 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .ServiceProfessionalInfo-meta {
   display: block;
 }
 
-/* line 52 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .FreelancerInfo-meta i {
+/* line 52 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .ServiceProfessionalInfo-meta i {
   font-size: 22px;
 }
 
-/* line 56 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .FreelancerInfo-meta .VerificationsRating {
+/* line 56 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .ServiceProfessionalInfo-meta .VerificationsRating {
   color: #555;
   vertical-align: bottom;
   line-height: 22px;
@@ -6214,20 +6214,20 @@ app-stars-rating {
   margin: 0 5px;
 }
 
-/* line 66 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .FreelancerInfo-meta .BackgroundCheckRating {
+/* line 66 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .ServiceProfessionalInfo-meta .BackgroundCheckRating {
   color: #47b347;
 }
 
-/* line 70 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .FreelancerInfo-meta .FreelancerInfo-favorite {
+/* line 70 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .ServiceProfessionalInfo-meta .ServiceProfessionalInfo-favorite {
   position: absolute;
   top: 4px;
   right: 10px;
 }
 
-/* line 75 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\FreelancerInfo.styl */
-.FreelancerInfo .FreelancerInfo-meta .FreelancerInfo-favorite i {
+/* line 75 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ServiceProfessionalInfo.styl */
+.ServiceProfessionalInfo .ServiceProfessionalInfo-meta .ServiceProfessionalInfo-favorite i {
   color: #ff6765;
 }
 

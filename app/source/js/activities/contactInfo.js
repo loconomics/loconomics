@@ -11,7 +11,7 @@ var A = Activity.extends(function ContactInfoActivity() {
     Activity.apply(this, arguments);
 
     this.viewModel = new ViewModel(this.app);
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     
     this.navBar = Activity.createSubsectionNavBar('Owner information', {
         backLink: 'ownerInfo'

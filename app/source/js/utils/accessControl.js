@@ -7,9 +7,9 @@
     Activities can define on its object an accessLevel
     property like next examples
     
-    this.accessLevel = app.Usertype.User; // anyone
-    this.accessLevel = app.UserType.Anonymous; // anonymous users only
-    this.accessLevel = app.UserType.LoggedUser; // authenticated users only
+    this.accessLevel = app.Usertype.user; // anyone
+    this.accessLevel = app.UserType.anonymous; // anonymous users only
+    this.accessLevel = app.UserType.loggedUser; // authenticated users only
 **/
 'use strict';
 

@@ -6,14 +6,18 @@ var ko = require('knockout'),
 
 // Enum UserType
 var UserType = {
-    None: 0,
-    Anonymous: 1,
-    Customer: 2,
-    Freelancer: 4,
-    Admin: 8,
-    LoggedUser: 14,
-    User: 15,
-    System: 16
+    none: 0,
+    anonymous: 1,
+    client: 2,
+    serviceProfessional: 4,
+    // All Members (member-only:8) are service professionals too: 4+8
+    member: 12,
+    admin: 16,
+    // All users except anonymous and system:
+    loggedUser: 30,
+    // All users except system,
+    user: 31,
+    system: 32
 };
 
 function User(values) {
@@ -35,8 +39,8 @@ function User(values) {
         birthMonthDay: null,
         birthMonth: null,
         
-        isFreelancer: false,
-        isCustomer: false,
+        isServiceProfessional: false,
+        isClient: false,
         isMember: false,
         isAdmin: false,
 
@@ -70,20 +74,20 @@ function User(values) {
     
     this.userType = ko.pureComputed({
         read: function() {
-            var c = this.isCustomer(),
-                p = this.isFreelancer(),
+            var c = this.isClient(),
+                p = this.isServiceProfessional(),
                 a = this.isAdmin();
             
             var userType = 0;
             
             if (this.isAnonymous())
-                userType = userType | UserType.Anonymous;
+                userType = userType | UserType.anonymous;
             if (c)
-                userType = userType | UserType.Customer;
+                userType = userType | UserType.client;
             if (p)
-                userType = userType | UserType.Freelancer;
+                userType = userType | UserType.serviceProfessional;
             if (a)
-                userType = userType | UserType.Admin;
+                userType = userType | UserType.admin;
             
             return userType;
         },

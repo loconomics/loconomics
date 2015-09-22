@@ -1,15 +1,15 @@
-/** Customer model **/
+/** client model **/
 'use strict';
 
 var ko = require('knockout'),
     Model = require('./Model');
 
-function Customer(values) {
+function Client(values) {
     
     Model(this);
     
     this.model.defProperties({
-        customerUserID: 0,
+        clientUserID: 0,
         
         firstName: '',
         lastName: '',
@@ -20,7 +20,7 @@ function Customer(values) {
         birthMonthDay: null,
         birthMonth: null,
         
-        notesAboutCustomer: null,
+        notesAboutclient: null,
         
         createdDate: null,
         updatedDate: null,
@@ -44,4 +44,4 @@ function Customer(values) {
     }, this);
 }
 
-module.exports = Customer;
+module.exports = Client;

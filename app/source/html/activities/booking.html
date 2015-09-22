@@ -23,21 +23,21 @@
                     <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
 
                     <div class="Box-sm">
-                        <div class="FreelancerInfo FreelancerInfo--md">
+                        <div class="ServiceProfessionalInfo ServiceProfessionalInfo--md">
                             <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: photoUrl }"></div>
-                            <h3 class="FreelancerInfo-name">Joshua Danielson</h3>
-                            <div class="FreelancerInfo-jobTitle">Massage Therapist</div>
-                            <div class="FreelancerInfo-businessName">Tact Massage Therapy</div>
-                            <div class="FreelancerInfo-meta">
+                            <h3 class="ServiceProfessionalInfo-name">Joshua Danielson</h3>
+                            <div class="ServiceProfessionalInfo-jobTitle">Massage Therapist</div>
+                            <div class="ServiceProfessionalInfo-businessName">Tact Massage Therapy</div>
+                            <div class="ServiceProfessionalInfo-meta">
                                 <app-stars-rating params="rating: 4.5, total: 1283" class="text-secondary"></app-stars-rating>
                                 <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" aria-description="4 Verifications"></i> (14)</span>
                                 <span class="BackgroundCheckRating"><i class="fa ion ion-ios-checkmark" aria-hidden="true" aria-description="Background Check: OK"></i></span>
-                                <span class="FreelancerInfo-favorite"><i class="fa ion ion-ios-heart ion-ios-heart-outlineDISABLED" aria-hidden="true"></i></span>
+                                <span class="ServiceProfessionalInfo-favorite"><i class="fa ion ion-ios-heart ion-ios-heart-outlineDISABLED" aria-hidden="true"></i></span>
                             </div>
                         </div>
                     </div>
 
-                    <div data-bind="template: { name: 'freelancer-pricing-template', data: freelancerPricing }"></div>
+                    <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalService }"></div>
 
                     <div data-bind="visible: supportGratuity">
                         <h2 class="SectionTitle">Add gratuity</h2>

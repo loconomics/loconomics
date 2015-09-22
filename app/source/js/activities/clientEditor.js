@@ -12,7 +12,7 @@ var A = Activity.extends(function ClientEditionActivity() {
     
     this.viewModel = new ViewModel(this.app);
     
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     
     this.navBar = Activity.createSubsectionNavBar('clients', {
         backLink: 'clients'
@@ -91,7 +91,7 @@ A.prototype.show = function show(state) {
             });
         }.bind(this));*/
 
-        this.app.model.customers.createItemVersion(clientID)
+        this.app.model.clients.createItemVersion(clientID)
         .then(function (clientVersion) {
             if (clientVersion) {
                 this.viewModel.clientVersion(clientVersion);
@@ -110,21 +110,21 @@ A.prototype.show = function show(state) {
     }
     else {
         
-        // Check request parameters that allow preset customer information
-        // (used when the customer is created based on an existent marketplace user)
+        // Check request parameters that allow preset client information
+        // (used when the client is created based on an existent marketplace user)
         var presetData = this.requestData.presetData || {};
         // If there is not set an explicit 'false' value on editable
         // field (as when there is not data given), set to true so can be edited
         // NOTE: This is because a given marketplace user will come with editable:false
         // and need to be preserved, while on regular 'new client' all data is set by 
-        // the freelancer.
+        // the service professional.
         if (presetData.editable !== false) {
             presetData.editable = true;
         }
 
         /*this.viewModel.client.newItem(presetData);*/
         // New client
-        this.viewModel.clientVersion(this.app.model.customers.newItem(presetData));
+        this.viewModel.clientVersion(this.app.model.clients.newItem(presetData));
         this.viewModel.header('Add a Client');
         
         // Extra preset data
@@ -190,16 +190,16 @@ function ViewModel(app) {
         }
         return null;
     }, this);
-    //this.client = app.model.customers.createWildcardItem();
+    //this.client = app.model.clients.createWildcardItem();
 
     this.header = ko.observable('');
     
-    this.isLoading = app.model.customers.state.isLoading;
-    this.isSyncing = app.model.customers.state.isSyncing;
-    this.isSaving = app.model.customers.state.isSaving;
+    this.isLoading = app.model.clients.state.isLoading;
+    this.isSyncing = app.model.clients.state.isSyncing;
+    this.isSaving = app.model.clients.state.isSaving;
     this.isLocked = ko.pureComputed(function() {
         return (
-            app.model.customers.state.isLocked() ||
+            app.model.clients.state.isLocked() ||
             this.isDeleting()
         );
     }, this);
@@ -208,7 +208,7 @@ function ViewModel(app) {
         return c && !c.editable();
     }, this);
 
-    this.isDeleting = app.model.customers.state.isDeleting;
+    this.isDeleting = app.model.clients.state.isDeleting;
 
     this.wasRemoved = ko.observable(false);
 
@@ -247,7 +247,7 @@ function ViewModel(app) {
 
     this.save = function() {
 
-        app.model.customers.setItem(this.client().model.toPlainObject())
+        app.model.clients.setItem(this.client().model.toPlainObject())
         .then(function(serverData) {
             // Update version with server data.
             this.client().model.updateWith(serverData);
@@ -255,7 +255,7 @@ function ViewModel(app) {
             this.clientVersion().push({ evenIfObsolete: true });
           
             // Special save, function provided by the activity on set-up
-            this.onSave(serverData.customerUserID);
+            this.onSave(serverData.clientUserID);
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
@@ -280,7 +280,7 @@ function ViewModel(app) {
 
     this.remove = function() {
 
-        app.model.customers.delItem(this.clientID())
+        app.model.clients.delItem(this.clientID())
         .then(function() {
             this.wasRemoved(true);
             // Go out the deleted location
@@ -361,7 +361,7 @@ function ViewModel(app) {
         if (!c) return;
         
         // Don't offer if is already that user!
-        if (c.customerUserID() === user.customerUserID) return;
+        if (c.clientUserID() === user.clientUserID) return;
         
         // NOTE: avoiding use fullName because it can make more than one conflicting
         // results, being not enough the name to confirm the user (use the search for that)
@@ -372,17 +372,17 @@ function ViewModel(app) {
             // Notify user
             var msg = 'We`ve found an existing record for {0}. Would you like to add him to your clients?'.replace(/\{0\}/g, user.firstName);
             app.modals.confirm({
-                title: 'Customer found at loconomics.com',
+                title: 'client found at loconomics.com',
                 message: msg
             })
             .then(function() {
                 // Acepted
                 // Replace current user data
-                // but keep notesAboutCustomer
-                var notes = c.notesAboutCustomer();
+                // but keep notesAboutclient
+                var notes = c.notesAboutclient();
                 c.model.updateWith(user);
-                c.notesAboutCustomer(notes);
-                this.clientID(user.customerUserID);
+                c.notesAboutclient(notes);
+                this.clientID(user.clientUserID);
             }.bind(this))
             .catch(function() {
                 // Discarded, do nothing
@@ -404,7 +404,7 @@ function ViewModel(app) {
             phone = c.phone();
         if (!email && !phone /*!fullName && */) return;
 
-        app.model.customers.publicSearch({
+        app.model.clients.publicSearch({
             //fullName: fullName,
             email: email,
             phone: phone

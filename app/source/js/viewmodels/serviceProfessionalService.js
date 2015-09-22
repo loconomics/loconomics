@@ -1,5 +1,5 @@
 /**
-    FreelancerPricingViewModel
+    ServiceProfessionalServiceViewModel
 **/
 'use strict';
 
@@ -7,12 +7,12 @@ var ko = require('knockout'),
     _ = require('lodash'),
     $ = require('jquery');
 
-function FreelancerPricingViewModel(app) {
+function ServiceProfessionalServiceViewModel(app) {
 
     this.list = ko.observableArray([]);
     this.jobTitleID = ko.observable(0);
     // 0 to load current user pricing and allow edit
-    this.freelancerID = ko.observable(null);
+    this.serviceProfessionalID = ko.observable(null);
     this.jobTitle = ko.observable(null);
     this.isAdditionMode = ko.observable(false);
     // Especial mode when instead of pick and edit we are just selecting
@@ -26,7 +26,7 @@ function FreelancerPricingViewModel(app) {
     this.cancelLink = ko.observable(null);
     
     this.allowAddPricing = ko.pureComputed(function() {
-        return this.freelancerID() === null;
+        return this.serviceProfessionalID() === null;
     }, this);
     
     // Grouped list of pricings:
@@ -118,7 +118,7 @@ function FreelancerPricingViewModel(app) {
     }.bind(this);
     
     this.editPricing = function(pricing) {
-        app.shell.go('freelancerPricingEditor/' + this.jobTitleID() + '/' + pricing.freelancerPricingID());
+        app.shell.go('serviceProfessionalServiceEditor/' + this.jobTitleID() + '/' + pricing.serviceProfessionalServiceID());
     }.bind(this);
     
     /**
@@ -138,7 +138,7 @@ function FreelancerPricingViewModel(app) {
     
     this.tapNewPricing = function(group, event) {
         
-        var url = '#!freelancerPricingEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
+        var url = '#!serviceProfessionalServiceEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
 
         // Passing original data, for in-progress process (as new-booking)
         // and the selected title since the URL could not be updated properly
@@ -159,7 +159,7 @@ function FreelancerPricingViewModel(app) {
             request.selectedPricing = this.selectedPricing()
             .map(function(pricing) {
                 return {
-                    freelancerPricingID: ko.unwrap(pricing.freelancerPricingID),
+                    serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
                     totalPrice: ko.unwrap(pricing.totalPrice)
                 };
             });
@@ -171,8 +171,8 @@ function FreelancerPricingViewModel(app) {
         event.stopImmediatePropagation();
     }.bind(this);
     
-    // TODO Support freelancerID (right now is loading current user pricing)
-    var loadDataFor = function loadDataFor(freelancerID, jobTitleID) {
+    // TODO Support serviceProfessionalID (right now is loading current user pricing)
+    var loadDataFor = function loadDataFor(serviceProfessionalID, jobTitleID) {
         if (jobTitleID) {
             // Get data for the Job title ID and pricing types.
             // They are essential data
@@ -185,11 +185,11 @@ function FreelancerPricingViewModel(app) {
                 // Save for use in the view
                 this.jobTitle(jobTitle);
                 // Get pricing
-                return app.model.freelancerPricing.getList(jobTitleID);
+                return app.model.serviceProfessionalServices.getList(jobTitleID);
             }.bind(this))
             .then(function(list) {
 
-                list = app.model.freelancerPricing.asModel(list);
+                list = app.model.serviceProfessionalServices.asModel(list);
 
                 // Read presets selection from requestData
                 var preset = this.preSelectedPricing(),
@@ -198,7 +198,7 @@ function FreelancerPricingViewModel(app) {
                 // Add the isSelected property to each item
                 list.forEach(function(item) {
                     var preSelected = preset.some(function(pr) {
-                        if (pr.freelancerPricingID === item.freelancerPricingID())
+                        if (pr.serviceProfessionalServiceID === item.serviceProfessionalServiceID())
                             return true;
                     }) || false;
 
@@ -226,8 +226,8 @@ function FreelancerPricingViewModel(app) {
 
     // AUTO LOAD on job title change
     ko.computed(function() {
-        loadDataFor(this.freelancerID(), this.jobTitleID());
+        loadDataFor(this.serviceProfessionalID(), this.jobTitleID());
     }.bind(this)).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
 
-module.exports = FreelancerPricingViewModel;
+module.exports = ServiceProfessionalServiceViewModel;

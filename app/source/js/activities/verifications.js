@@ -10,7 +10,7 @@ var A = Activity.extends(function VerificationsActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
@@ -59,7 +59,7 @@ function ViewModel(app) {
     this.emailInfo = ko.observable('Please click on "Verify my account" in the e-mail we sent you to verify your address. <a class="btn btn-link btn-block"  href="#resendEmailConfirmation">Click here to resend.</a>');
     this.facebookInfo = ko.pureComputed(function() {
         var tpl = 'Letting potential __kind__ know you have a trusted online presence helps them know you\'re real. <a class="btn btn-link btn-block" href="#connectWithFacebook">Click here to connect your account.</a>';
-        return tpl.replace(/__kind__/, app.model.user().isFreelancer() ? 'clients' : 'freelancers');
+        return tpl.replace(/__kind__/, app.model.user().isServiceProfessional() ? 'clients' : 'service professionals');
     });
 }
 

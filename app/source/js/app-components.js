@@ -131,9 +131,9 @@ exports.registerAll = function() {
         }
     });
     
-    /// FreelancerInfo
-    ko.components.register('app-freelancer-info', {
-        template: { element: 'freelancer-info-template' },
-        viewModel: require('./viewmodels/FreelancerInfo')
+    /// ServiceProfessionalInfo
+    ko.components.register('app-service-professional-info', {
+        template: { element: 'service-professional-info-template' },
+        viewModel: require('./viewmodels/ServiceProfessionalInfo')
     });
 };

@@ -10,7 +10,7 @@ var A = Activity.extends(function MarketplaceJobtitlesActivity() {
     
     Activity.apply(this, arguments);
     
-    this.accessLevel = this.app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
         backLink: '/marketplaceProfile'
@@ -43,10 +43,10 @@ var A = Activity.extends(function MarketplaceJobtitlesActivity() {
                 
                 ////////////
                 // Pricing/Services
-                this.app.model.freelancerPricing.getList(jobTitleID)
+                this.app.model.serviceProfessionalServices.getList(jobTitleID)
                 .then(function(list) {
 
-                    list = this.app.model.freelancerPricing.asModel(list);
+                    list = this.app.model.serviceProfessionalServices.asModel(list);
                     this.viewModel.pricing(list);
 
                 }.bind(this))
@@ -112,7 +112,7 @@ function ViewModel(app) {
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
     this.getJobUrlTo = function(name) {
-        // Sample '/freelancerPricing/' + jobTitleID()
+        // Sample '/serviceProfessionalServices/' + jobTitleID()
         return ko.pureComputed(function() {
             return (
                 '/' + name + '/' + this.jobTitleID() + '?mustReturn=marketplaceJobtitles/' + this.jobTitleID() +
@@ -176,7 +176,7 @@ function ViewModel(app) {
     this.isLoading = ko.pureComputed(function() {
         return (
             app.model.serviceAddresses.state.isLoading() ||
-            app.model.freelancerPricing.state.isLoading()
+            app.model.serviceProfessionalServices.state.isLoading()
         );
         
     }, this);

@@ -168,7 +168,7 @@ function AppointmentCardViewModel(params) {
                 // Notify
                 if (this.isBooking()) {
                     
-                    var msg = this.item().customer().firstName() + ' will receive an e-mail confirmation.';
+                    var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
                     
                     app.modals.showNotification({
                         title: 'Confirmed!',
@@ -274,19 +274,19 @@ function AppointmentCardViewModel(params) {
 
         editFieldOn('clients', {
             selectClient: true,
-            selectedClientID: this.item().sourceBooking().bookingRequest().customerUserID()
+            selectedClientID: this.item().sourceBooking().bookingRequest().clientUserID()
         });
     }.bind(this);
 
     this.pickService = function pickService() {
         if (this.isLocked()) return;
 
-        editFieldOn('freelancerPricing/' + this.item().jobTitleID(), {
+        editFieldOn('serviceProfessionalService/' + this.item().jobTitleID(), {
             selectPricing: true,
             selectedPricing: this.item().pricing()
             .map(function(pricing) {
                 return {
-                    freelancerPricingID: ko.unwrap(pricing.freelancerPricingID),
+                    serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
                     totalPrice: ko.unwrap(pricing.totalPrice)
                 };
             })
@@ -380,7 +380,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item()[requestData.field](requestData.text);
     }
     if (requestData.selectClient === true) {
-        this.item().customerUserID(requestData.selectedClientID);
+        this.item().clientUserID(requestData.selectedClientID);
     }
     if (typeof(requestData.selectedDatetime) !== 'undefined') {
         var field = requestData.datetimeField;

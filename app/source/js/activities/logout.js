@@ -9,7 +9,7 @@ var A = Activity.extends(function LogoutActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
 });
 
 exports.init = A.init;

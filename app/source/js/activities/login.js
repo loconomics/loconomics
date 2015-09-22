@@ -10,7 +10,7 @@ var A = Activity.extends(function LoginActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.Anonymous;
+    this.accessLevel = this.app.UserType.anonymous;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Log in');
     this.navBar.rightAction(null);

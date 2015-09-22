@@ -15,7 +15,7 @@ var A = Activity.extends(function CalendarActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Calendar');
 

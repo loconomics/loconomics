@@ -78,7 +78,7 @@ exports.create = function create(appModel) {
         
         // If is a booking
         if (apt.sourceBooking()) {
-            return appModel.bookings.setBooking(apt, allowBookUnavailableTime)
+            return appModel.bookings.setServiceProfessionalBooking(apt, allowBookUnavailableTime)
             .then(function(booking) {
                 
                 // TODO: clearCache, enhance by discarding only the cache for the previous

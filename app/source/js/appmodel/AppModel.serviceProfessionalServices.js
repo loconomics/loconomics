@@ -1,8 +1,8 @@
-/** Freelancer Pricing
+/** Service professional service
 **/
 'use strict';
 
-var FreelancerPricing = require('../models/FreelancerPricing'),
+var ServiceProfessionalService = require('../models/ServiceProfessionalService'),
     GroupListRemoteModel = require('../utils/GroupListRemoteModel');
 
 exports.create = function create(appModel) {
@@ -11,12 +11,12 @@ exports.create = function create(appModel) {
         // Conservative cache, just 1 minute
         listTtl: { minutes: 1 },
         groupIdField: 'jobTitleID',
-        itemIdField: 'freelancerPricingID',
-        Model: FreelancerPricing
+        itemIdField: 'serviceProfessionalServiceID',
+        Model: ServiceProfessionalService
     });
 
-    api.addLocalforageSupport('freelancer-pricing/');
-    api.addRestSupport(appModel.rest, 'freelancer-pricing/');
+    api.addLocalforageSupport('service-professional-services/');
+    api.addRestSupport(appModel.rest, 'me/service-professional-services/');
     
     appModel.on('clearLocalData', function() {
         api.clearCache();

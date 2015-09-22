@@ -36,7 +36,7 @@
                 </div>
                 <!-- ko foreach: clients -->
                 <div class="SimpleList-item">
-                    <a href="#" class="btn btn-link btn-block" data-bind="event: { click: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + customerUserID() }">
+                    <a href="#" class="btn btn-link btn-block" data-bind="event: { click: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + clientUserID() }">
                         <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
                     </a>
                 </div>

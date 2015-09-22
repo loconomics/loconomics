@@ -14,7 +14,7 @@ exports.create = function create(appModel) {
         remote: {
             rest: appModel.rest,
             getBookings: function(filters) {
-                return appModel.rest.get('bookings', filters)
+                return appModel.rest.get('me/bookings', filters)
                 .then(function(rawItems) {
                     return rawItems && rawItems.map(function(rawItem) {
                         return new Booking(rawItem);
@@ -44,7 +44,7 @@ exports.create = function create(appModel) {
         Get upcoming bookings meta-information for dashboard page
     **/
     api.getUpcomingBookings = function getUpcomingBookings() {
-        return appModel.rest.get('upcoming-bookings');
+        return appModel.rest.get('me/upcoming-bookings');
     };
 
     /**
@@ -52,7 +52,7 @@ exports.create = function create(appModel) {
     **/
     api.getBooking = function getBooking(id) {
         if (!id) return Promise.reject('The bookingID is required to get a booking');
-        return appModel.rest.get('bookings/' + id)
+        return appModel.rest.get('me/bookings/' + id)
         .then(function(booking) {
             return new Booking(booking);
         });
@@ -65,14 +65,14 @@ exports.create = function create(appModel) {
     api.appointmentToSimplifiedBooking = function(apt) {
         return {
             bookingID: apt.sourceBooking().bookingID(),
-            customerUserID: apt.customerUserID(),
+            clientUserID: apt.clientUserID(),
             addressID: apt.addressID(),
             startTime: apt.startTime(),
             pricing: apt.pricing().map(function(pricing) {
                 // TODO: for now, the REST API allow only a list of IDs,
                 // not objects, so next line is replaced:
                 //return pricing.model.toPlainObject(true);
-                return pricing.freelancerPricingID();
+                return pricing.serviceProfessionalServiceID();
             }),
             preNotesToClient: apt.preNotesToClient(),
             preNotesToSelf: apt.preNotesToSelf(),
@@ -87,7 +87,7 @@ exports.create = function create(appModel) {
     api.bookingToSimplifiedBooking = function(booking) {
         return {
             bookingID: booking().bookingID(),
-            customerUserID: booking.customerUserID(),
+            clientUserID: booking.clientUserID(),
             addressID: booking.addressID(),
             startTime: booking.startTime(),
             pricing: booking.bookingRequest().pricingEstimate().details().pricing
@@ -95,7 +95,7 @@ exports.create = function create(appModel) {
                 // TODO: for now, the REST API allow only a list of IDs,
                 // not objects, so next line is replaced:
                 //return pricing.model.toPlainObject(true);
-                return pricing.freelancerPricingID();
+                return pricing.serviceProfessionalServiceID();
             }),
             preNotesToClient: booking.preNotesToClient(),
             preNotesToSelf: booking.preNotesToSelf(),
@@ -105,10 +105,10 @@ exports.create = function create(appModel) {
     };
     
     /**
-        Creates/updates a booking, given a simplified booking
+        Creates/updates a booking by a service professional, given a simplified booking
         object or an Appointment model or a Booking model
     **/
-    api.setBooking = function setBooking(booking, allowBookUnavailableTime) {    
+    api.setServiceProfessionalBooking = function setServiceProfessionalBooking(booking, allowBookUnavailableTime) {    
         booking = booking.bookingID ?
             api.bookingToSimplifiedBooking(booking) :
             booking.sourceBooking ?
@@ -121,7 +121,28 @@ exports.create = function create(appModel) {
         
         booking.allowBookUnavailableTime = allowBookUnavailableTime || false;
 
-        return appModel.rest[method]('freelancer-bookings/' + id, booking)
+        return appModel.rest[method]('me/service-professional-booking/' + id, booking)
+        .then(function(serverBooking) {
+            return new Booking(serverBooking);
+        });
+    };
+    
+    /**
+        Creates/updates a booking by a client, given a simplified booking
+        object or an Appointment model or a Booking model
+    **/
+    api.setClientBooking = function setClientBooking(booking) {
+        booking = booking.bookingID ?
+            api.bookingToSimplifiedBooking(booking) :
+            booking.sourceBooking ?
+                api.appointmentToSimplifiedBooking(booking) :
+                booking
+        ;
+
+        var id = booking.bookingID || '',
+            method = id ? 'put' : 'post';
+
+        return appModel.rest[method]('me/client-booking/' + id, booking)
         .then(function(serverBooking) {
             return new Booking(serverBooking);
         });

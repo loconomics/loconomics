@@ -10,7 +10,7 @@ var A = Activity.extends(function SchedulingActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new UserJobProfileViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Scheduling');
 });

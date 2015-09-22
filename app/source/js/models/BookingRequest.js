@@ -12,8 +12,8 @@ module.exports = function BookingRequest(values) {
     this.model.defProperties({
         bookingRequestID: 0,
         bookingTypeID: 0,
-        customerUserID: 0,
-        freelancerUserID: 0,
+        clientUserID: 0,
+        serviceProfessionalUserID: 0,
         jobTitleID: 0,
         pricingEstimateID: 0,
         bookingRequestStatusID: 0,

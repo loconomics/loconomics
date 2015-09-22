@@ -18,7 +18,7 @@ function Activity($activity, app) {
     this.app = app;
 
     // Default access level: anyone
-    this.accessLevel = app.UserType.None;
+    this.accessLevel = app.UserType.none;
     
     // TODO: Future use of a viewState, plain object representation
     // of part of the viewModel to be used as the state passed to the

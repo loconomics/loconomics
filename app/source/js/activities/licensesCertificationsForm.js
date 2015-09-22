@@ -11,7 +11,7 @@ var A = Activity.extends(function LicensesCertificationsFormActivity() {
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
-    this.accessLevel = this.app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Certifications/Licenses');
     this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);

@@ -16,10 +16,10 @@ function Booking(values) {
         bookingID: 0,
         bookingRequestID: 0,
         confirmedDateID: null,
-        totalPricePaidByCustomer: null,
-        totalServiceFeesPaidByCustomer: null,
-        totalPaidToFreelancer: null,
-        totalServiceFeesPaidByFreelancer: null,
+        totalPricePaidByclient: null,
+        totalServiceFeesPaidByclient: null,
+        totalPaidToServiceProfessional: null,
+        totalServiceFeesPaidByServiceProfessional: null,
         bookingStatusID: null,
         pricingAdjustmentApplied: false,
         
@@ -28,8 +28,8 @@ function Booking(values) {
         preNotesToSelf: null,
         postNotesToSelf: null,
         
-        reviewedByFreelancer: false,
-        reviewedByCustomer: false,
+        reviewedByServiceProfessional: false,
+        reviewedByclient: false,
         
         createdDate: null,
         updatedDate: null,

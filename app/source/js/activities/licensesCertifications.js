@@ -11,7 +11,7 @@ var A = Activity.extends(function LicensesCertificationsActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title');

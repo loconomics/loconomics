@@ -10,7 +10,7 @@ var A = Activity.extends(function JobtitlesActivity() {
     
     Activity.apply(this, arguments);
     
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduling', {
         backLink: '/scheduling'
@@ -43,10 +43,10 @@ var A = Activity.extends(function JobtitlesActivity() {
                 
                 ////////////
                 // Pricing/Services
-                this.app.model.freelancerPricing.getList(jobTitleID)
+                this.app.model.serviceProfessionalServices.getList(jobTitleID)
                 .then(function(list) {
 
-                    list = this.app.model.freelancerPricing.asModel(list);
+                    list = this.app.model.serviceProfessionalServices.asModel(list);
                     this.viewModel.pricing(list);
 
                 }.bind(this))
@@ -107,7 +107,7 @@ function ViewModel(app) {
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
     this.getJobUrlTo = function(name) {
-        // Sample '/freelancerPricing/' + jobTitleID()
+        // Sample '/serviceProfessionalServices/' + jobTitleID()
         return ko.pureComputed(function() {
             return (
                 '/' + name + '/' + this.jobTitleID() + '?mustReturn=jobtitles/' + this.jobTitleID() +
@@ -123,7 +123,7 @@ function ViewModel(app) {
     this.isLoading = ko.pureComputed(function() {
         return (
             app.model.serviceAddresses.state.isLoading() ||
-            app.model.freelancerPricing.state.isLoading()
+            app.model.serviceProfessionalServices.state.isLoading()
         );
         
     }, this);

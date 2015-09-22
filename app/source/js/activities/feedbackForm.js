@@ -12,7 +12,7 @@ var A = Activity.extends(function FeedbackFormActivity() {
     
     this.viewModel = new ViewModel(this.app);
     
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     
     this.navBar = Activity.createSubsectionNavBar('Talk to us');
 });

@@ -34,7 +34,7 @@ exports.create = function create(appModel) {
         threadID: { control: CacheControl, thread: Thread }
     */};
     var fetchThreadRemote = function(threadID) {
-        return appModel.rest.get('messaging/' + threadID, {
+        return appModel.rest.get('me/messaging/' + threadID, {
             limit: 1000 /* max messages in the thread */
         })
         .then(function(thread) {

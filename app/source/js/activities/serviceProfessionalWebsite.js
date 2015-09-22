@@ -1,17 +1,17 @@
 /**
-    FreelancerWebsite activity
+    ServiceProfessionalWebsite activity
 **/
 'use strict';
 
 var Activity = require('../components/Activity'),
     ko = require('knockout');
 
-var A = Activity.extends(function FreelancerWebsiteActivity() {
+var A = Activity.extends(function ServiceProfessionalWebsiteActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
-    this.accessLevel = this.app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
         backLink: 'marketplaceProfile'

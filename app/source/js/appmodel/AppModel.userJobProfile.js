@@ -153,7 +153,7 @@ exports.create = function create(appModel) {
     // Private, fetch from remote
     var fetchUserJobProfile = function () {
         // Third and last, remote loading
-        return appModel.rest.get('user-job-profile')
+        return appModel.rest.get('me/user-job-profile')
         .then(function (raw) {
             // Cache in local storage
             localforage.setItem('userJobProfile', raw);
@@ -194,7 +194,7 @@ exports.create = function create(appModel) {
     
     // Private, fetch from remote
     var fetchUserJobTitle = function(jobTitleID) {
-        return appModel.rest.get('user-job-profile/' + jobTitleID)
+        return appModel.rest.get('me/user-job-profile/' + jobTitleID)
         .then(function(raw) {
             // Save to cache and get model
             var m = setGetUserJobTitleToCache(raw);
@@ -213,7 +213,7 @@ exports.create = function create(appModel) {
     
     var pushNewUserJobTitle = function(values) {
         // Create job title in remote
-        return appModel.rest.post('user-job-profile', $.extend({
+        return appModel.rest.post('me/user-job-profile', $.extend({
             jobTitleID: 0,
             jobTitleName: '',
             intro: '',

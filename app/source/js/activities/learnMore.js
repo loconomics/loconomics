@@ -29,5 +29,5 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel() {
-    this.profile = ko.observable('customer');
+    this.profile = ko.observable('client');
 }

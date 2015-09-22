@@ -15,7 +15,7 @@ var A = Activity.extends(function AppointmentActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.Freelancer;    
+    this.accessLevel = this.app.UserType.serviceProfessional;    
     this.menuItem = 'calendar';
     
     this.$appointmentView = this.$activity.find('#calendarAppointmentView');

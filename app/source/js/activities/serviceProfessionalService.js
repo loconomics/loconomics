@@ -1,7 +1,7 @@
 /**
-    Freelancer Pricing activity
+    ServiceProfessional Service activity
     
-    TODO: Use FreelancerPricing ViewModel and template
+    TODO: Use ServiceProfessionalService ViewModel and template
 **/
 'use strict';
 
@@ -10,11 +10,11 @@ var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function FreelancerPricingActivity() {
+var A = Activity.extends(function ServiceProfessionalServiceActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
@@ -50,11 +50,11 @@ var A = Activity.extends(function FreelancerPricingActivity() {
                     // Save for use in the view
                     this.viewModel.jobTitle(jobTitle);
                     // Get pricing
-                    return this.app.model.freelancerPricing.getList(jobTitleID);
+                    return this.app.model.serviceProfessionalServices.getList(jobTitleID);
                 }.bind(this))
                 .then(function(list) {
 
-                    list = this.app.model.freelancerPricing.asModel(list);
+                    list = this.app.model.serviceProfessionalServices.asModel(list);
                     
                     // Read presets selection from requestData
                     var preset = this.requestData.selectedPricing || [],
@@ -63,7 +63,7 @@ var A = Activity.extends(function FreelancerPricingActivity() {
                     // Add the isSelected property to each item
                     list.forEach(function(item) {
                         var preSelected = preset.some(function(pr) {
-                            if (pr.freelancerPricingID === item.freelancerPricingID())
+                            if (pr.serviceProfessionalServiceID === item.serviceProfessionalServiceID())
                                 return true;
                         }) || false;
                         
@@ -190,7 +190,7 @@ A.prototype.show = function show(options) {
     }
     else {
         // Set this page as cancelLink for editor links in the view
-        this.viewModel.cancelLink('/freelancerPricing/' + this.viewModel.jobTitleID());
+        this.viewModel.cancelLink('/serviceProfessionalService/' + this.viewModel.jobTitleID());
     }
 
     this.viewModel.isAdditionMode(isAdditionMode);
@@ -216,11 +216,11 @@ function ViewModel(app) {
     this.cancelLink = ko.observable(null);
     
     this.jobTitles = new UserJobProfile(app);
-    this.jobTitles.baseUrl('/freelancerPricing');
+    this.jobTitles.baseUrl('/serviceProfessionalService');
     this.jobTitles.selectJobTitle = function(jobTitle) {
         
         this.jobTitleID(jobTitle.jobTitleID());
-        var url = 'freelancerPricing/' + jobTitle.jobTitleID();
+        var url = 'serviceProfessionalService/' + jobTitle.jobTitleID();
         if (this.isAdditionMode())
             url += '/new';
         // pushState cannot be used because it conflicts with the 
@@ -235,7 +235,7 @@ function ViewModel(app) {
 
     this.isLoading = ko.computed(function() {
         return (
-            app.model.freelancerPricing.state.isLoading() ||
+            app.model.serviceProfessionalService.state.isLoading() ||
             app.model.pricingTypes.state.isLoading() ||
             app.model.jobTitles.state.isLoading()
         );
@@ -365,7 +365,7 @@ function ViewModel(app) {
             this.returnSelected(
                 this.selectedPricing().map(function(pricing) {
                     return {
-                        freelancerPricingID: ko.unwrap(pricing.freelancerPricingID),
+                        serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
                         totalPrice: ko.unwrap(pricing.price)
                     };
                 }),
@@ -378,7 +378,7 @@ function ViewModel(app) {
     }.bind(this);
     
     this.editPricing = function(pricing) {
-        app.shell.go('freelancerPricingEditor/' + this.jobTitleID() + '/' + pricing.freelancerPricingID());
+        app.shell.go('serviceProfessionalServiceEditor/' + this.jobTitleID() + '/' + pricing.serviceProfessionalServiceID());
     }.bind(this);
     
     /**
@@ -398,7 +398,7 @@ function ViewModel(app) {
     
     this.tapNewPricing = function(group, event) {
         
-        var url = '#!freelancerPricingEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
+        var url = '#!serviceProfessionalServiceEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
 
         // Passing original data, for in-progress process (as new-booking)
         // and the selected title since the URL could not be updated properly
@@ -419,7 +419,7 @@ function ViewModel(app) {
             request.selectedPricing = this.selectedPricing()
             .map(function(pricing) {
                 return {
-                    freelancerPricingID: ko.unwrap(pricing.freelancerPricingID),
+                    serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
                     totalPrice: ko.unwrap(pricing.totalPrice)
                 };
             });

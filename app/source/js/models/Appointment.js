@@ -30,7 +30,7 @@ function Appointment(values) {
         // Fields specific for bookings
         price: 0,
         // Actual bookings fields to use on post/put
-        customerUserID: null,
+        clientUserID: null,
         pricing: {
             Model: PricingEstimateDetail,
             isArray: true
@@ -147,7 +147,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     var apt = Appointment.fromCalendarEvent(event);
     
     // Include booking in apt
-    apt.customerUserID(booking.bookingRequest().customerUserID());
+    apt.clientUserID(booking.bookingRequest().clientUserID());
     apt.addressID(booking.bookingRequest().addressID());
     apt.jobTitleID(booking.bookingRequest().jobTitleID());
     apt.pricing(booking.bookingRequest().pricingEstimate().details());
@@ -163,7 +163,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
 
     var prices = booking.bookingRequest() && booking.bookingRequest().pricingEstimate();
     if (prices) {
-        // TODO Setting freelancer price, for customers must be
+        // TODO Setting service professional price, for clients must be
         // just totalPrice()
         apt.price(prices.totalPrice() - prices.pFeePrice());
     }

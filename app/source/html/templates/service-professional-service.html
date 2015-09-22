@@ -1,5 +1,5 @@
-<!-- Knockout Template freelancer-pricing -->
-<script type="text/html" id="freelancer-pricing-template">
+<!-- Knockout Template service-professional-service -->
+<script type="text/html" id="service-professional-service-template">
     <div data-bind="foreach: groupedPricing">
         <div class="SectionTitle" data-bind="visible: !$parent.isAdditionMode()">
             <span data-bind="text: group"></span>
@@ -20,7 +20,7 @@
             </a></li>
         </ul>
 
-        <a class="LinkTile" role="button" href="#!freelancerPricingEditor/"
+        <a class="LinkTile" role="button" href="#!serviceProfessionalServiceEditor/"
            data-bind="visible: $parent.allowAddPricing, click: $parent.tapNewPricing, text: type() && type().addNewLabel()"></a>
     </div>
 </script>

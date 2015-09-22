@@ -10,7 +10,7 @@ var A = Activity.extends(function FaqsActivity() {
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel();
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     
     this.navBar = Activity.createSubsectionNavBar('Talk to us');
     

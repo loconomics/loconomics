@@ -42,6 +42,7 @@ public static partial class LcData
             //OnlyMember = 8,
             Member = 12,
             Admin = 16,
+            LoggedUser = 30,
             User = 31,
             System = 32
         }

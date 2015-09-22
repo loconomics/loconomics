@@ -1,8 +1,8 @@
-/** Customers
+/** clients
 **/
 'use strict';
 
-var Customer = require('../models/Customer');
+var Client = require('../models/Client');
 
 var ListRemoteModel = require('../utils/ListRemoteModel');
 
@@ -10,19 +10,19 @@ exports.create = function create(appModel) {
     
     var api = new ListRemoteModel({
         listTtl: { minutes: 1 },
-        itemIdField: 'customerUserID',
-        Model: Customer
+        itemIdField: 'clientUserID',
+        Model: Client
     });
 
-    api.addLocalforageSupport('customers');
-    api.addRestSupport(appModel.rest, 'customers');
+    api.addLocalforageSupport('clients');
+    api.addRestSupport(appModel.rest, 'me/clients');
     
     appModel.on('clearLocalData', function() {
         api.clearCache();
     });
     
     /**
-        Public search of users, possible customers by well
+        Public search of users, possible clients by well
         know fields, with full value match.
     **/
     var publicSearchRequest = null;
@@ -38,7 +38,7 @@ exports.create = function create(appModel) {
             }
         }
         
-        var request = appModel.rest.get('customers/public-search', search);
+        var request = appModel.rest.get('me/clients/public-search', search);
         publicSearchRequest = request.xhr;
         
         // Catch 'abort' to avoid communicate a fake error in the promise; the

@@ -12,10 +12,10 @@ exports.create = function create(appModel) {
         ttl: { minutes: 1 },
         localStorageName: 'homeAddress',
         fetch: function fetch() {
-            return appModel.rest.get('addresses/home');
+            return appModel.rest.get('me/addresses/home');
         },
         push: function push() {
-            return appModel.rest.put('addresses/home', this.data.model.toPlainObject());
+            return appModel.rest.put('me/addresses/home', this.data.model.toPlainObject());
         }
     });
     

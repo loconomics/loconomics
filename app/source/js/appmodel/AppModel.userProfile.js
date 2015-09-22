@@ -14,10 +14,10 @@ exports.create = function create(appModel) {
         // IMPORTANT: Keep the name in sync with set-up at AppModel-account
         localStorageName: 'profile',
         fetch: function fetch() {
-            return appModel.rest.get('profile');
+            return appModel.rest.get('me/profile');
         },
         push: function push() {
-            return appModel.rest.put('profile', this.data.model.toPlainObject());
+            return appModel.rest.put('me/profile', this.data.model.toPlainObject());
         }
     });
     
@@ -33,7 +33,7 @@ exports.create = function create(appModel) {
             rem.data.onboardingStep(stepReference);
         }
 
-        return appModel.rest.put('profile/tracking', {
+        return appModel.rest.put('me/profile/tracking', {
             onboardingStep: stepReference
         })
         .then(function() {

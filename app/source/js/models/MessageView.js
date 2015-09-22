@@ -58,7 +58,7 @@ function MessageView(values, app) {
         }
     }, this);
     
-    this.customer = ko.computed(function() {
+    this.client = ko.computed(function() {
         var s = this.sourceMessage();
         if (!s || !app) return null;
 
@@ -67,7 +67,7 @@ function MessageView(values, app) {
             if (cid === app.model.userProfile.data.userID())
                 return app.model.userProfile.data;
             else
-                return app.model.customers.getObservableItem(cid, true)();
+                return app.model.clients.getObservableItem(cid, true)();
         }
         return null;
     }, this)

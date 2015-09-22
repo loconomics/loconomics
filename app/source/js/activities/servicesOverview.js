@@ -11,7 +11,7 @@ var A = Activity.extends(function ServicesOverviewActivity() {
     Activity.apply(this, arguments);
 
     this.viewModel = new ViewModel(this.app);
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     
     this.navBar = Activity.createSubsectionNavBar('Job Title');
     

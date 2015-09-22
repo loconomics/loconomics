@@ -12,7 +12,7 @@ var A = Activity.extends(function TextEditorActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     // Title is empty, since we are in 'go back' mode all the time here
     this.navBar = Activity.createSubsectionNavBar('');

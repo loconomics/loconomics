@@ -12,10 +12,10 @@ exports.create = function create(appModel) {
         ttl: { minutes: 1 },
         localStorageName: 'marketplaceProfile',
         fetch: function fetch() {
-            return appModel.rest.get('marketplace-profile');
+            return appModel.rest.get('me/marketplace-profile');
         },
         push: function push() {
-            return appModel.rest.put('marketplace-profile', this.data.model.toPlainObject());
+            return appModel.rest.put('me/marketplace-profile', this.data.model.toPlainObject());
         }
     });
     

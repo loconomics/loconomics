@@ -17,8 +17,8 @@ exports.create = function create(appModel) {
         Model: UserLicenseCertification
     });
     
-    api.addLocalforageSupport('userLicenseCertification');
-    api.addRestSupport(appModel.rest, 'userLicenseCertification/');
+    api.addLocalforageSupport('userLicenseCertifications');
+    api.addRestSupport(appModel.rest, 'me/user-license-certifications/');
     
     appModel.on('clearLocalData', function() {
         api.clearCache();

@@ -11,13 +11,13 @@ module.exports = function AppointmentView(appointment, app) {
     if (appointment._isAppointmentView) return appointment;
     appointment._isAppointmentView = true;
 
-    appointment.customer = ko.computed(function() {
+    appointment.client = ko.computed(function() {
         var b = this.sourceBooking();
         if (!b) return null;
         
-        var cid = this.customerUserID();
+        var cid = this.clientUserID();
         if (cid) {
-            return app.model.customers.getObservableItem(cid, true)();
+            return app.model.clients.getObservableItem(cid, true)();
         }
         return null;
     }, appointment)
@@ -41,7 +41,7 @@ module.exports = function AppointmentView(appointment, app) {
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     /* Property with the pricing array plus information about the
-        freelancerPricing.
+        serviceProfessionalService.
     */
     appointment.pricingWithInfo = ko.computed(function() {
         var b = this.sourceBooking();
@@ -59,7 +59,7 @@ module.exports = function AppointmentView(appointment, app) {
     appointment.servicesSummary = ko.computed(function() {
         return this.pricingWithInfo()
         .map(function(service) {
-            return service.freelancerPricing().name();
+            return service.serviceProfessionalService().name();
         }).join(', ');
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
@@ -70,7 +70,7 @@ module.exports = function AppointmentView(appointment, app) {
     appointment.getServiceDurationMinutes = function() {
         var pricing = this.pricingWithInfo();
         var sum = pricing.reduce(function(prev, service) {
-            return prev + service.freelancerPricing().serviceDurationMinutes();
+            return prev + service.serviceProfessionalService().serviceDurationMinutes();
         }, 0);
         return sum;
     };
@@ -94,9 +94,9 @@ module.exports = function AppointmentView(appointment, app) {
 
 function PricingEstimateDetailView(pricingEstimateDetail, jobTitleID, app) {
 
-    pricingEstimateDetail.freelancerPricing = ko.computed(function() {
-        var pid = this.freelancerPricingID();
-        return app.model.freelancerPricing
+    pricingEstimateDetail.serviceProfessionalService = ko.computed(function() {
+        var pid = this.serviceProfessionalServiceID();
+        return app.model.serviceProfessionalService
             .getObservableItem(jobTitleID, pid, true)();
     }, pricingEstimateDetail)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });

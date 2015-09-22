@@ -12,7 +12,7 @@ var A = Activity.extends(function ClientsActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Clients', {
@@ -39,7 +39,7 @@ var A = Activity.extends(function ClientsActivity() {
                 theSelectedClient) {
 
                 // Pass the selected client in the info
-                this.requestData.selectedClientID = theSelectedClient.customerUserID();
+                this.requestData.selectedClientID = theSelectedClient.clientUserID();
                 // And go back
                 this.app.shell.goBack(this.requestData);
                 // Last, clear requestData
@@ -124,7 +124,7 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
     
     // Keep data updated:
-    this.app.model.customers.sync()
+    this.app.model.clients.sync()
     .catch(function(err) {
         this.app.modals.showError({
             title: 'Error loading the clients list',
@@ -142,9 +142,9 @@ function ViewModel(app) {
     this.isSelectionMode = ko.observable(false);
 
     // Full list of clients
-    this.clients = app.model.customers.list;
-    this.isLoading = app.model.customers.state.isLoading;
-    this.isSyncing = app.model.customers.state.isSyncing;
+    this.clients = app.model.clients.list;
+    this.isLoading = app.model.clients.state.isLoading;
+    this.isSyncing = app.model.clients.state.isSyncing;
     
     // Search text, used to filter 'clients'
     this.searchText = ko.observable('');
@@ -226,7 +226,7 @@ function ViewModel(app) {
             // Remove previous results
             this.publicSearchResults([]);
             
-            request = app.model.customers.publicSearch({
+            request = app.model.clients.publicSearch({
                 fullName: searchText,
                 email: searchText,
                 phone: searchText

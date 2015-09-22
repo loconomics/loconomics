@@ -9,9 +9,9 @@ module.exports = function PricingEstimateDetail(values) {
     Model(this);
 
     this.model.defProperties({
-        freelancerPricingID: 0,
-        freelancerPricingDataInput: null,
-        customerPricingDataInput: null,
+        serviceProfessionalServiceID: 0,
+        serviceProfessionalDataInput: null,
+        clientDataInput: null,
         hourlyPrice: null,
         subtotalPrice: null,
         feePrice: null,

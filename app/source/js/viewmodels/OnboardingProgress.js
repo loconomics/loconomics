@@ -76,7 +76,7 @@ OnboardingProgress.predefinedStepGroups = {
         'welcome',
         'addJobTitles',
         // disabled on 2015-06-16 as of #575 comments
-        //'freelancerPricing',
+        //'serviceProfessionalService',
         //'serviceAddresses',
         'weeklySchedule',
         'contactInfo'

@@ -1,6 +1,6 @@
 /**
-    FreelancerInfo component, shows public information
-    about a freelancer in a short card.
+    ServiceProfessionalInfo component, shows public information
+    about a serviceProfessional in a short card.
 **/
 'use strict';
 
@@ -8,11 +8,11 @@ var Model = require('../models/Model'),
     UserJobTitle = require('../models/UserJobTitle'),
     ko = require('knockout');
 
-function FreelancerInfoVM(values) {
+function ServiceProfessionalInfoVM(values) {
     Model(this);
 
     this.model.defProperties({
-        freelancerID: 0,
+        serviceProfessionalID: 0,
         jobTitleID: 0,
         modClasses: 0,
         profile: {
@@ -25,11 +25,11 @@ function FreelancerInfoVM(values) {
     }, values);
 
     this.photoUrl = ko.pureComputed(function() {
-        return this.siteUrl() + '/en-US/Profile/Photo/' + this.freelancerID();
+        return this.siteUrl() + '/en-US/Profile/Photo/' + this.serviceProfessionalID();
     }, this);
 }
 
-module.exports = FreelancerInfoVM;
+module.exports = ServiceProfessionalInfoVM;
 
 function UserPublicProfile(values) {
     Model(this);
@@ -41,7 +41,7 @@ function UserPublicProfile(values) {
         businessName: '',
 
         hasPhotoUrl: false,
-        isFreelancer: false
+        isServiceProfessional: false
     }, values);
 
     this.fullName = ko.pureComputed(function() {

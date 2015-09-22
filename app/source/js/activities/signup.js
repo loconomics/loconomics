@@ -10,7 +10,7 @@ var A = Activity.extends(function SignupActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.Anonymous;
+    this.accessLevel = this.app.UserType.anonymous;
     this.viewModel = new ViewModel(this.app);
     // null for Logo
     this.navBar = Activity.createSectionNavBar(null);
@@ -123,5 +123,5 @@ function ViewModel() {
         this.isSigningUp(true);
     }.bind(this);
 
-    this.profile = ko.observable('customer');
+    this.profile = ko.observable('client');
 }

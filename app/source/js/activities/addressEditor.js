@@ -22,7 +22,7 @@ var A = Activity.extends(function AddressEditorActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Locations');
     

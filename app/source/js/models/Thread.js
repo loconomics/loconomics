@@ -14,8 +14,8 @@ function Thread(values) {
     this.model.defProperties({
         threadID: 0,
         
-        customerUserID: null,
-        freelancerUserID: null,
+        clientUserID: null,
+        serviceProfessionalUserID: null,
         jobTitleID: null,
         statusID: null,
         subject: null,

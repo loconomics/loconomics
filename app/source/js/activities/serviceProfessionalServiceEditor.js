@@ -1,5 +1,5 @@
 /**
-    FreelancerPricingEditor activity
+    ServiceProfessionalServiceEditor activity
     
     TODO: ModelVersion is NOT being used, so no getting updates if server updates
     the data after load (data load is requested but get first from cache). Use
@@ -11,11 +11,11 @@ var ko = require('knockout'),
     Activity = require('../components/Activity'),
     PricingType = require('../models/PricingType');
 
-var A = Activity.extends(function FreelancerPricingEditorActivity() {
+var A = Activity.extends(function ServiceProfessionalServiceEditorActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.Freelancer;
+    this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Services');
     
@@ -24,12 +24,12 @@ var A = Activity.extends(function FreelancerPricingEditorActivity() {
     this.viewModel.onSave = function(pricing) {
         // Go back on save.
         // If we comes with a selection of pricing, we must add the new one
-        // there and just go back (freelancerPricing is in selection mode) keeping
+        // there and just go back (serviceProfessionalService is in selection mode) keeping
         // any requestData for in-progress state.
         if (this.requestData.selectedPricing) {
             // Is an array of plain objects of just ID and totalPrice
             this.requestData.selectedPricing.push({
-                freelancerPricingID: pricing.freelancerPricingID,
+                serviceProfessionalServiceID: pricing.serviceProfessionalServiceID,
                 totalPrice: pricing.totalPrice
             });
             this.app.shell.goBack(this.requestData);
@@ -45,7 +45,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    var link = this.requestData.cancelLink || '/freelancerPricing/' + this.viewModel.jobTitleID();
+    var link = this.requestData.cancelLink || '/serviceProfessionalService/' + this.viewModel.jobTitleID();
     
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
@@ -56,7 +56,7 @@ A.prototype.show = function show(options) {
 
     // Reset
     this.viewModel.wasRemoved(false);
-    this.viewModel.freelancerPricingVersion(null);
+    this.viewModel.serviceProfessionalServiceVersion(null);
     this.viewModel.pricingType(null);
 
     // Params
@@ -66,10 +66,10 @@ A.prototype.show = function show(options) {
         // Parameter [1] can be 'new' followed by a pricingTypeID as [2]
         pricingTypeID = params[1] === 'new' ? params[2] |0 : 0,
         // Or a pricingID
-        freelancerPricingID = params[1] |0;
+        serviceProfessionalServiceID = params[1] |0;
 
     this.viewModel.jobTitleID(jobTitleID);
-    this.viewModel.freelancerPricingID(freelancerPricingID);
+    this.viewModel.serviceProfessionalServiceID(serviceProfessionalServiceID);
     
     this.updateNavBarState();
     
@@ -95,7 +95,7 @@ A.prototype.show = function show(options) {
         this.viewModel.isLoading(false);
         this.app.modals.showError({
             title: 'Invalid request',
-            error: { jobTitleID: jobTitleID, pricingTypeID: pricingTypeID, freelancerPricingID: freelancerPricingID }
+            error: { jobTitleID: jobTitleID, pricingTypeID: pricingTypeID, serviceProfessionalServiceID: serviceProfessionalServiceID }
         })
         .then(function() {
             // On close modal, go back
@@ -111,7 +111,7 @@ A.prototype.show = function show(options) {
             if (type) {
                 this.viewModel.pricingType(type);
                 // New pricing
-                this.viewModel.freelancerPricingVersion(this.app.model.freelancerPricing.newItemVersion({
+                this.viewModel.serviceProfessionalServiceVersion(this.app.model.serviceProfessionalService.newItemVersion({
                     jobTitleID: jobTitleID,
                     pricingTypeID: pricingTypeID
                 }));
@@ -122,18 +122,18 @@ A.prototype.show = function show(options) {
             }
         }.bind(this));
     }
-    else if (freelancerPricingID) {
+    else if (serviceProfessionalServiceID) {
         // Get the pricing
-        this.app.model.freelancerPricing.getItemVersion(jobTitleID, freelancerPricingID)
-        .then(function (freelancerPricingVersion) {
-            if (freelancerPricingVersion) {
+        this.app.model.serviceProfessionalService.getItemVersion(jobTitleID, serviceProfessionalServiceID)
+        .then(function (serviceProfessionalServiceVersion) {
+            if (serviceProfessionalServiceVersion) {
                 // Load the pricing type before put the version
                 // returns to let the 'catch' to get any error
-                return this.app.model.pricingTypes.getItem(freelancerPricingVersion.version.pricingTypeID())
+                return this.app.model.pricingTypes.getItem(serviceProfessionalServiceVersion.version.pricingTypeID())
                 .then(function(type) {
                     if (type) {
                         this.viewModel.pricingType(type);
-                        this.viewModel.freelancerPricingVersion(freelancerPricingVersion);
+                        this.viewModel.serviceProfessionalServiceVersion(serviceProfessionalServiceVersion);
                         pricingSetup();
                     }
                     else {
@@ -166,20 +166,20 @@ function ViewModel(app) {
 
     this.isLoading = ko.observable(false);
     // managed manually instead of
-    //app.model.freelancerPricing.state.isLoading;
-    this.isSaving = app.model.freelancerPricing.state.isSaving;
-    this.isSyncing = app.model.freelancerPricing.state.isSyncing;
-    this.isDeleting = app.model.freelancerPricing.state.isDeleting;
+    //app.model.serviceProfessionalService.state.isLoading;
+    this.isSaving = app.model.serviceProfessionalServices.state.isSaving;
+    this.isSyncing = app.model.serviceProfessionalServices.state.isSyncing;
+    this.isDeleting = app.model.serviceProfessionalServices.state.isDeleting;
     this.jobTitleID = ko.observable(0);
-    this.freelancerPricingID = ko.observable(0);
+    this.serviceProfessionalServiceID = ko.observable(0);
     // L10N
     this.moneySymbol = ko.observable('$');
     
     this.pricingType = ko.observable(new PricingType());
 
-    this.freelancerPricingVersion = ko.observable(null);
-    this.freelancerPricing = ko.pureComputed(function() {
-        var v = this.freelancerPricingVersion();
+    this.serviceProfessionalServiceVersion = ko.observable(null);
+    this.serviceProfessionalService = ko.pureComputed(function() {
+        var v = this.serviceProfessionalServiceVersion();
         if (v) {
             return v.version;
         }
@@ -190,7 +190,7 @@ function ViewModel(app) {
         if (this.isLoading()) {
             return 'Loading...';
         }
-        else if (this.freelancerPricingVersion()) {
+        else if (this.serviceProfessionalServiceVersion()) {
             var t = this.pricingType();
             return t && t.singularName() || 'Service';
         }
@@ -203,7 +203,7 @@ function ViewModel(app) {
     // Quicker access in form, under a 'with'
     this.current = ko.pureComputed(function() {
         var t = this.pricingType(),
-            p = this.freelancerPricing();
+            p = this.serviceProfessionalService();
         
         if (t && p) {
             return {
@@ -217,16 +217,16 @@ function ViewModel(app) {
     this.wasRemoved = ko.observable(false);
     
     this.isLocked = ko.computed(function() {
-        return this.isDeleting() || app.model.freelancerPricing.state.isLocked();
+        return this.isDeleting() || app.model.serviceProfessionalServices.state.isLocked();
     }, this);
     
     this.isNew = ko.pureComputed(function() {
-        var p = this.freelancerPricing();
+        var p = this.serviceProfessionalService();
         return p && !p.updatedDate();
     }, this);
 
     this.submitText = ko.pureComputed(function() {
-        var v = this.freelancerPricingVersion();
+        var v = this.serviceProfessionalServiceVersion();
         return (
             this.isLoading() ? 
                 'Loading...' : 
@@ -239,7 +239,7 @@ function ViewModel(app) {
     }, this);
 
     this.unsavedChanges = ko.pureComputed(function() {
-        var v = this.freelancerPricingVersion();
+        var v = this.serviceProfessionalServiceVersion();
         return v && v.areDifferent();
     }, this);
     
@@ -253,12 +253,12 @@ function ViewModel(app) {
 
     this.save = function() {
         
-        app.model.freelancerPricing.setItem(this.freelancerPricing().model.toPlainObject())
+        app.model.serviceProfessionalService.setItem(this.serviceProfessionalService().model.toPlainObject())
         .then(function(serverData) {
             // Update version with server data.
-            this.freelancerPricing().model.updateWith(serverData);
+            this.serviceProfessionalService().model.updateWith(serverData);
             // Push version so it appears as saved
-            this.freelancerPricingVersion().push({ evenIfObsolete: true });
+            this.serviceProfessionalServiceVersion().push({ evenIfObsolete: true });
             
             // After save logic provided by the activity, injected in the view:
             this.onSave(serverData);
@@ -288,7 +288,7 @@ function ViewModel(app) {
 
     this.remove = function() {
 
-        app.model.freelancerPricing.delItem(this.jobTitleID(), this.freelancerPricingID())
+        app.model.serviceProfessionalService.delItem(this.jobTitleID(), this.serviceProfessionalServiceID())
         .then(function() {
             this.wasRemoved(true);
             // Go out the deleted location

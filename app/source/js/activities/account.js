@@ -9,7 +9,7 @@ var A = Activity.extends(function AccountActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.LoggedUser;
+    this.accessLevel = this.app.UserType.loggedUser;
     
     this.navBar = Activity.createSectionNavBar('Account');
 });

@@ -16,7 +16,7 @@ exports.create = function create(appModel) {
     });
     
     api.addLocalforageSupport('addresses/service/');
-    api.addRestSupport(appModel.rest, 'addresses/service/');
+    api.addRestSupport(appModel.rest, 'me/addresses/service/');
     
     appModel.on('clearLocalData', function() {
         api.clearCache();

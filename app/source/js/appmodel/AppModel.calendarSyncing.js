@@ -12,10 +12,10 @@ exports.create = function create(appModel) {
         ttl: { minutes: 1 },
         localStorageName: 'calendarSyncing',
         fetch: function fetch() {
-            return appModel.rest.get('calendar-syncing');
+            return appModel.rest.get('me/calendar-syncing');
         },
         push: function push() {
-            return appModel.rest.put('calendar-syncing', this.data.model.toPlainObject());
+            return appModel.rest.put('me/calendar-syncing', this.data.model.toPlainObject());
         }
     });
     
@@ -25,7 +25,7 @@ exports.create = function create(appModel) {
         
         rem.isReseting(true);
 
-        return appModel.rest.post('calendar-syncing/reset-export-url')
+        return appModel.rest.post('me/calendar-syncing/reset-export-url')
         .then(function(updatedSyncSettings) {
             // Updating the cached data
             rem.data.model.updateWith(updatedSyncSettings);

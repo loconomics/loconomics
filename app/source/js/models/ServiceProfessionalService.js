@@ -1,6 +1,6 @@
 /**
-    Freelancer Pricing model: manages an individual
-    pricing/package from the user and a specific job title.
+    ServiceProfessionalService model: manages an individual
+    service from the user and a specific job title.
 **/
 'use strict';
 
@@ -8,13 +8,13 @@ var Model = require('./Model'),
     ko = require('knockout'),
     numeral = require('numeral');
 
-function FreelancerPricing(values) {
+function ServiceProfessionalService(values) {
     
     Model(this);
     
     this.model.defProperties({
-        freelancerPricingID: 0,
-        freelancerUserID: 0,
+        serviceProfessionalServiceID: 0,
+        serviceProfessionalUserID: 0,
         jobTitleID: 0,
         pricingTypeID: 0,
         name: '',
@@ -35,7 +35,7 @@ function FreelancerPricing(values) {
         updatedDate: null
     }, values);
     
-    this.model.defID(['freelancerPricingID']);
+    this.model.defID(['serviceProfessionalServiceID']);
     
     // One way effect: set priceRate to null when setting on noPriceRate
     // But nothing on off and no other relations to avoid bad side effects.
@@ -57,7 +57,7 @@ function FreelancerPricing(values) {
         // null or 0; cannot be done with a subscription on priceRate changes because will have
         // the bad side effect of auto mark noPriceRate on setting 0 on priceRate, breaking the
         // explicit purpose of the noPriceRate checkbox:
-        if (this.freelancerPricingID() && (this.priceRate() |0) <= 0) {
+        if (this.serviceProfessionalServiceID() && (this.priceRate() |0) <= 0) {
             var ts = this.model.dataTimestamp();
             this.noPriceRate(true);
             // Set again timestamp so the model appear as untouched.
@@ -143,4 +143,4 @@ function FreelancerPricing(values) {
     }, this);
 }
 
-module.exports = FreelancerPricing;
+module.exports = ServiceProfessionalService;
