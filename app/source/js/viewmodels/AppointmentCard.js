@@ -11,7 +11,7 @@ var ko = require('knockout'),
     AppointmentView = require('../viewmodels/AppointmentView'),
     ModelVersion = require('../utils/ModelVersion'),
     getDateWithoutTime = require('../utils/getDateWithoutTime'),
-    PricingEstimateDetail = require('../models/PricingEstimateDetail');
+    PricingSummaryDetail = require('../models/PricingSummaryDetail');
 
 function AppointmentCardViewModel(params) {
     /*jshint maxstatements: 40*/
@@ -396,7 +396,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     if (requestData.selectPricing === true) {
         this.item().pricing(
             requestData.selectedPricing.map(function(pricing) {
-                return new PricingEstimateDetail(pricing);
+                return new PricingSummaryDetail(pricing);
             })
         );
     }

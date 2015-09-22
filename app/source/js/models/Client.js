@@ -20,7 +20,7 @@ function Client(values) {
         birthMonthDay: null,
         birthMonth: null,
         
-        notesAboutclient: null,
+        notesAboutClient: null,
         
         createdDate: null,
         updatedDate: null,

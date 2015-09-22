@@ -51,7 +51,7 @@ module.exports = function AppointmentView(appointment, app) {
             details = this.pricing();
 
         return details.map(function(det) {
-            return PricingEstimateDetailView(det, jid, app);
+            return PricingSummaryDetailView(det, jid, app);
         });
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 60 } });
@@ -64,7 +64,6 @@ module.exports = function AppointmentView(appointment, app) {
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
-    // TODO Review for any change of compute the full service duration
     // ServiceDuration as function, because is needed for cases when cannot wait for the 
     // rated computed
     appointment.getServiceDurationMinutes = function() {
@@ -92,14 +91,14 @@ module.exports = function AppointmentView(appointment, app) {
     return appointment;
 };
 
-function PricingEstimateDetailView(pricingEstimateDetail, jobTitleID, app) {
+function PricingSummaryDetailView(pricingSummaryDetail, jobTitleID, app) {
 
-    pricingEstimateDetail.serviceProfessionalService = ko.computed(function() {
+    pricingSummaryDetail.serviceProfessionalService = ko.computed(function() {
         var pid = this.serviceProfessionalServiceID();
         return app.model.serviceProfessionalService
             .getObservableItem(jobTitleID, pid, true)();
-    }, pricingEstimateDetail)
+    }, pricingSummaryDetail)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
-    return pricingEstimateDetail;
+    return pricingSummaryDetail;
 }

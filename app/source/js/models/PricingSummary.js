@@ -3,17 +3,18 @@
 'use strict';
 
 var Model = require('./Model'),
-    PricingEstimateDetail = require('./PricingEstimateDetail');
+    PricingSummaryDetail = require('./PricingSummaryDetail');
 
-module.exports = function PricingEstimate(values) {
+module.exports = function PricingSummary(values) {
     
     Model(this);
 
     this.model.defProperties({
-        pricingEstimateID: 0,
-        pricingEstimateRevision: 0,
-        serviceDurationHours: null,
-        firstSessionDurationHours: null,
+        pricingSummaryID: 0,
+        pricingSummaryRevision: 0,
+        serviceDurationMinutes: null,
+        firstSessionDurationMinutes: null,
+        
         subtotalPrice: null,
         feePrice: null,
         totalPrice: null,
@@ -27,7 +28,7 @@ module.exports = function PricingEstimate(values) {
         updatedDate: null,
         
         details: {
-            Model: PricingEstimateDetail,
+            Model: PricingSummaryDetail,
             isArray: true
         }
     }, values);

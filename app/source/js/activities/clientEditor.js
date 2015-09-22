@@ -378,10 +378,10 @@ function ViewModel(app) {
             .then(function() {
                 // Acepted
                 // Replace current user data
-                // but keep notesAboutclient
-                var notes = c.notesAboutclient();
+                // but keep notesAboutClient
+                var notes = c.notesAboutClient();
                 c.model.updateWith(user);
-                c.notesAboutclient(notes);
+                c.notesAboutClient(notes);
                 this.clientID(user.clientUserID);
             }.bind(this))
             .catch(function() {

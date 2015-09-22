@@ -4,20 +4,20 @@
 
 var Model = require('./Model');
 
-module.exports = function PricingEstimateDetail(values) {
+module.exports = function PricingSummaryDetail(values) {
     
     Model(this);
 
     this.model.defProperties({
+        pricingSummaryID: 0,
+        pricingSummaryRevision: 0,
         serviceProfessionalServiceID: 0,
         serviceProfessionalDataInput: null,
         clientDataInput: null,
         hourlyPrice: null,
-        subtotalPrice: null,
-        feePrice: null,
-        totalPrice: null,
-        serviceDurationHours: null,
-        firstSessionDurationHours: null,
+        price: null,
+        serviceDurationMinutes: null,
+        firstSessionDurationMinutes: null,
         
         createdDate: null,
         updatedDate: null

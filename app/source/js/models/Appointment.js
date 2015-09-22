@@ -4,10 +4,10 @@
 var ko = require('knockout'),
     Model = require('./Model'),
     moment = require('moment'),
-    PricingEstimateDetail = require('./PricingEstimateDetail'),
+    PricingSummaryDetail = require('./PricingSummaryDetail'),
     CalendarEvent = require('./CalendarEvent'),
     Booking = require('./Booking');
-   
+
 function Appointment(values) {
     
     Model(this);
@@ -32,7 +32,7 @@ function Appointment(values) {
         // Actual bookings fields to use on post/put
         clientUserID: null,
         pricing: {
-            Model: PricingEstimateDetail,
+            Model: PricingSummaryDetail,
             isArray: true
         },
         addressID: null,
