@@ -149,7 +149,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     apt.clientUserID(booking.clientUserID());
     apt.addressID(booking.serviceAddressID());
     apt.jobTitleID(booking.jobTitleID());
-    apt.pricing(booking.pricingSummary().details());
+    apt.pricing(booking.pricingSummary() && booking.pricingSummary().details());
     apt.preNotesToClient(booking.preNotesToClient());
     apt.postNotesToClient(booking.postNotesToClient());
     apt.preNotesToSelf(booking.preNotesToSelf());
@@ -181,7 +181,7 @@ Appointment.listFromCalendarEventsBookings = function listFromCalendarEventsBook
     return events.map(function(event) {
         var booking = null;
         bookings.some(function(searchBooking) {
-            var found = searchBooking.confirmedDateID() === event.calendarEventID();
+            var found = searchBooking.serviceDateID() === event.calendarEventID();
             if (found) {
                 booking = searchBooking;
                 return true;

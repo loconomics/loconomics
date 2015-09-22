@@ -79,11 +79,10 @@ module.exports = function AppointmentView(appointment, app) {
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
-    // TODO Review if calculation of fees and that is needed
     ko.computed(function() {
         var pricing = appointment.pricing();
         this.price(pricing.reduce(function(prev, cur) {
-            return prev + cur.totalPrice();
+            return prev + cur.price();
         }, 0));
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });

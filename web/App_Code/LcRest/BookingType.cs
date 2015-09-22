@@ -50,7 +50,7 @@ public class BookingType
             firstTimeServiceFeeFixed,
             firstTimeServiceFeePercentage,
             paymentProcessingFeeFixed,
-            paymentProcessingFeePorcentage,
+            paymentProcessingFeePercentage,
             firstTimeServiceFeeMaximum,
             firstTimeServiceFeeMinimum,
             updatedDate

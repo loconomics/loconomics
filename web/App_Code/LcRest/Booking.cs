@@ -395,26 +395,32 @@ namespace LcRest
                     AND
                 E.StartTime < @2
         ";
-        const string sqlGetItemForUser = sqlSelect + @"
+        const string sqlGetItemForUser = sqlGetItem + @"
             AND (B.clientUserID = @1 OR B.serviceProfessionalUserID = @1)
         ";
         #endregion
 
-        public static Booking Get(int BookingID, bool internalUse = false, int? UserID = null)
+        public static Booking Get(int BookingID, bool fillLinks, bool internalUse = false, int? UserID = null)
         {
             using (var db = Database.Open("sqlloco"))
             {
                 var sql = UserID.HasValue ? sqlGetItemForUser : sqlGetItem;
-                return FromDB(db.QuerySingle(sql, BookingID, UserID), internalUse, UserID);
+                var b = FromDB(db.QuerySingle(sql, BookingID, UserID), internalUse, UserID);
+                if (fillLinks)
+                    b.FillLinks();
+                return b;
             }
         }
-        public static IEnumerable<Booking> GetList(int UserID, DateTime StartTime, DateTime EndTime)
+        public static IEnumerable<Booking> GetList(int UserID, DateTime StartTime, DateTime EndTime, bool fillLinks)
         {
             using (var db = Database.Open("sqlloco"))
             {
                 return db.Query(sqlGetList, UserID, StartTime, EndTime).Select<dynamic, Booking>(booking =>
                  {
-                     return FromDB(booking, false, UserID);
+                     var b = FromDB(booking, false, UserID);
+                     if (fillLinks)
+                         b.FillLinks();
+                     return b;
                  });
             }
         }
@@ -775,7 +781,7 @@ namespace LcRest
                 @9, @10, @11, @12, @13, @14, @15, @16,
                 -- instant.. 
                 @17, @18, @19, @20, @21, @22,
-                @23, @24, @25, @26
+                @23, @24, @25, @26,
                 @27, @28, @29,
                 getdate(), getdate(), 'sys'
             )
@@ -795,7 +801,7 @@ namespace LcRest
         /// </summary>
         private const string sqlUpdBookingByServiceProfessional = @"
             UPDATE Booking SET
-                ,[ServiceAddressID] = @1
+                [ServiceAddressID] = @1
                 ,ServiceDateID = @2
                 ,AlternativeDate1ID = @3
                 ,AlternativeDate2ID = @4
@@ -1387,9 +1393,10 @@ namespace LcRest
 
                 // 3º: Save pricing
                 // save Summary on db, will set the ID and Revision on the returned summary
+                // and save details with updated IDs too
                 booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
-                // save Details, they are updated with latest ID and Revision
-                PricingSummary.SetDetails(booking.pricingSummary, db.Db);
+                booking.pricingSummaryID = booking.pricingSummary.pricingSummaryID;
+                booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
 
                 // 4º: persisting booking on database
                 booking.bookingStatusID = (int)LcEnum.BookingStatus.confirmed;
@@ -1431,7 +1438,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 // 0: previous data and checks
-                var booking = LcRest.Booking.Get(bookingID, false, serviceProfessionalUserID);
+                var booking = LcRest.Booking.Get(bookingID, false, false, serviceProfessionalUserID);
                 if (booking == null)
                     return false;
 
@@ -1478,9 +1485,10 @@ namespace LcRest
 
                 // 3º: Updating pricing estimate records
                 // save Summary on db, will set the ID and Revision on the returned summary
+                // and save details with updated IDs too
                 booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
-                // save Details, they are updated with latest ID and Revision
-                PricingSummary.SetDetails(booking.pricingSummary, db.Db);
+                booking.pricingSummaryID = booking.pricingSummary.pricingSummaryID;
+                booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
 
                 // 4º: persisting booking on database
                 booking.serviceAddressID = serviceAddressID;
@@ -1635,9 +1643,10 @@ namespace LcRest
 
                 // 3º: Save pricing
                 // save Summary on db, will set the ID and Revision on the returned summary
+                // and save details with updated IDs too
                 booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
-                // save Details, they are updated with latest ID and Revision
-                PricingSummary.SetDetails(booking.pricingSummary, db.Db);
+                booking.pricingSummaryID = booking.pricingSummary.pricingSummaryID;
+                booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
 
                 // 4º: persisting booking on database
                 // Explicitly set incomplete status when payment is enabled (since payment info was not added still, it requires

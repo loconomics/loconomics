@@ -157,23 +157,36 @@ namespace LcRest
         {
             using (var db = new LcDatabase(sharedDb))
             {
-                return FromDB(db.QuerySingle(sqlInsertItem,
+                PricingSummary newData = FromDB(db.QuerySingle(sqlInsertItem,
                     data.pricingSummaryID, data.serviceDurationMinutes, data.firstSessionDurationMinutes,
                     data.subtotalPrice, data.feePrice,
                     data.totalPrice, data.pFeePrice));
+
+                if (data.details != null)
+                {
+                    // Set original with details,
+                    // since the saving needs to set-up the generated IDs
+                    newData.details = data.details;
+                    // After save it, gets the just generated records, with any timestamp.
+                    newData.details = SetDetails(newData, sharedDb);
+                }
+
+                return newData;
             }
         }
 
-        public static void SetDetails(PricingSummary summary, Database sharedDb = null)
+        public static IEnumerable<PricingSummaryDetail> SetDetails(PricingSummary summary, Database sharedDb = null)
         {
+            var newDetails = new List<PricingSummaryDetail>();
             foreach (var detail in summary.details)
             {
                 // Enforce IDs to be up-to-date
                 detail.pricingSummaryID = summary.pricingSummaryID;
                 detail.pricingSummaryRevision = summary.pricingSummaryRevision;
                 // Save each detail
-                PricingSummaryDetail.Set(detail, sharedDb);
+                newDetails.Add(PricingSummaryDetail.Set(detail, sharedDb));
             }
+            return newDetails;
         }
         #endregion
 

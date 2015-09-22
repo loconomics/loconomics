@@ -122,7 +122,7 @@ namespace LcRest
                 ,pc.CreatedDate as createdDate
                 ,pc.UpdatedDate as updatedDate
                 ,(CASE WHEN uc.AccountStatusID = 6 AND uc.ReferredByUserID = @0 THEN Cast(1 as bit) ELSE Cast(0 as bit) END) as editable
-        FROM    ProviderClient As pc
+        FROM    ServiceProfessionalClient As pc
                  INNER JOIN
                 Users As uc
                   ON uc.UserID = pc.ClientUserID
@@ -131,7 +131,7 @@ namespace LcRest
                   ON up.UserID = uc.UserID
         WHERE   pc.Active = 1
                  AND uc.Active = 1
-                 AND pc.ProviderUserID = @0
+                 AND pc.ServiceProfessionalUserID = @0
     ";
         private const string sqlAndClientUserID = @"
         AND pc.ClientUserID = @1

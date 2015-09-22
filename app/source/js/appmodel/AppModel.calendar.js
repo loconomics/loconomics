@@ -3,7 +3,7 @@
     
     Appointments is an abstraction around calendar events
     that behave as bookings or as events (where bookings are built
-    on top of an event instance --a booking record must have ever a confirmedDateID event).
+    on top of an event instance --a booking record must have ever a serviceDateID event).
     
     With this appModel, the APIs to manage events&bookings are combined to offer related
     records easier in Appointments objects.
@@ -57,7 +57,7 @@ exports.create = function create(appModel) {
             return appModel.bookings.getBooking(ids.bookingID)
             .then(function(booking) {
                 // An appointment for booking needs the confirmed event information
-                return appModel.calendarEvents.getEvent(booking.confirmedDateID())
+                return appModel.calendarEvents.getEvent(booking.serviceDateID())
                 .then(function(event) {
                     return Appointment.fromBooking(booking, event);
                 });
@@ -86,7 +86,7 @@ exports.create = function create(appModel) {
                 api.clearCache();
                 
                 // We need the event information too
-                return appModel.calendarEvents.getEvent(booking.confirmedDateID())
+                return appModel.calendarEvents.getEvent(booking.serviceDateID())
                 .then(function(event) {
                     return Appointment.fromBooking(booking, event);
                 });

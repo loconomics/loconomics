@@ -53,7 +53,7 @@
 
             if (itemID > 0)
             {
-                return LcRest.Booking.Get(itemID, false, userID);
+                return LcRest.Booking.Get(itemID, true, false, userID);
             }
 
             throw new HttpException(500, "Something goes wrong");
@@ -200,6 +200,7 @@
                 }
                 
                 // Send communication to client (email)
+                // TODO Reenable when reimplemented email templates
                 //LcMessaging.SendProviderBooking(itemID);
             }
             catch (ConstraintException delEx)

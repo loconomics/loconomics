@@ -157,6 +157,9 @@ namespace LcRest
                 @8, -- first duration
                 getdate(), getdate(), 'sys'
             )
+
+            SELECT * FROM PricingSummaryDetail
+            WHERE pricingSummaryID = @0 AND pricingSummaryRevision = @1 AND serviceProfessionalServiceID = @2
         ";
         #endregion
 

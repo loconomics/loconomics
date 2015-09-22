@@ -65,6 +65,7 @@ exports.create = function create(appModel) {
     api.appointmentToSimplifiedBooking = function(apt) {
         return {
             bookingID: apt.sourceBooking().bookingID(),
+            jobTitleID: apt.jobTitleID(),
             clientUserID: apt.clientUserID(),
             addressID: apt.addressID(),
             startTime: apt.startTime(),
@@ -85,12 +86,13 @@ exports.create = function create(appModel) {
         booking plain object, suitable to REST API for edition
     **/
     api.bookingToSimplifiedBooking = function(booking) {
+        console.log('DEBUG to simplified booking', booking.pricingSummary());
         return {
             bookingID: booking().bookingID(),
             clientUserID: booking.clientUserID(),
             addressID: booking.addressID(),
             startTime: booking.startTime(),
-            pricing: booking.pricingSummary().details().pricing
+            pricing: booking.pricingSummary() && booking.pricingSummary().details().pricing
             .map(function(pricing) {
                 // TODO: for now, the REST API allow only a list of IDs,
                 // not objects, so next line is replaced:
