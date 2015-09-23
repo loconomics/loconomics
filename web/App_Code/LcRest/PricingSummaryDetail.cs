@@ -27,6 +27,9 @@ namespace LcRest
         public decimal? price;
         public decimal? serviceDurationMinutes;
         public decimal? firstSessionDurationMinutes;
+        public string serviceName;
+        public string serviceDescription;
+        public int numberOfSessions;
         public DateTime createdDate;
         public DateTime updatedDate;
         #endregion
@@ -52,6 +55,9 @@ namespace LcRest
                 price = record.price,
                 serviceDurationMinutes = record.serviceDurationMinutes,
                 firstSessionDurationMinutes = record.firstSessionDurationMinutes,
+                serviceName = record.serviceName,
+                serviceDescription = record.serviceDescription,
+                numberOfSessions = record.numberOfSessions,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
             };
@@ -95,6 +101,9 @@ namespace LcRest
                 firstSessionDurationMinutes = service.serviceDurationMinutes,
                 price = service.price,
                 serviceProfessionalServiceID = service.serviceProfessionalServiceID,
+                serviceName = service.name,
+                serviceDescription = service.description,
+                numberOfSessions = service.numberOfSessions,
                 hourlyPrice = !String.IsNullOrEmpty(service.priceRateUnit) && service.priceRateUnit.ToUpper() == "HOUR" ? service.priceRate : null
             };
         }
@@ -112,6 +121,9 @@ namespace LcRest
                 price,
                 serviceDurationMinutes,
                 firstSessionDurationMinutes,
+                serviceName,
+                serviceDescription,
+                numberOfSessions,
                 createdDate,
                 updatedDate
             FROM
@@ -142,6 +154,9 @@ namespace LcRest
                 price,
                 serviceDurationMinutes,
                 firstSessionDurationMinutes,
+                serviceName,
+                serviceDescription,
+                numberOfSessions,
                 createdDate,
                 updatedDate,
                 modifiedBy
@@ -155,6 +170,9 @@ namespace LcRest
                 @6, -- subtotal
                 @7, -- duration
                 @8, -- first duration
+                @9, -- service name
+                @10, -- service description
+                @11, -- number of sessions
                 getdate(), getdate(), 'sys'
             )
 
@@ -179,7 +197,9 @@ namespace LcRest
                     data.clientDataInput,
                     data.hourlyPrice,
                     data.price,
-                    data.serviceDurationMinutes, data.firstSessionDurationMinutes
+                    data.serviceDurationMinutes, data.firstSessionDurationMinutes,
+                    data.serviceName, data.serviceDescription,
+                    data.numberOfSessions
                     ));
             }
         }

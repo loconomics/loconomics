@@ -17,18 +17,18 @@ public static class LcEmailTemplate
         }
     }
 
-    public class ServicePricing
+    /*public class ServicePricing
     {
         public LcRest.ServiceProfessionalService service;
         public LcRest.PricingSummaryDetail pricing;
 
         public ServicePricing() { }
-    }
+    }*/
 
     public class BookingEmailInfo
     {
         public LcRest.Booking booking;
-        public List<ServicePricing> servicePricing;
+        //public List<ServicePricing> servicePricing;
         /// <summary>
         /// Making publicly available an internal property of booking.
         /// </summary>
@@ -91,13 +91,24 @@ public static class LcEmailTemplate
         }
 
         /// <summary>
-        /// TODO Internal generated URL may need to be updated
+        /// TODO Need to be udpated for new UI/App front-end URL
         /// </summary>
         public string viewEmailUrl
         {
             get
             {
                 return LcUrl.LangUrl + LcData.Booking.GetUrlPathForBooking(booking.bookingID);
+            }
+        }
+
+        /// <summary>
+        /// TODO Need to be udpated for new UI/App front-end URL
+        /// </summary>
+        public string newBookingUrl
+        {
+            get
+            {
+                return LcUrl.LangUrl + "booking?providerid=" + booking.serviceProfessionalUserID.ToString() + "&positionid=" + booking.jobTitleID.ToString();
             }
         }
     }
@@ -137,7 +148,7 @@ public static class LcEmailTemplate
 
         b.FillLinks();
 
-        // The service details from database
+        /*// The service details from database
         var servicePricing = new List<ServicePricing>();
         if (b.pricingSummary.details != null && b.pricingSummary.details.Count() > 0)
         {
@@ -159,7 +170,7 @@ public static class LcEmailTemplate
                     });
                 }
             }
-        }
+        }*/
 
         // Cancellation policy
         var policy = LcRest.CancellationPolicy.Get(b.cancellationPolicyID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
@@ -167,7 +178,7 @@ public static class LcEmailTemplate
         return new BookingEmailInfo
         {
             booking = b,
-            servicePricing = servicePricing,
+            //servicePricing = servicePricing,
             userJobTitle = b.userJobTitle,
             cancellationPolicy = policy
             //,SentTo = sentTo

@@ -129,6 +129,36 @@ A.prototype.confirmLoad = function() {
     // TODO 
 };
 
+
+var Model = require('../Models/Model');
+var numeral = require('numeral');
+
+var PricingSummaryDetail = require('../Models/PricingSummaryDetail');
+// NOTE Right now the viewmodel for details is equal to the original mode
+/* TODO Review if the pricingSummary viewmodels can be removed, mixed with original
+    models and moved to viewmodel/ */
+var PricingSummaryItemVM = PricingSummaryDetail;
+
+PricingSummaryItemVM.fromServiceProfessionalService = function(service) {
+    // TODO Support special hourly pricings, housekeeper, etc.
+    var allSessionMinutes = service.numberOfSessions () > 0 ?
+        service.serviceDurationMinutes() * service.numberOfSessions() :
+        service.serviceDurationMinutes();
+
+    return new PricingSummaryItemVM({
+        serviceName: service.name(),
+        serviceDescription: service.description(),
+        numberOfSessions: service.numberOfSessions(),
+        serviceDurationMinutes: allSessionMinutes,
+        firstSessionDurationMinutes: service.serviceDurationMinutes(),
+        price: service.price(),
+        serviceProfessionalServiceID: service.serviceProfessionalServiceID(),
+        hourlyPrice: (service.priceRateUnit() || '').toUpperCase() === 'HOUR' ? service.priceRate() : null
+    });
+};
+
+
+
 var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalService'),
     BookingProgress = require('../viewmodels/BookingProgress'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses'),
@@ -229,41 +259,6 @@ function ViewModel(app) {
     }, this);
 }
 
-var Model = require('../Models/Model');
-var numeral = require('numeral');
-
-function PricingSummaryItemVM(values) {
-    
-    Model(this);
-
-    this.model.defProperties({
-        concept: '',
-        serviceProfessionalServiceID: 0,
-        serviceProfessionalDataInput: null,
-        clientDataInput: null,
-        hourlyPrice: null,
-        price: 0,
-        serviceDurationMinutes: null,
-        firstSessionDurationMinutes: null
-    }, values);
-}
-
-PricingSummaryItemVM.fromServiceProfessionalService = function(service) {
-    // TODO Support special hourly pricings, housekeeper, etc.
-    var allSessionMinutes = service.numberOfSessions () > 0 ?
-        service.serviceDurationMinutes() * service.numberOfSessions() :
-        service.serviceDurationMinutes();
-
-    return new PricingSummaryItemVM({
-        concept: service.name(),
-        serviceDurationMinutes: allSessionMinutes,
-        firstSessionDurationMinutes: service.serviceDurationMinutes(),
-        price: service.price(),
-        serviceProfessionalServiceID: service.serviceProfessionalServiceID(),
-        hourlyPrice: (service.priceRateUnit() || '').toUpperCase() === 'HOUR' ? service.priceRate() : null
-    });
-};
-
 function PricingSummaryVM(values) {
 
     Model(this);
@@ -321,7 +316,7 @@ function PricingSummaryVM(values) {
                 'Gratuity';
 
             items.push(new PricingSummaryItemVM({
-                concept: gratuityLabel,
+                serviceName: gratuityLabel,
                 price: this.gratuity()
             }));
         }

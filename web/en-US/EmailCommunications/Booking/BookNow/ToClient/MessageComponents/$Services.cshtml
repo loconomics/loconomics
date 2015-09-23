@@ -7,38 +7,38 @@
 }
 
 <!-- $Services -->
-        @foreach (var servicePricing in info.servicePricing) {
+        @foreach (var pricing in info.booking.pricingSummary.details) {
             <tr>
                 <td style="padding: 20px 0 0 0;" class="no-padding">
                     <!-- ARTICLE -->
                     <table bgcolor="#FFFFFF" border="0" cellspacing="0" cellpadding="0" width="100%">
                         <tr>
-                            <td align="left" style="padding: 25px 25px 5px 25px; text-align: left; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">@servicePricing.service.name</td>
+                            <td align="left" style="padding: 25px 25px 5px 25px; text-align: left; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">@pricing.serviceName</td>
                         </tr>
-                        @if (servicePricing.pricing.firstSessionDurationMinutes > 0) {
+                        @if (pricing.firstSessionDurationMinutes > 0) {
                             <tr>
                                 <td align="left" style=" text-align: left; padding: 0 25px 5px 25px; font-size: 13px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #aaaaaa;" class="padding-meta">
-                                    @servicePricing.pricing.firstSessionDurationMinutes minutes
-                                    @if (servicePricing.service.numberOfSessions > 1)
+                                    @pricing.firstSessionDurationMinutes minutes
+                                    @if (pricing.numberOfSessions > 1)
                                     {
-                                        <span>(@(servicePricing.service.numberOfSessions) sessions) <!-- @(servicePricing.pricing.serviceDurationMinutes) minutes in total--all sessions --></span>
+                                        <span>(@(pricing.numberOfSessions) sessions) <!-- @(pricing.serviceDurationMinutes) minutes in total--all sessions --></span>
                                     }
                                 </td>
                             </tr>
                         }
-                        else if (servicePricing.service.numberOfSessions > 1)
+                        else if (pricing.numberOfSessions > 1)
                         {
                             <tr>
                                 <td align="left" style=" text-align: left; padding: 0 25px 5px 25px; font-size: 13px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #aaaaaa;" class="padding-meta">
-                                    <span>@(servicePricing.service.numberOfSessions) sessions</span>
+                                    <span>@(pricing.numberOfSessions) sessions</span>
                                 </td>
                             </tr>
                         }
 
-                        @if (!String.IsNullOrEmpty(servicePricing.service.description))
+                        @if (!String.IsNullOrEmpty(pricing.serviceDescription))
                         {
                             <tr>
-                                    <td align="left" style="border-top: 2px solid #ff6765; text-align: justify; text-justify: auto; padding: 10px 25px 5px 25px; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">@servicePricing.service.description</td>
+                                    <td align="left" style="border-top: 2px solid #ff6765; text-align: justify; text-justify: auto; padding: 10px 25px 5px 25px; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">@pricing.serviceDescription</td>
                             </tr>
                         }
                         <tr>

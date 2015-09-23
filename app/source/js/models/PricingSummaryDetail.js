@@ -18,7 +18,9 @@ module.exports = function PricingSummaryDetail(values) {
         price: null,
         serviceDurationMinutes: null,
         firstSessionDurationMinutes: null,
-        
+        serviceName: '',
+        serviceDescription: null,
+        numberOfSessions: 1,
         createdDate: null,
         updatedDate: null
     }, values);
