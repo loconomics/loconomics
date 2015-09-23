@@ -131,7 +131,8 @@ A.prototype.confirmLoad = function() {
 
 var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalService'),
     BookingProgress = require('../viewmodels/BookingProgress'),
-    ServiceAddresses = require('../viewmodels/ServiceAddresses');
+    ServiceAddresses = require('../viewmodels/ServiceAddresses'),
+    PublicUser = require('../models/PublicUser');
 
 function ViewModel(app) {
     //jshint maxstatements:40
@@ -144,10 +145,6 @@ function ViewModel(app) {
     this.isLocked = ko.observable(false);
     this.bookingHeader = ko.pureComputed(function() {
         return this.instantBooking() ? 'Your instant booking' : 'Your booking request';
-    }, this);
-    
-    this.photoUrl = ko.pureComputed(function() {
-        return app.model.config.siteUrl + '/en-US/Profile/Photo/' + this.serviceProfessionalID();
     }, this);
     
     // Se inicializa con un estado previo al primer paso
@@ -206,6 +203,30 @@ function ViewModel(app) {
     this.save = function() {
         // TODO Final step, confirm and save booking
     };
+    
+    this.serviceProfessionalInfo = ko.observable(null);
+    this.isLoadingServiceProfessionalInfo = ko.observable(false);
+    this.serviceProfessionalID.subscribe(function(userID) {
+        this.isLoadingServiceProfessionalInfo(true);
+        app.model.users.getUser(userID)
+        .then(function(info) {
+            info = new PublicUser(info);
+            info.selectedJobTitleID(this.jobTitleID());
+            this.serviceProfessionalInfo(info);
+            this.isLoadingServiceProfessionalInfo(false);
+        }.bind(this))
+        .catch(function(err) {
+            this.isLoadingServiceProfessionalInfo(false);
+            app.modals.showError({ error: err });
+        }.bind(this));
+    }, this);
+
+    this.isLoading = ko.pureComputed(function() {
+        return (
+            this.isLoadingServiceProfessionalInfo() ||
+            this.serviceProfessionalServices.isLoading()
+        );
+    }, this);
 }
 
 var Model = require('../Models/Model');

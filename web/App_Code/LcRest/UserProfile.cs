@@ -39,6 +39,18 @@ namespace LcRest
         public int accountStatusID;
         public DateTime createdDate;
         public DateTime updatedDate;
+
+        // Automatic field right now, but is better
+        // to communicate it than to expect the App or API client
+        // to build it. It allows for future optimizations, like
+        // move to static content URLs.
+        public string photoUrl
+        {
+            get
+            {
+                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID;
+            }
+        }
         #endregion
 
         public static UserProfile FromDB(dynamic record)

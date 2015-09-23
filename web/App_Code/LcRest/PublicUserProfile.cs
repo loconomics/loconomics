@@ -32,6 +32,18 @@ namespace LcRest
         public string email;
         public string phone;
 
+        // Automatic field right now, but is better
+        // to communicate it than to expect the App or API client
+        // to build it. It allows for future optimizations, like
+        // move to static content URLs.
+        public string photoUrl
+        {
+            get
+            {
+                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID;
+            }
+        }
+
         public bool isServiceProfessional;
         public bool isClient;
         // TODO To decide if expose this publicly
@@ -105,7 +117,7 @@ namespace LcRest
                  OR PC.ServiceProfessionalUserID = @1 AND PC.ClientUserID = @0 )
         WHERE Users.UserID = @0
           AND Users.Active = 1
-    ";
+        ";
         #endregion
 
         #region Fetch

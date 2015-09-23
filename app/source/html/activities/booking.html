@@ -12,7 +12,10 @@
             </div>
 
             <div class="col-md-9 col-sm-reset">
-                <div data-bind="attr: { hidden: !progress.observeStep('services')() }">
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
+                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('services')() }, css: { 'is-loading': isLoading }">
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs">
                         <a href="/login" class="btn btn-link">
                             <span class="text-muted">Already have an account?</span>
@@ -23,16 +26,16 @@
                     <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
 
                     <div class="Box-sm">
-                        <div class="ServiceProfessionalInfo ServiceProfessionalInfo--md">
-                            <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: photoUrl }"></div>
-                            <h3 class="ServiceProfessionalInfo-name">Joshua Danielson</h3>
-                            <div class="ServiceProfessionalInfo-jobTitle">Massage Therapist</div>
-                            <div class="ServiceProfessionalInfo-businessName">Tact Massage Therapy</div>
+                        <div class="ServiceProfessionalInfo ServiceProfessionalInfo--md" data-bind="with: serviceProfessionalInfo">
+                            <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: profile().photoUrl }"></div>
+                            <h3 class="ServiceProfessionalInfo-name" data-bind="text: profile().fullName"></h3>
+                            <div class="ServiceProfessionalInfo-jobTitle" data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></div>
+                            <div class="ServiceProfessionalInfo-businessName" data-bind="text: profile().businessName"></div>
                             <div class="ServiceProfessionalInfo-meta">
-                                <app-stars-rating params="rating: 4.5, total: 1283" class="text-secondary"></app-stars-rating>
-                                <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" aria-description="4 Verifications"></i> (14)</span>
-                                <span class="BackgroundCheckRating"><i class="fa ion ion-ios-checkmark" aria-hidden="true" aria-description="Background Check: OK"></i></span>
-                                <span class="ServiceProfessionalInfo-favorite"><i class="fa ion ion-ios-heart ion-ios-heart-outlineDISABLED" aria-hidden="true"></i></span>
+                                <app-stars-rating params="rating: rating().ratingAverage, total: rating().totalRatings" class="text-secondary"></app-stars-rating>
+                                <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': verificationsSummary().total + 'verifications' }"></i> (<span data-bind="text: verificationsSummary().total"></span>)</span>
+                                <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i></span>
+                                <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" data-bind="css: { 'ion-ios-heart': isClientFavorite, 'ion-ios-heart-outline': !isClientFavorite() }, attr: { 'aria-description': isClientFavorite() ? 'Favorite' : '' }"></i></span>
                             </div>
                         </div>
                     </div>
@@ -111,7 +114,7 @@
                     </div>
                 </div>
                 
-                <div data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }">
+                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }">
                     <h1 class="SectionTitle">Select location</h1>
                     <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
                     <div class="PaddedBox-xs-only isolated-sm">
@@ -121,7 +124,7 @@
                     </div>
                 </div>
                 
-                <div data-bind="attr: { hidden: !progress.observeStep('selectTimes')() }">
+                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectTimes')() }">
                     Step 3
                     <div class="isolated">
                         <div>
@@ -130,7 +133,7 @@
                     </div>
                 </div>
 
-                <div data-bind="attr: { hidden: !progress.observeStep('selectTime')() }">
+                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectTime')() }">
                     <div class="isolated">
                         <div>
                             <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
@@ -138,7 +141,7 @@
                     </div>
                 </div>
                 
-                <div data-bind="attr: { hidden: !progress.observeStep('payment')() }">
+                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('payment')() }">
                     <div class="isolated">
                         <div>
                             <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
@@ -146,7 +149,7 @@
                     </div>
                 </div>
                 
-                <div data-bind="attr: { hidden: !progress.observeStep('confirm')() }">
+                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('confirm')() }">
                     <div class="isolated">
                         <div>
                             <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: save">Confirm</button>

@@ -8608,3 +8608,19 @@ app-stars-rating {
   text-transform: none;
   text-align: center;
 }
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking] .booking-step {
+  -webkit-transition: opacity 200ms;
+  -moz-transition: opacity 200ms;
+  -o-transition: opacity 200ms;
+  -ms-transition: opacity 200ms;
+  transition: opacity 200ms;
+}
+
+/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking] .booking-step.is-loading {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}

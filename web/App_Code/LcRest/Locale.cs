@@ -18,6 +18,11 @@ namespace LcRest
 
         private Locale() { }
 
+        public override string ToString()
+        {
+            return languageCode.ToLower() + "-" + countryCode.ToUpper();
+        }
+
         public static string GetCountryCodeByID(int CountryID)
         {
             switch (CountryID)

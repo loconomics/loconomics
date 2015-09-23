@@ -51,10 +51,12 @@
 
             var locale = LcRest.Locale.Current;
 
-            var jobProfile = profile.isServiceProfessional ? LcData.JobTitle.GetPublicUserJobTitles(userID, locale.languageID, locale.countryID) : null;
-            
-            var extendedJobProfile = jobProfile == null ? null : ((IList<dynamic>)jobProfile).Select(x => {
+            var jobProfile = profile.isServiceProfessional ? LcRest.PublicUserJobTitle.GetList(userID, locale.languageID, locale.countryID) : null;
+
+            var extendedJobProfile = jobProfile == null ? null : ((IEnumerable<LcRest.PublicUserJobTitle>)jobProfile).Select(x =>
+            {
                 return new {
+                    userID = x.userID,
                     jobTitleID = x.jobTitleID,
                     intro = x.intro,
                     cancellationPolicyID = x.cancellationPolicyID,

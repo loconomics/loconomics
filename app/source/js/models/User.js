@@ -43,6 +43,8 @@ function User(values) {
         isClient: false,
         isMember: false,
         isAdmin: false,
+        
+        photoUrl: null,
 
         onboardingStep: null,
         accountStatusID: 0,

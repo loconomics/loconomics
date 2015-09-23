@@ -11,6 +11,7 @@ namespace LcRest
     public class PublicUserJobTitle
     {
         #region Fields
+        public int userID;
         public int jobTitleID;
         public string intro;
         public int cancellationPolicyID = CancellationPolicy.DefaultCancellationPolicyID;
@@ -28,6 +29,7 @@ namespace LcRest
 
             return new PublicUserJobTitle
             {
+                userID = record.userID,
                 jobTitleID = record.jobTitleID,
                 intro = record.intro,
                 cancellationPolicyID = record.cancellationPolicyID ?? CancellationPolicy.DefaultCancellationPolicyID,
@@ -42,6 +44,7 @@ namespace LcRest
         #region SQL
         const string sqlSelectFromCommonWhere = @"
             SELECT
+                u.userID As userID,
                 u.PositionID As jobTitleID,
                 u.PositionIntro As intro,
                 u.CancellationPolicyID As cancellationPolicyID,
