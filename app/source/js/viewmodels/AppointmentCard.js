@@ -283,7 +283,7 @@ function AppointmentCardViewModel(params) {
 
         editFieldOn('serviceProfessionalService/' + this.item().jobTitleID(), {
             selectPricing: true,
-            selectedPricing: this.item().pricing()
+            selectedServices: this.item().pricing()
             .map(function(pricing) {
                 return {
                     serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
@@ -395,7 +395,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     }
     if (requestData.selectPricing === true) {
         this.item().pricing(
-            requestData.selectedPricing.map(function(pricing) {
+            requestData.selectedServices.map(function(pricing) {
                 return new PricingSummaryDetail(pricing);
             })
         );

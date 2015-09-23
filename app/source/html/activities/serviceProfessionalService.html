@@ -6,13 +6,13 @@
         
         <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
         
-        <div data-bind="foreach: groupedPricing">
+        <div data-bind="foreach: groupedServices">
             <div class="SectionTitle" data-bind="visible: !$root.isAdditionMode()">
                 <span data-bind="text: group"></span>
             </div>
 
             <ul class="TilesList" data-bind="foreach: pricing">
-                <li><a href="#" class="ItemTile" data-bind="click: $root.tapPricing" role="button">
+                <li><a href="#" class="ItemTile" data-bind="click: $root.tapService" role="button">
                     <div class="Tile-marker"><p data-bind="text: displayedPrice"></p></div>
                     <div class="Tile-content">
                         <div data-bind="visible: sessionsAndDuration(), text: name"></div>
@@ -27,7 +27,7 @@
             </ul>
             
             <a class="LinkTile" type="button" href="#!serviceProfessionalServiceEditor/"
-               data-bind="click: $root.tapNewPricing, text: type() && type().addNewLabel()"></a>
+               data-bind="click: $root.tapNewService, text: type() && type().addNewLabel()"></a>
         </div>
     </div>
 

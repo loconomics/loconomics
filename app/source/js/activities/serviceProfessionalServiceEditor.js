@@ -26,9 +26,9 @@ var A = Activity.extends(function ServiceProfessionalServiceEditorActivity() {
         // If we comes with a selection of pricing, we must add the new one
         // there and just go back (serviceProfessionalService is in selection mode) keeping
         // any requestData for in-progress state.
-        if (this.requestData.selectedPricing) {
+        if (this.requestData.selectedServices) {
             // Is an array of plain objects of just ID and totalPrice
-            this.requestData.selectedPricing.push({
+            this.requestData.selectedServices.push({
                 serviceProfessionalServiceID: pricing.serviceProfessionalServiceID,
                 totalPrice: pricing.totalPrice
             });

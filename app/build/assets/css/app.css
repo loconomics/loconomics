@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-09-22
+/*! LoconomicsApp 2015-09-23
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -258,7 +258,7 @@ select.btn::-ms-expand {
 
 /* line 20 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 
-/* line 116 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\styleguideVars.styl */
+/* line 121 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\variables.styl */
 
@@ -750,15 +750,20 @@ body.has-appNav-open .SmartNavBar h1 {
   background: rgba(0,0,0,0.4);
 }
 
-/* line 106 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 105 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App #errorModal {
+  z-index: 101050;
+}
 
-/* line 107 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 111 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+
+/* line 112 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 .App app-feedback-entry .ion-lightbulb,
 .App app-feedback-entry .ion-ios-lightbulb-outline {
   color: #f0ad4e;
 }
 
-/* line 112 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 117 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 .App .App-activities {
   background: White;
 }

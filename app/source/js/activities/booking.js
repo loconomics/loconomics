@@ -38,8 +38,7 @@ var A = Activity.extends(function BookingActivity() {
                 load.call(this);
         }.bind(this)
     });
-    
-    setTestingData(this.viewModel);
+
 });
 
 exports.init = A.init;
@@ -159,11 +158,11 @@ function ViewModel(app) {
         this.progress.stepsList(this.instantBooking() ? instantBookingSteps : bookingRequestSteps);
     }, this);
     
-    this.serviceProfessionalService = new ServiceProfessionalServiceVM(app);
-    this.jobTitleID.subscribe(this.serviceProfessionalService.jobTitleID);
-    this.serviceProfessionalID.subscribe(this.serviceProfessionalService.serviceProfessionalID);
-    this.serviceProfessionalService.isSelectionMode(true);
-    //this.serviceProfessionalService.preSelectedPricing([]);
+    this.serviceProfessionalServices = new ServiceProfessionalServiceVM(app);
+    this.jobTitleID.subscribe(this.serviceProfessionalServices.jobTitleID);
+    this.serviceProfessionalID.subscribe(this.serviceProfessionalServices.serviceProfessionalID);
+    this.serviceProfessionalServices.isSelectionMode(true);
+    //this.serviceProfessionalServices.preSelectedServices([]);
     
     this.supportGratuity = ko.observable(false);
     this.customGratuity = ko.observable(0);
@@ -178,8 +177,19 @@ function ViewModel(app) {
     }, this);
 
     this.summary = new PricingSummary();
+    // Automatic summary updates:
     this.gratuityPercentage.subscribe(this.summary.gratuityPercentage);
     this.gratuityAmount.subscribe(this.summary.gratuityAmount);
+    ko.computed(function() {
+        var services = this.serviceProfessionalServices.selectedServices();
+        // TODO Support special pricing types (housekeeper, hourly pricing).
+        this.summary.pricingItems(services.map(function(service) {
+            return new PricingSummaryItem({
+                concept: service.name(),
+                price: service.price()
+            });
+        }));
+    }, this);
     
     this.makeRepeatBooking = ko.observable(false);
     this.promotionalCode = ko.observable('');
@@ -279,17 +289,4 @@ function PricingSummary(values) {
 
         return items;
     }, this);
-}
-
-function setTestingData(vw) {
-    vw.summary.pricingItems([
-        new PricingSummaryItem({
-            concept: 'Deep Tissue Massage',
-            price: 99
-        }),
-        new PricingSummaryItem({
-            concept: 'Special oils',
-            price: 15
-        })
-    ]);
 }

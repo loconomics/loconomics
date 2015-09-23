@@ -57,8 +57,8 @@ var A = Activity.extends(function ServiceProfessionalServiceActivity() {
                     list = this.app.model.serviceProfessionalServices.asModel(list);
                     
                     // Read presets selection from requestData
-                    var preset = this.requestData.selectedPricing || [],
-                        selection = this.viewModel.selectedPricing;
+                    var preset = this.requestData.selectedServices || [],
+                        selection = this.viewModel.selectedServices;
                     
                     // Add the isSelected property to each item
                     list.forEach(function(item) {
@@ -93,7 +93,7 @@ var A = Activity.extends(function ServiceProfessionalServiceActivity() {
     // Go back with the selected pricing when triggered in the form/view
     this.viewModel.returnSelected = function(pricing, jobTitleID) {
         // Pass the selected client in the info
-        this.requestData.selectedPricing = pricing;
+        this.requestData.selectedServices = pricing;
         this.requestData.selectedJobTitleID = jobTitleID;
         // And go back
         this.app.shell.goBack(this.requestData);
@@ -168,7 +168,7 @@ A.prototype.show = function show(options) {
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
     this.viewModel.jobTitleID(0);
-    this.viewModel.selectedPricing.removeAll();
+    this.viewModel.selectedServices.removeAll();
     this.viewModel.requestData = this.requestData;
 
     this.viewModel.isSelectionMode(this.requestData.selectPricing === true);
@@ -255,7 +255,7 @@ function ViewModel(app) {
     
     // Grouped list of pricings:
     // Defined groups by pricing type
-    this.groupedPricing = ko.computed(function(){
+    this.groupedServices = ko.computed(function(){
 
         var list = this.list();
         var isSelection = this.isSelectionMode();
@@ -319,16 +319,16 @@ function ViewModel(app) {
 
     }, this);
 
-    this.selectedPricing = ko.observableArray([]);
+    this.selectedServices = ko.observableArray([]);
     /**
         Toggle the selection status of a pricing, adding
-        or removing it from the 'selectedPricing' array.
+        or removing it from the 'selectedServices' array.
     **/
-    this.togglePricingSelection = function(pricing) {
+    this.toggleServiceSelection = function(pricing) {
 
         var inIndex = -1,
-            isSelected = this.selectedPricing().some(function(selectedPricing, index) {
-            if (selectedPricing === pricing) {
+            isSelected = this.selectedServices().some(function(selectedServices, index) {
+            if (selectedServices === pricing) {
                 inIndex = index;
                 return true;
             }
@@ -337,9 +337,9 @@ function ViewModel(app) {
         pricing.isSelected(!isSelected);
 
         if (isSelected)
-            this.selectedPricing.splice(inIndex, 1);
+            this.selectedServices.splice(inIndex, 1);
         else
-            this.selectedPricing.push(pricing);
+            this.selectedServices.push(pricing);
     }.bind(this);
     
     this.onboardingNextReady = ko.computed(function() {
@@ -363,7 +363,7 @@ function ViewModel(app) {
             // Run method injected by the activity to return a 
             // selected address:
             this.returnSelected(
-                this.selectedPricing().map(function(pricing) {
+                this.selectedServices().map(function(pricing) {
                     return {
                         serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
                         totalPrice: ko.unwrap(pricing.price)
@@ -377,26 +377,26 @@ function ViewModel(app) {
         event.stopImmediatePropagation();
     }.bind(this);
     
-    this.editPricing = function(pricing) {
+    this.editService = function(pricing) {
         app.shell.go('serviceProfessionalServiceEditor/' + this.jobTitleID() + '/' + pricing.serviceProfessionalServiceID());
     }.bind(this);
     
     /**
         Handler for the listview items, managing edition and selection depending on current mode
     **/
-    this.tapPricing = function(pricing, event) {
+    this.tapService = function(pricing, event) {
         if (this.isSelectionMode()) {
-            this.togglePricingSelection(pricing);
+            this.toggleServiceSelection(pricing);
         }
         else {
-            this.editPricing(pricing);
+            this.editService(pricing);
         }
 
         event.preventDefault();
         event.stopImmediatePropagation();
     }.bind(this);
     
-    this.tapNewPricing = function(group, event) {
+    this.tapNewService = function(group, event) {
         
         var url = '#!serviceProfessionalServiceEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
 
@@ -416,7 +416,7 @@ function ViewModel(app) {
         // Add current selection as preselection, so can be recovered later and 
         // the editor can add the new pricing to the list
         if (this.isSelectionMode()) {
-            request.selectedPricing = this.selectedPricing()
+            request.selectedServices = this.selectedServices()
             .map(function(pricing) {
                 return {
                     serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),

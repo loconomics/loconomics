@@ -1944,6 +1944,14 @@ public static partial class LcData
 
             return GetCancellationAmountsFor(b, confirmedDate, fullRefund, db);
         }
+        /// <summary>
+        /// TODO Rework on top of #771 changes
+        /// </summary>
+        /// <param name="pricingAndPolicy"></param>
+        /// <param name="confirmedDate"></param>
+        /// <param name="fullRefund"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
         public static dynamic GetCancellationAmountsFor(dynamic pricingAndPolicy, DateTime confirmedDate, bool fullRefund, Database db)
         {
             dynamic result = null;
