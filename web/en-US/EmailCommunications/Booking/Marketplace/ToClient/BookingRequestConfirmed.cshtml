@@ -25,6 +25,27 @@
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
                 Hi, @(info.client.firstName), Thanks for requesting my @info.userJobTitle.jobTitleSingularName services. I’m either away or busy with a client but will confirm your appointment time as soon as I can.
             </div>
+            <div align="center" style="padding: 0px 15px 0px 15px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="500" class="wrapper">
+                    <!-- LOGO/PREHEADER TEXT -->
+                    <tr>
+                        <td style="padding: 20px 0px 30px 0px;" class="logo">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td bgcolor="#00989a" width="100" align="left"><a href="#" target="_blank"><img alt="Logo" src="@(LcUrl.AppUrl)img/email/@(LcUrl.LangId)/logo-white-large.png" width="120" height="48" style="display: block; font-family: Helvetica, Arial, sans-serif; color: #666666; font-size: 16px;" border="0"></a></td>
+                                    <td bgcolor="#00989a" width="400" align="right" class="mobile-hide">
+                                        <table border="0" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td align="right" style="padding: 0 0 5px 0; font-size: 14px; font-family: Arial, sans-serif; color: #FFFFFF; text-decoration: none;"><span style="color: #FFFFFF; text-decoration: none;">Make life better.<br>Build local economies.</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </td>
     </tr>
 </table>
@@ -83,7 +104,7 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="left" style="padding: 0 0 0 0; font-size: 26px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Booking Request Confirmation Number: @(info.booking.bookingID)</td>
+                                <td align="left" style="padding: 0 0 0 0; font-size: 26px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Booking Request Confirmation Number: @(info.booking.bookingID))</td>
                             </tr>
                         </table>
                     </td>
