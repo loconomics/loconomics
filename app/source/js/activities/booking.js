@@ -176,18 +176,14 @@ function ViewModel(app) {
             return preset;
     }, this);
 
-    this.summary = new PricingSummary();
+    this.summary = new PricingSummaryVM();
     // Automatic summary updates:
     this.gratuityPercentage.subscribe(this.summary.gratuityPercentage);
     this.gratuityAmount.subscribe(this.summary.gratuityAmount);
     ko.computed(function() {
         var services = this.serviceProfessionalServices.selectedServices();
-        // TODO Support special pricing types (housekeeper, hourly pricing).
-        this.summary.pricingItems(services.map(function(service) {
-            return new PricingSummaryItem({
-                concept: service.name(),
-                price: service.price()
-            });
+        this.summary.services(services.map(function(service) {
+            return PricingSummaryItemVM.fromServiceProfessionalService(service);
         }));
     }, this);
     
@@ -215,24 +211,46 @@ function ViewModel(app) {
 var Model = require('../Models/Model');
 var numeral = require('numeral');
 
-function PricingSummaryItem(values) {
+function PricingSummaryItemVM(values) {
     
     Model(this);
 
     this.model.defProperties({
         concept: '',
-        price: 0
+        serviceProfessionalServiceID: 0,
+        serviceProfessionalDataInput: null,
+        clientDataInput: null,
+        hourlyPrice: null,
+        price: 0,
+        serviceDurationMinutes: null,
+        firstSessionDurationMinutes: null
     }, values);
 }
 
-function PricingSummary(values) {
+PricingSummaryItemVM.fromServiceProfessionalService = function(service) {
+    // TODO Support special hourly pricings, housekeeper, etc.
+    var allSessionMinutes = service.numberOfSessions () > 0 ?
+        service.serviceDurationMinutes() * service.numberOfSessions() :
+        service.serviceDurationMinutes();
+
+    return new PricingSummaryItemVM({
+        concept: service.name(),
+        serviceDurationMinutes: allSessionMinutes,
+        firstSessionDurationMinutes: service.serviceDurationMinutes(),
+        price: service.price(),
+        serviceProfessionalServiceID: service.serviceProfessionalServiceID(),
+        hourlyPrice: (service.priceRateUnit() || '').toUpperCase() === 'HOUR' ? service.priceRate() : null
+    });
+};
+
+function PricingSummaryVM(values) {
 
     Model(this);
 
     this.model.defProperties({
-        pricingItems: {
+        services: {
             isArray: true,
-            Model: PricingSummaryItem
+            Model: PricingSummaryItemVM
         },
         gratuityPercentage: 0,
         gratuityAmount: 0,
@@ -240,7 +258,7 @@ function PricingSummary(values) {
     }, values);
 
     this.subtotalPrice = ko.pureComputed(function() {
-        return this.pricingItems().reduce(function(total, item) {
+        return this.services().reduce(function(total, item) {
             total += item.price();
             return total;
         }, 0);
@@ -273,7 +291,7 @@ function PricingSummary(values) {
 
     this.items = ko.pureComputed(function() {
 
-        var items = this.pricingItems().slice();
+        var items = this.services().slice();
         var gratuity = this.gratuity();
 
         if (gratuity > 0) {
@@ -281,12 +299,36 @@ function PricingSummary(values) {
                 'Gratuity (__gratuity__%)'.replace(/__gratuity__/g, (this.gratuityPercentage() |0)) :
                 'Gratuity';
 
-            items.push(new PricingSummaryItem({
+            items.push(new PricingSummaryItemVM({
                 concept: gratuityLabel,
                 price: this.gratuity()
             }));
         }
 
         return items;
+    }, this);
+    
+    this.serviceDurationMinutes = ko.pureComputed(function() {
+        return this.services().reduce(function(total, item) {
+            total += item.serviceDurationMinutes();
+            return total;
+        }, 0);
+    }, this);
+    
+    this.firstSessionDurationMinutes = ko.pureComputed(function() {
+        return this.services().reduce(function(total, item) {
+            total += item.firstSessionDurationMinutes();
+            return total;
+        }, 0);
+    }, this);
+    
+    var duration2Language = require('../utils/duration2Language');
+    
+    this.serviceDurationDisplay = ko.pureComputed(function() {
+        return duration2Language({ minutes: this.serviceDurationMinutes() });
+    }, this);
+    
+    this.firstSessionDurationDisplay = ko.pureComputed(function() {
+        return duration2Language({ minutes: this.firstSessionDurationMinutes() });
     }, this);
 }
