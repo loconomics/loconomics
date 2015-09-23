@@ -41,7 +41,7 @@
                             <tr>
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I'm just writing to confirm that you've cancelled my @info.userJobTitle.jobTitleSingularName services that were scheduled for @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime). I'd love for you to book another time that's more convenient for you.</td>
                             </tr>
-							@if (policy != null && info.booking.paymentCollected)
+							@if (policy != null && info.booking.paymentCollected == 1)
 							{
                            <tr>
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
@@ -60,8 +60,8 @@
 								</td>
 							</tr>
 							}
-							<tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"> @(info.serviceProfessional.email)</td>
+                            <tr>                               
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
                             </tr>
                         </table>
                             <tr>
@@ -72,7 +72,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="@(info.viewEmailUrl)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Book Another Appointment</a></td>
+                                                        <td align="center"><a href="@(info.newBookingUrl)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Book Another Appointment</a></td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -119,7 +119,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="#" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
+                                                        <td align="center"><a href="https://loconomics.zendesk.com" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
                                                     </tr>
                                                 </table>
                                             </td>

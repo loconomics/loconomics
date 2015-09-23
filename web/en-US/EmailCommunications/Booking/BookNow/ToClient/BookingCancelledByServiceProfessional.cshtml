@@ -9,6 +9,7 @@
 
     // All the data for this email:
     var info = LcEmailTemplate.GetBookingInfo();
+    var policy = info.cancellationPolicy;
 
     // NOTE: Write some notes
     // Write some more notes, maybe a second line?
@@ -18,7 +19,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), Unfortunately, I have to cancel the @info.userJobTitle.jobTitleSingularName services you were scheduled for
+                Hi, @(info.client.firstName), Unfortunately, I have to cancel the @info.userJobTitle.jobTitleSingularName services you were scheduled for <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>.
             </div>
         </td>
     </tr>
@@ -52,9 +53,8 @@
 								</td>
 							</tr>
 							}
-                            
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"> @(info.serviceProfessional.email)</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
                             </tr>
                         </table>
                             <tr>
@@ -65,7 +65,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="@(info.viewEmailUrl)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Book Another Appointment</a></td>
+                                                        <td align="center"><a href="@(info.newBookingUrl)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Book Another Appointment</a></td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -112,7 +112,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="#" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
+                                                        <td align="center"><a href="https://loconomics.zendesk.com" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
                                                     </tr>
                                                 </table>
                                             </td>

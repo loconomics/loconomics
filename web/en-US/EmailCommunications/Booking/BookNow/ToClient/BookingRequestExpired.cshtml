@@ -1,5 +1,5 @@
-﻿@* Email with updated information about a Booking Request, mainly to communicate to the
-    provider that a request was done (BookingRequestStatusID:2, but also generate content for other statuses)
+﻿@* Email to the client to communicate that the booking request they made expired. 
+	THIS MAY ONLY BE A MARKETPLACE feature...meaning BookNow bookings won't have this
  *@
 @using WebMatrix.Data;
 @{
@@ -18,14 +18,11 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), Thanks for requesting my @info.userJobTitle.jobTitleSingularName services. I’m either away or busy with a client but will confirm your appointment time as soon as I can.
+                Hi, @(info.client.firstName), Unfortunately, I'm unable to accept your request for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. 
             </div>
         </td>
     </tr>
 </table>
-
-
-<!-- Book Now: Booking Request Received -->
 <!-- MAIN COPY -->
 <!-- ONE COLUMN SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -40,10 +37,16 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, I have to cancel the <strong>@info.userJobTitle.jobTitleSingularName</strong> services you were scheduled for <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>. Please accept my apologies, and feel free to choose another appointment time.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, I'm unable to accept your request for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. Please accept my apologies, and feel free to book me again in the future.</td>
                             </tr>
+							@if (info.booking.paymentCollected == 1)
+							{
+                           <tr>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Your card will <strong>NOT</strong> be charged and any authorization should expire shortly.</td>
+							</tr>
+							}
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"> @(info.serviceProfessional.email)</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
                             </tr>
                         </table>
                             <tr>
@@ -116,19 +119,4 @@
         </td>
     </tr>
 </table>
-<!-- FOOTER -->
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td bgcolor="#ffffff" align="center" style="padding: 20px 0px;">
-            <!-- UNSUBSCRIBE COPY -->
-            <table width="500" border="0" cellspacing="0" cellpadding="0" align="center" class="responsive-table">
-                <tr>
-                    <td align="center" valign="middle" style="font-size: 12px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color:#666666;">
-                        <span class="appleFooter" style="color:#666666;">This e-mail was sent on behalf of @info.serviceProfessional.firstName @info.serviceProfessional.lastName <br>by <a href="https://loconomics.com/">Loconomics Cooperative, Inc.</a> Please do not reply.<br>3150 18th Street, Suite 438, San Francisco, CA 94110, USA</span><br><a href="#" target="_blank" class="original-only" style="color: #666666; text-decoration: none;">Privacy Policy</a><span class="original-only" style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><a href="#" target="_blank" class="original-only" style="color: #666666; text-decoration: none;">Unsubscribe</a><span class="original-only" style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><a href="@info.viewEmailUrl" style="color: #666666; text-decoration: none;" target="_blank">View this email in your browser</a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
-
+@RenderPage("MessageComponents/$Footer.cshtml", info)
