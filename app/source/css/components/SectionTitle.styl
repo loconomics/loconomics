@@ -40,8 +40,21 @@ $gray = lighten(#000, 33.5%);
     }
 }
 /* Inside a container, remove the margin gap */
-.container .SectionTitle,
-.container-fluid .SectionTitle {
-    margin-right: (0 - $container-padding-right);
-    margin-left: (0 - $container-padding-right);
+.container,
+.container-fluid {
+    .SectionTitle {
+        margin-right: (0 - $container-padding-right);
+        margin-left: (0 - $container-padding-right);
+    }
+    
+    // Inside column resets (Bootstrap extension) must be reset too
+    .col-xs-reset,
+    .col-sm-reset,
+    .col-md-reset,
+    .col-lg-reset {
+        .SectionTitle {
+            margin-right: 0;
+            margin-left: 0;
+        }
+    }
 }

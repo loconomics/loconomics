@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-09-23
+/*! LoconomicsApp 2015-09-24
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1692,13 +1692,30 @@ body.use-backdrop:before {
 }
 
 /* line 43 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SectionTitle.styl */
+
+/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SectionTitle.styl */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
   margin-right: -15px;
   margin-left: -15px;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SmartNavBar.styl */
+/* line 50 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SectionTitle.styl */
+
+/* line 51 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SectionTitle.styl */
+.container .col-xs-reset .SectionTitle,
+.container-fluid .col-xs-reset .SectionTitle,
+.container .col-sm-reset .SectionTitle,
+.container-fluid .col-sm-reset .SectionTitle,
+.container .col-md-reset .SectionTitle,
+.container-fluid .col-md-reset .SectionTitle,
+.container .col-lg-reset .SectionTitle,
+.container-fluid .col-lg-reset .SectionTitle {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SmartNavBar.styl */
 
 /* line 14 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\index.styl */
 
@@ -6762,10 +6779,27 @@ app-stars-rating {
 }
 
 /* line 43 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SectionTitle.styl */
+
+/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SectionTitle.styl */
 .container .SectionTitle,
 .container-fluid .SectionTitle {
   margin-right: -15px;
   margin-left: -15px;
+}
+
+/* line 50 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SectionTitle.styl */
+
+/* line 51 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SectionTitle.styl */
+.container .col-xs-reset .SectionTitle,
+.container-fluid .col-xs-reset .SectionTitle,
+.container .col-sm-reset .SectionTitle,
+.container-fluid .col-sm-reset .SectionTitle,
+.container .col-md-reset .SectionTitle,
+.container-fluid .col-md-reset .SectionTitle,
+.container .col-lg-reset .SectionTitle,
+.container-fluid .col-lg-reset .SectionTitle {
+  margin-right: 0;
+  margin-left: 0;
 }
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\clients.styl */
@@ -6854,7 +6888,7 @@ app-stars-rating {
   display: none;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\weeklySchedule.styl */
+/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\weeklySchedule.styl */
 
 /* line 53 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\isolated.styl */
 
@@ -8623,4 +8657,111 @@ app-stars-rating {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
+}
+
+/* line 16 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+
+/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking].animated .booking-steps {
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  position: absolute;
+}
+
+/* line 25 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking].animated .booking-steps .booking-step {
+  -webkit-transform: translateX(0px);
+  -moz-transform: translateX(0px);
+  -o-transform: translateX(0px);
+  -ms-transform: translateX(0px);
+  transform: translateX(0px);
+  z-index: 2;
+  position: absolute;
+  -webkit-transition-property: opacity, -webkit-transform;
+  -moz-transition-property: opacity, -moz-transform;
+  -o-transition-property: opacity, -o-transform;
+  -ms-transition-property: opacity, -ms-transform;
+  transition-property: opacity, transform;
+  -webkit-transition-duration: 200ms, 200ms;
+  -moz-transition-duration: 200ms, 200ms;
+  -o-transition-duration: 200ms, 200ms;
+  -ms-transition-duration: 200ms, 200ms;
+  transition-duration: 200ms, 200ms;
+  -webkit-transition-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1), cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1), cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1), cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1), cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1), cubic-bezier(0.65, 0.05, 0.36, 1);
+  -webkit-transition-delay: 150ms;
+  -moz-transition-delay: 150ms;
+  -o-transition-delay: 150ms;
+  -ms-transition-delay: 150ms;
+  transition-delay: 150ms;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  overflow: auto;
+}
+
+/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking].animated .booking-steps .booking-step[hidden] {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transition-delay: 0ms;
+  -moz-transition-delay: 0ms;
+  -o-transition-delay: 0ms;
+  -ms-transition-delay: 0ms;
+  transition-delay: 0ms;
+  display: block;
+  z-index: 1;
+  -webkit-transform: translateX(-25%);
+  -moz-transform: translateX(-25%);
+  -o-transform: translateX(-25%);
+  -ms-transform: translateX(-25%);
+  transform: translateX(-25%);
+  pointer-events: none;
+}
+@media (min-width: 992px) {
+
+/* line 53 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+  [data-activity=booking].animated > .container {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+  }
+
+/* line 62 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+  [data-activity=booking].animated .Sidebar {
+    z-index: 5;
+  }
+
+/* line 68 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+  [data-activity=booking].animated .booking-steps {
+    float: none;
+    width: auto;
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-left: 15px;
+    left: 25%;
+  }
+
+/* line 76 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+  [data-activity=booking].animated .booking-steps .booking-step {
+    padding: 0px 1px;
+  }
+
+/* line 82 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+  [data-activity=booking].animated .booking-steps .booking-step[hidden] {
+    -webkit-transform: translateX(-100px);
+    -moz-transform: translateX(-100px);
+    -o-transform: translateX(-100px);
+    -ms-transform: translateX(-100px);
+    transform: translateX(-100px);
+  }
 }
