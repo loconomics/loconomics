@@ -1,6 +1,7 @@
 /** Bookings
 
-    IMPORTANT!!!! API not to use directly by the app, but through appModel.calendar (it has cache and more)
+    IMPORTANT!! Some APIs here are intented for use through appModel.calendar (it has cache and more)
+    and not directly by the app.
 **/
 'use strict';
 
@@ -84,6 +85,8 @@ exports.create = function create(appModel) {
     /**
         Converst a Booking model into a simplified
         booking plain object, suitable to REST API for edition
+        
+        ONLY FOR SERVICE-PROFESSIONAL-BOOKINGS
     **/
     api.bookingToSimplifiedBooking = function(booking) {
         console.log('DEBUG to simplified booking', booking.pricingSummary());
@@ -130,24 +133,72 @@ exports.create = function create(appModel) {
     };
     
     /**
-        Creates/updates a booking by a client, given a simplified booking
-        object or an Appointment model or a Booking model
+        Using data to create a booking from a create client booking form,
+        as: booking, billingAddress, paymentMethod, requestOptions (promotionalCode, bookCode, etc.)
+        returns an object with the request fields to pass in to the REST API asking
+        create the client booking.
+
+        NOTE: Do NOT confuse with previous internal concept 'booking request'. Is called a
+        request because the fields and data passed in when creating a booking are different
+        from a existent booking.
     **/
-    api.setClientBooking = function setClientBooking(booking) {
-        booking = booking.bookingID ?
-            api.bookingToSimplifiedBooking(booking) :
-            booking.sourceBooking ?
-                api.appointmentToSimplifiedBooking(booking) :
-                booking
-        ;
+    var createClientBookingRequest = function(booking, requestOptions, paymentMethod) {
+        
+        var billingAddress = paymentMethod && paymentMethod.billingAddress();
+        paymentMethod = paymentMethod && paymentMethod.model.toPlainObject();
+        if (billingAddress) {
+            billingAddress = billingAddress.model.toPlainObject();
+            delete paymentMethod.billingAddress;
+        }
+        
+        return {
+            serviceProfessionalUserID: booking.serviceProfessionalUserID(),
+            jobTitleID: booking.jobTitleID(),
+            serviceAddressID: booking.serviceAddressID(),
+            serviceStartTime: booking.serviceDate() && booking.serviceDate().startTime(),
+            alternative1StartTime: booking.alternativeDate1() && booking.alternativeDate1().startTime(),
+            alternative2StartTime: booking.alternativeDate2() && booking.alternativeDate2().startTime(),
 
-        var id = booking.bookingID || '',
-            method = id ? 'put' : 'post';
-
-        return appModel.rest[method]('me/client-booking/' + id, booking)
-        .then(function(serverBooking) {
-            return new Booking(serverBooking);
-        });
+            pricing: booking.pricingSummary() && booking.pricingSummary().details()
+            .map(function(pricing) {
+                return pricing.serviceProfessionalServiceID();
+            }),
+            
+            bookCode: ko.unwrap(requestOptions.bookCode),
+            promotionalCode: ko.unwrap(requestOptions.promotionalCode),
+            
+            // Only a group of fields from a standard address object are read by the server:
+            billingAddress: {
+                addressLine1: billingAddress.addressLine1,
+                addressLine2: billingAddress.addressLine2,
+                postalCode: billingAddress.postalCode
+            },
+            
+            paymentMethod: paymentMethod
+        };
+    };
+    
+    /**
+        Creates a client booking
+        @param booking model/Booking
+        @param requestOptions { promotionalCode, bookCode }
+    **/
+    api.requestClientBooking = function requetsClientBooking(booking, requestOptions, billingAddress, paymentMethod) {
+        var data = createClientBookingRequest(booking, requestOptions, billingAddress, paymentMethod);
+        return appModel.rest.post('me/client-booking', data);
+    };
+    
+    /**
+        Ask for initialization data of a new client booking
+        
+        @param options {
+            serviceProfessionalUserID:int,
+            jobTitleID:int,
+            bookCode:string [Optional]
+        }
+    **/
+    api.getNewClientBooking = function getNewClientBooking(options) {
+        return appModel.rest.get('me/client-booking', options);
     };
 
     return api;

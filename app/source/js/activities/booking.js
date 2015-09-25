@@ -47,43 +47,13 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     var params = state && state.route && state.route.segments;
-    
-    this.viewModel.serviceProfessionalID(params[0] |0);
-    this.viewModel.jobTitleID(params[1] |0);
-    
-    // If there is not a serviceProfessional, redirect to search/home page to pick one
-    // TODO Same if the serviceProfessional is not found
-    if (this.viewModel.serviceProfessionalID() === 0 ||
-        this.viewModel.jobTitleID() === 0) {
-        this.app.shell.go('/home');
-        return;
-    }
-    
-    // Reset progress to none and trigger next so Load logic gets executed
-    this.viewModel.progress.step(-1);
-    this.viewModel.nextStep();
+    var bookCode = state && state.route && state.route.query.bookCode;
+
+    this.viewModel.initBooking(params[0] |0, params[1] |0, bookCode);
 };
 
-///
-/// Registered static list of steps. There are different possible lists depending
-/// on provider settings
-
-var bookingRequestSteps = [
-    'services',
-    'selectLocation',
-    'selectTimes',
-    'payment',
-    'confirm'
-];
-var instantBookingSteps = [
-    'services',
-    'selectLocation',
-    'selectTime', // <- This is different
-    'payment',
-    'confirm'
-];
-
 // L18N
+// List of all possible steps by name providing the language for the UI
 var stepsLabels = {
     services: 'Services',
     selectLocation: 'Select a location',
@@ -99,18 +69,24 @@ var stepsLabels = {
 
 A.prototype.servicesLoad = function() {
     // TODO Depends on jobTitle:
-    this.viewModel.supportGratuity(true);    
+    this.viewModel.supportsGratuity(true);    
 };
 
 A.prototype.selectLocationLoad = function() {
-    // TODO Load remote addresses for provider and jobtitle
+    // Load remote addresses for provider and jobtitle, reset first
     this.viewModel.serviceAddresses.sourceAddresses([]);
-    // TEST
-    this.app.model.serviceAddresses.getList(this.viewModel.jobTitleID())
+    this.viewModel.isLoadingServiceAddresses(true);
+    this.app.model.users.getServiceAddresses(this.viewModel.booking.serviceProfessionalUserID(), this.viewModel.booking.jobTitleID())
     .then(function(list) {
         list = this.app.model.serviceAddresses.asModel(list);
         this.viewModel.serviceAddresses.sourceAddresses(list);
-    }.bind(this));
+        this.viewModel.isLoadingServiceAddresses(false);
+        // TODO: Load user personal addresses too if the service professional has serviceRadius
+    }.bind(this))
+    .catch(function(err) {
+        this.viewModel.isLoadingServiceAddresses(false);
+        this.app.modals.showError({ error: err });
+    });
 };
 
 A.prototype.selectTimesLoad = function() {
@@ -161,37 +137,33 @@ PricingSummaryItemVM.fromServiceProfessionalService = function(service) {
 
 var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalService'),
     BookingProgress = require('../viewmodels/BookingProgress'),
+    Booking = require('../models/Booking'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses'),
+    InputPaymentMethod = require('../models/InputPaymentMethod'),
     PublicUser = require('../models/PublicUser');
 
 function ViewModel(app) {
     //jshint maxstatements:40
     
+    ///
+    /// Booking Data, request options and related entities
+    this.booking = new Booking();
+    this.newDataReady = ko.observable(false);
     this.serviceAddresses = new ServiceAddresses();
-    
-    this.serviceProfessionalID = ko.observable(0);
-    this.jobTitleID = ko.observable(0);
-    this.instantBooking = ko.observable(true);
-    this.isLocked = ko.observable(false);
-    this.bookingHeader = ko.pureComputed(function() {
-        return this.instantBooking() ? 'Your instant booking' : 'Your booking request';
-    }, this);
-    
-    // Se inicializa con un estado previo al primer paso
-    // (necesario para el manejo de reset y preparación del activity)
-    this.progress = new BookingProgress({ step: -1 });
-    
-    ko.computed(function() {
-        this.progress.stepsList(this.instantBooking() ? instantBookingSteps : bookingRequestSteps);
-    }, this);
-    
+    this.isLoadingServiceAddresses = ko.observable(false);
+    this.summary = new PricingSummaryVM();
+    this.bookCode = ko.observable(null);
     this.serviceProfessionalServices = new ServiceProfessionalServiceVM(app);
-    this.jobTitleID.subscribe(this.serviceProfessionalServices.jobTitleID);
-    this.serviceProfessionalID.subscribe(this.serviceProfessionalServices.serviceProfessionalID);
     this.serviceProfessionalServices.isSelectionMode(true);
-    //this.serviceProfessionalServices.preSelectedServices([]);
-    
-    this.supportGratuity = ko.observable(false);
+    this.serviceProfessionalServices.preSelectedServices([]);
+    this.makeRepeatBooking = ko.observable(false);
+    this.promotionalCode = ko.observable('');
+    this.paymentMethod = ko.observable(null); // InputPaymentMethod
+
+    ///
+    /// Gratuity
+    // TODO Complete support for gratuity, server-side
+    this.supportsGratuity = ko.observable(false);
     this.customGratuity = ko.observable(0);
     this.presetGratuity = ko.observable(0);
     this.gratuityAmount = ko.observable(0);
@@ -202,9 +174,11 @@ function ViewModel(app) {
         else
             return preset;
     }, this);
+    
+    // Sync: Automatic updates between dependent models:
+    this.booking.jobTitleID.subscribe(this.serviceProfessionalServices.jobTitleID);
+    this.booking.serviceProfessionalUserID.subscribe(this.serviceProfessionalServices.serviceProfessionalID);
 
-    this.summary = new PricingSummaryVM();
-    // Automatic summary updates:
     this.gratuityPercentage.subscribe(this.summary.gratuityPercentage);
     this.gratuityAmount.subscribe(this.summary.gratuityAmount);
     ko.computed(function() {
@@ -214,8 +188,33 @@ function ViewModel(app) {
         }));
     }, this);
     
-    this.makeRepeatBooking = ko.observable(false);
-    this.promotionalCode = ko.observable('');
+    ///
+    /// Service Professional Info
+    this.serviceProfessionalInfo = ko.observable(null);
+    this.isLoadingServiceProfessionalInfo = ko.observable(false);
+    this.booking.serviceProfessionalUserID.subscribe(function(userID) {
+        if (!userID) this.serviceProfessionalInfo(null);
+
+        this.isLoadingServiceProfessionalInfo(true);
+
+        app.model.users.getUser(userID)
+        .then(function(info) {
+            info = new PublicUser(info);
+            info.selectedJobTitleID(this.booking.jobTitleID());
+            this.serviceProfessionalInfo(info);
+            this.isLoadingServiceProfessionalInfo(false);
+        }.bind(this))
+        .catch(function(err) {
+            this.isLoadingServiceProfessionalInfo(false);
+            app.modals.showError({ error: err });
+        }.bind(this));
+    }, this);
+    
+    ///
+    /// Progress management
+    // Se inicializa con un estado previo al primer paso
+    // (necesario para el manejo de reset y preparación del activity)
+    this.progress = new BookingProgress({ step: -1 });
     
     this.nextStep = function() {
         this.progress.next();
@@ -230,33 +229,122 @@ function ViewModel(app) {
         return stepsLabels[stepName] || stepName;
     };
     
-    this.save = function() {
-        // TODO Final step, confirm and save booking
-    };
+    ///
+    /// Reset
+    this.reset = function reset() {
+        this.newDataReady(false);
+        this.booking.model.reset();
+        this.serviceProfessionalServices.preSelectedServices([]);
+        this.customGratuity(0);
+        this.presetGratuity(0);
+        this.gratuityAmount(0);
+        this.promotionalCode('');
+        this.makeRepeatBooking(false);
+        this.paymentMethod(null);
+    }.bind(this);
     
-    this.serviceProfessionalInfo = ko.observable(null);
-    this.isLoadingServiceProfessionalInfo = ko.observable(false);
-    this.serviceProfessionalID.subscribe(function(userID) {
-        this.isLoadingServiceProfessionalInfo(true);
-        app.model.users.getUser(userID)
-        .then(function(info) {
-            info = new PublicUser(info);
-            info.selectedJobTitleID(this.jobTitleID());
-            this.serviceProfessionalInfo(info);
-            this.isLoadingServiceProfessionalInfo(false);
+    this.isPhoneServiceOnly = ko.pureComputed(function() {
+        return this.serviceProfessionalServices.selectedServices().every(function(service) {
+            return service.isPhone();
+        });
+    }, this);
+    
+    ///
+    /// Keeps the progress stepsList updated depending on the data
+    ko.computed(function() {
+        if (!this.newDataReady()) return [];
+
+        // Starting list, with fixed first steps:
+        var list = ['services'];
+
+        if (!this.isPhoneServiceOnly())
+            list.push('selectLocation');
+
+        list.push(this.booking.instantBooking() ? 'selectTime' : 'selectTimes');
+
+        if (this.booking.paymentEnabled())
+            list.push('payment');
+        
+        // The final fixed steps
+        list.push('confirm');
+
+        this.progress.stepsList(list);
+    }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+
+    ///
+    /// New Booking data
+    this.isLoadingNewBooking = ko.observable(false);
+    this.initBooking = function(serviceProfessionalID, jobTitleID, bookCode) {
+        this.reset();
+        this.bookCode(bookCode);
+        
+        this.isLoadingNewBooking(true);
+        
+        app.model.bookings.getNewClientBooking({
+            serviceProfessionalUserID: serviceProfessionalID,
+            jobTitleID: jobTitleID,
+            bookCode: bookCode
+        }).then(function(bookingData) {
+            this.booking.model.updateWith(bookingData);
+            if (this.booking.paymentEnabled()) {
+                this.paymentMethod(new InputPaymentMethod());
+            }
+
+            this.isLoadingNewBooking(false);
+            this.newDataReady(true);
+            
+            // Reset progress to none and trigger next so Load logic gets executed
+            this.progress.step(-1);
+            this.nextStep();
         }.bind(this))
         .catch(function(err) {
-            this.isLoadingServiceProfessionalInfo(false);
+            this.isLoadingNewBooking(false);
             app.modals.showError({ error: err });
         }.bind(this));
+    }.bind(this);
+    
+    ///
+    /// UI
+    this.bookingHeader = ko.pureComputed(function() {
+        var v = this.booking.instantBooking();
+        return v === true ? 'Your instant booking' : v === false ? 'Your booking request' : '';
     }, this);
 
+    ///
+    /// States
     this.isLoading = ko.pureComputed(function() {
         return (
+            this.isLoadingNewBooking() ||
             this.isLoadingServiceProfessionalInfo() ||
             this.serviceProfessionalServices.isLoading()
         );
     }, this);
+    this.isSaving = ko.observable();
+    this.isLocked = ko.pureComputed(function() {
+        return this.isLoading() || this.isSaving();
+    }, this);
+
+    ///
+    /// Save
+    this.save = function() {
+        // Final step, confirm and save booking
+        this.isSaving(true);
+        
+        var requestOptions = {
+            promotionalCode: this.promotionalCode(),
+            bookCode: this.bookCode()
+        };
+        
+        app.model.bookings.requestClientBooking(this.booking, requestOptions, this.paymentMethod())
+        .then(function(serverBooking) {
+            this.isSaving(false);
+            this.booking.model.updateWith(serverBooking);
+        }.bind(this))
+        .catch(function(err) {
+            this.isSaving(false);
+            app.modals.showError({ error: err });
+        }.bind(this));
+    }.bind(this);
 }
 
 function PricingSummaryVM(values) {

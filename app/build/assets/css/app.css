@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-09-24
+/*! LoconomicsApp 2015-09-25
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -8644,7 +8644,18 @@ app-stars-rating {
 }
 
 /* line 8 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
-[data-activity=booking] .booking-step {
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking].is-loading .booking-steps,
+[data-activity=booking].is-loading .Sidebar {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking] .Sidebar,
+[data-activity=booking] .booking-steps {
   -webkit-transition: opacity 200ms;
   -moz-transition: opacity 200ms;
   -o-transition: opacity 200ms;
@@ -8652,16 +8663,38 @@ app-stars-rating {
   transition: opacity 200ms;
 }
 
-/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
-[data-activity=booking] .booking-step.is-loading {
+/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking] #bookingSelectLocation.is-loading > * {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
+  pointer-events: none;
 }
 
-/* line 16 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 23 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking] #bookingSelectLocation > * {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  -webkit-transition: opacity 200ms;
+  -moz-transition: opacity 200ms;
+  -o-transition: opacity 200ms;
+  -ms-transition: opacity 200ms;
+  transition: opacity 200ms;
+}
 
-/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 27 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking] #bookingSelectLocation > app-loading-spinner {
+  opacity: 1 !important;
+  -ms-filter: none;
+  filter: none;
+}
+
+/* line 33 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+
+/* line 35 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
 [data-activity=booking].animated .booking-steps {
   top: 0px;
   bottom: 0px;
@@ -8670,7 +8703,7 @@ app-stars-rating {
   position: absolute;
 }
 
-/* line 25 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 42 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
 [data-activity=booking].animated .booking-steps .booking-step {
   -webkit-transform: translateX(0px);
   -moz-transform: translateX(0px);
@@ -8706,7 +8739,7 @@ app-stars-rating {
   overflow: auto;
 }
 
-/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 56 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
 [data-activity=booking].animated .booking-steps .booking-step[hidden] {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -8727,7 +8760,7 @@ app-stars-rating {
 }
 @media (min-width: 992px) {
 
-/* line 53 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 70 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated > .container {
     position: absolute;
     left: 0px;
@@ -8736,12 +8769,12 @@ app-stars-rating {
     bottom: 0px;
   }
 
-/* line 62 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 79 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated .Sidebar {
     z-index: 5;
   }
 
-/* line 68 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 85 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated .booking-steps {
     float: none;
     width: auto;
@@ -8751,12 +8784,12 @@ app-stars-rating {
     left: 25%;
   }
 
-/* line 76 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 93 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated .booking-steps .booking-step {
     padding: 0px 1px;
   }
 
-/* line 82 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 99 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated .booking-steps .booking-step[hidden] {
     -webkit-transform: translateX(-100px);
     -moz-transform: translateX(-100px);

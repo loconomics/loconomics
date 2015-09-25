@@ -5,10 +5,29 @@
         text-align: center;
     }
     
-    .booking-step {
-        transition: opacity 200ms;
-        &.is-loading {
+    &.is-loading {
+        .booking-steps,
+        .Sidebar {
             opacity: 0;
+        }
+    }
+    
+    .Sidebar,
+    .booking-steps {
+        transition: opacity 200ms;
+    }
+    
+    #bookingSelectLocation {
+        &.is-loading > * {
+            opacity: 0;
+            pointer-events: none;
+        }
+        > * {
+            opacity: 1;
+            transition: opacity 200ms;
+        }
+        > app-loading-spinner {
+            opacity: 1 !important;
         }
     }
     

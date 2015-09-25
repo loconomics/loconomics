@@ -1561,7 +1561,8 @@ namespace LcRest
             DateTime? alternative2StartTime,
             IEnumerable<int> services,
             int languageID,
-            int countryID
+            int countryID,
+            string bookCode
         )
         {
             using (var db = new LcDatabase())
@@ -1578,7 +1579,7 @@ namespace LcRest
                     throw new ConstraintException("Create a booking require select almost one service");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
-                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null);
+                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, bookCode);
                 if (booking == null)
                     throw new ConstraintException("Impossible to create a booking for that Job Title.");
 

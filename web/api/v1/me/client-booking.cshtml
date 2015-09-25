@@ -6,6 +6,15 @@
     be fetched using the /bookings API.
 
     Options:
+
+    - GET /
+        @params {
+            serviceProfessionalUserID:int,
+            jobTitleID:int,
+            bookCode:string [Optional]
+        }
+
+        @result RestBooking. See the /bookings API for details.
     
     - POST /
         @params {
@@ -31,7 +40,7 @@
             // Query to fetch information in order to start
             // creation of a booking
             var clientID = WebSecurity.CurrentUserId;
-            var serviceProfessionalID = Request["serviceProfessionaID"].AsInt();
+            var serviceProfessionalID = Request["serviceProfessionalUserID"].AsInt();
             var jobTitleID = Request["jobTitleID"].AsInt();
             var bookCode = Request["bookCode"];
             var locale = LcRest.Locale.Current;
@@ -71,7 +80,6 @@
             Validation.Add("serviceProfessionalUserID", Validator.Integer("Service Professional"));
             Validation.Add("jobTitleID", Validator.Integer(LcRessources.RequiredField("Job Title")));
             Validation.Add("serviceAddressID", Validator.Integer(LcRessources.RequiredField("Location")));
-            Validation.Add("billingAddressID", Validator.Integer(LcRessources.RequiredField("Billing Address")));
             
             // TODO Implement gratuity as of #659
             //Validation.Add("gratuityAmount", Validator.Decimal("Gratuity must be a number"));
@@ -79,8 +87,7 @@
             
             var serviceProfessionalUserID = Request.Form["serviceProfessionalUserID"].AsInt();
             var jobTitleID = Request.Form["jobTitleID"].AsInt();
-            var serviceAddressesID = Request.Form["serviceAddressesID"].AsInt();
-            var billingAddressID = Request.Form["billingAddressID"].AsInt();
+            var serviceAddressID = Request.Form["serviceAddressID"].AsInt();
             var bookCode = Request.Form["bookCode"];
             //var gratuityAmount = Request.Form["gratuityAmount"].AsDecimal();
             //var gratuityPercentage = Request.Form["gratuityPercentage"].AsDecimal();
@@ -151,15 +158,16 @@
                 // Create booking
                 booking = LcRest.Booking.InsClientBooking(
                     userID,
-                    Request["serviceProfessionalUserID"].AsInt(),
-                    Request["jobTitleID"].AsInt(),
-                    Request["addressID"].AsInt(),
+                    serviceProfessionalUserID,
+                    jobTitleID,
+                    serviceAddressID,
                     serviceStartTime.Value,
                     alternative1StartTime,
                     alternative2StartTime,
                     pricingIds,
                     locale.languageID,
-                    locale.countryID
+                    locale.countryID,
+                    bookCode
                 );
                 itemID = booking.bookingID;
                 
@@ -185,7 +193,7 @@
                     expirationYear = Request["paymentMethod.expirationYear"],
                     securityCode = Request["paymentMethod.securityCode"],
                     billingAddress = address
-                }, Request["savePayment"].AsBool());
+                }, Request["paymentMethod.savePayment"].AsBool());
 
                 if (paymentErrors != null && paymentErrors.Count > 0)
                 {

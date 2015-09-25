@@ -5,9 +5,6 @@ using System.Web;
 using Braintree;
 using System.Web.WebPages;
 
-/// <summary>
-/// Descripción breve de LcPayment
-/// </summary>
 public static partial class LcPayment
 {
     public class InputPaymentMethod

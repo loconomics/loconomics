@@ -86,3 +86,12 @@ function Booking(values) {
 }
 
 module.exports = Booking;
+
+Booking.from = function from(data) {
+    if (Array.isArray(data)) {
+        return data.map(Booking.from);
+    }
+    else {
+        return new Booking(data);
+    }
+};

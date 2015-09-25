@@ -770,9 +770,12 @@
         </form>
       </div>
       <!-- Activity booking -->
-      <div data-activity="booking" class="Boxes-sm animated">
+      <div data-activity="booking" class="Boxes-sm animated" data-bind="css: { 'is-loading': isLoading }">
         <div class="container">
           <div class="row">
+            <div data-bind="css: { 'is-loading': isLoading }">
+              <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+            </div>
             <div class="Sidebar hidden-xs hidden-sm col-md-3">
                <h4>Add a new booking</h4>
 
@@ -783,10 +786,7 @@
               </div>
             </div>
             <div class="col-md-9 col-sm-reset booking-steps">
-              <div data-bind="css: { 'is-loading': isLoading }">
-                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-              </div>
-              <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('services')() }, css: { 'is-loading': isLoading }">
+              <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('services')() }">
                 <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs"> <a href="/login" class="btn btn-link">
                             <span class="text-muted">Already have an account?</span>
                             <span class="text-secondary">Log In</span>
@@ -815,7 +815,7 @@
                   </div>
                 </div>
                 <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
-                <div data-bind="visible: supportGratuity">
+                <div data-bind="visible: supportsGratuity">
                    <h2 class="SectionTitle">Add gratuity</h2>
 
                   <script type="text/html" id="booking-gratuity-radioButton">
@@ -904,7 +904,8 @@
                   </div>
                 </div>
               </div>
-              <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }">
+              <div id="bookingSelectLocation" class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }, css: { 'is-loading': isLoadingServiceAddresses }">
+                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                  <h1 class="SectionTitle">Select location</h1>
 
                 <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
