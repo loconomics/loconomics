@@ -1,37 +1,8 @@
 <!-- Activity datetimePicker -->
 <div class="container-fluid" data-activity="datetimePicker">
 
-  <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Select a start time</h2>
+    <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Select a start time</h2>
 
-  <div id="datetimePickerDatePicker" class="calendar-placeholder row" data-date="today"></div>
-
-  <!-- Daily View (appointments list) -->
-  <div id="datetimePickerTimePicker">
-    <h2 class="SectionTitle" data-bind="text: selectedDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></h2>
-    <div data-bind="css: { 'is-loading': isLoading }">
-        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
-    </div>
-      
-    <div class="isolated" data-bind="visible: durationDisplay">
-        <span>You'll need</span> <span data-bind="text: durationDisplay"></span>
-    </div>
-
-    <div class="GroupedTimeSlots" data-bind="foreach: groupedSlots">
-      <div class="GroupedTimeSlots-group">
-        <div class="GroupedTimeSlots-groupName" data-bind="text: group"></div>
-        <div class="GroupedTimeSlots-slots">
-            <div class="GroupedTimeSlots-slots-empty" data-bind="visible: slots.length === 0">No available appointments</div>
-            <!-- ko foreach: { data: slots, as: 'item' } -->
-                <a href="#" class="btn btn-link btn-default" data-bind="event: { click: $root.selectDatetime }, text: item, format: { type: 'datetime', format: 'hh:mma' }"></a>
-            <!-- /ko -->
-        </div>
-      </div>
-    </div>
-      <div class="isolated">
-          <button type="button" class="btn btn-default btn-block" data-bind="click: showTimePicker">
-              <span>Book an unavailable time</span>
-          </button>
-      </div>
-  </div>
+    <app-datetime-picker params="api: component"></app-datetime-picker>
 
 </div>

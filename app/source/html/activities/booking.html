@@ -127,7 +127,10 @@
                 </div>
                 
                 <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectTimes')() }">
-                    Step 3
+                    <h1 class="SectionTitle">Select preferred times</h1>
+                    
+                    <app-datetime-picker params="api: serviceStartDatePickerView"></app-datetime-picker>
+                    
                     <div class="isolated">
                         <div>
                             <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>

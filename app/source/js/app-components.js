@@ -14,7 +14,7 @@ var ko = require('knockout'),
     propTools = require('./utils/jsPropertiesTools'),
     getObservable = require('./utils/getObservable');
 
-exports.registerAll = function() {
+exports.registerAll = function(app) {
     
     /// navbar-action
     ko.components.register('app-navbar-action', {
@@ -135,5 +135,21 @@ exports.registerAll = function() {
     ko.components.register('app-service-professional-info', {
         template: { element: 'service-professional-info-template' },
         viewModel: require('./viewmodels/ServiceProfessionalInfo')
+    });
+    
+    /// DatetimePicker
+    var DateTimePickerVM = require('./viewmodels/DatetimePicker');
+    ko.components.register('app-datetime-picker', {
+        synchronous: true,
+        template: { element: 'datetime-picker-template' },
+        viewModel: {
+            createViewModel: function(params, componentInfo) {
+                var view = new DateTimePickerVM(app, componentInfo.element);
+                if (params && params.api)
+                    params.api(view);
+                
+                return view;
+            }
+        }
     });
 };

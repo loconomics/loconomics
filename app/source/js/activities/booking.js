@@ -211,6 +211,10 @@ function ViewModel(app) {
     }, this);
     
     ///
+    /// Date time picker(s)
+    this.serviceStartDatePickerView = ko.observable(null);
+    
+    ///
     /// Progress management
     // Se inicializa con un estado previo al primer paso
     // (necesario para el manejo de reset y preparación del activity)
