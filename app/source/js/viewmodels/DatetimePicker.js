@@ -109,6 +109,7 @@ function DatetimePickerVM(app, element) {
 
     this.pickedTime = ko.observable();
     this.allowBookUnavailableTime = ko.observable(false);
+    this.unavailableTimeBtnEnabled = ko.observable(false);
     
     this.getPickedDatetime = function() {
         var t = this.pickedTime();

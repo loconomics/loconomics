@@ -148,6 +148,15 @@ exports.registerAll = function(app) {
                 if (params && params.api)
                     params.api(view);
                 
+                if (params)
+                    Object.keys(params).forEach(function(key) {
+                        if (ko.isObservable(view[key])) {
+                            view[key](ko.unwrap(params[key]));
+                            if (ko.isObservable(params[key]))
+                                view[key].subscribe(params[key]);
+                        }
+                    });
+                
                 return view;
             }
         }

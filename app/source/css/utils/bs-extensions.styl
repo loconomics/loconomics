@@ -151,3 +151,41 @@ col-reset() {
 .fa-xl {
     font-size: 25px;
 }
+
+// Removing padding from the container class with additional complementary class
+// This allows to use the sizing limits of container on wider screens but
+// without the extra space, usefull when the content needs to use all the width
+// (specially on mobile) or has more advanced padding set-up internally.
+// Size suffixes work inverse of general Bootstrap, applying to that size and smaller
+ResetSectionTitleMargin() {
+    .SectionTitle {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+.container {
+    @media $mediaMaxXs {
+        &.nogaps-xs {
+            padding: 0;
+            ResetSectionTitleMargin();
+        }
+    }
+    @media $mediaMaxSm {
+        &.nogaps-sm {
+            padding: 0;
+            ResetSectionTitleMargin();
+        }
+    }
+    @media $mediaMaxMd {
+        &.nogaps-md {
+            padding: 0;
+            ResetSectionTitleMargin();
+        }
+    }
+    @media $mediaMinLg {
+        &.nogaps-lg {            
+            padding: 0;
+            ResetSectionTitleMargin();
+        }
+    }
+}

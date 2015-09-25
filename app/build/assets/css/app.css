@@ -56,7 +56,7 @@
 
 /* line 381 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
 
-/* line 140 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\styleguideVars.styl */
+/* line 178 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\variables.styl */
 
@@ -228,6 +228,60 @@ fieldset[disabled] .btn-secondary.active {
 /* line 137 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
 .fa-xl {
   font-size: 25px;
+}
+
+/* line 152 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+@media (max-width: 767px) {
+
+/* line 154 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-xs {
+    padding: 0;
+  }
+
+/* line 147 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-xs .SectionTitle {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+@media (max-width: 991px) {
+
+/* line 160 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-sm {
+    padding: 0;
+  }
+
+/* line 147 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-sm .SectionTitle {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+@media (max-width: 1199px) {
+
+/* line 166 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-md {
+    padding: 0;
+  }
+
+/* line 147 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-md .SectionTitle {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+@media (min-width: 1200px) {
+
+/* line 172 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-lg {
+    padding: 0;
+  }
+
+/* line 147 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-lg .SectionTitle {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 /* line 3 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\select-btn.styl */
@@ -2642,33 +2696,30 @@ body.use-backdrop:before {
 }
 
 /* line 148 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
-.DatePicker thead tr:first-child {
-  background: #eee;
-}
 
-/* line 150 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 149 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker thead tr:first-child th {
   cursor: pointer;
 }
 
-/* line 152 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 151 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker thead tr:first-child th:hover {
   background: #ccc;
 }
 
-/* line 155 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 154 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-years tr > td,
 .DatePicker .DatePicker-months tr > td {
   padding: 0;
 }
 
-/* line 158 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 157 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-months .switch,
 .DatePicker .DatePicker-years .switch {
   width: 72.4% !important;
 }
 
-/* line 161 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 160 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-months .prev,
 .DatePicker .DatePicker-months .next,
 .DatePicker .DatePicker-years .prev,
@@ -2676,9 +2727,9 @@ body.use-backdrop:before {
   width: 14% !important;
 }
 
-/* line 167 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 166 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 169 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 168 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker .DatePicker-days th.switch:after,
 .DatePicker .DatePicker-months th.switch:after {
   content: '';
@@ -2692,21 +2743,21 @@ body.use-backdrop:before {
   border-left: 4px solid transparent;
 }
 
-/* line 173 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 172 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 175 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 174 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged .DatePicker-days tr:last-child td {
   border-bottom-color: transparent !important;
 }
 
-/* line 177 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 176 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day {
   padding: 3px 5px 14px !important;
   border-bottom: 1px solid #ccc;
   position: relative;
 }
 
-/* line 183 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 182 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day:after {
   content: '';
   display: block;
@@ -2721,68 +2772,68 @@ body.use-backdrop:before {
   height: 6px;
 }
 
-/* line 195 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 194 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.tag-muted {
   color: #ccc;
 }
 
-/* line 197 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 196 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.tag-muted:after {
   background: #ccc;
 }
 
-/* line 200 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 199 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 201 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 200 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.tag-dark:after {
   background: Black;
 }
 
-/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 203 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 205 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.tag-primary:after {
   background: #00989a;
 }
 
-/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 203 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 205 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.tag-secondary:after {
   background: #ff6765;
 }
 
-/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 203 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 205 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.tag-success:after {
   background: #47b347;
 }
 
-/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 203 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 205 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.tag-info:after {
   background: #5bc0de;
 }
 
-/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 203 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 205 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.tag-warning:after {
   background: #f0ad4e;
 }
 
-/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 203 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 205 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.tag-danger:after {
   background: #d9534f;
 }
 
-/* line 208 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 207 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
-/* line 210 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 209 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged td.day.old:after,
 .DatePicker.DatePicker--tagged td.day.new:after {
   opacity: 0.5;
@@ -2790,20 +2841,20 @@ body.use-backdrop:before {
   filter: alpha(opacity=50);
 }
 
-/* line 219 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 218 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .DatePicker.DatePicker--tagged span.month,
 .DatePicker.DatePicker--tagged span.year {
   height: 102px;
   line-height: 102px;
 }
 
-/* line 223 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+/* line 222 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
+
+/* line 225 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
 /* line 226 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 
 /* line 227 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
-
-/* line 228 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\DatePicker.styl */
 .input-append.date .add-on i,
 .input-prepend.date .add-on i {
   display: block;
