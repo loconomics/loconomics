@@ -91,10 +91,12 @@ A.prototype.selectLocationLoad = function() {
 
 A.prototype.selectTimesLoad = function() {
     // TODO 
+    this.viewModel.serviceStartDatePickerView().selectedDatetime(null);
 };
 
 A.prototype.selectTimeLoad = function() {
     // TODO 
+    this.viewModel.serviceStartDatePickerView().selectedDatetime(null);
 };
 
 A.prototype.paymentLoad = function() {
@@ -140,10 +142,11 @@ var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalSer
     Booking = require('../models/Booking'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses'),
     InputPaymentMethod = require('../models/InputPaymentMethod'),
+    EventDates = require('../models/EventDates'),
     PublicUser = require('../models/PublicUser');
 
 function ViewModel(app) {
-    //jshint maxstatements:40
+    //jshint maxstatements:100
     
     ///
     /// Booking Data, request options and related entities
@@ -213,6 +216,17 @@ function ViewModel(app) {
     ///
     /// Date time picker(s)
     this.serviceStartDatePickerView = ko.observable(null);
+    ko.computed(function triggerSelectedDatetime() {
+        var v = this.serviceStartDatePickerView(),
+            dt = v && v.selectedDatetime();
+
+        if (dt) {
+            this.booking.serviceDate = new EventDates({
+                startTime: dt
+            });
+            this.progress.next();
+        }
+    }, this);
     
     ///
     /// Progress management
@@ -256,21 +270,23 @@ function ViewModel(app) {
     ///
     /// Keeps the progress stepsList updated depending on the data
     ko.computed(function() {
-        if (!this.newDataReady()) return [];
-
         // Starting list, with fixed first steps:
         var list = ['services'];
-
-        if (!this.isPhoneServiceOnly())
-            list.push('selectLocation');
-
-        list.push(this.booking.instantBooking() ? 'selectTime' : 'selectTimes');
-
-        if (this.booking.paymentEnabled())
-            list.push('payment');
         
-        // The final fixed steps
-        list.push('confirm');
+        if (this.newDataReady()) {
+
+            if (!this.isPhoneServiceOnly())
+                list.push('selectLocation');
+
+            list.push(this.booking.instantBooking() ? 'selectTime' : 'selectTimes');
+
+            if (this.booking.paymentEnabled())
+                list.push('payment');
+
+            // The final fixed steps
+            list.push('confirm');
+        }
+        // we need almost the first, for its load process to work, even if newData is not ready still
 
         this.progress.stepsList(list);
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });

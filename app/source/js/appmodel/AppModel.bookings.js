@@ -168,7 +168,7 @@ exports.create = function create(appModel) {
             promotionalCode: ko.unwrap(requestOptions.promotionalCode),
             
             // Only a group of fields from a standard address object are read by the server:
-            billingAddress: {
+            billingAddress: billingAddress && {
                 addressLine1: billingAddress.addressLine1,
                 addressLine2: billingAddress.addressLine2,
                 postalCode: billingAddress.postalCode
