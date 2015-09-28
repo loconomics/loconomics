@@ -199,13 +199,14 @@ function DatetimePickerVM(app, element) {
             $datePicker.datepicker('setValue', date, true);
     }.bind(this));
     
-    // First data load
-    // First load of today data
-    this.bindDateData(this.selectedDate())
-    .then(function() {
+    // On Setting the data, we need to refresh tags:
+    this.dateAvail.subscribe(function() {
         // Once finished, load the whole month
         this.tagAvailability(this.selectedDate());
     }.bind(this));
+    
+    // First load of today data
+    this.bindDateData(this.selectedDate());
     
     // Force first refresh on datepicker to allow
     // event handlers to get notified on first time:

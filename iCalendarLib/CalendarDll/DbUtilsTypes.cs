@@ -77,17 +77,27 @@ namespace CalendarDll
                 var freeOc = ocurrences.FirstOrDefault(oc => ((iEvent)oc.Source).AvailabilityID == (Int32)AvailabilityTypes.FREE); //free
                 var busyOc = ocurrences.FirstOrDefault(oc => ((iEvent)oc.Source).AvailabilityID == (Int32)AvailabilityTypes.BUSY); //busy
                 var tentOc = ocurrences.FirstOrDefault(oc => ((iEvent)oc.Source).AvailabilityID == (Int32)AvailabilityTypes.TENTATIVE); //tentative
-                var tranOc = ocurrences.FirstOrDefault(oc => ((iEvent)oc.Source).AvailabilityID == (Int32)AvailabilityTypes.TRANSPARENT); //Transparent
+                //var tranOc = ocurrences.FirstOrDefault(oc => ((iEvent)oc.Source).AvailabilityID == (Int32)AvailabilityTypes.TRANSPARENT); //Transparent
 
                 /*
                  take the occurrences in order of status, on top always, busy occurrence
                  */
+                /* IagoSRL@2015-09-28:
+                 * 
+                 * - removed transparent from computation, is a bugfix because transparent
+                 * just means 'does not affects availability', so must not be taked into consideration, not overlapping
+                 * 'free' as was happen. Minor performance benefit removing that
+                 * 
+                 * - changed next lines order and added 'else if', performance benefit since now small priority statuses
+                 * will not being analized when a higher is found (this happens per each slot, and there are a lot)
+                 * */
 
-                if (freeOc.Source != null) ocurrence = freeOc;
-                if (tentOc.Source != null) ocurrence = tentOc;
-                if (tranOc.Source != null) ocurrence = tranOc;
-                if (unavOc.Source != null) ocurrence = unavOc;
                 if (busyOc.Source != null) ocurrence = busyOc;
+                else if (unavOc.Source != null) ocurrence = unavOc;
+                else if (tentOc.Source != null) ocurrence = tentOc;
+                else if (freeOc.Source != null) ocurrence = freeOc;
+
+                //if (tranOc.Source != null) ocurrence = tranOc;
             }
             else ocurrence = ocurrences.FirstOrDefault();
 

@@ -117,6 +117,7 @@ function DateAvailability(values) {
         are free almost for the given duration. This allows to choose times
         that fit the needed service duration.
     **/
+    var createTimeSlots = require('../utils/createTimeSlots');
     this.getFreeTimeSlots = function getFreeTimeSlots(duration, slotSizeMinutes) {
         
         slotSizeMinutes = slotSizeMinutes || this.schedulingPreferences().incrementsSizeInMinutes();
@@ -145,37 +146,37 @@ function DateAvailability(values) {
             return slots;
         }
     };
+    
+    /**
+        Returns a list of objects { startTime:Date, endTime:Date }
+        for every free/available time range in the date
+    **/
+    this.getFreeTimeRanges = function getFreeTimeRanges() {
+        
+        var date = this.date(),
+            today = getDateWithoutTime();
+    
+        // Quick return with empty list when
+        // - past date (no time)
+        // - no available time (already computed)
+        if (date < today ||
+            this.availableMinutes() <= 0) {
+            return [];
+        }
+        else {
+            var slots = [];
+            // Iterate every free appointment
+            this.list().forEach(function (apt) {
+                if (apt.id() === Appointment.specialIds.free) {
+                    slots.push({
+                        startTime: apt.startTime(),
+                        endTime: apt.endTime()
+                    });
+                }
+            });
+            return slots;
+        }
+    };
 }
 
 module.exports = DateAvailability;
-
-/**
-    It creates slots between the given times and size for each one.
-    Past times are avoided, because are not available
-**/
-function createTimeSlots(from, to, size, duration) {
-    var i = moment(from),
-        d,
-        slots = [],
-        now = new Date(),
-        enought;
-
-    // Shortcut if bad 'to' (avoid infinite loop)
-    if (to <= from)
-        return slots;
-
-    while(i.toDate() < to) {
-        d = i.clone().toDate();
-        enought = i.clone().add(duration, 'minutes').toDate();
-        // Check that:
-        // - is not a past date
-        // - it has enought time in advance to fill the expected duration
-        if (d >= now &&
-            enought <= to)
-            slots.push(d);
-        // Next slot
-        i.add(size, 'minutes');
-    }
-    
-    return slots;
-}

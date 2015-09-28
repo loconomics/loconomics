@@ -4,8 +4,29 @@
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
 
-    dynamic data = null;
+    DateTime start = DateTime.Now;
 
-    data = LcEmailTemplate.GetBookingInfo(); // LcRest.Booking.GetList(141, DateTime.Today.AddDays(-200), DateTime.Today);
-}    
-@Newtonsoft.Json.JsonConvert.SerializeObject(data)
+    //var data = LcEmailTemplate.GetBookingInfo(); // LcRest.Booking.GetList(141, DateTime.Today.AddDays(-200), DateTime.Today);
+    
+    var cu = new CalendarDll.CalendarUtils();
+    var calUser = new CalendarDll.CalendarUser(141);
+    var startTime = new DateTime(2015, 9, 22); //new DateTime(2012, 1, 1); 
+    var endTime = new DateTime(2015, 9, 23);
+    
+    var aux = cu.OptimizedGetEventsByUserDateRange(calUser, startTime, endTime, "");
+    var data = aux.Select(ev => new { startTime = ev.Start.ToString("s"), endTime = ev.End.ToString("s"), uid = ev.UID, dow = ev.Start.DayOfWeek.ToString(), sum = ev.Summary });
+
+    //var data = cu.GetFreeEvents(calUser, startTime, endTime, DateTime.Today);
+}
+@*Newtonsoft.Json.JsonConvert.SerializeObject(data)*@
+@ObjectInfo.Print(data)
+
+PROCESS DURATION: @((DateTime.Now - start).ToString())
+
+@{
+   start = DateTime.Now;
+   var data2 = cu.GetUtcFreeOccurrences(141, startTime, endTime);
+}
+@ObjectInfo.Print(data2)
+
+PROCESS DURATION: @((DateTime.Now - start).ToString())
