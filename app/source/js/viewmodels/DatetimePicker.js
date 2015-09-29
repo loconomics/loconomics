@@ -16,10 +16,10 @@ function DatetimePickerVM(app, element) {
     
     this.selectedDate = ko.observable(getDateWithoutTime());
     this.isLoading = ko.observable(false);
-    this.requiredDuration = ko.observable(0);
+    this.requiredDurationMinutes = ko.observable(0);
     
     this.durationDisplay = ko.pureComputed(function() {
-        var fullMinutes = this.requiredDuration();
+        var fullMinutes = this.requiredDurationMinutes();
         if (fullMinutes <= 0)
             return '';
 
@@ -38,7 +38,7 @@ function DatetimePickerVM(app, element) {
     this.dateAvail = ko.observable();
     this.groupedSlots = ko.computed(function(){
         
-        var requiredDuration = this.requiredDuration();
+        var requiredDurationMinutes = this.requiredDurationMinutes();
         
         /*
           before 12:00pm (noon) = morning
@@ -70,7 +70,7 @@ function DatetimePickerVM(app, element) {
         ];
 
         // Populate groups with the time slots
-        var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(requiredDuration) || [];
+        var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(requiredDurationMinutes) || [];
         // Iterate to organize by group
         slots.forEach(function(slot) {
 
@@ -166,7 +166,7 @@ function DatetimePickerVM(app, element) {
             }));*/
         }.bind(this))
         .catch(function(err) {
-            this.app.modals.showError({
+            app.modals.showError({
                 title: 'Error loading availability',
                 error: err
             });

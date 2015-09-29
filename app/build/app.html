@@ -796,23 +796,7 @@
                  <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
 
                 <div class="Box-sm">
-                  <div class="ServiceProfessionalInfo ServiceProfessionalInfo--md" data-bind="with: serviceProfessionalInfo">
-                    <div class="Avatar Avatar--primary Avatar--sm">
-                      <img data-bind="attr: { src: profile().photoUrl }">
-                    </div>
-                     <h3 class="ServiceProfessionalInfo-name" data-bind="text: profile().fullName"></h3>
-
-                    <div class="ServiceProfessionalInfo-jobTitle" data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></div>
-                    <div class="ServiceProfessionalInfo-businessName" data-bind="text: profile().businessName"></div>
-                    <div class="ServiceProfessionalInfo-meta">
-                      <app-stars-rating params="rating: rating().ratingAverage, total: rating().totalRatings"
-                      class="text-secondary"></app-stars-rating> <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': verificationsSummary().total + 'verifications' }"></i> (<span data-bind="text: verificationsSummary().total"></span>)</span>
-                      <span
-                      class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i>
-                        </span> <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" data-bind="css: { 'ion-ios-heart': isClientFavorite, 'ion-ios-heart-outline': !isClientFavorite() }, attr: { 'aria-description': isClientFavorite() ? 'Favorite' : '' }"></i></span>
-
-                    </div>
-                  </div>
+                  <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
                 </div>
                 <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
                 <div data-bind="visible: supportsGratuity">
@@ -927,7 +911,6 @@
               <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectTime')() }">
                  <h1 class="SectionTitle">Select a start day and time</h1>
 
-                <app-datetime-picker params="api: serviceStartDatePickerView"></app-datetime-picker>
                 <!--<div class="isolated">
                         <div>
                             <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
@@ -982,13 +965,46 @@
                     <p>Your card will be authorized for $<span data-bind="text: summary.totalPrice"></span>.
                       <span
                       data-bind="visible: !booking.instantBooking()">If you rrequest is accepted (within 18 hours), we'll change your card
-                        the day <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile().firstName()"></span> performs
+                        the day <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span> performs
                         the scheduled services.</span>
                     </p>
                   </div>
                 </div>
               </div>
               <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('confirm')() }">
+                 <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
+
+                <div class="Box-sm">
+                  <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo }"></div>
+                </div>
+                <div class="Box-sm">
+                  <ul class="TilesList">
+                    <li></li>
+                    <li>
+                      <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'selectTimes')">
+                        <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ios-clock-outline"></span>
+
+                        </div>
+                        <div class="Tile-content" data-bind="with: booking.serviceDate()">
+                          <div data-bind="visible: startTime(), text: startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                          <div data-bind="visible: startTime(), text: displayedTimeRange()"></div>
+                          <p data-bind="visible: !startTime()" class="text-muted">Select date/time</p>
+                        </div>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'selectLocation')">
+                        <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ios-location-outline"></span>
+
+                        </div>
+                        <div class="Tile-content" data-bind="with: booking.serviceAddress()">
+                          <p data-bind="visible: singleLine, text: singleLine"></p>
+                          <p data-bind="visible: !singleLine()" class="text-muted">Select/Add location</p>
+                        </div>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
                 <div class="isolated">
                   <div>
                     <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: save">Confirm</button>
@@ -4132,16 +4148,16 @@
       </ul>
     </script>
     <script type="text/html" id="service-professional-info-template">
-      <div class="ServiceProfessionalInfo ServiceProfessionalInfo--md" data-bind="css: modClasses, if: profile() && jobTitle()">
-          <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: photoUrl }"></div>
-          <h3 class="ServiceProfessionalInfo-name" data-bind="text: profile().fullName">Joshua Danielson</h3>
-          <div class="ServiceProfessionalInfo-jobTitle" data-bind="text: jobTitle().jobTitleName">Massage Therapist</div>
-          <div class="ServiceProfessionalInfo-businessName" data-bind="text: profile().businessName">Tact Massage Therapy</div>
+      <div class="ServiceProfessionalInfo ServiceProfessionalInfo--md">
+          <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: profile() && profile().photoUrl }"></div>
+          <h3 class="ServiceProfessionalInfo-name" data-bind="text: profile() && profile().fullName"></h3>
+          <div class="ServiceProfessionalInfo-jobTitle" data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></div>
+          <div class="ServiceProfessionalInfo-businessName" data-bind="text: profile() && profile().businessName"></div>
           <div class="ServiceProfessionalInfo-meta">
-              <app-stars-rating params="rating: 4.5, total: 1283" class="text-secondary"></app-stars-rating>
-              <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" aria-description="4 Verifications"></i> (14)</span>
-              <span class="BackgroundCheckRating"><i class="fa ion ion-ios-checkmark" aria-hidden="true" aria-description="Background Check: OK"></i></span>
-              <span class="ServiceProfessionalInfo-favorite"><i class="fa ion ion-ios-heart ion-ios-heart-outlineDISABLED" aria-hidden="true"></i></span>
+              <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings" class="text-secondary"></app-stars-rating>
+              <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)</span>
+              <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i></span>
+              <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" data-bind="css: { 'ion-ios-heart': isClientFavorite, 'ion-ios-heart-outline': !isClientFavorite() }, attr: { 'aria-description': isClientFavorite() ? 'Favorite' : '' }"></i></span>
           </div>
       </div>
     </script>

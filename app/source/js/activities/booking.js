@@ -130,8 +130,6 @@ function ViewModel(app) {
     /// Booking Data, request options and related entities
     this.booking = new Booking();
     this.newDataReady = ko.observable(false);
-    this.serviceAddresses = new ServiceAddresses();
-    this.isLoadingServiceAddresses = ko.observable(false);
     this.summary = new PricingSummaryVM();
     this.bookCode = ko.observable(null);
     this.serviceProfessionalServices = new ServiceProfessionalServiceVM(app);
@@ -140,6 +138,12 @@ function ViewModel(app) {
     this.makeRepeatBooking = ko.observable(false);
     this.promotionalCode = ko.observable('');
     this.paymentMethod = ko.observable(null); // InputPaymentMethod
+    
+    ///
+    /// Address
+    this.serviceAddresses = new ServiceAddresses();
+    this.isLoadingServiceAddresses = ko.observable(false);
+    this.serviceAddresses.selectedAddress.subscribe(this.booking.serviceAddress, this);
 
     ///
     /// Gratuity
@@ -171,7 +175,7 @@ function ViewModel(app) {
     
     ///
     /// Service Professional Info
-    this.serviceProfessionalInfo = ko.observable(null);
+    this.serviceProfessionalInfo = ko.observable(new PublicUser());
     this.isLoadingServiceProfessionalInfo = ko.observable(false);
     this.booking.serviceProfessionalUserID.subscribe(function(userID) {
         if (!userID) this.serviceProfessionalInfo(null);
@@ -180,9 +184,8 @@ function ViewModel(app) {
 
         app.model.users.getUser(userID)
         .then(function(info) {
-            info = new PublicUser(info);
-            info.selectedJobTitleID(this.booking.jobTitleID());
-            this.serviceProfessionalInfo(info);
+            info.selectedJobTitleID = this.booking.jobTitleID();
+            this.serviceProfessionalInfo().model.updateWith(info, true);
             this.isLoadingServiceProfessionalInfo(false);
         }.bind(this))
         .catch(function(err) {
@@ -204,7 +207,16 @@ function ViewModel(app) {
             this.booking.serviceDate(new EventDates({
                 startTime: dt
             }));
+            this.booking.serviceDate().duration({
+                minutes: this.summary.firstSessionDurationMinutes()
+            });
+
             this.progress.next();
+        }
+    }, this);
+    this.summary.firstSessionDurationMinutes.subscribe(function(minutes) {
+        if (this.serviceStartDatePickerView()) {
+            this.serviceStartDatePickerView().requiredDurationMinutes(minutes);
         }
     }, this);
     

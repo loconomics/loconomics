@@ -132,9 +132,19 @@ exports.registerAll = function(app) {
     });
     
     /// ServiceProfessionalInfo
+    var PublicUser = require('./models/PublicUser');
     ko.components.register('app-service-professional-info', {
+        synchronous: true,
         template: { element: 'service-professional-info-template' },
-        viewModel: require('./viewmodels/ServiceProfessionalInfo')
+        viewModel: {
+            createViewModel: function(params) {
+                var view = new PublicUser();
+                if (params && params.api)
+                    params.api(view);
+                
+                return view;
+            }
+        }
     });
     
     /// DatetimePicker
@@ -147,7 +157,7 @@ exports.registerAll = function(app) {
                 var view = new DateTimePickerVM(app, componentInfo.element);
                 if (params && params.api)
                     params.api(view);
-                
+
                 if (params)
                     Object.keys(params).forEach(function(key) {
                         if (ko.isObservable(view[key])) {
