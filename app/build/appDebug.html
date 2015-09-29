@@ -919,23 +919,72 @@
                  <h1 class="SectionTitle">Select preferred times</h1>
 
                 <app-datetime-picker params="api: serviceStartDatePickerView"></app-datetime-picker>
-                <div class="isolated">
-                  <div>
-                    <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
-                  </div>
-                </div>
-              </div>
+                <!--<div class="isolated">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        </div>
+                    </div>--></div>
               <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectTime')() }">
-                <div class="isolated">
-                  <div>
-                    <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
-                  </div>
-                </div>
-              </div>
+                 <h1 class="SectionTitle">Select a start day and time</h1>
+
+                <app-datetime-picker params="api: serviceStartDatePickerView"></app-datetime-picker>
+                <!--<div class="isolated">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        </div>
+                    </div>--></div>
               <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('payment')() }">
-                <div class="isolated">
-                  <div>
-                    <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
+                  <div data-bind="with: paymentMethod" class="WhiteForm">
+                    <div class="form-group"> <span class="input-group">
+                                    <input type="text" class="form-control" data-bind="textInput: cardNumber, disable: $parent.isLocked" placeholder="Card number">
+                                    <span class="input-group-addon" aria-hidden="true">
+                                        <span class="fa ion ion-card fa-lg"></span>
+</span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-7">
+                        <div class="form-group"> <span class="input-group">
+                                            <span class="input-group-addon">Expiry</span>
+
+                          <input
+                          type="text" class="form-control" data-bind="value: expirationMonthYear, disable: $parent.isLocked"
+                          placeholder="mm/yyyy">
+                            </span>
+                        </div>
+                      </div>
+                      <div class="col-xs-5">
+                        <app-unlabeled-input params="placeholder: 'CCV', value: securityCode, disable: $parent.isLocked"></app-unlabeled-input>
+                      </div>
+                    </div>
+                    <div class="form-group"> <span class="input-group">
+                                    <input type="text" class="form-control" data-bind="textInput: billingAddress().postalCode, disable: $parent.isLocked" placeholder="Billing zip code">
+                                    <span class="input-group-addon"><span class="fa ion fa-lg ion-ios-home-outline"></span></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="isolated">
+                    <div>
+                      <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                    </div>
+                  </div>
+                  <div class="booking-secure-form-warning"> <span>
+                                <span class="fa ion ion-ios-locked-outline fa-lg" aria-hidden="true"></span>
+</span> <span>
+                                This is a secure 128 bit SSL encrypted form, and we're PCI compliant
+                            </span>
+
+                  </div>
+                  <div class="well">
+                     <h5><strong>How payment works:</strong></h5>
+
+                    <p>Your card will be authorized for $<span data-bind="text: summary.totalPrice"></span>.
+                      <span
+                      data-bind="visible: !booking.instantBooking()">If you rrequest is accepted (within 18 hours), we'll change your card
+                        the day <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile().firstName()"></span> performs
+                        the scheduled services.</span>
+                    </p>
                   </div>
                 </div>
               </div>

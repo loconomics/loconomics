@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-09-25
+/*! LoconomicsApp 2015-09-29
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -6361,13 +6361,23 @@ app-stars-rating {
   width: 5em;
 }
 
-/* line 21 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\NumberField.styl */
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\NumberField.styl */
+.NumberField.NumberField--month {
+  width: 4em;
+}
+
+/* line 27 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\NumberField.styl */
+.NumberField.NumberField--year {
+  width: 6em;
+}
+
+/* line 31 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\NumberField.styl */
 .NumberField.NumberField--center {
   margin: 0 auto;
   display: inline-block;
 }
 
-/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Sidebar.styl */
+/* line 36 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Sidebar.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Sidebar.styl */
 .Sidebar {
@@ -6549,10 +6559,37 @@ app-stars-rating {
   }
 }
 
-/* line 56 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
+/* line 75 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WhiteForm.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WhiteForm.styl */
+
+/* line 7 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WhiteForm.styl */
+.WhiteForm .form-control {
+  background: White;
+}
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WhiteForm.styl */
+.WhiteForm .input-group-addon {
+  background: White;
+}
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WhiteForm.styl */
+.WhiteForm .form-group {
+  border: 1px solid #ccc;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WhiteForm.styl */
+.WhiteForm .form-group .input-group-addon,
+.WhiteForm .form-group .form-control {
+  border-width: 0;
+}
+
+/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 75 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\calendar.styl */
+/* line 24 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\calendar.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\calendar.styl */
 
@@ -8743,9 +8780,23 @@ app-stars-rating {
   filter: none;
 }
 
-/* line 33 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 32 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking] .booking-secure-form-warning {
+  display: table;
+  width: auto;
+  margin: auto;
+}
 
-/* line 35 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 36 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+[data-activity=booking] .booking-secure-form-warning > span {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+
+/* line 46 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
 [data-activity=booking].animated .booking-steps {
   top: 0px;
   bottom: 0px;
@@ -8754,7 +8805,7 @@ app-stars-rating {
   position: absolute;
 }
 
-/* line 42 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 53 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
 [data-activity=booking].animated .booking-steps .booking-step {
   -webkit-transform: translateX(0px);
   -moz-transform: translateX(0px);
@@ -8790,7 +8841,7 @@ app-stars-rating {
   overflow: auto;
 }
 
-/* line 56 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 67 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
 [data-activity=booking].animated .booking-steps .booking-step[hidden] {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -8811,7 +8862,7 @@ app-stars-rating {
 }
 @media (min-width: 992px) {
 
-/* line 70 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 81 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated > .container {
     position: absolute;
     left: 0px;
@@ -8820,12 +8871,12 @@ app-stars-rating {
     bottom: 0px;
   }
 
-/* line 79 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 90 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated .Sidebar {
     z-index: 5;
   }
 
-/* line 85 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 96 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated .booking-steps {
     float: none;
     width: auto;
@@ -8835,12 +8886,12 @@ app-stars-rating {
     left: 25%;
   }
 
-/* line 93 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 104 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated .booking-steps .booking-step {
     padding: 0px 1px;
   }
 
-/* line 99 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
+/* line 110 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\booking.styl */
   [data-activity=booking].animated .booking-steps .booking-step[hidden] {
     -webkit-transform: translateX(-100px);
     -moz-transform: translateX(-100px);

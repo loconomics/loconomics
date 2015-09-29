@@ -119,6 +119,7 @@ var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalSer
     Booking = require('../models/Booking'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses'),
     InputPaymentMethod = require('../models/InputPaymentMethod'),
+    Address = require('../models/Address'),
     EventDates = require('../models/EventDates'),
     PublicUser = require('../models/PublicUser');
 
@@ -286,7 +287,9 @@ function ViewModel(app) {
         }).then(function(bookingData) {
             this.booking.model.updateWith(bookingData);
             if (this.booking.paymentEnabled()) {
-                this.paymentMethod(new InputPaymentMethod());
+                var ipm = new InputPaymentMethod();
+                ipm.billingAddress(new Address());
+                this.paymentMethod(ipm);
             }
 
             this.isLoadingNewBooking(false);
