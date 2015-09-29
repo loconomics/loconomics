@@ -111,31 +111,8 @@ A.prototype.confirmLoad = function() {
 var Model = require('../Models/Model');
 var numeral = require('numeral');
 
-var PricingSummaryDetail = require('../Models/PricingSummaryDetail');
-// NOTE Right now the viewmodel for details is equal to the original mode
-/* TODO Review if the pricingSummary viewmodels can be removed, mixed with original
-    models and moved to viewmodel/ */
-var PricingSummaryItemVM = PricingSummaryDetail;
-
-PricingSummaryItemVM.fromServiceProfessionalService = function(service) {
-    // TODO Support special hourly pricings, housekeeper, etc.
-    var allSessionMinutes = service.numberOfSessions () > 0 ?
-        service.serviceDurationMinutes() * service.numberOfSessions() :
-        service.serviceDurationMinutes();
-
-    return new PricingSummaryItemVM({
-        serviceName: service.name(),
-        serviceDescription: service.description(),
-        numberOfSessions: service.numberOfSessions(),
-        serviceDurationMinutes: allSessionMinutes,
-        firstSessionDurationMinutes: service.serviceDurationMinutes(),
-        price: service.price(),
-        serviceProfessionalServiceID: service.serviceProfessionalServiceID(),
-        hourlyPrice: (service.priceRateUnit() || '').toUpperCase() === 'HOUR' ? service.priceRate() : null
-    });
-};
-
-
+var PricingSummaryDetail = require('../Models/PricingSummaryDetail'),
+    PricingSummary = require('../Models/PricingSummary');
 
 var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalService'),
     BookingProgress = require('../viewmodels/BookingProgress'),
@@ -186,8 +163,8 @@ function ViewModel(app) {
     this.gratuityAmount.subscribe(this.summary.gratuityAmount);
     ko.computed(function() {
         var services = this.serviceProfessionalServices.selectedServices();
-        this.summary.services(services.map(function(service) {
-            return PricingSummaryItemVM.fromServiceProfessionalService(service);
+        this.summary.details(services.map(function(service) {
+            return PricingSummaryDetail.fromServiceProfessionalService(service);
         }));
     }, this);
     
@@ -218,12 +195,14 @@ function ViewModel(app) {
     this.serviceStartDatePickerView = ko.observable(null);
     ko.computed(function triggerSelectedDatetime() {
         var v = this.serviceStartDatePickerView(),
-            dt = v && v.selectedDatetime();
+            dt = v && v.selectedDatetime(),
+            current = this.booking.serviceDate();
 
-        if (dt) {
-            this.booking.serviceDate = new EventDates({
+        if (dt &&
+            dt.toString() !== (current && current.startTime().toString())) {
+            this.booking.serviceDate(new EventDates({
                 startTime: dt
-            });
+            }));
             this.progress.next();
         }
     }, this);
@@ -350,6 +329,9 @@ function ViewModel(app) {
         // Final step, confirm and save booking
         this.isSaving(true);
         
+        // Fill booking services from the selected services view
+        this.booking.pricingSummary(this.summary.toPricingSummary());
+        
         var requestOptions = {
             promotionalCode: this.promotionalCode(),
             bookCode: this.bookCode()
@@ -372,9 +354,9 @@ function PricingSummaryVM(values) {
     Model(this);
 
     this.model.defProperties({
-        services: {
+        details: {
             isArray: true,
-            Model: PricingSummaryItemVM
+            Model: PricingSummaryDetail
         },
         gratuityPercentage: 0,
         gratuityAmount: 0,
@@ -382,7 +364,7 @@ function PricingSummaryVM(values) {
     }, values);
 
     this.subtotalPrice = ko.pureComputed(function() {
-        return this.services().reduce(function(total, item) {
+        return this.details().reduce(function(total, item) {
             total += item.price();
             return total;
         }, 0);
@@ -415,7 +397,7 @@ function PricingSummaryVM(values) {
 
     this.items = ko.pureComputed(function() {
 
-        var items = this.services().slice();
+        var items = this.details().slice();
         var gratuity = this.gratuity();
 
         if (gratuity > 0) {
@@ -423,7 +405,7 @@ function PricingSummaryVM(values) {
                 'Gratuity (__gratuity__%)'.replace(/__gratuity__/g, (this.gratuityPercentage() |0)) :
                 'Gratuity';
 
-            items.push(new PricingSummaryItemVM({
+            items.push(new PricingSummaryDetail({
                 serviceName: gratuityLabel,
                 price: this.gratuity()
             }));
@@ -433,14 +415,14 @@ function PricingSummaryVM(values) {
     }, this);
     
     this.serviceDurationMinutes = ko.pureComputed(function() {
-        return this.services().reduce(function(total, item) {
+        return this.details().reduce(function(total, item) {
             total += item.serviceDurationMinutes();
             return total;
         }, 0);
     }, this);
     
     this.firstSessionDurationMinutes = ko.pureComputed(function() {
-        return this.services().reduce(function(total, item) {
+        return this.details().reduce(function(total, item) {
             total += item.firstSessionDurationMinutes();
             return total;
         }, 0);
@@ -455,4 +437,14 @@ function PricingSummaryVM(values) {
     this.firstSessionDurationDisplay = ko.pureComputed(function() {
         return duration2Language({ minutes: this.firstSessionDurationMinutes() });
     }, this);
+    
+    this.toPricingSummary = function() {
+        var plain = this.model.toPlainObject(true);
+        plain.subtotalPrice = this.subtotalPrice();
+        plain.feePrice = this.fees();
+        plain.totalPrice = this.totalPrice();
+        plain.serviceDurationMinutes = this.serviceDurationMinutes();
+        plain.firstSessionDurationMinutes = this.firstSessionDurationMinutes();
+        return new PricingSummary(plain);
+    };
 }

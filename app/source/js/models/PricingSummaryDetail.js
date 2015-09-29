@@ -4,7 +4,7 @@
 
 var Model = require('./Model');
 
-module.exports = function PricingSummaryDetail(values) {
+function PricingSummaryDetail(values) {
     
     Model(this);
 
@@ -24,4 +24,24 @@ module.exports = function PricingSummaryDetail(values) {
         createdDate: null,
         updatedDate: null
     }, values);
+}
+
+module.exports = PricingSummaryDetail;
+
+PricingSummaryDetail.fromServiceProfessionalService = function(service) {
+    // TODO Support special hourly pricings, housekeeper, etc.
+    var allSessionMinutes = service.numberOfSessions () > 0 ?
+        service.serviceDurationMinutes() * service.numberOfSessions() :
+        service.serviceDurationMinutes();
+
+    return new PricingSummaryDetail({
+        serviceName: service.name(),
+        serviceDescription: service.description(),
+        numberOfSessions: service.numberOfSessions(),
+        serviceDurationMinutes: allSessionMinutes,
+        firstSessionDurationMinutes: service.serviceDurationMinutes(),
+        price: service.price(),
+        serviceProfessionalServiceID: service.serviceProfessionalServiceID(),
+        hourlyPrice: (service.priceRateUnit() || '').toUpperCase() === 'HOUR' ? service.priceRate() : null
+    });
 };

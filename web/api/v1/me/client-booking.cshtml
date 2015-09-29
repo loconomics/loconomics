@@ -76,7 +76,7 @@
             
             Validation.RequireField("serviceProfessionalUserID", LcRessources.RequiredField("Service Professional"));
             Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
-            Validation.RequireField("serviceAddressID", LcRessources.RequiredField("Service Address"));
+            Validation.RequireField("serviceAddressID", LcRessources.RequiredField("Location"));
             Validation.Add("serviceProfessionalUserID", Validator.Integer("Service Professional"));
             Validation.Add("jobTitleID", Validator.Integer(LcRessources.RequiredField("Job Title")));
             Validation.Add("serviceAddressID", Validator.Integer(LcRessources.RequiredField("Location")));
@@ -102,19 +102,20 @@
                 * { serviceProfessionalUserID: 0, totalPrice: 0, clientInputData: null,... }
                 * like the pricing estimate detail object.
             */
-            if (!Request.Form.AllKeys.Contains<string>("pricing[]")) {
-                ModelState.AddError("pricing", "Choose almost one service");
+            if (!Request.Form.AllKeys.Contains<string>("services[]"))
+            {
+                ModelState.AddError("services", "Choose almost one service");
             }
-            var pricing = Request.Form.GetValues("pricing[]");
+            var pricing = Request.Form.GetValues("services[]");
             var pricingIds = new List<int>();
             if (pricing == null || pricing.Length < 1) {
-                ModelState.AddError("pricing", "Choose almost one service");
+                ModelState.AddError("services", "Choose almost one service");
             }
             else {
                 foreach(var pricingItem in pricing) {
                     var sid = pricingItem.AsInt(0);
                     if (sid == 0) {
-                        ModelState.AddError("pricing", "Some specified services are wrong");
+                        ModelState.AddError("services", "Some specified services are wrong");
                         break;
                     }
                     pricingIds.Add(sid);
@@ -173,9 +174,9 @@
                 
                 // Collect payment
                 var address = new LcData.Address {
-                    AddressLine1 = Request["billingAddress.addressLine1"],
-                    AddressLine2 = Request["billingAddress.addressLine2"],
-                    PostalCode = Request["billingAddress.postalCode"],
+                    AddressLine1 = Request["billingAddress[addressLine1]"],
+                    AddressLine2 = Request["billingAddress[addressLine2]"],
+                    PostalCode = Request["billingAddress[postalCode]"],
                     CountryID = locale.countryID
                 };
                 var autoAddress = LcRest.Address.GetPostalCodeData(address.PostalCode, address.CountryID, true);
@@ -186,14 +187,14 @@
                 
                 var paymentErrors = booking.CollectPayment(new LcPayment.InputPaymentMethod
                 {
-                    paymentMethodID = Request["paymentMethod.paymentMethodID"],
-                    cardNumber = Request["paymentMethod.cardNumber"],
-                    nameOnCard = Request["paymentMethod.nameOnCard"],
-                    expirationMonth = Request["paymentMethod.expirationMonth"],
-                    expirationYear = Request["paymentMethod.expirationYear"],
-                    securityCode = Request["paymentMethod.securityCode"],
+                    paymentMethodID = Request["paymentMethod[paymentMethodID]"],
+                    cardNumber = Request["paymentMethod[cardNumber]"],
+                    nameOnCard = Request["paymentMethod[nameOnCard]"],
+                    expirationMonth = Request["paymentMethod[expirationMonth]"],
+                    expirationYear = Request["paymentMethod[expirationYear]"],
+                    securityCode = Request["paymentMethod[securityCode]"],
                     billingAddress = address
-                }, Request["paymentMethod.savePayment"].AsBool());
+                }, Request["paymentMethod[savePayment]"].AsBool());
 
                 if (paymentErrors != null && paymentErrors.Count > 0)
                 {
