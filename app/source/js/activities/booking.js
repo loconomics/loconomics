@@ -108,11 +108,11 @@ A.prototype.confirmLoad = function() {
 };
 
 
-var Model = require('../Models/Model');
+var Model = require('../models/Model');
 var numeral = require('numeral');
 
-var PricingSummaryDetail = require('../Models/PricingSummaryDetail'),
-    PricingSummary = require('../Models/PricingSummary');
+var PricingSummaryDetail = require('../models/PricingSummaryDetail'),
+    PricingSummary = require('../models/PricingSummary');
 
 var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalService'),
     BookingProgress = require('../viewmodels/BookingProgress'),
@@ -139,6 +139,12 @@ function ViewModel(app) {
     this.promotionalCode = ko.observable('');
     this.paymentMethod = ko.observable(null); // InputPaymentMethod
     
+    // Displayed text when there is a payment card
+    this.paymentMethodDisplay = ko.pureComputed(function() {
+        var n = this.booking.paymentLastFourCardNumberDigits();
+        return n ? 'Card ending in ' + n : '';
+    }, this);
+
     ///
     /// Address
     this.serviceAddresses = new ServiceAddresses();
@@ -172,6 +178,12 @@ function ViewModel(app) {
             return PricingSummaryDetail.fromServiceProfessionalService(service);
         }));
     }, this);
+    
+    // Fill booking services from the selected services view
+    ko.computed(function() {
+        this.booking.pricingSummary(this.summary.toPricingSummary());
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     ///
     /// Service Professional Info
@@ -257,7 +269,7 @@ function ViewModel(app) {
         return this.serviceProfessionalServices.selectedServices().every(function(service) {
             return service.isPhone();
         });
-    }, this);
+    }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     ///
     /// Keeps the progress stepsList updated depending on the data
@@ -343,9 +355,6 @@ function ViewModel(app) {
     this.save = function() {
         // Final step, confirm and save booking
         this.isSaving(true);
-        
-        // Fill booking services from the selected services view
-        this.booking.pricingSummary(this.summary.toPricingSummary());
         
         var requestOptions = {
             promotionalCode: this.promotionalCode(),

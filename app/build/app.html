@@ -985,21 +985,69 @@
                         <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ios-clock-outline"></span>
 
                         </div>
-                        <div class="Tile-content" data-bind="with: booking.serviceDate()">
-                          <div data-bind="visible: startTime(), text: startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                          <div data-bind="visible: startTime(), text: displayedTimeRange()"></div>
-                          <p data-bind="visible: !startTime()" class="text-muted">Select date/time</p>
+                        <div class="Tile-content">
+                          <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                          <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().displayedTimeRange()"></div>
+                          <p data-bind="visible: !(booking.serviceDate() && booking.serviceDate().startTime())"
+                          class="text-muted">Select date/time</p>
                         </div>
                       </button>
                     </li>
-                    <li>
+                    <li data-bind="if: !isPhoneServiceOnly()">
                       <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'selectLocation')">
                         <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ios-location-outline"></span>
 
                         </div>
-                        <div class="Tile-content" data-bind="with: booking.serviceAddress()">
-                          <p data-bind="visible: singleLine, text: singleLine"></p>
-                          <p data-bind="visible: !singleLine()" class="text-muted">Select/Add location</p>
+                        <div class="Tile-content">
+                          <p data-bind="text: booking.serviceAddress() && booking.serviceAddress().singleLine() || 'Select/Add location', css: { 'text-muted': !(booking.serviceAddress() && booking.serviceAddress().singleLine()) }"></p>
+                        </div>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'services')">
+                        <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-ios-pricetags-outline"></span>
+
+                        </div>
+                        <div class="Tile-content">
+                          <p data-bind="text: booking.pricingSummary() && booking.pricingSummary().servicesSummary() || 'Select/Add service(s)', css: { 'text-muted': !(booking.pricingSummary() && booking.pricingSummary().servicesSummary()) }"></p>
+                        </div>
+                      </button>
+                    </li>
+                    <li class="InfoTile">
+                      <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-social-usd"></span>
+
+                      </div>
+                      <div class="Tile-content">
+                        <p data-bind="text: booking.pricingSummary() && booking.pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking.pricingSummary() && booking.pricingSummary().totalPrice())}"></p>
+                      </div>
+                    </li>
+                    <li data-bind="if: supportsGratuity">
+                      <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'services')">
+                        <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-cash"></span>
+
+                        </div>
+                        <div class="Tile-content">
+                          <p data-bind="text: summary.gratuity() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(summary.gratuity())}"></p>
+                        </div>
+                      </button>
+                    </li>
+                    <li data-bind="if: booking.paymentEnabled()">
+                      <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'payment')">
+                        <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-card"></span>
+
+                        </div>
+                        <div class="Tile-content">
+                          <p data-bind="text: paymentMethodDisplay() || 'Add payment method', css: { 'text-muted': !(paymentMethodDisplay())}"></p>
+                        </div>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'payment')">
+                        <div class="Tile-icon" aria-hidden="true"> <span class="fa ion ion-clipboard"></span>
+
+                        </div>
+                        <div class="Tile-content">
+                          <p data-bind="text: booking.specialRequests() || 'Add notes', css: { 'text-muted': !(booking.specialRequests())}"></p>
                         </div>
                       </button>
                     </li>

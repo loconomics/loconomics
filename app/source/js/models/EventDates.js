@@ -33,7 +33,6 @@ module.exports = function EventDates(values) {
             }
 
             var newEnd = moment(s).clone().add(value);
-            console.log('DURATION', value, moment(s).format(), newEnd.format());
             this.endTime(newEnd.toDate());
         },
         owner: this

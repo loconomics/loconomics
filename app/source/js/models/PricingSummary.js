@@ -3,6 +3,7 @@
 'use strict';
 
 var Model = require('./Model'),
+    ko = require('knockout'),
     PricingSummaryDetail = require('./PricingSummaryDetail');
 
 module.exports = function PricingSummary(values) {
@@ -32,4 +33,12 @@ module.exports = function PricingSummary(values) {
             isArray: true
         }
     }, values);
+    
+    this.servicesSummary = ko.computed(function() {
+        return this.details()
+        .map(function(detail) {
+            return detail.serviceName();
+        }).join(', ');
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 };
