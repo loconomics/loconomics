@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebMatrix.Data;
+using System.Web.WebPages;
 
 namespace LcRest
 {
@@ -118,6 +119,7 @@ namespace LcRest
         }
         #endregion
 
+        #region Instances
         public static Address FromDB(dynamic record)
         {
             if (record == null) return null;
@@ -148,6 +150,14 @@ namespace LcRest
                 kind = AddressKind.GetFromAddressDBRecord(record)
             };
         }
+        #endregion
+
+        #region Instance Util Methods
+        public bool IsNewAddress()
+        {
+            return addressID == NewAddressID;
+        }
+        #endregion
 
         #region SQL
         private const string sqlSelect = @"SELECT ";
@@ -399,10 +409,34 @@ namespace LcRest
             }
         }
 
+        /// <summary>
+        /// Checks if the provided addressID belongs to ALMOST ONE of the UserIDs provided.
+        /// </summary>
+        /// <param name="addressID"></param>
+        /// <param name="userIds"></param>
+        /// <returns></returns>
+        public static bool ItBelongsTo(int addressID, params int[] userIds)
+        {
+            using (var db = new LcDatabase())
+            {
+                var ownerUserID = (int?)db.QueryValue(@"
+                    SELECT userID FROM Address WHERE AddressID = @0
+                ", addressID);
+                if (ownerUserID.HasValue)
+                {
+                    foreach (var userID in userIds)
+                    {
+                        if (ownerUserID.Value == userID)
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
         #endregion
 
         #region Create/Update
-        public static int SetAddress(Address address)
+        public static int SetAddress(Address address, Database sharedDb = null)
         {
             // Inferred TypeID
             var internalTypeID = AddressType.Other;
@@ -463,7 +497,7 @@ namespace LcRest
                 address.addressName = "Service Area";
             }
 
-            using (var db = Database.Open("sqlloco"))
+            using (var db = new LcDatabase(sharedDb))
             {
 
                 // Different SQL for service addresses.

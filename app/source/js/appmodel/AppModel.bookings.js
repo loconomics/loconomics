@@ -150,14 +150,15 @@ exports.create = function create(appModel) {
             billingAddress = billingAddress.model.toPlainObject();
             delete paymentMethod.billingAddress;
         }
-        console.log('Booking', booking.pricingSummary());
+
         return {
             serviceProfessionalUserID: booking.serviceProfessionalUserID(),
             jobTitleID: booking.jobTitleID(),
-            serviceAddressID: booking.serviceAddressID(),
             serviceStartTime: booking.serviceDate() && booking.serviceDate().startTime(),
             alternative1StartTime: booking.alternativeDate1() && booking.alternativeDate1().startTime(),
             alternative2StartTime: booking.alternativeDate2() && booking.alternativeDate2().startTime(),
+            
+            serviceAddress: booking.serviceAddress().model.toPlainObject(),
 
             services: booking.pricingSummary() && booking.pricingSummary().details()
             .map(function(pricing) {

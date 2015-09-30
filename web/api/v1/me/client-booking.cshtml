@@ -18,6 +18,12 @@
     
     - POST /
         @params {
+            TODO complete list
+
+            serviceAddressID:int ID of the address where service will be performed (must belong to client or service professional
+                and is overwrited by the value of serviceAddress[addressID] if provided.
+            serviceAddress:Address Object to hold a serviceAddress[addressID] or the full details of a new
+                address saved for the client to be used as the place where service will be performed.
         }
 
         @result RestBooking. See the /bookings API for details.
@@ -76,10 +82,8 @@
             
             Validation.RequireField("serviceProfessionalUserID", LcRessources.RequiredField("Service Professional"));
             Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
-            Validation.RequireField("serviceAddressID", LcRessources.RequiredField("Location"));
             Validation.Add("serviceProfessionalUserID", Validator.Integer("Service Professional"));
             Validation.Add("jobTitleID", Validator.Integer(LcRessources.RequiredField("Job Title")));
-            Validation.Add("serviceAddressID", Validator.Integer(LcRessources.RequiredField("Location")));
             
             // TODO Implement gratuity as of #659
             //Validation.Add("gratuityAmount", Validator.Decimal("Gratuity must be a number"));
@@ -87,7 +91,6 @@
             
             var serviceProfessionalUserID = Request.Form["serviceProfessionalUserID"].AsInt();
             var jobTitleID = Request.Form["jobTitleID"].AsInt();
-            var serviceAddressID = Request.Form["serviceAddressID"].AsInt();
             var bookCode = Request.Form["bookCode"];
             //var gratuityAmount = Request.Form["gratuityAmount"].AsDecimal();
             //var gratuityPercentage = Request.Form["gratuityPercentage"].AsDecimal();
@@ -150,6 +153,30 @@
                 ModelState.AddError("startTime", requiredStartTimeName + " is not valid");
             }
 
+            var serviceAddress = new LcRest.Address
+            {
+                addressID = (Request["serviceAddress[addressID]"] ?? Request["serviceAddressID"]).AsInt(0),
+                addressLine1 = Request["serviceAddress[addressLine1]"],
+                addressLine2 = Request["serviceAddress[addressLine2]"],
+                addressName = Request["serviceAddress[addressName]"],
+                postalCode = Request["serviceAddress[postalCode]"],
+                specialInstructions = Request["serviceAddress[specialInstructions]"],
+                countryCode = Request["serviceAddress[countryCode]"] ?? locale.countryCode,
+                latitude = Request["serviceAddress[latitude]"].IsEmpty() ? (double?)null : (double)Request["serviceAddress[latitude]"].AsDecimal(),
+                longitude = Request["serviceAddress[longitude]"].IsEmpty() ? (double?)null : (double)Request["serviceAddress[longitude]"].AsDecimal()
+            };
+            if (serviceAddress.IsNewAddress()) {
+                serviceAddress.userID = userID;
+                
+                Validation.RequireField("serviceAddress[postalCode]", LcRessources.RequiredField("Zip Code"));
+                Validation.Add("serviceAddress[addressLine1]", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
+                Validation.Add("serviceAddress[addressLine2]", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
+                Validation.Add("serviceAddress[addressName]", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
+                Validation.Add("serviceAddress[specialInstructions]", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
+                Validation.Add("serviceAddress[latitude]", Validator.Decimal("Latitude must be a number"));
+                Validation.Add("serviceAddress[longitude]", Validator.Decimal("Longitude must be a number"));
+            }
+
             if (!Validation.IsValid()) {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
@@ -161,7 +188,7 @@
                     userID,
                     serviceProfessionalUserID,
                     jobTitleID,
-                    serviceAddressID,
+                    serviceAddress,
                     serviceStartTime.Value,
                     alternative1StartTime,
                     alternative2StartTime,

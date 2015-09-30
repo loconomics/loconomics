@@ -1555,7 +1555,7 @@ namespace LcRest
             int clientUserID,
             int serviceProfessionalUserID,
             int jobTitleID,
-            int serviceAddressID,
+            Address serviceAddress,
             DateTime serviceStartTime,
             DateTime? alternative1StartTime,
             DateTime? alternative2StartTime,
@@ -1649,7 +1649,33 @@ namespace LcRest
                 booking.pricingSummaryID = booking.pricingSummary.pricingSummaryID;
                 booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
 
-                // 4º: persisting booking on database
+                // 4º: Validate addressID or save the new one provided
+                if (!serviceAddress.IsNewAddress())
+                {
+                    // Validate the address is one from client or service professional
+                    if (!Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
+                    {
+                        throw new ConstraintException("Selected location is not valid.");
+                    }
+                    else
+                    {
+                        booking.serviceAddressID = serviceAddress.addressID;
+                    }
+                }
+                else
+                {
+                    // Save new client address for the service
+                    serviceAddress.userID = clientUserID;
+                    // Is a client service address, where perform a service but not related to
+                    // a job title but as customer
+                    serviceAddress.kind = Address.AddressKind.Service;
+                    serviceAddress.isServiceLocation = true;
+                    serviceAddress.jobTitleID = Address.NotAJobTitleID;
+                    // Save and get ID (passed in the connection to be in the same transaction)
+                    booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
+                }
+
+                // 5º: persisting booking on database
                 // Explicitly set incomplete status when payment is enabled (since payment info was not added still, it requires
                 // a call to another method after this).
                 // On no payment, depends on instantBooking
@@ -1661,7 +1687,6 @@ namespace LcRest
                 {
                     booking.bookingStatusID = (int)(booking.instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
                 }
-                booking.serviceAddressID = serviceAddressID;
                 Booking.Set(booking, clientUserID, db.Db);
 
                 // Persisting all or nothing:
