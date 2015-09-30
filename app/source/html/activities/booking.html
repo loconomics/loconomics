@@ -269,12 +269,12 @@
                                 </button>
                             </li>
                             <li>
-                                <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'payment')">
+                                <button type="button" class="InfoTile" data-bind="click: pickSpecialRequests">
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-clipboard"></span>
                                     </div>
                                     <div class="Tile-content">
-                                        <p data-bind="text: booking.specialRequests() || 'Add notes', css: { 'text-muted': !(booking.specialRequests())}"></p>
+                                        <p data-bind="text: booking.specialRequests() || specialRequestsPlaceholder(), css: { 'text-muted': !(booking.specialRequests())}"></p>
                                     </div>
                                 </button>
                             </li>

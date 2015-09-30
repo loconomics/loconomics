@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-09-29
+/*! LoconomicsApp 2015-09-30
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -8899,4 +8899,82 @@ app-stars-rating {
     -ms-transform: translateX(-100px);
     transform: translateX(-100px);
   }
+}
+
+/* line 68 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
+/** Modals styles **/
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\modals\textEditorModal.styl */
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\index.styl */
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\border.styl */
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\flex.styl */
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\image.styl */
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 13 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 578 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\size.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\source\css\modals\textEditorModal.styl */
+@media (max-width: 767px) {
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\source\css\modals\textEditorModal.styl */
+  #textEditorModal .modal-dialog {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: auto;
+  }
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\source\css\modals\textEditorModal.styl */
+  #textEditorModal .modal-dialog .modal-content {
+    border: none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    height: 100%;
+  }
+
+/* line 17 : D:\Iago\Proxectos\Loconomics\code\app\source\css\modals\textEditorModal.styl */
+  #textEditorModal .AppNav,
+  #textEditorModal .SmartNavBar {
+    position: static;
+  }
+}
+
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\modals\textEditorModal.styl */
+#textEditorModal .modal-footer {
+  border-top: none;
 }

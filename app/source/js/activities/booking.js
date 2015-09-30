@@ -371,6 +371,30 @@ function ViewModel(app) {
             app.modals.showError({ error: err });
         }.bind(this));
     }.bind(this);
+    
+    ///
+    /// Field Special requests (client notes to service professional)
+    this.specialRequestsPlaceholder = ko.pureComputed(function() {
+        var sp = this.serviceProfessionalInfo();
+        sp = sp.profile() && sp.profile().firstName();
+
+        return sp ? 'Add notes to ' + sp : 'Add notes';
+    }, this);
+    this.pickSpecialRequests = function() {
+        app.modals.showTextEditor({
+            title: this.specialRequestsPlaceholder(),
+            text: this.booking.specialRequests()
+        })
+        .then(function(text) {
+            this.booking.specialRequests(text);
+        }.bind(this))
+        .catch(function(err) {
+            if (err) {
+                app.modals.showError({ error: err });
+            }
+            // No error, do nothing just was dismissed
+        });
+    }.bind(this);
 }
 
 function PricingSummaryVM(values) {

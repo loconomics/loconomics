@@ -211,3 +211,5 @@ exports.showNotification = function showNotification(options) {
 };
 
 exports.showTimePicker = require('./modals/timePicker').show;
+
+exports.showTextEditor = require('./modals/textEditor').show;
