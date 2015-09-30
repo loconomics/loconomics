@@ -420,6 +420,13 @@ function ViewModel(app) {
             // No error, do nothing just was dismissed
         });
     }.bind(this);
+    
+    ///
+    /// URLs
+    this.urlTos = ko.observable('https://loconomics.com/en-US/About/TermsOfUse/');
+    this.urlPp = ko.observable('https://loconomics.com/en-US/About/PrivacyPolicy/');
+    this.urlBcp = ko.observable('https://loconomics.com/en-US/About/BackgroundCheckPolicy/');
+    this.urlCp = ko.observable('https://loconomics.com/en-US/About/CancellationPolicy/');
 }
 
 function PricingSummaryVM(values) {
