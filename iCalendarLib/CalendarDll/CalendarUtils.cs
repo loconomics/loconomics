@@ -1194,7 +1194,7 @@ namespace CalendarDll
                           ,[TimeBlock]
                           ,[DayofWeek]
                           ,[Description]
-                      FROM [loconomics].[dbo].[CalendarEvents]
+                      FROM [CalendarEvents]
                     WHERE userId = {2} AND (
                         (StartTime < {0} AND EndTime >= {1})
                         OR EXISTS (SELECT id from CalendarReccurrence AS R where R.EventID = CalendarEvents.Id)
