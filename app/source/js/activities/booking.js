@@ -196,7 +196,10 @@ function ViewModel(app) {
     this.serviceProfessionalInfo = ko.observable(new PublicUser());
     this.isLoadingServiceProfessionalInfo = ko.observable(false);
     this.booking.serviceProfessionalUserID.subscribe(function(userID) {
-        if (!userID) this.serviceProfessionalInfo(null);
+        if (!userID) {
+            this.serviceProfessionalInfo().model.reset();
+            return;
+        }
 
         this.isLoadingServiceProfessionalInfo(true);
 
