@@ -90,21 +90,19 @@ A.prototype.selectLocationLoad = function() {
 };
 
 A.prototype.selectTimesLoad = function() {
-    // TODO 
     this.viewModel.serviceStartDatePickerView().selectedDatetime(null);
+    this.viewModel.timeFieldToBeSelected('');
 };
 
 A.prototype.selectTimeLoad = function() {
-    // TODO 
     this.viewModel.serviceStartDatePickerView().selectedDatetime(null);
+    this.viewModel.timeFieldToBeSelected('serviceDate');
 };
 
 A.prototype.paymentLoad = function() {
-    // TODO 
 };
 
 A.prototype.confirmLoad = function() {
-    // TODO 
 };
 
 
@@ -217,21 +215,26 @@ function ViewModel(app) {
     ///
     /// Date time picker(s)
     this.serviceStartDatePickerView = ko.observable(null);
+    this.timeFieldToBeSelected = ko.observable('');
     ko.computed(function triggerSelectedDatetime() {
         var v = this.serviceStartDatePickerView(),
             dt = v && v.selectedDatetime(),
-            current = this.booking.serviceDate();
+            current = this.booking.serviceDate(),
+            field = this.timeFieldToBeSelected.peek();
 
-        if (dt &&
+        if (dt && field &&
             dt.toString() !== (current && current.startTime().toString())) {
-            this.booking.serviceDate(new EventDates({
+            this.booking[field](new EventDates({
                 startTime: dt
             }));
-            this.booking.serviceDate().duration({
+            this.booking[field]().duration({
                 minutes: this.summary.firstSessionDurationMinutes()
             });
 
-            this.progress.next();
+            if (this.booking.instantBooking())
+                this.progress.next();
+            else
+                this.timeFieldToBeSelected('');
         }
     }, this);
     this.summary.firstSessionDurationMinutes.subscribe(function(minutes) {
@@ -239,6 +242,16 @@ function ViewModel(app) {
             this.serviceStartDatePickerView().requiredDurationMinutes(minutes);
         }
     }, this);
+    
+    this.pickServiceDate = function() {
+        this.timeFieldToBeSelected('serviceDate');
+    }.bind(this);
+    this.pickAlternativeDate1 = function() {
+        this.timeFieldToBeSelected('alternativeDate1');
+    }.bind(this);
+    this.pickAlternativeDate2 = function() {
+        this.timeFieldToBeSelected('alternativeDate2');
+    }.bind(this);
     
     ///
     /// Progress management
@@ -258,6 +271,10 @@ function ViewModel(app) {
     this.getStepLabel = function(stepName) {
         return stepsLabels[stepName] || stepName;
     };
+    
+    // Reused step observers
+    this.isAtSelectTimes = this.progress.observeStep('selectTimes');
+    this.isAtSelectTime = this.progress.observeStep('selectTime');
     
     ///
     /// Reset

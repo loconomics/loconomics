@@ -115,26 +115,93 @@
                     </div>
                 </div>
                 
-                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectTimes')() }">
-                    <h1 class="SectionTitle">Select preferred times</h1>
+                <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
+                    <h1 class="SectionTitle">
+                        <span data-bind="visible: isAtSelectTimes">Select up to 3 appointment times</span>
+                        <span data-bind="visible: isAtSelectTime">Select a start day and time</span>                        &nbsp;
+                    </h1>
                     
-                    <app-datetime-picker params="api: serviceStartDatePickerView"></app-datetime-picker>
-                    
-                    <!--<div class="isolated">
-                        <div>
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
-                        </div>
-                    </div>-->
-                </div>
+                    <div data-bind="visible: !timeFieldToBeSelected()" class="Box-sm">
+                        <ul class="TilesList">
+                            <li data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime()">
+                                <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickServiceDate">
+                                <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                                <div class="Tile-content">
+                                    <div><strong>First choice:</strong></div>
+                                    <div data-bind="text: booking.serviceDate() && booking.serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></div>
+                                    <div data-bind="text: booking.serviceDate() && booking.serviceDate().displayedTimeRange()"></div>
+                                </div>
+                                <div class="Tile-addon"><span class="fa fa-lg ion ion-edit" aria-hidden="true"></span></div>
+                            </button></li>
+                            <li data-bind="visible: !(booking.serviceDate() && booking.serviceDate().startTime())">
+                                <button class="ItemAddonTile" type="button" data-bind="click: pickServiceDate">
+                                    <div class="Tile-marker"></div>
+                                    <div class="Tile-content">
+                                        <p class="text-muted">Select a first choice</p>
+                                    </div>
+                                    <div class="Tile-addon"><span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span></div>
+                                </button>
+                            </li>
 
-                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectTime')() }">
-                    <h1 class="SectionTitle">Select a start day and time</h1>
-                    
-                    <!--<div class="isolated">
-                        <div>
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                            <li data-bind="visible: booking.alternativeDate1() && booking.alternativeDate1().startTime()">
+                                <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickAlternativeDate1">
+                                <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                                <div class="Tile-content">
+                                    <div><strong>Second choice:</strong></div>
+                                    <div data-bind="text: booking.alternativeDate1() && booking.alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></div>
+                                    <div data-bind="text: booking.alternativeDate1() && booking.alternativeDate1().displayedTimeRange()"></div>
+                                </div>
+                                <div class="Tile-addon"><span class="fa fa-lg ion ion-edit" aria-hidden="true"></span></div>
+                            </button></li>
+                            <li data-bind="visible: !(booking.alternativeDate1() && booking.alternativeDate1().startTime())">
+                                <button class="ItemAddonTile" type="button" data-bind="click: pickAlternativeDate1">
+                                    <div class="Tile-marker"></div>
+                                    <div class="Tile-content">
+                                        <p class="text-muted">Select a second choice</p>
+                                    </div>
+                                    <div class="Tile-addon"><span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span></div>
+                                </button>
+                            </li>
+                            
+                            <li data-bind="visible: booking.alternativeDate2() && booking.alternativeDate2().startTime()">
+                                <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickAlternativeDate2">
+                                <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                                <div class="Tile-content">
+                                    <div><strong>Third choice:</strong></div>
+                                    <div data-bind="text: booking.alternativeDate2() && booking.alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></div>
+                                    <div data-bind="text: booking.alternativeDate2() && booking.alternativeDate2().displayedTimeRange()"></div>
+                                </div>
+                                <div class="Tile-addon"><span class="fa fa-lg ion ion-edit" aria-hidden="true"></span></div>
+                            </button></li>
+                            <li data-bind="visible: !(booking.alternativeDate2() && booking.alternativeDate2().startTime())">
+                                <button class="ItemAddonTile" type="button" data-bind="click: pickAlternativeDate2">
+                                    <div class="Tile-marker"></div>
+                                    <div class="Tile-content">
+                                        <p class="text-muted">Select a third choice</p>
+                                    </div>
+                                    <div class="Tile-addon"><span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span></div>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div data-bind="visible: timeFieldToBeSelected">
+                        <app-datetime-picker params="api: serviceStartDatePickerView"></app-datetime-picker>
+                    </div>
+
+                    <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
+                        <div class="isolated bottom-only" data-bind="visible: isAtSelectTimes">
+                            <div>
+                                <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                            </div>
                         </div>
-                    </div>-->
+
+                        <div class="well" data-bind="visible: !timeFieldToBeSelected()">
+                            <h5><strong>Why am I choosing three times?</strong></h5>
+                            <p>This allows us to figure out a good appointment time on both ends.
+                            Your service professional has 18 hours to confirm your appointment.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('payment')() }">
@@ -202,7 +269,7 @@
                     <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
                     
                     <div class="Box-sm">
-                        <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo }"></div>
+                        <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
                     </div>
                     
                     <div class="Box-sm">
