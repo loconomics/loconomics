@@ -34,6 +34,14 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
         var pri2 = AvailabilityPriorities[date2.AvailabilityTypeID];
         return pri1 >= pri2 ? date1 : date2;
     }
+    DateTime MinDateTime(DateTime t1, DateTime t2)
+    {
+        return t1 <= t2 ? t1 : t2;
+    }
+    DateTime MaxDateTime(DateTime t1, DateTime t2)
+    {
+        return t1 >= t2 ? t1 : t2;
+    }
     IEnumerable<CalendarDll.CalendarUtils.DateRange> GetTimeline(IEnumerable<CalendarDll.CalendarUtils.DateRange> dateRanges)
     {
         var enumerate = dateRanges.GetEnumerator();
@@ -76,35 +84,57 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
                 // new range will share its availability with one of the others, allowing
                 // to mix both in one.
                 //
+                // IMPORTANT: current may finish before prev (current inside prev) like
+                // |.............prev..............|
+                //        |......current....|
+                // |.prev.|.prev-or-current.|.prev.|
+                //
+                // TODO: If prev has higher or same priority, there is only one range, the prev
+                // TODO: If current has higher priority, three ranges are needed, the current keeps 'as is'
+                //
+
+                var buffer = new List<CalendarDll.CalendarUtils.DateRange>();
                 // - Return a reduced version of the prev
-                // (if there is place one!)
+                // (if there is place for one!)
                 if (prev.StartTime != current.StartTime) {
-                    yield return new CalendarDll.CalendarUtils.DateRange
+                    buffer.Add(new CalendarDll.CalendarUtils.DateRange
                     {
                         StartTime = prev.StartTime,
                         EndTime = current.StartTime,
                         AvailabilityTypeID = prev.AvailabilityTypeID
-                    };
+                    });
                 }
                 // - New range on the intersection, with the stronger availability
-                prev = new CalendarDll.CalendarUtils.DateRange
+                buffer.Add(new CalendarDll.CalendarUtils.DateRange
                 {
                     StartTime = current.StartTime,
-                    EndTime = prev.EndTime,
+                    EndTime = MinDateTime(current.EndTime, prev.EndTime),
                     AvailabilityTypeID = GetPriorityDateRange(prev, current).AvailabilityTypeID
-                };
+                });
                 // - Reduced version of the current
                 // (if there is place for one!)
                 if (prev.EndTime != current.EndTime) {
-
-                    yield return prev;
-                    
-                    prev = new CalendarDll.CalendarUtils.DateRange
+                    var maxEnd = MaxDateTime(prev.EndTime, current.EndTime);
+                    buffer.Add(new CalendarDll.CalendarUtils.DateRange
                     {
-                        StartTime = prev.EndTime,
-                        EndTime = current.EndTime,
-                        AvailabilityTypeID = current.AvailabilityTypeID
-                    };
+                        StartTime = MinDateTime(prev.EndTime, current.EndTime),
+                        EndTime = maxEnd,
+                        AvailabilityTypeID = maxEnd == current.EndTime ? current.AvailabilityTypeID : prev.AvailabilityTypeID
+                    });
+                }
+
+                // Release the buffer
+                if (buffer.Count == 0) {
+                    prev = current;
+                }
+                else {
+                    // Last range created keeps as prev, others are returned immediately
+                    var lastIndex = buffer.Count - 1;
+                    prev = buffer[lastIndex];
+                    buffer.RemoveAt(lastIndex);
+                    foreach(var b in buffer) {
+                        yield return b;
+                    }
                 }
             }
         }
@@ -162,6 +192,16 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
            StartTime = new DateTime(2015, 10, 3, 13, 0, 0),
            EndTime = new DateTime(2015, 10, 3, 15, 0, 0),
            AvailabilityTypeID = 2
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 15, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 18, 0, 0),
+           AvailabilityTypeID = 1
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 16, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 17, 0, 0),
+           AvailabilityTypeID = 2
        }
    };
    var testresultBasic = new List<CalendarDll.CalendarUtils.DateRange>
@@ -195,7 +235,22 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
            StartTime = new DateTime(2015, 10, 3, 14, 0, 0),
            EndTime = new DateTime(2015, 10, 3, 15, 0, 0),
            AvailabilityTypeID = 2
-       }
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 15, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 16, 0, 0),
+           AvailabilityTypeID = 1
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 16, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 17, 0, 0),
+           AvailabilityTypeID = 2
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 17, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 18, 0, 0),
+           AvailabilityTypeID = 1
+       }      
    };
    var testdata3Coincidences = new List<CalendarDll.CalendarUtils.DateRange>
    {
