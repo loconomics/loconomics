@@ -39,7 +39,7 @@
                             <tr>
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, I'm unable to accept your request for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. Please accept my apologies, and feel free to book me again in the future.</td>
                             </tr>
-							@if (info.booking.paymentCollected == 1)
+							@if (info.booking.paymentCollected)
 							{
                            <tr>
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Your card will <strong>NOT</strong> be charged and any authorization should expire shortly.</td>

@@ -20,7 +20,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), I'm just writing to confirm that you've cancelled my @info.userJobTitle.jobTitleSingularName services that were scheduled for @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime).
+                Hi, @(info.client.firstName), I'm just writing to confirm that you've cancelled my @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)).
             </div>
         </td>
     </tr>
@@ -39,24 +39,24 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I'm just writing to confirm that you've cancelled my @info.userJobTitle.jobTitleSingularName services that were scheduled for @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime). I'd love for you to book another time that's more convenient for you.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I'm just writing to confirm that you've cancelled my @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)). I'd love for you to book another time that's more convenient for you.</td>
                             </tr>
-							@if (policy != null && info.booking.paymentCollected == 1)
+							@if (policy != null && info.booking.paymentCollected)
 							{
                            <tr>
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
-								 @if (info.cancellationLimitDate <= DateTime.Now)  
-									{
-										<span>
-											My cancellation policy states you would have had to cancel your appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is my cancellation fee of <strong>@(policy.refundIfCancelledBefore.ToString("0.##%")) of the cost of booked services</strong>.
-										</span>
-									}
-									else
-									{
-										<span>
-											Since you've cancelled within my cancellation policy, your card will not be charged and any authorization should expire shortly.
-										</span>
-									}
+								    @if (info.cancellationLimitDate <= DateTime.Now)  
+								    {
+									    <span>
+										    My cancellation policy states you would have had to cancel your appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is my cancellation fee of <strong>@(policy.refundIfCancelledBefore.ToString("0.##%")) of the cost of booked services</strong>.
+									    </span>
+								    }
+								    else
+								    {
+									    <span>
+										    Since you've cancelled within my cancellation policy, your card will not be charged and any authorization should expire shortly.
+									    </span>
+								    }
 								</td>
 							</tr>
 							}
