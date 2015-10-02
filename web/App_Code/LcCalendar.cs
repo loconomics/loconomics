@@ -67,6 +67,11 @@ public static partial class LcCalendar
         Free = 1,
         Busy = 2,
         Tentative = 3,
+        /// <summary>
+        /// TODO This has no sense. An offline must be a type of event, is nothing about availability.
+        /// But there is another kind of availability: 'transparent' that just means event must be discarded
+        /// when computing availability.
+        /// </summary>
         Offline = 4
     }
 

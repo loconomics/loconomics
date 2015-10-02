@@ -10,24 +10,107 @@
     
     var cu = new CalendarDll.CalendarUtils();
     var calUser = new CalendarDll.CalendarUser(141);
-    var startTime = new DateTime(2014, 10, 12); //new DateTime(2012, 1, 1); 
-    var endTime = new DateTime(2015, 10, 18);
+    var startTime = new DateTime(2015, 10, 12); //new DateTime(2012, 1, 1); 
+    var endTime = new DateTime(2015, 10, 19);
     
     //var aux = cu.OptimizedGetEventsByUserDateRange(calUser, startTime, endTime, "");
     //var data = aux.Select(ev => new { startTime = ev.Start.ToString("s"), endTime = ev.End.ToString("s"), uid = ev.UID, dow = ev.Start.DayOfWeek.ToString(), sum = ev.Summary });
 
     //var data = cu.GetFreeEvents(calUser, startTime, endTime, DateTime.Today);
 }
-@*Newtonsoft.Json.JsonConvert.SerializeObject(data)*@
 @*ObjectInfo.Print(data)
 
 PROCESS DURATION: @((DateTime.Now - start).ToString())
 *@
+@functions {
+    Dictionary<int, int> AvailabilityPriorities = new Dictionary<int, int> {
+        { (int)LcCalendar.AvailabilityType.Busy, 40 }, // Busy stronger
+        { (int)LcCalendar.AvailabilityType.Unavailable, 30 }, // Unavailable
+        { (int)LcCalendar.AvailabilityType.Tentative, 20 }, // Tentative
+        { (int)LcCalendar.AvailabilityType.Free, 10 }  // Free
+    };
+    CalendarDll.CalendarUtils.DateRange GetPriorityDateRange(CalendarDll.CalendarUtils.DateRange date1, CalendarDll.CalendarUtils.DateRange date2) {
+        var pri1 = AvailabilityPriorities[date1.AvailabilityTypeID];
+        var pri2 = AvailabilityPriorities[date2.AvailabilityTypeID];
+        return pri1 >= pri2 ? date1 : date2;
+    }
+    IEnumerable<CalendarDll.CalendarUtils.DateRange> GetTimeline(IEnumerable<CalendarDll.CalendarUtils.DateRange> dateRanges)
+    {
+        var enumerate = dateRanges.GetEnumerator();
+        // Quick return
+        if (!enumerate.MoveNext()) {
+            yield break;
+        }
+        // First one, as previous on the iteration.
+        var prev = enumerate.Current;
+
+        while (enumerate.MoveNext())
+        {
+            var current = enumerate.Current;
+
+            if (current.StartTime == prev.EndTime)
+            {
+                yield return prev;
+                prev = current;
+            }
+            else if (current.StartTime > prev.EndTime)
+            {
+                // There is a gap, fill it with unavailable slot
+                yield return new CalendarDll.CalendarUtils.DateRange
+                {
+                    AvailabilityTypeID = (int)LcCalendar.AvailabilityType.Unavailable,
+                    StartTime = prev.EndTime,
+                    EndTime = current.StartTime
+                };
+                prev = current;
+            }
+            else /* current.StartTime < prev.EndTime */
+            {
+                // Intersection of events:
+                // |.....prev.....|
+                //         |.....current.....|
+                // |.prev..|.new..|..current.|
+                //
+                // - Return a reduced version of the prev
+                // (if there is place one!)
+                if (prev.StartTime != current.StartTime) {
+                    yield return new CalendarDll.CalendarUtils.DateRange
+                    {
+                        StartTime = prev.StartTime,
+                        EndTime = current.StartTime,
+                        AvailabilityTypeID = prev.AvailabilityTypeID
+                    };
+                }
+                // - New range on the intersection, with the stronger availability
+                prev = new CalendarDll.CalendarUtils.DateRange
+                {
+                    StartTime = current.StartTime,
+                    EndTime = prev.EndTime,
+                    AvailabilityTypeID = GetPriorityDateRange(prev, current).AvailabilityTypeID
+                };
+                // - Reduced version of the current
+                // (if there is place for one!)
+                if (prev.EndTime == current.EndTime) {
+
+                    yield return prev;
+                    
+                    prev = new CalendarDll.CalendarUtils.DateRange
+                    {
+                        StartTime = prev.EndTime,
+                        EndTime = current.EndTime,
+                        AvailabilityTypeID = current.AvailabilityTypeID
+                    };
+                }
+            }
+        }
+        yield return prev;
+    }
+}
 @{
    start = DateTime.Now;
-   var data2 = cu.GetUtcFreeOccurrences(calUser.Id, startTime, endTime);
+   var data2 = GetTimeline(cu.GetUtcFreeOccurrences(calUser.Id, startTime, endTime));
 }
-@ObjectInfo.Print(data2.Count())
+@ObjectInfo.Print(data2)
 
 PROCESS DURATION: @((DateTime.Now - start).ToString())
 
