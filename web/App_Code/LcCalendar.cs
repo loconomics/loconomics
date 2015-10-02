@@ -347,11 +347,11 @@ public static partial class LcCalendar
         // Type work-hours: 2
         newevent.EventType = 2;
         // Automatic text, irrelevant
-        newevent.Summary = "Work hours";
+        newevent.Summary = "Work hours at " + workHoursDay.DayOfWeek.ToString();
         //newevent.Description = "";
         // free hours: 1
         newevent.CalendarAvailabilityTypeID = 1;
-        newevent.Transparency = true;
+        newevent.Transparency = false;
         newevent.StartTime = startDateTime;
         newevent.EndTime = endDateTime;
         newevent.IsAllDay = allDay;

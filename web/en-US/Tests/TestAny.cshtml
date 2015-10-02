@@ -10,8 +10,8 @@
     
     var cu = new CalendarDll.CalendarUtils();
     var calUser = new CalendarDll.CalendarUser(141);
-    var startTime = new DateTime(2015, 9, 22); //new DateTime(2012, 1, 1); 
-    var endTime = new DateTime(2015, 9, 23);
+    var startTime = new DateTime(2015, 10, 12); //new DateTime(2012, 1, 1); 
+    var endTime = new DateTime(2015, 10, 18);
     
     var aux = cu.OptimizedGetEventsByUserDateRange(calUser, startTime, endTime, "");
     var data = aux.Select(ev => new { startTime = ev.Start.ToString("s"), endTime = ev.End.ToString("s"), uid = ev.UID, dow = ev.Start.DayOfWeek.ToString(), sum = ev.Summary });
@@ -25,8 +25,53 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
 
 @{
    start = DateTime.Now;
-   var data2 = cu.GetUtcFreeOccurrences(141, startTime, endTime);
+   var data2 = cu.GetUtcFreeOccurrences(calUser.Id, startTime, endTime);
 }
-@ObjectInfo.Print(data2)
+@ObjectInfo.Print(data2.Count())
 
 PROCESS DURATION: @((DateTime.Now - start).ToString())
+
+@{
+    var data3 = LcCalendar.GetAvailability.Weekly(calUser.Id, startTime, endTime, false);
+}
+@ObjectInfo.Print(data3)
+
+@*{
+    var ical = new DDay.iCal.iCalendar();
+    var ievent = new DDay.iCal.Event();
+    ievent.Start = new DDay.iCal.iCalDateTime(2015, 10, 12, 10, 0, 0, "");
+    ievent.End = new DDay.iCal.iCalDateTime(2015, 10, 12, 15, 0, 0, "");
+    ievent.Status = DDay.iCal.EventStatus.Confirmed;
+    ievent.UID = "1234";
+    var rrule = new DDay.iCal.RecurrencePattern();
+    rrule.ByDay.Add(new DDay.iCal.WeekDay(DayOfWeek.Monday));
+    rrule.FirstDayOfWeek = 0;
+    rrule.Interval = 1;
+    rrule.Frequency = DDay.iCal.FrequencyType.Weekly;
+    ievent.RecurrenceRules.Add(rrule);
+    ical.Events.Add(ievent);
+
+    var userEvents = cu.GetEventsByUserDateRange(calUser, new DateTime(2006, 1, 1), new DateTime(2006, 1, 1), "");
+    var userEvent = userEvents.First();
+
+    //ical.Events.Add(userEvent);
+
+    var data4 = userEvent.GetOccurrences(new DDay.iCal.iCalDateTime(2015, 10, 12, 10, 0, 0, ""), new DDay.iCal.iCalDateTime(2015, 11, 12, 15, 0, 0, ""))
+    .Select(occ => {
+        return new
+        {
+            start = occ.Period.StartTime.ToString(),
+            end = occ.Period.EndTime.ToString(),
+            uid = ((DDay.iCal.IEvent)occ.Period.StartTime.AssociatedObject).UID,
+            status = ((DDay.iCal.IEvent)occ.Period.StartTime.AssociatedObject).Status
+        };
+    });
+}
+@ObjectInfo.Print(data4)
+@ObjectInfo.Print(new {
+    start = userEvent.Start.ToString(),
+    end = userEvent.End.ToString(),
+    status = userEvent.Status,
+    uid = userEvent.UID,
+    rrule = userEvent.RecurrenceRules
+})*@

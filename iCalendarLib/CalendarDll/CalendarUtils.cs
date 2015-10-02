@@ -1077,7 +1077,8 @@ namespace CalendarDll
         /// <remarks>2015-09 by iago</remarks>
         public iEvent OptimizedCreateEvent(
             CalendarDll.Data.CalendarEvents eventFromDB,
-            string defaultTZID)
+            string defaultTZID,
+            System.Data.Entity.DbContext db)
         {
             // TODO: When TZID in DB implemented as a recognized Time-Zone ID string, use next commented code:
             //defaultTZID = eventFromDB.TimeZone ?? defaultTZID;
@@ -1109,6 +1110,20 @@ namespace CalendarDll
                 Description = eventFromDB.Description ?? null
             };
 
+
+            // Additional data loading, references
+            eventFromDB.CalendarEventExceptionsPeriodsList = db.Database.SqlQuery<CalendarEventExceptionsPeriodsList>("SELECT * FROM CalendarEventExceptionsPeriodsList WHERE IdEvent = {0}", eventFromDB.Id).ToList();
+            eventFromDB.CalendarEventRecurrencesPeriodList = db.Database.SqlQuery<CalendarEventRecurrencesPeriodList>("SELECT * FROM CalendarEventRecurrencesPeriodList WHERE IdEvent = {0}", eventFromDB.Id).ToList();
+            eventFromDB.CalendarReccurrence = db.Database.SqlQuery<CalendarReccurrence>("SELECT * FROM CalendarReccurrence WHERE EventID = {0}", eventFromDB.Id).ToList();
+
+            foreach (var r in eventFromDB.CalendarEventExceptionsPeriodsList)
+            {
+                r.CalendarEventExceptionsPeriod = db.Database.SqlQuery<CalendarEventExceptionsPeriod>("SELECT * FROM CalendarEventExceptionsPeriod WHERE IdException = {0}", r.Id).ToList();
+            }
+            foreach (var r in eventFromDB.CalendarEventRecurrencesPeriodList)
+            {
+                r.CalendarEventRecurrencesPeriod = db.Database.SqlQuery<CalendarEventRecurrencesPeriod>("SELECT * FROM CalendarEventRecurrencesPeriod WHERE IdRecurrence = {0}", r.Id).ToList();
+            }
 
             //----------------------------------------------------------------------
             // Additional Processing
@@ -1203,7 +1218,10 @@ namespace CalendarDll
 
                 foreach (var currEventFromDB in listEventsFromDB)
                 {
-                    var iCalEvent = OptimizedCreateEvent(currEventFromDB, defaultTZID);
+                    // IT LOADS RELATED DATA TOO, like recurrence
+                    // MUST BE BEFORE the CreateBetweenEvent (but can be yielded later if order must change,
+                    // with change on CreateBetweenEvent on where time is applied; right now is after)
+                    var iCalEvent = OptimizedCreateEvent(currEventFromDB, defaultTZID, db);
 
                     yield return iCalEvent;
 
