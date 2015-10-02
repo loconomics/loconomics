@@ -55,6 +55,7 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
             }
             else if (current.StartTime > prev.EndTime)
             {
+                yield return prev;
                 // There is a gap, fill it with unavailable slot
                 yield return new CalendarDll.CalendarUtils.DateRange
                 {
@@ -70,6 +71,10 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
                 // |.....prev.....|
                 //         |.....current.....|
                 // |.prev..|.new..|..current.|
+                //
+                // TODO: Optimize creation of ranges: only 2 are needed, because the
+                // new range will share its availability with one of the others, allowing
+                // to mix both in one.
                 //
                 // - Return a reduced version of the prev
                 // (if there is place one!)
@@ -90,7 +95,7 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
                 };
                 // - Reduced version of the current
                 // (if there is place for one!)
-                if (prev.EndTime == current.EndTime) {
+                if (prev.EndTime != current.EndTime) {
 
                     yield return prev;
                     
@@ -105,12 +110,182 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
         }
         yield return prev;
     }
+    
+    List<string> CheckTestTimeline(string name, IEnumerable<CalendarDll.CalendarUtils.DateRange> result, IList<CalendarDll.CalendarUtils.DateRange> expected) {
+        var testErrors = new List<string>();
+        if (result.Count() != expected.Count)
+        {
+            testErrors.Add(name + ": expected result set has different size");
+        }
+        else
+        {
+            var ir = -1;
+            foreach (var r in result)
+            {
+                ir++;
+                if (!r.Equals(expected[ir]))
+                {
+                    testErrors.Add(name + ": result " + ir + " is different");
+                }
+            }
+        }
+        return testErrors;
+    }
 }
 @{
    start = DateTime.Now;
-   var data2 = GetTimeline(cu.GetUtcFreeOccurrences(calUser.Id, startTime, endTime));
+   //var occurrences = cu.GetUtcFreeOccurrences(calUser.Id, startTime, endTime);
+
+   var testdataBasic = new List<CalendarDll.CalendarUtils.DateRange>
+   {
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 5, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 8, 0, 0),
+           AvailabilityTypeID = 2
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 8, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 10, 0, 0),
+           AvailabilityTypeID = 1
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 12, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 14, 0, 0),
+           AvailabilityTypeID = 1
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 12, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 14, 0, 0),
+           AvailabilityTypeID = 3
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 13, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 15, 0, 0),
+           AvailabilityTypeID = 2
+       }
+   };
+   var testresultBasic = new List<CalendarDll.CalendarUtils.DateRange>
+   {
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 5, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 8, 0, 0),
+           AvailabilityTypeID = 2
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 8, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 10, 0, 0),
+           AvailabilityTypeID = 1
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 10, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 12, 0, 0),
+           AvailabilityTypeID = 0
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 12, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 13, 0, 0),
+           AvailabilityTypeID = 3
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 13, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 14, 0, 0),
+           AvailabilityTypeID = 2
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 14, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 15, 0, 0),
+           AvailabilityTypeID = 2
+       }
+   };
+   var testdata3Coincidences = new List<CalendarDll.CalendarUtils.DateRange>
+   {
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 16, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 20, 0, 0),
+           AvailabilityTypeID = 1
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 17, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 18, 0, 0),
+           AvailabilityTypeID = 2
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 17, 30, 0),
+           EndTime = new DateTime(2015, 10, 3, 21, 0, 0),
+           AvailabilityTypeID = 3
+       },
+       
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 4, 0, 0, 0),
+           EndTime = new DateTime(2015, 10, 4, 10, 0, 0),
+           AvailabilityTypeID = 1
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 2, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 6, 0, 0),
+           AvailabilityTypeID = 2
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 5, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 8, 0, 0),
+           AvailabilityTypeID = 3
+       },
+   };
+   var testresult3Coincidences = new List<CalendarDll.CalendarUtils.DateRange>
+   {
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 16, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 17, 0, 0),
+           AvailabilityTypeID = 1
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 17, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 18, 0, 0),
+           AvailabilityTypeID = 2
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 18, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 21, 0, 0),
+           AvailabilityTypeID = 3
+       },
+
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 21, 0, 0),
+           EndTime = new DateTime(2015, 10, 4, 0, 0, 0),
+           AvailabilityTypeID = 0
+       },
+       
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 4, 0, 0, 0),
+           EndTime = new DateTime(2015, 10, 4, 2, 0, 0),
+           AvailabilityTypeID = 1
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 2, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 6, 0, 0),
+           AvailabilityTypeID = 2
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 3, 6, 0, 0),
+           EndTime = new DateTime(2015, 10, 3, 8, 0, 0),
+           AvailabilityTypeID = 3
+       },
+       new CalendarDll.CalendarUtils.DateRange {
+           StartTime = new DateTime(2015, 10, 4, 8, 0, 0),
+           EndTime = new DateTime(2015, 10, 4, 10, 0, 0),
+           AvailabilityTypeID = 1
+       },
+   };
+
+   var data2 = GetTimeline(testdataBasic);
+
+   var testErrors = CheckTestTimeline("Basic", data2, testresultBasic);
+   
+   var data2b = GetTimeline(testdata3Coincidences);
+   testErrors.AddRange(CheckTestTimeline("3Coincidences", data2b, testresult3Coincidences));
 }
 @ObjectInfo.Print(data2)
+@ObjectInfo.Print(testErrors);
 
 PROCESS DURATION: @((DateTime.Now - start).ToString())
 

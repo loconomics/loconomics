@@ -1267,6 +1267,15 @@ namespace CalendarDll
             public DateTime StartTime;
             public DateTime EndTime;
             public int AvailabilityTypeID;
+            public override bool Equals(object obj)
+            {
+                var other = obj as DateRange;
+                if (other != null)
+                {
+                    return StartTime == other.StartTime && EndTime == other.EndTime && AvailabilityTypeID == other.AvailabilityTypeID;
+                }
+                return false;
+            }
         }
 
         public IEnumerable<DateRange> GetEventsOccurrencesRanges(iCalendar ical, DateTime startTime, DateTime endTime)
