@@ -1266,6 +1266,27 @@ namespace CalendarDll
         {
             public DateTime StartTime;
             public DateTime EndTime;
+            public int AvailabilityTypeID;
+        }
+
+        public IEnumerable<DateRange> GetEventsOccurrencesRanges(iCalendar ical, DateTime startTime, DateTime endTime)
+        {
+            foreach (var ev in ical.Events)
+            {
+                foreach (var occ in ev.GetOccurrences(startTime, endTime))
+                {
+                    yield return new DateRange {
+                        StartTime = occ.Period.StartTime.UTC,
+                        EndTime = occ.Period.EndTime.UTC,
+                        AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
+                    };;
+                }
+            }
+        }
+
+        public IEnumerable<DateRange> SortDateRange(IEnumerable<DateRange> dateRanges)
+        {
+            return dateRanges.OrderBy(dr => dr.StartTime);
         }
 
         /// <summary>
@@ -1289,26 +1310,9 @@ namespace CalendarDll
             // Later, results will need to be filtered for the time parts.
             endTime = endTime.AddDays(1);
 
-            /*foreach(var ev in data.Events) {
-                foreach (var occ in ev.GetOccurrences(startTime, endTime))
-                {
-                    yield return new DateRange {
-                        StartTime = occ.Period.StartTime.UTC,
-                        EndTime = occ.Period.EndTime.UTC
-                    };
-                }
-            }
-            */
-            // Same resultset, but around 3 times slower (on local testing) for unknow reason:
-            foreach (var occ in data.GetOccurrences(startTime, endTime))
-            {
-                yield return new DateRange
-                {
-                    StartTime = occ.Period.StartTime.UTC,
-                    EndTime = occ.Period.EndTime.UTC
-                };
-            }
-            // Similar information to know busy events with the API data.GetFreeBusy() but slower too than GetEventByRange
+            var occurrences = GetEventsOccurrencesRanges(data, startTime, endTime).OrderBy(dr => dr.StartTime);
+
+            return occurrences;
         }
         #endregion
 
