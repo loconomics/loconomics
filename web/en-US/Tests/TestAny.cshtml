@@ -43,7 +43,7 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
         return t1 >= t2 ? t1 : t2;
     }
 
-    const int MAX_GETTIMELINE_PASSES = 30;
+    const int MAX_GETTIMELINE_PASSES = 255;
     /// <summary>
     /// 
     /// </summary>
@@ -79,15 +79,16 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
         // a complete pass is done [like GetTimeline(GetTimeline(...))], only the specific sections of overlaped ranges
         // performs a second (or more) passes, and still is effective.
         // 
-        // TODO: Investigate if is possible a logic that avoid multiple passes OR a most effective way to check when
-        // multiple passes are needed (right now just [prevsBuffer.length > 1], maybe other quick logic can discard
+        // TODO: Review if the logic updates makes possible to remove the multiple passes feature OR a most effective way to check when
+        // multiple passes are needed (right now just [prevsBuffer.length > 2], maybe other quick logic can discard
         // cases that match that condiction but don't need a second pass).
+        // IMPORTANT: Right now, on unit tests for different edge cases extra passes are not needed.
         var needsAnotherPass = false;
 
         while (enumerate.MoveNext())
         {
             var current = enumerate.Current;
-            needsAnotherPass = prevsBuffer.Count > 1;
+            needsAnotherPass = prevsBuffer.Count > 2;
             
             foreach (var prev in prevsBuffer) {
                 if (current.StartTime >= prev.EndTime)
