@@ -42,7 +42,15 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
     {
         return t1 >= t2 ? t1 : t2;
     }
-    IEnumerable<CalendarDll.CalendarUtils.DateRange> GetTimeline(IEnumerable<CalendarDll.CalendarUtils.DateRange> dateRanges)
+
+    const int MAX_GETTIMELINE_PASSES = 30;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="dateRanges"></param>
+    /// <param name="passNumber">Used only internally, to avoid that recursive calls creates an stack overflow.</param>
+    /// <returns></returns>
+    IEnumerable<CalendarDll.CalendarUtils.DateRange> GetTimeline(IEnumerable<CalendarDll.CalendarUtils.DateRange> dateRanges, int passNumber = 0)
     {
         var enumerate = dateRanges.GetEnumerator();
         // Quick return
@@ -122,29 +130,34 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
                     
                     // - Return a reduced version of the prev
                     // (if there is place for one!)
+                    var minStart = MinDateTime(prev.StartTime, current.StartTime);
+                    var minEnd = MinDateTime(MinDateTime(prev.EndTime, current.EndTime), MaxDateTime(prev.StartTime, current.StartTime));
+                    //if (minEnd < minStart) throw new Exception("TEST minEnd < minStart::" + passNumber + ":" + minEnd.ToString("r") + ":" + minStart.ToString("r"));
                     if (prev.StartTime != current.StartTime) {
-                        var minStart = MinDateTime(prev.StartTime, current.StartTime);
                         newsBuffer.Add(new CalendarDll.CalendarUtils.DateRange
                         {
                             StartTime = minStart,
-                            EndTime = MaxDateTime(prev.StartTime, current.StartTime),
+                            EndTime = minEnd,
                             AvailabilityTypeID = minStart == current.StartTime ? current.AvailabilityTypeID : prev.AvailabilityTypeID
                         });
                     }
                     // - New range on the intersection, with the stronger availability
+                    var maxStart = MaxDateTime(MinDateTime(prev.EndTime, current.EndTime), MaxDateTime(prev.StartTime, current.StartTime));
+                    //if (maxStart < minEnd) throw new Exception("TEST maxStart < minEnd::" + maxStart.ToString("r") + ":" + minEnd.ToString("r"));
                     newsBuffer.Add(new CalendarDll.CalendarUtils.DateRange
                     {
-                        StartTime = current.StartTime,
-                        EndTime = MinDateTime(current.EndTime, prev.EndTime),
+                        StartTime = minEnd,
+                        EndTime = maxStart,
                         AvailabilityTypeID = GetPriorityDateRange(prev, current).AvailabilityTypeID
                     });
                     // - Reduced version of the current
                     // (if there is place for one!)
                     if (prev.EndTime != current.EndTime) {
                         var maxEnd = MaxDateTime(prev.EndTime, current.EndTime);
+                        //if (maxEnd < maxStart) throw new Exception("TEST maxEnd < maxStart::" + maxEnd.ToString("r") + ":" + maxStart.ToString("r"));
                         newsBuffer.Add(new CalendarDll.CalendarUtils.DateRange
                         {
-                            StartTime = MinDateTime(prev.EndTime, current.EndTime),
+                            StartTime = maxStart,
                             EndTime = maxEnd,
                             AvailabilityTypeID = maxEnd == current.EndTime ? current.AvailabilityTypeID : prev.AvailabilityTypeID
                         });
@@ -203,7 +216,9 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
             
             // Multi passes are needed to ensure correct results.
             if (needsAnotherPass) {
-                prevsBuffer = GetTimeline(prevsBuffer.OrderBy(x => x.StartTime)).ToList();
+                // Stack overflow, excessive passes, control:
+                if (passNumber + 1 > MAX_GETTIMELINE_PASSES) throw new Exception("Impossible to compute availability.");
+                prevsBuffer = GetTimeline(prevsBuffer.OrderBy(x => x.StartTime), passNumber + 1).ToList();
             }
         }
 
@@ -233,12 +248,23 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
         return testErrors;
     }
     
+    public class CheckTimelineResults {
+        public List<List<CalendarDll.CalendarUtils.DateRange>> Outputs = new List<List<CalendarDll.CalendarUtils.DateRange>>();
+        public List<List<string>> Errors = new List<List<string>>();
+    }
+    
     /// <summary>
     /// Unit Tests on CheckTimeline
-    /// Returns a list of errors
+    /// Returns a list of errors.
+    /// 
+    /// IMPORTANT: Expected output written for initial versions that has un-optimized output, that means that the
+    /// output is correct representing the availability but can contains consecutive ranges for the same availability ID
+    /// that could, when optimized, being joined into a unique range. If the function is optimized, or a second 
+    /// optimization function is applied, the expected resultset must be updated in order to avoid false negatives.
     /// </summary>
     /// <returns></returns>
-    List<string> CheckTimeline_UnitTests() {
+    CheckTimelineResults CheckTimeline_UnitTests()
+    {
         var testdataBasic = new List<CalendarDll.CalendarUtils.DateRange>
         {
             new CalendarDll.CalendarUtils.DateRange {
@@ -358,6 +384,22 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
                 EndTime = new DateTime(2015, 10, 4, 8, 0, 0),
                 AvailabilityTypeID = 3
             },
+            
+            new CalendarDll.CalendarUtils.DateRange {
+                StartTime = new DateTime(2015, 10, 5, 0, 0, 0),
+                EndTime = new DateTime(2015, 10, 5, 10, 0, 0),
+                AvailabilityTypeID = 1
+            },
+            new CalendarDll.CalendarUtils.DateRange {
+                StartTime = new DateTime(2015, 10, 5, 2, 0, 0),
+                EndTime = new DateTime(2015, 10, 5, 5, 0, 0),
+                AvailabilityTypeID = 2
+            },
+            new CalendarDll.CalendarUtils.DateRange {
+                StartTime = new DateTime(2015, 10, 5, 3, 0, 0),
+                EndTime = new DateTime(2015, 10, 5, 4, 0, 0),
+                AvailabilityTypeID = 3
+            }
         };
         var testresult3Coincidences = new List<CalendarDll.CalendarUtils.DateRange>
         {
@@ -418,16 +460,51 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
                 EndTime = new DateTime(2015, 10, 4, 10, 0, 0),
                 AvailabilityTypeID = 1
             },
+            
+            new CalendarDll.CalendarUtils.DateRange {
+                StartTime = new DateTime(2015, 10, 4, 10, 0, 0),
+                EndTime = new DateTime(2015, 10, 5, 0, 0, 0),
+                AvailabilityTypeID = 0
+            },
+            
+            new CalendarDll.CalendarUtils.DateRange {
+                StartTime = new DateTime(2015, 10, 5, 0, 0, 0),
+                EndTime = new DateTime(2015, 10, 5, 2, 0, 0),
+                AvailabilityTypeID = 1
+            },
+            new CalendarDll.CalendarUtils.DateRange {
+                StartTime = new DateTime(2015, 10, 5, 2, 0, 0),
+                EndTime = new DateTime(2015, 10, 5, 3, 0, 0),
+                AvailabilityTypeID = 2
+            },
+            new CalendarDll.CalendarUtils.DateRange {
+                StartTime = new DateTime(2015, 10, 5, 3, 0, 0),
+                EndTime = new DateTime(2015, 10, 5, 4, 0, 0),
+                AvailabilityTypeID = 2
+            },
+            new CalendarDll.CalendarUtils.DateRange {
+                StartTime = new DateTime(2015, 10, 5, 4, 0, 0),
+                EndTime = new DateTime(2015, 10, 5, 5, 0, 0),
+                AvailabilityTypeID = 2
+            },
+            new CalendarDll.CalendarUtils.DateRange {
+                StartTime = new DateTime(2015, 10, 5, 5, 0, 0),
+                EndTime = new DateTime(2015, 10, 5, 10, 0, 0),
+                AvailabilityTypeID = 1
+            }
         };
 
-        var data2 = GetTimeline(testdataBasic);
+        var result = new CheckTimelineResults();
 
-        var testErrors = CheckTestTimeline("Basic", data2, testresultBasic);
+        var output = GetTimeline(testdataBasic).ToList();
+        result.Outputs.Add(output);
+        result.Errors.Add(CheckTestTimeline("Basic", output, testresultBasic));
 
-        var data2b = GetTimeline(testdata3Coincidences);
-        testErrors.AddRange(CheckTestTimeline("3Coincidences", data2b, testresult3Coincidences));
+        output = GetTimeline(testdata3Coincidences).ToList();
+        result.Outputs.Add(output);
+        result.Errors.Add(CheckTestTimeline("3Coincidences", output, testresult3Coincidences));
 
-        return testErrors;
+        return result;
     }
 }
 @{
@@ -435,9 +512,9 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
    //var occurrences = cu.GetUtcFreeOccurrences(calUser.Id, startTime, endTime);
    //var data2 = GetTimeline(occurrences);
 
-   var testErrors = CheckTimeline_UnitTests();
+   var testOutput = CheckTimeline_UnitTests();
 }
-@ObjectInfo.Print(testErrors)
+@ObjectInfo.Print(testOutput)
 @*ObjectInfo.Print(data2)*@
 @*ObjectInfo.Print(data2b)*@
 
