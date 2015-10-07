@@ -644,28 +644,48 @@
             "get": {}
         },
 
-
-
-        'Put Availability Weekly Schedule (aka work-hours) WILL BE MOVED/CHANGED': {
-            url: '/api/v1/en-US/availability/weekly-schedule',
-            put: {
-                'all-time': false,
-                'json-data': '{'+
-                 '   "defaultStatus":"unavailable",'+
-                 '   "status":"available",'+
-                 '   "timeZone":"America/Los_Angeles",'+
-                 '   "slots":{'+
-                 '       "sunday":["00:00:00","00:15:00","00:30:00","00:45:00"],'+
-                 '       "tuesday":["14:00:00","14:15:00","14:30:00","14:45:00"]'+
-                 '   }'+
-                '}'
-            }
-        },
-        'Put Availability monthly-schedule WILL BE MOVED/CHANGED': {
-            url: '/api/v1/en-US/availability/monthly-schedule',
-            put: {
-                'json-data':
-                    '{"defaultStatus":"available","slots":{"2014-09-28":{},"2014-09-29":{"source":"user","status":"unavailable"},"2014-10-15":{"source":"user","status":"available"},"2014-11-08":{} }}'
+        "Weekly Schedule": {
+            "url": "/api/v1/en-US/me/weekly-schedule",
+            "get": {},
+            "put": {
+                "timeZone": "America/Los_Angeles",
+                "sunday": [
+                    {
+                        "start": "00:00:00",
+                        "end": "23:59:59"
+                    }
+                ],
+                "monday": [
+                    {
+                        "start": "00:00:00",
+                        "end": "23:59:59"
+                    }
+                ],
+                "tuesday": [
+                    {
+                        "start": "00:00:00",
+                        "end": "23:59:59"
+                    }
+                ],
+                "wednesday": [
+                    {
+                        "start": "00:00:00",
+                        "end": "23:59:59"
+                    }
+                ],
+                "thursday": [],
+                "friday": null,
+                "saturday": [
+                    {
+                        "start": "10:00:00",
+                        "end": "14:00:00"
+                    },
+                    {
+                        "start": "16:30:00",
+                        "end": "20:30:00"
+                    }
+                ],
+                "isAllTime": false
             }
         }
     };
