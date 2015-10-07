@@ -21,7 +21,7 @@ public static partial class LcCalendar
         // and precision to seconds.
         const string dateFormat = "yyyy'-'MM'-'dd";
         const string timeFormat = @"hh\:mm\:ss";
-        static readonly CultureInfo systemCulture = System.Globalization.CultureInfo.InvariantCulture;
+        public static readonly CultureInfo systemCulture = System.Globalization.CultureInfo.InvariantCulture;
         #endregion
 
         #region Public API

@@ -75,6 +75,8 @@ public static partial class LcCalendar
         Offline = 4
     }
 
+    public const string serverTimeZoneID = "America/Los_Angeles";
+
     /// <summary>
     /// Get availability table for the user between given date and times
     /// </summary>
@@ -415,7 +417,7 @@ public static partial class LcCalendar
         var slotsGap = TimeSpan.FromMinutes(15);
         var slotsRanges = new List<LcCalendar.WorkHoursDay>();
 
-        var timeZone = "America/Los_Angeles";
+        var timeZone = serverTimeZoneID;
         if (workhours.timeZone != null)
         {
             timeZone = workhours.timeZone.Value;
@@ -500,7 +502,7 @@ public static partial class LcCalendar
     /// It sets all time, all week days as available for the userId
     /// </summary>
     /// <param name="userId"></param>
-    public static void SetAllTimeAvailability(int userId)
+    public static void SetAllTimeAvailability(int userId, string timeZone = null)
     {
         // Adds slots ranges for all day time each week day
         var workHoursList = new List<WorkHoursDay>();
@@ -509,7 +511,8 @@ public static partial class LcCalendar
             workHoursList.Add(new WorkHoursDay {
                 DayOfWeek = wk,
                 StartTime = TimeSpan.Zero,
-                EndTime = TimeSpan.Zero
+                EndTime = TimeSpan.Zero,
+                TimeZone = timeZone ?? serverTimeZoneID
             });
         }
         
@@ -521,7 +524,7 @@ public static partial class LcCalendar
     /// </summary>
     /// <param name="userID"></param>
     /// <param name="workHoursDay"></param>
-    [Obsolete]
+    [Obsolete("Use SetAllProviderWorkHours")]
     public static void SetProviderWorkHours(int userID, WorkHoursDay workHoursDay) {
         var ent = new loconomicsEntities();
 
@@ -626,7 +629,7 @@ public static partial class LcCalendar
     /// </summary>
     /// <param name="userID"></param>
     /// <param name="dayOfWeek"></param>
-    [Obsolete]
+    [Obsolete("Use SetAllProviderWorkHours")]
     public static void DelProviderWorkHours(int userID, DayOfWeek dayOfWeek)
     {
         var ent = new loconomicsEntities();

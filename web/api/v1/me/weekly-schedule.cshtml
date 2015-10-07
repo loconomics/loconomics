@@ -5,19 +5,65 @@
     Options:
     
     - GET /
-        @result [{
-            ...
-        }]
+        @result {
+            "timeZone": "America/Los_Angeles",
+            "sunday": [
+                {
+                    "start": "00:00:00",
+                    "end": "23:59:59"
+                }
+            ],
+            "monday": [
+                {
+                    "start": "00:00:00",
+                    "end": "23:59:59"
+                }
+            ],
+            "tuesday": [
+                {
+                    "start": "00:00:00",
+                    "end": "23:59:59"
+                }
+            ],
+            "wednesday": [
+                {
+                    "start": "00:00:00",
+                    "end": "23:59:59"
+                }
+            ],
+            "thursday": [],
+            "friday": null,
+            "saturday": [
+                {
+                    "start": "10:00:00",
+                    "end": "14:00:00"
+                },
+                {
+                    "start": "16:30:00",
+                    "end": "20:30:00"
+                }
+            ],
+            "isAllTime": false
+        }
 
     - PUT /
 
-        @params {
-            monday: [{
-                start:isotime
-                end:isotime
-            }],
-            tuesday...... FOR EVERY WEEK DAY
-        }
+        @params Same structure than the output, but URLEncoded in Request.Form looks like (same data than previous GET example):
+            timeZone=America/Los_Angeles
+            sunday[0][start]=00:00:00
+            sunday[0][end]=23:59:59
+            monday[0][start]=00:00:00
+            monday[0][end]=23:59:59
+            tuesday[0][start]=00:00:00
+            tuesday[0][end]=23:59:59
+            wednesday[0][start]=00:00:00
+            wednesday[0][end]=23:59:59
+            friday=null
+            saturday[0][start]=10:00:00
+            saturday[0][end]=14:00:00
+            saturday[1][start]=16:30:00
+            saturday[1][end]=20:30:00
+            isAllTime=false
 
         @result Updated copy from database, as in a GET request
 
@@ -26,6 +72,44 @@
             "url": "/api/v1/en-US/me/weekly-schedule",
             "get": {},
             "put": {
+                "timeZone": "America/Los_Angeles",
+                "sunday": [
+                    {
+                        "start": "00:00:00",
+                        "end": "23:59:59"
+                    }
+                ],
+                "monday": [
+                    {
+                        "start": "00:00:00",
+                        "end": "23:59:59"
+                    }
+                ],
+                "tuesday": [
+                    {
+                        "start": "00:00:00",
+                        "end": "23:59:59"
+                    }
+                ],
+                "wednesday": [
+                    {
+                        "start": "00:00:00",
+                        "end": "23:59:59"
+                    }
+                ],
+                "thursday": [],
+                "friday": null,
+                "saturday": [
+                    {
+                        "start": "10:00:00",
+                        "end": "14:00:00"
+                    },
+                    {
+                        "start": "16:30:00",
+                        "end": "20:30:00"
+                    }
+                ],
+                "isAllTime": false
             }
         }
     }
@@ -46,8 +130,71 @@
 
         public override dynamic Put()
         {
+            var userID = WebSecurity.CurrentUserId;
+            var alltime = Request.Form["isAllTime"].AsBool(false);
+            var timeZone = Request.Form["timeZone"] ?? LcCalendar.serverTimeZoneID;
 
-            return null;
+            if (alltime)
+            {
+                LcCalendar.SetAllTimeAvailability(userID, timeZone);
+            }
+            else
+            {
+                // Read all passed week days and its array of timesRange
+                //var input = new Dictionary<string, object>();
+                var whdays = new List<LcCalendar.WorkHoursDay>();
+
+                foreach (var dow in Enum.GetNames(typeof(DayOfWeek)))
+                {
+                    var wk = String.Format(LcCalendar.GetAvailability.systemCulture, "{0}", dow).ToLower();
+                    //var list = new List<LcCalendar.GetAvailability.TimesRange>();
+                    //input.Add(wk, list);
+                    
+                    // The number of elements in each list is unknow, so we iterate from 0 to the last
+                    // one that has data; when reading a key that has no data (or invalid) on the start
+                    // or end properties, the loop is done.
+                    var i = 0;
+                    var done = false;
+                    while (!done) {
+                        var key = wk + "[" + i + "]";
+                        var start = TimeSpanFromISO(Request.Form[key + "[start]"]);
+                        var end = TimeSpanFromISO(Request.Form[key + "[end]"]);
+                        if (start.HasValue && end.HasValue) {
+                            /*list.Add(new LcCalendar.GetAvailability.TimesRange
+                            {
+                                start = start.Value,
+                                end = end.Value
+                            });*/
+                            whdays.Add(new LcCalendar.WorkHoursDay {
+                                StartTime = start.Value,
+                                EndTime = end.Value,
+                                TimeZone = timeZone,
+                                DayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), dow)
+                            });
+                        }
+                        else {
+                            done = true;
+                        }
+                        i++;
+                    }
+                }
+                
+                if (whdays.Count == 0) {
+                    throw new HttpException(400, "Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \"all days/times\".");
+                }
+
+                // Save it!
+                LcCalendar.SetAllProviderWorkHours(userID, whdays);
+            }
+
+            // Everything goes fine, latest details:
+            // Testing the alert
+            using (var db = Database.Open("sqlloco"))
+            {
+                db.Execute("EXEC TestAlertAvailability @0", userID);
+            }
+            // Updated data copy:
+            return LcCalendar.GetAvailability.WeeklySchedule(userID);
         }
     }
 }

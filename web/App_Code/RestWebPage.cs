@@ -257,5 +257,12 @@ public class RestWebPage
             (DateTime?)dt.ToLocalTime() :
             null;
     }
+    public static TimeSpan? TimeSpanFromISO(string timespan)
+    {
+        TimeSpan ts;
+        return (TimeSpan.TryParseExact(timespan, TimeFormat, null, out ts)) ?
+            (TimeSpan?)ts :
+            null;
+    }
     #endregion
 }
