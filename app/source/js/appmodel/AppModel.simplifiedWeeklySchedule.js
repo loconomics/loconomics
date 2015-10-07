@@ -6,10 +6,6 @@ var SimplifiedWeeklySchedule = require('../models/SimplifiedWeeklySchedule'),
     RemoteModel = require('../utils/RemoteModel'),
     moment = require('moment');
 
-// The slot size is fixed to 15 minutes by default.
-// NOTE: currently, the API only allows 15 minutes slots,
-// being that implicit, but part of the code is ready for explicit slotSize.
-var defaultSlotSize = 15;
 // A list of week day properties names allowed
 // to be part of the objects describing weekly schedule
 // (simplified or complete/slot based)
@@ -22,22 +18,12 @@ exports.create = function create(appModel) {
         ttl: { minutes: 1 },
         localStorageName: 'weeklySchedule',
         fetch: function fetch() {
-            return appModel.rest.get('availability/weekly-schedule')
+            return appModel.rest.get('me/weekly-schedule')
             .then(fromWeeklySchedule);
         },
         push: function push() {
-            var plainData = {
-                'all-time': false,
-                'json-data': {}
-            };
-            if (this.data.isAllTime() === true) {
-                plainData['all-time'] = true;
-            }
-            else {
-                plainData['json-data'] = JSON.stringify(toWeeklySchedule(this.data.model.toPlainObject(true)));
-            }
-
-            return appModel.rest.put('availability/weekly-schedule', plainData)
+            var plainData = toWeeklySchedule(this.data.model.toPlainObject(true));
+            return appModel.rest.put('me/weekly-schedule', plainData)
             .then(fromWeeklySchedule)
             .then(function(result) {
                 // We need to recompute availability as side effect of schedule
@@ -55,6 +41,29 @@ exports.create = function create(appModel) {
     return rem;
 };
 
+/**
+    Basically, from a multi date timeRanges structure
+    to a similar with only one timeRange per date and
+    managed in minutes in a 'from-to' structure.
+    
+    Source structure (some weekdays removed for brevity): {
+        "timeZone": "America/Los_Angeles",
+        "sunday": [{
+            "start": "00:00:00",
+            "end": "23:59:59"
+        }],
+        "monday": [],
+        "tuesday": null,
+        "saturday": [{
+            "start": "10:00:00",
+            "end": "14:00:00"
+        }, {
+            "start": "16:30:00",
+            "end": "20:30:00"
+        }],
+        "isAllTime": false
+    }
+**/
 function fromWeeklySchedule(weeklySchedule) {
     
     // New simplified object, as a plain object with
@@ -65,98 +74,29 @@ function fromWeeklySchedule(weeklySchedule) {
     // so plain is simple and better on performance; can be
     // converted easily to the SimplifiedWeeklySchedule object.
     var simpleWS = {
-        timeZone: weeklySchedule.timeZone || ''
+        timeZone: weeklySchedule.timeZone || '',
+        isAllTime: weeklySchedule.isAllTime
     };
-    
-    // Only supports 'available' status with default 'unavailable'
-    if (weeklySchedule.defaultStatus !== 'unavailable' ||
-        weeklySchedule.status !== 'available') {
-        throw {
-            name: 'input-format',
-            message: 'Weekly schedule, given statuses not supported, status: ' +
-            weeklySchedule.status + ', defaultStatus: ' + 
-            weeklySchedule.defaultStatus
-          };
-    }
-    
-    // given slotSize or default
-    var slotSize = (weeklySchedule.slotSize || defaultSlotSize) |0;
 
-    // Read slots per week-day ({ slots: { "sunday": [] } })
-    Object.keys(weeklySchedule.slots)
+    // Read timeRanges per week-day
+    Object.keys(weeklySchedule)
     .forEach(function(weekday) {
         
         // Verify is a weekday property, or exit early
         if (weekDayProperties.indexOf(weekday) === -1) {
             return;
         }
-        
-        var dayslots = weeklySchedule.slots[weekday];
-        
-        // We get the first available slot and the last consecutive
-        // to make the range
-        var from = null,
-            to = null,
-            previous = null;
 
-        // times are ordered in ascending
-        // and with format "00:00:00" that we convert to minutes
-        // (enough precision for simplified weekly schedule)
-        // using moment.duration
-        // NOTE: using 'some' rather than 'forEach' to be able
-        // to exit early from the iteration by returning 'true'
-        // when the end is reached.
-        dayslots.some(function(slot) {
-            var minutes = moment.duration(slot).asMinutes() |0;
-            // We have not still a 'from' time:
-            if (from === null) {
-                from = minutes;
-                previous = minutes;
-            }
-            else {
-                // We have a beggining, check if this is consecutive
-                // to previous, by checking previous plus slotSize
-                if (previous + slotSize === minutes) {
-                    // New end
-                    to = minutes;
-                    // Next iteration
-                    previous = minutes;
-                }
-                else {
-                    // No consecutive, we already has a range, any
-                    // additional slot is discarded, out of the
-                    // precision of the simplified weekly schedule,
-                    // so we can go out the iteration:
-                    return true;
-                    
-                    // NOTE: If in a future a more complete schedule
-                    // need to be wroten using multiple ranges rather
-                    // individual slots, this is the place to continue
-                    // coding, populating an array of [{from, to}] :-)
-                }
-            }
-        });
-        
-        // Slots checked, check the result
-        if (from !== null) {
-            
-            var simpleDay = {
-                from: from,
-                to: 0
+        var timeRanges = weeklySchedule[weekday];
+
+        if (timeRanges && timeRanges[0]) {
+            // Times comes in ISO format "00:00:00" that we convert to minutes
+            // (enough precision for simplified weekly schedule)
+            // using moment.duration
+            simpleWS[weekday] = {
+                from: moment.duration(timeRanges[0].start).asMinutes() |0,
+                to: moment.duration(timeRanges[0].end).asMinutes() |0
             };
-            simpleWS[weekday] = simpleDay;
-
-            // We have a range!
-            if (to !== null) {
-                // and has an end!
-                // add the slot size to the ending
-                simpleDay.to = to + slotSize;
-            }
-            else {
-                // smaller range, just one slot,
-                // add the slot size to the begining
-                simpleDay.to = from + slotSize;
-            }
         }
     });
 
@@ -167,55 +107,40 @@ function fromWeeklySchedule(weeklySchedule) {
 /**
     Pass in a plain object, not a model,
     getting an object suitable for the API endpoint.
+    
+    It returns a structure like the input source expected at fromWeeklySchedule
 **/
 function toWeeklySchedule(simplifiedWeeklySchedule) {
-
-    var slotSize = defaultSlotSize;
     
-    // It's build with 'available' as explicit status:
+    // Resulting structure
     var weeklySchedule = {
-        status: 'available',
-        defaultAvailability: 'unavailable',
-        slots: {},
-        slotSize: slotSize,
-        timeZone: simplifiedWeeklySchedule.timeZone
+        timeZone: simplifiedWeeklySchedule.timeZone,
+        isAllTime: simplifiedWeeklySchedule.isAllTime
     };
 
-    // Per weekday
-    Object.keys(simplifiedWeeklySchedule)
-    .forEach(function(weekday) {
+    // Avoid extra work if is all time, since all other properties
+    // will get discarded on that case.
+    // Otherwise, create the weekdays properties with the timeRanges
+    if (!weeklySchedule.isAllTime) {
+        // Per weekday
+        Object.keys(simplifiedWeeklySchedule)
+        .forEach(function(weekday) {
 
-        // Verify is a weekday property, or exit early
-        if (weekDayProperties.indexOf(weekday) === -1) {
-            return;
-        }
-
-        var simpleDay = simplifiedWeeklySchedule[weekday];
-
-        // We need to expand the simplified time ranges 
-        // in slots of the slotSize
-        // The end time will be excluded, since slots
-        // define only the start, being implicit the slotSize.
-        var from = simpleDay.from |0,
-            to = simpleDay.to |0;
-
-        // Create the slot array
-        weeklySchedule.slots[weekday] = [];
-
-        // Integrity verification
-        if (to > from) {
-            // Iterate by the slotSize until we reach
-            // the end, not including the 'to' since
-            // slots indicate only the start of the slot
-            // that is assumed to fill a slotSize starting
-            // on that slot-time
-            var previous = from;
-            while (previous < to) {
-                weeklySchedule.slots[weekday].push(minutesToTimeString(previous));
-                previous += slotSize;
+            // Verify is a weekday property, or exit early
+            if (weekDayProperties.indexOf(weekday) === -1) {
+                return;
             }
-        }
-    });
+
+            var simpleDay = simplifiedWeeklySchedule[weekday];
+
+            // Convert the minutes to ISO time format (00:00:00)
+            // and add it to a new array with a single timeRange:
+            weeklySchedule[weekday] = [{
+                start: minutesToTimeString(simpleDay.from |0),
+                end: minutesToTimeString(simpleDay.to |0)
+            }];
+        });
+    }
 
     // Done!
     return weeklySchedule;
