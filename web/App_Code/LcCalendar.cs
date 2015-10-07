@@ -227,7 +227,7 @@ public static partial class LcCalendar
         public string TimeZone;
     }
 
-    private static TimeSpan LastMinute = new TimeSpan(23, 59, 59);
+    public static TimeSpan LastMinute = new TimeSpan(23, 59, 59);
 
     /// <summary>
     /// Retrieve a list of Events of type Work Hours of the provider
@@ -404,6 +404,7 @@ public static partial class LcCalendar
     /// <param name="userId"></param>
     /// <param name="workhours"></param>
     /// <returns>It returns true if there was data and was saved, false otherwise</returns>
+    [Obsolete("Use SetWeeklySchedule and time-ranges instead of this.")]
     public static bool SaveWorkHoursJsonData(int userId, dynamic workhours)
     {
         if (workhours == null || workhours.slots == null)

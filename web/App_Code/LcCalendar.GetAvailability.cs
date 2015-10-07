@@ -25,6 +25,72 @@ public static partial class LcCalendar
         #endregion
 
         #region Public API
+        public class TimesRange
+        {
+            public TimeSpan start;
+            public TimeSpan end;
+        }
+        /// <summary>
+        /// Gets the weekly schedule of a user in a structure for the public REST API.
+        /// Result includes a timeZone property, a property for each weekday that includes
+        /// each one a list of TimesRanges, and a isAllTime property as true if all returned
+        /// weekdays are available for work in full.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        static public Dictionary<string, object> WeeklySchedule(int userID)
+        {
+            var result = new Dictionary<string, object>();
+            var data = LcCalendar.GetProviderWorkHours(userID);
+            // Bit flag to track if isAllTime: each bit matches a weekday position, if 1 is fullday,
+            // if all are 1 (127) is all time.
+            var isAllTime = 0;
+
+            // Timezone shared by all (even if specified individually, is considered
+            // to be the same on all cases)
+            // By default:
+            result["timeZone"] = "America/Los_Angeles";
+
+            // To ensure all weekdays are included in the output, and preparing in advance
+            // the list objects, add them now:
+            foreach (var dow in Enum.GetNames(typeof(DayOfWeek)))
+            {
+                var wk = String.Format(systemCulture, "{0}", dow).ToLower();
+                result.Add(wk, new List<TimesRange>());
+            }
+
+            foreach (var r in data)
+            {
+                var wk = String.Format(systemCulture, "{0}", r.DayOfWeek).ToLower();
+
+                // Set timeZone if any
+                // Since is a general setting, will get the last one
+                if (!String.IsNullOrEmpty(r.TimeZone))
+                {
+                    result["timeZone"] = r.TimeZone;
+                }
+
+                // Convert WorkHoursDay into a TimesRange and add it to the list for this weekday:
+                ((List<TimesRange>)result[wk]).Add(new TimesRange
+                {
+                    start = r.StartTime,
+                    end = r.EndTime
+                });
+
+                // Check if this weekday is an alltime available and add it to the bit flag
+                if (r.StartTime == TimeSpan.Zero &&
+                    r.EndTime == LcCalendar.LastMinute)
+                {
+                    isAllTime |= (1 << (int)r.DayOfWeek);
+                }
+            }
+
+            result["isAllTime"] = isAllTime == 127;
+
+            return result;
+        }
+
+        [Obsolete("Use WeeklySchedule, for an optimized, more convenient, result, rather than slots")]
         static public Dictionary<string, object> WorkHours(int userId)
         {
             var result = new Dictionary<string, object>();
@@ -119,6 +185,7 @@ public static partial class LcCalendar
         /// <param name="endDate"></param>
         /// <param name="inUtc"></param>
         /// <returns></returns>
+        [Obsolete("Use Times API, more optimized and convenient output")]
         static public Dictionary<string, object> Weekly(int userId, DateTime startDate, DateTime endDate, bool inUtc)
         {
             var result = new Dictionary<string, object>();

@@ -1,0 +1,57 @@
+﻿@using WebMatrix.WebData;
+@*
+    Gets and updates the weekly schedule of the user (it's general working hours, by week day).
+
+    Options:
+    
+    - GET /
+        @result [{
+            ...
+        }]
+
+    - PUT /
+
+        @params {
+            monday: [{
+                start:isotime
+                end:isotime
+            }],
+            tuesday...... FOR EVERY WEEK DAY
+        }
+
+        @result Updated copy from database, as in a GET request
+
+    EXAMPLES {
+        "My Weekly Schedule": {
+            "url": "/api/v1/en-US/me/weekly-schedule",
+            "get": {},
+            "put": {
+            }
+        }
+    }
+*@
+@functions{
+    public class RestWeeklySchedule : RestWebPage
+    {       
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not Found");
+            }
+
+            var userID = WebSecurity.CurrentUserId;
+
+            return LcCalendar.GetAvailability.WeeklySchedule(userID);
+        }
+
+        public override dynamic Put()
+        {
+
+            return null;
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestWeeklySchedule().JsonResponse(this);
+}
