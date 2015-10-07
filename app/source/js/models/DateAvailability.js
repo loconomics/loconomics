@@ -136,22 +136,16 @@ function DateAvailability(values) {
             return [];
         }
         else {
-            var slots = [];
-            // Iterate every free appointment
-            this.list().forEach(function (apt) {
-                if (apt.id() === Appointment.specialIds.free) {
-                    slots.push.apply(slots, createTimeSlots(apt.startTime(), apt.endTime(), slotSizeMinutes, duration));
-                }
-            });
-            return slots;
+            return createTimeSlots.forList(this.getFreeAvailableSlots(), slotSizeMinutes, duration);
         }
     };
     
     /**
-        Returns a list of objects { startTime:Date, endTime:Date }
+        Returns a list of objects of type AvailableSlot
+        ( { startTime:Date, endTime:Date, availability:'free' } )
         for every free/available time range in the date
     **/
-    this.getFreeTimeRanges = function getFreeTimeRanges() {
+    this.getFreeAvailableSlots = function getFreeAvailableSlots() {
         
         var date = this.date(),
             today = getDateWithoutTime();
@@ -169,6 +163,7 @@ function DateAvailability(values) {
             this.list().forEach(function (apt) {
                 if (apt.id() === Appointment.specialIds.free) {
                     slots.push({
+                        availability: 'free',
                         startTime: apt.startTime(),
                         endTime: apt.endTime()
                     });
