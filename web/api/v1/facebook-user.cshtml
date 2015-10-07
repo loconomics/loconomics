@@ -14,6 +14,17 @@
             This parameter includes the Facebook user ID and confirmation of a successul login (to avoid
             expose publicly private data through the facebook_id parameter) so the facebook_id is just
             to double check that the explicit requested user account matches the logged user.
+
+    EXAMPLES {
+        "Facebook User": {
+            "url": "/api/v1/en-US/facebook-user",
+            "get": {
+                "do_login": false,
+                "facebook_id": 324234123,
+                "signed_request": "fbsr_feSDf323fsf2"
+            }
+        }
+    }
 *@
 @functions{
     public class RestFacebookUser : RestWebPage

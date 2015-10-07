@@ -31,7 +31,34 @@
     EXAMPLES {
         "Book a service professional (client booking)": {
             "url": "/api/v1/en-US/me/client-booking",
-            "post": {}
+            "post": {
+                "serviceProfessionalUserID": 141,
+                "jobTitleID": 106,
+                "serviceStartTime": "2015-10-19T08:30:00.000Z",
+                "alternative1StartTime": "2015-10-26T09:30:00.000Z",
+                "alternative2StartTime": null,
+                "serviceAddress": {
+                    "addressID": 240,
+                    "addressName": "Service Area",
+                    "addressLine1": "",
+                    "postalCode": 98001,
+                    "countryCode": "US",
+                    "latitude": 47.3394747,
+                    "longitude": -122.2667661,
+                },
+                "services": [8, 108],
+                "promotionalCode":null,
+                "billingAddress": {
+                    "postalCode": 90001,
+                    "paymentMethodID": "0",
+                    "nameOnCard": "",
+                    "cardNumber": "123456789456123",
+                    "expirationMonth": "01",
+                    "expirationYear": "2017",
+                    "securityCode": "1565",
+                    "savePayment": false
+                }
+            }
         }
     }
 *@
