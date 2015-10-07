@@ -15,13 +15,30 @@
     defining ranges of available/unavailable times. The described next TODO will not be needed with
     a time ranges API because the slots by a user slot size are created in the API consumer if needed.
 
-    TODO: Implement preferred service professional slot size, right now is just fixed to the minimum 15 minutes.
-
-    TODO: Implement /times for results in a single array of date-time ranges, avoiding the problematic date grouping
-        and time-zone conversions.
-
     Options:
     
+    - GET /times
+        It returns the calendar availability by date ranges of variable size, with startTime, endTime
+        and availability of the time range/slot.
+        It includes extra properties with relevant information about the user schedule.
+
+        @params {
+            start:isodatetime (Optional) Beggining of the times range returned. By default, "today".
+            end:isodatetime (Optional) Ending of the times range returned. By default, "tomorrow".
+        }
+
+        @result {
+            "incrementsSizeInMinutes":int the user choosen precision to pick times, in blocks of the given size
+                (rounded to that). Consumers must split the given date ranges to show them in blocks of this size,
+                the server can block any attempt to request a datetime that does not match that precision when
+                booking the user.
+            "slots": [{
+                startTime:datetime,
+                endTime:datetime,
+                availability:string [free, busy, unavailable, tentative]
+            }]
+        }
+
     - GET /slots
         It returns the calendar availability by time slots of the size preferred by the calendar owner*2
         (slot sizes like 15 minutes, 30 minutes, 60 minutes,..) grouped by date.
@@ -87,6 +104,13 @@
 
     EXAMPLES {
         "User Availability at times detail": {
+            "url": "/api/v1/en-US/users/141/availability/times",
+            "get": {
+                "start": "2015-11-01T22:00:00Z",
+                "end": "2015-11-30T22:00:00Z"
+            }
+        },
+        "User Availability at times detail as fixed size slots": {
             "url": "/api/v1/en-US/users/141/availability/slots",
             "get": {
                 "start": "2015-08-22T22:00:00Z",
@@ -130,8 +154,7 @@
                 return data;
             }
             else if (UrlData[0] == "times") {
-                // TODO Implement time ranges in UTC:
-                throw new NotImplementedException("Availability by time ranges in UTC not implemented still");
+                return LcCalendar.GetAvailability.Times(userID, startDate, endDate);
             }
             
             throw new HttpException(404, "User Not Found");

@@ -1282,7 +1282,16 @@ namespace CalendarDll
             }
         }
 
-        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlots(iCalendar ical, DateTime startTime, DateTime endTime)
+        /// <summary>
+        /// Compute the occurrences of all events, normal and recurrents, from the filled in icalendar given between the dates
+        /// as of the internal logic of the icalendar component.
+        /// Results are in UTC
+        /// </summary>
+        /// <param name="ical"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlotsUtc(iCalendar ical, DateTime startTime, DateTime endTime)
         {
             foreach (var ev in ical.Events)
             {
@@ -1292,7 +1301,7 @@ namespace CalendarDll
                         StartTime = occ.Period.StartTime.UTC,
                         EndTime = occ.Period.EndTime.UTC,
                         AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
-                    };;
+                    };
                 }
             }
         }
@@ -1311,12 +1320,17 @@ namespace CalendarDll
         /// and complete timeline, where some availabilities takes precedence over others to don't have overlapping.
         /// Results may include slots that goes beyond the given filter dates, but it ensures that all that, partial or complete
         /// happens in that dates will be returned.
+        /// 
+        /// Resulting dates are given in UTC.
+        /// NOTE: Events from database are read as if they are in the machine local timezone (what is true currently for all events,
+        /// being the testing and production server at America/Los_Angeles timezone), passing in that information to the icalendar API
+        /// so performs conversions properly.
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="startTime">Included (more than or equals)</param>
         /// <param name="endTime">Excluded (less than)</param>
         /// <returns></returns>
-        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlotsByUser(int userID, DateTime startTime, DateTime endTime)
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInUtcAvailabilitySlotsByUser(int userID, DateTime startTime, DateTime endTime)
         {
             // We need an icalendar to include events and being able to compute occurrences
             iCalendar data = GetICalendarLibraryInstance();
@@ -1330,7 +1344,7 @@ namespace CalendarDll
             // A later process may want to filter out to don't have results out of the given dates.
             endTime = endTime.AddDays(1);
 
-            var occurrences = GetEventsOccurrencesInAvailabilitySlots(data, startTime, endTime).OrderBy(dr => dr.StartTime);
+            var occurrences = GetEventsOccurrencesInAvailabilitySlotsUtc(data, startTime, endTime).OrderBy(dr => dr.StartTime);
 
             return occurrences;
         }

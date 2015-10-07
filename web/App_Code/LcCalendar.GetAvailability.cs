@@ -381,13 +381,26 @@ public static partial class LcCalendar
 
         #region TIMES Availability Slots Timeline [mixed Public and Private API]
 
+        /// <summary>
+        /// Public API for the availability/times endpoint.
+        /// Get the Availability of the user as a timeline: a list of consecutive date time ranges,
+        /// without overlapping, computed the precedence of availability types and intersections
+        /// so a single, no holes, line of time is returned.
+        /// IMPORTANT: Times are in UTC ever.
+        /// NOTE: Additional information, important for the public API, is offered, as incrementsSizeInMinutes
+        /// from the user scheduling preferences.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
         public static Dictionary<string, object> Times(int userID, DateTime startTime, DateTime endTime)
         {
             var result = new Dictionary<string, object>();
 
             var cu = new CalendarDll.CalendarUtils();
             var calUser = new CalendarDll.CalendarUser(141);
-            var data = cu.GetEventsOccurrencesInAvailabilitySlotsByUser(calUser.Id, startTime, endTime);
+            var data = cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(calUser.Id, startTime, endTime);
 
             // Create result
             result["times"] = GetTimelinePublicOutputFormat(GetTimeline(data));
