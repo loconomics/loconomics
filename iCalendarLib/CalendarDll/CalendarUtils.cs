@@ -1262,14 +1262,18 @@ namespace CalendarDll
             }
         }
 
-        public class DateRange
+        /// <summary>
+        /// Represents a slot of time (a range of two dates)
+        /// for a type of availability.
+        /// </summary>
+        public class AvailabilitySlot
         {
             public DateTime StartTime;
             public DateTime EndTime;
             public int AvailabilityTypeID;
             public override bool Equals(object obj)
             {
-                var other = obj as DateRange;
+                var other = obj as AvailabilitySlot;
                 if (other != null)
                 {
                     return StartTime == other.StartTime && EndTime == other.EndTime && AvailabilityTypeID == other.AvailabilityTypeID;
@@ -1278,13 +1282,13 @@ namespace CalendarDll
             }
         }
 
-        public IEnumerable<DateRange> GetEventsOccurrencesRanges(iCalendar ical, DateTime startTime, DateTime endTime)
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlots(iCalendar ical, DateTime startTime, DateTime endTime)
         {
             foreach (var ev in ical.Events)
             {
                 foreach (var occ in ev.GetOccurrences(startTime, endTime))
                 {
-                    yield return new DateRange {
+                    yield return new AvailabilitySlot {
                         StartTime = occ.Period.StartTime.UTC,
                         EndTime = occ.Period.EndTime.UTC,
                         AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
@@ -1293,19 +1297,26 @@ namespace CalendarDll
             }
         }
 
-        public IEnumerable<DateRange> SortDateRange(IEnumerable<DateRange> dateRanges)
+        public IEnumerable<AvailabilitySlot> SortDateRange(IEnumerable<AvailabilitySlot> dateRanges)
         {
             return dateRanges.OrderBy(dr => dr.StartTime);
         }
 
         /// <summary>
-        /// INCOMPLETE - JUST TESTING STEPS BEFORE COMPLETE WANTED RESULT
+        /// For the given user and included in the given dates, returns all the
+        /// availability slots for the computed event occurrences, complete or partial.
+        /// Results are event occurrences in the format of availability slots, so overlapping of
+        /// slots will happen, and holes. Results are sorted by start time.
+        /// Another method must perform the computation of put all this slots in a single, consecutive
+        /// and complete timeline, where some availabilities takes precedence over others to don't have overlapping.
+        /// Results may include slots that goes beyond the given filter dates, but it ensures that all that, partial or complete
+        /// happens in that dates will be returned.
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="startTime">Included (more than or equals)</param>
         /// <param name="endTime">Excluded (less than)</param>
         /// <returns></returns>
-        public IEnumerable<DateRange> GetUtcFreeOccurrences(int userID, DateTime startTime, DateTime endTime)
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlotsByUser(int userID, DateTime startTime, DateTime endTime)
         {
             // We need an icalendar to include events and being able to compute occurrences
             iCalendar data = GetICalendarLibraryInstance();
@@ -1316,10 +1327,10 @@ namespace CalendarDll
 
             // The GetOccurrences API discards the part of the passed datetimes, it means that the endtime
             // gets discarded, to be included in the results we need to add 1 day to it.
-            // Later, results will need to be filtered for the time parts.
+            // A later process may want to filter out to don't have results out of the given dates.
             endTime = endTime.AddDays(1);
 
-            var occurrences = GetEventsOccurrencesRanges(data, startTime, endTime).OrderBy(dr => dr.StartTime);
+            var occurrences = GetEventsOccurrencesInAvailabilitySlots(data, startTime, endTime).OrderBy(dr => dr.StartTime);
 
             return occurrences;
         }

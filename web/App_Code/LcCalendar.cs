@@ -85,6 +85,7 @@ public static partial class LcCalendar
     /// to the Calendar API. It's needed when the user checking availability is the same provider and don't want this time to block itself
     /// but only clients.</param>
     /// <returns></returns>
+    [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
     public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTime dateStart, DateTime dateEnd, bool excludeAdvanceTime = false)
     {
         var lcCalendar = new CalendarDll.CalendarUtils();
@@ -102,6 +103,7 @@ public static partial class LcCalendar
     /// <param name="dateStart">Start date and time for the time range (greater or equals than dateStart)</param>
     /// <param name="dateEnd">End date and time for the time range (less than dateEnd)</param>
     /// <returns>True when is available, False when not</returns>
+    [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
     public static bool CheckUserAvailability(int userID, DateTime dateStart, DateTime dateEnd, bool excludeAdvanceTime = false)
     {
         foreach (var e in GetUserAvailability(userID, dateStart, dateEnd, excludeAdvanceTime))
@@ -126,6 +128,7 @@ public static partial class LcCalendar
     /// <param name="dateStart"></param>
     /// <param name="dateEnd"></param>
     /// <returns></returns>
+    [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
     public static bool HasUserSomeAvailability(int userID, DateTime dateStart, DateTime dateEnd)
     {
         foreach (var e in GetUserAvailability(userID, dateStart, dateEnd))
@@ -173,6 +176,7 @@ public static partial class LcCalendar
     /// <param name="startTime"></param>
     /// <param name="endTime"></param>
     /// <returns></returns>
+    [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
     public static bool DoubleCheckEventAvailability(int eventID, DateTime? startTime = null, DateTime? endTime = null, bool excludeAdvanceTime = false)
     {
         // We require an owned connection, to avoid conflict with other transactions
