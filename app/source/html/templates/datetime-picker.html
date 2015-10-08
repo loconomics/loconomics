@@ -4,7 +4,7 @@
     <div>
         <h2 class="SectionTitle" data-bind="text: selectedDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></h2>
         <div data-bind="css: { 'is-loading': isLoading }">
-            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+            <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
         </div>
         <div class="Box-sm PaddedBox-xs">
             <div class="isolated bottom-only" data-bind="visible: durationDisplay">

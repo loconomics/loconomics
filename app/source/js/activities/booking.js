@@ -90,13 +90,19 @@ A.prototype.selectLocationLoad = function() {
 };
 
 A.prototype.selectTimesLoad = function() {
-    this.viewModel.serviceStartDatePickerView().selectedDatetime(null);
+    var picker = this.viewModel.serviceStartDatePickerView();
     this.viewModel.timeFieldToBeSelected('');
+    picker.selectedDatetime(null);
+    picker.userID(this.viewModel.booking.serviceProfessionalUserID());
+    picker.bindDateData(new Date());
 };
 
 A.prototype.selectTimeLoad = function() {
-    this.viewModel.serviceStartDatePickerView().selectedDatetime(null);
     this.viewModel.timeFieldToBeSelected('serviceDate');
+    var picker = this.viewModel.serviceStartDatePickerView();
+    picker.selectedDatetime(null);
+    picker.userID(this.viewModel.booking.serviceProfessionalUserID());
+    picker.bindDateData(new Date());
 };
 
 A.prototype.paymentLoad = function() {

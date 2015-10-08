@@ -80,7 +80,8 @@ A.prototype.show = function show(state) {
     // Parameters: pass a required duration
     this.viewModel.component().requiredDuration(this.requestData.requiredDuration |0);
 
-    // Preselect a date, or current date
+    // Preselect userID and a date, or current date
+    this.viewModel.component().userID(this.app.model.user.userID());
     this.viewModel.component().selectedDate(getDateWithoutTime(this.requestData.selectedDatetime));
     
     this.updateNavBarState();

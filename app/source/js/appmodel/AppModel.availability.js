@@ -4,11 +4,18 @@
 'use strict';
 
 var CacheControl = require('../utils/CacheControl'),
-    CacheControl = require('../utils/CacheControl');
+    moment = require('moment'),
+    EventEmitter = require('events').EventEmitter;
 
 exports.create = function create(appModel) {
     
-    var api = {};
+    function Api() {
+        EventEmitter.call(this);
+        this.setMaxListeners(30);
+    }
+    Api._inherits(EventEmitter);
+    
+    var api = new Api();
     
     var cache = {
         times: {/*
@@ -23,12 +30,14 @@ exports.create = function create(appModel) {
     
     api.clearCache = function clearCache() {
         cache.times = {};
+        this.emit('clearCache');
     };
     
     appModel.on('clearLocalData', function() {
         api.clearCache();
     });
     
+    var createTimeSlots = require('../utils/createTimeSlots');
     function saveTimesInCache(queryKey, data) {
         var c = cache.times[queryKey];
         if (c) {
@@ -40,13 +49,18 @@ exports.create = function create(appModel) {
             c = cache.times[queryKey] = {
                 times: data.times,
                 incrementsSizeInMinutes: data.incrementsSizeInMinutes,
-                control: new CacheControl({ ttl: { minutes: 1 } })
+                control: new CacheControl({ ttl: { minutes: 1 } }),
+                getFreeTimeSlots: function(duration, slotSizeMinutes) {
+                    var size = slotSizeMinutes || this.incrementsSizeInMinutes;
+                    return createTimeSlots.forList(this.times, size, duration);
+                }
             };
         }
         return c;
     }
 
     api.times = function times(userID, start, end) {
+        if (!end) end = moment(start).add(1, 'day').toDate();
         var queryKey = userID + '-' + start.toISOString() + '-' + end.toISOString();
 
         if (cache.times.hasOwnProperty(queryKey) &&
@@ -59,6 +73,11 @@ exports.create = function create(appModel) {
                 start: start,
                 end: end
             }).then(function(data) {
+                // IMPORTANT: REST API is not ensuring resultsets ONLY in the start-end
+                // dates, but on all complete availabilityRanges that touches that criteria.
+                // SO: Ensure only the wanted set of data is saved
+                data.times = createTimeSlots.filterListBy(data.times, start, end);
+                // Save and return:
                 return saveTimesInCache(queryKey, data);
             });
         }

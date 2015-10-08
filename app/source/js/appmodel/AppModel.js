@@ -176,7 +176,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.education = require('./AppModel.education').create(this);
     this.licensesCertifications = require('./AppModel.licensesCertifications').create(this);
     this.users = require('./AppModel.users').create(this);
-    //UNSTABLE:this.availability = require('./AppModel.availability').create(this);
+    this.availability = require('./AppModel.availability').create(this);
 };
 
 /**

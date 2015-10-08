@@ -15,6 +15,7 @@ var datepickerAvailability = require('../utils/datepickerAvailability');
 function DatetimePickerVM(app, element) {
     
     this.selectedDate = ko.observable(getDateWithoutTime());
+    this.userID = ko.observable();
     this.isLoading = ko.observable(false);
     this.requiredDurationMinutes = ko.observable(0);
     
@@ -47,7 +48,7 @@ function DatetimePickerVM(app, element) {
         */
         // Since slots must be for the same date,
         // to define the groups ranges use the first date
-        var datePart = this.dateAvail() && this.dateAvail().date() || new Date();
+        var datePart = this.selectedDate() || new Date();
         var groups = [
             {
                 group: 'Morning',
@@ -73,13 +74,6 @@ function DatetimePickerVM(app, element) {
         var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(requiredDurationMinutes) || [];
         // Iterate to organize by group
         slots.forEach(function(slot) {
-
-            // Filter slots by the increment size preference
-            /*var totalMinutes = moment.duration(slot).asMinutes() |0;
-            if (totalMinutes % incSize !== 0) {
-                return;
-            }*/
-
             // Check every group
             groups.some(function(group) {
                 // If matches the group, push to it
@@ -150,10 +144,13 @@ function DatetimePickerVM(app, element) {
     
     this.bindDateData = function bindDateData(date) {
 
-        if (!date) return;
+        if (!date || !this.userID()) return;
+        
+        date = getDateWithoutTime(date);
         
         this.isLoading(true);
-        return app.model.calendar.getDateAvailability(date)
+        //return app.model.calendar.getDateAvailability(date)
+        return app.model.availability.times(this.userID(), date)
         .then(function(data) {
 
             this.dateAvail(data);
@@ -199,11 +196,16 @@ function DatetimePickerVM(app, element) {
             $datePicker.datepicker('setValue', date, true);
     }.bind(this));
     
-    // On Setting the data, we need to refresh tags:
-    this.dateAvail.subscribe(function() {
-        // Once finished, load the whole month
-        this.tagAvailability(this.selectedDate());
-    }.bind(this));
+    // On Setting the data, we need to refresh tags,
+    // and on change userID. This runs too the first time
+    // update.
+    ko.computed(function() {
+        if (this.dateAvail() && this.userID()) {
+            // Once finished, load the whole month
+            this.tagAvailability(this.selectedDate(), this.userID());
+        }
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 60 } });
     
     // First load of today data
     this.bindDateData(this.selectedDate());
