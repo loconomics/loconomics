@@ -94,7 +94,7 @@ A.prototype.selectTimesLoad = function() {
     this.viewModel.timeFieldToBeSelected('');
     picker.selectedDatetime(null);
     picker.userID(this.viewModel.booking.serviceProfessionalUserID());
-    picker.bindDateData(new Date());
+    picker.selectedDate(new Date());
 };
 
 A.prototype.selectTimeLoad = function() {
@@ -102,7 +102,7 @@ A.prototype.selectTimeLoad = function() {
     var picker = this.viewModel.serviceStartDatePickerView();
     picker.selectedDatetime(null);
     picker.userID(this.viewModel.booking.serviceProfessionalUserID());
-    picker.bindDateData(new Date());
+    picker.selectedDate(new Date());
 };
 
 A.prototype.paymentLoad = function() {

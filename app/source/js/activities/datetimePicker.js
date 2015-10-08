@@ -82,7 +82,8 @@ A.prototype.show = function show(state) {
 
     // Preselect userID and a date, or current date
     this.viewModel.component().userID(this.app.model.user.userID());
-    this.viewModel.component().selectedDate(getDateWithoutTime(this.requestData.selectedDatetime));
+    var selDate = getDateWithoutTime(this.requestData.selectedDatetime);
+    this.viewModel.component().selectedDate(selDate);
     
     this.updateNavBarState();
 };

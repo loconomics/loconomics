@@ -32,8 +32,8 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
     **/
     var tagAvailability = function tagAvailability(date, userID, refresh) {
         var month = date.getMonth();
-        // Avoid dupes
-        if (month === prevMonth && prevUserID === userID && !refresh) return;
+        // Avoid dupes and non-data
+        if (!userID || month === prevMonth && prevUserID === userID && !refresh) return;
         prevMonth = month;
         prevUserID = userID;
         

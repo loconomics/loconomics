@@ -207,9 +207,6 @@ function DatetimePickerVM(app, element) {
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 60 } });
     
-    // First load of today data
-    this.bindDateData(this.selectedDate());
-    
     // Force first refresh on datepicker to allow
     // event handlers to get notified on first time:
     $datePicker.datepicker('fill');
