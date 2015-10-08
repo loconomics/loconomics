@@ -399,6 +399,14 @@ function ViewModel(app) {
         .then(function(serverBooking) {
             this.isSaving(false);
             this.booking.model.updateWith(serverBooking);
+            
+            app.modals.showNotification({
+                title: 'Done!',
+                message: 'Your booking was created!'
+            })
+            .then(function() {
+                app.shell.go('/');
+            });
         }.bind(this))
         .catch(function(err) {
             this.isSaving(false);

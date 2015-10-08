@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
-id="com.loconomics.app" version="0.7.19">
+id="com.loconomics.app" version="0.8.0">
   <name>Loconomics</name>
   <description>Make your life better</description>
   <author href="https://loconomics.com"
@@ -18,7 +18,7 @@ id="com.loconomics.app" version="0.7.19">
   on your app, which PhoneGap requires. -->
   <preference name="permissions" value="none" />
   <!-- Customize your app and platform with the preference element. -->
-  <preference name="phonegap-version" value="cli-5.1.1" />
+  <preference name="phonegap-version" value="cli-5.2.0" />
   <!-- all: default means both landscape and portrait are enabled -->
   <preference name="orientation" value="default" />
   <!-- all: possible values handset, tablet, or universal -->
