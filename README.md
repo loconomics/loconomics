@@ -73,7 +73,7 @@ To perform that task in your own computer, you need the SDKs of each platform:
 
   > phonegap build ios
   
-- Android SDKsinstalled to create the Android app; run the command:
+- Android SDKs installed to create the Android app; run the command:
 
   > phonegap build android
   
