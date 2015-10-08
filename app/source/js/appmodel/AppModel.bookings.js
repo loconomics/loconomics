@@ -158,7 +158,7 @@ exports.create = function create(appModel) {
             alternative1StartTime: booking.alternativeDate1() && booking.alternativeDate1().startTime(),
             alternative2StartTime: booking.alternativeDate2() && booking.alternativeDate2().startTime(),
             
-            serviceAddress: booking.serviceAddress().model.toPlainObject(),
+            serviceAddress: booking.serviceAddress() && booking.serviceAddress().model.toPlainObject(),
 
             services: booking.pricingSummary() && booking.pricingSummary().details()
             .map(function(pricing) {

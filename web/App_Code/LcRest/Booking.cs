@@ -820,7 +820,7 @@ namespace LcRest
         /// </summary>
         private const string sqlUpdBookingByClient = @"
             UPDATE Booking SET
-                ,[ServiceAddressID] = @1
+                [ServiceAddressID] = @1
                 ,ServiceDateID = @2
                 ,PricingSummaryRevision = @3
                 ,SpecialRequests = @4
@@ -834,7 +834,7 @@ namespace LcRest
         /// </summary>
         private const string sqlUpdBookingPayment = @"
             UPDATE Booking SET
-                ,PaymentTransactionID = @1
+                PaymentTransactionID = @1
                 ,PaymentCollected = @2
                 ,PaymentAuthorized = @3
                 ,PaymentLastFourCardNumberDigits = @4
@@ -847,7 +847,7 @@ namespace LcRest
         /// </summary>
         private const string sqlUpdateStatus = @"
             UPDATE Booking SET
-                ,BookingStatusID = @1
+                BookingStatusID = @1
                 ,[UpdatedDate] = getdate()
                 ,[ModifiedBy] = 'sys'
             WHERE BookingID = @0
