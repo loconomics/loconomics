@@ -7,9 +7,22 @@
 
     TODO Coordinate with login about changes in things like old redirectUrl
 
-    - POST:
-        - username:string
+    - POST /quick:
+        - email:string
         - password:string
+        - returnProfile:bool as in Login
+        - profileType:string Enumeration: 'service-professional', 'client'
+            NOTE: Currently allowed: 'freelancer', 'freelance', 'provider' as aliases,
+                any other value or not value will create a 'client' profile.
+
+    - POST:
+        - email:string
+        - password:string
+        - firstName:string
+        - lastName:string,
+        - phone:string,
+        - referralCode:string,
+        - device:string,
         - returnProfile:bool as in Login
         - profileType:string Enumeration: 'service-professional', 'client'
             NOTE: Currently allowed: 'freelancer', 'freelance', 'provider' as aliases,
@@ -24,10 +37,26 @@
     - return: same as Login, or 400 with validation errors.
 
     EXAMPLES {
-        "Signup": {
+        "Signup, detailed data required": {
             "url": "/api/v1/en-US/signup",
             "post": {
-                 "username": "some user email",
+                 "email": "some user email",
+                 "password": "",
+                 "firstName": "John",
+                 "lastName": "Smith",
+                 "phone": "1234",
+                 "postalCode": "90001",
+                 "referralCode": "",
+                 "device": "ios",
+                 "profileType": "freelancer",
+                 "returnProfile": false,
+                 "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
+            }
+        },
+        "Quick Signup, simplified to require just email and password": {
+            "url": "/api/v1/en-US/signup/quick",
+            "post": {
+                 "email": "some user email",
                  "password": "",
                  "profileType": "freelancer",
                  "returnProfile": false,
@@ -53,12 +82,15 @@
                 if (UrlData[0] == "facebook") {
                     return LcAuthHelper.FacebookSignup(this.WebPage);
                 }
+                else if (UrlData[0] == "quick") {
+                    return LcAuthHelper.QuickSignup(this.WebPage);
+                }
                 else {
                     throw new HttpException(404, "Not Found");
                 }
             }
             else {
- 	            return LcAuthHelper.Signup(this.WebPage);
+ 	            return LcAuthHelper.DetailedSignup(this.WebPage);
             }
         }
     }

@@ -47,7 +47,8 @@ public static class LcAuth
         bool isProvider,
         string marketingSource = null,
         int genderID = -1,
-        string aboutMe = null
+        string aboutMe = null,
+        string phone = null
     ) {
         using (var db = Database.Open("sqlloco"))
         {
@@ -85,10 +86,10 @@ public static class LcAuth
                 // Automatic transaction can be used now:
                 db.Execute("BEGIN TRANSACTION");
 
-                db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6",
+                db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6,@7",
                     userid, firstname, lastname,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
-                    genderID, aboutMe
+                    genderID, aboutMe, phone
                 );
 
                 // If is provider, update profile with that info (being both customer and provider)

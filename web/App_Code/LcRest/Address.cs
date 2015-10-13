@@ -346,7 +346,8 @@ namespace LcRest
                 {
                     add = new Address
                     {
-                        userID = userID
+                        userID = userID,
+                        kind = AddressKind.Home
                     };
                 }
                 return add;

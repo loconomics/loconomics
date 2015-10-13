@@ -208,12 +208,18 @@ public static class LcAuthHelper
     #endregion
 
     #region Signup
-    public static LoginResult Signup(WebPage page) {
+    /// <summary>
+    /// Quick signup, just username/email and a password.
+    /// </summary>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    public static LoginResult QuickSignup(WebPage page) {
 
-        if (page.Validation.GetHtml("username") == null) {
-            page.Validation.RequireField("username", "You must specify an email.");
+        if (page.Validation.GetHtml("email") == null)
+        {
+            page.Validation.RequireField("email", "You must specify an email.");
             // Username is an email currently, so need to be restricted
-            page.Validation.Add("username",
+            page.Validation.Add("email",
                 Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
         }
         if (page.Validation.GetHtml("password") == null) {
@@ -221,7 +227,7 @@ public static class LcAuthHelper
         }
         
         if (page.Validation.IsValid()) {
-            var username = Request.Form["username"];
+            var username = Request.Form["email"];
             var password = Request.Form["password"];
             var rememberMe = Request.Form["rememberMe"].AsBool();
             var returnProfile = Request.Form["returnProfile"].AsBool();
@@ -261,6 +267,126 @@ public static class LcAuthHelper
             }
         }
         else {
+            // Bad request, input data incorrect because of validation rules
+            throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+        }
+    }
+
+    /// <summary>
+    /// Signup with detailed account details: name, postal code,...
+    /// </summary>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    public static LoginResult DetailedSignup(WebPage page)
+    {
+
+        if (page.Validation.GetHtml("email") == null)
+        {
+            page.Validation.RequireField("email", "You must specify an email.");
+            // Username is an email currently, so need to be restricted
+            page.Validation.Add("email",
+                Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
+        }
+        if (page.Validation.GetHtml("password") == null)
+        {
+            page.Validation.RequireField("password", "You must specify a password.");
+        }
+        page.Validation.RequireField("firstName", "You must specify your first name.");
+        page.Validation.RequireField("lastName", "You must specify your last name.");
+        page.Validation.RequireField("postalCode", "You must specify your Zip code.");
+        page.Validation.RequireField("phone", "You must specify your mobile phone number.");
+
+        // First data
+        var profileTypeStr = Request.Form["profileType"] ?? "";
+        var isServiceProfessional = new string[] { "SERVICE-PROFESSIONAL", "FREELANCE", "FREELANCER", "PROVIDER" }.Contains(profileTypeStr.ToUpper());
+
+        // Conditional validations
+        if (isServiceProfessional)
+        {
+            page.Validation.RequireField("device", "You must specify your device. In short, we will send you a link to download the app for your device.");
+        }
+
+        if (page.Validation.IsValid())
+        {
+            var email = Request.Form["email"];
+            var password = Request.Form["password"];
+            var firstName = Request.Form["firstName"];
+            var lastName = Request.Form["lastName"];
+            var postalCode = Request.Form["postalCode"];
+            var referralCode = Request.Form["referralCode"];
+            var device = Request.Form["device"];
+            var phone = Request.Form["phone"];
+            var returnProfile = Request.Form["returnProfile"].AsBool();
+            var locale = LcRest.Locale.Current;
+
+            var utm = Request.Url.Query;
+
+            // If the user exists, try to log-in with the given password,
+            // becoming a provider if that was the requested profileType and follow as 
+            // a normal login.
+            // If the password didn't match, throw a sign-up specific error (email in use)
+            // Otherwise, just register the user.
+            if (LcAuth.ExistsEmail(email))
+            {
+                LoginResult logged = null;
+                // Try Login
+                try
+                {
+                    logged = Login(email, password, false, returnProfile);
+                    // throw exception on error
+                    if (isServiceProfessional)
+                    {
+                        LcAuth.BecomeProvider(logged.userID);
+                    }
+                }
+                catch (HttpException)
+                {
+                    // Not valid log-in, throw a 'email exists' error with Conflict http code
+                    throw new HttpException(409, "Email address is already in use.");
+                }
+
+                // Update account data with the extra information.
+                using (var db = new LcDatabase())
+                {
+                    db.Execute(@"
+                        UPDATE users SET
+                            firstName = @1,
+                            lastName = @2,
+                            mobilePhone = @3
+                        WHERE userID = @0
+                    ", logged.userID, firstName, lastName, phone);
+
+                    var address = LcRest.Address.GetHomeAddress(logged.userID);
+                    if (address.postalCode != postalCode)
+                    {
+                        address.postalCode = postalCode;
+                        address.countryCode = locale.countryCode;
+                        LcRest.Address.AutosetByCountryPostalCode(address);
+                        LcRest.Address.SetAddress(address);
+                    }
+                }
+
+                return logged;
+            }
+            else
+            {
+                var registered = LcAuth.RegisterUser(email, firstName, lastName, password, isServiceProfessional, utm, -1, null, phone);
+                // Set address
+                var address = LcRest.Address.GetHomeAddress(registered.UserID);
+                address.postalCode = postalCode;
+                address.countryCode = locale.countryCode;
+                LcRest.Address.AutosetByCountryPostalCode(address);
+                LcRest.Address.SetAddress(address);
+
+                // IMPORTANT: DO NOT send registering email for now, until full website or app are ready #773
+                //LcAuth.SendRegisterUserEmail(registered);
+
+                // Auto login:
+                return Login(email, password, false, returnProfile, true);
+            }
+        }
+        else
+        {
             // Bad request, input data incorrect because of validation rules
             throw new HttpException(400, LcRessources.ValidationSummaryTitle);
         }

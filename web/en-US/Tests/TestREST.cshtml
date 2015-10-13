@@ -122,10 +122,26 @@
             "get": { }
         },
 
-        "Signup": {
+        "Signup, detailed data required": {
             "url": "/api/v1/en-US/signup",
             "post": {
-                 "username": "some user email",
+                 "email": "some user email",
+                 "password": "",
+                 "firstName": "John",
+                 "lastName": "Smith",
+                 "phone": "1234",
+                 "postalCode": "90001",
+                 "referralCode": "",
+                 "device": "ios",
+                 "profileType": "freelancer",
+                 "returnProfile": false,
+                 "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
+            }
+        },
+        "Quick Signup, simplified to require just email and password": {
+            "url": "/api/v1/en-US/signup/quick",
+            "post": {
+                 "email": "some user email",
                  "password": "",
                  "profileType": "freelancer",
                  "returnProfile": false,
