@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-10-08
+/*! LoconomicsApp 2015-10-13
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -6586,10 +6586,18 @@ app-stars-rating {
   border-width: 0;
 }
 
+/* line 23 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WhiteForm.styl */
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WhiteForm.styl */
+.WhiteForm .form-group[class*='has-'] .input-group-addon,
+.WhiteForm .form-group[class*='has-'] .form-control {
+  border-width: 1px;
+}
+
 /* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 24 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\calendar.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\calendar.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\calendar.styl */
 
@@ -8901,7 +8909,87 @@ app-stars-rating {
   }
 }
 
-/* line 68 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
+/* line 118 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+
+/* line 2 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] #signup-or {
+  position: relative;
+}
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] #signup-or span {
+  font-weight: bold;
+  background: White;
+  display: inline-block;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  padding: 0 15px;
+}
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] #signup-or:before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 15px;
+  bottom: 0;
+  left: 15px;
+  display: block;
+  border-top: 2px solid #eee;
+}
+
+/* line 28 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+
+/* line 29 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] form .form-group .form-control {
+  background: White;
+  border-color: #777;
+}
+
+/* line 34 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] form .form-group .form-control-feedback[class*='ion-'] {
+  font-size: 22px;
+}
+
+/* line 41 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] form .form-group select.form-control {
+  text-indent: -2px;
+}
+
+/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] form .form-group.has-feedback .form-control {
+  padding-right: 34px;
+}
+
+/* line 47 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+
+/* line 48 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] form .form-group.has-error .form-control {
+  border-color: #d9534f;
+}
+
+/* line 52 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+
+/* line 53 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] form .form-group.has-warning .form-control {
+  border-color: #f0ad4e;
+}
+
+/* line 58 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] .col-xs-5 {
+  padding-right: 5px;
+}
+
+/* line 61 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] .col-xs-7 {
+  padding-left: 5px;
+}
+
+/* line 69 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
 /** Modals styles **/
 
 /* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\modals\textEditorModal.styl */

@@ -1,0 +1,64 @@
+[data-activity=signup] {
+    #signup-or {
+        position: relative;
+        
+        span {
+            font-weight: bold;
+            background: White;
+            display: inline-block;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            padding: 0 15px;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            right: 15px;
+            bottom: 0;
+            left: 15px;
+            display: block;
+            border-top: 2px solid $gray-lighter;
+        }
+    }
+    
+    form .form-group {
+        .form-control {
+            background: White;
+            border-color: $gray-light;
+        }
+        
+        .form-control-feedback[class*='ion-'] {
+            font-size: 22px;
+        }
+        
+        select.form-control {
+            text-indent: -2px;
+        }
+        
+        &.has-feedback .form-control {
+            padding-right: 34px;
+        }
+        
+        &.has-error {
+            .form-control {
+                border-color: $brand-danger;
+            }
+        }
+        &.has-warning {
+            .form-control {
+                border-color: $brand-warning;
+            }
+        }
+    }
+    
+    .col-xs-5 {
+        padding-right: 5px;
+    }
+    .col-xs-7 {
+        padding-left: 5px;
+    }
+}

@@ -294,7 +294,6 @@ public static class LcAuthHelper
         page.Validation.RequireField("firstName", "You must specify your first name.");
         page.Validation.RequireField("lastName", "You must specify your last name.");
         page.Validation.RequireField("postalCode", "You must specify your Zip code.");
-        page.Validation.RequireField("phone", "You must specify your mobile phone number.");
 
         // First data
         var profileTypeStr = Request.Form["profileType"] ?? "";
@@ -303,7 +302,8 @@ public static class LcAuthHelper
         // Conditional validations
         if (isServiceProfessional)
         {
-            page.Validation.RequireField("device", "You must specify your device. In short, we will send you a link to download the app for your device.");
+            page.Validation.RequireField("phone", "You must specify your mobile phone number.");
+            page.Validation.RequireField("device", "You must select a device. In short, we will send you a link to download the app for your device.");
         }
 
         if (page.Validation.IsValid())
