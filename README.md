@@ -19,7 +19,7 @@ It uses:
 - From the command line, use the NodeJS Package Manager (npm) to globally install
   - [Grunt](http://gruntjs.com/), type:
 
-    > npm install -g grunt
+    > npm install -g grunt-cli
   - [Phonegap](http://phonegap.com/), type:
 
     > npm install -g phonegap
