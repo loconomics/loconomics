@@ -85,7 +85,7 @@ var A = Activity.extends(function SignupActivity() {
                     
                     setTimeout(function() {
                         // Focus first field with error
-                        this.$activity.find('.has-error:first').find('input').focus();
+                        this.$activity.find('.form-group.has-error:first').find('input').focus();
                     }.bind(this), 100);
 
                     ended();

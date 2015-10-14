@@ -137,8 +137,7 @@ module.exports = function(/*grunt*/) {
         ],
         'dest': './build/assets/js/splash.js',
         'options': {
-            // Enable debug ever when compiling script.js, the min.js will delete debug info for production use:
-            'debug': true,
+            debug: false,
             shim: {
                 // Using a shim we avoid jquery to detect the CommonJS loader and 
                 // it attachs itself to the global namespace (window) what let
