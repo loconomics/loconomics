@@ -1,0 +1,79 @@
+/**
+    Special Splash page/site.
+**/
+// Some parts Copied from components/App.styl:
+.Splash {
+    // At the beggining, all content must be hidden except
+    // an splash screen, up to the app being flagged as 'ready'
+    > body > * {
+        visibility: hidden;
+        
+        &.SplashScreen {
+            visibility: visible;
+        }
+    }
+    &.is-ready > body > * {
+        visibility: inherit;
+        
+        &.SplashScreen {
+            visibility: hidden;
+        }
+    }
+
+    /** We use ever all the available screen **/
+    height: 100%;
+    // Fix for iOS smooth scrolling
+    overflow: auto;
+    // Smoother scrolling and inertia effect for iOS
+    // The property is inheret to every element with scroll enabled (overflow:auto|scroll)
+    // Be carefull since scrolling this way has a bug with fixed elements (typically navbar)
+    // on that cases is better to use 'absolute' positioning changing the scrolling to a
+    // content element rather than the document or the container of the absolute elements.
+    -webkit-overflow-scrolling: touch;
+    
+    @import '../utils/signup-btns.styl';
+    
+    background: $brand-primary;
+    .App-activities {
+        background: $brand-primary;
+    }    
+    
+    $brandWidth = 100px;
+    $brandHeight = 38px;
+    .logo-white,
+    .logo-teal {
+        display: inline-block;
+        text-indent: -99999px;
+        background: url("../images/logo-loconomics-teal-mini.png") no-repeat center;
+        hr-image("../images/logo-loconomics-teal-mini@2x.png", $brandWidth, $brandHeight);
+        width: $brandWidth;
+        height: $brandHeight;
+    }
+    .logo-white {
+        background: url("../images/logo-loconomics-white-mini.png") no-repeat center;
+        hr-image("../images/logo-loconomics-white-mini@2x.png", $brandWidth, $brandHeight);
+    }
+    
+    // Common styles on Splash specific pages
+    .Splash-message {
+        background: White;
+        margin: 0 auto;
+        padding: 20px 60px 30px;
+        text-align: center;
+        font-size: 1.1em;
+        
+        h2 {
+            font-size: 1.4em;
+        }
+
+        p {
+            text-align: justify;
+            max-width: 400px;
+            margin: 0 auto 16px;
+        }
+
+        .btn {
+            margin: 10px auto;
+        }
+    }
+}

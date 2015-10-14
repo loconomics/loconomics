@@ -1,0 +1,34 @@
+@*context: {debug:bool, includedFiles:[], siteUrl:string} *@
+<!DOCTYPE html>
+<html lang="en" class="Splash" data-site-url="@(siteUrl)" data-facebook-language="@(facebookLang)" data-facebook-appid="@(facebookAppID)">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Loconomics.com App">
+        <meta name="author" content="Loconomics Cooperative, Inc.">
+        <link rel="icon" href="assets/images/favicon.ico" />
+        <meta
+          name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+
+        <meta name="format-detection" content="telephone=no" />
+
+        <title>Loconomics App</title>
+
+        @if(debug) {
+        <link href="assets/css/splash-libs.css?nocache=1" rel="stylesheet">
+        <link href="assets/css/splash.css?nocache=1" rel="stylesheet">
+        <script src="assets/js/splash.js?nocache=1"></script>
+        } else {
+        <link href="assets/css/splash.min.css" rel="stylesheet">
+        <script src="assets/js/splash.min.js"></script>
+        }
+    </head>
+    <body>
+        <div class="SplashScreen">Loading...</div>
+        <div class="App-activities">
+            @for(var f=0; f < includedFiles.length; f++) {
+                @render(includedFiles[f])
+            }
+        </div>
+    </body>
+</html>

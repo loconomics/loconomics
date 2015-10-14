@@ -21,8 +21,9 @@ module.exports = {
 	],
 	'build-css': [
         'concat:css-libs',
-		'stylus',
-		'cssmin',//'newer:cssmin'
+		'stylus:app',
+		'cssmin:libs',//'newer:cssmin'
+		'cssmin:app',//'newer:cssmin'
         'notify:css'
 	],
     'build-images': [
@@ -54,7 +55,7 @@ module.exports = {
 
 	'build-dev': [
 		'browserify',
-		'stylus',
+		'stylus:app',
         'bliss:appDebug',
         'notify:build'
 	],
@@ -72,5 +73,19 @@ module.exports = {
     'atwork': [
         'connect:atbuild',
         'watch'
+    ],
+    'build-splash': [
+		'jshint',//'newer:jshint',
+		'browserify:splash',
+		'uglify:splash',//'newer:uglify:splash'
+        'notify:browserify',
+        'concat:css-splash-libs',
+		'stylus:splash',
+		'cssmin:splash',//'newer:cssmin:splash'
+        'notify:css',
+        'bliss:splash',
+        'notify:html',
+        'build-fonts',
+        'notify:build'
     ]
 };

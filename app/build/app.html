@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" class="App" data-site-url="http://dev.loconomics.com">
+<html lang="en" class="App" data-site-url="http://dev.loconomics.com"
+data-facebook-language="en-US" data-facebook-appid="180579422039773">
   
   <head>
     <meta charset="utf-8">
@@ -3520,15 +3521,15 @@
     </div>
     <!-- Activity Signup -->
     <div class="container-fluid" data-activity="signup">
-      <div class="LeadContent">
+      <div class="LeadContent container">
          <h3>Sign up for free</h3>
 
-        <div> <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook">Sign up with Facebook</a>
+        <div data-bind="visible: !facebookUserID()"> <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
 
           <!--<a
           href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
         </div>
-        <p class="isolated text-center" id="signup-or"> <span>or</span>
+        <p class="isolated text-center" id="signup-or" data-bind="visible: !facebookUserID()"> <span>or</span>
 
         </p>
         <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }"
@@ -3560,19 +3561,21 @@
             placeholder="E-mail address" data-bind="textInput: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }"> <span class="form-control-feedback ion-ios-at-outline" aria-hidden="true"></span>
 
           </div>
-          <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }">
+          <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
             <label for="signupAccountPassword" class="sr-only">Password</label>
             <input type="password" class="form-control" id="signupAccountPassword"
             placeholder="Password" data-bind="textInput: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'top' }"> <span class="ion-ios-locked-outline form-control-feedback" aria-hidden="true"></span>
 
           </div>
-          <button type="submit" data-loading-text="Creating account..." class="btn btn-primary btn-block"
-          autocomplete="off">Create account</button>
+          <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }"> <span data-bind="visible: facebookUserID"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;</span>
+
+            <span
+            data-bind="text: submitText">Sign up</span>
+          </button>
         </form>
         <p class="isolated">By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/"
-          target="_blank">Terms of Use</a>, <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
-          target="_blank">Privacy Policy</a> &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
-          target="_blank">Co-op Membership Agreement</a>
+          target="_blank">Terms of Use</a> &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
+          target="_blank">Privacy Policy</a>
 
         </p>
       </div>

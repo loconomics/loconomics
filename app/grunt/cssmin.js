@@ -25,5 +25,10 @@ module.exports = {
         files: {
             './build/assets/css/libs.min.css': ['./build/assets/css/libs.css']
         }
+    },
+    splash: {
+        files: {
+            './build/assets/css/splash.min.css': ['./build/assets/css/splash-libs.css', './build/assets/css/splash.css']
+        }
     }
 };

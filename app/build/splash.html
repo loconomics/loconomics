@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" class="Splash" data-site-url="http://dev.loconomics.com"
+data-facebook-language="en-US" data-facebook-appid="180579422039773">
+  
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Loconomics.com App">
+    <meta name="author" content="Loconomics Cooperative, Inc.">
+    <link rel="icon" href="assets/images/favicon.ico" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>Loconomics App</title>
+    <link href="assets/css/splash-libs.css?nocache=1"
+    rel="stylesheet">
+    <link href="assets/css/splash.css?nocache=1" rel="stylesheet">
+    <script src="assets/js/splash.js?nocache=1"></script>
+  </head>
+  
+  <body>
+    <div class="SplashScreen">Loading...</div>
+    <div class="App-activities">
+      <!-- Activity index -->
+      <div data-activity="splashIndex">
+        <div class="text-center"><a class="logo-white">Loconomics Cooperative, Inc.</a>
+        </div>
+        <div class="LeadContent">
+           <h1>Now's the time.</h1>
+
+          <p class="lead">A marketplace owned by the people doing the work.</p>
+          <div class="text-center"> <a href="#!signup" class="btn btn-secondary">Sign up for the beta</a>
+
+          </div>
+          <br>
+          <p class="text-center">Are you a local service professional in the SF Bay Area? <a href="http://www.eventbrite.com/e/meet-loconomics-cooperative-tickets-18850942677?aff=homepage"
+            target="_blank">Meet us November 4th</a>
+
+          </p>
+        </div>
+        <div class="Splash-message">
+           <h2>Welcome</h2>
+
+          <p>Loconomics Cooperative’s mission is to use technology, shared ownership,
+            and community to eliminate middle-men in local economies.</p>
+          <p>We provide local service professionals (our owners) with the tools, marketplace,
+            and community that empower them to thrive in their work.</p>
+          <p>Together, we are building an on-demand marketplace where everyone can
+            discover and book local service professionals safely, easily, and directly.</p>
+          <br> <a href="#!signup" class="btn btn-secondary">Sign up for the beta</a>
+
+        </div>
+        <footer class="WebsiteFooter">
+          <div class="WebsiteFooter-social WebsiteFooter-social--on-top">
+             <h6>Join us on:</h6>
+
+            <ul class="list-unstyled">
+              <li><a href="https://instagram.com/" target="_blank"><span class="sr-only">Instagram</span> <i aria-hidden="true" class="fa ion ion-social-instagram"></i></a>
+              </li>
+              <li><a href="https://facebook.com" target="_blank"><span class="sr-only">Facebook</span> <i aria-hidden="true" class="fa ion ion-social-facebook"></i></a>
+              </li>
+              <li><a href="https://twitter.com" target="_blank"><span class="sr-only">Twitter</span> <i aria-hidden="true" class="fa ion ion-social-twitter"></i></a>
+              </li>
+              <li><a href="https://plus.google.com" target="_blank"><span class="sr-only">Google Plus</span> <i aria-hidden="true" class="fa ion ion-social-googleplus"></i></a>
+              </li>
+              <li><a href="https://pinterest.com" target="_blank"><span class="sr-only">Pinterest</span> <i aria-hidden="true" class="fa ion ion-social-pinterest"></i></a>
+              </li>
+            </ul>
+          </div>
+          <p class="WebsiteFooter-copyright">&copy; Loconomics Cooperative, Inc.</p>
+        </footer>
+      </div>
+      <div class="container" data-activity="splashThanks">
+        <div class="LeadContent">Thank you!</div>
+      </div>
+      <!-- Activity Signup -->
+      <div class="container-fluid" data-activity="signup">
+        <div class="text-center signup-logo"><a class="logo-white">Loconomics Cooperative, Inc.</a>
+        </div>
+        <div class="LeadContent signup-profiles" data-bind="visible: !profile()">
+           <h1>Join our community</h1>
+
+           <h2>You'll soon get access to our beta and help shape our future.</h2>
+
+          <div class="signup-selector">
+            <div class="signup-selector-option">
+               <h3>I am a professional</h3>
+ <a class="btn btn-secondary btn-lg btn-block" href="#!signup/service-professional">Sign up</a>
+
+            </div>
+            <div class="signup-selector-separator">or</div>
+            <div class="signup-selector-option">
+               <h3>I want to hire professionals</h3>
+ <a class="btn btn-secondary btn-lg btn-block" href="#!signup/client">Sign up</a>
+
+            </div>
+          </div>
+        </div>
+        <div class="LeadContent container signup-formcontainer" data-bind="visible: profile">
+           <h3>Sign up for free</h3>
+
+          <div data-bind="visible: !facebookUserID()"> <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
+
+            <!--<a
+            href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
+          </div>
+          <p class="isolated text-center" id="signup-or" data-bind="visible: !facebookUserID()"> <span>or</span>
+
+          </p>
+          <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }"
+          novalidate>
+            <script type="text/html" id="signup-field">
+              <div class="form-group has-feedback" data-bind="css: { 'has-error': field.error }">
+                <input type="email" class="form-control" data-bind="value: field, attr: { placeholder: label, 'aria-label': label }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
+                <span class="form-control-feedback" aria-hidden="true" data-bind="css: icon"></span>
+              </div>
+            </script>
+            <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', icon: 'ion-android-contact' } }"></div>
+            <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', icon: 'ion-android-contact' } }"></div>
+            <div class="row">
+              <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label: 'Zip code', icon: 'ion-ios-home-outline' } }"></div>
+              <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label: 'Referral code', icon: 'ion-android-contacts' } }"></div>
+            </div>
+            <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }, visible: forServiceProfessional">
+              <select data-bind="value: device" class="form-control">
+                <option value="">Select your device</option>
+                <option value="ios">iPhone/iPad</option>
+                <option value="android">Android</option>
+              </select> <span class="ion-iphone form-control-feedback" aria-hidden="true"></span>
+
+            </div>
+            <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
+            <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
+              <label for="signupAccountEmail" class="sr-only">E-mail address</label>
+              <input type="email" class="form-control" id="signupAccountEmail"
+              placeholder="E-mail address" data-bind="textInput: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }"> <span class="form-control-feedback ion-ios-at-outline" aria-hidden="true"></span>
+
+            </div>
+            <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
+              <label for="signupAccountPassword" class="sr-only">Password</label>
+              <input type="password" class="form-control" id="signupAccountPassword"
+              placeholder="Password" data-bind="textInput: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'top' }"> <span class="ion-ios-locked-outline form-control-feedback" aria-hidden="true"></span>
+
+            </div>
+            <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }"> <span data-bind="visible: facebookUserID"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;</span>
+
+              <span
+              data-bind="text: submitText">Sign up</span>
+            </button>
+          </form>
+          <p class="isolated" id="signup-agreement">By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/"
+            target="_blank">Terms of Use</a> &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
+            target="_blank">Privacy Policy</a>
+
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>

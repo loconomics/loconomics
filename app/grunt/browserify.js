@@ -127,6 +127,53 @@ module.exports = function(/*grunt*/) {
             )
         }
     };
+    
+    /**
+        Splash bundle
+    **/
+    bconfig.splash = {
+        'src': [
+            './source/js/splash.js'
+        ],
+        'dest': './build/assets/js/splash.js',
+        'options': {
+            // Enable debug ever when compiling script.js, the min.js will delete debug info for production use:
+            'debug': true,
+            shim: {
+                // Using a shim we avoid jquery to detect the CommonJS loader and 
+                // it attachs itself to the global namespace (window) what let
+                // the plugins works fine.
+                jquery: {
+                    path: './vendor/jquery/jquery-2.1.4.js',
+                    exports: 'jQuery'
+                },
+                'bootstrap': {
+                    // Using latest Bootstrap version:
+                    path: './vendor/bootstrap/js/bootstrap.js',
+                    exports: null,
+                    depends: { 'jquery': 'jquery' }
+                },
+                'fastclick': {
+                    path: './vendor/fastclick-forked/fastclick.js',
+                    exports: 'FastClick'
+                },
+                'jquery.ajaxQueue': {
+                    path: './vendor/caoglish/jquery.ajaxQueue.js',
+                    exports: null,
+                    depends: { 'jquery': 'jquery' }
+                }
+            },
+            'alias': [
+                'knockout',
+                'es6-promise',
+                'localforage',
+                './source/js/custom-modernizr.js:custom-modernizr',
+                './vendor/iagosrl/ko/formatBinding:ko/formatBinding',
+                './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent',
+                './vendor/iagosrl/throttle:iagosrl/throttle'
+            ]
+        }
+    };
 
     return bconfig;
 };

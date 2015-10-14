@@ -1,14 +1,35 @@
 <!-- Activity Signup -->
 <div class="container-fluid" data-activity="signup">
-  <div class="LeadContent">
+    
+    <div class="text-center signup-logo"><a class="logo-white">Loconomics Cooperative, Inc.</a></div>
+    
+    <div class="LeadContent signup-profiles" data-bind="visible: !profile()">
+        <h1>Join our community</h1>
+        <h2>You'll soon get access to our beta and help shape our future.</h2>
+        <div class="signup-selector">
+            <div class="signup-selector-option">
+                <h3>I am a professional</h3>
+                <a class="btn btn-secondary btn-lg btn-block" href="#!signup/service-professional">Sign up</a>
+            </div>
+            <div class="signup-selector-separator">
+                or
+            </div>
+            <div class="signup-selector-option">
+                <h3>I want to hire professionals</h3>
+                <a class="btn btn-secondary btn-lg btn-block" href="#!signup/client">Sign up</a>
+            </div>
+        </div>
+    </div>
+    
+  <div class="LeadContent container signup-formcontainer" data-bind="visible: profile">
     <h3>Sign up for free</h3>
 
-    <div>
-      <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook">Sign up with Facebook</a>
+    <div data-bind="visible: !facebookUserID()">
+      <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
       <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
     </div>
 
-    <p class="isolated text-center" id="signup-or">
+    <p class="isolated text-center" id="signup-or" data-bind="visible: !facebookUserID()">
       <span>or</span>
     </p>
       
@@ -42,19 +63,22 @@
         <input type="email" class="form-control" id="signupAccountEmail" placeholder="E-mail address" data-bind="textInput: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }">
           <span class="form-control-feedback ion-ios-at-outline" aria-hidden="true"></span>
       </div>
-      <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }">
+        
+      <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
         <label for="signupAccountPassword" class="sr-only">Password</label>
         <input type="password" class="form-control" id="signupAccountPassword" placeholder="Password" data-bind="textInput: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'top' }">
           <span class="ion-ios-locked-outline form-control-feedback" aria-hidden="true"></span>
       </div>
-      <button type="submit" data-loading-text="Creating account..." class="btn btn-primary btn-block" autocomplete="off">
-        Create account
+        
+      <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }">
+        <span data-bind="visible: facebookUserID"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;</span>
+        <span data-bind="text: submitText">Sign up</span>
       </button>
     </form>
 
-    <p class="isolated">
-      By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank">Terms of Use</a>,
-        <a href="https://loconomics.com/en-US/About/PrivacyPolicy" target="_blank">Privacy Policy</a> &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy" target="_blank">Co-op Membership Agreement</a>
+    <p class="isolated" id="signup-agreement">
+      By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank">Terms of Use</a> &amp;
+        <a href="https://loconomics.com/en-US/About/PrivacyPolicy" target="_blank">Privacy Policy</a>
     </p>
   </div>
 

@@ -10,7 +10,6 @@ var A = Activity.extends(function SignupActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.anonymous;
     this.viewModel = new ViewModel(this.app);
     // null for Logo
     this.navBar = Activity.createSectionNavBar(null);
@@ -24,34 +23,30 @@ var A = Activity.extends(function SignupActivity() {
 
                 // Perform signup
 
-                // Notify state:
-                var $btn = this.$activity.find('[type="submit"]');
-                $btn.button('loading');
-
                 // Clear previous error so makes clear we
                 // are attempting
                 this.viewModel.signupError('');
 
                 var ended = function ended() {
                     this.viewModel.isSigningUp(false);
-                    $btn.button('reset');
                 }.bind(this);
+                
+                var plainData = {
+                    email: this.viewModel.email(),
+                    password: this.viewModel.password(),
+                    firstName: this.viewModel.firstName(),
+                    lastName: this.viewModel.lastName(),
+                    phone: this.viewModel.phone(),
+                    postalCode: this.viewModel.postalCode(),
+                    referralCode: this.viewModel.referralCode(),
+                    device: this.viewModel.device(),
+                    facebookUserID: this.viewModel.facebookUserID(),
+                    facebookAccessToken: this.viewModel.facebookAccessToken(),
+                    profileType: this.viewModel.profile(),
+                };
 
-                // After clean-up error (to force some view updates),
-                // validate and abort on error
-                // Manually checking error on each field
-                if (this.viewModel.email.error() ||
-                    this.viewModel.password.error()) {
-                    this.viewModel.signupError('Review your data');
-                    ended();
-                    return;
-                }
-
-                this.app.model.signup(
-                    this.viewModel.email(),
-                    this.viewModel.password(),
-                    this.viewModel.profile()
-                ).then(function(signupData) {
+                this.app.model.signup(plainData)
+                .then(function(signupData) {
 
                     this.viewModel.signupError('');
                     ended();
@@ -60,10 +55,14 @@ var A = Activity.extends(function SignupActivity() {
                     this.app.model.onboarding.setStep(signupData.onboardingStep);
 
                     // Remove form data
-                    this.viewModel.email('');
-                    this.viewModel.password('');
+                    this.viewModel.reset();
 
-                    this.app.goDashboard();
+                    if (this.app.goDashboard)
+                        // In App
+                        this.app.goDashboard();
+                    else
+                        // In Splash
+                        this.app.shell.go('#!splashThanks');
 
                 }.bind(this)).catch(function(err) {
                     
@@ -71,7 +70,9 @@ var A = Activity.extends(function SignupActivity() {
                     
                     if (err && err.errorSource === 'validation' && err.errors) {
                         Object.keys(err.errors).forEach(function(fieldKey) {
-                            this.viewModel[fieldKey].error(err.errors[fieldKey]);
+                            if (this.viewModel[fieldKey] && this.viewModel[fieldKey].error) {
+                                this.viewModel[fieldKey].error(err.errors[fieldKey]);
+                            }
                         }.bind(this));
                     }
                     else {
@@ -81,6 +82,11 @@ var A = Activity.extends(function SignupActivity() {
 
                         this.viewModel.signupError(msg);
                     }
+                    
+                    setTimeout(function() {
+                        // Focus first field with error
+                        this.$activity.find('.has-error:first').find('input').focus();
+                    }.bind(this), 100);
 
                     ended();
                 }.bind(this));
@@ -102,8 +108,27 @@ var A = Activity.extends(function SignupActivity() {
         }.bind(this)
     });
     
+    var vm = this.viewModel;
     this.viewModel.facebook = function() {
-        
+        var fb = require('../utils/facebookUtils');
+
+        // email,user_about_me
+        fb.login({ scope: 'email' }).then(function (result) {
+            var auth = result.auth,
+                FB = result.FB;
+            // Set FacebookId to link accounts:
+            vm.facebookUserID(auth.userID);
+            vm.facebookAccessToken(auth.accessToken);
+            // Request more user data
+            FB.api('/me', function (user) {
+                //Fill Data
+                vm.email(user.email);
+                vm.firstName(user.first_name);
+                vm.lastName(user.last_name);
+                //(user.gender);
+                //(user.about);
+            });
+        });
     };
 });
 
@@ -112,15 +137,14 @@ exports.init = A.init;
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     
-    if (options && options.route &&
-        options.route.segments &&
-        options.route.segments.length) {
-        this.viewModel.profile(options.route.segments[0]);
-    }
+    this.viewModel.reset();
+    
+    var p = options && options.route && options.route.segments && options.route.segments[0] || '';
+    this.viewModel.profile(p);
 };
 
 
-var FormCredentials = require('../viewmodels/FormCredentials');
+//var FormCredentials = require('../viewmodels/FormCredentials');
 var newFieldObs = function() {
     var obs = ko.observable('');
     obs.error = ko.observable('');
@@ -139,22 +163,45 @@ function ViewModel() {
     this.postalCode = newFieldObs();
     this.referralCode = newFieldObs();
     this.device = newFieldObs();
+    
+    this.facebookUserID = ko.observable();
+    this.facebookAccessToken = ko.observable();
 
-    var credentials = new FormCredentials();    
-    this.email = credentials.username;
-    this.password = credentials.password;
+    //var credentials = new FormCredentials();    
+    //this.email = credentials.username;
+    //this.password = credentials.password;
+    this.email = newFieldObs();
+    this.password = newFieldObs();
 
     this.signupError = ko.observable('');
     
     this.isSigningUp = ko.observable(false);
+    this.submitText = ko.pureComputed(function() {
+        return (
+            this.isSigningUp() ? 'Signing up...' :
+            this.facebookUserID() ? 'Sign up with Facebook' :
+            'Sign up'
+        );
+    }, this);
     
     this.performSignup = function performSignup() {
 
         this.isSigningUp(true);
     }.bind(this);
 
-    this.profile = ko.observable('client');
+    this.profile = ko.observable(''); // client, service-professional
     this.forServiceProfessional = ko.pureComputed(function() {
-        return this.profile() === 'serviceProfessional';
+        return this.profile() === 'service-professional';
     }, this);
+    
+    this.reset = function() {
+        this.firstName('');
+        this.lastName('');
+        this.phone('');
+        this.postalCode('');
+        this.referralCode('');
+        this.device('');
+        this.facebookUserID('');
+        this.facebookAccessToken('');
+    };
 }

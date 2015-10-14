@@ -63,5 +63,12 @@ module.exports = {
         'files': {
             './build/assets/js/styleguidelibs.min.js': ['<%= browserify.styleguidelibs.dest %>']
         }
+    },
+    'splash': {
+        // Disabled conservative settings, enable if some bugs happens using minified files.
+        //'options': { compress: false, mangle: false },
+        'files': {
+            './build/assets/js/splash.min.js': ['<%= browserify.splash.dest %>']
+        }
     }
 };
