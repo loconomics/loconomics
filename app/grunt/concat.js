@@ -22,5 +22,13 @@ module.exports ={
             './vendor/ionicons/css/ionicons.css'
         ],
         dest: './build/assets/css/libs.css'
+    },
+    'css-splash-libs': {
+        src: [
+            './vendor/bootstrap/css/bootstrap.css',
+            './vendor/font-awesome/css/font-awesome.css',
+            './vendor/ionicons/css/ionicons.css'
+        ],
+        dest: './build/assets/css/splash-libs.css'
     }
 };

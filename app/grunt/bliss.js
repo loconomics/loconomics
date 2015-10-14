@@ -11,6 +11,12 @@ module.exports = function(grunt) {
     
     var facebookAppID = '180579422039773',
         facebookLang = 'en-US';
+    
+    var splashIncludedFiles = [
+        'activities/splashIndex.html',
+        'activities/splashThanks.html',
+        'activities/signup.html'
+    ];
 
     return {
         app: {
@@ -41,6 +47,20 @@ module.exports = function(grunt) {
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang
                 //siteUrl: 'http://localhost/source'
+            }
+          }
+        },
+        splash: {
+          files: {
+            'build/splash.html': ['source/html/splash.js.html']
+          },
+          options: {
+            context: {
+                debug: true,
+                includedFiles: splashIncludedFiles,
+                siteUrl: 'http://dev.loconomics.com',
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang
             }
           }
         },

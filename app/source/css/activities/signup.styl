@@ -61,4 +61,29 @@
     .col-xs-7 {
         padding-left: 5px;
     }
+    
+    .LeadContent {
+        max-width: 360px;
+        background: White;
+        
+        @media $mediaMinSm {
+            padding: 15px 50px;
+        }
+        @media $mediaMinMd {
+            padding: 15px 65px;
+        }
+    }
+    
+    .btn[type=submit] {
+        padding: 10px 12px;
+        font-weight: bold;
+        font-size: 17px;
+    }
+    
+    #signup-agreement {
+        a {
+            color: $brand-secondary;
+            font-weight: bold;
+        }
+    }
 }
