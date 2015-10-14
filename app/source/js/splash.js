@@ -3,21 +3,15 @@
 /** Global dependencies **/
 var $ = require('jquery');
 var ko = require('knockout');
-ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 var bootknock = require('./utils/bootknockBindingHelpers');
 require('./utils/Function.prototype._inherits');
-require('./utils/Function.prototype._delayed');
 // Polyfill for useful non-standard feature Function.name for IE9+
 // (feature used to simplify creation of Activities and Models)
 require('./utils/Function.prototype.name-polyfill');
 // Promise polyfill, so its not 'require'd per module:
 require('es6-promise').polyfill();
 
-var layoutUpdateEvent = require('layoutUpdateEvent');
 var SplashAppModel = require('./appmodel/SplashAppModel');
-
-// Register the special locale
-require('./locales/en-US-LC');
 
 var attachFastClick = require('fastclick').attach;
 
@@ -59,28 +53,12 @@ app.getActivityControllerByRoute = function getActivityControllerByRoute(route) 
     return this.getActivity(actName);
 };
 
-// Shortcut to UserType enumeration used to set permissions
-app.UserType = require('./models/User').UserType;
-
 /** App Init **/
 var appInit = function appInit() {
     /*jshint maxstatements:50,maxcomplexity:16 */
     
     attachFastClick(document.body);
-    
-    // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
-    // and can be triggered manually by any script to notify changes on layout that
-    // may require adjustments on other scripts that listen to it.
-    // The event is throttle, guaranting that the minor handlers are executed rather
-    // than a lot of them in short time frames (as happen with 'resize' events).
-    layoutUpdateEvent.layoutUpdateEvent += ' orientationchange';
-    layoutUpdateEvent.on();
-    
-    // Force an update delayed to ensure update after some things did additional work
-    setTimeout(function() {
-        $(window).trigger('layoutUpdate');
-    }, 200);
-    
+
     // Bootstrap
     require('bootstrap');
     
@@ -121,44 +99,13 @@ var appInit = function appInit() {
     app.shell.on('error', function(err) {
         app.modals.showError({ error: err });
     });
-    
-    // Scroll to element when clicking a usual fragment link (not a page link)
-    var scrollToElement = require('./utils/scrollToElement');
-    app.shell.on('fragmentNavigation', function(href) {
-        // Check link, avoiding empty links
-        // (href comes with the initial hash ever, so empty is just '#')
-        if (href === '#') {
-            // Notify for debugging, because this may be unwanted
-            console.warn(
-                'Navigation to an empty fragment, this may be not wanted. ' +
-                'For root links, use "/"; on script handled links, call event.preventDefault; ' +
-                'A touch event was listened on a link, but not the click event.'
-            );
-        }
-        else {
-            // Locate target
-            var target = $(href);
-            if (target.length) {
-                // Smooth scrolling with animation
-                scrollToElement(target, { animation: { duration: 300 } });
-            }
-        }
-    });
-
-    // App init:
-    var alertError = function(err) {
-        app.modals.showError({
-            title: 'There was an error loading',
-            error: err
-        });
-    };
 
     app.model.init()
-    .then(app.shell.run.bind(app.shell), alertError)
+    .then(app.shell.run.bind(app.shell))
     .then(function() {
         // Mark the page as ready
         $('html').addClass('is-ready');
-    }, alertError);
+    });
 };
 
 // Only on DOM-Ready, for in browser development

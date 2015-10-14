@@ -137,7 +137,7 @@ module.exports = function(/*grunt*/) {
         ],
         'dest': './build/assets/js/splash.js',
         'options': {
-            debug: false,
+            debug: true,
             shim: {
                 // Using a shim we avoid jquery to detect the CommonJS loader and 
                 // it attachs itself to the global namespace (window) what let
@@ -164,12 +164,7 @@ module.exports = function(/*grunt*/) {
             },
             'alias': [
                 'knockout',
-                'es6-promise',
-                'localforage',
-                './source/js/custom-modernizr.js:custom-modernizr',
-                './vendor/iagosrl/ko/formatBinding:ko/formatBinding',
-                './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent',
-                './vendor/iagosrl/throttle:iagosrl/throttle'
+                'es6-promise'
             ]
         }
     };

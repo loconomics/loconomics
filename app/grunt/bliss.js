@@ -56,9 +56,9 @@ module.exports = function(grunt) {
           },
           options: {
             context: {
-                debug: true,
+                debug: false,
                 includedFiles: splashIncludedFiles,
-                siteUrl: 'http://dev.loconomics.com',
+                siteUrl: '',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang
             }
