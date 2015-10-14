@@ -1,4 +1,4 @@
-﻿@* Email sent to the client after they've made an instant booking.
+﻿@* This e-mail is a reminder sent to the service professional 48 hours before an appointment.
  *@
 @using WebMatrix.Data;
 @{
@@ -17,7 +17,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), Thanks for booking my <strong>@info.userJobTitle.jobTitleSingularName</strong> services 
+                Hi, @(info.serviceProfessional.firstName), This is just a friendly reminder about your <strong>@info.userJobTitle.jobTitleSingularName</strong> services @(info.client.firstName) @(info.client.lastName) booked are coming up on <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>.
             </div>
         </td>
     </tr>
@@ -33,13 +33,13 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
+                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thanks for booking my <strong>@info.userJobTitle.jobTitleSingularName</strong> services <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>. Below are the details. I look forward to it!</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">This is just a friendly reminder about your <strong>@info.userJobTitle.jobTitleSingularName</strong> services @(info.client.firstName) @(info.client.lastName) booked are coming up on <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>. If you need to cancel or reschedule, please do so ASAP by <a href="@(info.viewEmailUrl)" target="_blank" >clicking here</a>.</td>
                             </tr>
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>The Loconomics team</td>
                             </tr>
                         </table>
                     </td>
@@ -122,5 +122,5 @@
         </td>
     </tr>
 </table>
-@RenderPage("MessageComponents/$MarketplaceMarketingMessage.cshtml", info)
 @RenderPage("MessageComponents/$Footer.cshtml", info)
+

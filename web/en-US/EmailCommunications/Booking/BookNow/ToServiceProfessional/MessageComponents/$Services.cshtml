@@ -1,0 +1,64 @@
+@* Pricing summary of the services requested.
+ *@
+@using WebMatrix.Data;
+@{
+    // All the data for this component:
+    var info = LcEmailTemplate.GetBookingInfo(PageData);
+}
+
+<!-- Services -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#E6E9ED" align="center" style="padding: 40px 15px 40px 15px;" class="section-padding">
+            <table border="0" cellpadding="0" cellspacing="0" width="500" style="padding:0 0 20px 0;" class="responsive-table">
+                <!-- TITLE -->
+                <tr>
+                    <td align="center" style="padding: 0 0 5px 25px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy" colspan="2">Services Requested</td>
+                </tr>
+                 @foreach (var pricing in info.booking.pricingSummary.details) {
+					<tr>
+						<td style="padding: 20px 0 0 0;" class="no-padding">
+							<!-- ARTICLE -->
+							<table bgcolor="#FFFFFF" border="0" cellspacing="0" cellpadding="0" width="100%">
+								<tr>
+									<td align="left" style="padding: 25px 25px 5px 25px; text-align: left; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">@pricing.serviceName</td>
+								</tr>
+								@if (pricing.firstSessionDurationMinutes > 0) {
+									<tr>
+										<td align="left" style=" text-align: left; padding: 0 25px 5px 25px; font-size: 13px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #aaaaaa;" class="padding-meta">
+											@pricing.firstSessionDurationMinutes minutes
+											@if (pricing.numberOfSessions > 1)
+											{
+												<span>(@(pricing.numberOfSessions) sessions)</span><!-- @(pricing.serviceDurationMinutes) minutes in total-all sessions-->  
+											}
+										</td>
+									</tr>
+								}
+								else if (pricing.numberOfSessions > 1)
+								{
+									<tr>
+										<td align="left" style=" text-align: left; padding: 0 25px 5px 25px; font-size: 13px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #aaaaaa;" class="padding-meta">
+											<span>@(pricing.numberOfSessions) sessions</span>
+										</td>
+									</tr>
+								}
+
+								@if (!String.IsNullOrEmpty(pricing.serviceDescription))
+								{
+									<tr>
+											<td align="left" style="border-top: 2px solid #ff6765; text-align: justify; text-justify: auto; padding: 10px 25px 5px 25px; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">@pricing.serviceDescription</td>
+									</tr>
+								}
+								<tr>
+									<td align="left" style="border-bottom: 1px solid #d2d2d2; text-align: left; padding: 20px 25px 0 25px;"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				}
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- $Services END -->                            
