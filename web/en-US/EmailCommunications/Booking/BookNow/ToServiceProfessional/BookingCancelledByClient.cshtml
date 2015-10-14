@@ -1,4 +1,6 @@
-﻿@* Email sent to the client after they've made an instant booking.
+﻿@* This e-mail goes out to the service professional after the client has cancelled an appointment.
+    If payment was collected and the service professional has a cancellation policy in effect, 
+    a summary of cancellation fees charged to the client's card will be included.
  *@
 @using WebMatrix.Data;
 @{
@@ -8,6 +10,7 @@
 
     // All the data for this email:
     var info = LcEmailTemplate.GetBookingInfo();
+    var policy = info.cancellationPolicy;
 
     // NOTE: Write some notes
     // Write some more notes, maybe a second line?
@@ -17,7 +20,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), Thanks for booking my <strong>@info.userJobTitle.jobTitleSingularName</strong> services 
+                Hi, @(info.serviceProfessional.firstName), Unfortunately, @(info.client.firstName) @(info.client.lastName) their appointment for your @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)).
             </div>
         </td>
     </tr>
@@ -33,13 +36,32 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
+                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thanks for booking my <strong>@info.userJobTitle.jobTitleSingularName</strong> services <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>. Below are the details. I look forward to it!</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, @(info.client.firstName) @(info.client.lastName) their appointment for your @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)). Your schedule has been updated to reflect this.</td>
                             </tr>
+							@if (policy != null && info.booking.paymentCollected)
+							{
+                           <tr>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+								    @if (info.cancellationLimitDate <= DateTime.Now)  
+								    {
+									    <span>
+										    Since your cancellation policy states @(info.client.firstName) would have had to cancel their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, @(info.client.firstName) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is your cancellation fee of <strong>@(policy.refundIfCancelledBefore.ToString("0.##%")) of the cost of booked services</strong>. You'll receive payment shortly.
+									    </span>
+								    }
+								    else
+								    {
+									    <span>
+										    Since @(info.client.firstName) cancelled within your cancellation policy, they will not be charged.
+									    </span>
+								    }
+								</td>
+							</tr>
+							}
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>The Loconomics team</td>
                             </tr>
                         </table>
                     </td>
@@ -48,32 +70,6 @@
         </td>
     </tr>
 </table>
-<!-- Booking Details -->
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td bgcolor="#ffffff" align="center" style="padding: 40px 15px 15px 15px;" class="section-padding">
-            <table border="0" cellpadding="0" cellspacing="0" width="500" class="responsive-table">
-                <tr>
-                    <td>
-                        <!-- COPY -->
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                                <td align="center"><a href="@(info.viewEmailUrl)" target="_blank" style="padding: 0 0 0 0; font-size: 30px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ff6765;" class="padding-copy">Booking Details</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
-@RenderPage("MessageComponents/$PricingSummary.cshtml", info)
-@RenderPage("MessageComponents/$Services.cshtml", info)
-@RenderPage("MessageComponents/$TimeConfirmed.cshtml", info)
-@RenderPage("MessageComponents/$Location.cshtml", info)
-@RenderPage("MessageComponents/$PaymentStatus.cshtml", info)
-@RenderPage("MessageComponents/$NotesToServiceProfessional.cshtml", info)
-@RenderPage("MessageComponents/$CancellationPolicy.cshtml", info)
 <!-- FAQS -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -122,5 +118,4 @@
         </td>
     </tr>
 </table>
-@RenderPage("MessageComponents/$MarketplaceMarketingMessage.cshtml", info)
 @RenderPage("MessageComponents/$Footer.cshtml", info)
