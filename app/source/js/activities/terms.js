@@ -17,9 +17,9 @@ var A = Activity.extends(function TermsActivity() {
     // null for logos
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
-    this.$activity.find('#terms-index a').click(function (e) 
-    {
+    this.$activity.find('#terms-index a').click(function (e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
         $(this).tab('show');
     });
 });
@@ -27,5 +27,9 @@ var A = Activity.extends(function TermsActivity() {
 exports.init = A.init;
 
 A.prototype.show = function show(state) {
-    Activity.prototype.show.call(this, state); 
+    Activity.prototype.show.call(this, state);
+    
+    var tabName = state && state.route.segments && state.route.segments[0];
+    var tab = this.$activity.find('[href="#terms-' + tabName + '"]');
+    if (tab.length) tab.tab('show');
 };

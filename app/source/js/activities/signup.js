@@ -81,6 +81,7 @@ var A = Activity.extends(function SignupActivity() {
                             'Invalid username or password';
 
                         this.viewModel.signupError(msg);
+                        this.viewModel.email.error(msg);
                     }
                     
                     setTimeout(function() {

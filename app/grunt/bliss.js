@@ -15,7 +15,8 @@ module.exports = function(grunt) {
     var splashIncludedFiles = [
         'activities/splashIndex.html',
         'activities/splashThanks.html',
-        'activities/signup.html'
+        'activities/signup.html',
+        'activities/terms.html'
     ];
 
     return {

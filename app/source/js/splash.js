@@ -27,11 +27,15 @@ var app = {
     activities: {
         'splashIndex': require('./activities/splashIndex'),
         'signup': require('./activities/signup'),
-        'splashThanks': require('./activities/splashThanks')
+        'splashThanks': require('./activities/splashThanks'),
+        'terms': require('./activities/terms')
     }
 };
 
 app.shell.indexName = 'splashIndex';
+// Lower delay, because this Splash is for website and default delay
+// is visible at desktop browsers, while not a problem for the Splash activities:
+app.shell.items.switchDelay = 40;
 
 /** Continue app creation with things that need a reference to the app **/
 

@@ -1307,3 +1307,57 @@ body.use-backdrop:before {
 [data-activity=splashThanks] {
   background: White;
 }
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+
+/* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+[data-activity=terms] {
+  background: White;
+}
+
+/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+[data-activity=terms] .profile-menu {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding: 0px;
+  margin: 0px auto 25px !important;
+  text-align: center;
+  line-height: 19px !important;
+  background-color: #00989a;
+}
+
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+[data-activity=terms] .profile-menu a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+[data-activity=terms] .profile-menu ul {
+  display: block;
+  width: 100% !important;
+  margin: 0 auto !important;
+  list-style: none;
+}
+
+/* line 28 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+[data-activity=terms] .profile-menu ul li {
+  display: inline;
+  margin: 0px !important;
+}
+
+/* line 32 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+[data-activity=terms] .profile-menu ul li a {
+  color: #fff;
+  display: inline-block;
+  padding: 17px 15px;
+  margin: 0px -3px 0px -3px;
+  font-size: 15px;
+}
+
+/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+[data-activity=terms] .profile-menu ul li a:hover {
+  border-bottom: 4px solid;
+  padding-bottom: 13px !important;
+}

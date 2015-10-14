@@ -3521,7 +3521,28 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
     </div>
     <!-- Activity Signup -->
     <div class="container-fluid" data-activity="signup">
-      <div class="LeadContent container">
+      <div class="text-center signup-logo"><a class="logo-white">Loconomics Cooperative, Inc.</a>
+      </div>
+      <div class="LeadContent signup-profiles" data-bind="visible: !profile()">
+         <h1>Join our community</h1>
+
+         <h2>You'll soon get access to our beta and help shape our future.</h2>
+
+        <div class="signup-selector">
+          <div class="signup-selector-option">
+             <h3>I am a professional</h3>
+ <a class="btn btn-secondary btn-lg btn-block" href="#!signup/service-professional">Sign up</a>
+
+          </div>
+          <div class="signup-selector-separator">or</div>
+          <div class="signup-selector-option">
+             <h3>I want to hire professionals</h3>
+ <a class="btn btn-secondary btn-lg btn-block" href="#!signup/client">Sign up</a>
+
+          </div>
+        </div>
+      </div>
+      <div class="LeadContent container signup-formcontainer" data-bind="visible: profile">
          <h3>Sign up for free</h3>
 
         <div data-bind="visible: !facebookUserID()"> <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
@@ -3547,7 +3568,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label: 'Referral code', icon: 'ion-android-contacts' } }"></div>
           </div>
           <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }, visible: forServiceProfessional">
-            <select data-bind="value: device" class="form-control">
+            <select data-bind="value: device" class="form-control btn">
               <option value="">Select your device</option>
               <option value="ios">iPhone/iPad</option>
               <option value="android">Android</option>
@@ -3573,12 +3594,105 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             data-bind="text: submitText">Sign up</span>
           </button>
         </form>
-        <p class="isolated">By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/"
+        <p class="isolated" id="signup-agreement">By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/"
           target="_blank">Terms of Use</a> &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
           target="_blank">Privacy Policy</a>
 
         </p>
       </div>
+    </div>
+    <!-- Activity index -->
+    <div data-activity="splashIndex">
+      <div class="splashIndex-top">
+        <div class="text-center"><a class="logo-white">Loconomics Cooperative, Inc.</a>
+        </div>
+        <div class="LeadContent">
+           <h1>Now's the time.</h1>
+
+          <p class="lead">A marketplace owned by the people doing the work.</p>
+          <div class="text-center"> <a href="#!signup" class="btn btn-secondary">Sign up for the beta</a>
+
+          </div>
+          <br>
+          <p class="text-center">Are you a local service professional in the SF Bay Area? <a href="http://www.eventbrite.com/e/meet-loconomics-cooperative-tickets-18850942677?aff=homepage"
+            target="_blank">Meet us November 4th</a>
+
+          </p>
+        </div>
+      </div>
+      <div class="Splash-message">
+         <h2>Welcome</h2>
+
+        <p>Loconomics Cooperative’s mission is to use technology, shared ownership,
+          and community to eliminate middle-men in local economies.</p>
+        <p>We provide local service professionals (our owners) with the tools, marketplace,
+          and community that empower them to thrive in their work.</p>
+        <p>Together, we are building an on-demand marketplace where everyone can
+          discover and book local service professionals safely, easily, and directly.</p>
+        <br> <a href="#!signup" class="btn btn-secondary">Sign up for the beta</a>
+
+      </div>
+      <footer class="WebsiteFooter">
+        <div class="WebsiteFooter-social WebsiteFooter-social--on-top">
+           <h6>Join us on:</h6>
+
+          <ul class="list-unstyled">
+            <li><a href="https://instagram.com/loconomicscoop" target="_blank"><span class="sr-only">Instagram</span> <i aria-hidden="true" class="fa ion ion-social-instagram"></i></a>
+            </li>
+            <li><a href="https://www.facebook.com/loconomics" target="_blank"><span class="sr-only">Facebook</span> <i aria-hidden="true" class="fa ion ion-social-facebook"></i></a>
+            </li>
+            <li><a href="https://twitter.com/loconomics" target="_blank"><span class="sr-only">Twitter</span> <i aria-hidden="true" class="fa ion ion-social-twitter"></i></a>
+            </li>
+            <li><a href="https://plus.google.com/108055414279433244346" target="_blank"><span class="sr-only">Google Plus</span> <i aria-hidden="true" class="fa ion ion-social-googleplus"></i></a>
+            </li>
+            <li><a href="https://www.pinterest.com/loconomics/" target="_blank"><span class="sr-only">Pinterest</span> <i aria-hidden="true" class="fa ion ion-social-pinterest"></i></a>
+            </li>
+          </ul>
+        </div>
+        <p class="WebsiteFooter-copyright">&copy; Loconomics Cooperative, Inc.</p>
+      </footer>
+    </div>
+    <div data-activity="splashThanks">
+      <div class="text-center"><a class="logo-teal">Loconomics Cooperative, Inc.</a>
+      </div>
+      <div class="Splash-message">
+         <h2>Thank you!</h2>
+
+        <div data-bind="visible: isServiceProfessional">
+          <p>You’re making history. We’ll be reaching out to you shortly with instructions
+            to downnload our beta version of the app. Your feedback is essential.</p>
+          <p>You’ll also receive information on becoming a founding owner of Loconomcis
+            Cooperative.</p>
+        </div>
+        <div data-bind="visible: !isServiceProfessional()">
+          <p>You’re making history. We’re currently testing the beta version of our
+            app with local service professionals (our owners). We will keep you in
+            the loop when we’re ready for you to start booking local services.</p>
+          <p>In the meantime, please share our story with any local service professionals
+            you think might be interested in becoming founding owners.</p>
+        </div>
+        <p>Until soon,</p>
+        <p>The Loconomics Team</p>
+      </div>
+      <footer class="WebsiteFooter">
+        <div class="WebsiteFooter-social WebsiteFooter-social--on-top">
+           <h6>Join us on:</h6>
+
+          <ul class="list-unstyled">
+            <li><a href="https://instagram.com/loconomicscoop" target="_blank"><span class="sr-only">Instagram</span> <i aria-hidden="true" class="fa ion ion-social-instagram"></i></a>
+            </li>
+            <li><a href="https://www.facebook.com/loconomics" target="_blank"><span class="sr-only">Facebook</span> <i aria-hidden="true" class="fa ion ion-social-facebook"></i></a>
+            </li>
+            <li><a href="https://twitter.com/loconomics" target="_blank"><span class="sr-only">Twitter</span> <i aria-hidden="true" class="fa ion ion-social-twitter"></i></a>
+            </li>
+            <li><a href="https://plus.google.com/108055414279433244346" target="_blank"><span class="sr-only">Google Plus</span> <i aria-hidden="true" class="fa ion ion-social-googleplus"></i></a>
+            </li>
+            <li><a href="https://www.pinterest.com/loconomics/" target="_blank"><span class="sr-only">Pinterest</span> <i aria-hidden="true" class="fa ion ion-social-pinterest"></i></a>
+            </li>
+          </ul>
+        </div>
+        <p class="WebsiteFooter-copyright">&copy; Loconomics Cooperative, Inc.</p>
+      </footer>
     </div>
     <!-- Terms -->
     <div class="" data-activity="terms">

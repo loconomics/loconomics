@@ -20,6 +20,6 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-    var p = state && state.params && state.params[0];
+    var p = state && state.route.segments && state.route.segments[0];
     this.viewModel.isServiceProfessional(p === 'service-professional');
 };
