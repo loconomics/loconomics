@@ -22,20 +22,22 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
     <div class="App-activities">
       <!-- Activity index -->
       <div data-activity="splashIndex">
-        <div class="text-center"><a class="logo-white">Loconomics Cooperative, Inc.</a>
-        </div>
-        <div class="LeadContent">
-           <h1>Now's the time.</h1>
-
-          <p class="lead">A marketplace owned by the people doing the work.</p>
-          <div class="text-center"> <a href="#!signup" class="btn btn-secondary">Sign up for the beta</a>
-
+        <div class="splashIndex-top">
+          <div class="text-center"><a class="logo-white">Loconomics Cooperative, Inc.</a>
           </div>
-          <br>
-          <p class="text-center">Are you a local service professional in the SF Bay Area? <a href="http://www.eventbrite.com/e/meet-loconomics-cooperative-tickets-18850942677?aff=homepage"
-            target="_blank">Meet us November 4th</a>
+          <div class="LeadContent">
+             <h1>Now's the time.</h1>
 
-          </p>
+            <p class="lead">A marketplace owned by the people doing the work.</p>
+            <div class="text-center"> <a href="#!signup" class="btn btn-secondary">Sign up for the beta</a>
+
+            </div>
+            <br>
+            <p class="text-center">Are you a local service professional in the SF Bay Area? <a href="http://www.eventbrite.com/e/meet-loconomics-cooperative-tickets-18850942677?aff=homepage"
+              target="_blank">Meet us November 4th</a>
+
+            </p>
+          </div>
         </div>
         <div class="Splash-message">
            <h2>Welcome</h2>
@@ -54,23 +56,62 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
              <h6>Join us on:</h6>
 
             <ul class="list-unstyled">
-              <li><a href="https://instagram.com/" target="_blank"><span class="sr-only">Instagram</span> <i aria-hidden="true" class="fa ion ion-social-instagram"></i></a>
+              <li><a href="https://instagram.com/loconomicscoop" target="_blank"><span class="sr-only">Instagram</span> <i aria-hidden="true" class="fa ion ion-social-instagram"></i></a>
               </li>
-              <li><a href="https://facebook.com" target="_blank"><span class="sr-only">Facebook</span> <i aria-hidden="true" class="fa ion ion-social-facebook"></i></a>
+              <li><a href="https://www.facebook.com/loconomics" target="_blank"><span class="sr-only">Facebook</span> <i aria-hidden="true" class="fa ion ion-social-facebook"></i></a>
               </li>
-              <li><a href="https://twitter.com" target="_blank"><span class="sr-only">Twitter</span> <i aria-hidden="true" class="fa ion ion-social-twitter"></i></a>
+              <li><a href="https://twitter.com/loconomics" target="_blank"><span class="sr-only">Twitter</span> <i aria-hidden="true" class="fa ion ion-social-twitter"></i></a>
               </li>
-              <li><a href="https://plus.google.com" target="_blank"><span class="sr-only">Google Plus</span> <i aria-hidden="true" class="fa ion ion-social-googleplus"></i></a>
+              <li><a href="https://plus.google.com/108055414279433244346" target="_blank"><span class="sr-only">Google Plus</span> <i aria-hidden="true" class="fa ion ion-social-googleplus"></i></a>
               </li>
-              <li><a href="https://pinterest.com" target="_blank"><span class="sr-only">Pinterest</span> <i aria-hidden="true" class="fa ion ion-social-pinterest"></i></a>
+              <li><a href="https://www.pinterest.com/loconomics/" target="_blank"><span class="sr-only">Pinterest</span> <i aria-hidden="true" class="fa ion ion-social-pinterest"></i></a>
               </li>
             </ul>
           </div>
           <p class="WebsiteFooter-copyright">&copy; Loconomics Cooperative, Inc.</p>
         </footer>
       </div>
-      <div class="container" data-activity="splashThanks">
-        <div class="LeadContent">Thank you!</div>
+      <div data-activity="splashThanks">
+        <div class="text-center"><a class="logo-teal">Loconomics Cooperative, Inc.</a>
+        </div>
+        <div class="Splash-message">
+           <h2>Thank you!</h2>
+
+          <div data-bind="visible: isServiceProfessional">
+            <p>You’re making history. We’ll be reaching out to you shortly with instructions
+              to downnload our beta version of the app. Your feedback is essential.</p>
+            <p>You’ll also receive information on becoming a founding owner of Loconomcis
+              Cooperative.</p>
+          </div>
+          <div data-bind="visible: !isServiceProfessional()">
+            <p>You’re making history. We’re currently testing the beta version of our
+              app with local service professionals (our owners). We will keep you in
+              the loop when we’re ready for you to start booking local services.</p>
+            <p>In the meantime, please share our story with any local service professionals
+              you think might be interested in becoming founding owners.</p>
+          </div>
+          <p>Until soon,</p>
+          <p>The Loconomics Team</p>
+        </div>
+        <footer class="WebsiteFooter">
+          <div class="WebsiteFooter-social WebsiteFooter-social--on-top">
+             <h6>Join us on:</h6>
+
+            <ul class="list-unstyled">
+              <li><a href="https://instagram.com/loconomicscoop" target="_blank"><span class="sr-only">Instagram</span> <i aria-hidden="true" class="fa ion ion-social-instagram"></i></a>
+              </li>
+              <li><a href="https://www.facebook.com/loconomics" target="_blank"><span class="sr-only">Facebook</span> <i aria-hidden="true" class="fa ion ion-social-facebook"></i></a>
+              </li>
+              <li><a href="https://twitter.com/loconomics" target="_blank"><span class="sr-only">Twitter</span> <i aria-hidden="true" class="fa ion ion-social-twitter"></i></a>
+              </li>
+              <li><a href="https://plus.google.com/108055414279433244346" target="_blank"><span class="sr-only">Google Plus</span> <i aria-hidden="true" class="fa ion ion-social-googleplus"></i></a>
+              </li>
+              <li><a href="https://www.pinterest.com/loconomics/" target="_blank"><span class="sr-only">Pinterest</span> <i aria-hidden="true" class="fa ion ion-social-pinterest"></i></a>
+              </li>
+            </ul>
+          </div>
+          <p class="WebsiteFooter-copyright">&copy; Loconomics Cooperative, Inc.</p>
+        </footer>
       </div>
       <!-- Activity Signup -->
       <div class="container-fluid" data-activity="signup">

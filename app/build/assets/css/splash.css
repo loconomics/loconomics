@@ -333,7 +333,6 @@ select.btn::-ms-expand {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 
-  background: #00989a;
 }
 
 /* line 8 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
@@ -356,7 +355,7 @@ select.btn::-ms-expand {
   visibility: hidden;
 }
 
-/* line 79 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+/* line 82 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
 .Splash .btn-google {
@@ -372,14 +371,15 @@ select.btn::-ms-expand {
   border: none;
 }
 
-/* line 37 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
-.Splash .App-activities {
-  background: #00989a;
+/* line 36 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
+.Splash .App-activities [data-activity] {
+  top: 0 !important;
 }
 
 /* line 43 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
 .Splash .logo-white,
 .Splash .logo-teal {
+  margin-top: 44px !important;
   display: inline-block;
   text-indent: -99999px;
   background: url("../images/logo-loconomics-teal-mini.png") no-repeat center;
@@ -398,7 +398,7 @@ select.btn::-ms-expand {
   }
 }
 
-/* line 51 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
+/* line 54 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
 .Splash .logo-white {
   background: url("../images/logo-loconomics-white-mini.png") no-repeat center;
 }
@@ -413,28 +413,28 @@ select.btn::-ms-expand {
   }
 }
 
-/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
+/* line 60 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
 .Splash .Splash-message {
   background: White;
   margin: 0 auto;
   padding: 20px 60px 30px;
   text-align: center;
-  font-size: 1.1em;
+  font-size: 1.2em;
 }
 
-/* line 64 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
+/* line 67 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
 .Splash .Splash-message h2 {
-  font-size: 1.4em;
+  font-size: 1.6em;
 }
 
-/* line 68 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
+/* line 71 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
 .Splash .Splash-message p {
   text-align: justify;
-  max-width: 400px;
+  max-width: 360px;
   margin: 0 auto 16px;
 }
 
-/* line 74 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
+/* line 77 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Splash.styl */
 .Splash .Splash-message .btn {
   margin: 10px auto;
 }
@@ -1260,11 +1260,16 @@ body.use-backdrop:before {
 }
 
 /* line 129 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+.Splash [data-activity=signup] {
+  background: #00989a;
+}
+
+/* line 132 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] .signup-logo {
   display: block;
 }
 
-/* line 132 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
+/* line 136 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
 
@@ -1275,18 +1280,30 @@ body.use-backdrop:before {
 }
 
 /* line 10 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
+[data-activity=splashIndex] .splashIndex-top {
+  background: #00989a;
+}
 
-/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
+
+/* line 16 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
 [data-activity=splashIndex] .LeadContent h1,
 [data-activity=splashIndex] .LeadContent p,
 [data-activity=splashIndex] .LeadContent .btn {
   color: White;
 }
 
-/* line 16 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
+/* line 21 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
 [data-activity=splashIndex] .btn {
   font-size: 16px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
   border-bottom-color: #d9534f;
+}
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashThanks.styl */
+
+/* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashThanks.styl */
+[data-activity=splashThanks] {
+  background: White;
 }

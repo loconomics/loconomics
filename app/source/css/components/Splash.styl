@@ -33,15 +33,18 @@
     
     @import '../utils/signup-btns.styl';
     
-    background: $brand-primary;
-    .App-activities {
-        background: $brand-primary;
+    .App-activities [data-activity] {
+        // Replace the Activity default position, that takes care of a navbar
+        top: 0 !important;
     }    
     
     $brandWidth = 100px;
     $brandHeight = 38px;
     .logo-white,
     .logo-teal {
+        // It's always in the top, adds the top margin
+        margin-top: 44px !important;
+        
         display: inline-block;
         text-indent: -99999px;
         background: url("../images/logo-loconomics-teal-mini.png") no-repeat center;
@@ -60,15 +63,15 @@
         margin: 0 auto;
         padding: 20px 60px 30px;
         text-align: center;
-        font-size: 1.1em;
+        font-size: 1.2em;
         
         h2 {
-            font-size: 1.4em;
+            font-size: 1.6em;
         }
 
         p {
             text-align: justify;
-            max-width: 400px;
+            max-width: 360px;
             margin: 0 auto 16px;
         }
 
