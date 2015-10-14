@@ -57,7 +57,12 @@ var A = Activity.extends(function SignupActivity() {
                     // Remove form data
                     this.viewModel.reset();
 
-                    this.app.goDashboard();
+                    if (this.app.goDashboard)
+                        // In App
+                        this.app.goDashboard();
+                    else
+                        // In Splash
+                        this.app.shell.go('#!splashThanks');
 
                 }.bind(this)).catch(function(err) {
                     
@@ -65,7 +70,9 @@ var A = Activity.extends(function SignupActivity() {
                     
                     if (err && err.errorSource === 'validation' && err.errors) {
                         Object.keys(err.errors).forEach(function(fieldKey) {
-                            this.viewModel[fieldKey].error(err.errors[fieldKey]);
+                            if (this.viewModel[fieldKey] && this.viewModel[fieldKey].error) {
+                                this.viewModel[fieldKey].error(err.errors[fieldKey]);
+                            }
                         }.bind(this));
                     }
                     else {
@@ -75,6 +82,11 @@ var A = Activity.extends(function SignupActivity() {
 
                         this.viewModel.signupError(msg);
                     }
+                    
+                    setTimeout(function() {
+                        // Focus first field with error
+                        this.$activity.find('.has-error:first').find('input').focus();
+                    }.bind(this), 100);
 
                     ended();
                 }.bind(this));
@@ -127,11 +139,8 @@ A.prototype.show = function show(options) {
     
     this.viewModel.reset();
     
-    if (options && options.route &&
-        options.route.segments &&
-        options.route.segments.length) {
-        this.viewModel.profile(options.route.segments[0]);
-    }
+    var p = options && options.route && options.route.segments && options.route.segments[0] || '';
+    this.viewModel.profile(p);
 };
 
 
@@ -180,9 +189,9 @@ function ViewModel() {
         this.isSigningUp(true);
     }.bind(this);
 
-    this.profile = ko.observable('client');
+    this.profile = ko.observable(''); // client, service-professional
     this.forServiceProfessional = ko.pureComputed(function() {
-        return this.profile() === 'serviceProfessional';
+        return this.profile() === 'service-professional';
     }, this);
     
     this.reset = function() {

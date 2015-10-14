@@ -62,14 +62,16 @@
         padding-left: 5px;
     }
     
-    .LeadContent {
+    .signup-formcontainer {
         max-width: 360px;
         background: White;
         
         @media $mediaMinSm {
+            max-width: 430px;
             padding: 15px 50px;
         }
         @media $mediaMinMd {
+            max-width: 460px;
             padding: 15px 65px;
         }
     }
@@ -86,4 +88,44 @@
             font-weight: bold;
         }
     }
+    
+    .signup-profiles {
+        color: White;
+    }
+    
+    .signup-selector {
+        margin: 40px auto;
+        text-align: center;
+
+        .signup-selector-option {
+            background: White;
+            display: inline-block;
+            padding: 24px 40px;
+            width: 320px;
+            vertical-align: middle;
+            
+            h3 {
+                color: $gray;
+                margin: 0px 0px 20px;
+            }
+        }
+
+        .signup-selector-separator {
+            display: inline-block;
+            line-height: 80px;
+            font-size: 20px;
+            font-weight: bold;
+            vertical-align: middle;
+            margin: 0 16px;
+        }
+    }
+    
+    .signup-logo {
+        display: none;
+        margin-bottom: 20px;
+    }
+}
+
+.Splash [data-activity=signup] .signup-logo {
+    display: block;
 }

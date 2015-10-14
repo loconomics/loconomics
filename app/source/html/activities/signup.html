@@ -1,6 +1,27 @@
 <!-- Activity Signup -->
 <div class="container-fluid" data-activity="signup">
-  <div class="LeadContent container">
+    
+    <div class="text-center signup-logo"><a class="logo-white">Loconomics Cooperative, Inc.</a></div>
+    
+    <div class="LeadContent signup-profiles" data-bind="visible: !profile()">
+        <h1>Join our community</h1>
+        <h2>You'll soon get access to our beta and help shape our future.</h2>
+        <div class="signup-selector">
+            <div class="signup-selector-option">
+                <h3>I am a professional</h3>
+                <a class="btn btn-secondary btn-lg btn-block" href="#!signup/service-professional">Sign up</a>
+            </div>
+            <div class="signup-selector-separator">
+                or
+            </div>
+            <div class="signup-selector-option">
+                <h3>I want to hire professionals</h3>
+                <a class="btn btn-secondary btn-lg btn-block" href="#!signup/client">Sign up</a>
+            </div>
+        </div>
+    </div>
+    
+  <div class="LeadContent container signup-formcontainer" data-bind="visible: profile">
     <h3>Sign up for free</h3>
 
     <div data-bind="visible: !facebookUserID()">

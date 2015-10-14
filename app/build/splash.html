@@ -21,29 +21,32 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
     <div class="SplashScreen">Loading...</div>
     <div class="App-activities">
       <!-- Activity index -->
-      <div class="container" data-activity="splashIndex">
+      <div data-activity="splashIndex">
         <div class="text-center"><a class="logo-white">Loconomics Cooperative, Inc.</a>
         </div>
         <div class="LeadContent">
            <h1>Now's the time.</h1>
 
-          <p class="lead">A marketplace owned by the people doing the work.</p> <a href="#!signup"
-          class="btn btn-secondary btn-block">Sign up for the beta</a>
+          <p class="lead">A marketplace owned by the people doing the work.</p>
+          <div class="text-center"> <a href="#!signup" class="btn btn-secondary">Sign up for the beta</a>
 
+          </div>
           <br>
           <p class="text-center">Are you a local service professional in the SF Bay Area? <a href="http://www.eventbrite.com/e/meet-loconomics-cooperative-tickets-18850942677?aff=homepage"
             target="_blank">Meet us November 4th</a>
 
           </p>
         </div>
-        <div>
+        <div class="Splash-message">
+           <h2>Welcome</h2>
+
           <p>Loconomics Cooperative’s mission is to use technology, shared ownership,
             and community to eliminate middle-men in local economies.</p>
           <p>We provide local service professionals (our owners) with the tools, marketplace,
             and community that empower them to thrive in their work.</p>
           <p>Together, we are building an on-demand marketplace where everyone can
             discover and book local service professionals safely, easily, and directly.</p>
-          <br> <a href="#!signup" class="btn btn-secondary btn-block">Sign up for the beta</a>
+          <br> <a href="#!signup" class="btn btn-secondary">Sign up for the beta</a>
 
         </div>
         <footer class="WebsiteFooter">
@@ -71,7 +74,28 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       </div>
       <!-- Activity Signup -->
       <div class="container-fluid" data-activity="signup">
-        <div class="LeadContent container">
+        <div class="text-center signup-logo"><a class="logo-white">Loconomics Cooperative, Inc.</a>
+        </div>
+        <div class="LeadContent signup-profiles" data-bind="visible: !profile()">
+           <h1>Join our community</h1>
+
+           <h2>You'll soon get access to our beta and help shape our future.</h2>
+
+          <div class="signup-selector">
+            <div class="signup-selector-option">
+               <h3>I am a professional</h3>
+ <a class="btn btn-secondary btn-lg btn-block" href="#!signup/service-professional">Sign up</a>
+
+            </div>
+            <div class="signup-selector-separator">or</div>
+            <div class="signup-selector-option">
+               <h3>I want to hire professionals</h3>
+ <a class="btn btn-secondary btn-lg btn-block" href="#!signup/client">Sign up</a>
+
+            </div>
+          </div>
+        </div>
+        <div class="LeadContent container signup-formcontainer" data-bind="visible: profile">
            <h3>Sign up for free</h3>
 
           <div data-bind="visible: !facebookUserID()"> <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
