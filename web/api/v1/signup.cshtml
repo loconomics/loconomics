@@ -23,6 +23,8 @@
         - phone:string,
         - referralCode:string,
         - device:string,
+        - facebookUserID:string Allows to sign-in without password but with a valid Facebook Account
+        - facebookAccessToken:string If facebookUserID is used, the access token is required to validate the account
         - returnProfile:bool as in Login
         - profileType:string Enumeration: 'service-professional', 'client'
             NOTE: Currently allowed: 'freelancer', 'freelance', 'provider' as aliases,
@@ -48,7 +50,9 @@
                  "postalCode": "90001",
                  "referralCode": "",
                  "device": "ios",
-                 "profileType": "freelancer",
+                 "profileType": "service-professional",
+                 "facebookUserID": "",
+                 "facebookAccessToken": "",
                  "returnProfile": false,
                  "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
             }
@@ -58,16 +62,16 @@
             "post": {
                  "email": "some user email",
                  "password": "",
-                 "profileType": "freelancer",
+                 "profileType": "service-professional",
                  "returnProfile": false,
                  "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
             }
         },
-        "Facebook Signup": {
+        "Facebook Signup (quick signup that will retrieve basic user data from Facebook, server2server)": {
             "url": "/api/v1/en-US/signup/facebook",
             "post": {
                 "accessToken": "Facebook Access Token",
-                "profileType": "freelancer",
+                "profileType": "service-professional",
                 "returnProfile": true
             }
         }

@@ -79,20 +79,18 @@ exports.plugIn = function (AppModel) {
         Attempts to create a user account, getting logged
         if successfully like when doing a login call.
     **/
-    AppModel.prototype.signup = function signup(username, password, profileType) {
+    AppModel.prototype.signup = function signup(data) {
 
         // Reset the extra headers to attempt the signup
         this.rest.extraHeadres = null;
+        
+        data.returnProfile = true;
 
         // The result is the same as in a login, and
         // we do the same as there to get the user logged
         // on the app on sign-up success.
-        return this.rest.post('signup?utm_source=app', {
-            username: username,
-            password: password,
-            profileType: profileType,
-            returnProfile: true
-        }).then(performLocalLogin(this, username, password));
+        return this.rest.post('signup?utm_source=app', data)
+        .then(performLocalLogin(this, data.email, data.password));
     };
 };
 

@@ -8,6 +8,9 @@ module.exports = function(grunt) {
         cwd: includedDir,
         filter: grunt.file.isFile
     }, includedPatterns);
+    
+    var facebookAppID = '180579422039773',
+        facebookLang = 'en-US';
 
     return {
         app: {
@@ -19,7 +22,9 @@ module.exports = function(grunt) {
                 debug: false,
                 includedFiles: includedFiles,
                 cordovajs: false,
-                siteUrl: 'http://dev.loconomics.com'
+                siteUrl: 'http://dev.loconomics.com',
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang
             }
           }
         },
@@ -32,7 +37,9 @@ module.exports = function(grunt) {
                 debug: true,
                 includedFiles: includedFiles,
                 cordovajs: false,
-                siteUrl: 'http://dev.loconomics.com'
+                siteUrl: 'http://dev.loconomics.com',
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang
                 //siteUrl: 'http://localhost/source'
             }
           }
@@ -46,7 +53,9 @@ module.exports = function(grunt) {
                 debug: false,
                 includedFiles: includedFiles,
                 cordovajs: true,
-                siteUrl: 'http://dev.loconomics.com'
+                siteUrl: 'http://dev.loconomics.com',
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang
             }
           }
         },
