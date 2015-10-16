@@ -134,6 +134,9 @@ public static class LcAuth
             {
                 db.Execute("ROLLBACK TRANSACTION");
 
+                // If profile creation failed, there was a rollback, now must ensure the userprofile record is removed too:
+                db.Execute("DELETE FROM UserProfile WHERE Email like @0", email);
+
                 throw ex;
             }
         }
