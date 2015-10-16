@@ -381,7 +381,7 @@ public static class LcAuthHelper
                 }
 
                 // SPLASH BETA SIGNUP
-                LcMessaging.SendMail("support@loconomics.com", "Beta Sign-up", String.Format(@"
+                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Beta Sign-up", String.Format(@"
                     <html><body><h3>Sign-up for the beta from the Splash page.</h3>
                     <strong>This user was already in the database, is re-registering itself again!</strong><br/>
                     <dl>
@@ -429,7 +429,7 @@ public static class LcAuthHelper
                 //LcAuth.SendRegisterUserEmail(registered);
 
                 // SPLASH BETA SIGNUP
-                LcMessaging.SendMail("support@loconomics.com", "Beta Sign-up", String.Format(@"
+                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Beta Sign-up", String.Format(@"
                     <html><body><h3>Sign-up for the beta from the Splash page.</h3>
                     <dl>
                     <dt>Profile:</dt><dd>{0}</dd>

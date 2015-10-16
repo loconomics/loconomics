@@ -1238,7 +1238,7 @@ body.use-backdrop:before {
   background: White;
   display: inline-block;
   padding: 24px 40px;
-  max-width: 320px;
+  width: 320px;
   vertical-align: middle;
 }
 
@@ -1263,26 +1263,28 @@ body.use-backdrop:before {
   [data-activity=signup] .signup-selector .signup-selector-option {
     display: block;
     margin: 0px auto;
+    max-width: 320px;
+    width: auto;
   }
 }
 
-/* line 127 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 129 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 [data-activity=signup] .signup-logo {
   display: none;
   margin-bottom: 20px;
 }
 
-/* line 133 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 135 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] {
   background: #00989a;
 }
 
-/* line 136 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 138 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] .signup-logo {
   display: block;
 }
 
-/* line 140 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
+/* line 142 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\splashIndex.styl */
 
