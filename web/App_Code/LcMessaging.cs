@@ -752,8 +752,10 @@ public class LcMessaging
     /// <param name="ProviderUserID"></param>
     /// <param name="PositionID"></param>
     /// <param name="BookingRequestID"></param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingRequest(int CustomerUserID, int ProviderUserID, int PositionID, int BookingRequestID)
     {
+        return;
         dynamic customer = null, provider = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -798,8 +800,10 @@ public class LcMessaging
     /// <param name="BookingRequestID"></param>
     /// <param name="BookingID"></param>
     /// <param name="sentByProvider"></param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingRequestConfirmation(int BookingRequestID, int BookingID)
     {
+        return;
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -853,8 +857,10 @@ public class LcMessaging
     /// <param name="PositionID"></param>
     /// <param name="BookingRequestID"></param>
     /// <param name="BookingID"></param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendInstantBooking(int CustomerUserID, int ProviderUserID, int PositionID, int BookingRequestID, int BookingID)
     {
+        return;
         dynamic customer = null, provider = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -903,8 +909,10 @@ public class LcMessaging
     /// <param name="ProviderUserID"></param>
     /// <param name="PositionID"></param>
     /// <param name="BookingID"></param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendProviderBooking(int BookingID)
     {
+        return;
         int CustomerUserID = 0;
         int ProviderUserID = 0;
         int PositionID = 0;
@@ -949,8 +957,10 @@ public class LcMessaging
         }
     }
 
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingRequestDenegation(int BookingRequestID, bool sentByProvider)
     {
+        return;
         // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
         SendBookingRequestInvalidation(BookingRequestID, 2, sentByProvider ? 13 : 14);
     }
@@ -962,8 +972,10 @@ public class LcMessaging
     /// <param name="BookingRequestID"></param>
     /// <param name="threadStatusID">1 for unresponded, 2 for responded</param>
     /// <param name="messageTypeID">Recommended types: 13 (provider declined), 14 (customer cancelled), 19 (booking updated)</param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingRequestInvalidation(int BookingRequestID, int threadStatusID, int messageTypeID)
     {
+        return;
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -1024,8 +1036,10 @@ public class LcMessaging
     /// <param name="reminderType">Specify ONLY If the message is a Reminder. Set the kind of reminder (service, review-firstreminder, review)</param>
     /// <param name="messageTypeID">the parameter bySystemProviderOrCustomer choose automatically a messageTypeID from the 'update' types, but when
     /// another type is need that can be just specified here and will take precedence.</param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer, char onlyTo = 'b', string reminderType = null, int? messageTypeID = null)
     {
+        return;
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -1241,8 +1255,10 @@ public class LcMessaging
     #endregion
 
     #region Type:Welcome
+    [Obsolete("Disabled because it's broken")]
     public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
+        return;
         SendMail(providerEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeProvider/",
             new Dictionary<string,object> {
@@ -1251,8 +1267,10 @@ public class LcMessaging
                 { "ConfirmationURL", HttpUtility.UrlEncode(confirmationURL) }
          }));
     }
+    [Obsolete("Disabled because it's broken")]
     public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
     {
+        return;
         SendMail(userEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeCustomer/",
             new Dictionary<string, object> {
@@ -1262,8 +1280,10 @@ public class LcMessaging
                 { "ConfirmationToken", HttpUtility.UrlEncode(confirmationToken) }
         }));
     }
+    [Obsolete("Disabled because it's broken")]
     public static void SendResetPassword(int userID, string userEmail, string resetURL, string resetToken)
     {
+        return;
         SendMail(userEmail, "[Action Required] Loconomics Password Recovery",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailResetPassword/",
             new Dictionary<string, object> {

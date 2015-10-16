@@ -86,6 +86,7 @@ public static class LcAuth
                 // Automatic transaction can be used now:
                 db.Execute("BEGIN TRANSACTION");
 
+                // TODO:CONFIRM: SQL executed inside a procedure is inside the transaction? Some errors on testing showed that maybe not, and that's a problem.
                 db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6,@7",
                     userid, firstname, lastname,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),

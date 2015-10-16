@@ -180,29 +180,33 @@ public static class LcAuthHelper
         // Since we set IsConfirmed as true on database to let 'auto-logging on register', 
         // we must check for the existance of a confirmation token:
         var userId = WebSecurity.GetUserId(username);
-        string token = userId == -1 ? null :
-            Database
-            .Open("sqlloco")
-            // coalesce used to avoid the value 'DbNull' to be returned, just 'empty' when there is no token,
-            // is already confirmed
-            .QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userId);
 
-        if (userId > -1 && !string.IsNullOrWhiteSpace(token)) {
-            // Resend confirmation mail
-            var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");
+        using (var db = new LcDatabase())
+        {
+            string token = userId == -1 ? null :
+                // coalesce used to avoid the value 'DbNull' to be returned, just 'empty' when there is no token,
+                // is already confirmed
+                db.QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userId);
             
-            var isProvider = Database
-                .Open("sqlloco")
-                .QueryValue("SELECT IsProvider FROM users WHERE UserID=@0", userId);
+            if (userId > -1 && !string.IsNullOrWhiteSpace(token))
+            {
+                // Resend confirmation mail
+                var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");
 
-            if (isProvider) {
-                LcMessaging.SendWelcomeProvider(userId, username, confirmationUrl);
-            } else {
-                LcMessaging.SendWelcomeCustomer(userId, username, confirmationUrl, token);
+                var isProvider = (bool)(db.QueryValue("SELECT IsProvider FROM users WHERE UserID=@0", userId) ?? false);
+
+                if (isProvider)
+                {
+                    LcMessaging.SendWelcomeProvider(userId, username, confirmationUrl);
+                }
+                else
+                {
+                    LcMessaging.SendWelcomeCustomer(userId, username, confirmationUrl, token);
+                }
+
+                /// http 409:Conflict
+                throw new HttpException(409, "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.");
             }
-            
-            /// http 409:Conflict
-            throw new HttpException(409, "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.");
         }
     }
     #endregion

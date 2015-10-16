@@ -346,6 +346,8 @@ namespace LcRest
                 {
                     add = new Address
                     {
+                        // L10N
+                        addressName = "Home",
                         userID = userID,
                         kind = AddressKind.Home
                     };
