@@ -52,7 +52,8 @@ var A = Activity.extends(function SignupActivity() {
                     ended();
                     
                     // Start onboarding
-                    this.app.model.onboarding.setStep(signupData.onboardingStep);
+                    if (this.app.model.onboarding)
+                        this.app.model.onboarding.setStep(signupData.onboardingStep);
 
                     // Remove form data
                     this.viewModel.reset();
