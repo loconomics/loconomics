@@ -48,7 +48,8 @@ public static class LcAuth
         string marketingSource = null,
         int genderID = -1,
         string aboutMe = null,
-        string phone = null
+        string phone = null,
+        string signupDevice = null
     ) {
         using (var db = Database.Open("sqlloco"))
         {
@@ -118,6 +119,10 @@ public static class LcAuth
                     marketingSource = System.Web.HttpContext.Current.Request.Url.Query;
                 if (marketingSource != null)
                     db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, marketingSource);
+
+                // Device
+                if (!string.IsNullOrEmpty(signupDevice))
+                    db.Execute("UPDATE users SET SignupDevice = @1 WHERE UserID = @0", userid, signupDevice);
 
                 db.Execute("COMMIT TRANSACTION");
 

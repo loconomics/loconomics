@@ -365,9 +365,10 @@ public static class LcAuthHelper
                         UPDATE users SET
                             firstName = @1,
                             lastName = @2,
-                            mobilePhone = @3
+                            mobilePhone = @3,
+                            signupDevice = @4
                         WHERE userID = @0
-                    ", logged.userID, firstName, lastName, phone);
+                    ", logged.userID, firstName, lastName, phone, device);
 
                     var address = LcRest.Address.GetHomeAddress(logged.userID);
                     if (address.postalCode != postalCode)
@@ -378,6 +379,24 @@ public static class LcAuthHelper
                         LcRest.Address.SetAddress(address);
                     }
                 }
+
+                // SPLASH BETA SIGNUP
+                LcMessaging.SendMail("support@loconomics.com", "Beta Sign-up", String.Format(@"
+                    <html><body><h3>Sign-up for the beta from the Splash page.</h3>
+                    <strong>This user was already in the database, is re-registering itself again!</strong><br/>
+                    <dl>
+                    <dt>Profile:</dt><dd>{0}</dd>
+                    <dt>First Name:</dt><dd>{1}</dd>
+                    <dt>Last Name:</dt><dd>{2}</dd>
+                    <dt>Zip code:</dt><dd>{3}</dd>
+                    <dt>Referral code:</dt><dd>{4}</dd>
+                    <dt>Device:</dt><dd>{5}</dd>
+                    <dt>Phone:</dt><dd>{6}</dd>
+                    <dt>Email:</dt><dd>{7}</dd>
+                    <dt>UserID:</dt><dd>{8}</dd>
+                    </dl>
+                    </body></html>
+                ", profileTypeStr, firstName, lastName, postalCode, referralCode, device, phone, email, logged.userID));
 
                 return logged;
             }
@@ -392,7 +411,7 @@ public static class LcAuthHelper
                     }
                 }
 
-                var registered = LcAuth.RegisterUser(email, firstName, lastName, password, isServiceProfessional, utm, -1, null, phone);
+                var registered = LcAuth.RegisterUser(email, firstName, lastName, password, isServiceProfessional, utm, -1, null, phone, device);
                 // Set address
                 var address = LcRest.Address.GetHomeAddress(registered.UserID);
                 address.postalCode = postalCode;
@@ -408,6 +427,23 @@ public static class LcAuthHelper
 
                 // IMPORTANT: DO NOT send registering email for now, until full website or app are ready #773
                 //LcAuth.SendRegisterUserEmail(registered);
+
+                // SPLASH BETA SIGNUP
+                LcMessaging.SendMail("support@loconomics.com", "Beta Sign-up", String.Format(@"
+                    <html><body><h3>Sign-up for the beta from the Splash page.</h3>
+                    <dl>
+                    <dt>Profile:</dt><dd>{0}</dd>
+                    <dt>First Name:</dt><dd>{1}</dd>
+                    <dt>Last Name:</dt><dd>{2}</dd>
+                    <dt>Zip code:</dt><dd>{3}</dd>
+                    <dt>Referral code:</dt><dd>{4}</dd>
+                    <dt>Device:</dt><dd>{5}</dd>
+                    <dt>Phone:</dt><dd>{6}</dd>
+                    <dt>Email:</dt><dd>{7}</dd>
+                    <dt>UserID:</dt><dd>{8}</dd>
+                    </dl>
+                    </body></html>
+                ", profileTypeStr, firstName, lastName, postalCode, referralCode, device, phone, email, registered.UserID));
 
                 // Auto login:
                 return Login(email, password, false, returnProfile, true);
