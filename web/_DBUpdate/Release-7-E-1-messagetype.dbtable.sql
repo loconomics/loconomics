@@ -2,7 +2,7 @@
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'
 DELETE FROM messagetype 
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -22,7 +22,7 @@ VALUES
     ,'4/25/2012 12:00:00 AM'
     ,'jd'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -42,7 +42,7 @@ VALUES
     ,'4/25/2012 12:00:00 AM'
     ,'jd'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -62,7 +62,7 @@ VALUES
     ,'4/25/2012 12:00:00 AM'
     ,'jd'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -82,7 +82,7 @@ VALUES
     ,'4/25/2012 12:00:00 AM'
     ,'jd'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -102,7 +102,7 @@ VALUES
     ,'4/25/2012 12:00:00 AM'
     ,'jd'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -122,7 +122,7 @@ VALUES
     ,'5/18/2012 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -142,7 +142,7 @@ VALUES
     ,'5/18/2012 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -162,7 +162,7 @@ VALUES
     ,'4/25/2012 12:00:00 AM'
     ,'jd'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -182,7 +182,7 @@ VALUES
     ,'4/25/2012 12:00:00 AM'
     ,'jd'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -202,7 +202,7 @@ VALUES
     ,'4/25/2012 12:00:00 AM'
     ,'jd'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -222,7 +222,7 @@ VALUES
     ,'4/26/2012 12:00:00 AM'
     ,'jd'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -242,7 +242,7 @@ VALUES
     ,'5/16/2012 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -262,7 +262,7 @@ VALUES
     ,'5/16/2012 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -282,7 +282,7 @@ VALUES
     ,'5/16/2012 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -302,7 +302,7 @@ VALUES
     ,'5/16/2012 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -322,7 +322,7 @@ VALUES
     ,'5/16/2012 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -342,7 +342,7 @@ VALUES
     ,'5/16/2012 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -362,7 +362,7 @@ VALUES
     ,'7/16/2012 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -382,7 +382,7 @@ VALUES
     ,'7/7/2014 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -402,7 +402,7 @@ VALUES
     ,'7/7/2014 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]
@@ -422,7 +422,7 @@ VALUES
     ,'3/6/2015 12:00:00 AM'
     ,'iago'
     ,'True')
-INSERT INTO [loconomics].[dbo].[messagetype]
+INSERT INTO [dbo].[messagetype]
     ([MessageTypeID]
     ,[LanguageID]
     ,[CountryID]

@@ -1,0 +1,30 @@
+﻿@{
+    // TODO: Detect language automatically from:
+    // - User session cookie or remember login (lcAuth and/or lcSessionId)
+    // - User cookie preference
+    // - Browser language preference (http header: accepted-languages list)
+    // - Continue showing this page html, with a better design, greater redirect timeout
+    // - Redirect to the default language (en-US) if nothing is selected by the user after the timeout (implemented with http-equiv header)
+
+    // Not implemented, for now simply redirect to default language (en-US):
+    Response.Redirect("en-US/" + Request.Url.Query);
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Loconomics</title>
+	<meta http-equiv="refresh" content="0; url=en-US/" />
+</head>
+<body>
+	<p><em>You are being automatically redirected to the default locale (US English). If this fails, you can choose a locale manually:</em></p>
+	<ul>
+		<li><a href="en-US/"><img src="Styles/images/us.png" alt="US" /> English</a></li>
+		<li><a href="es-US/"><img src="Styles/images/us.png" alt="US" /> Spanish</a></li>
+		<li><a href="es-ES/"><img src="Styles/images/es.png" alt="Spain" /> Spanish</a></li>
+		<li><a href="en-ES/"><img src="Styles/images/es.png" alt="Spain" /> English</a></li>
+	</ul>
+</body>
+</html>

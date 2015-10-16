@@ -20,9 +20,19 @@
         // Special cases (each page creates its own log file)
         if (ex is HttpException)
         {
+            // IMPORTANT: Catch several errors, like 404 "Not Found" works here because
+            // we have the custom url rewriting code at _AppStart.cshtml, like:
+            //  RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/CustomURL.cshtml");
+            // That way, ANY URL that has not a static or asp.net page goes that cshtml page, and that
+            // returns an error that is catch here. Without that, this code will never run because IIS
+            // runs its own 'not found/errors' logic far before (and customErrors web.config seems to not
+            // work for some reason, maybe needs to be in the root config or something in the rewriting there
+            // breaks it or the hosting set-up avoids custom errors on web.config).
             switch (((HttpException)ex).GetHttpCode()){
                 case 404:
-                    Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+                    // IMPORTANT: To enable splash screen, all not founds goes to index silently
+                    //Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+                    Response.Redirect("/");
                     // Execution ends right here.
                     break;
                 case 403:

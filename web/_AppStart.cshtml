@@ -27,10 +27,12 @@
 
     /* Routing rules
      */
+    // DISABLED routing for splash screen
     // Public Profile URL optimized for SEO:
-    RouteTable.Routes.MapWebPageRoute("{city}/{position}/{user}", "~/PublicProfileURL.cshtml");
+    //RouteTable.Routes.MapWebPageRoute("{city}/{position}/{user}", "~/PublicProfileURL.cshtml");    
     // CustomURL:
-    RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/CustomURL.cshtml");
+    //RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/CustomURL.cshtml");
+
     // REST API, locale independent:
     // NOTE: Any folder added to the API folder need to be registered, and before the catch-all pages route
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/me/{page}/{*urldata}", "~/api/v1/me/{page}.cshtml");
@@ -40,4 +42,9 @@
     //RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/icalendar/{page}", "~/api/v1/icalendar/{page}.cshtml");
     // Catch-all pages route, will route to any page inmediately in the API folder, or Not Found
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/{page}/{*urldata}", "~/api/v1/{page}.cshtml");
+
+    // IMPORTANT:SPLASH: ANY NOT FOUND URL GOES TO THE INDEX
+    RouteTable.Routes.MapWebPageRoute("{customurl}", "~/RedirectToDefault.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{customurl}/{*urldata}", "~/RedirectToDefault.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{*urldata}", "~/RedirectToDefault.cshtml");
 }
