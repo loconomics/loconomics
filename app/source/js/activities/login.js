@@ -57,8 +57,11 @@ var A = Activity.extends(function LoginActivity() {
                     // Remove form data
                     this.viewModel.username('');
                     this.viewModel.password('');
-
-                    this.app.goDashboard();
+                    
+                    if (this.requestData && this.requestData.redirectUrl)
+                        this.app.shell.go(this.requestData.redirectUrl);
+                    else
+                        this.app.goDashboard();
 
                 }.bind(this)).catch(function(err) {
 
@@ -86,6 +89,53 @@ var A = Activity.extends(function LoginActivity() {
                 input.blur();
         }.bind(this)
     });
+    
+    this.viewModel.facebook = function() {
+        var fb = require('../utils/facebookUtils');
+        
+        // Notify state:
+        var $btn = this.$activity.find('[type="submit"]');
+        $btn.button('loading');
+
+        // Clear previous error so makes clear we
+        // are attempting
+        this.viewModel.loginError('');
+
+        
+        var ended = function ended() {
+            this.viewModel.isLogingIn(false);
+            $btn.button('reset');
+        }.bind(this);
+
+        // email,user_about_me
+        fb.login({ scope: 'email' })
+        .then(function (result) {
+            return this.app.model.facebookLogin(result.auth.accessToken)
+            .then(function(/*loginData*/) {
+                this.viewModel.loginError('');
+                ended();
+
+                // Remove form data
+                this.viewModel.username('');
+                this.viewModel.password('');
+
+                if (this.requestData && this.requestData.redirectUrl)
+                    this.app.shell.go(this.requestData.redirectUrl);
+                else
+                    this.app.goDashboard();
+
+            }.bind(this));
+        })
+        .catch(function(err) {
+
+            var msg = err && err.responseJSON && err.responseJSON.errorMessage ||
+                err && err.statusText ||
+                'Invalid login';
+
+            this.viewModel.loginError(msg);
+            ended();
+        }.bind(this));
+    }.bind(this);
 });
 
 exports.init = A.init;

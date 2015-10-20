@@ -12,7 +12,8 @@ var A = Activity.extends(function BookingActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.loggedUser;
+    // Any, we provide login and signup options integrated here
+    //this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Booking');
     
@@ -142,6 +143,14 @@ function ViewModel(app) {
     this.makeRepeatBooking = ko.observable(false);
     this.promotionalCode = ko.observable('');
     this.paymentMethod = ko.observable(null); // InputPaymentMethod
+    this.isAnonymous = ko.pureComputed(function() {
+        var u = app.model.user();
+        return u && u.isAnonymous();
+    });
+    
+    this.confirmBtnText = ko.pureComputed(function() {
+        return this.isAnonymous() ? 'Sign up and confirm' : 'Confirm';
+    }, this);
     
     // Displayed text when there is a payment card
     this.paymentMethodDisplay = ko.pureComputed(function() {
@@ -444,6 +453,15 @@ function ViewModel(app) {
     this.urlPp = ko.observable('https://loconomics.com/en-US/About/PrivacyPolicy/');
     this.urlBcp = ko.observable('https://loconomics.com/en-US/About/BackgroundCheckPolicy/');
     this.urlCp = ko.observable('https://loconomics.com/en-US/About/CancellationPolicy/');
+    
+    
+    this.goLogin = function(d, e) {
+        app.shell.go('/login', { redirectUrl: app.shell.currentRoute.url });
+        if (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
+    };
 }
 
 function PricingSummaryVM(values) {

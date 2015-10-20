@@ -50,6 +50,23 @@ exports.plugIn = function (AppModel) {
     };
 
     /**
+        Performs a login attempt with the API by using
+        a Facebook accessToken.
+    **/
+    AppModel.prototype.facebookLogin = function facebookLogin(accessToken) {
+
+        // Reset the extra headers to attempt the login
+        this.rest.extraHeaders = null;
+
+        return this.rest.post('login/facebook', {
+            accessToken: accessToken,
+            returnProfile: true
+        }).then(function(logged) {
+            return performLocalLogin(this, logged.email, null);
+        }.bind(this));
+    };
+
+    /**
         Performs a logout, removing cached credentials
         and profile so the app can be filled up with
         new user information.

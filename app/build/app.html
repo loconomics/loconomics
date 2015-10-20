@@ -826,7 +826,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </div>
             <div class="col-md-9 col-sm-reset booking-steps">
               <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('services')() }">
-                <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs"> <a href="/login" class="btn btn-link">
+                <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous"> <a href="/login" class="btn btn-link" data-bind="click: goLogin">
                             <span class="text-muted">Already have an account?</span>
                             <span class="text-secondary">Log In</span>
                         </a>
@@ -1179,7 +1179,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
           </div>
           <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
             <div>
-              <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: save">Confirm</button>
+              <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: save, text: confirmBtnText">Confirm</button>
             </div>
             <div class="isolated">By tapping sign up &amp; confirm, I agree to Loconomics' <a target="_blank"
               data-bind="attr: { href: urlTos }">Terms of Service</a>, <a target="_blank"
@@ -2319,10 +2319,10 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       <div class="LeadContent">
          <h3>Log in to your account</h3>
 
-        <div> <a href="#facebook" class="btn btn-default btn-block btn-facebook">Facebook</a>
+        <div> <a href="#facebook" class="btn btn-default btn-block btn-facebook" data-bind="click: facebook">Facebook</a>
 
-          <a
-          href="#google" class="btn btn-default btn-block btn-google">Google</a>
+          <!--<a
+          href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
         </div>
         <p class="isolated text-center">or</p>
         <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }"
@@ -3520,7 +3520,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       </form>
     </div>
     <!-- Activity Signup -->
-    <div class="container-fluid" data-activity="signup">
+    <div data-activity="signup">
       <div class="text-center signup-logo"><a class="logo-white">Loconomics Cooperative, Inc.</a>
       </div>
       <div class="LeadContent signup-profiles" data-bind="visible: !profile()">
@@ -3594,9 +3594,8 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             data-bind="text: submitText">Sign up</span>
           </button>
         </form>
-        <p class="isolated" id="signup-agreement">By clicking on "Create account", you agree to our <a href="https://loconomics.com/en-US/About/TermsOfUse/"
-          target="_blank">Terms of Use</a> &amp; <a href="https://loconomics.com/en-US/About/PrivacyPolicy"
-          target="_blank">Privacy Policy</a>
+        <p class="isolated" id="signup-agreement">By clicking on "Create account", you agree to our <a href="#!terms/terms-of-service"
+          target="_blank">Terms of Use</a> &amp; <a href="#!terms/privacy-policy" target="_blank">Privacy Policy</a>
 
         </p>
       </div>
@@ -3623,7 +3622,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       <div class="Splash-message">
          <h2>Welcome</h2>
 
-        <p>Loconomics Cooperative’s mission is to use technology, shared ownership,
+        <p>Loconomics Cooperative's mission is to use technology, shared ownership,
           and community to eliminate middle-men in local economies.</p>
         <p>We provide local service professionals (our owners) with the tools, marketplace,
           and community that empower them to thrive in their work.</p>
@@ -3659,15 +3658,15 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
          <h2>Thank you!</h2>
 
         <div data-bind="visible: isServiceProfessional">
-          <p>You’re making history. We’ll be reaching out to you shortly with instructions
+          <p>You're making history. We'll be reaching out to you shortly with instructions
             to downnload our beta version of the app. Your feedback is essential.</p>
-          <p>You’ll also receive information on becoming a founding owner of Loconomcis
+          <p>You'll also receive information on becoming a founding owner of Loconomcis
             Cooperative.</p>
         </div>
         <div data-bind="visible: !isServiceProfessional()">
-          <p>You’re making history. We’re currently testing the beta version of our
+          <p>You're making history. We're currently testing the beta version of our
             app with local service professionals (our owners). We will keep you in
-            the loop when we’re ready for you to start booking local services.</p>
+            the loop when we're ready for you to start booking local services.</p>
           <p>In the meantime, please share our story with any local service professionals
             you think might be interested in becoming founding owners.</p>
         </div>

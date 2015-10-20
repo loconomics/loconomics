@@ -17,8 +17,8 @@
 
             <div class="col-md-9 col-sm-reset booking-steps">
                 <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('services')() }">
-                    <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs">
-                        <a href="/login" class="btn btn-link">
+                    <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
+                        <a href="/login" class="btn btn-link" data-bind="click: goLogin">
                             <span class="text-muted">Already have an account?</span>
                             <span class="text-secondary">Log In</span>
                         </a>
@@ -350,7 +350,7 @@
 
                     <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
                         <div>
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: save">Confirm</button>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: save, text: confirmBtnText">Confirm</button>
                         </div>
                         <div class="isolated">
                             By tapping sign up &amp; confirm, I agree to Loconomics'
