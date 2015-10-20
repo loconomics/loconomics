@@ -24,7 +24,15 @@ exports.extends = function (app) {
         var user = app.model.user();
 
         if (user.isAnonymous()) {
-            app.navBar().leftAction(NavAction.menuOut);
+            var prev = app.navBar().leftAction();
+            if (prev !== NavAction.menuOut) {
+                app.navBar().leftAction(NavAction.menuOut);
+                app.navBar().prevLeftAction = prev;
+            }
+        }
+        else if (app.navBar().prevLeftAction) {
+            app.navBar().leftAction(app.navBar().prevLeftAction);
+            app.navBar().prevLeftAction = null;
         }
     }
     // Commented lines, used previously but unused now, it must be enough with the update
