@@ -206,7 +206,7 @@
                 Validation.Add("serviceAddress[longitude]", Validator.Decimal("Longitude must be a number"));
             }
 
-            if (!Validation.IsValid()) {
+            if (!Validation.IsValid() || !ModelState.IsValid) {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
 

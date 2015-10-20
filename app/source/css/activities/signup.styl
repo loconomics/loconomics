@@ -1,141 +1,41 @@
 [data-activity=signup] {
-    #signup-or {
-        position: relative;
-        
-        span {
-            font-weight: bold;
-            background: White;
-            display: inline-block;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-            padding: 0 15px;
-        }
-
-        &:before {
-            content: '';
-            position: absolute;
-            z-index: 1;
-            top: 50%;
-            right: 15px;
-            bottom: 0;
-            left: 15px;
-            display: block;
-            border-top: 2px solid $gray-lighter;
-        }
-    }
+    // Most styles are defined in the Signup component.
+    // Here only specific styles of the activity, since the
+    // component shares html on several activities, like client booking
     
-    form .form-group {
-        .form-control {
-            background: White;
-            border-color: $gray-light;
-        }
-        
-        .form-control-feedback[class*='ion-'] {
-            font-size: 22px;
-        }
-        
-        &.has-feedback .form-control {
-            padding-right: 34px;
-        }
-        
-        &.has-error {
-            .form-control {
-                border-color: $brand-danger;
-            }
-        }
-        &.has-warning {
-            .form-control {
-                border-color: $brand-warning;
-            }
-        }
-    }
-    
-    .col-xs-5 {
-        padding-right: 5px;
-    }
-    .col-xs-7 {
-        padding-left: 5px;
-    }
-    
-    .signup-formcontainer {
-        max-width: 360px;
-        background: White;
+    .Signup-formcontainer {
         margin-bottom: 60px;
-        
+
         @media $mediaMinSm {
-            max-width: 430px;
             padding: 15px 50px;
         }
         @media $mediaMinMd {
-            max-width: 460px;
             padding: 15px 65px;
         }
-    }
-    
-    .btn[type=submit] {
-        padding: 10px 12px;
-        font-weight: bold;
-        font-size: 17px;
-    }
-    
-    #signup-agreement {
-        a {
-            color: $brand-secondary;
-            font-weight: bold;
-        }
-    }
-    
-    .signup-profiles {
-        color: White;
-    }
-    
-    .signup-selector {
-        margin: 40px auto;
-        text-align: center;
-
-        .signup-selector-option {
-            background: White;
-            display: inline-block;
-            padding: 24px 40px;
-            width: 320px;
-            vertical-align: middle;
-            
-            h3 {
-                color: $gray;
-                margin: 0px 0px 20px;
-            }
-        }
-
-        .signup-selector-separator {
-            display: inline-block;
-            line-height: 80px;
-            font-size: 20px;
-            font-weight: bold;
-            vertical-align: middle;
-            margin: 0 16px;
-        }
-        
-        @media $mediaMaxSm {
-            .signup-selector-option {
-                display: block;
-                margin: 0px auto;
-                max-width: 320px;
-                width: auto;
-            }
-        }
-    }
-    
-    .signup-logo {
-        display: none;
-        margin-bottom: 20px;
     }
 }
 
 .Splash [data-activity=signup] {
+    
     background: $brand-primary;
+    
+    .Signup {
+        background: inherit;
+    }
+    
+    .Signup-profiles {
+        color: White;
+    }
+    
+    .Signup-selector .Signup-selector-option {
+        background: White;
+        
+        h3 {
+            color: $gray;
+        }
+    }
 
-    .signup-logo {
+    .Signup-logo {
         display: block;
     }
 }

@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-10-14
+/*! LoconomicsApp 2015-10-20
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -6622,10 +6622,175 @@ app-stars-rating {
   border-width: 1px;
 }
 
-/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
+/* line 30 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup {
+  background: White;
+}
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-or {
+  position: relative;
+}
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-or span {
+  font-weight: bold;
+  background: White;
+  display: inline-block;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  padding: 0 15px;
+}
+
+/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-or:before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 15px;
+  bottom: 0;
+  left: 15px;
+  display: block;
+  border-top: 2px solid #ccc;
+}
+
+/* line 31 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+
+/* line 32 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup form .form-group .form-control {
+  background: White;
+  border-color: #777;
+}
+
+/* line 37 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup form .form-group .form-control-feedback[class*='ion-'] {
+  font-size: 22px;
+}
+
+/* line 41 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup form .form-group.has-feedback .form-control {
+  padding-right: 34px;
+}
+
+/* line 45 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+
+/* line 46 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup form .form-group.has-error .form-control {
+  border-color: #d9534f;
+}
+
+/* line 50 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+
+/* line 51 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup form .form-group.has-warning .form-control {
+  border-color: #f0ad4e;
+}
+
+/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .col-xs-5 {
+  padding-right: 5px;
+}
+
+/* line 60 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .col-xs-7 {
+  padding-left: 5px;
+}
+
+/* line 64 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-formcontainer {
+  max-width: 360px;
+  background: White;
+  margin: 0 auto;
+  padding-top: 20px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+
+/* line 73 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+  .Signup .Signup-formcontainer {
+    max-width: 430px;
+  }
+}
+@media (min-width: 992px) {
+
+/* line 76 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+  .Signup .Signup-formcontainer {
+    max-width: 460px;
+  }
+}
+
+/* line 81 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .btn[type=submit] {
+  padding: 10px 12px;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+/* line 87 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+
+/* line 88 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-agreement a {
+  color: #ff6765;
+  font-weight: bold;
+}
+
+/* line 94 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-selector {
+  margin: 40px auto;
+  text-align: center;
+}
+
+/* line 98 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-selector .Signup-selector-option {
+  background: #00989a;
+  display: inline-block;
+  padding: 24px 40px;
+  width: 320px;
+  vertical-align: middle;
+}
+
+/* line 105 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-selector .Signup-selector-option h3 {
+  color: White;
+  margin: 0px 0px 20px;
+}
+
+/* line 111 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-selector .Signup-selector-separator {
+  display: inline-block;
+  line-height: 80px;
+  font-size: 20px;
+  font-weight: bold;
+  vertical-align: middle;
+  margin: 0 16px;
+}
+@media (max-width: 991px) {
+
+/* line 121 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+  .Signup .Signup-selector .Signup-selector-option {
+    display: block;
+    margin: 0px auto;
+    max-width: 320px;
+    width: auto;
+  }
+}
+
+/* line 130 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\Signup.styl */
+.Signup .Signup-logo {
+  display: none;
+  margin-bottom: 20px;
+}
+
+/* line 58 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
 /** Activities styles **/
 
-/* line 30 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\calendar.styl */
+/* line 135 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\calendar.styl */
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\calendar.styl */
 
@@ -8946,490 +9111,63 @@ app-stars-rating {
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 
-/* line 2 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] #signup-or {
-  position: relative;
-}
-
-/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] #signup-or span {
-  font-weight: bold;
-  background: White;
-  display: inline-block;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-  padding: 0 15px;
-}
-
-/* line 15 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] #signup-or:before {
-  content: '';
-  position: absolute;
-  z-index: 1;
-  top: 50%;
-  right: 15px;
-  bottom: 0;
-  left: 15px;
-  display: block;
-  border-top: 2px solid #eee;
-}
-
-/* line 28 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-
-/* line 29 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] form .form-group .form-control {
-  background: White;
-  border-color: #777;
-}
-
-/* line 34 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] form .form-group .form-control-feedback[class*='ion-'] {
-  font-size: 22px;
-}
-
-/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] form .form-group select.form-control {
-  text-indent: -2px;
-}
-
-/* line 47 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] form .form-group.has-feedback .form-control {
-  padding-right: 34px;
-}
-
-/* line 50 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-
-/* line 51 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] form .form-group.has-error .form-control {
-  border-color: #d9534f;
-}
-
-/* line 55 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-
-/* line 56 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] form .form-group.has-warning .form-control {
-  border-color: #f0ad4e;
-}
-
-/* line 61 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .col-xs-5 {
-  padding-right: 5px;
-}
-
-/* line 64 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .col-xs-7 {
-  padding-left: 5px;
-}
-
-/* line 67 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .signup-formcontainer {
-  max-width: 360px;
-  background: White;
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+[data-activity=signup] .Signup-formcontainer {
+  margin-bottom: 60px;
 }
 @media (min-width: 768px) {
 
-/* line 70 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-  [data-activity=signup] .signup-formcontainer {
-    max-width: 430px;
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+  [data-activity=signup] .Signup-formcontainer {
     padding: 15px 50px;
   }
 }
 @media (min-width: 992px) {
 
-/* line 74 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-  [data-activity=signup] .signup-formcontainer {
-    max-width: 460px;
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+  [data-activity=signup] .Signup-formcontainer {
     padding: 15px 65px;
   }
 }
 
-/* line 79 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .btn[type=submit] {
-  padding: 10px 12px;
-  font-weight: bold;
-  font-size: 17px;
-}
-
-/* line 85 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-
-/* line 86 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] #signup-agreement a {
-  color: #ff6765;
-  font-weight: bold;
-}
-
-/* line 92 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .signup-profiles {
-  color: White;
-}
-
-/* line 96 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .signup-selector {
-  margin: 40px auto;
-  text-align: center;
-}
-
-/* line 100 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .signup-selector .signup-selector-option {
-  background: White;
-  display: inline-block;
-  padding: 24px 40px;
-  width: 320px;
-  vertical-align: middle;
-}
-
-/* line 107 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .signup-selector .signup-selector-option h3 {
-  color: #555;
-  margin: 0px 0px 20px;
-}
-
-/* line 113 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .signup-selector .signup-selector-separator {
-  display: inline-block;
-  line-height: 80px;
-  font-size: 20px;
-  font-weight: bold;
-  vertical-align: middle;
-  margin: 0 16px;
-}
-
-/* line 123 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-[data-activity=signup] .signup-logo {
-  display: none;
-  margin-bottom: 20px;
-}
-
-/* line 129 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] {
   background: #00989a;
 }
 
-/* line 132 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
-.Splash [data-activity=signup] .signup-logo {
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+.Splash [data-activity=signup] .Signup {
+  background: inherit;
+}
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+.Splash [data-activity=signup] .Signup-profiles {
+  color: White;
+}
+
+/* line 30 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+.Splash [data-activity=signup] .Signup-selector .Signup-selector-option {
+  background: White;
+}
+
+/* line 33 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+.Splash [data-activity=signup] .Signup-selector .Signup-selector-option h3 {
+  color: #555;
+}
+
+/* line 38 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+.Splash [data-activity=signup] .Signup-logo {
   display: block;
 }
 
-/* line 136 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 42 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] body,
-[data-activity=terms] textarea {
-  background-color: #f5f5f5;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 13.3px;
-  font-weight: 400;
-  color: #3d3d3d;
+[data-activity=terms] {
+  background: White;
 }
 
-/* line 43 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .loco-primary {
-  color: #00989a;
-}
-
-/* line 45 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .loco-common {
-  color: #fff;
-}
-
-/* line 47 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .loco-info {
-  color: #777;
-}
-
-/* line 49 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .loco-secondary {
-  color: #ff6765;
-}
-
-/* line 51 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .loco-warning {
-  color: #f0ad4e;
-}
-
-/* line 53 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .loco-infolight {
-  color: #888;
-}
-
-/* line 70 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] img {
-  height: auto;
-  width: 100%;
-}
-
-/* line 74 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .profile {
-  margin-top: 40px;
-}
-
-/* line 78 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .panel {
-  padding: 10px;
-  border: 1px solid #dfdfdf;
-}
-
-/* line 82 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .panel-content section {
-  background-color: #fff;
-  padding: 0.1px 10px;
-  margin: 0 0px 10px 0;
-  position: relative;
-  border-bottom: 1px solid #e8eaeb;
-}
-
-/* line 88 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .panel-content article {
-  border-top: 1px solid #ff6765;
-  padding: 10px;
-  margin: 5px -10px;
-}
-
-/* line 95 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .page-wrapper {
-  background-color: #ecf0f1;
-}
-
-/* line 98 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .form-wrapper {
-  background-color: #fff;
-  font-size: 16px;
-  border-bottom: 1px solid #e8eaeb;
-}
-
-/* line 104 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .media-middle {
-  vertical-align: middle !important;
-}
-
-/* line 107 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .profilename {
-  display: inline-block;
-  height: 20px;
-  overflow: hidden;
-  vertical-align: sub;
-  width: 64px;
-}
-
-/* line 114 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .display-inline-block {
-  display: inline-block;
-}
-
-/* line 117 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .display-block {
-  display: block;
-}
-
-/* line 120 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pointer {
-  cursor: pointer;
-}
-
-/* line 123 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pad5l {
-  padding-left: 5px;
-}
-
-/* line 126 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pad5t {
-  padding-top: 5px;
-}
-
-/* line 129 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pad5r {
-  padding-right: 5px;
-}
-
-/* line 132 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pad10t {
-  padding-top: 10px !important;
-}
-
-/* line 135 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pad5b {
-  padding-bottom: 5px;
-}
-
-/* line 138 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pad10b {
-  padding-bottom: 10px;
-}
-
-/* line 141 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pad20b {
-  padding-bottom: 20px !important;
-}
-
-/* line 144 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pad20t {
-  padding-top: 20px !important;
-}
-
-/* line 147 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .bold {
-  font-weight: bold;
-}
-
-/* line 150 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .margin-none {
-  margin: 0px !important;
-}
-
-/* line 153 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .margin5t {
-  margin-top: 5px;
-}
-
-/* line 156 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .margin10t {
-  margin-top: 10px;
-}
-
-/* line 159 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .margin0t {
-  margin-top: 0px;
-}
-
-/* line 162 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .margin5r {
-  margin-right: 5px;
-}
-
-/* line 165 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .margin0b {
-  margin-bottom: 0px !important;
-}
-
-/* line 168 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .margin20b {
-  margin-bottom: 20px !important;
-}
-
-/* line 171 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .border-right-blue {
-  border-right: 2px solid #00989a;
-}
-
-/* line 174 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .border-right-red {
-  border-right: 2px solid #ff6765;
-}
-
-/* line 177 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .border-right-grey {
-  border-right: 2px solid #777;
-}
-
-/* line 180 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .border-right-yellow {
-  border-right: 2px solid #f0ad4e;
-}
-
-/* line 183 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .border-bottom {
-  border-bottom: 1px solid #00989a;
-}
-
-/* line 186 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .border-top {
-  border-top: 1px solid #00989a;
-}
-
-/* line 189 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .table-border-bottom {
-  border-bottom: 1px solid #888;
-}
-
-/* line 192 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .border-none {
-  border: 0px !important;
-}
-
-/* line 195 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .pos-relative {
-  position: relative;
-}
-
-/* line 197 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .center-block {
-  float: none;
-}
-
-/* line 200 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .sm-icons {
-  font-size: 28px;
-}
-
-/* line 203 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .sm-icons .h4 {
-  font-size: 16px !important;
-}
-
-/* line 206 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .sm-icons :hover {
-  color: #888;
-  text-decoration: none;
-}
-
-/* line 210 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 211 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .profile-share-icons > a {
-  display: inline-block;
-}
-
-/* line 214 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 215 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .user-in-card h3 {
-  white-space: nowrap;
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-}
-
-/* line 220 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .user-in-card h5 {
-  height: 32px;
-  overflow: hidden;
-}
-
-/* line 225 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .editpen {
-  border: 1px solid #00989a;
-  -webkit-border-radius: 50%;
-  border-radius: 50%;
-  display: block;
-  height: 22px;
-  padding: 0 5px;
-  width: 22px;
-}
-
-/* line 233 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .about {
-  display: none;
-}
-
-/* line 236 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .user-review {
-  top: 8px;
-  position: relative;
-}
-
-/* line 240 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-@media (min-width: 768px) {
-
-/* line 241 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .profile-book-btn {
-    margin-top: 10px;
-  }
-}
-
-/* line 246 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu {
   display: block;
   position: relative;
@@ -9441,13 +9179,13 @@ app-stars-rating {
   background-color: #00989a;
 }
 
-/* line 255 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu a {
   color: #fff;
   text-decoration: none;
 }
 
-/* line 258 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul {
   display: block;
   width: 100% !important;
@@ -9455,13 +9193,13 @@ app-stars-rating {
   list-style: none;
 }
 
-/* line 264 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 28 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li {
   display: inline;
   margin: 0px !important;
 }
 
-/* line 268 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 32 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li a {
   color: #fff;
   display: inline-block;
@@ -9470,216 +9208,13 @@ app-stars-rating {
   font-size: 15px;
 }
 
-/* line 275 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li a:hover {
   border-bottom: 4px solid;
   padding-bottom: 13px !important;
 }
 
-/* line 282 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] label {
-  display: inline-block;
-  cursor: pointer;
-  position: relative;
-  margin-right: 15px;
-  font-size: 13px;
-}
-
-/* line 288 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] label:before {
-  content: "";
-  display: inline-block;
-  width: 19px;
-  height: 19px;
-  position: absolute;
-  left: 0;
-  bottom: 1px;
-  background-color: #fff;
-  border: 2px solid #4c4c4c;
-}
-
-/* line 300 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .wrapper {
-  width: 500px;
-  margin: 50px auto;
-}
-
-/* line 304 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] input[type=radio],
-[data-activity=terms] input[type=checkbox] {
-  display: none;
-}
-
-/* line 307 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 308 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 309 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .radio label:before {
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
-}
-
-/* line 312 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 313 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .checkbox label {
-  margin-bottom: 0px;
-}
-
-/* line 315 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] .checkbox label:before {
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-}
-
-/* line 318 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 319 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 320 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] input[type=radio]:checked + label:before {
-  content: "\2022";
-  color: #00989a;
-  font-size: 30px;
-  text-align: center;
-  line-height: 18px;
-  border: 2px solid #00989a;
-}
-
-/* line 328 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 329 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-
-/* line 330 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-[data-activity=terms] input[type=checkbox]:checked + label:before {
-  content: "\2713";
-  font-size: 22px;
-  color: #00989a;
-  text-align: center;
-  font-weight: bold;
-  line-height: 8px;
-  border: 2px solid #00989a;
-}
-@media (min-width: 1920px) and (max-width: 2560px) {
-
-/* line 342 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .pad5r {
-    padding-right: 15px;
-  }
-
-/* line 345 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .pad5l {
-    padding-left: 15px;
-  }
-}
-@media (min-width: 2560px) and (max-width: 2880px) {
-
-/* line 349 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .pad5r {
-    padding-right: 15px;
-  }
-
-/* line 352 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .pad5l {
-    padding-left: 15px;
-  }
-}
-@media (min-width: 1024px) and (max-width: 1920px) {
-
-/* line 356 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .searchbar {
-    min-width: 400px;
-  }
-
-/* line 359 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .pad5r {
-    padding-right: 15px;
-  }
-
-/* line 362 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .pad5l {
-    padding-left: 15px;
-  }
-}
-@media (min-width: 768px) and (max-width: 1023px) {
-
-/* line 366 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .nav > li > a {
-    padding: 15px 7px;
-  }
-
-/* line 369 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .searchbar {
-    min-width: 190px;
-  }
-
-/* line 371 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .searchbar input {
-    width: 85%;
-  }
-
-/* line 374 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .sm-icons {
-    font-size: 22px;
-  }
-}
-@media (min-width: 320px) and (max-width: 767px) {
-
-/* line 378 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .form-wrapper {
-    display: none;
-  }
-
-/* line 381 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .panel-content {
-    width: 100%;
-    float: none;
-  }
-
-/* line 385 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .sm-icons {
-    display: none;
-  }
-
-/* line 388 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .profile {
-    text-align: center;
-  }
-
-/* line 391 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .profile h2 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 30px;
-  }
-
-/* line 396 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .profile h4 {
-    font-size: 14px !important;
-    font-weight: 400;
-  }
-
-/* line 400 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .profile .star {
-    position: relative;
-    top: -70px;
-  }
-
-/* line 404 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .profile .loco-info {
-    display: none;
-  }
-
-/* line 407 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
-  [data-activity=terms] .about,
-  [data-activity=terms] .about .sm-icons {
-    margin-top: 10px;
-    display: block;
-  }
-}
-
-/* line 70 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
+/* line 71 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
 /** Modals styles **/
 
 /* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\modals\textEditorModal.styl */

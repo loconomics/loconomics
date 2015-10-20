@@ -1,27 +1,27 @@
 <!-- Activity Signup -->
-<div data-activity="signup">
+<div data-activity="signup" class="Signup">
     
-    <div class="text-center signup-logo"><a class="logo-white">Loconomics Cooperative, Inc.</a></div>
+    <div class="text-center Signup-logo"><a class="logo-white">Loconomics Cooperative, Inc.</a></div>
     
-    <div class="LeadContent signup-profiles" data-bind="visible: !profile()">
+    <div class="LeadContent Signup-profiles" data-bind="visible: !profile()">
         <h1>Join our community</h1>
         <h2>You'll soon get access to our beta and help shape our future.</h2>
-        <div class="signup-selector">
-            <div class="signup-selector-option">
+        <div class="Signup-selector">
+            <div class="Signup-selector-option">
                 <h3>I am a professional</h3>
                 <a class="btn btn-secondary btn-lg btn-block" href="#!signup/service-professional">Sign up</a>
             </div>
-            <div class="signup-selector-separator">
+            <div class="Signup-selector-separator">
                 or
             </div>
-            <div class="signup-selector-option">
+            <div class="Signup-selector-option">
                 <h3>I want to hire professionals</h3>
                 <a class="btn btn-secondary btn-lg btn-block" href="#!signup/client">Sign up</a>
             </div>
         </div>
     </div>
     
-  <div class="LeadContent container signup-formcontainer" data-bind="visible: profile">
+  <div class="LeadContent container Signup-formcontainer" data-bind="visible: profile">
     <h3>Sign up for free</h3>
 
     <div data-bind="visible: !facebookUserID()">
@@ -29,7 +29,7 @@
       <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
     </div>
 
-    <p class="isolated text-center" id="signup-or" data-bind="visible: !facebookUserID()">
+    <p class="isolated text-center Signup-or" data-bind="visible: !facebookUserID()">
       <span>or</span>
     </p>
       
@@ -76,7 +76,7 @@
       </button>
     </form>
 
-    <p class="isolated" id="signup-agreement">
+    <p class="isolated Signup-agreement">
       By clicking on "Create account", you agree to our <a href="#!terms/terms-of-service" target="_blank">Terms of Use</a> &amp;
         <a href="#!terms/privacy-policy" target="_blank">Privacy Policy</a>
     </p>

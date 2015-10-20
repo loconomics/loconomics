@@ -6,7 +6,8 @@
 'use strict';
 
 var Activity = require('../components/Activity'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    SignupVM = require('../viewmodels/Signup');
 
 var A = Activity.extends(function BookingActivity() {
 
@@ -165,6 +166,10 @@ function ViewModel(app) {
             this.booking.paymentLastFourCardNumberDigits(last);
         }
     }, this);
+    
+    ///
+    /// Signup
+    this.signupVM = new SignupVM(app);
 
     ///
     /// Address
@@ -399,13 +404,17 @@ function ViewModel(app) {
         // Final step, confirm and save booking
         this.isSaving(true);
         
-        var requestOptions = {
-            promotionalCode: this.promotionalCode(),
-            bookCode: this.bookCode()
-        };
-        
-        app.model.bookings.requestClientBooking(this.booking, requestOptions, this.paymentMethod())
-        .then(function(serverBooking) {
+        // Prepare tasks (callbacks)
+        // save promise:
+        var saveIt = function() {
+            var requestOptions = {
+                promotionalCode: this.promotionalCode(),
+                bookCode: this.bookCode()
+            };
+            return app.model.bookings.requestClientBooking(this.booking, requestOptions, this.paymentMethod());    
+        }.bind(this);
+        // success promise:
+        var success = function(serverBooking) {
             this.isSaving(false);
             this.booking.model.updateWith(serverBooking);
             
@@ -416,11 +425,25 @@ function ViewModel(app) {
             .then(function() {
                 app.shell.go('/');
             });
-        }.bind(this))
-        .catch(function(err) {
+        }.bind(this);
+        // error handling
+        var onerror = function(err) {
             this.isSaving(false);
             app.modals.showError({ error: err });
-        }.bind(this));
+        }.bind(this);
+
+        // If anonymous, must pass the signup, and only after save booking
+        if (this.isAnonymous()) {
+            this.signupVM.performSignup()
+            .then(saveIt)
+            .then(success)
+            .catch(onerror);
+        }
+        else {
+            saveIt()
+            .then(success)
+            .catch(onerror);
+        }
     }.bind(this);
     
     ///
