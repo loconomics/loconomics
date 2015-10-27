@@ -169,6 +169,7 @@ function ViewModel(app) {
     this.toggleInstantBooking = function() {
         var current = this.instantBooking();
         if (this.userJobTitle()) {
+            // Change immediately, while saving in background
             this.userJobTitle().instantBooking(!current);
             // Push change to server
             var plain = this.userJobTitle().model.toPlainObject();
@@ -177,6 +178,8 @@ function ViewModel(app) {
             app.model.userJobProfile.setUserJobTitle(plain)
             .catch(function(err) {
                 app.modals.showError({ title: 'Error saving Instant Booking preference', error: err });
+                // On error, original value must be restored (so can attempt to change it again)
+                this.userJobTitle().instantBooking(current);
             }.bind(this));
         }
     };
