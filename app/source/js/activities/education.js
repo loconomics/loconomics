@@ -13,7 +13,7 @@ var A = Activity.extends(function EducationActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
-backLink: '/marketplaceProfile'
+        backLink: '/marketplaceProfile'
     });
 });
 

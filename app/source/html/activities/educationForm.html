@@ -6,21 +6,21 @@
             <label for="educationForm-school">School</label>
             <div>
                 <input type="text" id="educationForm-school" class="form-control"
-                       data-bind="value: school, disable: $parent.isLocked"/>
+                       data-bind="value: institutionName, disable: $parent.isLocked"/>
             </div>
         </div>
         <div class="form-group">
             <label for="educationForm-degree">Degree/Certificate</label>
             <div>
                 <input type="text" id="educationForm-degree" class="form-control"
-                       data-bind="value: degree, disable: $parent.isLocked"/>
+                       data-bind="value: degreeCertificate, disable: $parent.isLocked"/>
             </div>
         </div>
         <div class="form-group">
             <label for="educationForm-field">Field of study</label>
             <div>
                 <input type="text" id="educationForm-field" class="form-control"
-                       data-bind="value: field, disable: $parent.isLocked"/>
+                       data-bind="value: fieldOfStudy, disable: $parent.isLocked"/>
             </div>
         </div>
         <div>
@@ -28,14 +28,14 @@
             <div class="form-group form-group-inline">
                 <label for="educationForm-startYear" class="sr-only">Start year</label>
                 <select id="educationForm-startYear" class="form-control"
-                       data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: startYear, disable: $parent.isLocked">
+                       data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: fromYearAttended, disable: $parent.isLocked">
                 </select>
             </div>
             &nbsp;-&nbsp;
             <div class="form-group form-group-inline">
                 <label for="educationForm-startYear" class="sr-only">End year</label>
                 <select id="educationForm-endYear" class="form-control"
-                       data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: endYear, disable: $parent.isLocked">
+                       data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: toYearAttended, disable: $parent.isLocked">
                 </select>
             </div>
         </div>

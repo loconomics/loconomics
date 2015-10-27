@@ -1699,11 +1699,11 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
                     <span class="fa ion ion-university" aria-hidden="true"></span>
                 </div>
                 <div class="Tile-content">
-                    <div data-bind="text: school"></div>
+                    <div data-bind="text: institutionName"></div>
                     <em>
-                        <span data-bind="text: degree"></span><span data-bind="visible: degree() && field()">, </span>
-                        <span data-bind="text: field"></span>
-                        <span data-bind="visible: startYear() || endYear()"><span data-bind="text: startYear"></span> - <span data-bind="text: endYear"></span></span>
+                        <span data-bind="text: degreeCertificate"></span><span data-bind="visible: degreeCertificate() && fieldOfStudy()">, </span>
+                        <span data-bind="text: fieldOfStudy"></span>
+                        <span data-bind="visible: fromYearAttended() || toYearAttended()"><span data-bind="text: fromYearAttended"></span> - <span data-bind="text: toYearAttended"></span></span>
                     </em>
                 </div>
             </a>
@@ -1725,21 +1725,21 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         <div class="form-group">
           <label for="educationForm-school">School</label>
           <div>
-            <input type="text" id="educationForm-school" class="form-control" data-bind="value: school, disable: $parent.isLocked"
+            <input type="text" id="educationForm-school" class="form-control" data-bind="value: institutionName, disable: $parent.isLocked"
             />
           </div>
         </div>
         <div class="form-group">
           <label for="educationForm-degree">Degree/Certificate</label>
           <div>
-            <input type="text" id="educationForm-degree" class="form-control" data-bind="value: degree, disable: $parent.isLocked"
+            <input type="text" id="educationForm-degree" class="form-control" data-bind="value: degreeCertificate, disable: $parent.isLocked"
             />
           </div>
         </div>
         <div class="form-group">
           <label for="educationForm-field">Field of study</label>
           <div>
-            <input type="text" id="educationForm-field" class="form-control" data-bind="value: field, disable: $parent.isLocked"
+            <input type="text" id="educationForm-field" class="form-control" data-bind="value: fieldOfStudy, disable: $parent.isLocked"
             />
           </div>
         </div>
@@ -1748,12 +1748,12 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
           <div class="form-group form-group-inline">
             <label for="educationForm-startYear" class="sr-only">Start year</label>
             <select id="educationForm-startYear" class="form-control"
-            data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: startYear, disable: $parent.isLocked"></select>
+            data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: fromYearAttended, disable: $parent.isLocked"></select>
           </div>&nbsp;-&nbsp;
           <div class="form-group form-group-inline">
             <label for="educationForm-startYear" class="sr-only">End year</label>
             <select id="educationForm-endYear" class="form-control"
-            data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: endYear, disable: $parent.isLocked"></select>
+            data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: toYearAttended, disable: $parent.isLocked"></select>
           </div>
         </div>
         <div class="LightForm-submitBar">

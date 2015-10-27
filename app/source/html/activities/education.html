@@ -18,11 +18,11 @@
                     <span class="fa ion ion-university" aria-hidden="true"></span>
                 </div>
                 <div class="Tile-content">
-                    <div data-bind="text: school"></div>
+                    <div data-bind="text: institutionName"></div>
                     <em>
-                        <span data-bind="text: degree"></span><span data-bind="visible: degree() && field()">, </span>
-                        <span data-bind="text: field"></span>
-                        <span data-bind="visible: startYear() || endYear()"><span data-bind="text: startYear"></span> - <span data-bind="text: endYear"></span></span>
+                        <span data-bind="text: degreeCertificate"></span><span data-bind="visible: degreeCertificate() && fieldOfStudy()">, </span>
+                        <span data-bind="text: fieldOfStudy"></span>
+                        <span data-bind="visible: fromYearAttended() || toYearAttended()"><span data-bind="text: fromYearAttended"></span> - <span data-bind="text: toYearAttended"></span></span>
                     </em>
                 </div>
             </a></li>
