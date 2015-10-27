@@ -130,11 +130,20 @@ function ViewModel(app) {
             var status = this.userJobTitle() && this.userJobTitle().statusID();
             if (v === true && status === 3) {
                 this.userJobTitle().statusID(1);
+                // Push change to back-end
+                app.model.userJobProfile.reactivateUserJobTitle(this.jobTitleID())
+                .catch(function(err) {
+                    app.modals.showError({ title: 'Error enabling a Job Title', error: err });
+                });
             }
             else if (v === false && status === 1) {
                 this.userJobTitle().statusID(3);
+                // Push change to back-end
+                app.model.userJobProfile.deactivateUserJobTitle(this.jobTitleID())
+                .catch(function(err) {
+                    app.modals.showError({ title: 'Error disabling a Job Title', error: err });
+                });
             }
-            // TODO Push change to back-end
         },
         owner: this
     });

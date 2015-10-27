@@ -272,8 +272,48 @@ exports.create = function create(appModel) {
         }
     };
     
+    /**
+        Push changes to remote. StatusID can NOT be modified with this API, use specific
+        deactivate/reactivate methods
+    **/
+    api.setUserJobTitle = function (values) {
+        return appModel.rest.put('me/user-job-profile/' + values.jobTitleID, values)
+        .then(function(raw) {
+            // Save to cache and get model
+            var m = setGetUserJobTitleToCache(raw);
+            
+            // TODO implement cache saving for single job-titles, currently
+            // it needs to save the profile cache, that may not exists if
+            // the first request is for a single job title.
+            // Next lines are to save full profile, not valid here.
+            // Save in local
+            //saveCacheInLocal();
+            
+            // Return model
+            return m;
+        });
+    };
+    
     api.createUserJobTitle = function (values) {
         return pushNewUserJobTitle(values);
+    };
+    
+    api.deactivateUserJobTitle = function(jobTitleID) {
+        return appModel.rest.post('me/user-job-profile/' + (jobTitleID|0) + '/deactivate')
+        .then(function(raw) {
+            // Save to cache and get model
+            var m = setGetUserJobTitleToCache(raw);
+            return m;
+        });
+    };
+    
+    api.reactivateUserJobTitle = function(jobTitleID) {
+        return appModel.rest.post('me/user-job-profile/' + (jobTitleID|0) + '/reactivate')
+        .then(function(raw) {
+            // Save to cache and get model
+            var m = setGetUserJobTitleToCache(raw);
+            return m;
+        });
     };
     
     /*************************/

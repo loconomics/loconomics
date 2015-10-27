@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-10-20
+/*! LoconomicsApp 2015-10-27
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -2009,7 +2009,7 @@ body.use-backdrop:before {
 .SmartNavBar .SmartNavBar-notification {
   display: none;
   position: absolute;
-  z-index: 100;
+  z-index: 110;
   top: 0;
   right: 0;
   bottom: 0;
