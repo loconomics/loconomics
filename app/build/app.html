@@ -671,14 +671,14 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         </div>
       </div>
       <!-- Activity addressEditor -->
-      <div class="container-fluid" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
+      <div class="container-fluid LightForm" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
         <form role="form" data-bind="submit: save">
            <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
         </h2>
 
-          <fieldset class="isolated" data-bind="with: address()">
+          <div data-bind="with: address()">
             <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
               <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code"
               data-bind="textInput: postalCode, disable: $root.isLocked,
@@ -709,8 +709,8 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
                 id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
               </div>
             </div>
-          </fieldset>
-          <div class="isolated">
+          </div>
+          <div class="LightForm-submitBar">
             <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
             <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
           </div>
@@ -763,7 +763,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         </div>
       </div>
       <!-- BookMeButton activity -->
-      <div class="container-fluid" data-activity="bookMeButton">
+      <div class="container-fluid LightForm" data-activity="bookMeButton">
          <h2 class="SectionTitle">Book Me Now Button</h2>
 
         <script type="text/html" id="bookMeButton-radioButton">
@@ -1251,7 +1251,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       <div id="calendarDailyView" class="TilesList" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
     </div>
     <!-- CalendarSyncing activity -->
-    <div class="container-fluid" data-activity="calendarSyncing">
+    <div class="LightForm" data-activity="calendarSyncing">
        <h2 class="SectionTitle">Calendar Syncing</h2>
 
       <form data-bind="submit: save" class="container">
@@ -1349,7 +1349,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       </form>
     </div>
     <!-- ClientEdition activity -->
-    <div class="container-fluid" data-activity="clientEditor">
+    <div class="container-fluid LightForm" data-activity="clientEditor">
       <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
@@ -1359,7 +1359,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         <div data-bind="css: { 'is-loading': isLoading }">
           <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-        <fieldset class="isolated" data-bind="with: client()">
+        <div data-bind="with: client()">
           <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
           <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
           <div class="form-group">
@@ -1397,8 +1397,8 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
           </div>
           <textarea class="form-control" data-bind="textInput: notesAboutClient, disable: $root.isLocked"
           placeholder="Notes about client (only seen by you)"></textarea>
-        </fieldset>
-        <div class="isolated">
+        </div>
+        <div class="LightForm-submitBar">
           <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
           <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked(), event: { click: confirmRemoval }, visible: !isNew()"></button>
         </div>
@@ -1489,59 +1489,57 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       <app-feedback-entry params="section: 'cms'"></app-feedback-entry>
     </div>
     <!-- ContactForm activity -->
-    <div class="container-fluid" data-activity="contactForm">
+    <div class="container-fluid LightForm" data-activity="contactForm">
        <h2 class="SectionTitle">Contact us for help</h2>
 
       <p class="isolated">If you've searched the <a href="/faqs">FAQs</a> and can't find the help
         you need, send us a note.</p>
-      <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
-      <div>
+      <textarea class="form-control" data-bind="textInput: message, disable: isSending"></textarea>
+      <div class="LightForm-submitBar">
         <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending">Send</button>
       </div>
     </div>
     <!-- Activity contactInfo -->
-    <div class="container-fluid" data-activity="contactInfo">
+    <div class="container-fluid LightForm" data-activity="contactInfo">
       <form role="form" data-bind="submit: save">
-        <div>
-           <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
+         <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
 
-          <fieldset class="isolated">
-            <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Last name', value: profile.lastName, disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Second Last name', value: profile.secondLastName, disable: isLocked"
-            data-bind="visible: !!profile.secondLastName()"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile.phone, disable: isLocked"></app-unlabeled-input>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked"
-                />Can receive SMS</label>
-            </div>
-            <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
-            <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
-              <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code"
-              data-bind="textInput: address.postalCode, disable: $root.isLocked,
+        <div>
+          <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disable: isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Last name', value: profile.lastName, disable: isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Second Last name', value: profile.secondLastName, disable: isLocked"
+          data-bind="visible: !!profile.secondLastName()"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile.phone, disable: isLocked"></app-unlabeled-input>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked"
+              />Can receive SMS</label>
+          </div>
+          <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
+          <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
+            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code"
+            data-bind="textInput: address.postalCode, disable: $root.isLocked,
                                 popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
-            </div>
-            <div class="form-group">
-              <p class="form-control-static"> <span data-bind="visible: address.city() || address.stateProvinceCode()">
+          </div>
+          <div class="form-group">
+            <p class="form-control-static"> <span data-bind="visible: address.city() || address.stateProvinceCode()">
                         <span data-bind="text: address.city"></span>,
-                <span
-                data-bind="text: address.stateProvinceCode"></span>
-                  </span>
-                  <!-- White space to reserve vertical space -->&nbsp;</p>
-            </div>
-            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
-            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
-            <div class="form-group">
-              <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: isLocked"></select>
-            </div>
-            <div class="form-group">
-              <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)', disable: isLocked"></select>
-            </div>
-          </fieldset>
+              <span
+              data-bind="text: address.stateProvinceCode"></span>
+                </span>
+                <!-- White space to reserve vertical space -->&nbsp;</p>
+          </div>
+          <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
+          <div class="form-group">
+            <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: isLocked"></select>
+          </div>
+          <div class="form-group">
+            <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)', disable: isLocked"></select>
+          </div>
         </div>
-        <div class="isolated">
+        <div class="LightForm-submitBar">
           <div>
             <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
           </div>
@@ -1811,7 +1809,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       </ul>
     </div>
     <!-- FeedbackForm activity -->
-    <div class="container-fluid" data-activity="feedbackForm">
+    <div class="container-fluid LightForm" data-activity="feedbackForm">
        <h2 class="SectionTitle">Send us ideas or feedback</h2>
 
       <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
@@ -1821,7 +1819,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
           />I'd like to become an Owner Collaborator and help develop new tools and
           features for Owners! We'll folow up with detail.</label>
       </div>
-      <div>
+      <div class="LightForm-submitBar">
         <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending">Send</button>
       </div>
     </div>
@@ -2627,7 +2625,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       </ul>
     </div>
     <!-- PrivacySettings activity -->
-    <div class="container-fluid" data-activity="privacySettings">
+    <div class="LightForm" data-activity="privacySettings">
        <h2 class="SectionTitle">Privacy Settings</h2>
 
       <script type="text/html" id="privacySettings-optionCheck">
@@ -2688,7 +2686,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
                             disable: isLocked
             } }"></div>
         </fieldset>
-        <div class="isolated">
+        <div class="LightForm-submitBar">
           <div>
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>
@@ -3242,7 +3240,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
     </div>
     <!-- SchedulingPreferences activity -->
-    <div class="container-fluid" data-activity="schedulingPreferences">
+    <div class="LightForm" data-activity="schedulingPreferences">
        <h2 class="SectionTitle">Schedule preferences</h2>
 
       <script type="text/html" id="schedulingPrefs-radioButton">
@@ -3308,7 +3306,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </div>
           </div>
         </div>
-        <div class="row isolated">
+        <div class="row LightForm-submitBar">
           <div class="col-sm-4 col-sm-offset-4 col-lg-2 col-lg-offset-10">
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>
@@ -3387,7 +3385,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       </div>
     </div>
     <!-- Activity serviceProfessionalServiceEditor -->
-    <div class="container-fluid" data-activity="serviceProfessionalServiceEditor">
+    <div class="container-fluid LightForm" data-activity="serviceProfessionalServiceEditor">
       <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
@@ -3397,7 +3395,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         <div data-bind="css: { 'is-loading': isLoading }">
           <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
         </div>
-        <fieldset class="isolated" data-bind="with: current">
+        <div data-bind="with: current">
           <app-unlabeled-input params="placeholder: type.namePlaceHolder, value: pricing.name, disable: $root.isLocked() || !!type.fixedName()"></app-unlabeled-input>
           <div class="form-inline isolated">
             <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
@@ -3444,7 +3442,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
 
           </div>
           </span>
-    </div>
+        </div>
     </div>
     <div class="isolated" data-bind="visible: type.inPersonPhoneLabel">
       <label data-bind="text: type.inPersonPhoneLabel"></label>
@@ -3506,8 +3504,8 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         </div>
       </div>
     </div>
-    </fieldset>
-    <div class="isolated">
+    </div>
+    <div class="LightForm-submitBar">
       <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
       <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
     </div>
@@ -6005,14 +6003,14 @@ are defined as services offered to
       </div>
     </div>
     <!-- Activity textEditor -->
-    <div class="container-fluid" data-activity="textEditor">
+    <div class="container-fluid LightForm" data-activity="textEditor">
        <h2 class="SectionTitle" id="textEditorTitle" data-bind="visible: headerText, text: headerText">Text</h2>
 
       <div class="isolated">
         <textarea id="textEditorText" data-bind="value: text, valueUpdate: 'afterkeydown'"
         aria-labelledby="textEditorTitle" class="form-control" rows="2"></textarea>
       </div>
-      <div class="row isolated">
+      <div class="row LightForm-submitBar">
         <div class="col-xs-6">
           <button type="button" class="btn btn-warning btn-block" data-bind="event: { click: cancel }">cancel</button>
         </div>
@@ -6063,7 +6061,7 @@ are defined as services offered to
       </div>
     </div>
     <!-- WeeklySchedule activity -->
-    <div class="container-fluid" data-activity="weeklySchedule">
+    <div class="LightForm" data-activity="weeklySchedule">
        <h2 class="SectionTitle">Weekly schedule</h2>
 
       <script type="text/html" id="weeklySchedule-timeSelectorHourMinutesTpl">
@@ -6192,7 +6190,7 @@ are defined as services offered to
 
           </div>
         </div>
-        <div class="isolated">
+        <div class="LightForm-submitBar">
           <div>
             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
           </div>

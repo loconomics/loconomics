@@ -1,9 +1,8 @@
 <!-- Activity contactInfo -->
-<div class="container-fluid" data-activity="contactInfo">
-  <form role="form" data-bind="submit: save">
-    <div>
+<div class="container-fluid LightForm" data-activity="contactInfo">
+    <form role="form" data-bind="submit: save">
         <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
-        <fieldset class="isolated">
+        <div>
             <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Last name', value: profile.lastName, disable: isLocked"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Second Last name', value: profile.secondLastName, disable: isLocked" data-bind="visible: !!profile.secondLastName()"></app-unlabeled-input>
@@ -45,13 +44,12 @@
             <div class="form-group">
                 <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)', disable: isLocked"></select>
             </div>
-        </fieldset>
-    </div>
-
-    <div class="isolated">
-        <div>
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
         </div>
-    </div>
-  </form>
+
+        <div class="LightForm-submitBar">
+            <div>
+                <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+            </div>
+        </div>
+    </form>
 </div>

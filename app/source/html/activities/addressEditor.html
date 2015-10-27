@@ -1,12 +1,12 @@
 <!-- Activity addressEditor -->
-<div class="container-fluid" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
+<div class="container-fluid LightForm" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
     <form role="form" data-bind="submit: save">
         <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
         </h2>
 
-        <fieldset class="isolated" data-bind="with: address()">
+        <div data-bind="with: address()">
             
             <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
               <input type="number" class="form-control"
@@ -44,9 +44,9 @@
                     <textarea rows="2" class="form-control" placeholder="Special instructions" id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
                 </div>
             </div>
-        </fieldset>
+        </div>
 
-      <div class="isolated">
+      <div class="LightForm-submitBar">
         <button type="submit" class="btn btn-primary btn-block"
                 data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
         <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>

@@ -1,5 +1,5 @@
 <!-- Activity serviceProfessionalServiceEditor -->
-<div class="container-fluid" data-activity="serviceProfessionalServiceEditor">
+<div class="container-fluid LightForm" data-activity="serviceProfessionalServiceEditor">
     <form role="form" data-bind="submit: save">
         <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
@@ -9,7 +9,7 @@
             <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
         </div>
 
-        <fieldset class="isolated" data-bind="with: current">
+        <div data-bind="with: current">
 
             <app-unlabeled-input params="placeholder: type.namePlaceHolder, value: pricing.name, disable: $root.isLocked() || !!type.fixedName()"></app-unlabeled-input>
             
@@ -108,9 +108,9 @@
                 </div>
             </div>
 
-        </fieldset>
+        </div>
 
-      <div class="isolated">
+      <div class="LightForm-submitBar">
         <button type="submit" class="btn btn-primary btn-block"
                 data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
         <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>

@@ -1,5 +1,5 @@
 <!-- ClientEdition activity -->
-<div class="container-fluid" data-activity="clientEditor">
+<div class="container-fluid LightForm" data-activity="clientEditor">
     <form role="form" data-bind="submit: save">
         <h2 class="SectionTitle"
             data-bind="css: { 'is-syncing': isSyncing }">
@@ -11,7 +11,7 @@
             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
 
-        <fieldset class="isolated" data-bind="with: client()">
+        <div data-bind="with: client()">
             
             <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
@@ -55,9 +55,9 @@
             <textarea class="form-control" data-bind="textInput: notesAboutClient, disable: $root.isLocked"
                       placeholder="Notes about client (only seen by you)"></textarea>
 
-        </fieldset>
+        </div>
 
-        <div class="isolated">
+        <div class="LightForm-submitBar">
             <button type="submit" class="btn btn-primary btn-block"
                     data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
             <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked(), event: { click: confirmRemoval }, visible: !isNew()"></button>

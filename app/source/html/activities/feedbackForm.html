@@ -1,5 +1,5 @@
 <!-- FeedbackForm activity -->
-<div class="container-fluid" data-activity="feedbackForm">
+<div class="container-fluid LightForm" data-activity="feedbackForm">
 
     <h2 class="SectionTitle">Send us ideas or feedback</h2>
     <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
@@ -10,7 +10,7 @@
             and features for Owners! We'll folow up with detail.
         </label>
     </div>
-    <div>
+    <div class="LightForm-submitBar">
         <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending">Send</button>
     </div>
 </div>

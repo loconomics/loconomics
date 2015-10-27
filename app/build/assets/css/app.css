@@ -5897,25 +5897,26 @@ body.use-backdrop:before {
 
 /* line 24 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LightForm.styl */
 .LightForm .LightForm-submitBar {
-  margin: 25px 0;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 
-/* line 32 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LightForm.styl */
+/* line 33 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LightForm.styl */
 .LightForm .LightForm-tool {
   margin: 25px 40px;
 }
 
-/* line 37 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LightForm.styl */
+/* line 38 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LightForm.styl */
 .LightForm textarea.form-control {
   resize: vertical;
 }
 
-/* line 41 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LightForm.styl */
+/* line 42 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LightForm.styl */
 .LightForm .form-control {
   background: White;
 }
 
-/* line 45 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\TagsList.styl */
+/* line 46 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\TagsList.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\TagsList.styl */
 .TagsList {
