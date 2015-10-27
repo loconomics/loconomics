@@ -170,7 +170,14 @@ function ViewModel(app) {
         var current = this.instantBooking();
         if (this.userJobTitle()) {
             this.userJobTitle().instantBooking(!current);
-            // TODO Push change to server
+            // Push change to server
+            var plain = this.userJobTitle().model.toPlainObject();
+            plain.instantBooking = !current;
+
+            app.model.userJobProfile.setUserJobTitle(plain)
+            .catch(function(err) {
+                app.modals.showError({ title: 'Error saving Instant Booking preference', error: err });
+            }.bind(this));
         }
     };
 
