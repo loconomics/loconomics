@@ -705,6 +705,30 @@
                 ],
                 "isAllTime": false
             }
+        },
+
+        "Education (list and create)": {
+            "url": "/api/v1/en-US/me/education",
+            "get": { },
+            "post": {
+                "institutionName": "MIT",
+                "degreeCertificate": "Engineer",
+                "fieldOfStudy": "Computering",
+                "fromYearAttended": "2002",
+                "toYearAttended": "2005"
+            }
+        },
+        "Education item": {
+            "url": "/api/v1/en-US/me/education/123",
+            "get": { },
+            "put": {
+                "institutionName": "MIT",
+                "degreeCertificate": "Engineer",
+                "fieldOfStudy": "Computering",
+                "fromYearAttended": "2002",
+                "toYearAttended": "2005"
+            },
+            "delete": { }
         }
     };
 

@@ -24,10 +24,10 @@ namespace LcRest
         private int postalCodeID;
         public string postalCode;
         public string city;
-        private int stateProvinceID;
+        internal int stateProvinceID;
         public string stateProvinceCode;
         public string stateProvinceName;
-        private int countryID;
+        internal int countryID;
         public string countryCode;
         public double? latitude;
         public double? longitude;
