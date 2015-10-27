@@ -78,10 +78,10 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
     // Parameters: pass a required duration
-    this.viewModel.component().requiredDuration(this.requestData.requiredDuration |0);
+    this.viewModel.component().requiredDurationMinutes(this.requestData.requiredDuration |0);
 
     // Preselect userID and a date, or current date
-    this.viewModel.component().userID(this.app.model.user.userID());
+    this.viewModel.component().userID(this.app.model.user().userID());
     var selDate = getDateWithoutTime(this.requestData.selectedDatetime);
     this.viewModel.component().selectedDate(selDate);
     

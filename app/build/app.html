@@ -2408,7 +2408,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
     </h2>
 
       <ul class="TilesList">
-        <li><a class="InfoTile" href="/serviceProfessionalService" data-bind="attr: { href: getJobUrlTo('serviceProfesionalService') }">
+        <li><a class="InfoTile" href="/serviceProfessionalService" data-bind="attr: { href: getJobUrlTo('serviceProfessionalService') }">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
             </div>                
@@ -6770,7 +6770,7 @@ are defined as services offered to
               </div>
               <div class="Tile-addon" aria-hidden="true">
                   <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
-                        data-bind="css: { 'ion-ios-circle-filled': $parent.observerSelected($data), 'ion-ios-circle-outline': !$parent.observerSelected($data)() }"></span>
+                        data-bind="css: { 'ion-ios-arrow-right': !$parent.isSelectionMode(), 'ion-ios-circle-filled': $parent.isSelectionMode() && $parent.observerSelected($data), 'ion-ios-circle-outline': $parent.isSelectionMode() && !$parent.observerSelected($data)() }"></span>
               </div>
           </a></li>
       </ul>

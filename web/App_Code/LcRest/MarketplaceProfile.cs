@@ -68,7 +68,7 @@ namespace LcRest
                 userID = record.userID,
                 publicBio = record.publicBio,
                 serviceProfessionalProfileUrlSlug = record.serviceProfessionalProfileUrlSlug,
-                serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUr,
+                serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUrl,
                 bookCode = record.bookCode,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate

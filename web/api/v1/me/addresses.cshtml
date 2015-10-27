@@ -318,11 +318,12 @@
                 }
             }
 
-            // This check makes required some fields (name and address line 1) if not a service
-            // address or is service location, thats excludes the service area addresses
-            // from the need of that fields.
+            // This check makes required some fields (name and address line 1) optional
+            // on service areas
             var isServiceLocation = Request.Form["isServiceLocation"].AsBool(false);
-            if (jobTitleID != LcRest.Address.NotAJobTitleID || isServiceLocation) {
+            var isServiceArea = Request.Form["isServiceArea"].AsBool(false);
+            if (!isServiceArea)
+            {
                 Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
                 Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
             }
