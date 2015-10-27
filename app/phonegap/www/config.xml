@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
-id="com.loconomics.app" version="0.8.1">
+id="com.loconomics.app" version="0.8.2">
   <name>Loconomics</name>
   <description>Make your life better</description>
   <author href="https://loconomics.com"
@@ -74,20 +74,20 @@ id="com.loconomics.app" version="0.8.1">
   <preference name="ios-statusbarstyle" value="blackopaque" />
   <!-- PhoneGap Build plugins -->
   <!-- fix problem with transparent overlay statusbar iOS 7 -->
-  <gap:plugin name="cordova-plugin-statusbar" version="1.0.0" source="npm"
+  <gap:plugin name="cordova-plugin-statusbar" version="1.0.1" source="npm"
   />
   <!-- Control keyboard to fix some buggy default behaviors -->
-  <gap:plugin name="ionic-plugin-keyboard" version="1.0.4" source="npm"
+  <gap:plugin name="ionic-plugin-keyboard" version="1.0.7" source="npm"
   />
   <!-- Control the splash screen -->
-  <gap:plugin name="cordova-plugin-splashscreen" version="2.0.0 " source="npm"
+  <gap:plugin name="cordova-plugin-splashscreen" version="2.1.0 " source="npm"
   />
-  <gap:plugin name="cordova-plugin-inappbrowser" version="1.0.0" source="npm"
+  <gap:plugin name="cordova-plugin-inappbrowser" version="1.0.1" source="npm"
   />
-  <gap:plugin name="cordova-plugin-device" version="1.0.0" source="npm"
+  <gap:plugin name="cordova-plugin-device" version="1.0.1" source="npm"
   />
-  <!--<gap:plugin name="cordova-plugin-wkwebview" version="0.3.9" source="npm"
-  />-->
+  <gap:plugin name="cordova-plugin-wkwebview" version="0.6.5" source="npm"
+  />
   <gap:plugin name="cordova-plugin-whitelist" version="1.0.0" source="npm"
   />
   <gap:plugin name="cordova-plugin-camera" version="1.2.0" source="npm"
