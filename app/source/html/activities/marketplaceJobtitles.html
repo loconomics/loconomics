@@ -5,8 +5,10 @@
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
     <div class="switchLine">
-        <span data-bind="text: jobTitleName"></span> <span>profile:</span> <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
-        <div class="pull-right">
+        <span class="switchLine-label">
+            <span data-bind="text: jobTitleName"></span> <span>profile:</span> <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
+        </span>
+        <div class="switchLine-switch">
             <label>
                 <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }" />
             </label>
