@@ -312,7 +312,7 @@ select.btn::-ms-expand {
 
 /* line 20 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 
-/* line 109 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\styleguideVars.styl */
+/* line 112 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\styleguideVars.styl */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\variables.styl */
 
@@ -758,7 +758,12 @@ body.has-appNav-open .SmartNavBar h1 {
   visibility: hidden;
 }
 
-/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 38 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App [data-activity] {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* line 42 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 .App > body {
   height: 100%;
 /* Space for app-nav on top */
@@ -766,7 +771,7 @@ body.has-appNav-open .SmartNavBar h1 {
 }
 @media (min-width: 992px) {
 
-/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 47 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
   .App > body {
     padding-top: 62px;
   }
@@ -788,9 +793,9 @@ body.has-appNav-open .SmartNavBar h1 {
   border: none;
 }
 
-/* line 65 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 68 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 
-/* line 66 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 69 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 .App .modal.bottom .modal-dialog {
   position: absolute;
   padding: 10px;
@@ -799,39 +804,39 @@ body.has-appNav-open .SmartNavBar h1 {
   bottom: 0;
 }
 
-/* line 79 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 82 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 
-/* line 80 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 83 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 .App .modal .modal-dialog {
   padding-top: 44px;
 }
 @media (min-width: 992px) {
 
-/* line 82 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 85 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
   .App .modal .modal-dialog {
     padding-top: 62px;
   }
 }
 
-/* line 89 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 92 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 .App .modal {
   background: rgba(0,0,0,0.4);
 }
 
-/* line 93 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 96 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 .App #errorModal {
   z-index: 101050;
 }
 
-/* line 99 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 102 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 
-/* line 100 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 103 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 .App app-feedback-entry .ion-lightbulb,
 .App app-feedback-entry .ion-ios-lightbulb-outline {
   color: #f0ad4e;
 }
 
-/* line 105 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+/* line 108 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
 .App .App-activities {
   background: White;
 }
