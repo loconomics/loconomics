@@ -42,6 +42,8 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    
+    this.user = app.model.userProfile.data;
 
     var privacySettings = app.model.privacySettings;
 

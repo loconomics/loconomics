@@ -148,7 +148,9 @@ exports.extends = function (app) {
             navBar: app.navBar,
             // Both: are later filled with a call to the model once loaded and ready
             photoUrl: ko.observable('about:blank'),
-            userName: ko.observable('Me')
+            userName: ko.observable('Me'),
+            isServiceProfessional: ko.observable(false),
+            isClient: ko.observable(false)
         };
         ko.applyBindings(app.navBarBinding, $('.AppNav').get(0));
     };

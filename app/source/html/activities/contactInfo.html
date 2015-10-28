@@ -36,7 +36,8 @@
                 </p>
             </div>
             
-            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"
+                                 data-bind="visible: user.isServiceProfessional"></app-unlabeled-input>
             <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
             <div class="form-group">
                 <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: isLocked"></select>

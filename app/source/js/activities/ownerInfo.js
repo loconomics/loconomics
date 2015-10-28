@@ -9,8 +9,7 @@ var A = Activity.extends(function OwnerInfoActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.loggedUser;
-    
+    this.accessLevel = this.app.UserType.serviceProfessional;
     this.navBar = Activity.createSubsectionNavBar('Account', {
         backLink: 'account'
     });

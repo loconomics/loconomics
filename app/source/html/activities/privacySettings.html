@@ -46,7 +46,7 @@
             } }"></div>
         </fieldset>
         
-        <fieldset class="isolated">
+        <fieldset class="isolated" data-bind="visible: user.isServiceProfessional">
             <legend>Marketing:</legend>
             <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
                             value: settings.profileSeoPermission,
@@ -60,7 +60,7 @@
             } }"></div>
         </fieldset>
         
-        <fieldset class="isolated">
+        <fieldset class="isolated" data-bind="visible: user.isServiceProfessional">
             <legend>Co-branding partners:</legend>
             <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
                             value: settings.coBrandedPartnerPermissions,

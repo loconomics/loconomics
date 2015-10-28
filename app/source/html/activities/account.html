@@ -3,7 +3,15 @@
     <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
     
     <ul class="TilesList">
-        <li><a class="InfoTile" href="/ownerInfo">
+        <li data-bind="visible: !isServiceProfessional()"><a class="InfoTile" href="/contactInfo">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Contact information</p>
+            </div>
+        </a></li>
+        <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/ownerInfo">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-information-outline" aria-hidden="true"></span>
             </div>

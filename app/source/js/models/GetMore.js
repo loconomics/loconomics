@@ -31,7 +31,7 @@ function GetMore(values) {
         }),
         coop: new ListViewItem({
             contentLine1: 'Learn more about our cooperative',
-            actionIcon: 'fa fa-gavel'
+            markerIcon: 'fa fa-gavel'
         })
     };
 

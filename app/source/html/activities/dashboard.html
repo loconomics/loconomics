@@ -1,7 +1,7 @@
 <!-- Activity dashboard -->
 <div data-activity="dashboard">
 
-    <div>
+    <div data-bind="visible: user.isServiceProfessional">
         <h1 class="SectionTitle"
             data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
             Upcoming bookings
@@ -30,7 +30,7 @@
                     </p>
                 </a>
             </div>
-            <div data-bind="visible: !nextBooking()" class="isolated">
+            <div data-bind="visible: !nextBooking()" class="PaddedBox-xs">
                 <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
                 <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
             </div>
@@ -71,7 +71,7 @@
         </a>
     </div>
 
-    <div>
+    <div data-bind="visible: user.isServiceProfessional">
         <h1 class="SectionTitle">Performance</h1>
         <ul id="dashboardPerformance" class="TilesList" data-bind="foreach: performance.items">
             <li><a href="#" class="LineTile"

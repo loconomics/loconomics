@@ -44,23 +44,23 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
           <ul class="nav navbar-nav">
             <li class="go-dashboard"><a href="/dashboard"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a>
             </li>
-            <li class="go-calendar"><a href="/calendar"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Calendar</a>
+            <li class="go-calendar" data-bind="visible: isServiceProfessional"><a href="/calendar"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Calendar</a>
             </li>
             <li class="go-inbox"><a href="/inbox"><i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i> Inbox</a>
             </li>
-            <li class="go-scheduling"><a href="/scheduling"><i class="fa fa-fw fa-calendar-o" aria-hidden="true"></i> Scheduling</a>
+            <li class="go-scheduling" data-bind="visible: isServiceProfessional"><a href="/scheduling"><i class="fa fa-fw fa-calendar-o" aria-hidden="true"></i> Scheduling</a>
             </li>
-            <li class="go-cms"><a href="/cms"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Clients</a>
+            <li class="go-cms" data-bind="visible: isServiceProfessional"><a href="/cms"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Clients</a>
             </li>
-            <li class="go-payments"><a href="/payments"><i class="fa fa-fw ion-card" aria-hidden="true"></i> Payments</a>
+            <li class="go-payments" data-bind="visible: isServiceProfessional"><a href="/payments"><i class="fa fa-fw ion-card" aria-hidden="true"></i> Payments</a>
             </li>
-            <li class="go-performance"><a href="/performance"><i class="fa fa-fw ion-ios-speedometer-outline" aria-hidden="true"></i> Performance</a>
+            <li class="go-performance" data-bind="visible: isServiceProfessional"><a href="/performance"><i class="fa fa-fw ion-ios-speedometer-outline" aria-hidden="true"></i> Performance</a>
             </li>
-            <li class="go-performance"><a href="/insurance"><i class="fa fa-fw ion-umbrella" aria-hidden="true"></i> Insurance</a>
+            <li class="go-insurance" data-bind="visible: isServiceProfessional"><a href="/insurance"><i class="fa fa-fw ion-umbrella" aria-hidden="true"></i> Insurance</a>
             </li>
             <li class="go-marketplaceProfile"><a href="/marketplaceProfile"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a>
             </li>
-            <li class="go-insurance"><a href="/insurance"><i class="fa fa-fw ion-ios-cart-outline" aria-hidden="true"></i> Hire services</a>
+            <li class="go-insurance" data-bind="visible: isServiceProfessional"><a href="/insurance"><i class="fa fa-fw ion-ios-cart-outline" aria-hidden="true"></i> Hire services</a>
             </li>
             <li class="go-account"><a href="/account"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Account</a>
             </li>
@@ -86,15 +86,15 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
            <h4 class="App-menus-header">ADD NEW</h4>
 
           <ul class="nav navbar-nav">
-            <li class="go-booking-new"><a href="/appointment/-4"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Booking</a>
+            <li class="go-booking-new" data-bind="visible: isServiceProfessional"><a href="/appointment/-4"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Booking</a>
             </li>
-            <li class="go-client-new"><a href="/clientEditor"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Client</a>
+            <li class="go-client-new" data-bind="visible: isServiceProfessional"><a href="/clientEditor"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Client</a>
             </li>
-            <li class="go-calendar-new"><a href="/appointment/-3"><i class="fa fa-fw fa-ban" aria-hidden="true"></i> Calendar block</a>
+            <li class="go-calendar-new" data-bind="visible: isServiceProfessional"><a href="/appointment/-3"><i class="fa fa-fw fa-ban" aria-hidden="true"></i> Calendar block</a>
             </li>
-            <li class="go-pricing-new"><a href="/serviceProfessionalService/new"><i class="fa fa-fw ion-ios-pricetag-outline" aria-hidden="true"></i> Pricing</a>
+            <li class="go-pricing-new" data-bind="visible: isServiceProfessional"><a href="/serviceProfessionalService/new"><i class="fa fa-fw ion-ios-pricetag-outline" aria-hidden="true"></i> Pricing</a>
             </li>
-            <li class="go-jobtitle-new"><a href="/addJobTitles"><i class="fa fa-fw ion-settings" aria-hidden="true"></i> Job title</a>
+            <li class="go-jobtitle-new" data-bind="visible: isServiceProfessional"><a href="/addJobTitles"><i class="fa fa-fw ion-settings" aria-hidden="true"></i> Job title</a>
             </li>
           </ul>
         </div>
@@ -597,7 +597,16 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
          <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
 
         <ul class="TilesList">
-          <li><a class="InfoTile" href="/ownerInfo">
+          <li data-bind="visible: !isServiceProfessional()"><a class="InfoTile" href="/contactInfo">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Contact information</p>
+            </div>
+        </a>
+          </li>
+          <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/ownerInfo">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-information-outline" aria-hidden="true"></span>
             </div>
@@ -1534,7 +1543,8 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
                 </span>
                 <!-- White space to reserve vertical space -->&nbsp;</p>
           </div>
-          <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"></app-unlabeled-input>
+          <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"
+          data-bind="visible: user.isServiceProfessional"></app-unlabeled-input>
           <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
           <div class="form-group">
             <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: isLocked"></select>
@@ -1579,7 +1589,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
     </div>
     <!-- Activity dashboard -->
     <div data-activity="dashboard">
-      <div>
+      <div data-bind="visible: user.isServiceProfessional">
          <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
             Upcoming bookings
             <!-- ko component: {
@@ -1605,7 +1615,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
                 </a>
 
           </div>
-          <div data-bind="visible: !nextBooking()" class="isolated"> <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
+          <div data-bind="visible: !nextBooking()" class="PaddedBox-xs"> <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
 
             <app-loading-spinner
             params="mod: 'row bigger'"></app-loading-spinner>
@@ -1644,7 +1654,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         </a>
 
       </div>
-      <div>
+      <div data-bind="visible: user.isServiceProfessional">
          <h1 class="SectionTitle">Performance</h1>
 
         <ul id="dashboardPerformance" class="TilesList" data-bind="foreach: performance.items">
@@ -2496,22 +2506,24 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
     </div>
     <!-- marketplaceProfile activity -->
     <div data-activity="marketplaceProfile" data-bind="css: { 'is-loading': isLoading }">
-       <h2 class="SectionTitle">Job Profiles
-        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-    </h2>
+      <div data-bind="visible: user.isServiceProfessional">
+         <h2 class="SectionTitle">Job Profiles
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+        </h2>
 
-      <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
-      <ul class="TilesList TilesList--openEnd">
-        <li><a class="CompactLinkTile" href="/addJobTitles">
-            <div class="Tile-content text-muted">Add a job profile</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </a>
-        </li>
-        <li class="LinkTile">
-          <div class="Tile-content"><a href="/profile" class="btn btn-default btn-block">Preview profile</a>
-          </div>
-        </li>
-      </ul>
+        <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
+        <ul class="TilesList TilesList--openEnd">
+          <li><a class="CompactLinkTile" href="/addJobTitles">
+                <div class="Tile-content text-muted">Add a job profile</div>
+                <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+            </a>
+          </li>
+          <li class="LinkTile">
+            <div class="Tile-content"><a href="/profile" class="btn btn-default btn-block">Preview profile</a>
+            </div>
+          </li>
+        </ul>
+      </div>
        <h2 class="SectionTitle">About You</h2>
 
       <ul class="TilesList TilesList--openEnd">
@@ -2534,7 +2546,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </div>
         </a>
         </li>
-        <li><a class="InfoTile" href="/education">
+        <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/education">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-university" aria-hidden="true"></span>
             </div>
@@ -2543,7 +2555,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </div>
         </a>
         </li>
-        <li><a class="InfoTile" href="/serviceProfessionalWebsite">
+        <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/serviceProfessionalWebsite">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-link" aria-hidden="true"></span>
             </div>
@@ -2552,7 +2564,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </div>
         </a>
         </li>
-        <li><a class="InfoTile" href="/backgroundCheck">
+        <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/backgroundCheck">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-checkmark" aria-hidden="true"></span>
             </div>
@@ -2669,7 +2681,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
                             disable: isLocked
             } }"></div>
         </fieldset>
-        <fieldset class="isolated">
+        <fieldset class="isolated" data-bind="visible: user.isServiceProfessional">
           <legend>Marketing:</legend>
           <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
                             value: settings.profileSeoPermission,
@@ -2682,7 +2694,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
                             disable: isLocked
             } }"></div>
         </fieldset>
-        <fieldset class="isolated">
+        <fieldset class="isolated" data-bind="visible: user.isServiceProfessional">
           <legend>Co-branding partners:</legend>
           <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
                             value: settings.coBrandedPartnerPermissions,

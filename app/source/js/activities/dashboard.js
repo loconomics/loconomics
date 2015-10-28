@@ -132,7 +132,7 @@ var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
     PerformanceSummary = require('../models/PerformanceSummary'),
     GetMore = require('../models/GetMore');
 
-function ViewModel() {
+function ViewModel(app) {
 
     this.upcomingBookings = new UpcomingBookingsSummary();
     this.upcomingBookings.isLoading = ko.observable(false);
@@ -151,6 +151,8 @@ function ViewModel() {
     this.performance = new PerformanceSummary();
     
     this.getMore = new GetMore();
+    
+    this.user = app.model.userProfile.data;
 }
 
 /** TESTING DATA **/
@@ -160,10 +162,22 @@ function setSomeTestingData(viewModel) {
     viewModel.performance.earnings.nextAmount(6200.54);
     viewModel.performance.timeBooked.percent(0.93);
     
-    viewModel.getMore.model.updateWith({
-        availability: false,
-        payments: true,
-        profile: true,
-        coop: false
-    });
+    var moreData = {};
+    if (viewModel.user.isServiceProfessional()) {
+        moreData = {
+            availability: false,
+            payments: true,
+            profile: true,
+            coop: false
+        };
+    }
+    else {
+        moreData = {
+            availability: false,
+            payments: false,
+            profile: false,
+            coop: true
+        };
+    }
+    viewModel.getMore.model.updateWith(moreData);
 }

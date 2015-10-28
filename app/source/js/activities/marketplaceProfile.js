@@ -12,7 +12,7 @@ var A = Activity.extends(function MarketplaceProfileActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.serviceProfessional;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Marketplace Profile');
     
@@ -25,7 +25,8 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
-    this.viewModel.sync();
+    if (this.viewModel.user.isServiceProfessional())
+        this.viewModel.sync();
 };
 
 function ViewModel(app) {
@@ -58,6 +59,8 @@ function ViewModel(app) {
         var lastDate = new Date(2014, 10, 14);
         return moment(lastDate).format('L');
     }, jobVm);
+    
+    jobVm.user = app.model.userProfile.data;
 
     return jobVm;
 }

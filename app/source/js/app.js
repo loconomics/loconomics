@@ -397,10 +397,13 @@ var appInit = function appInit() {
             window.navigator.splashscreen.hide();
         }
         
-        // Connect username in navbar
+        // Connect username in navbar, and type flags
         ko.computed(function() {
-            var n = app.model.userProfile.data.firstName();
+            var u = app.model.userProfile.data,
+                n = u.firstName();
             app.navBarBinding.userName(n || 'Me');
+            app.navBarBinding.isServiceProfessional(u.isServiceProfessional());
+            app.navBarBinding.isClient(u.isClient());
         });
         // Connect photoUrl in navbar
         ko.computed(function() {
