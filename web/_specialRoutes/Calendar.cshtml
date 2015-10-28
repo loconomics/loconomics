@@ -1,0 +1,30 @@
+﻿@*
+    Generates an iCalendar output for the UserID calendar given in the first URL segment
+    if the token given in the second URL segment math the user private-calendar-token.
+    The third parameter MUST be 'ical'
+*@
+@{
+    var userID = Context.GetRouteValue("userID").AsInt();
+    var token = Context.GetRouteValue("token");
+    var f = Context.GetRouteValue("file");
+
+    if (f == "ical" && userID > 0) {
+        using (var db = Database.Open("sqlloco")) {
+            if (db.QueryValue("SELECT PrivateCalendarToken FROM CalendarProviderAttributes WHERE UserID=@0", userID)
+                == token) {
+                var file = LcCalendar.Export(userID);
+                Response.ContentType = "text/calendar";
+                Response.WriteBinary(file.Item1, "text/calendar");
+            }
+        }
+        // Logger
+        using (var logger = new LcLogger("calendar"))
+        {
+            logger.Log("Calendar public Export:");
+            logger.Log("Request:: {0} {1}", Request.HttpMethod, Request.RawUrl);
+            logger.Log("User-Agent:: {0}", Request.UserAgent);
+            logger.Log("User-Address:: {0} {1}", Request.UserHostAddress, Request.UserHostName);
+            logger.Save();
+        }
+    }
+}
