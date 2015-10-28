@@ -1283,8 +1283,12 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
     </form>
     </div>
     <!-- cancellationPolicy activity -->
-    <div class="container-fluid LightForm" data-activity="cancellationPolicy">
-       <h2 class="SectionTitle">Cancellation Policy</h2>
+    <div class="container-fluid LightForm" data-activity="cancellationPolicy"
+    data-bind="css: { 'is-loading': isLoading, 'is-saving': isSaving }">
+       <h2 class="SectionTitle">
+        <span>Cancellation Policy</span>
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+    </h2>
 
       <script type="text/html" id="cancellationPolicy-item-tpl">
         <div class="radio">
@@ -1315,11 +1319,11 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </em>
         </div>
       </script>
-      <form data-bind="submit: save, with: userJobTitle">
-        <div data-bind="foreach: { data: $parent.policies, as: 'policy' }">
+      <form data-bind="submit: save">
+        <div data-bind="foreach: { data: policies, as: 'policy' }">
           <!-- ko template: { name: 'cancellationPolicy-item-tpl', data: { checkedValue:
-          $parent.cancellationPolicyID, itemValue: policy.cancellationPolicyID, disabled:
-          $parent.isLocked, itemLabel: policy.name } } -->
+          $parent.selectedCancellationPolicyID, itemValue: policy.cancellationPolicyID,
+          disabled: $parent.isLocked, itemLabel: policy.name } } -->
           <!-- /ko -->
           <!-- ko template: { name: 'cancellationPolicy-info-tpl', data: { policy:
           policy } } -->
@@ -1344,7 +1348,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
           </ul>
         </div>
         <div class="LightForm-submitBar">
-          <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>
+          <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
         </div>
       </form>
     </div>
