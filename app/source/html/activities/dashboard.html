@@ -71,7 +71,7 @@
         </a>
     </div>
 
-    <div data-bind="visible: user.isServiceProfessional">
+    <div data-bind="visible: user.isServiceProfessional" hidden="hidden">
         <h1 class="SectionTitle">Performance</h1>
         <ul id="dashboardPerformance" class="TilesList" data-bind="foreach: performance.items">
             <li><a href="#" class="LineTile"
@@ -87,7 +87,7 @@
         </a>
     </div>
     
-    <div>
+    <div data-bind="visible: getMore.items().length">
         <h1 class="SectionTitle">Get more from Loconomics</h1>
         <ul class="TilesList" id="dashboardGetMore" data-bind="foreach: getMore.items()">
             <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">

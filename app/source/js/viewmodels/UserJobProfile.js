@@ -5,7 +5,8 @@
 **/
 'use strict';
 
-var ko = require('knockout');
+var ko = require('knockout'),
+    UserJobTitle = require('../models/UserJobTitle');
 
 function UserJobProfileViewModel(app) {
     
@@ -37,10 +38,10 @@ function UserJobProfileViewModel(app) {
         userJobtitle.marketplaceStatusHtml = ko.pureComputed(function() {
             var status = this.statusID();
             // L18N
-            if (status === 1) {
+            if (status === UserJobTitle.status.on) {
                 return 'Marketplace profile: <strong class="text-success">ON</strong>';
             }
-            else if (status === 3) {
+            else if (status === UserJobTitle.status.off) {
                 return 'Marketplace profile: <strong class="text-danger">OFF</strong>';
             }
             else {

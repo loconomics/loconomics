@@ -6,7 +6,8 @@
 var ko = require('knockout');
 
 var Activity = require('../components/Activity'),
-    AppointmentView = require('../viewmodels/AppointmentView');
+    AppointmentView = require('../viewmodels/AppointmentView'),
+    UserJobTitle = require('../models/UserJobTitle');
 
 var A = Activity.extends(function DashboardActivity() {
     
@@ -124,6 +125,20 @@ A.prototype.show = function show(options) {
         v.inbox.isLoading(false);
         v.inbox.isSyncing(false);
     });
+    
+    this.syncGetMore();
+};
+
+A.prototype.syncGetMore = function syncGetMore() {
+    // Check the 'profile' alert
+    this.app.model.userJobProfile.syncList()
+    .then(function(list) {
+        var yep = list.some(function(job) {
+            if (job.statusID() !== UserJobTitle.status.on)
+                return true;
+        });
+        this.viewModel.getMore.profile(!!yep);
+    }.bind(this));
 };
 
 
@@ -158,16 +173,16 @@ function ViewModel(app) {
 /** TESTING DATA **/
 function setSomeTestingData(viewModel) {
     
-    viewModel.performance.earnings.currentAmount(2400);
-    viewModel.performance.earnings.nextAmount(6200.54);
-    viewModel.performance.timeBooked.percent(0.93);
+    //viewModel.performance.earnings.currentAmount(2400);
+    //viewModel.performance.earnings.nextAmount(6200.54);
+    //viewModel.performance.timeBooked.percent(0.93);
     
     var moreData = {};
     if (viewModel.user.isServiceProfessional()) {
         moreData = {
             availability: false,
-            payments: true,
-            profile: true,
+            payments: false,
+            profile: false,
             coop: false
         };
     }

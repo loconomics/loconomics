@@ -1,6 +1,8 @@
 {
     "jscodehints.detectedExclusions": [
         "C:/Users/Iago/Proxectos/Loconomics/code/app/phonegap/www/assets/js/styleguidelibs.min.js",
-        "C:/Users/Iago/Proxectos/Loconomics/code/app/source/js/activities/profile.js"
+        "C:/Users/Iago/Proxectos/Loconomics/code/app/source/js/activities/profile.js",
+        "C:/Users/Iago/Proxectos/Loconomics/code/app/source/js/activities/profilePictureBio.js",
+        "C:/Users/Iago/Proxectos/Loconomics/code/app/source/js/activities/scheduling.js"
     ]
 }
