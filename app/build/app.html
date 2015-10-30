@@ -56,17 +56,15 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </li>
             <li class="go-performance" data-bind="visible: isServiceProfessional"><a href="/performance"><i class="fa fa-fw ion-ios-speedometer-outline" aria-hidden="true"></i> Performance</a>
             </li>
-            <li class="go-insurance" data-bind="visible: isServiceProfessional"><a href="/insurance"><i class="fa fa-fw ion-umbrella" aria-hidden="true"></i> Insurance</a>
+            <li class="go-insurance" data-bind="visible: isServiceProfessional"><a target="_system" href="https://www.freelancersunion.org/network/bp/loconomics"><i class="fa fa-fw ion-umbrella" aria-hidden="true"></i> View insurance plans</a>
             </li>
             <li class="go-marketplaceProfile"><a href="/marketplaceProfile"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a>
-            </li>
-            <li class="go-insurance" data-bind="visible: isServiceProfessional"><a href="/insurance"><i class="fa fa-fw ion-ios-cart-outline" aria-hidden="true"></i> Hire services</a>
             </li>
             <li class="go-account"><a href="/account"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Account</a>
             </li>
             <li class="go-feedback"><a href="/feedback"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Talk to us</a>
             </li>
-            <li class="go-search"><a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search</a>
+            <li class="go-search"><a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search Marketplace</a>
             </li>
             <li class="go-logout"><a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a>
             </li>
@@ -1919,7 +1917,8 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
               <label for="homeSearch" class="sr-only">Search</label>
               <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
                 <input
-                type="text" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)">
+                type="text" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)"
+                disabled>
               </div>
             </div>
             <div class="form-group col-sm-4">
@@ -1927,11 +1926,11 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
               <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
                 <input
                 type="text" name="location" class="form-control inset" id="homeLocation"
-                placeholder="Where?">
+                placeholder="Where?" disabled>
               </div>
             </div>
             <div class="col-sm-2">
-              <button type="submit" class="btn btn-secondary btn-lg btn-block">Search</button>
+              <button type="submit" class="btn btn-secondary btn-lg btn-block" disabled>Search</button>
             </div>
           </form>
         </div>
@@ -2639,6 +2638,20 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         </a>
         </li>
       </ul>
+    </div>
+    <!-- Activity payments -->
+    <div class="container" data-activity="payments">
+      <div class="LeadContent">
+         <h1>Coming soon!</h1>
+
+      </div>
+    </div>
+    <!-- Activity performance -->
+    <div class="container" data-activity="performance">
+      <div class="LeadContent">
+         <h1>Coming soon!</h1>
+
+      </div>
     </div>
     <!-- PrivacySettings activity -->
     <div class="LightForm" data-activity="privacySettings">
@@ -6033,6 +6046,15 @@ are defined as services offered to
         <div class="col-xs-6">
           <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }">Save</button>
         </div>
+      </div>
+    </div>
+    <!-- Activity userFees -->
+    <div class="container" data-activity="userFees">
+       <h1 class="SectionTitle">User fees</h1>
+
+      <div class="LeadContent">
+         <h1>Coming soon!</h1>
+
       </div>
     </div>
     <!-- Activity verifications -->

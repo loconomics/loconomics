@@ -171,7 +171,13 @@ Shell.prototype.getUpdatedState = function getUpdatedState(state) {
         isHashBang ?
         location.hash :
         location.pathname
-    ) + (location.search || '');
+    );
+    // Is better to do this check here, because the hash can contain a query (even if
+    // not valid for URL query, is valid for hashbang queries)
+    if (location.search) {
+        var sep = link.indexOf('?') !== -1 ? '&' : '?';
+        link += sep + location.search.substr(1);
+    }
     
     // Set the route
     state.route = this.parseUrl(link);

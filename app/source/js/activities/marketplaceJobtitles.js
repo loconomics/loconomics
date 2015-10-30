@@ -116,7 +116,7 @@ function ViewModel(app) {
         return ko.pureComputed(function() {
             return (
                 '/' + name + '/' + this.jobTitleID() + '?mustReturn=marketplaceJobtitles/' + this.jobTitleID() +
-                '&returnText=' + this.jobTitleName()
+                '&returnText=' + encodeURIComponent(this.jobTitleName())
             );
         }, this);
     };

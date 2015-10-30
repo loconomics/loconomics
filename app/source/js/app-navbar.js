@@ -95,7 +95,6 @@ exports.extends = function (app) {
             var returnLink = decodeURIComponent(state.route.query.mustReturn);
             // A text can be provided
             var returnText = decodeURIComponent(state.route.query.returnText || '');
-
             if (returnLink === '1' || returnLink === 'true') {
                 // Left action forced to be a go-back
                 app.navBar().leftAction(NavAction.goBack.model.clone({
