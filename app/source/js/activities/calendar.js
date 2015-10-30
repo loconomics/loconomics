@@ -133,7 +133,7 @@ A.prototype.show = function show(options) {
     this.viewModel.previousDate = null;
     this.viewModel.currentDate(date);
     // Force a refresh of tags
-    this.tagAvailability(date, true);
+    this.tagAvailability(date, this.app.model.userProfile.data.userID(), true);
 };
 
 var Appointment = require('../models/Appointment'),
