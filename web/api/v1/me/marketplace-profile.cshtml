@@ -97,7 +97,7 @@
             // Check on database that the requested profile URL is available
             // NOTE: more expensive check, and irrelevant on previous validation errors, so is done
             // after the first check
-            var profileUrlSlug = Request.Form["serviceProfessionalProfileUrlSlug"].Trim();
+            var profileUrlSlug = (Request.Form["serviceProfessionalProfileUrlSlug"] ?? "").Trim();
             if (!LcRest.MarketplaceProfile.IsProfileUrlAvailable(userID, profileUrlSlug)) {
                 ModelState.AddError("serviceProfessionalProfileUrlSlug", "We're sorry, that custom URL is unavailable, please choose other.");
             }

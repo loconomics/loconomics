@@ -153,6 +153,19 @@ public class RestWebPage
             }
 
         }
+        catch (ValidationException valEx)
+        {
+            result = new Dictionary<string, dynamic>();
+            result["errorMessage"] = LcRessources.ValidationSummaryTitle;
+            result["errorSource"] = "validation";
+
+            var errors = new System.Collections.Hashtable();
+            errors[valEx.ContainerName + "." + valEx.ParamName] = valEx.Message;
+            errors[valEx.ParamName] = valEx.Message;
+            result["errors"] = errors;
+
+            WebPage.Response.StatusCode = 400;
+        }
         catch (HttpException http)
         {
             result = new Dictionary<string, dynamic>();
