@@ -112,9 +112,9 @@ NavAction.menuNewItem = new NavAction({
 });
 
 NavAction.goHelpIndex = new NavAction({
-    link: '#helpIndex',
+    link: '/contactForm/general?mustReturn=true',
     text: 'help',
-    isModal: true
+    isModal: false
 });
 
 NavAction.goLogin = new NavAction({
