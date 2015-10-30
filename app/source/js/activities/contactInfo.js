@@ -13,13 +13,15 @@ var A = Activity.extends(function ContactInfoActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     
-    this.serviceProfessionalNavBar = Activity.createSubsectionNavBar('Owner information', {
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Owner information', {
         backLink: 'ownerInfo'
     });
-    this.clientNavBar = Activity.createSubsectionNavBar('Account', {
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Account', {
         backLink: 'account'
     });
-    this.navBar = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
     
     this.registerHandler({
         target: this.app.model.userProfile,
@@ -95,7 +97,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
         // Reset
         var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
-        this.navBar.model.updateWith(nav);
+        this.navBar.model.updateWith(nav, true);
     }
 };
 

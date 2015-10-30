@@ -16,7 +16,7 @@ var A = Activity.extends(function WeeklyScheduleActivity() {
     this.navBar = Activity.createSubsectionNavBar('Scheduling', {
         backLink: 'scheduling'
     });
-    this.defaultNavBar = this.navBar.model.toPlainObject();
+    this.defaultNavBar = this.navBar.model.toPlainObject(true);
     
     this.registerHandler({
         target: this.app.model.simplifiedWeeklySchedule,
@@ -37,7 +37,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     
     if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
         // Reset
-        this.navBar.model.updateWith(this.defaultNavBar);
+        this.navBar.model.updateWith(this.defaultNavBar, true);
     }
 };
 

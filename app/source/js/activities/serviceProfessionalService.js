@@ -21,7 +21,7 @@ var A = Activity.extends(function ServiceProfessionalServiceActivity() {
         backLink: '/scheduling'
     });
     // Save defaults to restore on updateNavBarState when needed:
-    this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
+    this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
     
     // On changing jobTitleID:
     // - load pricing
@@ -125,7 +125,7 @@ A.prototype.applyOwnNavbarRules = function() {
     }
     else {
         // Reset to defaults, or given title:
-        this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
+        this.navBar.leftAction().model.updateWith(this.defaultLeftAction, true);
         if (this.requestData.navTitle)
             this.navBar.leftAction().text(this.requestData.navTitle);
 
