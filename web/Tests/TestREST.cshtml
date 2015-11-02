@@ -737,7 +737,7 @@
             data = api[method];
         if (api) {
             $('[name=url]').val(api.url);
-            $('[name=rawdata]').val(JSON.stringify(data, null, ' '));
+            $('[name=rawdata]').val(JSON.stringify(data, null, 4));
         }
     }
 
@@ -763,13 +763,38 @@
         });
     }
 
+/// http://stackoverflow.com/questions/4810841/how-can-i-pretty-print-json-using-javascript
+function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+         json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
     jQuery(function ($) {
 
         showApiList();
 
-        function doRequest(type, url, data) {
+        $log = $('#log');
+        $resultStatus = $('#resultStatus');
+        $formattedLog = $('#formattedLog');
 
-            $log = $('#log');
+        function doRequest(type, url, data) {
 
             try {
 
@@ -786,7 +811,16 @@
                 }).then(
                 function (d, status, xhr) {
                     console.log('OK   ', d);
-                    $log.text('OK    ' + xhr.status + ':' + xhr.statusText + '\n' + xhr.responseText + '\n');
+                    var formattedResult = xhr.responseText;
+                    try {
+                        formattedResult = JSON.stringify(JSON.parse(xhr.responseText), null, 4);
+                        $formattedLog.html(syntaxHighlight(formattedResult));
+                    } catch (ex) {
+                        $formattedLog.text(formattedResult);
+                    }
+
+                    $log.text(formattedResult);
+                    $resultStatus.text('OK    ' + xhr.status + ':' + xhr.statusText);
                 }, function (err) {
 
                     var msg = err.responseText;
@@ -795,7 +829,17 @@
                     } catch (ex) { }
 
                     console.log('ERROR', msg);
-                    $log.text('ERROR ' + err.status + ':' + err.statusText + '\n' + err.responseText + '\n');
+                    $resultStatus.text('ERROR ' + err.status + ':' + err.statusText);
+
+                    var formattedResult = err.responseText;
+                    try {
+                        formattedResult = JSON.stringify(JSON.parse(err.responseText), null, 4);
+                        $formattedLog.html(syntaxHighlight(formattedResult));
+                    } catch (ex) {
+                        $formattedLog.text(formattedResult);
+                    }
+
+                    $log.text(formattedResult);
                 }
                 ).always(function () {
                     $('body').removeClass('is-loading');
@@ -803,7 +847,9 @@
 
             } catch (ex) {
                 $('body').removeClass('is-loading');
-                $log.text('REQUEST ERROR, See console log.\n' + (ex && ex.toString()));
+                var errmsg = 'REQUEST ERROR, See console log.\n' + (ex && ex.toString());
+                $log.text(errmsg);
+                $formattedLog.text(errmsg);
                 console.error('doRequest', ex);
             }
         }
@@ -817,6 +863,18 @@
             return false;
         });
 
+        $('#switchResult').on('click', function() {
+            var formatVisible = !$formattedLog.is('[hidden]');
+            if (formatVisible) {
+                $formattedLog.attr('hidden', 'hidden');
+                $log.removeAttr('hidden');
+            }
+            else {
+                $formattedLog.removeAttr('hidden');
+                $log.attr('hidden', 'hidden');
+            }
+        });
+
     });
 </script>
 <style>
@@ -826,8 +884,9 @@
         -webkit-box-sizing: border-box !important;
         width: 100% !important;
     }
-    #log {
-        max-height: 200px;
+    #log,
+    #formattedLog {
+        max-height: 400px;
         overflow: auto;
     }
     #apiList {
@@ -846,14 +905,35 @@
     .is-loading .loading-spinner {
         opacity: 1;
     }
+    
+    #testrest label 
+    {
+        display: block;
+        font-weight: normal;
+    }
+    
+    #url 
+    {
+        color: #D23131;
+    }
+    #rawdata 
+    {
+        color: rgb(13, 119, 36)
+    }
+    
+    .string { color: #A52A2A; }
+    .number { color: #1D8374; }
+    .boolean { color: #337000; }
+    .null { color: #DA2EDA; }
+    .key { color: #00b; }
 </style>
-<div>
+<div id="testrest">
     <form>
-        <label>REST API URL (for example /en-US/REST/Test) <input type="text" name="url" value="/api/v1/en-US/Test" /></label>
+        <label>REST API URL (for example /en-US/REST/Test) <input type="text" id="url" name="url" value="/api/v1/en-US/Test" /></label>
         <div>
             <!-- Some example data as JSON -->
             <label>Request raw data as JSON
-            <textarea name="rawdata" rows="7">
+            <textarea name="rawdata" id="rawdata" rows="7">
 {
 "name": "Mine"
 }
@@ -868,8 +948,10 @@
             <button type="button" class="action" data-method="DELETE">DELETE</button>
         </div>
     </form>
-    <h6>Task result (see it formatted in the browser web console):</h6>
-    <pre id="log"></pre>
-    <h6>REST API examples</h6>
+    <h3>Task result (it's too at the browser web console):</h3><button type="button" id="switchResult">Switch syntax highlighting</button>
+    <pre id="resultStatus"></pre>
+    <pre id="log" hidden="hidden"></pre>
+    <pre id="formattedLog"></pre>
+    <h3>REST API examples</h3>
     <ul id="apiList"></ul>
 </div>
