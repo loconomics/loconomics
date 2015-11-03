@@ -235,7 +235,7 @@ namespace LcRest
                     !serviceAttributes.serviceAttributes.ContainsKey(attCat.serviceAttributeCategoryID) ||
                     serviceAttributes.serviceAttributes[attCat.serviceAttributeCategoryID].Count == 0))
                 {
-                    throw new ValidationException(String.Format(requiredAttCatError, attCat.name));
+                    throw new ValidationException(String.Format(requiredAttCatError, attCat.name), attCat.serviceAttributeCategoryID.ToString(), "serviceAttributes");
                 }
                 indexedValidAttributes.Add(attCat.serviceAttributeCategoryID, new HashSet<int>(attCat.serviceAttributes.Select(x => x.serviceAttributeID)));
             }

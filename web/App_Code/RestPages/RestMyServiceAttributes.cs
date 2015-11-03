@@ -15,23 +15,14 @@ public class RestMyServiceAttributes : RestWebPage
     /// <returns></returns>
     public override dynamic Get()
     {
-        if (UrlData[0].IsInt())
+        if (UrlData.Count == 1 && UrlData[0].IsInt())
         {
             // Parameters
             int userId = WebSecurity.CurrentUserId;
             var jobTitleID = UrlData[0].AsInt();
             var locale = LcRest.Locale.Current;
 
-            var detailed = (UrlData[1] ?? "").ToUpper() == "DETAILED";
-
-            if (detailed)
-            {
-                return LcRest.ServiceAttribute.GetGroupedUserJobTitleAttributes(jobTitleID, userId, locale.languageID, locale.countryID);
-            }
-            else
-            {
-                return LcRest.UserJobTitleServiceAttributes.Get(userId, jobTitleID, locale.languageID, locale.countryID);
-            }
+            return LcRest.UserJobTitleServiceAttributes.Get(userId, jobTitleID, locale.languageID, locale.countryID);
         }
 
         // DOUBT: API to filter by categoryID too? /jobTitleID/categoryID and get only array if serviceAttributeIDs??
@@ -75,6 +66,8 @@ public class RestMyServiceAttributes : RestWebPage
     private LcRest.UserJobTitleServiceAttributes GetInputData()
     {
         var data = new LcRest.UserJobTitleServiceAttributes();
+        data.serviceAttributes = new Dictionary<int, List<int>>();
+        data.proposedServiceAttributes = new Dictionary<int, List<string>>();
 
         // Attributes
         var reg = new System.Text.RegularExpressions.Regex(@"^serviceAttributes\[([^\]]+)\]", System.Text.RegularExpressions.RegexOptions.ECMAScript);
@@ -85,11 +78,21 @@ public class RestMyServiceAttributes : RestWebPage
             {
                 var catID = match.Groups[1].Value.AsInt();
                 // Get attributes IDs from the list (avoid any '0' or non positive integer value)
-                var atts = Request.Form.GetValues(key).Select(x => x.AsInt(0)).Where(x => x > 0).ToList();
-                // Get attributes NAMEs from the list, for new proposed attributes
-                var attNames = Request.Form.GetValues(key).Where(x => !x.IsInt()).ToList();
-                data.serviceAttributes.Add(catID, atts);
-                data.proposedServiceAttributes.Add(catID, attNames);
+                var values = Request.Form.GetValues(key);
+                if (values != null)
+                {
+                    var atts = values.Select(x => x.AsInt(0)).Where(x => x > 0).ToList();
+                    if (atts.Count > 0)
+                    {
+                        data.serviceAttributes.Add(catID, atts);
+                    }
+                    // Get attributes NAMEs from the list, for new proposed attributes
+                    var attNames = values.Where(x => !x.IsInt()).ToList();
+                    if (attNames.Count > 0)
+                    {
+                        data.proposedServiceAttributes.Add(catID, attNames);
+                    }
+                }
             }
         }
 

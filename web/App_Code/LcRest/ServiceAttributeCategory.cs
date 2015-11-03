@@ -34,13 +34,13 @@ namespace LcRest
             var desc = "";
             try
             {
-                name = record.name;
-                desc = record.description;
+                name = record.serviceAttributeCategoryName;
+                desc = record.serviceAttributeCategoryDescription;
             }
             catch
             {
-                name = record.serviceAttributeCategoryName;
-                desc = record.serviceAttributeCategoryDescription;
+                name = record.name;
+                desc = record.description;
             }
 
             var cat = new ServiceAttributeCategory
