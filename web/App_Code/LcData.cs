@@ -10,6 +10,7 @@ using WebMatrix.Data;
 public static partial class LcData
 {
     #region Service Attributes and Categories
+    [Obsolete("Use LcRest.ServiceAttribute and LcRest.UserJobTitleServiceAttributes methods")]
     public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filters = null, int userId = 0)
     {
         var rcats = new Dictionary<int, Dictionary<string, object>>();
@@ -185,6 +186,7 @@ public static partial class LcData
              UserID, PositionID);
         }
     }
+    [Obsolete("Unused language levels")]
     public static dynamic GetLanguageLevels()
     {
         using (var db = Database.Open("sqlloco"))
@@ -204,6 +206,7 @@ public static partial class LcData
     /// <param name="UserID"></param>
     /// <param name="PositionID"></param>
     /// <returns></returns>
+    [Obsolete("Unused language levels")]
     public static Dictionary<int, int> GetUserLanguageLevels(int UserID, int PositionID)
     {
         var userLangLevels = new Dictionary<int, int>();
