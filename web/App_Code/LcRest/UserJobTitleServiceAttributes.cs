@@ -6,7 +6,7 @@ using System.Web;
 namespace LcRest
 {
     /// <summary>
-    /// 
+    /// Manages the user data around service attributes, with API for editions, using mainly IDs.
     /// </summary>
     public class UserJobTitleServiceAttributes
     {

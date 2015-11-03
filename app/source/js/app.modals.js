@@ -191,6 +191,7 @@ exports.showNotification = function showNotification(options) {
     
     var modal = $('#notificationModal'),
         header = modal.find('#notificationModal-label'),
+        button = modal.find('#notificationModal-button'),
         body = modal.find('#notificationModal-body');
 
     options = options || {};
@@ -201,6 +202,7 @@ exports.showNotification = function showNotification(options) {
     body.multiline(msg);
 
     header.text(options.title || header.data('default-text'));
+    button.text(options.buttonText || button.data('default-text'));
     
     return new Promise(function(resolve) {
         modal.modal('show');

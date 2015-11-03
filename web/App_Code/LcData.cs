@@ -162,6 +162,7 @@ public static partial class LcData
     //public const int ServiceAttCatIDClientTypes = 7;
 
     #region Extra tables for Service attributes (Languages&Experience Levels)
+    [Obsolete("Use LcRest.ExperienceLevel API")]
     public static dynamic GetExperienceLevels(int UserID = 0, int PositionID = 0)
     {
         using (var db = Database.Open("sqlloco"))
