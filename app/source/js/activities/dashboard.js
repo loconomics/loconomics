@@ -41,10 +41,13 @@ A.prototype.show = function show(options) {
         switch (this.requestData.completedOnboarding) {
             case 'welcome': // Schedule complete
                 this.app.modals.showNotification({
-                    title: 'Congrats',
-                    message: 'You\'re all ready to start scheduling ' +
-                        'clients. Click + to start adding bookings ' +
-                        'and clients.'
+                    title: 'Nice work!',
+                    message: 'You\'ll now be taken to your dashboard.' +
+                        'Please try the following: ' +
+                        '1. Activate your marketplace profile ' +
+                        '2. Add a fake client using +' +
+                        '3. Add a fake booking using +',
+                    buttonText: 'Got it'
                 });
                 break;
         }

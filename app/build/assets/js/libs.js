@@ -1,4 +1,59 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+
+process.nextTick = (function () {
+    var canSetImmediate = typeof window !== 'undefined'
+    && window.setImmediate;
+    var canPost = typeof window !== 'undefined'
+    && window.postMessage && window.addEventListener
+    ;
+
+    if (canSetImmediate) {
+        return function (f) { return window.setImmediate(f) };
+    }
+
+    if (canPost) {
+        var queue = [];
+        window.addEventListener('message', function (ev) {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
+                ev.stopPropagation();
+                if (queue.length > 0) {
+                    var fn = queue.shift();
+                    fn();
+                }
+            }
+        }, true);
+
+        return function nextTick(fn) {
+            queue.push(fn);
+            window.postMessage('process-tick', '*');
+        };
+    }
+
+    return function nextTick(fn) {
+        setTimeout(fn, 0);
+    };
+})();
+
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+}
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+
+},{}],2:[function(require,module,exports){
 var Modernizr = require('./lib/Modernizr'),
     ModernizrProto = require('./lib/ModernizrProto'),
     classes = require('./lib/classes'),
@@ -21,7 +76,7 @@ for (var i = 0; i < Modernizr._q.length; i++) {
 
 module.exports = Modernizr;
 
-},{"./lib/Modernizr":2,"./lib/ModernizrProto":3,"./lib/classes":4,"./lib/setClasses":23,"./lib/testRunner":30}],2:[function(require,module,exports){
+},{"./lib/Modernizr":3,"./lib/ModernizrProto":4,"./lib/classes":5,"./lib/setClasses":24,"./lib/testRunner":31}],3:[function(require,module,exports){
 var ModernizrProto = require('./ModernizrProto');
 
 
@@ -39,7 +94,7 @@ var ModernizrProto = require('./ModernizrProto');
   
 
 module.exports = Modernizr;
-},{"./ModernizrProto":3}],3:[function(require,module,exports){
+},{"./ModernizrProto":4}],4:[function(require,module,exports){
 var tests = require('./tests');
 
 
@@ -83,12 +138,12 @@ var tests = require('./tests');
   
 
 module.exports = ModernizrProto;
-},{"./tests":31}],4:[function(require,module,exports){
+},{"./tests":32}],5:[function(require,module,exports){
 
   var classes = [];
   
 module.exports = classes;
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
   /**
    * contains returns a boolean for if substr is found within str.
@@ -99,14 +154,14 @@ module.exports = classes;
 
   
 module.exports = contains;
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
   var createElement = function() {
     return document.createElement.apply(document, arguments);
   };
   
 module.exports = createElement;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var ModernizrProto = require('./ModernizrProto');
 var omPrefixes = require('./omPrefixes');
 
@@ -116,12 +171,12 @@ var omPrefixes = require('./omPrefixes');
   
 
 module.exports = cssomPrefixes;
-},{"./ModernizrProto":3,"./omPrefixes":21}],8:[function(require,module,exports){
+},{"./ModernizrProto":4,"./omPrefixes":22}],9:[function(require,module,exports){
 
   var docElement = document.documentElement;
   
 module.exports = docElement;
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var ModernizrProto = require('./ModernizrProto');
 var omPrefixes = require('./omPrefixes');
 
@@ -131,7 +186,7 @@ var omPrefixes = require('./omPrefixes');
   
 
 module.exports = domPrefixes;
-},{"./ModernizrProto":3,"./omPrefixes":21}],10:[function(require,module,exports){
+},{"./ModernizrProto":4,"./omPrefixes":22}],11:[function(require,module,exports){
 
     // Helper function for e.g. boxSizing -> box-sizing
     function domToHyphenated( name ) {
@@ -141,7 +196,7 @@ module.exports = domPrefixes;
     }
     
 module.exports = domToHyphenated;
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var slice = require('./slice');
 
 
@@ -193,7 +248,7 @@ var slice = require('./slice');
   
 
 module.exports = Function.prototype.bind;
-},{"./slice":24}],12:[function(require,module,exports){
+},{"./slice":25}],13:[function(require,module,exports){
 var createElement = require('./createElement');
 
 
@@ -213,7 +268,7 @@ var createElement = require('./createElement');
   
 
 module.exports = getBody;
-},{"./createElement":6}],13:[function(require,module,exports){
+},{"./createElement":7}],14:[function(require,module,exports){
 var ModernizrProto = require('./ModernizrProto');
 var docElement = require('./docElement');
 var createElement = require('./createElement');
@@ -279,7 +334,7 @@ var getBody = require('./getBody');
   
 
 module.exports = injectElementWithStyles;
-},{"./ModernizrProto":3,"./createElement":6,"./docElement":8,"./getBody":12}],14:[function(require,module,exports){
+},{"./ModernizrProto":4,"./createElement":7,"./docElement":9,"./getBody":13}],15:[function(require,module,exports){
 var createElement = require('./createElement');
 
 
@@ -287,17 +342,17 @@ var createElement = require('./createElement');
   
 
 module.exports = inputElem;
-},{"./createElement":6}],15:[function(require,module,exports){
+},{"./createElement":7}],16:[function(require,module,exports){
 
   var inputs = {};
   
 module.exports = inputs;
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 
   var inputtypes = 'search tel url email datetime date month week time datetime-local number range color'.split(' ');
   
 module.exports = inputtypes;
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 
   /**
    * is returns a boolean for if typeof obj is exactly type.
@@ -307,7 +362,7 @@ module.exports = inputtypes;
   }
   
 module.exports = is;
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var Modernizr = require('./Modernizr');
 var modElem = require('./modElem');
 
@@ -326,7 +381,7 @@ var modElem = require('./modElem');
   
 
 module.exports = mStyle;
-},{"./Modernizr":2,"./modElem":19}],19:[function(require,module,exports){
+},{"./Modernizr":3,"./modElem":20}],20:[function(require,module,exports){
 var Modernizr = require('./Modernizr');
 var createElement = require('./createElement');
 
@@ -346,7 +401,7 @@ var createElement = require('./createElement');
   
 
 module.exports = modElem;
-},{"./Modernizr":2,"./createElement":6}],20:[function(require,module,exports){
+},{"./Modernizr":3,"./createElement":7}],21:[function(require,module,exports){
 var injectElementWithStyles = require('./injectElementWithStyles');
 var domToHyphenated = require('./domToHyphenated');
 
@@ -385,7 +440,7 @@ var domToHyphenated = require('./domToHyphenated');
     
 
 module.exports = nativeTestProps;
-},{"./domToHyphenated":10,"./injectElementWithStyles":13}],21:[function(require,module,exports){
+},{"./domToHyphenated":11,"./injectElementWithStyles":14}],22:[function(require,module,exports){
 
   // Following spec is to expose vendor-specific style properties as:
   //   elem.style.WebkitBorderRadius
@@ -400,7 +455,7 @@ module.exports = nativeTestProps;
   var omPrefixes = 'Webkit Moz O ms';
   
 module.exports = omPrefixes;
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var ModernizrProto = require('./ModernizrProto');
 
 
@@ -413,7 +468,7 @@ var ModernizrProto = require('./ModernizrProto');
   
 
 module.exports = prefixes;
-},{"./ModernizrProto":3}],23:[function(require,module,exports){
+},{"./ModernizrProto":4}],24:[function(require,module,exports){
 var Modernizr = require('./Modernizr');
 var docElement = require('./docElement');
 
@@ -442,7 +497,7 @@ var docElement = require('./docElement');
   
 
 module.exports = setClasses;
-},{"./Modernizr":2,"./docElement":8}],24:[function(require,module,exports){
+},{"./Modernizr":3,"./docElement":9}],25:[function(require,module,exports){
 var classes = require('./classes');
 
 
@@ -450,12 +505,12 @@ var classes = require('./classes');
   
 
 module.exports = slice;
-},{"./classes":4}],25:[function(require,module,exports){
+},{"./classes":5}],26:[function(require,module,exports){
 
   var smile = ':)';
   
 module.exports = smile;
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 var ModernizrProto = require('./ModernizrProto');
 var testPropsAll = require('./testPropsAll');
 
@@ -482,7 +537,7 @@ var testPropsAll = require('./testPropsAll');
     
 
 module.exports = testAllProps;
-},{"./ModernizrProto":3,"./testPropsAll":29}],27:[function(require,module,exports){
+},{"./ModernizrProto":4,"./testPropsAll":30}],28:[function(require,module,exports){
 var is = require('./is');
 require('./fnBind');
 
@@ -519,7 +574,7 @@ require('./fnBind');
   
 
 module.exports = testDOMProps;
-},{"./fnBind":11,"./is":17}],28:[function(require,module,exports){
+},{"./fnBind":12,"./is":18}],29:[function(require,module,exports){
 var contains = require('./contains');
 var mStyle = require('./mStyle');
 var createElement = require('./createElement');
@@ -618,7 +673,7 @@ var is = require('./is');
   
 
 module.exports = testProps;
-},{"./contains":5,"./createElement":6,"./is":17,"./mStyle":18,"./nativeTestProps":20}],29:[function(require,module,exports){
+},{"./contains":6,"./createElement":7,"./is":18,"./mStyle":19,"./nativeTestProps":21}],30:[function(require,module,exports){
 var ModernizrProto = require('./ModernizrProto');
 var cssomPrefixes = require('./cssomPrefixes');
 var is = require('./is');
@@ -659,7 +714,7 @@ var prefixes = require('./prefixes');
     
 
 module.exports = testPropsAll;
-},{"./ModernizrProto":3,"./cssomPrefixes":7,"./domPrefixes":9,"./is":17,"./prefixes":22,"./testDOMProps":27,"./testProps":28}],30:[function(require,module,exports){
+},{"./ModernizrProto":4,"./cssomPrefixes":8,"./domPrefixes":10,"./is":18,"./prefixes":23,"./testDOMProps":28,"./testProps":29}],31:[function(require,module,exports){
 var tests = require('./tests');
 var Modernizr = require('./Modernizr');
 var classes = require('./classes');
@@ -729,12 +784,12 @@ var is = require('./is');
   
 
 module.exports = testRunner;
-},{"./Modernizr":2,"./classes":4,"./is":17,"./tests":31}],31:[function(require,module,exports){
+},{"./Modernizr":3,"./classes":5,"./is":18,"./tests":32}],32:[function(require,module,exports){
 
   var tests = [];
   
 module.exports = tests;
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var Modernizr = require('./../../lib/Modernizr');
 var testAllProps = require('./../../lib/testAllProps');
 
@@ -750,7 +805,7 @@ var testAllProps = require('./../../lib/testAllProps');
   Modernizr.addTest('csstransforms', testAllProps('transform', 'scale(1)', true));
 
 
-},{"./../../lib/Modernizr":2,"./../../lib/testAllProps":26}],33:[function(require,module,exports){
+},{"./../../lib/Modernizr":3,"./../../lib/testAllProps":27}],34:[function(require,module,exports){
 var Modernizr = require('./../lib/Modernizr');
 var inputElem = require('./../lib/inputElem');
 var docElement = require('./../lib/docElement');
@@ -866,9 +921,9 @@ Modernizr.inputtypes.week
   })(inputtypes);
 
 
-},{"./../lib/Modernizr":2,"./../lib/docElement":8,"./../lib/inputElem":14,"./../lib/inputs":15,"./../lib/inputtypes":16,"./../lib/smile":25}],"es6-promise":[function(require,module,exports){
-module.exports=require('OtxCQt');
-},{}],"OtxCQt":[function(require,module,exports){
+},{"./../lib/Modernizr":3,"./../lib/docElement":9,"./../lib/inputElem":15,"./../lib/inputs":16,"./../lib/inputtypes":17,"./../lib/smile":26}],"es6-promise":[function(require,module,exports){
+module.exports=require('GTq6kC');
+},{}],"GTq6kC":[function(require,module,exports){
 (function (process,global){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -1830,10 +1885,10 @@ module.exports=require('OtxCQt');
       this['ES6Promise'] = es6$promise$umd$$ES6Promise;
     }
 }).call(this);
-}).call(this,require("D:\\Iago\\Proxectos\\Loconomics\\code\\app\\node_modules\\browserify\\node_modules\\insert-module-globals\\node_modules\\process\\browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"D:\\Iago\\Proxectos\\Loconomics\\code\\app\\node_modules\\browserify\\node_modules\\insert-module-globals\\node_modules\\process\\browser.js":78}],"events":[function(require,module,exports){
-module.exports=require('Bmcwnc');
-},{}],"Bmcwnc":[function(require,module,exports){
+}).call(this,require("/Users/joshdanielson/Dropbox/Github/Loconomics/app/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"/Users/joshdanielson/Dropbox/Github/Loconomics/app/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":1}],"events":[function(require,module,exports){
+module.exports=require('wIHYyO');
+},{}],"wIHYyO":[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2137,8 +2192,8 @@ function isUndefined(arg) {
 }
 
 },{}],"is_js":[function(require,module,exports){
-module.exports=require('dTWyf+');
-},{}],"dTWyf+":[function(require,module,exports){
+module.exports=require('Oux2Lx');
+},{}],"Oux2Lx":[function(require,module,exports){
 (function (global){
 // is.js 0.7.4
 // Author: Aras Atasaygin
@@ -2967,7 +3022,7 @@ module.exports=require('dTWyf+');
 }));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"is_js":"dTWyf+"}],40:[function(require,module,exports){
+},{"is_js":"Oux2Lx"}],41:[function(require,module,exports){
 var jQuery = require('jquery');
 
 /*!
@@ -3291,7 +3346,7 @@ $.extend( $.ui, {
 
 })( jQuery );
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 var jQuery = require('jquery');
 require('./core');
 require('./mouse');
@@ -4256,7 +4311,7 @@ $.ui.plugin.add("draggable", "zIndex", {
 
 })(jQuery);
 
-},{"./core":40,"./mouse":42,"./widget":44}],42:[function(require,module,exports){
+},{"./core":41,"./mouse":43,"./widget":45}],43:[function(require,module,exports){
 var jQuery = require('jquery');
 require('./widget');
 
@@ -4430,7 +4485,7 @@ $.widget("ui.mouse", {
 
 })(jQuery);
 
-},{"./widget":44}],43:[function(require,module,exports){
+},{"./widget":45}],44:[function(require,module,exports){
 var jQuery = require('jquery');
 require('./core');
 require('./mouse');
@@ -5726,7 +5781,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 })(jQuery);
 
-},{"./core":40,"./mouse":42,"./widget":44}],44:[function(require,module,exports){
+},{"./core":41,"./mouse":43,"./widget":45}],45:[function(require,module,exports){
 var jQuery = require('jquery');
 
 /*!
@@ -6251,7 +6306,7 @@ $.each( { show: "fadeIn", hide: "fadeOut" }, function( method, defaultEffect ) {
 
 })( jQuery );
 
-},{}],"0BXEF2":[function(require,module,exports){
+},{}],"zCfFjl":[function(require,module,exports){
 // knockout-sortable 0.11.0 | (c) 2015 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
@@ -6622,11 +6677,11 @@ $.each( { show: "fadeIn", hide: "fadeOut" }, function( method, defaultEffect ) {
     };
 });
 
-},{"jquery-ui/draggable":41,"jquery-ui/sortable":43,"knockout":"/NukmX"}],"knockout-sortable":[function(require,module,exports){
-module.exports=require('0BXEF2');
+},{"jquery-ui/draggable":42,"jquery-ui/sortable":44,"knockout":"CUXsN6"}],"knockout-sortable":[function(require,module,exports){
+module.exports=require('zCfFjl');
 },{}],"knockout.mapping":[function(require,module,exports){
-module.exports=require('v38f/V');
-},{}],"v38f/V":[function(require,module,exports){
+module.exports=require('fFLZXq');
+},{}],"fFLZXq":[function(require,module,exports){
 (function (factory) {
     // Module systems magic dance.
 
@@ -7453,7 +7508,9 @@ module.exports=require('v38f/V');
     }
 }));
 
-},{"knockout":"/NukmX"}],"/NukmX":[function(require,module,exports){
+},{"knockout":"CUXsN6"}],"knockout":[function(require,module,exports){
+module.exports=require('CUXsN6');
+},{}],"CUXsN6":[function(require,module,exports){
 /*!
  * Knockout JavaScript library v3.3.0
  * (c) Steven Sanderson - http://knockoutjs.com/
@@ -12930,9 +12987,7 @@ ko.exportSymbol('nativeTemplateEngine', ko.nativeTemplateEngine);
 }());
 })();
 
-},{}],"knockout":[function(require,module,exports){
-module.exports=require('/NukmX');
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 
 var asap = require('asap')
@@ -13039,7 +13094,7 @@ function doResolve(fn, onFulfilled, onRejected) {
   }
 }
 
-},{"asap":53}],52:[function(require,module,exports){
+},{"asap":54}],53:[function(require,module,exports){
 'use strict';
 
 //This file contains then/promise specific extensions to the core promise API
@@ -13221,7 +13276,7 @@ Promise.prototype['catch'] = function (onRejected) {
   return this.then(null, onRejected);
 }
 
-},{"./core.js":51,"asap":53}],53:[function(require,module,exports){
+},{"./core.js":52,"asap":54}],54:[function(require,module,exports){
 (function (process){
 
 // Use the fastest possible means to execute a task in a future turn
@@ -13337,8 +13392,8 @@ function asap(task) {
 module.exports = asap;
 
 
-}).call(this,require("D:\\Iago\\Proxectos\\Loconomics\\code\\app\\node_modules\\browserify\\node_modules\\insert-module-globals\\node_modules\\process\\browser.js"))
-},{"D:\\Iago\\Proxectos\\Loconomics\\code\\app\\node_modules\\browserify\\node_modules\\insert-module-globals\\node_modules\\process\\browser.js":78}],54:[function(require,module,exports){
+}).call(this,require("/Users/joshdanielson/Dropbox/Github/Loconomics/app/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
+},{"/Users/joshdanielson/Dropbox/Github/Loconomics/app/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":1}],55:[function(require,module,exports){
 // Some code originally from async_storage.js in
 // [Gaia](https://github.com/mozilla-b2g/gaia).
 (function() {
@@ -13753,7 +13808,7 @@ module.exports = asap;
     }
 }).call(window);
 
-},{"promise":52}],55:[function(require,module,exports){
+},{"promise":53}],56:[function(require,module,exports){
 // If IndexedDB isn't available, we'll fall back to localStorage.
 // Note that this will have considerable performance and storage
 // side-effects (all data will be serialized on save and only data that
@@ -14084,7 +14139,7 @@ module.exports = asap;
     }
 }).call(window);
 
-},{"./../utils/serializer":59,"promise":52}],56:[function(require,module,exports){
+},{"./../utils/serializer":60,"promise":53}],57:[function(require,module,exports){
 /*
  * Includes code from:
  *
@@ -14502,9 +14557,7 @@ module.exports = asap;
     }
 }).call(window);
 
-},{"./../utils/serializer":59,"promise":52}],"localforage":[function(require,module,exports){
-module.exports=require('MJo+fF');
-},{}],"MJo+fF":[function(require,module,exports){
+},{"./../utils/serializer":60,"promise":53}],"HTjHtl":[function(require,module,exports){
 (function() {
     'use strict';
 
@@ -14926,7 +14979,9 @@ module.exports=require('MJo+fF');
     }
 }).call(window);
 
-},{"./drivers/indexeddb":54,"./drivers/localstorage":55,"./drivers/websql":56,"promise":52}],59:[function(require,module,exports){
+},{"./drivers/indexeddb":55,"./drivers/localstorage":56,"./drivers/websql":57,"promise":53}],"localforage":[function(require,module,exports){
+module.exports=require('HTjHtl');
+},{}],60:[function(require,module,exports){
 (function() {
     'use strict';
 
@@ -15158,7 +15213,7 @@ module.exports=require('MJo+fF');
     }
 }).call(window);
 
-},{}],"9TlSmm":[function(require,module,exports){
+},{}],"K2RcUv":[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -21949,8 +22004,8 @@ module.exports=require('MJo+fF');
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],"lodash":[function(require,module,exports){
-module.exports=require('9TlSmm');
-},{}],62:[function(require,module,exports){
+module.exports=require('K2RcUv');
+},{}],63:[function(require,module,exports){
 module.exports={
 	"version": "2015a",
 	"zones": [
@@ -22540,13 +22595,13 @@ module.exports={
 		"Pacific/Pohnpei|Pacific/Ponape"
 	]
 }
-},{}],"WZs3h1":[function(require,module,exports){
+},{}],"moment-timezone":[function(require,module,exports){
+module.exports=require('uoYiKq');
+},{}],"uoYiKq":[function(require,module,exports){
 var moment = module.exports = require("./moment-timezone");
 moment.tz.load(require('./data/packed/latest.json'));
 
-},{"./data/packed/latest.json":62,"./moment-timezone":65}],"moment-timezone":[function(require,module,exports){
-module.exports=require('WZs3h1');
-},{}],65:[function(require,module,exports){
+},{"./data/packed/latest.json":63,"./moment-timezone":66}],66:[function(require,module,exports){
 //! moment-timezone.js
 //! version : 0.3.1
 //! author : Tim Wood
@@ -22966,9 +23021,9 @@ module.exports=require('WZs3h1');
 	return moment;
 }));
 
-},{"moment":"Vip+k1"}],"moment":[function(require,module,exports){
-module.exports=require('Vip+k1');
-},{}],"Vip+k1":[function(require,module,exports){
+},{"moment":"iROhDJ"}],"moment":[function(require,module,exports){
+module.exports=require('iROhDJ');
+},{}],"iROhDJ":[function(require,module,exports){
 (function (global){
 //! moment.js
 //! version : 2.8.4
@@ -25908,9 +25963,7 @@ module.exports=require('Vip+k1');
 }).call(this);
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"numeral":[function(require,module,exports){
-module.exports=require('qxo2E7');
-},{}],"qxo2E7":[function(require,module,exports){
+},{}],"ubjloo":[function(require,module,exports){
 /*!
  * numeral.js
  * version : 1.5.3
@@ -26591,7 +26644,11 @@ module.exports=require('qxo2E7');
     }
 }).call(this);
 
-},{}],"IIoUsY":[function(require,module,exports){
+},{}],"numeral":[function(require,module,exports){
+module.exports=require('ubjloo');
+},{}],"custom-modernizr":[function(require,module,exports){
+module.exports=require('LUd5c7');
+},{}],"LUd5c7":[function(require,module,exports){
 /** Load Modernizr custom build.
     Uses the module Browsernizr with just the tests
     we want.
@@ -26603,245 +26660,9 @@ require('browsernizr/test/css/transforms');
 // Cargando Modernizr y devolviendo la instancia:
 module.exports = require('browsernizr');
 
-},{"browsernizr":1,"browsernizr/test/css/transforms":32,"browsernizr/test/inputtypes":33}],"custom-modernizr":[function(require,module,exports){
-module.exports=require('IIoUsY');
-},{}],"qwQ2q7":[function(require,module,exports){
-/* jshint maxcomplexity:14 */
-/**
-    Format extender for Knockout observables.
-**/
-'use strict';
-
-var ko = require('knockout');
-var $ = require('jquery');
-
-/**
-    The extender types are defined externally and registered
-    in 'types' with each property the name of the type and the value
-    the function implementing it.
-**/
-exports.types = {};
-
-/**
-    Knockout extender, to attach to ko.extenders with the desired
-    name (for example: 'type' :-)
-**/
-exports.formatBinding = {
-    update: function(element, valueAccessor, allBindings) {
-
-        var options = ko.unwrap(valueAccessor()),
-            value = ko.unwrap(allBindings.get('text'));
-            
-        applyFormat(value, element, options, ko.dataFor(element));
-
-    }
-};
-
-function applyFormat(value, element, options, dataContext) {
-
-    var type = ko.unwrap(options.type);
-
-    if (type && type in exports.types) {
-
-        var typeFormatter = exports.types[type];
-        var str = typeFormatter.format(value, options, ko.dataFor(element));
-
-        if ('html' in typeFormatter && typeFormatter.html === true)
-            $(element).html(str);
-        else
-            $(element).text(str);
-    }
-}
-
-/** Definition of several types */ 
-exports.types.link = {
-    html: true,
-    format: function LinkFormatter(value, def, dataContext) {
-    
-        var link = def ? def.link ? def.link : def : null;
-        link = typeof(link) === 'string' ? link : null;
-        var r = value;
-        
-        if (link) {
-            r = $('<a/>');
-            
-            var title = def ? def.title ? def.title : null : null,
-                target = def ? def.target ? def.target : null : null;
-            
-            r.attr('href', link.replace(/__value__/g, value));
-            if (title)
-                r.attr('title', title.replace(/__value__/g, value));
-            if (target)
-                r.attr('target', target);
-                
-            // TODO: dataContext placeholders
-            
-            if (def.contentFormat) {
-                applyFormat(value, r, def.contentFormat, dataContext);
-            }
-            else {
-                r.text(value);
-            }
-            
-            r = r.outerHtml();
-        }
-
-        return r;
-    }
-};
-
-var moment = require('moment');
-exports.types.datetime = {
-    format: function DateTimeFormatter(value, def, dataContext) {
-        var moment = require('moment');
-        
-        if (!value)
-            return def.default || def.invalid || '';
-        
-        var dt = moment(value);
-        return dt.isValid() ? dt.format(def.format) : def.invalid || '';
-    }
-};
-    
-exports.types.concat = {
-    format: function ConcatFormatter(value, def, dataContext) {
-
-        var fields = $.map(def.format, function(v, i) {
-            // If is not a literal (between comiles), is a field
-            // we need the value from the source and put it in the list
-            var match = /["'](.*)["']/.exec(v);
-            if (match && match.length > 1)
-                return match[1];
-            else
-                return dataContext[v];
-        });
-
-        return fields.join('');
-    }
-};
-
-var numeral = require('numeral');    
-exports.types.number = {
-    format: function NumberFormatter(value, def, dataContext) {
-        var numeral = require('numeral');
-        return numeral(value).format(def.format);
-    }
-};
-    
-exports.types.bool = {
-    format: function BoolFormatter(value, def, dataContext) {
-        var vs = def.values;
-        if (!vs || vs.length !== 2)
-            vs = ['true', 'false'];
-
-        return value ? vs[0] : vs[1];
-    }
-};
-
-},{"knockout":"/NukmX","moment":"Vip+k1","numeral":"qxo2E7"}],"ko/formatBinding":[function(require,module,exports){
-module.exports=require('qwQ2q7');
-},{}],"r551ZY":[function(require,module,exports){
-/**
-    Layout update event
-**/
-var throttle = require('./throttle');
-var $ = require('jquery');
-
-exports.layoutUpdateEvent = 'resize webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend';
-exports.throttle = 50;
-
-exports.on = function on() {
-    $(window).on(exports.layoutUpdateEvent, throttle(function(e) {
-        var ev = $.Event('layoutUpdate');
-        ev.sourceEvent = e;
-        $(window).trigger(ev);
-    }, exports.throttle));
-};
-
-exports.off = function off() {
-    $(window).off(exports.layoutUpdateEvent);
-};
-
-},{"./throttle":"/yqoem"}],"layoutUpdateEvent":[function(require,module,exports){
-module.exports=require('r551ZY');
-},{}],"/yqoem":[function(require,module,exports){
-/**
-    throttle function
-**/
-
-module.exports = function throttle(fx, precision) {
-
-    precision = precision || 50;
-    var timer = null;
-
-    return function() {
-        var that = this, args = arguments;
-        clearTimeout(timer);
-        
-        timer = setTimeout(function(){
-            fx.apply(that, args);
-        }, precision);
-    };
-};
-
-},{}],"iagosrl/throttle":[function(require,module,exports){
-module.exports=require('/yqoem');
-},{}],78:[function(require,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-
-process.nextTick = (function () {
-    var canSetImmediate = typeof window !== 'undefined'
-    && window.setImmediate;
-    var canPost = typeof window !== 'undefined'
-    && window.postMessage && window.addEventListener
-    ;
-
-    if (canSetImmediate) {
-        return function (f) { return window.setImmediate(f) };
-    }
-
-    if (canPost) {
-        var queue = [];
-        window.addEventListener('message', function (ev) {
-            var source = ev.source;
-            if ((source === window || source === null) && ev.data === 'process-tick') {
-                ev.stopPropagation();
-                if (queue.length > 0) {
-                    var fn = queue.shift();
-                    fn();
-                }
-            }
-        }, true);
-
-        return function nextTick(fn) {
-            queue.push(fn);
-            window.postMessage('process-tick', '*');
-        };
-    }
-
-    return function nextTick(fn) {
-        setTimeout(fn, 0);
-    };
-})();
-
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-}
-
-// TODO(shtylman)
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-
-},{}],"exAe9k":[function(require,module,exports){
+},{"browsernizr":2,"browsernizr/test/css/transforms":33,"browsernizr/test/inputtypes":34}],"fastclick":[function(require,module,exports){
+module.exports=require('qPecKU');
+},{}],"qPecKU":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 ;(function () {
@@ -27694,11 +27515,7 @@ process.chdir = function (dir) {
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"fastclick":[function(require,module,exports){
-module.exports=require('exAe9k');
-},{}],"history":[function(require,module,exports){
-module.exports=require('35CTLQ');
-},{}],"35CTLQ":[function(require,module,exports){
+},{}],"J/VznU":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 typeof JSON!="object"&&(JSON={}),function(){"use strict";function f(e){return e<10?"0"+e:e}function quote(e){return escapable.lastIndex=0,escapable.test(e)?'"'+e.replace(escapable,function(e){var t=meta[e];return typeof t=="string"?t:"\\u"+("0000"+e.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+e+'"'}function str(e,t){var n,r,i,s,o=gap,u,a=t[e];a&&typeof a=="object"&&typeof a.toJSON=="function"&&(a=a.toJSON(e)),typeof rep=="function"&&(a=rep.call(t,e,a));switch(typeof a){case"string":return quote(a);case"number":return isFinite(a)?String(a):"null";case"boolean":case"null":return String(a);case"object":if(!a)return"null";gap+=indent,u=[];if(Object.prototype.toString.apply(a)==="[object Array]"){s=a.length;for(n=0;n<s;n+=1)u[n]=str(n,a)||"null";return i=u.length===0?"[]":gap?"[\n"+gap+u.join(",\n"+gap)+"\n"+o+"]":"["+u.join(",")+"]",gap=o,i}if(rep&&typeof rep=="object"){s=rep.length;for(n=0;n<s;n+=1)typeof rep[n]=="string"&&(r=rep[n],i=str(r,a),i&&u.push(quote(r)+(gap?": ":":")+i))}else for(r in a)Object.prototype.hasOwnProperty.call(a,r)&&(i=str(r,a),i&&u.push(quote(r)+(gap?": ":":")+i));return i=u.length===0?"{}":gap?"{\n"+gap+u.join(",\n"+gap)+"\n"+o+"}":"{"+u.join(",")+"}",gap=o,i}}typeof Date.prototype.toJSON!="function"&&(Date.prototype.toJSON=function(e){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+f(this.getUTCMonth()+1)+"-"+f(this.getUTCDate())+"T"+f(this.getUTCHours())+":"+f(this.getUTCMinutes())+":"+f(this.getUTCSeconds())+"Z":null},String.prototype.toJSON=Number.prototype.toJSON=Boolean.prototype.toJSON=function(e){return this.valueOf()});var cx=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,escapable=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta={"\b":"\\b","	":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},rep;typeof JSON.stringify!="function"&&(JSON.stringify=function(e,t,n){var r;gap="",indent="";if(typeof n=="number")for(r=0;r<n;r+=1)indent+=" ";else typeof n=="string"&&(indent=n);rep=t;if(!t||typeof t=="function"||typeof t=="object"&&typeof t.length=="number")return str("",{"":e});throw new Error("JSON.stringify")}),typeof JSON.parse!="function"&&(JSON.parse=function(text,reviver){function walk(e,t){var n,r,i=e[t];if(i&&typeof i=="object")for(n in i)Object.prototype.hasOwnProperty.call(i,n)&&(r=walk(i,n),r!==undefined?i[n]=r:delete i[n]);return reviver.call(e,t,i)}var j;text=String(text),cx.lastIndex=0,cx.test(text)&&(text=text.replace(cx,function(e){return"\\u"+("0000"+e.charCodeAt(0).toString(16)).slice(-4)}));if(/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,"]").replace(/(?:^|:|,)(?:\s*\[)+/g,"")))return j=eval("("+text+")"),typeof reviver=="function"?walk({"":j},""):j;throw new SyntaxError("JSON.parse")})}(),function(e,t){"use strict";var n=e.History=e.History||{},r=e.jQuery;if(typeof n.Adapter!="undefined")throw new Error("History.js Adapter has already been loaded...");n.Adapter={bind:function(e,t,n){r(e).bind(t,n)},trigger:function(e,t,n){r(e).trigger(t,n)},extractEventData:function(e,n,r){var i=n&&n.originalEvent&&n.originalEvent[e]||r&&r[e]||t;return i},onDomLoad:function(e){r(e)}},typeof n.init!="undefined"&&n.init()}(window),function(e,t){"use strict";var n=e.document,r=e.setTimeout||r,i=e.clearTimeout||i,s=e.setInterval||s,o=e.History=e.History||{};if(typeof o.initHtml4!="undefined")throw new Error("History.js HTML4 Support has already been loaded...");o.initHtml4=function(){if(typeof o.initHtml4.initialized!="undefined")return!1;o.initHtml4.initialized=!0,o.enabled=!0,o.savedHashes=[],o.isLastHash=function(e){var t=o.getHashByIndex(),n;return n=e===t,n},o.isHashEqual=function(e,t){return e=encodeURIComponent(e).replace(/%25/g,"%"),t=encodeURIComponent(t).replace(/%25/g,"%"),e===t},o.saveHash=function(e){return o.isLastHash(e)?!1:(o.savedHashes.push(e),!0)},o.getHashByIndex=function(e){var t=null;return typeof e=="undefined"?t=o.savedHashes[o.savedHashes.length-1]:e<0?t=o.savedHashes[o.savedHashes.length+e]:t=o.savedHashes[e],t},o.discardedHashes={},o.discardedStates={},o.discardState=function(e,t,n){var r=o.getHashByState(e),i;return i={discardedState:e,backState:n,forwardState:t},o.discardedStates[r]=i,!0},o.discardHash=function(e,t,n){var r={discardedHash:e,backState:n,forwardState:t};return o.discardedHashes[e]=r,!0},o.discardedState=function(e){var t=o.getHashByState(e),n;return n=o.discardedStates[t]||!1,n},o.discardedHash=function(e){var t=o.discardedHashes[e]||!1;return t},o.recycleState=function(e){var t=o.getHashByState(e);return o.discardedState(e)&&delete o.discardedStates[t],!0},o.emulated.hashChange&&(o.hashChangeInit=function(){o.checkerFunction=null;var t="",r,i,u,a,f=Boolean(o.getHash());return o.isInternetExplorer()?(r="historyjs-iframe",i=n.createElement("iframe"),i.setAttribute("id",r),i.setAttribute("src","#"),i.style.display="none",n.body.appendChild(i),i.contentWindow.document.open(),i.contentWindow.document.close(),u="",a=!1,o.checkerFunction=function(){if(a)return!1;a=!0;var n=o.getHash(),r=o.getHash(i.contentWindow.document);return n!==t?(t=n,r!==n&&(u=r=n,i.contentWindow.document.open(),i.contentWindow.document.close(),i.contentWindow.document.location.hash=o.escapeHash(n)),o.Adapter.trigger(e,"hashchange")):r!==u&&(u=r,f&&r===""?o.back():o.setHash(r,!1)),a=!1,!0}):o.checkerFunction=function(){var n=o.getHash()||"";return n!==t&&(t=n,o.Adapter.trigger(e,"hashchange")),!0},o.intervalList.push(s(o.checkerFunction,o.options.hashChangeInterval)),!0},o.Adapter.onDomLoad(o.hashChangeInit)),o.emulated.pushState&&(o.onHashChange=function(t){var n=t&&t.newURL||o.getLocationHref(),r=o.getHashByUrl(n),i=null,s=null,u=null,a;return o.isLastHash(r)?(o.busy(!1),!1):(o.doubleCheckComplete(),o.saveHash(r),r&&o.isTraditionalAnchor(r)?(o.Adapter.trigger(e,"anchorchange"),o.busy(!1),!1):(i=o.extractState(o.getFullUrl(r||o.getLocationHref()),!0),o.isLastSavedState(i)?(o.busy(!1),!1):(s=o.getHashByState(i),a=o.discardedState(i),a?(o.getHashByIndex(-2)===o.getHashByState(a.forwardState)?o.back(!1):o.forward(!1),!1):(o.pushState(i.data,i.title,encodeURI(i.url),!1,!0),o.Adapter.trigger(e,"popstate"),!0))))},o.Adapter.bind(e,"hashchange",o.onHashChange),o.pushState=function(t,n,r,i,s){r=encodeURI(r).replace(/%25/g,"%");if(o.getHashByUrl(r))throw new Error("History.js does not support states with fragment-identifiers (hashes/anchors).");if(i!==!1&&o.busy())return o.pushQueue({scope:o,callback:o.pushState,args:arguments,queue:i}),!1;o.busy(!0);var u=o.createStateObject(t,n,r),a=o.getHashByState(u),f=o.getState(!1),l=o.getHashByState(f),c=o.getHash(),h=o.expectedStateId==u.id;return o.storeState(u),o.expectedStateId=u.id,o.recycleState(u),o.setTitle(u),a===l?(o.busy(!1),!1):(o.saveState(u),h||o.Adapter.trigger(e,"statechange"),!o.isHashEqual(a,c)&&!o.isHashEqual(a,o.getShortUrl(o.getLocationHref()))&&o.setHash(a,!1),o.busy(!1),!0)},o.replaceState=function(t,n,r,i){r=encodeURI(r).replace(/%25/g,"%");if(o.getHashByUrl(r))throw new Error("History.js does not support states with fragment-identifiers (hashes/anchors).");if(i!==!1&&o.busy())return o.pushQueue({scope:o,callback:o.replaceState,args:arguments,queue:i}),!1;o.busy(!0);var s=o.createStateObject(t,n,r),u=o.getHashByState(s),a=o.getState(!1),f=o.getHashByState(a),l=o.getStateByIndex(-2);return o.discardState(a,s,l),u===f?(o.storeState(s),o.expectedStateId=s.id,o.recycleState(s),o.setTitle(s),o.saveState(s),o.Adapter.trigger(e,"statechange"),o.busy(!1)):o.pushState(s.data,s.title,s.url,!1),!0}),o.emulated.pushState&&o.getHash()&&!o.emulated.hashChange&&o.Adapter.onDomLoad(function(){o.Adapter.trigger(e,"hashchange")})},typeof o.init!="undefined"&&o.init()}(window),function(e,t){"use strict";var n=e.console||t,r=e.document,i=e.navigator,s=e.sessionStorage||!1,o=e.setTimeout,u=e.clearTimeout,a=e.setInterval,f=e.clearInterval,l=e.JSON,c=e.alert,h=e.History=e.History||{},p=e.history;try{s.setItem("TEST","1"),s.removeItem("TEST")}catch(d){s=!1}l.stringify=l.stringify||l.encode,l.parse=l.parse||l.decode;if(typeof h.init!="undefined")throw new Error("History.js Core has already been loaded...");h.init=function(e){return typeof h.Adapter=="undefined"?!1:(typeof h.initCore!="undefined"&&h.initCore(),typeof h.initHtml4!="undefined"&&h.initHtml4(),!0)},h.initCore=function(d){if(typeof h.initCore.initialized!="undefined")return!1;h.initCore.initialized=!0,h.options=h.options||{},h.options.hashChangeInterval=h.options.hashChangeInterval||100,h.options.safariPollInterval=h.options.safariPollInterval||500,h.options.doubleCheckInterval=h.options.doubleCheckInterval||500,h.options.disableSuid=h.options.disableSuid||!1,h.options.storeInterval=h.options.storeInterval||1e3,h.options.busyDelay=h.options.busyDelay||250,h.options.debug=h.options.debug||!1,h.options.initialTitle=h.options.initialTitle||r.title,h.options.html4Mode=h.options.html4Mode||!1,h.options.delayInit=h.options.delayInit||!1,h.intervalList=[],h.clearAllIntervals=function(){var e,t=h.intervalList;if(typeof t!="undefined"&&t!==null){for(e=0;e<t.length;e++)f(t[e]);h.intervalList=null}},h.debug=function(){(h.options.debug||!1)&&h.log.apply(h,arguments)},h.log=function(){var e=typeof n!="undefined"&&typeof n.log!="undefined"&&typeof n.log.apply!="undefined",t=r.getElementById("log"),i,s,o,u,a;e?(u=Array.prototype.slice.call(arguments),i=u.shift(),typeof n.debug!="undefined"?n.debug.apply(n,[i,u]):n.log.apply(n,[i,u])):i="\n"+arguments[0]+"\n";for(s=1,o=arguments.length;s<o;++s){a=arguments[s];if(typeof a=="object"&&typeof l!="undefined")try{a=l.stringify(a)}catch(f){}i+="\n"+a+"\n"}return t?(t.value+=i+"\n-----\n",t.scrollTop=t.scrollHeight-t.clientHeight):e||c(i),!0},h.getInternetExplorerMajorVersion=function(){var e=h.getInternetExplorerMajorVersion.cached=typeof h.getInternetExplorerMajorVersion.cached!="undefined"?h.getInternetExplorerMajorVersion.cached:function(){var e=3,t=r.createElement("div"),n=t.getElementsByTagName("i");while((t.innerHTML="<!--[if gt IE "+ ++e+"]><i></i><![endif]-->")&&n[0]);return e>4?e:!1}();return e},h.isInternetExplorer=function(){var e=h.isInternetExplorer.cached=typeof h.isInternetExplorer.cached!="undefined"?h.isInternetExplorer.cached:Boolean(h.getInternetExplorerMajorVersion());return e},h.options.html4Mode?h.emulated={pushState:!0,hashChange:!0}:h.emulated={pushState:!Boolean(e.history&&e.history.pushState&&e.history.replaceState&&!/ Mobile\/([1-7][a-z]|(8([abcde]|f(1[0-8]))))/i.test(i.userAgent)&&!/AppleWebKit\/5([0-2]|3[0-2])/i.test(i.userAgent)),hashChange:Boolean(!("onhashchange"in e||"onhashchange"in r)||h.isInternetExplorer()&&h.getInternetExplorerMajorVersion()<8)},h.enabled=!h.emulated.pushState,h.bugs={setHash:Boolean(!h.emulated.pushState&&i.vendor==="Apple Computer, Inc."&&/AppleWebKit\/5([0-2]|3[0-3])/.test(i.userAgent)),safariPoll:Boolean(!h.emulated.pushState&&i.vendor==="Apple Computer, Inc."&&/AppleWebKit\/5([0-2]|3[0-3])/.test(i.userAgent)),ieDoubleCheck:Boolean(h.isInternetExplorer()&&h.getInternetExplorerMajorVersion()<8),hashEscape:Boolean(h.isInternetExplorer()&&h.getInternetExplorerMajorVersion()<7)},h.isEmptyObject=function(e){for(var t in e)if(e.hasOwnProperty(t))return!1;return!0},h.cloneObject=function(e){var t,n;return e?(t=l.stringify(e),n=l.parse(t)):n={},n},h.getRootUrl=function(){var e=r.location.protocol+"//"+(r.location.hostname||r.location.host);if(r.location.port||!1)e+=":"+r.location.port;return e+="/",e},h.getBaseHref=function(){var e=r.getElementsByTagName("base"),t=null,n="";return e.length===1&&(t=e[0],n=t.href.replace(/[^\/]+$/,"")),n=n.replace(/\/+$/,""),n&&(n+="/"),n},h.getBaseUrl=function(){var e=h.getBaseHref()||h.getBasePageUrl()||h.getRootUrl();return e},h.getPageUrl=function(){var e=h.getState(!1,!1),t=(e||{}).url||h.getLocationHref(),n;return n=t.replace(/\/+$/,"").replace(/[^\/]+$/,function(e,t,n){return/\./.test(e)?e:e+"/"}),n},h.getBasePageUrl=function(){var e=h.getLocationHref().replace(/[#\?].*/,"").replace(/[^\/]+$/,function(e,t,n){return/[^\/]$/.test(e)?"":e}).replace(/\/+$/,"")+"/";return e},h.getFullUrl=function(e,t){var n=e,r=e.substring(0,1);return t=typeof t=="undefined"?!0:t,/[a-z]+\:\/\//.test(e)||(r==="/"?n=h.getRootUrl()+e.replace(/^\/+/,""):r==="#"?n=h.getPageUrl().replace(/#.*/,"")+e:r==="?"?n=h.getPageUrl().replace(/[\?#].*/,"")+e:t?n=h.getBaseUrl()+e.replace(/^(\.\/)+/,""):n=h.getBasePageUrl()+e.replace(/^(\.\/)+/,"")),n.replace(/\#$/,"")},h.getShortUrl=function(e){var t=e,n=h.getBaseUrl(),r=h.getRootUrl();return h.emulated.pushState&&(t=t.replace(n,"")),t=t.replace(r,"/"),h.isTraditionalAnchor(t)&&(t="./"+t),t=t.replace(/^(\.\/)+/g,"./").replace(/\#$/,""),t},h.getLocationHref=function(e){return e=e||r,e.URL===e.location.href?e.location.href:e.location.href===decodeURIComponent(e.URL)?e.URL:e.location.hash&&decodeURIComponent(e.location.href.replace(/^[^#]+/,""))===e.location.hash?e.location.href:e.URL.indexOf("#")==-1&&e.location.href.indexOf("#")!=-1?e.location.href:e.URL||e.location.href},h.store={},h.idToState=h.idToState||{},h.stateToId=h.stateToId||{},h.urlToId=h.urlToId||{},h.storedStates=h.storedStates||[],h.savedStates=h.savedStates||[],h.normalizeStore=function(){h.store.idToState=h.store.idToState||{},h.store.urlToId=h.store.urlToId||{},h.store.stateToId=h.store.stateToId||{}},h.getState=function(e,t){typeof e=="undefined"&&(e=!0),typeof t=="undefined"&&(t=!0);var n=h.getLastSavedState();return!n&&t&&(n=h.createStateObject()),e&&(n=h.cloneObject(n),n.url=n.cleanUrl||n.url),n},h.getIdByState=function(e){var t=h.extractId(e.url),n;if(!t){n=h.getStateString(e);if(typeof h.stateToId[n]!="undefined")t=h.stateToId[n];else if(typeof h.store.stateToId[n]!="undefined")t=h.store.stateToId[n];else{for(;;){t=(new Date).getTime()+String(Math.random()).replace(/\D/g,"");if(typeof h.idToState[t]=="undefined"&&typeof h.store.idToState[t]=="undefined")break}h.stateToId[n]=t,h.idToState[t]=e}}return t},h.normalizeState=function(e){var t,n;if(!e||typeof e!="object")e={};if(typeof e.normalized!="undefined")return e;if(!e.data||typeof e.data!="object")e.data={};return t={},t.normalized=!0,t.title=e.title||"",t.url=h.getFullUrl(e.url?e.url:h.getLocationHref()),t.hash=h.getShortUrl(t.url),t.data=h.cloneObject(e.data),t.id=h.getIdByState(t),t.cleanUrl=t.url.replace(/\??\&_suid.*/,""),t.url=t.cleanUrl,n=!h.isEmptyObject(t.data),(t.title||n)&&h.options.disableSuid!==!0&&(t.hash=h.getShortUrl(t.url).replace(/\??\&_suid.*/,""),/\?/.test(t.hash)||(t.hash+="?"),t.hash+="&_suid="+t.id),t.hashedUrl=h.getFullUrl(t.hash),(h.emulated.pushState||h.bugs.safariPoll)&&h.hasUrlDuplicate(t)&&(t.url=t.hashedUrl),t},h.createStateObject=function(e,t,n){var r={data:e,title:t,url:n};return r=h.normalizeState(r),r},h.getStateById=function(e){e=String(e);var n=h.idToState[e]||h.store.idToState[e]||t;return n},h.getStateString=function(e){var t,n,r;return t=h.normalizeState(e),n={data:t.data,title:e.title,url:e.url},r=l.stringify(n),r},h.getStateId=function(e){var t,n;return t=h.normalizeState(e),n=t.id,n},h.getHashByState=function(e){var t,n;return t=h.normalizeState(e),n=t.hash,n},h.extractId=function(e){var t,n,r,i;return e.indexOf("#")!=-1?i=e.split("#")[0]:i=e,n=/(.*)\&_suid=([0-9]+)$/.exec(i),r=n?n[1]||e:e,t=n?String(n[2]||""):"",t||!1},h.isTraditionalAnchor=function(e){var t=!/[\/\?\.]/.test(e);return t},h.extractState=function(e,t){var n=null,r,i;return t=t||!1,r=h.extractId(e),r&&(n=h.getStateById(r)),n||(i=h.getFullUrl(e),r=h.getIdByUrl(i)||!1,r&&(n=h.getStateById(r)),!n&&t&&!h.isTraditionalAnchor(e)&&(n=h.createStateObject(null,null,i))),n},h.getIdByUrl=function(e){var n=h.urlToId[e]||h.store.urlToId[e]||t;return n},h.getLastSavedState=function(){return h.savedStates[h.savedStates.length-1]||t},h.getLastStoredState=function(){return h.storedStates[h.storedStates.length-1]||t},h.hasUrlDuplicate=function(e){var t=!1,n;return n=h.extractState(e.url),t=n&&n.id!==e.id,t},h.storeState=function(e){return h.urlToId[e.url]=e.id,h.storedStates.push(h.cloneObject(e)),e},h.isLastSavedState=function(e){var t=!1,n,r,i;return h.savedStates.length&&(n=e.id,r=h.getLastSavedState(),i=r.id,t=n===i),t},h.saveState=function(e){return h.isLastSavedState(e)?!1:(h.savedStates.push(h.cloneObject(e)),!0)},h.getStateByIndex=function(e){var t=null;return typeof e=="undefined"?t=h.savedStates[h.savedStates.length-1]:e<0?t=h.savedStates[h.savedStates.length+e]:t=h.savedStates[e],t},h.getCurrentIndex=function(){var e=null;return h.savedStates.length<1?e=0:e=h.savedStates.length-1,e},h.getHash=function(e){var t=h.getLocationHref(e),n;return n=h.getHashByUrl(t),n},h.unescapeHash=function(e){var t=h.normalizeHash(e);return t=decodeURIComponent(t),t},h.normalizeHash=function(e){var t=e.replace(/[^#]*#/,"").replace(/#.*/,"");return t},h.setHash=function(e,t){var n,i;return t!==!1&&h.busy()?(h.pushQueue({scope:h,callback:h.setHash,args:arguments,queue:t}),!1):(h.busy(!0),n=h.extractState(e,!0),n&&!h.emulated.pushState?h.pushState(n.data,n.title,n.url,!1):h.getHash()!==e&&(h.bugs.setHash?(i=h.getPageUrl(),h.pushState(null,null,i+"#"+e,!1)):r.location.hash=e),h)},h.escapeHash=function(t){var n=h.normalizeHash(t);return n=e.encodeURIComponent(n),h.bugs.hashEscape||(n=n.replace(/\%21/g,"!").replace(/\%26/g,"&").replace(/\%3D/g,"=").replace(/\%3F/g,"?")),n},h.getHashByUrl=function(e){var t=String(e).replace(/([^#]*)#?([^#]*)#?(.*)/,"$2");return t=h.unescapeHash(t),t},h.setTitle=function(e){var t=e.title,n;t||(n=h.getStateByIndex(0),n&&n.url===e.url&&(t=n.title||h.options.initialTitle));try{r.getElementsByTagName("title")[0].innerHTML=t.replace("<","&lt;").replace(">","&gt;").replace(" & "," &amp; ")}catch(i){}return r.title=t,h},h.queues=[],h.busy=function(e){typeof e!="undefined"?h.busy.flag=e:typeof h.busy.flag=="undefined"&&(h.busy.flag=!1);if(!h.busy.flag){u(h.busy.timeout);var t=function(){var e,n,r;if(h.busy.flag)return;for(e=h.queues.length-1;e>=0;--e){n=h.queues[e];if(n.length===0)continue;r=n.shift(),h.fireQueueItem(r),h.busy.timeout=o(t,h.options.busyDelay)}};h.busy.timeout=o(t,h.options.busyDelay)}return h.busy.flag},h.busy.flag=!1,h.fireQueueItem=function(e){return e.callback.apply(e.scope||h,e.args||[])},h.pushQueue=function(e){return h.queues[e.queue||0]=h.queues[e.queue||0]||[],h.queues[e.queue||0].push(e),h},h.queue=function(e,t){return typeof e=="function"&&(e={callback:e}),typeof t!="undefined"&&(e.queue=t),h.busy()?h.pushQueue(e):h.fireQueueItem(e),h},h.clearQueue=function(){return h.busy.flag=!1,h.queues=[],h},h.stateChanged=!1,h.doubleChecker=!1,h.doubleCheckComplete=function(){return h.stateChanged=!0,h.doubleCheckClear(),h},h.doubleCheckClear=function(){return h.doubleChecker&&(u(h.doubleChecker),h.doubleChecker=!1),h},h.doubleCheck=function(e){return h.stateChanged=!1,h.doubleCheckClear(),h.bugs.ieDoubleCheck&&(h.doubleChecker=o(function(){return h.doubleCheckClear(),h.stateChanged||e(),!0},h.options.doubleCheckInterval)),h},h.safariStatePoll=function(){var t=h.extractState(h.getLocationHref()),n;if(!h.isLastSavedState(t))return n=t,n||(n=h.createStateObject()),h.Adapter.trigger(e,"popstate-internal"),h;return},h.back=function(e){return e!==!1&&h.busy()?(h.pushQueue({scope:h,callback:h.back,args:arguments,queue:e}),!1):(h.busy(!0),h.doubleCheck(function(){h.back(!1)}),p.go(-1),!0)},h.forward=function(e){return e!==!1&&h.busy()?(h.pushQueue({scope:h,callback:h.forward,args:arguments,queue:e}),!1):(h.busy(!0),h.doubleCheck(function(){h.forward(!1)}),p.go(1),!0)},h.go=function(e,t){var n;if(e>0)for(n=1;n<=e;++n)h.forward(t);else{if(!(e<0))throw new Error("History.go: History.go requires a positive or negative integer passed.");for(n=-1;n>=e;--n)h.back(t)}return h};if(h.emulated.pushState){var v=function(){};h.pushState=h.pushState||v,h.replaceState=h.replaceState||v}else h.onPopState=function(t,n){var r=!1,i=!1,s,o;return h.doubleCheckComplete(),s=h.getHash(),s?(o=h.extractState(s||h.getLocationHref(),!0),o?h.replaceState(o.data,o.title,o.url,!1):(h.Adapter.trigger(e,"anchorchange"),h.busy(!1)),h.expectedStateId=!1,!1):(r=h.Adapter.extractEventData("state",t,n)||!1,r?i=h.getStateById(r):h.expectedStateId?i=h.getStateById(h.expectedStateId):i=h.extractState(h.getLocationHref()),i||(i=h.createStateObject(null,null,h.getLocationHref())),h.expectedStateId=!1,h.isLastSavedState(i)?(h.busy(!1),!1):(h.storeState(i),h.saveState(i),h.setTitle(i),h.Adapter.trigger(e,"statechange"),h.busy(!1),!0))},h.Adapter.bind(e,"popstate-internal",h.onPopState),h.Adapter.bind(e,"popstate",h.onPopState),h.pushState=function(t,n,r,i){if(h.getHashByUrl(r)&&h.emulated.pushState)throw new Error("History.js does not support states with fragement-identifiers (hashes/anchors).");if(i!==!1&&h.busy())return h.pushQueue({scope:h,callback:h.pushState,args:arguments,queue:i}),!1;h.busy(!0);var s=h.createStateObject(t,n,r);return h.isLastSavedState(s)?h.busy(!1):(h.storeState(s),h.expectedStateId=s.id,p.pushState(s.id,s.title,s.url),h.Adapter.trigger(e,"popstate-internal")),!0},h.replaceState=function(t,n,r,i){if(h.getHashByUrl(r)&&h.emulated.pushState)throw new Error("History.js does not support states with fragement-identifiers (hashes/anchors).");if(i!==!1&&h.busy())return h.pushQueue({scope:h,callback:h.replaceState,args:arguments,queue:i}),!1;h.busy(!0);var s=h.createStateObject(t,n,r);return h.isLastSavedState(s)?h.busy(!1):(h.storeState(s),h.expectedStateId=s.id,p.replaceState(s.id,s.title,s.url),h.Adapter.trigger(e,"popstate-internal")),!0};if(s){try{h.store=l.parse(s.getItem("History.store"))||{}}catch(m){h.store={}}h.normalizeStore()}else h.store={},h.normalizeStore();h.Adapter.bind(e,"unload",h.clearAllIntervals),h.saveState(h.storeState(h.extractState(h.getLocationHref(),!0))),s&&(h.onUnload=function(){var e,t,n;try{e=l.parse(s.getItem("History.store"))||{}}catch(r){e={}}e.idToState=e.idToState||{},e.urlToId=e.urlToId||{},e.stateToId=e.stateToId||{};for(t in h.idToState){if(!h.idToState.hasOwnProperty(t))continue;e.idToState[t]=h.idToState[t]}for(t in h.urlToId){if(!h.urlToId.hasOwnProperty(t))continue;e.urlToId[t]=h.urlToId[t]}for(t in h.stateToId){if(!h.stateToId.hasOwnProperty(t))continue;e.stateToId[t]=h.stateToId[t]}h.store=e,h.normalizeStore(),n=l.stringify(e);try{s.setItem("History.store",n)}catch(i){if(i.code!==DOMException.QUOTA_EXCEEDED_ERR)throw i;s.length&&(s.removeItem("History.store"),s.setItem("History.store",n))}},h.intervalList.push(a(h.onUnload,h.options.storeInterval)),h.Adapter.bind(e,"beforeunload",h.onUnload),h.Adapter.bind(e,"unload",h.onUnload));if(!h.emulated.pushState){h.bugs.safariPoll&&h.intervalList.push(a(h.safariStatePoll,h.options.safariPollInterval));if(i.vendor==="Apple Computer, Inc."||(i.appCodeName||"")==="Mozilla")h.Adapter.bind(e,"hashchange",function(){h.Adapter.trigger(e,"popstate")}),h.getHash()&&h.Adapter.onDomLoad(function(){h.Adapter.trigger(e,"hashchange")})}},(!h.options||!h.options.delayInit)&&h.init()}(window),function(e,t){"use strict";if(e.History==t)throw new Error("History.js is needed");if(e.HistoryEnhance!=t)return;var n=e.History,r=e.HistoryEnhance=e.HistoryEnhance||{},i=null,s=[],o=n.pushState,u=n.replaceState;n.pushState=function(e,t,r,s,u){o(e,t,r,s,u),u!=1&&(i=n.getState())},n.replaceState=function(e,t,r,s){u(e,t,r,s),i=n.getState()},n.Adapter.bind(e,"popstate",function(t){var r=i;if(r==null)return;var o=i=n.getState(),u=!0;if(s.length>0){var a=s[s.length-1];a.id==o.id&&(u=!1)}u?(s.push(r),n.Adapter.trigger(e,"navigation-backward",[r,o])):(s.pop(),n.Adapter.trigger(e,"navigation-forward",[r,o]))})}(window)
@@ -27707,9 +27524,192 @@ typeof JSON!="object"&&(JSON={}),function(){"use strict";function f(e){return e<
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],"history":[function(require,module,exports){
+module.exports=require('J/VznU');
+},{}],"7ibFqB":[function(require,module,exports){
+/* jshint maxcomplexity:14 */
+/**
+    Format extender for Knockout observables.
+**/
+'use strict';
+
+var ko = require('knockout');
+var $ = require('jquery');
+
+/**
+    The extender types are defined externally and registered
+    in 'types' with each property the name of the type and the value
+    the function implementing it.
+**/
+exports.types = {};
+
+/**
+    Knockout extender, to attach to ko.extenders with the desired
+    name (for example: 'type' :-)
+**/
+exports.formatBinding = {
+    update: function(element, valueAccessor, allBindings) {
+
+        var options = ko.unwrap(valueAccessor()),
+            value = ko.unwrap(allBindings.get('text'));
+            
+        applyFormat(value, element, options, ko.dataFor(element));
+
+    }
+};
+
+function applyFormat(value, element, options, dataContext) {
+
+    var type = ko.unwrap(options.type);
+
+    if (type && type in exports.types) {
+
+        var typeFormatter = exports.types[type];
+        var str = typeFormatter.format(value, options, ko.dataFor(element));
+
+        if ('html' in typeFormatter && typeFormatter.html === true)
+            $(element).html(str);
+        else
+            $(element).text(str);
+    }
+}
+
+/** Definition of several types */ 
+exports.types.link = {
+    html: true,
+    format: function LinkFormatter(value, def, dataContext) {
+    
+        var link = def ? def.link ? def.link : def : null;
+        link = typeof(link) === 'string' ? link : null;
+        var r = value;
+        
+        if (link) {
+            r = $('<a/>');
+            
+            var title = def ? def.title ? def.title : null : null,
+                target = def ? def.target ? def.target : null : null;
+            
+            r.attr('href', link.replace(/__value__/g, value));
+            if (title)
+                r.attr('title', title.replace(/__value__/g, value));
+            if (target)
+                r.attr('target', target);
+                
+            // TODO: dataContext placeholders
+            
+            if (def.contentFormat) {
+                applyFormat(value, r, def.contentFormat, dataContext);
+            }
+            else {
+                r.text(value);
+            }
+            
+            r = r.outerHtml();
+        }
+
+        return r;
+    }
+};
+
+var moment = require('moment');
+exports.types.datetime = {
+    format: function DateTimeFormatter(value, def, dataContext) {
+        var moment = require('moment');
+        
+        if (!value)
+            return def.default || def.invalid || '';
+        
+        var dt = moment(value);
+        return dt.isValid() ? dt.format(def.format) : def.invalid || '';
+    }
+};
+    
+exports.types.concat = {
+    format: function ConcatFormatter(value, def, dataContext) {
+
+        var fields = $.map(def.format, function(v, i) {
+            // If is not a literal (between comiles), is a field
+            // we need the value from the source and put it in the list
+            var match = /["'](.*)["']/.exec(v);
+            if (match && match.length > 1)
+                return match[1];
+            else
+                return dataContext[v];
+        });
+
+        return fields.join('');
+    }
+};
+
+var numeral = require('numeral');    
+exports.types.number = {
+    format: function NumberFormatter(value, def, dataContext) {
+        var numeral = require('numeral');
+        return numeral(value).format(def.format);
+    }
+};
+    
+exports.types.bool = {
+    format: function BoolFormatter(value, def, dataContext) {
+        var vs = def.values;
+        if (!vs || vs.length !== 2)
+            vs = ['true', 'false'];
+
+        return value ? vs[0] : vs[1];
+    }
+};
+
+},{"knockout":"CUXsN6","moment":"iROhDJ","numeral":"ubjloo"}],"ko/formatBinding":[function(require,module,exports){
+module.exports=require('7ibFqB');
+},{}],"I1qi1o":[function(require,module,exports){
+/**
+    Layout update event
+**/
+var throttle = require('./throttle');
+var $ = require('jquery');
+
+exports.layoutUpdateEvent = 'resize webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend';
+exports.throttle = 50;
+
+exports.on = function on() {
+    $(window).on(exports.layoutUpdateEvent, throttle(function(e) {
+        var ev = $.Event('layoutUpdate');
+        ev.sourceEvent = e;
+        $(window).trigger(ev);
+    }, exports.throttle));
+};
+
+exports.off = function off() {
+    $(window).off(exports.layoutUpdateEvent);
+};
+
+},{"./throttle":"kYchTJ"}],"layoutUpdateEvent":[function(require,module,exports){
+module.exports=require('I1qi1o');
+},{}],"kYchTJ":[function(require,module,exports){
+/**
+    throttle function
+**/
+
+module.exports = function throttle(fx, precision) {
+
+    precision = precision || 50;
+    var timer = null;
+
+    return function() {
+        var that = this, args = arguments;
+        clearTimeout(timer);
+        
+        timer = setTimeout(function(){
+            fx.apply(that, args);
+        }, precision);
+    };
+};
+
+},{}],"iagosrl/throttle":[function(require,module,exports){
+module.exports=require('kYchTJ');
 },{}],"jquery-mobile":[function(require,module,exports){
-module.exports=require('5FjZZQ');
-},{}],"5FjZZQ":[function(require,module,exports){
+module.exports=require('vhbfba');
+},{}],"vhbfba":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, define) {
 
@@ -28770,9 +28770,7 @@ if ( eventCaptureSupported ) {
 }).call(global, module, undefined);
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"jquery.ui.touch-punch":[function(require,module,exports){
-module.exports=require('k762vl');
-},{}],"k762vl":[function(require,module,exports){
+},{}],"SMgHcN":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, define) {
 
@@ -28791,4 +28789,6 @@ module.exports=require('k762vl');
 }).call(global, module, undefined);
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],"jquery.ui.touch-punch":[function(require,module,exports){
+module.exports=require('SMgHcN');
 },{}]},{},[])

@@ -2155,20 +2155,23 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       <div class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: threads() }"></div>
     </div>
     <!-- Activity index -->
-    <div class="container" data-activity="index">
-      <div class="LeadContent">
-        <div class="embed-responsive embed-responsive-16by9">
-          <video>No video for now</video>
+    <div data-activity="index">
+      <div class="splashIndex-top">
+        <div class="text-center"><a class="welcome">Loconomics Cooperative, Inc.</a>
         </div>
-        <p class="lead">Loconomics is a marketplace for local services owned by the service professionals
-          and employees doing the work. They share in the profits and decision-makina
-          power.</p>
-        <p class="text-center">To learn more, click below:</p>
-        <div> <a href="#!learnMore/service-professional" class="btn btn-default btn-block">I provide services</a>
+        <div class="LeadContent">
+           <h1>Now's the time.</h1>
 
-          <a
-          href="#!learnMore/client" class="btn btn-default btn-block">I'm a potential client</a>
+          <p class="lead">A marketplace owned by the people doing the work.</p>
         </div>
+      </div>
+      <div class="Splash-message">
+         <h2>Welcome Founding Owner!</h2>
+
+        <p>You're making history. Thanks for agreeing to help work out the kinks
+          in the app before we go live.</p>
+        <br> <a href="#!signup/service-professional" class="btn btn-secondary">Get Started</a>
+
       </div>
     </div>
     <!-- Jobtitles activity -->
@@ -3601,62 +3604,64 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         </div>
       </div>
       <div class="LeadContent container Signup-formcontainer" data-bind="visible: profile">
-         <h3>Sign up for free</h3>
+        <p class="Signup-login"><span>Already have an account? </span><a class="btn btn-link" href="/login">Login<a><p>
+    <h3>Sign up for free</h3>
 
-        <div data-bind="visible: !facebookUserID()"> <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
+    <div data-bind="visible: !facebookUserID()">
+      <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
 
           <!--<a
           href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
-        </div>
-        <p class="isolated text-center Signup-or" data-bind="visible: !facebookUserID()"> <span>or</span>
-
-        </p>
-        <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }"
-        novalidate>
-          <script type="text/html" id="signup-field">
-            <div class="form-group has-feedback" data-bind="css: { 'has-error': field.error }">
-              <input type="email" class="form-control" data-bind="value: field, attr: { placeholder: label, 'aria-label': label }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
-              <span class="form-control-feedback" aria-hidden="true" data-bind="css: icon"></span>
-            </div>
-          </script>
-          <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', icon: 'ion-android-contact' } }"></div>
-          <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', icon: 'ion-android-contact' } }"></div>
-          <div class="row">
-            <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label: 'Zip code', icon: 'ion-ios-home-outline' } }"></div>
-            <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label: 'Referral code', icon: 'ion-android-contacts' } }"></div>
-          </div>
-          <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }, visible: forServiceProfessional">
-            <select data-bind="value: device" class="form-control btn">
-              <option value="">Select your device</option>
-              <option value="ios">iPhone/iPad</option>
-              <option value="android">Android</option>
-            </select> <span class="ion-iphone form-control-feedback" aria-hidden="true"></span>
-
-          </div>
-          <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
-          <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-            <label for="signupAccountEmail" class="sr-only">E-mail address</label>
-            <input type="email" class="form-control" id="signupAccountEmail"
-            placeholder="E-mail address" data-bind="textInput: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }"> <span class="form-control-feedback ion-ios-at-outline" aria-hidden="true"></span>
-
-          </div>
-          <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
-            <label for="signupAccountPassword" class="sr-only">Password</label>
-            <input type="password" class="form-control" id="signupAccountPassword"
-            placeholder="Password" data-bind="textInput: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'top' }"> <span class="ion-ios-locked-outline form-control-feedback" aria-hidden="true"></span>
-
-          </div>
-          <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }"> <span data-bind="visible: facebookUserID"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;</span>
-
-            <span
-            data-bind="text: submitText">Sign up</span>
-          </button>
-        </form>
-        <p class="isolated Signup-agreement">By clicking on "Create account", you agree to our <a href="#!terms/terms-of-service"
-          target="_blank">Terms of Use</a> &amp; <a href="#!terms/privacy-policy" target="_blank">Privacy Policy</a>
-
-        </p>
       </div>
+      <p class="isolated text-center Signup-or" data-bind="visible: !facebookUserID()"> <span>or</span>
+
+      </p>
+      <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }"
+      novalidate>
+        <script type="text/html" id="signup-field">
+          <div class="form-group has-feedback" data-bind="css: { 'has-error': field.error }">
+            <input type="email" class="form-control" data-bind="value: field, attr: { placeholder: label, 'aria-label': label }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
+            <span class="form-control-feedback" aria-hidden="true" data-bind="css: icon"></span>
+          </div>
+        </script>
+        <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', icon: 'ion-android-contact' } }"></div>
+        <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', icon: 'ion-android-contact' } }"></div>
+        <div class="row">
+          <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label: 'Zip code', icon: 'ion-ios-home-outline' } }"></div>
+          <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label: 'Referral code', icon: 'ion-android-contacts' } }"></div>
+        </div>
+        <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }, visible: forServiceProfessional">
+          <select data-bind="value: device" class="form-control btn">
+            <option value="">Select your device</option>
+            <option value="ios">iPhone/iPad</option>
+            <option value="android">Android</option>
+          </select> <span class="ion-iphone form-control-feedback" aria-hidden="true"></span>
+
+        </div>
+        <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
+        <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
+          <label for="signupAccountEmail" class="sr-only">E-mail address</label>
+          <input type="email" class="form-control" id="signupAccountEmail"
+          placeholder="E-mail address" data-bind="textInput: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }"> <span class="form-control-feedback ion-ios-at-outline" aria-hidden="true"></span>
+
+        </div>
+        <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
+          <label for="signupAccountPassword" class="sr-only">Password</label>
+          <input type="password" class="form-control" id="signupAccountPassword"
+          placeholder="Password" data-bind="textInput: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'top' }"> <span class="ion-ios-locked-outline form-control-feedback" aria-hidden="true"></span>
+
+        </div>
+        <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }"> <span data-bind="visible: facebookUserID"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;</span>
+
+          <span
+          data-bind="text: submitText">Sign up</span>
+        </button>
+      </form>
+      <p class="isolated Signup-agreement">By clicking on "Create account", you agree to our <a href="#!terms/terms-of-service"
+        target="_blank">Terms of Use</a> &amp; <a href="#!terms/privacy-policy" target="_blank">Privacy Policy</a>
+
+      </p>
+    </div>
     </div>
     <!-- Activity index -->
     <div data-activity="splashIndex">
@@ -6082,60 +6087,107 @@ are defined as services offered to
 
       <script type="text/html" id="weeklySchedule-timeSelectorHourMinutesTpl">
         <select data-bind="value: value, disable: isLocked">
-            <option value="0">12a</option>
-            <option value="60">1a</option>
-            <option value="120">2a</option>
-            <option value="180">3a</option>
-            <option value="240">4a</option>
-            <option value="300">5a</option>
-            <option value="360">6a</option>
-            <option value="420">7a</option>
-            <option value="480">8a</option>
-            <option value="540">9a</option>
-            <option value="600">10a</option>
-            <option value="660">11a</option>
-            <option value="720">12p</option>
-            <option value="780">1p</option>
-            <option value="840">2p</option>
-            <option value="900">3p</option>
-            <option value="960">4p</option>
-            <option value="1020">5p</option>
-            <option value="1080">6p</option>
-            <option value="1140">7p</option>
-            <option value="1200">8p</option>
-            <option value="1260">9p</option>
-            <option value="1320">10p</option>
-            <option value="1380">11p</option>
-            <option value="1440">12a</option>
+            <option value="0">12:00am</option>
+            <option value="30">12:30am</option>
+            <option value="60">1:00am</option>
+            <option value="90">1:30am</option>
+            <option value="120">2:00am</option>
+            <option value="150">2:30am</option>
+            <option value="180">3:00am</option>
+            <option value="210">3:30am</option>
+            <option value="240">4:00am</option>
+            <option value="270">4:30am</option>
+            <option value="300">5:00am</option>
+            <option value="330">5:30am</option>
+            <option value="360">6:00am</option>
+            <option value="390">6:30am</option>
+            <option value="420">7:00am</option>
+            <option value="450">7:30am</option>
+            <option value="480">8:00am</option>
+            <option value="510">8:30am</option>
+            <option value="540">9:00am</option>
+            <option value="570">9:30am</option>
+            <option value="600">10:00am</option>
+            <option value="630">10:30am</option>
+            <option value="660">11:00am</option>
+            <option value="690">11:30am</option>
+            <option value="720">12:00pm</option>
+            <option value="750">12:30pm</option>
+            <option value="780">1:00pm</option>
+            <option value="810">1:30pm</option>
+            <option value="840">2:00pm</option>
+            <option value="870">2:30pm</option>
+            <option value="900">3:00pm</option>
+            <option value="930">3:30pm</option>
+            <option value="960">4:00pm</option>
+            <option value="990">4:30pm</option>
+            <option value="1020">5:00pm</option>
+            <option value="1050">5:30pm</option>
+            <option value="1080">6:00pm</option>
+            <option value="1110">6:30pm</option>
+            <option value="1140">7:00pm</option>
+            <option value="1170">7:30pm</option>
+            <option value="1200">8:00pm</option>
+            <option value="1230">8:30pm</option>
+            <option value="1260">9:00pm</option>
+            <option value="1290">9:30pm</option>
+            <option value="1320">10:00pm</option>
+            <option value="1350">10:30pm</option>
+            <option value="1380">11:00pm</option>
+            <option value="1410">11:30pm</option>
+            <option value="1440">12:00am</option>
         </select>
       </script>
       <script type="text/html" id="weeklySchedule-timeSelectorHourTpl">
         <select data-bind="value: value, disable: isLocked, valueAllowUnset: true">
-            <!-- ko if: midnightAtBeginning --><option value="0">12a</option><!-- /ko -->
-            <option value="1">1a</option>
-            <option value="2">2a</option>
-            <option value="3">3a</option>
-            <option value="4">4a</option>
-            <option value="5">5a</option>
-            <option value="6">6a</option>
-            <option value="7">7a</option>
-            <option value="8">8a</option>
-            <option value="9">9a</option>
-            <option value="10">10a</option>
-            <option value="11">11a</option>
-            <option value="12">12p</option>
-            <option value="13">1p</option>
-            <option value="14">2p</option>
-            <option value="15">3p</option>
-            <option value="16">4p</option>
-            <option value="17">5p</option>
-            <option value="18">6p</option>
-            <option value="19">7p</option>
-            <option value="20">8p</option>
-            <option value="21">9p</option>
-            <option value="22">10p</option>
-            <option value="23">11p</option>
-            <!-- ko if: midnightAtEnd --><option value="24">12a</option><!-- /ko -->
+            <!-- ko if: midnightAtBeginning --><option value="0">12:00am</option><!-- /ko -->
+            <option value="1">1:00am</option>
+            <option value="1.5">1:30am</option>
+            <option value="2">2:00am</option>
+            <option value="2.5">2:30am</option>
+            <option value="3">3:00am</option>
+            <option value="3.5">3:30am</option>
+            <option value="4">4:00am</option>
+            <option value="4.5">4:30am</option>
+            <option value="5">5:00am</option>
+            <option value="5.5">5:30am</option>
+            <option value="6">6:00am</option>
+            <option value="6.5">6:30am</option>
+            <option value="7">7:00am</option>
+            <option value="7.5">7:30am</option>
+            <option value="8">8:00am</option>
+            <option value="8.5">8:30am</option>
+            <option value="9">9:00am</option>
+            <option value="9.5">9:30am</option>
+            <option value="10">10:00am</option>
+            <option value="10.5">10:30am</option>
+            <option value="11">11:00am</option>
+            <option value="11.5">11:30am</option>
+            <option value="12">12:00pm</option>
+            <option value="12.5">12:30pm</option>
+            <option value="13">1:00pm</option>
+            <option value="13.5">1:30pm</option>
+            <option value="14">2:00pm</option>
+            <option value="14.5">2:30pm</option>
+            <option value="15">3:00pm</option>
+            <option value="15.5">3:30pm</option>
+            <option value="16">4:00pm</option>
+            <option value="16.5">4:30pm</option>
+            <option value="17">5:00pm</option>
+            <option value="17.5">5:30pm</option>
+            <option value="18">6:00pm</option>
+            <option value="18.5">6:30pm</option>
+            <option value="19">7:00pm</option>
+            <option value="19.5">7:30am</option>
+            <option value="20">8:00pm</option>
+            <option value="20.5">8:30pm</option>
+            <option value="21">9:00pm</option>
+            <option value="21.5">9:30pm</option>
+            <option value="22">10:00pm</option>
+            <option value="22.5">10:30pm</option>
+            <option value="23">11:00pm</option>
+            <option value="23.5">11:30pm</option>
+            <!-- ko if: midnightAtEnd --><option value="24">12:00am</option><!-- /ko -->
         </select>
       </script>
       <script type="text/html" id="weeklySchedule-weekDayTpl">
@@ -6175,7 +6227,7 @@ are defined as services offered to
         <div class="weeklySchedule-allTime">
           <label> <span>All days/times</span>
 
-            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'warning', offColor: 'primary' }"
+            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime }"
             />
           </label>
         </div>
@@ -6215,58 +6267,67 @@ are defined as services offered to
     </div>
     <!-- Activity welcome -->
     <div data-activity="welcome">
-      <div class="LeadContent">
-         <h2>Welcome in!</h2>
+      <div class="Splash-message">
+        	<h2>Things to test:</h2>
 
-        <p class="lead">We're glad you're here. You'll need to complete a few easy steps to start
-          scheduling and managing clients inmediately. Later we'll help you set up
-          other tools like a book now button for your website, payment processing,
-          a marketplace profile and much more.</p>
-        <button type="button" class="btn btn-block btn-primary"
-        data-bind="click: startOnboarding">Set up scheduling</button>
-      </div>
-    </div>
-    <!-- Activity workPhotos -->
-    <div class="container-fluid LightForm" data-activity="workPhotos">
-       <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+        <p>1. Set your schedule</p>
+        <p>2. Activate your marketplace profile</p>
+        <p>3. Schedule a client using fake data</p>
+        <br>
+        	<h2>Report problems by:</h2>
+
+        <p>–E-mailing support@loconomics.com</p>
+        <p>–Clicking on "help" in the upper-right corner of the app</p>
+        <p>–Sending feedback where you see <span class="fa ion ion-ios-lightbulb"
+          aria-hidden="true"></p>
+		<br>
+		
+    <button type="button" class="btn btn-block btn-secondary" data-bind="click: startOnboarding">Set up scheduling</button>
+  </div>
+</div>
+                <!-- Activity workPhotos -->
+<div class="container-fluid LightForm" data-activity="workPhotos">
+
+  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       Photos of your work
       <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
   </h2>
-
-      <div data-bind="css: { 'is-loading': isLoading }">
+    <div data-bind="css: { 'is-loading': isLoading }">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+    </div>
+    
+    <div>
+        <ul class="list-unstyled WorkPhotos"
+            data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
+            <li>
+                <div class="WorkPhotos-imgBtn">
+                    <img src="nophoto.jpg" alt="Work photo" data-bind="attr: { src: url, alt: title }" />
+                    <div class="WorkPhotos-editionLayer">
+                        <div class="WorkPhotos-toolbar">
+                            <a href="#move" type="button" class="btn btn-link btn-lg WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span>
+          </a>
+          <button type="button" class="btn btn-link btn-lg WorkPhotos-removeBtn"
+          data-bind="click: $root.removeImg"><span class="glyphicon glyphicon-remove"></span>
+          </button>
       </div>
-      <div>
-        <ul class="list-unstyled WorkPhotos" data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
-          <li>
-            <div class="WorkPhotos-imgBtn">
-              <img src="nophoto.jpg" alt="Work photo" data-bind="attr: { src: url, alt: title }"
-              />
-              <div class="WorkPhotos-editionLayer">
-                <div class="WorkPhotos-toolbar"> <a href="#move" type="button" class="btn btn-link btn-lg WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span></a>
-
-                  <button
-                  type="button" class="btn btn-link btn-lg WorkPhotos-removeBtn" data-bind="click: $root.removeImg"><span class="glyphicon glyphicon-remove"></span>
-                    </button>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <input class="form-control" type="text" data-bind="textInput: title" />
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">
-        <button type="button" class="CompactLinkTile" data-bind="click: addNew">
-          <div class="Tile-content text-muted">Upload/take photo</div>
-          <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
-          </div>
-        </button>
-      </div>
-      <div class="LightForm-submitBar">
-        <button type="submit" class="btn btn-primary btn-block">Save</button>
-      </div>
+    </div>
+    </div>
+    <div class="form-group">
+      <input class="form-control" type="text" data-bind="textInput: title" />
+    </div>
+    </li>
+    </ul>
+    </div>
+    <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">
+      <button type="button" class="CompactLinkTile" data-bind="click: addNew">
+        <div class="Tile-content text-muted">Upload/take photo</div>
+        <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span>
+        </div>
+      </button>
+    </div>
+    <div class="LightForm-submitBar">
+      <button type="submit" class="btn btn-primary btn-block">Save</button>
+    </div>
     </div>
     <!-- Component Template appointment-card -->
     <script type="text/html" id="largenavbar-template">

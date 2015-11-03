@@ -1,6 +1,6 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"bootstrap-switch":[function(require,module,exports){
-module.exports=require('YDrSQ2');
-},{}],"YDrSQ2":[function(require,module,exports){
+module.exports=require('24P8Kn');
+},{}],"24P8Kn":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, define) {
 
@@ -720,9 +720,9 @@ global.bootstrap = require("bootstrap");
 }).call(global, module, undefined);
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"bootstrap":"jI9r89","jquery":"xGsco0"}],"bootstrap":[function(require,module,exports){
-module.exports=require('jI9r89');
-},{}],"jI9r89":[function(require,module,exports){
+},{"bootstrap":"+66m3Y","jquery":"eaqc6+"}],"bootstrap":[function(require,module,exports){
+module.exports=require('+66m3Y');
+},{}],"+66m3Y":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, define) {
 
@@ -2686,7 +2686,7 @@ if (typeof jQuery === 'undefined') {
 }).call(global, module, undefined);
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":"xGsco0"}],"CgLAfl":[function(require,module,exports){
+},{"jquery":"eaqc6+"}],"Q5mOXt":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, define) {
 
@@ -2744,11 +2744,11 @@ $.ajaxQueue = function( ajaxOpts ) {
 }).call(global, module, undefined);
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":"xGsco0"}],"jquery.ajaxQueue":[function(require,module,exports){
-module.exports=require('CgLAfl');
+},{"jquery":"eaqc6+"}],"jquery.ajaxQueue":[function(require,module,exports){
+module.exports=require('Q5mOXt');
 },{}],"jquery":[function(require,module,exports){
-module.exports=require('xGsco0');
-},{}],"xGsco0":[function(require,module,exports){
+module.exports=require('eaqc6+');
+},{}],"eaqc6+":[function(require,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /*!
