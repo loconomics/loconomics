@@ -1,9 +1,9 @@
 {
   "name": "LoconomicsApp",
-  "version": "0.9.2",
+  "version": "0.9.5",
   "description": "Loconomics.com mobile app",
   "author": "Loconomics Cooperative, Inc.",
-  "appId": "com.loconomics.loconomics",
+  "appId": "com.loconomics.app",
   "appName": "Loconomics",
   "appDescription": "Make your life better",
   "phonegapbuildId": 1266913,

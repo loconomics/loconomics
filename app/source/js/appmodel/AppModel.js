@@ -179,6 +179,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.users = require('./AppModel.users').create(this);
     this.availability = require('./AppModel.availability').create(this);
     this.serviceAttributes = require('./AppModel.serviceAttributes').create(this);
+    this.jobTitleServiceAttributes = require('./AppModel.jobTitleServiceAttributes').create(this);
 };
 
 /**

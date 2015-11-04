@@ -70,7 +70,7 @@ public class RestMyServiceAttributes : RestWebPage
         data.proposedServiceAttributes = new Dictionary<int, List<string>>();
 
         // Attributes
-        var reg = new System.Text.RegularExpressions.Regex(@"^serviceAttributes\[([^\]]+)\]", System.Text.RegularExpressions.RegexOptions.ECMAScript);
+        var reg = new System.Text.RegularExpressions.Regex(@"^(?:proposed)?[sS]erviceAttributes\[([^\]]+)\]", System.Text.RegularExpressions.RegexOptions.ECMAScript);
         foreach (var key in Request.Form.AllKeys)
         {
             var match = reg.Match(key);

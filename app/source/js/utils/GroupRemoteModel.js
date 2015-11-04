@@ -73,10 +73,10 @@ function GroupRemoteModel(settings) {
     /** API definition **/
     var api = this;
 
-    api.getItem = function getItem(itemID) {
+    api.getItem = function getItem(itemID, forceRemoteLoad) {
         var cacheEntry = cache[itemID];
 
-        if (!cacheEntry || cacheEntry.control.mustRevalidate()) {
+        if (forceRemoteLoad || !cacheEntry || cacheEntry.control.mustRevalidate()) {
             // No cache data, is first load, try from local
             if (!cacheEntry || !cacheEntry.data) {
                 api.state.isLoading(true);
@@ -147,7 +147,7 @@ function GroupRemoteModel(settings) {
         
         api.state.isSaving(true);
         // Send to remote first
-        return this.pushItemToRemote(data)
+        return this.pushItemToRemote(data[settings.itemIdField], data)
         .then(function(serverData) {
             var cached;
             // Success! update local copy with returned data
@@ -162,7 +162,7 @@ function GroupRemoteModel(settings) {
                 // In local need to be saved all the grouped data, not just
                 // the item; since we have the cache list updated, use that
                 // full list to save local
-                this.pushItemToLocal(itemID, cached.data);
+                this.pushItemToLocal(itemID, cached.data.model.toPlainObject(true));
             }
             api.state.isSaving(false);
 
@@ -249,14 +249,14 @@ function GroupRemoteModel(settings) {
             });
         }
         
-        version.load = function load(newItemID) {
+        version.load = function load(newItemID, forceRemoteLoad) {
             version.state.isSyncing(true);
             // Use the new itemID, OR use the one at the original model.
             // Why not the closure itemID?
             // The ID could get updated in a save process,
             // because autogenerating one for a new item.
             var oItemID = newItemID || version.original[settings.itemIdField]();
-            return api.getItem(oItemID)
+            return api.getItem(oItemID, forceRemoteLoad)
             .then(function(model) {
                 version.state.lastError(null);
                 version.state.isSyncing(false);

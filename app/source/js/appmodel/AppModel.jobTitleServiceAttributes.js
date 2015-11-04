@@ -2,19 +2,19 @@
 **/
 'use strict';
 
-var UserJobTitleServiceAttributes = require('../models/UserJobTitleServiceAttributes');
+var JobTitleServiceAttributes = require('../models/JobTitleServiceAttributes');
 
 var GroupRemoteModel = require('../utils/GroupRemoteModel');
 
 exports.create = function create(appModel) {
     var api = new GroupRemoteModel({
-        ttl: { minutes: 1 },
+        ttl: { hours: 1 },
         itemIdField: 'jobTitleID',
-        Model: UserJobTitleServiceAttributes
+        Model: JobTitleServiceAttributes
     });
     
-    api.addLocalforageSupport('service-attributes/');
-    api.addRestSupport(appModel.rest, 'me/service-attributes/');    
+    api.addLocalforageSupport('job-title-service-attributes/');
+    api.addRestSupport(appModel.rest, 'job-title-service-attributes/');    
     
     appModel.on('clearLocalData', function() {
         api.clearCache();
