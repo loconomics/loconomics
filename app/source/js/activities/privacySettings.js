@@ -35,7 +35,7 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-        // Keep data updated:
+    // Keep data updated:
     this.app.model.privacySettings.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();

@@ -37,6 +37,7 @@ exports.create = function create(appModel) {
         return appModel.rest.get('users/' + (userID |0) + '/job-profile/' + (jobTitleID |0));
     };
     
+    // TODO REMOVE THIS OLD?? REPLACED BY SERVER-SIDE AppModel.availability?
     var getAvailability = function getAvailability(userID, format, query) {
         return appModel.rest.get('users/' + (userID |0) + '/availability/' + format, query);
     };
@@ -70,6 +71,10 @@ exports.create = function create(appModel) {
     api.getClientVerificationsSummary = getVerificationsSummary.bind(api, 'client');
     api.getServiceProfessionalVerificationsSummary = getVerificationsSummary.bind(api, 'service-professional');
     api.getJobTitleVerificationsSummary = function(userID, jobTitleID) { return getVerificationsSummary(jobTitleID |0, userID); };
+
+    api.getServiceAttributes = function getServiceAttributes(userID, jobTitleID) {
+        return appModel.rest.get('users/' + (userID |0) + '/service-attributes/' + (jobTitleID |0));
+    };
 
     return api;
 };

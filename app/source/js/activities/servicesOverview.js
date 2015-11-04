@@ -57,7 +57,23 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
     var params = state && state.route && state.route.segments;
-    this.viewModel.jobTitleID(params[0] |0);
+    var jid = params[0] |0;
+    this.viewModel.jobTitleID(jid);
+
+    if (jid) {
+        // Load it
+        this.viewModel.serviceAttributesControl.load(jid)
+        .catch(function(err) {
+            this.app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            });
+        }.bind(this));
+    }
+    else {
+        // Just a new one
+        this.viewModel.serviceAttributesControl.reset();
+    }
 };
 
 function ViewModel(app) {
@@ -68,12 +84,15 @@ function ViewModel(app) {
     // in memory without press 'save'
     this.intro = ko.observable(null);
     
+    this.serviceAttributesControl = app.model.serviceAttributes.newItemVersion();
+    this.serviceAttributes = this.serviceAttributesControl.version;
+    
     this.isLoading = ko.observable(false);
     this.isSaving = ko.observable(false);
     this.isLocked = ko.pureComputed(function() {
         return this.isLoading() || this.isSaving();
     }, this);
-    
+
     var sampleDataList = [{
         name: ko.observable('Window cleaning')
     }, {
@@ -81,7 +100,7 @@ function ViewModel(app) {
     }, {
         name: ko.observable('Cabinet cleaning')
     }];
-    
+
     // TODO: Must be a component, with one instance per service attribute category, and being completed
     this.list = ko.observableArray(sampleDataList);
     this.attributeSearch = ko.observable('');

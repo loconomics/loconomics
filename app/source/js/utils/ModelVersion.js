@@ -71,7 +71,8 @@ ModelVersion.prototype.getRollback = function getRollback(from) {
 };
 
 /**
-    Sends the version changes to the original
+    Discard the version changes getting the original
+    data.
     
     options: {
         evenIfNewer: false
@@ -102,8 +103,7 @@ ModelVersion.prototype.pull = function pull(options) {
 };
 
 /**
-    Discard the version changes getting the original
-    data.
+    Sends the version changes to the original
     
     options: {
         evenIfObsolete: false

@@ -144,7 +144,8 @@ AppModel.prototype.init = function init() {
 };
 
 AppModel.prototype.loadModules = function loadModules() {
-
+    //jshint maxstatements: 80
+    
     this.userProfile = require('./AppModel.userProfile').create(this);
     // NOTE: Alias for the user data
     // TODO:TOREVIEW if continue to makes sense to keep this 'user()' alias, document
@@ -177,6 +178,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.licensesCertifications = require('./AppModel.licensesCertifications').create(this);
     this.users = require('./AppModel.users').create(this);
     this.availability = require('./AppModel.availability').create(this);
+    this.serviceAttributes = require('./AppModel.serviceAttributes').create(this);
 };
 
 /**
