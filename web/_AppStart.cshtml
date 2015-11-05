@@ -27,7 +27,6 @@
 
     /* Routing rules
      */
-    
     // REST API, locale in URL for locale independent files:
     // NOTE: Any folder added to the API folder need to be registered, and before the catch-all pages route
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/me/{page}/{*urldata}", "~/api/v1/me/{page}.cshtml");
@@ -42,24 +41,32 @@
     RouteTable.Routes.MapWebPageRoute("scheduledtask", "~/_specialRoutes/ScheduledTask.cshtml");
     // PaymentGatewayWebhook: hook URL to allow Braintree to contact us about transactions/merchant account information
     RouteTable.Routes.MapWebPageRoute("PaymentGatewayWebhook", "~/_specialRoutes/PaymentGatewayWebhook.cshtml");
-    // Booking with service professional bookcode URL
-    RouteTable.Routes.MapWebPageRoute("book/{bookcode}", "~/_specialRoutes/Book.cshtml");
-    RouteTable.Routes.MapWebPageRoute("book/{bookcode}/{positionID}", "~/_specialRoutes/Book.cshtml");
     // iCalendar URL
     RouteTable.Routes.MapWebPageRoute("calendar/{userID}/{token}/{file}", "~/_specialRoutes/Calendar.cshtml");
-    
-    // Public User profile photo, KEEPING prev Release-6 URL
+
+    // Public User profile photo, KEEPING URL AS IN Release-6.3 FOR RELEASE-7+
     RouteTable.Routes.MapWebPageRoute("en-US/profile/photo", "~/_specialRoutes/UserProfilePhoto.cshtml");
     RouteTable.Routes.MapWebPageRoute("en-US/profile/photo/{userID}", "~/_specialRoutes/UserProfilePhoto.cshtml");
-    RouteTable.Routes.MapWebPageRoute("en-US/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");
+    RouteTable.Routes.MapWebPageRoute("en-US/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");    
 
-    // Public Profile URL optimized for SEO:
-    RouteTable.Routes.MapWebPageRoute("{city}/{position}/{user}", "~/_specialRoutes/PublicProfileURL.cshtml");
-    // CustomURL:
-    RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/_specialRoutes/CustomURL.cshtml");
-
-    // EXAMPLE: ANY NOT FOUND URL GOES TO THE INDEX
-    //RouteTable.Routes.MapWebPageRoute("{customurl}", "~/_specialRoutes/RedirectToDefault.cshtml");
-    //RouteTable.Routes.MapWebPageRoute("{customurl}/{*urldata}", "~/_specialRoutes/RedirectToDefault.cshtml");
-    //RouteTable.Routes.MapWebPageRoute("{*urldata}", "~/_specialRoutes/RedirectToDefault.cshtml");
+    // DISABLED routing for splash screen on Live
+    if (LcHelpers.InLive)
+    {
+        // SPLASH ENABLED
+        // ANY NOT FOUND URL GOES TO THE INDEX
+        RouteTable.Routes.MapWebPageRoute("{customurl}", "~/_specialRoutes/RedirectToDefault.cshtml");
+        RouteTable.Routes.MapWebPageRoute("{customurl}/{*urldata}", "~/_specialRoutes/RedirectToDefault.cshtml");
+        RouteTable.Routes.MapWebPageRoute("{*urldata}", "~/_specialRoutes/RedirectToDefault.cshtml");
+    }
+    else
+    {
+        // NORMAL ROUTES
+        // Booking with service professional bookcode URL
+        RouteTable.Routes.MapWebPageRoute("book/{bookcode}", "~/_specialRoutes/Book.cshtml");
+        RouteTable.Routes.MapWebPageRoute("book/{bookcode}/{positionID}", "~/_specialRoutes/Book.cshtml");
+        // Public Profile URL optimized for SEO:
+        RouteTable.Routes.MapWebPageRoute("{city}/{position}/{user}", "~/_specialRoutes/PublicProfileURL.cshtml");
+        // CustomURL:
+        RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/_specialRoutes/CustomURL.cshtml");
+    }
 }
