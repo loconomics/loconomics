@@ -1,5 +1,12 @@
 ﻿@{
-    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
-    Page.Title = "Loconomics";
+    if (LcHelpers.InLive)
+    {
+        @RenderPage("_specialRoutes/_Splash.cshtml");
+        return;
+    }
+    else {
+        Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
+        Page.Title = "Loconomics";
+    }
 }
 <h1>Loconomics</h1>
