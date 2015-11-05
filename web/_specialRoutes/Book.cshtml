@@ -1,0 +1,41 @@
+﻿@using WebMatrix.Data;
+@*
+    Route a booking from external link to the given provider-position
+    reserved code.
+
+    TODO Needs to be updated to the actual Release-7 URL
+*@
+@{
+    LcHelpers.SecurePage();
+
+    var bookcode = Context.GetRouteValue("bookcode");
+    using (var db = Database.Open("sqlloco")){
+        // Check the BookCode, gets the associated UserID
+        var userid = db.QueryValue(@"
+            SELECT  UserID
+            FROM    Users
+            WHERE   BookCode = @0
+        ", bookcode);
+
+        if (userid is int) {
+            Session["BookCode"] = bookcode;
+            
+            // Check if there is a valid position in the URL
+            var pos = Context.GetRouteValue("positionID");
+            if (pos.IsInt())
+            {
+                int posID = pos.AsInt();
+                // Check that the position exists for the user and is public
+                if (LcData.UserInfo.GetUserPositionStatus(userid, posID) == 1){
+                    // Redirects to the booking page for that provider and position
+                    Response.Redirect(LcUrl.LangPath + "Booking/?ProviderID=" + userid + "&PositionID=" + posID);
+                }
+            } else {
+                // Redirect to the providers public profile
+                Response.Redirect(LcData.UserInfo.GetUserPublicURL(userid));
+            }
+        }
+    }
+    // Not found user for the BookCode, this URL page doesn't exist, transfer to Not Found
+    @RenderPage(LcUrl.RenderAppPath + "Errors/Error404.cshtml");
+}

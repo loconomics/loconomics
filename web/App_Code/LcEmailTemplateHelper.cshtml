@@ -115,131 +115,8 @@
 @* Some non-css utilities
  *@
 @functions{
-    public class BookingEmailInfo {
-        public int BookingRequestID;
-        public int BookingID;
-        public dynamic Booking;
-        public LcData.UserInfo.UserType SentTo;
-        public int SentToUserID;
-        public LcData.UserInfo.UserType SentBy;
-        public int SentByUserID;
-        public LcData.UserInfo.UserType PairUserType;
-        public int PairUserID;
-        public string ViewOnSiteURL;
-        public DateTime ConfirmationLimitDate;
-        public bool IsRequest;
-        
-        private dynamic sentToUser, sentByUser, pairUser;
-        public dynamic SentToUser {
-            get {
-                if (sentToUser == null) 
-                    sentToUser = LcData.UserInfo.GetUserRow(SentToUserID);
-                return sentToUser;
-            }
-        }
-        public dynamic SentByUser {
-            get {
-                if (sentByUser == null) 
-                    sentByUser = LcData.UserInfo.GetUserRow(SentByUserID);
-                return sentByUser;
-            }
-        }
-        public dynamic PairUser {
-            get {
-                if (pairUser == null) 
-                    pairUser = LcData.UserInfo.GetUserRowWithContactData(PairUserID);
-                return pairUser;
-            }
-        }
-        
-        private dynamic providerUser, customerUser;
-        public dynamic ProviderUser {
-            get {
-                if (providerUser == null)
-                    providerUser = LcData.UserInfo.GetUserRow(Booking.ProviderUserID);
-                return providerUser;
-            }
-        }
-        public dynamic CustomerUser {
-            get {
-                if (customerUser == null)
-                    customerUser = LcData.UserInfo.GetUserRow(Booking.CustomerUserID);
-                return customerUser;
-            }
-        }
-    }
-    public static BookingEmailInfo GetBookingInfo() {
-        
-        dynamic b = null;
-        string viewURL = null;
-        var sentTo = LcData.UserInfo.UserType.None;
-        var sentBy = LcData.UserInfo.UserType.System;
-        var pairType = LcData.UserInfo.UserType.None;
-        bool isRequest = false;
-        var bID = Request["BookingID"].AsInt();
-        var brID = Request["BookingRequestID"].AsInt();
-        if (!Enum.TryParse<LcData.UserInfo.UserType> (Request["SentTo"], out sentTo)) {
-            throw new ArgumentException("Invalid value for url request parameter SentTo: " + Request["SentTo"]);
-        }
-        Enum.TryParse<LcData.UserInfo.UserType> (Request["SentBy"], out sentBy);
-        DateTime confirmationLimitDate = DateTime.MaxValue;
-
-        if (bID == 0) {
-            b = LcData.Booking.GetBookingRequestForUser(brID, 0, true);
-            isRequest = true;
-            viewURL = LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(brID);
-            if (b != null) {
-                confirmationLimitDate = b.UpdatedDate.AddHours(LcData.Booking.ConfirmationLimitInHours);
-            }
-        } else {
-            b = LcData.Booking.GetBookingForUser(bID, 0, true);
-            viewURL = LcUrl.LangUrl + LcData.Booking.GetUrlPathForBooking(bID, brID);
-        }
-        
-        int toUserID = 0, byUserID = 0, pairUserID = 0;
-        if (sentTo == LcData.UserInfo.UserType.Provider) {
-            toUserID = b.ProviderUserID;
-        }
-
-        switch (sentTo) {
-            case LcData.UserInfo.UserType.Customer:
-                toUserID = b.CustomerUserID;
-                pairUserID = b.ProviderUserID;
-                pairType = LcData.UserInfo.UserType.Provider;
-                break;
-            case LcData.UserInfo.UserType.Provider:
-                toUserID = b.ProviderUserID;
-                pairUserID = b.CustomerUserID;
-                pairType = LcData.UserInfo.UserType.Customer;
-                break;
-        }
-        switch (sentBy) {
-            case LcData.UserInfo.UserType.Customer:
-                byUserID = b.CustomerUserID;
-                break;
-            case LcData.UserInfo.UserType.Provider:
-                byUserID = b.ProviderUserID;
-                break;
-        }      
-        
-        return new BookingEmailInfo{
-            BookingRequestID = brID
-            ,BookingID = bID
-            ,Booking = b
-            ,IsRequest = isRequest
-            ,SentTo = sentTo
-            ,SentToUserID = toUserID
-            ,SentBy = sentBy
-            ,SentByUserID = byUserID
-            // If this message is sent to provider, the 'pair' is the customer, and viceversa:
-            ,PairUserID = pairUserID
-            ,PairUserType = pairType
-            ,ViewOnSiteURL = viewURL
-            ,ConfirmationLimitDate = confirmationLimitDate
-        };
-    }
     
-    public static string GetLocationForGoogleMaps(dynamic data){
+    public static string GetLocationForGoogleMaps(dynamic data) {
         return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
     
@@ -324,7 +201,7 @@
             @user.MobilePhone <text>(mobile) or </text> @user.AlternatePhone <text>(other)</text>
         }
         <br />
-        e-mail: <a href="mailto:@user.Email">@user.Email</a>
+        E-mail: <a href="mailto:@user.Email">@LcRest.Client.GetEmailFromDb(user.Email)</a>
     </div>
 }
 @helper PrintUserProfileLink(dynamic userdata, string label = null) {/*

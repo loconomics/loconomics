@@ -1,0 +1,82 @@
+﻿@*
+    Retrieving the Job Title information for a single record.
+
+    TODO: Add posibility to create a job title given a name, see #650
+
+    Options:
+    
+    - GET /@id
+        Returns a list of JobTitle records
+
+    - GET /autocomplete
+        Receives param 'search' or 'term' (just an alias) to perform a search of job titles by name or alias
+        returning an Autocomplete list, suitable for use in an autocomplete UI.
+
+    Structures
+    - JobTitle {
+        "jobTitleID":int,
+        "singularName":string,
+        "pluralName":string,
+        "aliases":string,
+        "description":string,
+        "searchDescription":string,
+        "createdDate":Date,
+        "updatedDate":Date,
+        "pricingTypes":[
+            {
+                "pricingTypeID":int,
+                "clientTypeID":int,
+                "createdDate":Date,
+                "updatedDate":Date
+            }
+        ]
+    }
+    - Autocomplete {
+        "label":string, // The job title singularName
+        "value":int // The jobTitleID
+    }
+
+    EXAMPLES {
+        "Job Titles (item)": {
+            "url": "/api/v1/en-US/job-titles/106",
+            "get": { }
+        },
+        "Job Titles Autocomplete Search": {
+            "url": "/api/v1/en-US/job-titles/autocomplete",
+            "get": {
+                "search": "massag",
+                "api_comment": "The parameter 'term' is allowed too as an alias for 'search', just for easier integration with some UI components"
+            }
+        }
+    }
+*@
+@functions{
+    public class RestJobTitles : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt(0);
+                
+                var item = LcData.JobTitle.GetJobTitle(id);
+                
+                if (item != null)
+                    return item;
+                else
+                    throw new HttpException(404, "Job Title not found.");
+            }
+            else if (UrlData[0].ToLower() == "autocomplete") {
+                
+                var search = Request["search"] ?? Request["term"];
+                
+                return LcData.JobTitle.SearchJobTitles(search, LcRest.Locale.Current);
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+    }
+}
+@{   
+    new RestJobTitles().JsonResponse(this);
+}

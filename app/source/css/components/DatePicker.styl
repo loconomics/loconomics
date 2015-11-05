@@ -1,0 +1,232 @@
+/*!
+ * DatePicker JS Component, with several
+ * modes and optional inline-permanent visualization.
+ *
+ * Copyright 2014 Loconomics Coop.
+ *
+ * Based on:
+ * Datepicker for Bootstrap
+ * Copyright 2012 Stefan Petre
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+@import 'nib';
+@import '../bs-mixims/caret.styl';
+ 
+.DatePicker
+    top 0
+    left 0
+    padding 0 // There is enough cell padding and any extra make it strange with the new borders
+    margin 0
+    border-radius 4px
+  
+    &:before
+        content ''
+        display inline-block
+        border-left 7px solid transparent
+        border-right 7px solid transparent
+        border-bottom 7px solid #ccc
+        border-bottom-color rgba(0, 0, 0, 0.2)
+        position absolute
+        top -7px
+        left 6px
+  
+    &:after
+        content ''
+        display inline-block
+        border-left 6px solid transparent
+        border-right 6px solid transparent
+        border-bottom 6px solid white
+        position absolute
+        top -6px
+        left 7px
+  
+    > div
+        display none
+  
+    table
+        width 100%
+        margin 0
+
+    .DatePicker-days
+        tbody tr
+            td
+                padding: 5px;
+
+    .DatePicker-weekDays th
+        height 30px
+        border-radius 4px
+        vertical-align bottom
+        padding-bottom 0 !important
+  
+    td, th
+        text-align center
+        width 20px
+        height 20px
+
+        &.day
+            span
+                display inline-block
+                width 28px
+                line-height 28px
+                font-size 17px
+
+            &:hover
+                background $gray-lighter
+                cursor pointer
+            &.disabled
+                color $gray-lighter
+
+        // Days of other months get muted
+        &.old
+        &.new
+            color $gray-light
+            opacity .5
+            
+        &.active
+        &.active:hover
+            color #fff
+            text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
+
+        &.active span
+            background-color: $brand-info-dark;
+            border-radius: 100%;
+
+        &.active:hover
+            span
+                background none
+
+    span.month,
+    span.year
+        display block
+        float left
+        cursor pointer
+        border-radius(4px)
+
+        /* Percentual sizing to being responsive rather than the 
+           original fixed size
+        */
+        box-sizing border-box
+        width 25%
+        height 86px
+        line-height 86px
+        margin 0
+
+        &:hover
+            background $gray-lighter
+        &.active
+            background-color: $brand-info-dark;
+            color #fff
+            text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
+        &.old
+            color $gray-light
+  
+    th
+        font-weight normal
+        &.switch
+            width 145px
+        &.next
+        &.prev
+            font-size ($font-size-base * 1.5)
+  
+    thead tr:first-child
+        th
+            cursor pointer
+            &:hover
+                background $gray-lighter
+
+    /* Percentual sizing to being responsive rather than the 
+    original fixed size
+    */
+    .DatePicker-years tr > td
+    .DatePicker-months tr > td
+        padding 0
+
+    .DatePicker-months .switch
+    .DatePicker-years .switch
+        width 72.4% !important
+
+    .DatePicker-months .prev
+    .DatePicker-months .next
+    .DatePicker-years .prev
+    .DatePicker-years .next
+        width 14% !important
+
+    /* Carets to visually notify 'clickable headers' */
+    .DatePicker-days
+    .DatePicker-months
+        th.switch:after
+            content: ''
+            $caret(6px)
+
+
+    /**
+        Enabling tags in the datepicker
+    **/
+    &.DatePicker--tagged
+        // Border not in latest row
+        .DatePicker-days tr:last-child td
+            border-bottom-color transparent !important
+
+        td.day
+            // General styles to be ready for tags
+            // IMPORTANT: changes to this sizing needs changes to months/years later
+            padding: 3px 5px 14px !important;
+            border-bottom 1px solid $gray-lighter
+            position: relative;
+
+            &:after
+              content ''
+              display block
+              margin auto
+              border-radius 100%
+              position absolute
+              left 0
+              right 0
+              bottom 7px
+              width 6px
+              height 6px
+          
+            // Possible tags
+            &.tag-muted
+              color $gray-lighter
+              &:after
+                  background $gray-lighter
+              
+            // This tag is empty: &.tag-blank
+            &.tag-dark
+                &:after
+                    background Black
+
+            for $color in $brand-colors
+                &.tag-{$color}
+                    &:after
+                        background $brand-colors[$color]
+
+            // Tag in days of other months get even more muted:
+            &.old
+            &.new
+                &:after
+                    opacity .5
+
+        // IMPORTANT: Adapt size of months/years to keep the whole
+        // calendar in the same size independent of the view mode
+        span.month
+        span.year
+            height 102px
+            line-height 102px
+
+    $.DatePicker-hasLegend
+        border-bottom 1px solid $gray-lighter
+            
+/*
+    TOREVIEW: Addapt it with other name?
+*/
+.input-append, .input-prepend
+    &.date
+        .add-on i
+            display block
+            cursor pointer
+            width 16px
+            height 16px

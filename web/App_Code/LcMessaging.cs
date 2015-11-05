@@ -47,10 +47,11 @@ public class LcMessaging
                    ,BodyText
                    ,AuxID
                    ,AuxT
+                   ,SentByUserID
                    ,[CreatedDate]
                    ,[UpdatedDate]
                    ,[ModifiedBy])
-            VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys')
+            VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys')
         SELECT @@Identity As MessageID
     ";
     private static readonly string sqlGetThread = @"
@@ -103,13 +104,13 @@ public class LcMessaging
     /// <param name="FirstMessageTypeID"></param>
     /// <param name="FirstMessageBody"></param>
     /// <returns></returns>
-    public static int CreateThread(int CustomerUserID, int ProviderUserID, int PositionID, string ThreadSubject, int FirstMessageTypeID, string FirstMessageBody, int FirstMessageAuxID = -1, string FirstMessageAuxT = null)
+    public static int CreateThread(int CustomerUserID, int ProviderUserID, int PositionID, string ThreadSubject, int FirstMessageTypeID, string FirstMessageBody, int SentByUserID, int FirstMessageAuxID = -1, string FirstMessageAuxT = null)
     {
         int threadID = 0;
         using (var db = Database.Open("sqlloco"))
         {
             threadID = (int)db.QueryValue(sqlInsThread, CustomerUserID, ProviderUserID, PositionID, ThreadSubject);
-            int messageID = (int)db.QueryValue(sqlInsMessage, threadID, FirstMessageTypeID, FirstMessageBody, (FirstMessageAuxID == -1 ? null : (object)FirstMessageAuxID), FirstMessageAuxT);
+            int messageID = (int)db.QueryValue(sqlInsMessage, threadID, FirstMessageTypeID, FirstMessageBody, (FirstMessageAuxID == -1 ? null : (object)FirstMessageAuxID), FirstMessageAuxT, SentByUserID);
             // Update created thread with the lastMessageID
             db.Execute(sqlUpdThread, threadID, null, messageID, null);
         }
@@ -135,13 +136,13 @@ public class LcMessaging
     /// <param name="MessageTypeID"></param>
     /// <param name="MessageBody"></param>
     /// <returns></returns>
-    public static int CreateMessage(int ThreadID, int MessageThreadStatusID, int MessageTypeID, string MessageBody, int MessageAuxID = -1, string MessageAuxT = null, string NewThreadSubject = null)
+    public static int CreateMessage(int ThreadID, int MessageThreadStatusID, int MessageTypeID, string MessageBody, int SentByUserID, int MessageAuxID = -1, string MessageAuxT = null, string NewThreadSubject = null)
     {
         int messageID = 0;
         using (var db = Database.Open("sqlloco"))
         {
             // Create Message
-            messageID = (int)db.QueryValue(sqlInsMessage, ThreadID, MessageTypeID, MessageBody, (MessageAuxID == -1 ? null : (object)MessageAuxID), MessageAuxT);
+            messageID = (int)db.QueryValue(sqlInsMessage, ThreadID, MessageTypeID, MessageBody, (MessageAuxID == -1 ? null : (object)MessageAuxID), MessageAuxT, SentByUserID);
             // Update Thread status (and date automatically)
             db.Execute(sqlUpdThread, ThreadID, MessageThreadStatusID, messageID, NewThreadSubject);
         }
@@ -236,6 +237,406 @@ public class LcMessaging
         }
         return ret;
     }
+    #endregion
+
+    #region REST
+    public class RestThread
+    {
+        public int threadID;
+        public int customerUserID;
+        public int freelancerUserID;
+        public int jobTitleID;
+        public int statusID;
+        public string subject;
+        public DateTime createdDate;
+        public DateTime updatedDate;
+        public List<RestMessage> messages;
+
+        public static RestThread FromDB(dynamic record, IEnumerable<dynamic> messages = null)
+        {
+            return new RestThread {
+                threadID = record.threadID,
+                customerUserID = record.customerUserID,
+                freelancerUserID = record.freelancerUserID,
+                jobTitleID = record.jobTitleID,
+                statusID = record.statusID,
+                subject = record.subject,
+                createdDate = record.createdDate,
+                updatedDate = record.updatedDate,
+                messages = messages == null ? null : messages.Select(RestMessage.FromDB).ToList<RestMessage>()
+            };
+        }
+    }
+    public class RestMessage
+    {
+        public int messageID;
+        public int threadID;
+        public int sentByUserID;
+        public int typeID;
+        public string auxT;
+        public int? auxID;
+        public string bodyText;
+        public DateTime createdDate;
+        public DateTime updatedDate;
+
+        public static RestMessage FromDB(dynamic record)
+        {
+            return new RestMessage {
+                messageID = record.messageID,
+                threadID = record.threadID,
+                sentByUserID = record.sentByUserID,
+                typeID = record.typeID,
+                auxT = record.auxT,
+                auxID = record.auxID,
+                bodyText = record.bodyText,
+                createdDate = record.createdDate,
+                updatedDate = record.updatedDate
+            };
+        }
+    }
+
+    #region SQL
+    private const string sqlSelectRestThreads = @"
+        SELECT TOP @1
+            T.ThreadID As threadID,
+            T.CustomerUserID As customerUserID,
+            T.ProviderUserID As freelancerUserID,
+            T.PositionID As jobTitleID,
+            T.MessageThreadStatusID As statusID,
+            T.Subject As subject,                
+            T.CreatedDate As createdDate,
+            T.UpdatedDate As updatedDate
+        FROM MessagingThreads As T
+        WHERE
+            (T.CustomerUserID = @0 OR T.ProviderUserID = @0)
+                AND
+            (@2 is null OR T.ThreadID < @2)
+                AND
+            (@3 is null OR T.ThreadID > @3)
+    ";
+    /// <summary>
+    /// UpdatedDate gets touch on every new message and thread edition
+    /// is not possible except when adding a message, so
+    /// it works effectively as 'date of last message'.
+    /// </summary>
+    private const string sqlOrderDescRestThreads = @"
+        ORDER BY T.UpdatedDate DESC
+    ";
+    private const string sqlOrderAscRestThreads = @"
+        ORDER BY T.UpdatedDate ASC
+    ";
+
+    private const string sqlSelectRestMessages = @"
+        SELECT  TOP @1
+                M.MessageID As messageID,
+                M.ThreadID As threadID,
+                M.SentByUserID As sentByUserID,
+                M.AuxT As auxT,
+                M.AuxID As auxID,
+                M.MessageTypeID As typeID,
+                M.BodyText As bodyText,
+                M.CreatedDate As createdDate,
+                M.UpdatedDate As updatedDate
+        FROM    Messages As M
+        WHERE   M.ThreadID = @0
+                    AND
+                (@2 is null OR M.MessageID < @2)
+                    AND
+                (@3 is null OR M.MessageID > @3)
+    ";
+    private const string sqlOrderDescRestMessages = @"
+        -- Latest first, by creation/reception
+        ORDER BY M.CreatedDate DESC
+    ";
+    private const string sqlOrderAscRestMessages = @"
+        -- Latest first, by creation/reception
+        ORDER BY M.CreatedDate ASC
+    ";
+    #endregion
+
+    public static List<RestThread> GetRestThreads(int userID, int limit = 20, int? untilID = null, int? sinceID = null, int messagesLimit = 1)
+    {
+        // Maximum limit: 100
+        if (limit > 100)
+            limit = 100;
+        else if (limit < 1)
+            limit = 1;
+
+        var sql = sqlSelectRestThreads + sqlOrderDescRestThreads;
+
+        // Generally, we get the more recent threads (order desc), except
+        // if the parameter sinceID was set without an untilID: we
+        // want the closest threads to that, in other words, 
+        // the older threads that are more recent that sinceID.
+        // A final sorting is done to return rows in descending as ever.
+        var usingSinceOnly = sinceID.HasValue && !untilID.HasValue;
+        if (usingSinceOnly)
+        {
+            sql = sqlSelectRestThreads + sqlOrderAscRestThreads;
+        }
+
+        using (var db = Database.Open("sqlloco"))
+        {
+            // db.Query has a bug not processiong parameters in 'select top @1'
+            // so manual replacement
+            sql = sql.Replace("@1", limit.ToString());
+
+            var data = db.Query(sql, userID, limit, untilID, sinceID)
+             .Select(thread =>
+             {
+                 var t = (RestThread)RestThread.FromDB(thread);
+                 if (messagesLimit > 0)
+                 {
+                     t.messages = GetRestThreadMessages(thread.threadID, messagesLimit);
+                 }
+                 return t;
+             }).ToList();
+
+            if (usingSinceOnly)
+            {
+                // Since rows were get in ascending, records need to be inverted
+                // so we ever return data in descending order (latest first).
+                data.Reverse();
+            }
+
+            return data;
+        }
+    }
+    public static List<RestMessage> GetRestThreadMessages(int threadID, int limit = 20, int? untilID = null, int? sinceID = null)
+    {
+        // Maximum limit: 100
+        if (limit > 100)
+            limit = 100;
+        else if (limit < 1)
+            limit = 1;
+
+        var sql = sqlSelectRestMessages + sqlOrderDescRestMessages;
+
+        // Generally, we get the more recent threads (order desc), except
+        // if the parameter sinceID was set without an untilID: we
+        // want the closest threads to that, in other words, 
+        // the older threads that are more recent that sinceID.
+        // A final sorting is done to return rows in descending as ever.
+        var usingSinceOnly = sinceID.HasValue && !untilID.HasValue;
+        if (usingSinceOnly)
+        {
+            sql = sqlSelectRestMessages + sqlOrderAscRestMessages;
+        }
+
+        using (var db = Database.Open("sqlloco"))
+        {
+            // db.Query has a bug not processiong parameters in 'select top @1'
+            // so manual replacement
+            sql = sql.Replace("@1", limit.ToString());
+
+            var data = db.Query(sql, threadID, limit, untilID, sinceID)
+             .Select(RestMessage.FromDB)
+             .ToList();
+
+            if (usingSinceOnly)
+            {
+                // Since rows were get in ascending, records need to be inverted
+                // so we ever return data in descending order (latest first).
+                data.Reverse();
+            }
+
+            return data;
+        }
+    }
+
+    private static RestMessage GetFirstThreadMessage(int threadID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return RestMessage.FromDB(db.QuerySingle(@"
+                SELECT  TOP 1
+                        M.MessageID As messageID,
+                        M.ThreadID As threadID,
+                        M.SentByUserID As sentByUserID,
+                        M.AuxT As auxT,
+                        M.AuxID As auxID,
+                        M.MessageTypeID As typeID,
+                        M.BodyText As bodyText,
+                        M.CreatedDate As createdDate,
+                        M.UpdatedDate As updatedDate
+                FROM    Messages As M
+                WHERE   M.ThreadID = @0
+                ORDER BY CreatedDate ASC
+            ", threadID));
+        }
+    }
+
+    #region Creating Threads and Messages (Just inquiries)
+    /// <summary>
+    /// Creat a thread with an initial message.
+    /// Send email to the recipient, but without copy to sender.
+    /// </summary>
+    /// <param name="CustomerUserID"></param>
+    /// <param name="FreelancerUserID"></param>
+    /// <param name="JobTitleID"></param>
+    /// <param name="Subject"></param>
+    /// <param name="BodyText"></param>
+    /// <param name="SentByFreelancer"></param>
+    public static int PostRestThread(int CustomerUserID, int FreelancerUserID, int JobTitleID, string Subject, string BodyText, int SentByUserID)
+    {
+        // Validate user can send it (its in the thread)
+        if (SentByUserID != CustomerUserID &&
+            SentByUserID != FreelancerUserID) {
+            // Not allowed, quick return, nothing done:
+            return 0;
+        }
+
+        dynamic customer = null, provider = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Customer information
+            customer = db.QuerySingle(sqlGetUserData, CustomerUserID);
+            // Get Provider information
+            provider = db.QuerySingle(sqlGetUserData, FreelancerUserID);
+        }
+        if (customer != null && provider != null)
+        {
+            bool SentByFreelancer = SentByUserID == FreelancerUserID;
+
+            int typeID = SentByFreelancer ? 22 : 1;
+            int threadID = CreateThread(CustomerUserID, FreelancerUserID, JobTitleID, Subject, typeID, BodyText, SentByUserID);
+
+            // From a REST API, a copy is Not send to the original user, as in the general API, so just
+            // send an email to the recipient
+            // NOTE: the Kind possible values are in the template.
+            if (SentByFreelancer)
+            {
+                SendMail(customer.Email, "A Message From a Loconomics Freelancer",
+                    ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+                    new Dictionary<string, object> {
+                        { "ThreadID", threadID },
+                        { "Kind", 4 },
+                        { "RequestKey", SecurityRequestKey },
+                        { "EmailTo", customer.Email }
+                    })
+                );
+            }
+            else
+            {
+                SendMail(provider.Email, "A Message From a Loconomics Client",
+                    ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+                        new Dictionary<string, object> {
+                        { "ThreadID", threadID },
+                        { "Kind", 1 },
+                        { "RequestKey", SecurityRequestKey },
+                        { "EmailTo", provider.Email }
+                    })
+                );
+            }
+
+            return threadID;
+        }
+
+        return 0;
+    }
+    public static int PostRestMessage(int ThreadID, string BodyText, int SentByUserID)
+    {
+        dynamic customer = null, provider = null, thread = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Thread info
+            thread = db.QuerySingle(sqlGetThread, ThreadID);
+            if (thread != null)
+            {
+                // Validate user can send it (its in the thread)
+                if (SentByUserID != thread.CustomerUserID &&
+                    SentByUserID != thread.ProviderUserID) {
+                    // Not allowed, quick return, nothing done:
+                    return 0;
+                }
+
+                // Get Customer information
+                customer = db.QuerySingle(sqlGetUserData, thread.CustomerUserID);
+                // Get Provider information
+                provider = db.QuerySingle(sqlGetUserData, thread.ProviderUserID);
+            }
+        }
+        if (customer != null && provider != null)
+        {
+            bool SentByFreelancer = SentByUserID == thread.ProviderUserID;
+            var firstMessage = GetFirstThreadMessage(ThreadID);
+            var firstSentByFreelancer = firstMessage.sentByUserID == thread.ProviderUserID;
+
+            // ThreadStatus: 1=respond, 2=responded
+            // MessageType: 1=customer inquiry, 3=provider answer, 22=provider inquiry, 23=customer answer
+            var statusID = 0;
+            var typeID = 0;
+            if (firstSentByFreelancer)
+            {
+                if (SentByFreelancer)
+                {
+                    // Freelancer is asking again
+                    statusID = 1;
+                    typeID = 22;
+                }
+                else
+                {
+                    // Client answered
+                    statusID = 2;
+                    typeID = 23;
+                }
+            }
+            else
+            {
+                if (SentByFreelancer)
+                {
+                    // Freelancer answered
+                    statusID = 2;
+                    typeID = 3;
+                }
+                else
+                {
+                    // Client is asking again
+                    statusID = 1;
+                    typeID = 1;
+                }
+            }
+
+            int messageID = CreateMessage(ThreadID, statusID, typeID, BodyText, SentByUserID);
+
+            // From a REST API, a copy is Not send to the original user, as in the general API, so just
+            // send an email to the recipient
+            // NOTE: the Kind possible values are in the template.
+            if (SentByFreelancer)
+            {
+                // NOTE: Message from freelancer to client, answering an inquiry started by the client.
+                SendMail(customer.Email, "A Message From a Loconomics Freelancer",
+                    ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+                    new Dictionary<string, object> {
+                        { "ThreadID", ThreadID },
+                        { "MessageID", messageID },
+                        { "Kind", firstSentByFreelancer ? 6 : 2 },
+                        { "RequestKey", SecurityRequestKey },
+                        { "EmailTo", customer.Email }
+                    })
+                );
+            }
+            else
+            {
+                // NOTE: Copy to the author. The author is a freelancer, answering to a client that started the inquiry.
+                SendMail(provider.Email, "A Message From a Loconomics Client",
+                    ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+                    new Dictionary<string, object> {
+                        { "ThreadID", ThreadID },
+                        { "MessageID", messageID },
+                        { "Kind", firstSentByFreelancer ? 5 : 3 },
+                        { "RequestKey", SecurityRequestKey },
+                        { "EmailTo", provider.Email }
+                    })
+                );
+            }
+
+            return messageID;
+        }
+
+        return 0;
+    }
+    #endregion
     #endregion
 
     #region Message Summary (building small reusable summaries, as of messages listings)
@@ -351,8 +752,10 @@ public class LcMessaging
     /// <param name="ProviderUserID"></param>
     /// <param name="PositionID"></param>
     /// <param name="BookingRequestID"></param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingRequest(int CustomerUserID, int ProviderUserID, int PositionID, int BookingRequestID)
     {
+        return;
         dynamic customer = null, provider = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -367,7 +770,9 @@ public class LcMessaging
             string subject = LcData.Booking.GetBookingRequestSubject(BookingRequestID);
             string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
 
-            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
+            // First message type ID is ever 4:Customer booking request
+            // Ever send by customer
+            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, CustomerUserID, BookingRequestID, "BookingRequest");
 
             SendMail(provider.Email, "[Action Required] " + LcData.Booking.GetBookingRequestTitleFor(2, customer, LcData.UserInfo.UserType.Provider), 
                 ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
@@ -395,8 +800,10 @@ public class LcMessaging
     /// <param name="BookingRequestID"></param>
     /// <param name="BookingID"></param>
     /// <param name="sentByProvider"></param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingRequestConfirmation(int BookingRequestID, int BookingID)
     {
+        return;
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -417,7 +824,7 @@ public class LcMessaging
             string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
 
             // ThreadStatus=2, responded; MessageType=7 by provider (6 by customer; ONLY provider can confirm it)
-            int messageID = CreateMessage(thread.ThreadID, 2, 7, message, BookingID, "Booking", subject);
+            int messageID = CreateMessage(thread.ThreadID, 2, 7, message, thread.ProviderUserID, BookingID, "Booking", subject);
 
             SendMail(provider.Email, LcData.Booking.GetBookingTitleFor(1, customer, LcData.UserInfo.UserType.Provider), 
                 ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
@@ -442,8 +849,18 @@ public class LcMessaging
         }
     }
 
+    /// <summary>
+    /// Booking created by Customer for Providers with Instant Booking enabled
+    /// </summary>
+    /// <param name="CustomerUserID"></param>
+    /// <param name="ProviderUserID"></param>
+    /// <param name="PositionID"></param>
+    /// <param name="BookingRequestID"></param>
+    /// <param name="BookingID"></param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendInstantBooking(int CustomerUserID, int ProviderUserID, int PositionID, int BookingRequestID, int BookingID)
     {
+        return;
         dynamic customer = null, provider = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -460,7 +877,7 @@ public class LcMessaging
             string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
 
             // #520: MessageTypeID:6 "Booking Request Customer Confirmation"
-            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 6, message, BookingID, "Booking");
+            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 6, message, CustomerUserID, BookingID, "Booking");
 
             SendMail(provider.Email, LcData.Booking.GetBookingTitleFor(1, customer, LcData.UserInfo.UserType.Provider),
                 ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
@@ -485,8 +902,65 @@ public class LcMessaging
         }
     }
 
+    /// <summary>
+    /// Booking created by the Provider, sent to the customer only
+    /// </summary>
+    /// <param name="CustomerUserID"></param>
+    /// <param name="ProviderUserID"></param>
+    /// <param name="PositionID"></param>
+    /// <param name="BookingID"></param>
+    [Obsolete("Disabled because it's broken")]
+    public static void SendProviderBooking(int BookingID)
+    {
+        return;
+        int CustomerUserID = 0;
+        int ProviderUserID = 0;
+        int PositionID = 0;
+        int BookingRequestID = 0;
+        dynamic customer = null, provider = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Booking info
+            var booking = LcData.Booking.GetBookingBasicInfo(BookingID);
+            CustomerUserID = booking.CustomerUserID;
+            ProviderUserID = booking.ProviderUserID;
+            PositionID = booking.PositionID;
+            BookingRequestID = booking.BookingRequestID;
+            // Get Customer information
+            customer = db.QuerySingle(sqlGetUserData, CustomerUserID);
+            // Get Provider information
+            provider = db.QuerySingle(sqlGetUserData, ProviderUserID);
+        }
+        if (customer != null && provider != null)
+        {
+            // Create message body based on detailed booking data
+            string subject = LcData.Booking.GetBookingSubject(BookingID);
+            string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
+
+            // #520: MessageTypeID:15 "Booking Provider Update"
+            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 15, message, ProviderUserID, BookingID, "Booking");
+
+            var cemail = LcRest.Client.GetEmailFromDb(customer.Email);
+            if (!String.IsNullOrEmpty(cemail))
+            {
+                SendMail(cemail, LcData.Booking.GetBookingTitleFor(1, provider, LcData.UserInfo.UserType.Customer),
+                    ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
+                    new Dictionary<string, object> {
+                        { "BookingID", BookingID }
+                        ,{ "BookingRequestID", BookingRequestID }
+                        ,{ "SentTo", "Customer" }
+                        ,{ "SentBy", "Provider" }
+                        ,{ "RequestKey", SecurityRequestKey }
+                        ,{ "EmailTo", cemail }
+                }));
+            }
+        }
+    }
+
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingRequestDenegation(int BookingRequestID, bool sentByProvider)
     {
+        return;
         // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
         SendBookingRequestInvalidation(BookingRequestID, 2, sentByProvider ? 13 : 14);
     }
@@ -498,8 +972,10 @@ public class LcMessaging
     /// <param name="BookingRequestID"></param>
     /// <param name="threadStatusID">1 for unresponded, 2 for responded</param>
     /// <param name="messageTypeID">Recommended types: 13 (provider declined), 14 (customer cancelled), 19 (booking updated)</param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingRequestInvalidation(int BookingRequestID, int threadStatusID, int messageTypeID)
     {
+        return;
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -518,9 +994,15 @@ public class LcMessaging
             // Create message body based on detailed booking data
             string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
             var bookingRequest = LcData.Booking.GetBookingRequestBasicInfo(BookingRequestID);
+            var sentByUserID = messageTypeID == 13 ? 
+                (int)thread.ProviderUserID : 
+                messageTypeID == 14 ? 
+                    (int)thread.CustomerUserID : 
+                    0
+            ;
 
             // ThreadStatus=2, responded;
-            int messageID = CreateMessage(thread.ThreadID, threadStatusID, messageTypeID, message, BookingRequestID, "BookingRequest");
+            int messageID = CreateMessage(thread.ThreadID, threadStatusID, messageTypeID, message, sentByUserID, BookingRequestID, "BookingRequest");
 
             // default value and explicit value for Status:2
             string emailTemplatePath = "Booking/Email/EmailBookingDetailsPage/";
@@ -554,8 +1036,10 @@ public class LcMessaging
     /// <param name="reminderType">Specify ONLY If the message is a Reminder. Set the kind of reminder (service, review-firstreminder, review)</param>
     /// <param name="messageTypeID">the parameter bySystemProviderOrCustomer choose automatically a messageTypeID from the 'update' types, but when
     /// another type is need that can be just specified here and will take precedence.</param>
+    [Obsolete("Disabled because it's broken")]
     public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer, char onlyTo = 'b', string reminderType = null, int? messageTypeID = null)
     {
+        return;
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -575,13 +1059,19 @@ public class LcMessaging
             string subject = LcData.Booking.GetBookingSubject(BookingID);
             string message = LcData.Booking.GetBookingStatus(BookingID);
             var booking = LcData.Booking.GetBookingBasicInfo(BookingID);
+            var sentByUserID = bySystemProviderOrCustomer == 'p' ? 
+                (int)thread.ProviderUserID :
+                bySystemProviderOrCustomer == 'c' ?
+                    (int)thread.CustomerUserID :
+                    0
+            ;
 
             // ThreadStatus=2, responded;
             // MessageType: 'p' provider 15, 'c' customer 16, 's' system 19
             int messageType = bySystemProviderOrCustomer == 'p' ? 15 : bySystemProviderOrCustomer == 'c' ? 16 : 19;
             if (messageTypeID.HasValue)
                 messageType = messageTypeID.Value;
-            int messageID = CreateMessage(thread.ThreadID, 2, messageType, message, BookingID, "Booking", subject);
+            int messageID = CreateMessage(thread.ThreadID, 2, messageType, message, sentByUserID, BookingID, "Booking", subject);
 
             // default value and explicit value for Status:1
             string emailTemplatePath = "Booking/Email/EmailBookingDetailsPage/";
@@ -624,15 +1114,19 @@ public class LcMessaging
             }
             if (onlyTo == 'b' || onlyTo == 'c')
             {
-                SendMail(customer.Email, LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, provider, LcData.UserInfo.UserType.Customer),
-                    ApplyTemplate(LcUrl.LangPath + emailTemplatePath,
-                    new Dictionary<string, object> {
-                    { "BookingID", BookingID }
-                    ,{ "SentTo", "Customer" }
-                    ,{ "SentBy", LcData.UserInfo.ParseUserType(bySystemProviderOrCustomer) }
-                    ,{ "RequestKey", SecurityRequestKey }
-                    ,{ "EmailTo", customer.Email }
-                }));
+                var cemail = LcRest.Client.GetEmailFromDb(customer.Email);
+                if (!String.IsNullOrEmpty(cemail))
+                {
+                    SendMail(cemail, LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, provider, LcData.UserInfo.UserType.Customer),
+                        ApplyTemplate(LcUrl.LangPath + emailTemplatePath,
+                        new Dictionary<string, object> {
+                        { "BookingID", BookingID }
+                        ,{ "SentTo", "Customer" }
+                        ,{ "SentBy", LcData.UserInfo.ParseUserType(bySystemProviderOrCustomer) }
+                        ,{ "RequestKey", SecurityRequestKey }
+                        ,{ "EmailTo", cemail }
+                    }));
+                }
             }
         }
     }
@@ -651,9 +1145,10 @@ public class LcMessaging
         }
         if (customer != null && provider != null)
         {
-            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, InquirySubject, 1, InquiryText);
+            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, InquirySubject, 1, InquiryText, CustomerUserID);
 
-            SendMail(provider.Email, "A Message From a Loconomics Provider", 
+            // NOTE: Message from client to freelancer
+            SendMail(provider.Email, "A Message From a Loconomics Client",
                 ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
@@ -661,7 +1156,8 @@ public class LcMessaging
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", provider.Email }
             }));
-            SendMail(customer.Email, "A Message From a Loconomics Client", 
+            // NOTE: Copy to the author. The author is a client sending message to a freelancer.
+            SendMail(customer.Email, "Copy of your inquiry",
                 ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
@@ -689,8 +1185,9 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             // ThreadStatus=2, responded; MessageType=3, provider answer
-            int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer);
+            int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer, thread.ProviderUserID);
 
+            // NOTE: Message from freelancer to client, answering an inquiry started by the client.
             SendMail(customer.Email, "A Message From a Loconomics Provider", 
                 ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
@@ -700,7 +1197,8 @@ public class LcMessaging
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", customer.Email }
             }));
-            SendMail(provider.Email, "A Message From a Loconomics Client", 
+            // NOTE: Copy to the author. The author is a freelancer, answering to a client that started the inquiry.
+            SendMail(provider.Email, "Copy of your answer", 
                 ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
@@ -729,9 +1227,10 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             // ThreadStatus=1, respond; MessageType=1, customer inquiry
-            int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer);
+            int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer, thread.CustomerUserID);
 
-            SendMail(provider.Email, "Loconomics.com: Inquiry", 
+            // NOTE: Message from client to freelancer, answering (or any further message) an inquiry started by the client (itself).
+            SendMail(provider.Email, "A Message From a Loconomics Client", 
                 ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
@@ -740,7 +1239,9 @@ public class LcMessaging
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", provider.Email }
             }));
-            SendMail(customer.Email, "Loconomics.com: Inquiry", 
+            // NOTE: Copy to the author. The author is a client, answering to a freelancer (or any further message).
+            // The client started the inquiry.
+            SendMail(customer.Email, "Copy of your answer", 
                 ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
@@ -754,8 +1255,10 @@ public class LcMessaging
     #endregion
 
     #region Type:Welcome
+    [Obsolete("Disabled because it's broken")]
     public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
+        return;
         SendMail(providerEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeProvider/",
             new Dictionary<string,object> {
@@ -764,8 +1267,10 @@ public class LcMessaging
                 { "ConfirmationURL", HttpUtility.UrlEncode(confirmationURL) }
          }));
     }
+    [Obsolete("Disabled because it's broken")]
     public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
     {
+        return;
         SendMail(userEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeCustomer/",
             new Dictionary<string, object> {
@@ -775,8 +1280,10 @@ public class LcMessaging
                 { "ConfirmationToken", HttpUtility.UrlEncode(confirmationToken) }
         }));
     }
+    [Obsolete("Disabled because it's broken")]
     public static void SendResetPassword(int userID, string userEmail, string resetURL, string resetToken)
     {
+        return;
         SendMail(userEmail, "[Action Required] Loconomics Password Recovery",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailResetPassword/",
             new Dictionary<string, object> {
@@ -802,7 +1309,7 @@ public class LcMessaging
     }
     #endregion
 
-    #region Type:Request provider payment to Loconomics Stuff Users
+    #region Notification to Loconomics Stuff/Support
     /// <summary>
     /// OBSOLETE.
     /// This email was used before the integration of Braintree Marketplace, to report about the
@@ -820,6 +1327,18 @@ public class LcMessaging
                 { "BookingID", bookingID },
                 { "EmailTo", "support@loconomics.com" }
          }));
+    }
+    public static void NotifyNewJobTitle(string jobTitleName, int jobTitleID)
+    {
+        try
+        {
+            var channel = LcHelpers.Channel == "live" ? "" : " at" + LcHelpers.Channel;
+            SendMail("support@loconomics.com",
+                "New job title" + channel + ": " + jobTitleName,
+                "Generated new job title with name '" + jobTitleName + "', assigned ID: " + jobTitleID
+            );
+        }
+        catch { }
     }
     #endregion
 

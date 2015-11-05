@@ -24,15 +24,27 @@ public static partial class LcData
     public class UserInfo
     {
         #region User Type
+        [Obsolete("Needs refactor and move to LcEnum namespace")]
         public enum UserType : int
         {
             None = 0,
             Anonymous = 1,
+            [Obsolete("Use Client, same internal value")]
             Customer = 2,
+            Client = 2,
+            [Obsolete("Use ServiceProfessional, same internal value")]
             Provider = 4,
-            Admin = 8,
-            User = 15,
-            System = 16
+            ServiceProfessional = 4,
+            // All Members are Providers too,
+            // so an option 'only member' does NOT exists
+            // and its value gets reserved for use
+            // grouped with the Provider (then, in binary 4 + 8 => 12)
+            //OnlyMember = 8,
+            Member = 12,
+            Admin = 16,
+            LoggedUser = 30,
+            User = 31,
+            System = 32
         }
         public static UserType ParseUserType(string strtype, UserType defaultTo = UserType.None)
         {
@@ -62,6 +74,8 @@ public static partial class LcData
                     return UserType.Anonymous;
                 case 'n':
                     return UserType.None;
+                case 'm':
+                    return UserType.Member;
                 default:
                     return defaultTo;
             }
@@ -117,6 +131,7 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
+                                ,IsMember
                                 ,AccountStatusID
 
                                 -- Only Providers:
@@ -198,6 +213,7 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
+                                ,IsMember
                                 ,AccountStatusID
 
                                 -- Only Providers:
@@ -313,7 +329,6 @@ public static partial class LcData
             }
             return u;
         }
-
         #endregion
 
         #region Update personal data
@@ -499,6 +514,16 @@ public static partial class LcData
                 );
             }
         }
+
+        public static void BecomeCollaborator(int userID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                db.Execute(@"
+                    UPDATE users SET IsCollaborator=1 WHERE UserID = @0
+                ", userID);
+            }
+        }
         #endregion
         #endregion
 
@@ -526,21 +551,27 @@ public static partial class LcData
         #endregion
 
         #region Create
-        private const string sqlInsProviderPosition = @"
-            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4
-        ";
-        public static void InsProviderPosition(int userID, int positionID)
+        public static void InsProviderPosition(int userID, int positionID,
+            int cancellationPolicyID = LcData.Booking.DefaultCancellationPolicyID,
+            string intro = null,
+            bool instantBooking = false)
         {
-            using (var db = Database.Open("sqlloco"))
+            var jobTitleExists = LcData.JobTitle.GetJobTitle(positionID) != null;
+            if (jobTitleExists)
             {
-                // Create position for the provider
-                var Results = db.QuerySingle(LcData.UserInfo.sqlInsProviderPosition,
-                    userID, positionID,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
-                    LcData.Booking.DefaultCancellationPolicyID);
-                if (Results.Result != "Success") {
-                    throw new Exception("We're sorry, there was an error creating your position: " + Results.Result);
-                }
+                LcData.JobTitle.InsertUserJobTitle(
+                    userID,
+                    positionID,
+                    cancellationPolicyID,
+                    intro,
+                    instantBooking,
+                    LcData.GetCurrentLanguageID(),
+                    LcData.GetCurrentCountryID()
+                );
+            }
+            else
+            {
+                throw new Exception("The job title does not exists or is disapproved");
             }
         }
         #endregion
@@ -592,6 +623,7 @@ public static partial class LcData
                         WHERE a.UserID = @0 and c.LanguageID = @2 and c.CountryID = @3
                             AND c.Active = 1
                             AND a.Active = 1 AND ((@1 = 0 AND a.StatusID > 0) OR a.StatusID = 1)
+                            AND (c.Approved = 1 Or c.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
                     ";
                     poss = db.Query(sqlpositions, userId, onlyActivePositions ? 1 : 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 }
@@ -612,8 +644,11 @@ public static partial class LcData
         }
         /* Get a data object with the Position row of the user 'userId' with PositionId 'posId' from the database
          */
-        public static dynamic GetUserPos(int userId, int posId) {
-        
+        public static dynamic GetUserPos(int userId, int posId, int langID = 0, int countryID = 0)
+        {
+            if (langID == 0) langID = LcData.GetCurrentLanguageID();
+            if (countryID == 0) countryID = LcData.GetCurrentCountryID();
+
             // Implemented a basic, per-page, cache, faster and simplified for each page
             var u = HelperPage.PageData["userpos:" + userId.ToString() + ":" + posId.ToString()];
             if (u == null){
@@ -624,7 +659,7 @@ public static partial class LcData
                         FROM    dbo.userprofilepositions a join positions c on a.PositionID = c.PositionID 
                         WHERE   a.UserID = @0 and a.PositionID = @1 and c.LanguageID = @2 and c.CountryID = @3
                                 AND c.Active = 1 AND a.Active = 1 AND a.StatusID > 0";
-                    u = db.QuerySingle(sqlpositions, userId, posId, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                    u = db.QuerySingle(sqlpositions, userId, posId, langID, countryID);
                 }
                 HelperPage.PageData["userpos:" + userId.ToString() + ":" + posId.ToString()] = u;
             }
@@ -666,7 +701,7 @@ public static partial class LcData
         }
         #endregion
 
-        #region Checkes
+        #region Checks
         public class UserPositionActivation
         {
             public List<string> Messages
@@ -803,6 +838,12 @@ public static partial class LcData
         {
             return GetUserPublicURL(WebSecurity.CurrentUserId);
         }
+        /// <summary>
+        /// TODO: rename to GetUserPublicURLPath since it doesn't includes the domain part.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="positionID"></param>
+        /// <returns></returns>
         public static string GetUserPublicURL(int userid, object positionID = null)
         {
             string city = GetUserCity(userid);
@@ -869,6 +910,17 @@ public static partial class LcData
                             ,CoBrandedPartnerPermissions
                     FROM Users WHERE UserID = @0
                     ", userId);
+            }
+        }
+
+        public static void SetOnboardingStep(int userID, string onboardingStep)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
+                    userID,
+                    String.IsNullOrWhiteSpace(onboardingStep) ? null : onboardingStep
+                );
             }
         }
         #endregion

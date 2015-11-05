@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Collections;
+using System.Globalization;
+using System.Threading;
 
 /// <summary>
 /// LcExtensions is a set of usefull classes extensions to use along all the Loconomics site
@@ -42,6 +44,37 @@ public static class LcExtensions
             str[0].ToString().ToUpper() + 
             (str.Length > 1 ? str.Substring(1) : "")
         );
+    }
+    
+    public static string ToTitleCase(this String stringToFormat)
+    {
+        CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
+        TextInfo textInfo = cultureInfo.TextInfo;
+
+        // Check if we have a string to format
+        if (String.IsNullOrEmpty(stringToFormat))
+        {
+            // Return an empty string
+            return string.Empty;
+        }
+
+        // Format the string to Proper Case
+        return textInfo.ToTitleCase(stringToFormat.ToLower());
+    }
+
+    /// <summary>
+    /// Reduce every duplicated appeareance of white space characters
+    /// to a single, standard, space.
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    public static string CollapseSpaces(this String str)
+    {
+        if (String.IsNullOrWhiteSpace(str))
+            return "";
+
+        var reg = new System.Text.RegularExpressions.Regex(@"\s{2,}");
+        return reg.Replace(str, " ");
     }
 
     public static IEnumerable TopElements(this IEnumerable list, double limit)
@@ -144,5 +177,21 @@ public static class LcExtensions
             return v;
         else
             return alt;
+    }
+
+    public static List<T> Replace<T>(this List<T> list, T lookFor, T replaceWith)
+    {
+        for (int i = 0, l = list.Count; i < l; i++)
+        {
+            var item = list[i];
+            if (item != null && item.Equals(lookFor) ||
+                item == null && lookFor == null)
+            {
+                // Replace with value
+                list[i] = replaceWith;
+            }
+        }
+        // Return the same list for chainability
+        return list;
     }
 }

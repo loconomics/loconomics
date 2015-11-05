@@ -1,0 +1,23 @@
+/**
+    LinkTile: two lines tile of indented text
+    and pointing icon on the right.
+    
+    Follows same indent as CompactLinkTile
+**/
+@import 'Tile.styl'
+@import 'CompactLinkTile.styl'
+
+.LinkTile {
+
+    Tile()
+    
+    Tile-addContent(2);
+    
+    $vgap = 18px;
+    
+    Tile-addTagContentSupport($vgap)
+    
+    padding: $vgap $Tile-hgap $vgap ($CompactLinkTile-indentSize + $Tile-hgap);
+
+    CompactLinkTile-addIcon(line-height-computed / 2 + $vgap);
+}

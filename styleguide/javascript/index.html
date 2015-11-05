@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" id="Loconomics">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Loconomics, styleguide">
+    <meta name="keywords" content="HTML, CSS, JS, JavaScript, framework, bootstrap, front-end, frontend, web development">
+    <meta name="author" content="Loconomics">
+
+    <title>
+        Loconomics Styleguide
+    </title>
+    <link rel="icon" type="image/vnd.microsoft.icon" href="/assets/images/favicon.ico" />
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Styles build following the Styleguide -->
+    <link href="/assets/css/styleguide.css" rel="stylesheet">    
+    <!-- Styles only in use on Desktop site, as additional to styleguide.css -->
+    <link href="/assets/css/styleguide-desktop.css" rel="stylesheet"> 
+    <!-- Documentation extras from getbootstrap.com -->
+    <link href="/assets/css/docs.css" rel="stylesheet">
+    <!-- Our documentation extras -->
+    <link href="/assets/css/sgdocs.css" rel="stylesheet">
+  </head>
+  <body>
+    <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <!-- Docs master nav -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+      <div class="container">
+        <div class="navbar-header">
+          <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="https://loconomics.com" class="navbar-brand">Loconomics</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="/">Style Guide</a>
+            </li>
+            <li>
+              <a href="/css">CSS Components</a>
+            </li>
+            <li class="active">
+              <a href="/javascript">Javascript Components</a>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://blog.loconomics.com" target="_blank">Blog</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+
+    <!-- Docs page layout -->
+    <div class="bs-docs-header" id="content">
+      <div class="container">
+        <h1>Javascript Components</h1>
+        <p>Enhanced and reusable UI/UX components.</p>
+        <p>Some of them are built on top of independent CSS Components.</p>
+      </div>
+    </div>
+
+    <div class="container bs-docs-container">
+
+      <div class="row">
+        <div class="col-md-9" role="main">
+          <div class="bs-docs-section">
+            <h1 id="js-overview" class="page-header">Overview</h1>
+            
+            <div class="bs-callout bs-callout-danger">
+              <h4>Component data attributes</h4>
+              <p>Don't use data attributes from multiple plugins on the same element. For example, a button cannot both have a tooltip and toggle a modal. To accomplish this, use a wrapping element.</p>
+            </div>            
+
+            <h1 id="js-help-point">Help Point</h1>
+            <p>A small marker with a Popover for inline help.</p>
+
+            <div class="bs-callout bs-callout-warning">
+              <h4>Display options</h4>
+              <p>Sizes and other pure CSS options for the marker are described in the <a href="/css#css-help-point">its complementary CSS Component</a></p>
+            </div>
+            
+            <h3>Basic example</h3>
+            <p>This component is meant to be used with a short text that triggers a Popover on click to provide in-context help.</p>
+            <p>Just use the <code>HelpPoint</code> class in a link, recommended with <code>href="#"</code>,
+              and the attribute <code>data-content</code> with the desired text.
+            </p>
+            <div class="bs-example">
+              Click/tap it for extra help. All default options
+              <a href="#" class="HelpPoint size-lg" data-content="Some help text.">?</a>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint"><code class="html">
+                <a href="#" class="HelpPoint size-lg" data-content="Some help text.">?</a>
+              </code></pre>
+           </div>
+
+            <h3>Popover</h3>
+            <p>Since the component just triggers a <strong>Popover</strong>,
+              <a href="http://getbootstrap.com/javascript/#popovers" target="_blank">all its options are available</a> on the element,
+              all the <code>data-*</code> attributes and the optional standard <code>title</code> attribute.
+            </p>
+            <div class="bs-example">
+              Hover it with the mouse for extra help (on desktop; just tap it on mobile).
+              <a href="#" class="HelpPoint size-lg"
+                  data-placement="bottom"
+                  data-trigger="hover"
+                  data-html="true"
+                  title="Help"
+                  data-content="Some help text.&lt;br/&gt;It can 
+                    use some &lt;strong&gt;html&lt;/strong&gt;, useful to highlight phrases.">?</a>
+              <p>The popover is placed on bottom, has some html inside <code>data-content</code> (be carefull closing comiles)</p>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint"><code class="html">
+                <a href="#" class="HelpPoint size-lg"
+                  data-placement="bottom"
+                  data-trigger="hover"
+                  data-html="true"
+                  title="Help"
+                  data-content="Some help text.&lt;br/&gt;It can 
+                    use some &lt;strong&gt;html&lt;/strong&gt;, useful to highlight phrases.">?</a>
+              </code></pre>
+            </div>
+            
+            <h3>Carousel</h3>
+            <p>The Bootstrap Carousel component is available with <a target="_blank" href="http://getbootstrap.com/javascript/#carousel">all its options as described in official Bootstrap docs</a></p>
+            <p>It's mainly used to expose images, that fit all the Carousel size, with an optional caption over the image.</p>
+            <p>
+              In order to be used with text that flows from the top (and not as a centered caption), an optional sub-element was introduced <code>carousel-content</code>, placed
+              inside a <code>container</code> on each item, allows for text, or any formatted content, as replacement for the single exposed image.
+            </p>
+            <div class="bs-example">           
+              <div id="carouselExample1" class="carousel slide" data-ride="carousel" style="height: 450px">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                  <li data-target="#carouselExample1" data-slide-to="0" class="active"></li>
+                  <li data-target="#carouselExample1" data-slide-to="1"></li>
+                  <li data-target="#carouselExample1" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                  <div class="item active">
+                    <div class="container">
+                      <div class="carousel-content">
+                        <h3>Find a provider</h3>
+                        <p>
+                        Loconomics makes finding the perfect independent professional for your job pretty dang easy. You can comb through profiles and read everyone’s reviews and recommendations before settling on Ms. or Mr. Right. This is not online dating; your specific needs – finally assembling a custom table for the dining room, painting your guest room, getting a deep tissue massage – will be met. Loconomics makes it simple.
+                        </p>
+                        <h3>Book a provider</h3>
+                        <p>
+                        Loconomics uses an ultra-simple three-step booking process that eliminates the usual scheduling, follow-up, and payment hassles. It’s all here. And we’re always waiting in the background to help.
+                        </p>
+                        <h3>Review a provider</h3>
+                        <p>
+                        Your reviews of the providers you’ve found on Loconomics help others decide who to choose. It’s kind of a paying-it-forward thing. Plus, if you find you can talk forever about Tanya’s magical massaging thumbs, why not help her out a little with a glowing review? Loconomics is a community, and a positive one where great people doing great work can find eager customers.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTAwIj48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzc3NyIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQ1MCIgeT0iMjUwIiBzdHlsZT0iZmlsbDojNzc3O2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjU2cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+OTAweDUwMDwvdGV4dD48L3N2Zz4=" data-src="holder.js/900x500/auto/#777:#777" alt=" ">
+                    <div class="container">
+                      <div class="carousel-caption">
+                        <h1>Headline over image.</h1>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="container">
+                      <div class="carousel-content">
+                        <h3>Find a provider</h3>
+                        <p>
+                        Loconomics makes finding the perfect independent professional for your job pretty dang easy. You can comb through profiles and read everyone’s reviews and recommendations before settling on Ms. or Mr. Right. This is not online dating; your specific needs – finally assembling a custom table for the dining room, painting your guest room, getting a deep tissue massage – will be met. Loconomics makes it simple.
+                        </p>
+                      </div>
+                      <div class="carousel-caption">
+                        <h1>Headline over text.</h1>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <a class="left carousel-control" href="#carouselExample1" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                <a class="right carousel-control" href="#carouselExample1" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+              </div>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint"><code class="html">
+              
+                <div id="carouselExample" class="carousel slide" data-ride="carousel" style="height: 450px">
+                  <!-- Indicators -->
+                  <ol class="carousel-indicators">
+                    <li data-target="#carouselExample" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExample" data-slide-to="1"></li>
+                    <li data-target="#carouselExample" data-slide-to="2"></li>
+                  </ol>
+                  <div class="carousel-inner">
+                    <div class="item active">
+                      <div class="container">
+                        <div class="carousel-content">
+                          <h3>Find a provider</h3>
+                          <p>
+                          Loconomics makes finding....
+                          </p>
+                         </div>
+                      </div>
+                    </div>
+                    <div class="item">
+                      <img src="..." alt="...">
+                      <div class="container">
+                        <div class="carousel-caption">
+                          <h1>Headline over image.</h1>
+                          <p>...</p>
+                          <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="item">
+                      <div class="container">
+                        <div class="carousel-content">
+                          <h3>Find a provider</h3>
+                          <p>
+                          Loconomics makes finding...
+                          </p>
+                        </div>
+                        <div class="carousel-caption">
+                          <h1>Headline over text.</h1>
+                          <p>...</p>
+                          <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <a class="left carousel-control" href="#carouselExample" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                  <a class="right carousel-control" href="#carouselExample" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                </div>
+              
+              </code></pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bs-docs-footer" role="contentinfo">
+      <div class="container">
+        <p>Created by <a href="https://loconomics.com">Loconomics</a> using <a href="http://getbootstrap.com">Bootstrap</a>.</p>
+      </div>
+    </footer>
+    
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/assets/javascript/styleguidelibs.js"></script>
+    <script src="/assets/javascript/sgdocs.js"></script>
+    <script src="/assets/javascript/google-code-prettify/run_prettify.js"></script>
+    <script src="/assets/javascript/styleguide.js"></script>
+  </body>
+</html>

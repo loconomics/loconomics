@@ -1,0 +1,84 @@
+﻿@*
+    Reading and updating the logged User Scheduling Preferences.
+
+    Options:
+
+    - GET: no params
+    
+    - PUT: sending
+        - advanceTime:decimal Hours
+        - betweenTime:decimal Hours
+        - incrementsSizeInMinutes:int
+
+    - @Result {
+        "advanceTime":decimal, // Hours before allow do a booking
+        "betweenTime":decimal, // Hours to add as unavailable between bookings
+        "incrementsSizeInMinutes":int // Size in minutes of the increments in which availability slots are displayed.
+    }
+
+    EXAMPLES {
+        "Scheduling Preferences": {
+            "url": "/api/v1/en-US/me/scheduling-preferences",
+            "get": { },
+            "put": {
+                "advanceTime": 0.5,
+                "betweenTime": 1,
+                "incrementsSizeInMinutes": 30
+            }
+        }
+    }
+*@
+@functions{
+    public class RestSchedulingPreferences : RestWebPage
+    {
+        private dynamic GetData()
+        {
+            return LcCalendar.GetSchedulingPreferences(WebSecurity.CurrentUserId);
+        }
+        
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+ 	        return GetData();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+            var userID = WebSecurity.CurrentUserId;
+
+            if (Request["advanceTime"].IsEmpty()) {
+                ModelState.AddError("advanceTime", LcRessources.RequiredField("Time in advance of bookings"));
+            }
+            if (Request["betweenTime"].IsEmpty()) {
+                ModelState.AddError("betweenTime", LcRessources.RequiredField("Preparation time between bookings"));
+            }
+            
+            if (!ModelState.IsValid) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            var advanceTime = Request["advanceTime"].AsDecimal(0);
+            var betweenTime = Request["betweenTime"].AsDecimal(0);
+            var incrementsSizeInMinutes = Request["incrementsSizeInMinutes"].AsInt(15);
+
+            LcCalendar.SetSchedulingPreferences(userID, new LcCalendar.RestSchedulingPreferences {
+                advanceTime = advanceTime,
+                betweenTime = betweenTime,
+                incrementsSizeInMinutes = incrementsSizeInMinutes
+            });
+            
+            return GetData();
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
+    new RestSchedulingPreferences().JsonResponse(this);
+}

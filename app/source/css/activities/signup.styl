@@ -1,0 +1,48 @@
+[data-activity=signup] {
+    // Most styles are defined in the Signup component.
+    // Here only specific styles of the activity, since the
+    // component shares html on several activities, like client booking
+    
+    .Signup-formcontainer {
+        margin-bottom: 60px;
+
+        @media $mediaMinSm {
+            padding: 15px 50px;
+        }
+        @media $mediaMinMd {
+            padding: 15px 65px;
+        }
+    }
+    .Signup-login {
+        text-align: center;
+        padding: 10px 20px;
+        > * {
+    	    vertical-align: middle;
+        }
+    }
+}
+
+.Splash [data-activity=signup] {
+    
+    background: $brand-primary;
+    
+    .Signup {
+        background: inherit;
+    }
+    
+    .Signup-profiles {
+        color: White;
+    }
+    
+    .Signup-selector .Signup-selector-option {
+        background: White;
+        
+        h3 {
+            color: $gray;
+        }
+    }
+
+    .Signup-logo {
+        display: block;
+    }
+}

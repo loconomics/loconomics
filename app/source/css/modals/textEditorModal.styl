@@ -1,0 +1,25 @@
+@import 'nib';
+
+#textEditorModal {
+    @media $mediaMaxXs {
+        .modal-dialog {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: auto;
+            
+            .modal-content {
+                border: none;
+                border-radius: 0;
+                height: 100%;
+            }
+        }
+        .AppNav, .SmartNavBar {
+            position: static;
+        }
+    }
+    
+    .modal-footer {
+        border-top: none;
+    }
+}

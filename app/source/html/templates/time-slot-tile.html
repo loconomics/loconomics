@@ -1,0 +1,19 @@
+<!-- Knockout Template time-slot-tile -->
+<script type="text/html" id="time-slot-tile-template">
+    <a class="ItemAddonTile" href="#" data-bind="css: classNames, attr: { href: link }">
+        <div class="Tile-marker">
+            <div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div>
+            <em data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></em>
+        </div>
+        <div class="Tile-content">
+            <p data-bind="visible: !description()"><strong data-bind="text: subject"></strong></p>
+            <div data-bind="visible: description()"><strong data-bind="text: subject"></strong></div>
+            <p data-bind="visible: classNames().indexOf('ItemAddonTile--largerContent') > -1 && description(), text: description"></p>
+            <div data-bind="visible: classNames().indexOf('ItemAddonTile--largerContent') === -1 && description(), text: description"></div>
+        </div>
+        <div class="Tile-addon">
+            <p data-bind="visible: actionText, text: actionText"></p>
+            <span class="fa fa-2x" aria-hidden="true" data-bind="visible: actionIcon, css: actionIcon"></span>
+        </div>
+    </a>
+</script>

@@ -1,0 +1,54 @@
+/**
+    CompactLinkTile: single line tile of indented text
+    and pointing icon on the right, minimum padding,
+    just for simple link blocks.
+**/
+@import 'Tile.styl'
+
+CompactLinkTile-addIcon($vgap) {
+    
+    $iconWidth = 22px;
+
+    // Left space for the icon and small gap:
+    padding-right: ($iconWidth + 4px + $Tile-hgap);
+
+    .Tile-icon {
+        position: absolute;
+        right: $Tile-hgap;
+        top: $vgap;
+        bottom: $vgap;
+        width: $iconWidth;
+        overflow: hidden;
+        height: line-height-computed;
+        // there are some problems with some icons (ionicons mainly) where
+        // even with enough space, gets cut on the edges; add a minimum gap
+        // to give them overflow space
+        padding: 0 1px;
+        text-align: right;
+
+        // Fix ionicons ridiculous size, setting the same as line-height
+        .ion {
+            line-height: line-height-computed;
+            font-size: line-height-computed;
+        }
+    }
+}
+
+$CompactLinkTile-indentSize = 30px;
+
+.CompactLinkTile {
+
+    Tile()
+    
+    $vgap = 10px;
+    
+    Tile-addTagContentSupport($vgap)
+
+    padding-left: ($CompactLinkTile-indentSize + $Tile-hgap);
+
+    .Tile-content {
+        Tile-singleLine($vgap);
+    }
+
+    CompactLinkTile-addIcon($vgap);
+}

@@ -30,7 +30,7 @@ public static partial class LcData
     /// <summary>
     /// Methods to get data related with Bookings
     /// </summary>
-    public static class Booking
+    public static partial class Booking
     {
         /// <summary>
         /// After that time from the last update on a
@@ -42,12 +42,10 @@ public static partial class LcData
         #region Query list of bookings
         #region SQLs
         private const string sqlGetBookingsByDateRange = @"
-        SELECT  R.BookingRequestID,
-                B.BookingID,
-                R.ProviderUserID,
-                R.CustomerUserID,
-                R.PricingEstimateID,
-                R.BookingRequestStatusID,
+        SELECT  B.BookingID,
+                B.ServiceProfessionalUserID,
+                B.ClientUserID,
+                B.PricingSummaryID,
                 B.BookingStatusID,
 
                 UC.FirstName As CustomerFirstName,
@@ -64,28 +62,25 @@ public static partial class LcData
                 (Pr.SubtotalPrice - Pr.PFeePrice) As ProviderPrice
         FROM    Booking As B
                  INNER JOIN
-                BookingRequest As R
-                  ON B.BookingRequestID = R.BookingRequestID
-                 INNER JOIN
-                PricingEstimate As Pr
-                  ON Pr.PricingEstimateID = R.PricingEstimateID
+                PricingSummary As Pr
+                  ON Pr.PricingSummaryID = B.PricingSummaryID AND Pr.PricingSummaryRevision = B.PricingSummaryRevision
                  INNER JOIN
                 Users As UC
-                  ON UC.UserID = R.CustomerUserID
+                  ON UC.UserID = B.ClientUserID
                  INNER JOIN
                 Users As UP
-                  ON UP.UserID = R.ProviderUserID
+                  ON UP.UserID = B.ServiceProfessionalUserID
                  LEFT JOIN
                 CalendarEvents As E
-                  ON E.Id = B.ConfirmedDateID
+                  ON E.Id = B.ServiceDateID
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
 					AND Pos.LanguageID = @3 AND Pos.CountryID = @4
         WHERE   (
-                 R.CustomerUserID=@0
+                 B.ClientUserID=@0
                   OR
-                 R.ProviderUserID=@0
+                 B.ServiceProfessionalUserID=@0
                 )
                  AND
                 (   @1 is null AND E.StartTime is null
@@ -94,7 +89,49 @@ public static partial class LcData
                      AND
                     Convert(date, E.StartTime) <= @2
                 )
-        ORDER BY E.StartTime DESC, B.UpdatedDate DESC, R.UpdatedDate DESC
+        ORDER BY E.StartTime DESC, B.UpdatedDate DESC
+        ";
+        private const string sqlGetBookingsSumByDateRange = @"
+            SELECT  count(*) as count,
+                    min(E.StartTime) as startTime,
+                    max(E.EndTime) as endTime
+            FROM    Booking As B
+                     INNER JOIN
+                    CalendarEvents As E
+                      ON E.Id = B.ServiceDateID
+            WHERE   
+                    -- Any bookings, as provider or customer
+                    (
+                     B.ClientUserID=@0
+                      OR
+                     B.ServiceProfessionalUserID=@0
+                    )
+                     AND
+                    (   
+                        E.StartTime >= @1
+                         AND
+                        E.StartTime <= @2
+                    )
+        ";
+        private const string sqlGetNextBookingID = @"
+            SELECT  TOP 1
+                    B.BookingID
+            FROM    Booking As B
+                     INNER JOIN
+                    CalendarEvents As E
+                      ON E.Id = B.ServiceDateID
+            WHERE   
+                    -- Any bookings, as provider or customer
+                    (
+                     B.ClientUserID=@0
+                      OR
+                     B.ServiceProfessionalUserID=@0
+                    )
+                     AND
+                    (   
+                        E.StartTime >= @1
+                    )
+            ORDER BY E.StartTime ASC
         ";
         #endregion
 
@@ -135,15 +172,64 @@ public static partial class LcData
 
             return ret;
         }
+
+        public class RestUpcomingBookingsInfo
+        {
+            public int quantity;
+            public DateTime? time;
+        }
+
+        public static Dictionary<string, dynamic> GetUpcomingBookingsInfo(int userID)
+        {
+            var ret = new Dictionary<string, dynamic>();
+            
+            // Preparing dates for further filtering
+            var leftToday = DateTime.Now;
+            var tomorrow = DateTime.Today.AddDays(1);
+            // Next week is from tomorrow up to 7 days
+            var nextWeekStart = tomorrow;
+            var nextWeekEnd = nextWeekStart.AddDays(7);
+
+            using (var db = Database.Open("sqlloco"))
+            {
+                dynamic d = null;
+
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, leftToday, tomorrow);
+                ret["today"] = new RestUpcomingBookingsInfo {
+                    quantity = d.count,
+                    // NOTE: What if the endTime is for a different date? Last work hour on the date?
+                    time = d.endTime
+                };
+                
+                // NOTE: what if there is a booking for several days and we are in the middel of that? First work hour on the date?
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, tomorrow, tomorrow.AddDays(1).AddSeconds(-1));
+                ret["tomorrow"] = new RestUpcomingBookingsInfo {
+                    quantity = d.count,
+                    time = d.startTime
+                };
+
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, nextWeekStart, nextWeekEnd);
+                ret["nextWeek"] = new RestUpcomingBookingsInfo {
+                    quantity = d.count,
+                    time = d.startTime
+                };
+
+                ret["nextBookingID"] = db.QueryValue(sqlGetNextBookingID, userID, leftToday);
+            }
+
+            return ret;
+        }
         #endregion
 
         #region Query Booking information
         #region SQLs
+        [Obsolete("Not working after DB changes")]
         public const string sqlGetBookingRequestPricingEstimate = @"
             SELECT  PricingEstimateID
             FROM    BookingRequest
             WHERE   BookingRequestID = @0
         ";
+        [Obsolete("Not working after DB changes")]
         public const string sqlGetPricingPackagesInPricingEstimate = @"
             SELECT  PP.ProviderPackageID
                     ,PP.ProviderUserID
@@ -656,6 +742,7 @@ public static partial class LcData
         }
         #endregion
 
+        [Obsolete("Use LcRest.ServiceProfessionalService.GetFromPricingEstimate")]
         public static IEnumerable<LcPricingModel.PackageBaseData> GetPricingEstimatePackages(int pricingEstimateID, int pricingEstimateRevision = 0)
         {
             using (var db = Database.Open("sqlloco"))
@@ -1285,26 +1372,8 @@ public static partial class LcData
                 // affect the availability check.
                 // And get the required information from the event to do the
                 // availability check
-                var dateInfo = db.QuerySingle(@"
-                    UPDATE  CalendarEvents SET
-                            CalendarAvailabilityTypeID = 4
-                    WHERE   ID = @0
-
-                    SELECT  ID, StartTime, EndTime, UserId
-                    FROM    CalendarEvents
-                    WHERE   ID = @0
-                ", dateID);
-                var isNotAvailable = !LcCalendar.CheckUserAvailability(dateInfo.UserID, dateInfo.StartTime, dateInfo.EndTime);
-
-                if (isNotAvailable)
+                if (!LcCalendar.DoubleCheckEventAvailability(dateID))
                 {
-                    // Is not available, restore event to its previous state (availability 'tentative':3)
-                    db.Execute(@"
-                        UPDATE  CalendarEvents SET
-                                CalendarAvailabilityTypeID = 3
-                        WHERE   ID = @0
-                    ", dateID);
-
                     return new SqlGenericResult
                     {
                         Error = -2,
@@ -1321,6 +1390,8 @@ public static partial class LcData
                 // On no errors:
                 if (result.Error == 0)
                 {
+                    var dateInfo = LcCalendar.GetBasicEventInfo(dateID, db);
+
                     // SINCE #508, Customer is not charged on confirming the booking, else the date of the service;
                     // NOW here we authorize a transaction for lower than 7 days for service date from now, or
                     // nothing on other cases since we cannot ensure the authorization would persist more than
@@ -1401,6 +1472,7 @@ public static partial class LcData
         /// <param name="bookingID"></param>
         /// <param name="db"></param>
         /// <returns>An error message or null on success</returns>
+        [Obsolete("Use LcRest.Booking methods, updated for new DB scheme, constraints and flags")]
         public static string AuthorizeBookingTransaction(string paymentTransactionID, int bookingID, Database db = null)
         {
             var owned = db == null;
@@ -1427,7 +1499,7 @@ public static partial class LcData
                         }
                         else
                         {
-                            return "Transaction or card identifier gets lost, payment will cannot be performed.";
+                            return "Transaction or card identifier gets lost, payment cannot be performed.";
                         }
                     }
                 }
@@ -1454,6 +1526,7 @@ public static partial class LcData
         /// <param name="db"></param>
         /// <returns>A string with an error message or null on success.
         /// </returns>
+        [Obsolete("Use LcRest.Booking methods, that enforce new constraints, save data and use updated LcPayment methods")]
         public static string SettleBookingTransaction(string paymentTransactionID, int bookingID, Database db = null)
         {
             var owned = db == null;
@@ -1541,28 +1614,26 @@ public static partial class LcData
         /// is refunded if needed.
         /// List of BookingRequestStatusID:
         /// BookingRequestStatusID	BookingRequestStatusName
-        /// 3	timed out
-        /// 4	cancelled
-        /// 5	denied
-        /// 6	expired
-        /// 8	denied with alternatives
+        /// 3	cancelled
+        /// 4	denied
+        /// 5	expired
         /// </summary>
         /// <param name="BookingRequestID"></param>
-        public static SqlGenericResult InvalidateBookingRequest(int BookingRequestID, int BookingRequestStatusID)
+        public static SqlGenericResult InvalidateBookingRequest(int BookingID, int BookingStatusID)
         {
-            if (!(new int[] { 3, 4, 5, 6, 8 }).Contains<int>(BookingRequestStatusID))
+            if (!(new int[] { 3, 4, 5 }).Contains<int>(BookingStatusID))
             {
                 throw new Exception(String.Format(
-                    "BookingRequestStatusID '{0}' is not valid to invalidate the booking request",
-                    BookingRequestStatusID));
+                    "BookingStatusID '{0}' is not valid to invalidate the booking request",
+                    BookingStatusID));
             }
 
             var sqlGetTransactionAndUsers = @"
                 SELECT  PaymentTransactionID,
-                        CustomerUserID,
-                        ProviderUserID
-                FROM    BookingRequest
-                WHERE   BookingRequestID = @0
+                        ClientUserID,
+                        ServiceProfessionalUserID
+                FROM    Booking
+                WHERE   BookingID = @0
             ";
 
             var sqlInvalidateBookingRequest = @"EXEC InvalidateBookingRequest @0, @1";
@@ -1570,10 +1641,10 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 // Check cancellation policy and get quantities to refund
-                var refund = GetCancellationAmountsForBookingRequest(BookingRequestID, BookingRequestStatusID, db);
+                var refund = GetCancellationAmountsForBookingRequest(BookingID, BookingStatusID, db);
 
                 // Get booking info
-                var booking = db.QuerySingle(sqlGetTransactionAndUsers, BookingRequestID);
+                var booking = db.QuerySingle(sqlGetTransactionAndUsers, BookingID);
 
                 string result = ManageRefundTransaction(booking.PaymentTransactionID, refund, booking.CustomerUserID, booking.ProviderUserID);
 
@@ -1587,8 +1658,8 @@ public static partial class LcData
 
                 // Invalidate in database the booking request:    
                 return db.QuerySingle(sqlInvalidateBookingRequest,
-                    BookingRequestID,
-                    BookingRequestStatusID);
+                    BookingID,
+                    BookingStatusID);
             }
         }
 
@@ -1783,6 +1854,7 @@ public static partial class LcData
         /// <summary>
         /// Currently, default cancellation policy is Flexible:3
         /// </summary>
+        [Obsolete("Use LcRest.CancellationPolicy.DefaultCancellationPolicyID")]
         public const int DefaultCancellationPolicyID = 3;
         private const string sqlViewPricingAndPolicy = @"
             SELECT  R.PricingEstimateID
@@ -1872,6 +1944,14 @@ public static partial class LcData
 
             return GetCancellationAmountsFor(b, confirmedDate, fullRefund, db);
         }
+        /// <summary>
+        /// TODO Rework on top of #771 changes
+        /// </summary>
+        /// <param name="pricingAndPolicy"></param>
+        /// <param name="confirmedDate"></param>
+        /// <param name="fullRefund"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
         public static dynamic GetCancellationAmountsFor(dynamic pricingAndPolicy, DateTime confirmedDate, bool fullRefund, Database db)
         {
             dynamic result = null;

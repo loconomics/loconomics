@@ -1,0 +1,16 @@
+<!-- ContactForm activity -->
+<div class="container-fluid LightForm" data-activity="contactForm">
+
+    <h2 class="SectionTitle">Contact us for help</h2>
+    
+    <p class="isolated">
+        If you've searched the <a href="/faqs">FAQs</a> and can't find the help you need,
+        send us a note.
+    </p>
+
+    <textarea class="form-control" data-bind="textInput: message, disable: isSending"></textarea>
+
+    <div class="LightForm-submitBar">
+        <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending">Send</button>
+    </div>
+</div>

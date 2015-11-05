@@ -1,0 +1,101 @@
+<!-- Activity dashboard -->
+<div data-activity="dashboard">
+
+    <div data-bind="visible: user.isServiceProfessional">
+        <h1 class="SectionTitle"
+            data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
+            Upcoming bookings
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>    
+        <div id="dashboardNextBooking"
+           data-bind="css: { 'is-loading': nextBooking.isLoading() }">
+            <div data-bind="with: nextBooking">
+                <a href="#" class="LeadTile"
+                   data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
+                    <h3 class="Tile-title">
+                        <div data-bind="text: displayedDate"></div>
+                        <div>
+                            <span data-bind="text: displayedStartTime"></span>
+                            -
+                            <span data-bind="text: displayedEndTime"></span>
+                        </div>
+                    </h3>
+                    <h4 class="Tile-subtitle" data-bind="text: client() && client().fullName()"></h4>
+                    <p class="Tile-content">
+                        <span data-bind="text: servicesSummary()"></span>
+                        <em data-bind="text: price, format: { type: 'number', format: '$0,0' }"></em>
+                    </p>
+                </a>
+            </div>
+            <div data-bind="visible: !nextBooking()" class="PaddedBox-xs">
+                <span data-bind="visible: !nextBooking.isLoading()">You have no bookings!</span>
+                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+            </div>
+        </div>
+
+        <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
+            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
+        <ul id="dashboardUpcomingBookings" class="TilesList" data-bind="foreach: upcomingBookings.items">
+            <li><a href="#" class="LineTile"
+               data-bind="attr: { href: url }">
+                <strong data-bind="text: quantity"></strong>
+                <span data-bind="text: phrase"></span>
+            </a></li>
+        </ul>
+        <a class="CompactLinkTile" href="/calendar">
+            <div class="Tile-content">Go to calendar</div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+    </div>
+  
+    <div>
+        <h1 class="SectionTitle"
+            data-bind="css: { 'is-syncing': inbox.isSyncing() }">
+            Inbox
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>
+        <div data-bind="css: { 'is-loading': inbox.isLoading() }">
+            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
+        <div id="dashboardInbox" class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
+        <a class="CompactLinkTile" href="/inbox">
+            <div class="Tile-content">Go to inbox</div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+    </div>
+
+    <div data-bind="visible: user.isServiceProfessional" hidden="hidden">
+        <h1 class="SectionTitle">Performance</h1>
+        <ul id="dashboardPerformance" class="TilesList" data-bind="foreach: performance.items">
+            <li><a href="#" class="LineTile"
+                   data-bind="attr: { href: link }">
+                    <strong data-bind="text: markerLine1"></strong>
+                    <span data-bind="text: contentLine1"></span>
+                </a>
+            </li>
+        </ul>
+        <a class="CompactLinkTile" href="/performance">
+            <div class="Tile-content">Go to performance</div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+    </div>
+    
+    <div data-bind="visible: getMore.items().length">
+        <h1 class="SectionTitle">Get more from Loconomics</h1>
+        <ul class="TilesList" id="dashboardGetMore" data-bind="foreach: getMore.items()">
+            <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span data-bind="css: markerIcon"></span>
+                </div>                
+                <div class="Tile-content"><p data-bind="text: contentLine1()"></p></div>
+            </a></li>
+        </ul>
+    </div>
+</div>

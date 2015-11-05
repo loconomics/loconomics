@@ -144,25 +144,9 @@ namespace CalendarDll
             // filled with Events
             //----------------------------------------------------------------------
 
-
-            iCalendar iCal =
-                GetICalendarLibraryInstance();
-
-            // Fill it with Events
-
-            foreach 
-                (var currEvent in 
-                    GetEventsByUserDateRange(
-                        user, 
-                        startDate, 
-                        endDate,
-                        user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
-            {
-                iCal.Events.Add(currEvent);
-            }
-            
-
-
+            // IagoSRL: using optimized methods
+            //iCalendar iCal = GetICalendarEventsFromDBByUserDateRange(user, startDate, endDate);
+            iCalendar iCal = OptimizedGetICalendarEventsFromDBByUserDateRange(user, startDate, endDate);
 
 
             //----------------------------------------------------------------------
@@ -349,21 +333,33 @@ namespace CalendarDll
             DateTime startDate, 
             DateTime endDate)
         {
+            if (user == null)
+                throw new ArgumentNullException("user");
 
+            return GetICalendarForEvents(GetEventsByUserDateRange(
+                user, 
+                startDate, 
+                endDate,
+                user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null));
+        }
+
+        public iCalendar GetICalendarForEvents(IEnumerable<iEvent> events)
+        {
             iCalendar iCal = GetICalendarLibraryInstance();
-
-            if (user != null)
+            foreach (var ievent in events)
             {
-                foreach (var currEvent in GetEventsByUserDateRange(
-                    user, 
-                    startDate, 
-                    endDate,
-                    user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
-                {
-                    iCal.Events.Add(currEvent);
-                }
+                iCal.Events.Add(ievent);
             }
+            return iCal;
+        }
 
+        public iCalendar GetICalendarForEvents(IEnumerable<CalendarEvents> events, string defaultTZID)
+        {
+            iCalendar iCal = GetICalendarLibraryInstance();
+            foreach (var ievent in events)
+            {
+                iCal.Events.Add(CreateEvent(ievent, defaultTZID));
+            }
             return iCal;
         }
 
@@ -436,7 +432,7 @@ namespace CalendarDll
         /// <param name="eventFromDB"></param>
         /// <returns></returns>
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
-        private iEvent CreateEvent(
+        public iEvent CreateEvent(
             CalendarDll.Data.CalendarEvents eventFromDB,
             string defaultTZID)
         {
@@ -1022,13 +1018,11 @@ namespace CalendarDll
                         )
                     ).ToList();
 
-                var iCalEvents = new List<iEvent>();
-
                 foreach (var currEventFromDB in listEventsFromDB)
                 {
                     var iCalEvent = CreateEvent(currEventFromDB, defaultTZID);
 
-                    iCalEvents.Add(iCalEvent);
+                    yield return iCalEvent;
 
                     //----------------------------------------------------------------------
                     // If the Event is a Busy Event
@@ -1052,10 +1046,211 @@ namespace CalendarDll
                     //
                     //----------------------------------------------------------------------
 
-                    if (iCalEvent.EventType == 1)
+                    if (iCalEvent.EventType == 1 &&
+                        user.BetweenTime > TimeSpan.Zero)
                     {
-                        var evExt = CreateBetweenEvent(iCalEvent,user);
-                        iCalEvents.Add(evExt);
+                        yield return CreateBetweenEvent(iCalEvent,user);
+                    }
+
+                    //var newEv = CreateEvent(c);
+                    //yield return newEv;
+
+                    //----------------------------------------------------------------------
+
+                } 
+            
+            }
+
+        }
+
+        #endregion
+
+        #region IAGO: New, faster, optimized fetch event and occurrences (don't fetch unneeded data, use SQL, time filtering, faster)
+
+        /// <summary>
+        /// Create Event 
+        /// 
+        /// In iCal format, from the Loconomics DB
+        /// </summary>
+        /// <param name="eventFromDB"></param>
+        /// <returns></returns>
+        /// <remarks>2015-09 by iago</remarks>
+        public iEvent OptimizedCreateEvent(
+            CalendarDll.Data.CalendarEvents eventFromDB,
+            string defaultTZID,
+            System.Data.Entity.DbContext db)
+        {
+            // TODO: When TZID in DB implemented as a recognized Time-Zone ID string, use next commented code:
+            //defaultTZID = eventFromDB.TimeZone ?? defaultTZID;
+
+            iEvent iCalEvent = new iEvent()
+            {
+                Summary = eventFromDB.Summary ?? null,
+                Start = new iCalDateTime((DateTime)eventFromDB.StartTime, defaultTZID),
+                //Duration = (eventFromDB.EndTime - eventFromDB.StartTime),
+                End = new iCalDateTime((DateTime)eventFromDB.EndTime, defaultTZID),
+                Location = eventFromDB.Location ?? null,
+                AvailabilityID = eventFromDB.CalendarAvailabilityTypeID,
+                EventType = eventFromDB.EventType,
+                IsAllDay = eventFromDB.IsAllDay,
+                Status = GetEventStatus(eventFromDB.CalendarAvailabilityTypeID),
+                Priority = eventFromDB.Priority ?? 0,
+                UID = (string.IsNullOrEmpty(eventFromDB.UID)) ? "*" + Guid.NewGuid().ToString() + "@loconomics.com" : eventFromDB.UID,
+                Class = eventFromDB.Class,
+                Organizer = eventFromDB.Organizer != null ? new Organizer(eventFromDB.Organizer) : null,
+                Transparency = (TransparencyType)(eventFromDB.Transparency ? 1 : 0),
+                Created = new iCalDateTime((DateTime)(eventFromDB.CreatedDate ?? DateTime.Now), defaultTZID),
+                DTEnd = new iCalDateTime((DateTime)eventFromDB.EndTime, defaultTZID),
+                DTStamp = new iCalDateTime((DateTime)(eventFromDB.StampTime ?? DateTime.Now), defaultTZID),
+                DTStart = new iCalDateTime((DateTime)eventFromDB.StartTime, defaultTZID),
+                LastModified = new iCalDateTime((DateTime)(eventFromDB.UpdatedDate ?? DateTime.Now), defaultTZID),
+                Sequence = eventFromDB.Sequence ?? 0,
+                RecurrenceID = eventFromDB.RecurrenceId != null ? new iCalDateTime((DateTime)eventFromDB.RecurrenceId, defaultTZID) : null,
+                GeographicLocation = eventFromDB.Geo != null ? new GeographicLocation(eventFromDB.Geo) : null/*"+-####;+-####"*/,
+                Description = eventFromDB.Description ?? null
+            };
+
+
+            // Additional data loading, references
+            eventFromDB.CalendarEventExceptionsPeriodsList = db.Database.SqlQuery<CalendarEventExceptionsPeriodsList>("SELECT * FROM CalendarEventExceptionsPeriodsList WHERE IdEvent = {0}", eventFromDB.Id).ToList();
+            eventFromDB.CalendarEventRecurrencesPeriodList = db.Database.SqlQuery<CalendarEventRecurrencesPeriodList>("SELECT * FROM CalendarEventRecurrencesPeriodList WHERE IdEvent = {0}", eventFromDB.Id).ToList();
+            eventFromDB.CalendarReccurrence = db.Database.SqlQuery<CalendarReccurrence>("SELECT * FROM CalendarReccurrence WHERE EventID = {0}", eventFromDB.Id).ToList();
+
+            foreach (var r in eventFromDB.CalendarEventExceptionsPeriodsList)
+            {
+                r.CalendarEventExceptionsPeriod = db.Database.SqlQuery<CalendarEventExceptionsPeriod>("SELECT * FROM CalendarEventExceptionsPeriod WHERE IdException = {0}", r.Id).ToList();
+            }
+            foreach (var r in eventFromDB.CalendarEventRecurrencesPeriodList)
+            {
+                r.CalendarEventRecurrencesPeriod = db.Database.SqlQuery<CalendarEventRecurrencesPeriod>("SELECT * FROM CalendarEventRecurrencesPeriod WHERE IdRecurrence = {0}", r.Id).ToList();
+            }
+
+            //----------------------------------------------------------------------
+            // Additional Processing
+            //----------------------------------------------------------------------
+
+
+            FillExceptionsDates(iCalEvent, eventFromDB, defaultTZID);
+            FillRecurrencesDates(iCalEvent, eventFromDB, defaultTZID);
+            FillRecurrences(iCalEvent, eventFromDB);
+            // Unneeded, commented out (we just want times, occurrences, not meta data records)
+            //FillContacts(        iCalEvent, eventFromDB);
+            //FillAttendees(       iCalEvent, eventFromDB);
+            //FillComments(        iCalEvent, eventFromDB);
+
+            //----------------------------------------------------------------------
+
+            return iCalEvent;
+        }
+
+        public iCalendar OptimizedGetICalendarEventsFromDBByUserDateRange(
+            CalendarUser user,
+            DateTime startDate,
+            DateTime endDate)
+        {
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return GetICalendarForEvents(OptimizedGetEventsByUserDateRange(
+                user,
+                startDate,
+                endDate,
+                user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null));
+        }
+
+        /// <summary>
+        /// Get Events By User and by Range of Dates
+        /// Note: Because recurrence events are more complicated,
+        /// they are recovered regardless of dates
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="startEvaluationDate">Included (more than or equals)</param>
+        /// <param name="endEvaluationDate">Excluded (less than)</param>
+        /// <returns></returns>
+        /// <remarks>2015-09 Iago</remarks>
+        public IEnumerable<iEvent> OptimizedGetEventsByUserDateRange(
+            CalendarUser user,
+            DateTime startEvaluationDate,
+            DateTime endEvaluationDate,
+            string defaultTZID)
+        {
+            using (var db = new CalendarDll.Data.loconomicsEntities())
+            {
+                // Recovers Events 
+                // for a particular User
+                // and a particular Date Range
+                // OR, if they are Recurrence, any Date Range (cannot be filtered out at database)
+                // Filtering is 'all events complete or partially inside the range: complete included or with a previous
+                // start or with a posterior end'.
+                // As of #463, comment https://github.com/dani0198/Loconomics/issues/463#issuecomment-36936782 and nexts.
+                var listEventsFromDB = db.Database.SqlQuery<CalendarEvents>(@"
+                    SELECT [Id]
+                          ,[UserId]
+                          ,[EventType]
+                          ,[Summary]
+                          ,[UID]
+                          ,[CalendarAvailabilityTypeID]
+                          ,[Transparency]
+                          ,[StartTime]
+                          ,[EndTime]
+                          ,[IsAllDay]
+                          ,[StampTime]
+                          ,[TimeZone]
+                          ,[Priority]
+                          ,[Location]
+                          ,[UpdatedDate]
+                          ,[CreatedDate]
+                          ,[ModifyBy]
+                          ,[Class]
+                          ,[Organizer]
+                          ,[Sequence]
+                          ,[Geo]
+                          ,[RecurrenceId]
+                          ,[TimeBlock]
+                          ,[DayofWeek]
+                          ,[Description]
+                      FROM [CalendarEvents]
+                    WHERE userId = {2} AND (
+                        (StartTime < {0} AND EndTime >= {1})
+                        OR EXISTS (SELECT id from CalendarReccurrence AS R where R.EventID = CalendarEvents.Id)
+                    )
+                ", endEvaluationDate, startEvaluationDate, user.Id);
+
+                foreach (var currEventFromDB in listEventsFromDB)
+                {
+                    // IT LOADS RELATED DATA TOO, like recurrence
+                    // MUST BE BEFORE the CreateBetweenEvent (but can be yielded later if order must change,
+                    // with change on CreateBetweenEvent on where time is applied; right now is after)
+                    var iCalEvent = OptimizedCreateEvent(currEventFromDB, defaultTZID, db);
+
+                    yield return iCalEvent;
+
+                    //----------------------------------------------------------------------
+                    // If the Event is a Busy Event
+                    // that is Work of a Provider,
+                    // it adds a "Between Time" or buffer time
+                    // so that the next Job is not completely next in the Calendar.
+                    //
+                    // This is to give some preparation or transportation time
+                    // between Jobs to the Provider
+                    //----------------------------------------------------------------------
+
+                    //----------------------------------------------------------------------
+                    // Event types
+                    //----------------------------------------------------------------------
+                    //
+                    // 1	booking - GENERATES BETWEEN TIME
+                    // 2	work hours
+                    // 3	availibility events
+                    // 4	imported
+                    // 5	other
+                    //
+                    //----------------------------------------------------------------------
+
+                    if (iCalEvent.EventType == 1 &&
+                        user.BetweenTime > TimeSpan.Zero)
+                    {
+                        yield return CreateBetweenEvent(iCalEvent, user);
                     }
 
                     //var newEv = CreateEvent(c);
@@ -1064,15 +1259,95 @@ namespace CalendarDll
                     //----------------------------------------------------------------------
 
                 }
-
-                return iCalEvents;            
-            
             }
-
         }
 
+        /// <summary>
+        /// Represents a slot of time (a range of two dates)
+        /// for a type of availability.
+        /// </summary>
+        public class AvailabilitySlot
+        {
+            public DateTime StartTime;
+            public DateTime EndTime;
+            public int AvailabilityTypeID;
+            public override bool Equals(object obj)
+            {
+                var other = obj as AvailabilitySlot;
+                if (other != null)
+                {
+                    return StartTime == other.StartTime && EndTime == other.EndTime && AvailabilityTypeID == other.AvailabilityTypeID;
+                }
+                return false;
+            }
+        }
 
+        /// <summary>
+        /// Compute the occurrences of all events, normal and recurrents, from the filled in icalendar given between the dates
+        /// as of the internal logic of the icalendar component.
+        /// Results are in UTC
+        /// </summary>
+        /// <param name="ical"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlotsUtc(iCalendar ical, DateTime startTime, DateTime endTime)
+        {
+            foreach (var ev in ical.Events)
+            {
+                foreach (var occ in ev.GetOccurrences(startTime, endTime))
+                {
+                    yield return new AvailabilitySlot {
+                        StartTime = occ.Period.StartTime.UTC,
+                        EndTime = occ.Period.EndTime.UTC,
+                        AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
+                    };
+                }
+            }
+        }
 
+        public IEnumerable<AvailabilitySlot> SortDateRange(IEnumerable<AvailabilitySlot> dateRanges)
+        {
+            return dateRanges.OrderBy(dr => dr.StartTime);
+        }
+
+        /// <summary>
+        /// For the given user and included in the given dates, returns all the
+        /// availability slots for the computed event occurrences, complete or partial.
+        /// Results are event occurrences in the format of availability slots, so overlapping of
+        /// slots will happen, and holes. Results are sorted by start time.
+        /// Another method must perform the computation of put all this slots in a single, consecutive
+        /// and complete timeline, where some availabilities takes precedence over others to don't have overlapping.
+        /// Results may include slots that goes beyond the given filter dates, but it ensures that all that, partial or complete
+        /// happens in that dates will be returned.
+        /// 
+        /// Resulting dates are given in UTC.
+        /// NOTE: Events from database are read as if they are in the machine local timezone (what is true currently for all events,
+        /// being the testing and production server at America/Los_Angeles timezone), passing in that information to the icalendar API
+        /// so performs conversions properly.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="startTime">Included (more than or equals)</param>
+        /// <param name="endTime">Excluded (less than)</param>
+        /// <returns></returns>
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInUtcAvailabilitySlotsByUser(int userID, DateTime startTime, DateTime endTime)
+        {
+            // We need an icalendar to include events and being able to compute occurrences
+            iCalendar data = GetICalendarLibraryInstance();
+            var tz = data.AddLocalTimeZone();
+            var events = OptimizedGetEventsByUserDateRange(new CalendarUser(userID), startTime, endTime, tz.TZID);   
+            foreach (var ievent in events)
+                data.Events.Add(ievent);
+
+            // The GetOccurrences API discards the part of the passed datetimes, it means that the endtime
+            // gets discarded, to be included in the results we need to add 1 day to it.
+            // A later process may want to filter out to don't have results out of the given dates.
+            endTime = endTime.AddDays(1);
+
+            var occurrences = GetEventsOccurrencesInAvailabilitySlotsUtc(data, startTime, endTime).OrderBy(dr => dr.StartTime);
+
+            return occurrences;
+        }
         #endregion
 
         #region Fill Exceptions Dates

@@ -1,0 +1,184 @@
+﻿@*
+    It allows serviceProfessionals to create and update a booking.
+    It has a different set of possibilities than a client or the normal booking process.
+    NOTE: To query/get bookings, use the general 'bookings' API.
+
+    TODO To implement "payment processing enabled", implemented only for "scheduling software"
+    TODO Complete documentation details (methods, params)
+
+    EXAMPLES {
+        "Freelancer Bookings (post only)": {
+            "url": "/api/v1/en-US/me/service-professional-booking",
+            "post": {
+                "clientUserID": 141,
+                "jobTitleID": 106,
+                "addressID": 1,
+                "startTime": "2015-01-01T10:00:00Z",
+                "services": [ 8, 35 ],
+                "preNotesToClient": "",
+                "preNotesToSelf": "",
+                "api comment": "Fields of the Simplified Freelancer Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing."
+            }
+        },
+        "Freelancer Bookings (single only)": {
+            "url": "/api/v1/en-US/me/service-professional-booking/73",
+            "put": {
+                "addressID": 19,
+                "startTime": "2015-02-08T10:30:00Z",
+                "services": [ 8, 35 ],
+                "preNotesToClient": "",
+                "preNotesToSelf": "",
+                "postNotesToClient": "",
+                "postNotesToSelf": "",
+                "api comment": "Fields of the Simplified Freelancer Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing."
+            }
+        }
+    }
+*@
+@functions{
+    public class RestServiceProfessionalBookings : RestWebPage
+    { 
+        /// <summary>
+        /// It returns an item.
+        /// NOTE: Same code than the general 'bookings' API, just to enable this API to
+        /// return the created/updated booking record.
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        public dynamic GetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            if (itemID > 0)
+            {                
+                return LcRest.Booking.Get(itemID, true, false, userID);
+            }
+
+            throw new HttpException(404, "Booking not found.");
+        }
+        
+        public dynamic SetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            
+            Validation.RequireField("startTime", LcRessources.RequiredField("Start Date and Time"));
+            Validation.RequireField("clientUserID", LcRessources.RequiredField("Client"));
+            Validation.RequireField("addressID", LcRessources.RequiredField("Location"));
+            Validation.Add("clientUserID", Validator.Integer("Choose a valid client"));
+            Validation.Add("addressID", Validator.Integer("Choose a valid location"));
+
+            /* TODO: Update to receive an array of object like
+                * { serviceProfessionalServiceID: 0, totalPrice: 0, clientInputData: null,... }
+                * like the pricing estimate detail object.
+            */
+            if (!Request.Form.AllKeys.Contains<string>("pricing[]")) {
+                ModelState.AddError("pricing", "Choose almost one service");
+            }
+            var pricing = Request.Form.GetValues("pricing[]");
+            var pricingIds = new List<int>();
+            if (pricing == null || pricing.Length < 1) {
+                ModelState.AddError("pricing", "Choose almost one service");
+            }
+            else {
+                foreach(var pricingItem in pricing) {
+                    var sid = pricingItem.AsInt(0);
+                    if (sid == 0) {
+                        ModelState.AddError("pricing", "Some specified services are wrong");
+                        break;
+                    }
+                    pricingIds.Add(sid);
+                }
+            }
+            
+            var startTime = DateTimeFromISO(Request["startTime"]);
+            if (!startTime.HasValue) {
+                ModelState.AddError("startTime", "Start date/time is not valid");
+            }
+
+            if (!Validation.IsValid()) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            try
+            {
+                var locale = LcRest.Locale.Current;
+                if (itemID == 0) {
+                    itemID = LcRest.Booking.InsServiceProfessionalBooking(
+                        Request["clientUserID"].AsInt(),
+                        userID,
+                        Request["jobTitleID"].AsInt(),
+                        Request["addressID"].AsInt(),
+                        startTime.Value,
+                        pricingIds,
+                        Request["preNotesToClient"],
+                        Request["preNotesToSelf"],
+                        Request["allowBookUnavailableTime"].AsBool(false),
+                        locale.languageID,
+                        locale.countryID
+                    ).bookingID;
+                }
+                else {
+                    var itemExists = LcRest.Booking.UpdServiceProfessionalBooking(
+                        itemID,
+                        userID,
+                        Request["addressID"].AsInt(),
+                        startTime.Value,
+                        pricingIds,
+                        Request["preNotesToClient"],
+                        Request["preNotesToSelf"],
+                        Request["postNotesToClient"],
+                        Request["postNotesToSelf"],
+                        Request["allowBookUnavailableTime"].AsBool(false)
+                    );
+                    
+                    // If doesn't exists, return null early
+                    if (!itemExists) {
+                        return null;
+                    }
+                }
+                
+                // Send communication to client (email)
+                // TODO Reenable when reimplemented email templates
+                //LcMessaging.SendProviderBooking(itemID); 
+            }
+            catch (ConstraintException delEx)
+            {
+                // The item cannot be inserted/updated:
+                throw new HttpException(400, delEx.Message);
+            }
+            
+            // Return database copy
+            return GetItem(itemID);
+        }
+        
+        public override dynamic Post()
+        {
+            if (UrlData.Count > 0)
+                throw new HttpException(405, "Method not allowed.");
+
+            return SetItem(0);
+        }
+
+        public override dynamic Put()
+        {           
+            dynamic updated = null;
+            if (UrlData.Count == 1)
+                updated = SetItem(UrlData[0].AsInt(0));
+
+            if (updated == null) {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Booking not found.");
+            }
+
+            return updated;
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
+    new RestServiceProfessionalBookings().JsonResponse(this);
+}

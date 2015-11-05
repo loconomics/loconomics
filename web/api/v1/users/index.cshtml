@@ -1,0 +1,82 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetchs a summary of the public user profile.
+    Returned object includes data from different APIs available also individually
+    on its own endpoints that follows the same (or adapted) name as the property
+    where they are included.
+    For information on the returned format of each one, check out each individual API.
+    The result includes: profile, rating, verificationsSummary, jobProfile (only on freelancers,
+    and extended with properties rating and verificationsSummary to get that specific info
+    for the job title).
+
+    IMPORTANT: this API is expected to be reach under the URL ~/users/{userID}
+    not using the trailing '/index'.
+
+    Options:
+    
+    - GET /
+        @returns {
+            profile: {}, // like /users/{userID}/profile
+            rating: {}, // like /users/{userID}/rating
+            verificationsSummary: {}, // like /users/{userID}/verifications-summary
+            jobProfile: [{}] // like /users/{userID}/jobProfile BUT extended with rating and verificationsSummary
+        }
+
+    EXAMPLES {
+        "Public user profile summary": {
+            "url": "/api/v1/en-US/users/141",
+            "get": {}
+        }
+    }
+*@
+@functions{
+    public class RestUserProfileSummary : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+            if (userID <= 0)
+            {
+                throw new HttpException(404, "User Not Found");
+            }
+            
+            var profile = LcRest.PublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
+            if (profile == null)
+                throw new HttpException(404, "User Not Found");
+
+            // when service professional, gets only job-titles related rating (-2), otherwise client rating only (0)
+            var rating = LcRest.PublicUserRating.Get(userID, profile.isServiceProfessional ? -2 : 0);
+
+            var verificationsSummary = LcRest.PublicUserVerificationsSummary.Get(userID, profile.isServiceProfessional ? -2 : 0);
+
+            var locale = LcRest.Locale.Current;
+
+            var jobProfile = profile.isServiceProfessional ? LcRest.PublicUserJobTitle.GetList(userID, locale.languageID, locale.countryID) : null;
+
+            var extendedJobProfile = jobProfile == null ? null : ((IEnumerable<LcRest.PublicUserJobTitle>)jobProfile).Select(x =>
+            {
+                return new {
+                    userID = x.userID,
+                    jobTitleID = x.jobTitleID,
+                    intro = x.intro,
+                    cancellationPolicyID = x.cancellationPolicyID,
+                    instantBooking = x.instantBooking,
+                    jobTitleSingularName = x.jobTitleSingularName,
+                    jobTitlePluralName = x.jobTitlePluralName,
+                    rating = LcRest.PublicUserRating.Get(userID, x.jobTitleID),
+                    verificationsSummary = LcRest.PublicUserVerificationsSummary.Get(userID, x.jobTitleID)
+                };
+            });
+
+            return new {
+                profile = profile,
+                rating = rating,
+                verificationsSummary = verificationsSummary,
+                jobProfile = extendedJobProfile
+            };
+        }
+    }
+}
+@{
+    new RestUserProfileSummary().JsonResponse(this);
+}

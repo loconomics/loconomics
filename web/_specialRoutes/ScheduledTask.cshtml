@@ -1,0 +1,22 @@
+﻿@using WebMatrix.Data;
+@using System.Text;
+@{
+    var logresult = ScheduleTask.Run();
+}
+@if (!LcHelpers.InLive)
+{
+    //Response.ContentType = "text/plain";
+    <div><h2>Log</h2>
+    <pre>@logresult</pre>
+    </div>
+
+    try
+    {
+        if (LcCalendar.LastBulkImport != null)
+        {
+        <div><h2>Timeline</h2>
+        @Html.Raw(LcCalendar.LastBulkImport.ToHtmlString(showStartTime: false, showEndTime: false, showNotes: false))
+        </div>
+        }
+    } catch {}
+}

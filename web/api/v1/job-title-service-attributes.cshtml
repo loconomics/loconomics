@@ -1,0 +1,31 @@
+﻿@using WebMatrix.WebData;
+@*
+    Get the list of service attributes, categories and experience assigned to a user and job title
+    with all public text details for visualization.
+
+    EXAMPLES {
+        "Job Title Service Attributes": {
+            "url": "/api/v1/en-US/job-title-service-attributes/106",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestJobTitleServiceAttributes : RestWebPage
+    {
+        public override dynamic Get()
+        {           
+            if (UrlData.Count == 1 && UrlData[0].IsInt()) {
+                var jobTitleID = UrlData[0].AsInt();
+                var locale = LcRest.Locale.Current;
+                return LcRest.JobTitleServiceAttributes.Get(jobTitleID, locale.languageID, locale.countryID);
+            }
+
+            return base.Get();
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestJobTitleServiceAttributes().JsonResponse(this);
+}

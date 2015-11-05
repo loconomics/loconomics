@@ -1,0 +1,88 @@
+﻿@*
+    Allows users to send feedback to Loconomics.
+
+    Options:
+    
+    - POST
+        message:string
+        becomeACollaborator:bool (Only allowed on request to 'IDEAS')
+        vocElementID:int
+        userDevice:string A JSON object encoded as string with a userAgent property from the webview/browser and
+            additional optional fields like 'device' and 'model' from something like PhoneGap Device Plugin.
+
+    - @Result:LcRest.Feedback object with the feedbackID filled automatically
+
+    EXAMPLES {
+        "Feedback Support": {
+            "url": "/api/v1/en-US/feedback/support",
+            "post": {
+                "message": "A problem with that you know",
+                "vocElementID": 1,
+                "userDevice": "{ \"userAgent\": \"Mozilla/5.0 Some Browser\" }"
+            }
+        },
+        "Feedback Ideas": {
+            "url": "/api/v1/en-US/feedback/ideas",
+            "post": {
+                "message": "I have an idea!",
+                "vocElementID": 1,
+                "becomeACollaborator": true,
+                "userDevice": "{ \"userAgent\": \"Mozilla/5.0 Some Browser\" }"
+            }
+        }
+    }
+*@
+@functions{
+    public class RestFeedback : RestWebPage
+    {
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 1)
+            {
+                var vocExperienceCategoryID = 0;
+                switch (UrlData[0].ToUpper()) {
+                    case "IDEAS":
+                        vocExperienceCategoryID = 1;
+                        break;
+                    case "SUPPORT":
+                        vocExperienceCategoryID = 2;
+                        break;
+                    default:
+                        return base.Post();
+                }
+                
+                var feedback = new LcRest.Feedback {
+                    vocExperienceCategoryID = vocExperienceCategoryID,
+                    userID = WebSecurity.CurrentUserId,
+                    message = Request["message"],
+                    becomeACollaborator = vocExperienceCategoryID == 1 ? Request["becomeACollaborator"].AsBool() : false,
+                    vocElementID = Request["vocElementID"].AsInt(),
+                    userDevice = Request["userDevice"]
+                };
+
+ 	            LcRest.Feedback.PostFeedback(feedback);
+
+                // On support request, send an email
+                if (vocExperienceCategoryID == 2) {
+                    LcMessaging.SendMail("help@loconomics.com", "Message to /feedback/support API", feedback.message, WebSecurity.CurrentUserName);
+                }
+                else if (vocExperienceCategoryID == 1) {
+                    // On ideas request, send an email
+                    LcMessaging.SendMail("voc@loconomics.com", "Message to /feedback/ideas API", feedback.message, WebSecurity.CurrentUserName);
+                }
+
+                // User becomes an owner by its own request
+                if (feedback.becomeACollaborator) {
+                    LcData.UserInfo.BecomeCollaborator(feedback.userID);
+                }
+
+                return feedback;
+            }
+            return base.Post();
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestFeedback().JsonResponse(this);
+}

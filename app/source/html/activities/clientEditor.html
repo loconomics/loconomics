@@ -1,0 +1,66 @@
+<!-- ClientEdition activity -->
+<div class="container-fluid LightForm" data-activity="clientEditor">
+    <form role="form" data-bind="submit: save">
+        <h2 class="SectionTitle"
+            data-bind="css: { 'is-syncing': isSyncing }">
+            <span data-bind="text: header"></span>
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+        </h2>
+        
+        <div data-bind="css: { 'is-loading': isLoading }">
+            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
+
+        <div data-bind="with: client()">
+            
+            <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
+
+            <div class="form-group">
+                <div class="input-group" data-bind="css: { 'input-group': $root.validPhone() }">
+                    <input type="tel" class="form-control"
+                         data-bind="textInput: phone, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
+                         placeholder="Mobile phone" aria-label="Mobile phone" />
+                    <span class="input-group-btn" data-bind="visible: $root.validPhone()">
+                        <a href="#" data-bind="attr: { href: 'tel:' + $root.validPhone() }" class="btn btn-info"><span class="sr-only">Call to this phone</span><span class="fa ion ion-ios-telephone-outline"></span></a>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" data-bind="checked: canReceiveSms, disable: $root.isLocked() || $root.isReadOnly()" />
+                    Can receive SMS
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <div class="input-group" data-bind="css: { 'input-group': $root.validEmail() }">
+                    <input type="email" class="form-control"
+                         data-bind="textInput: email, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
+                         placeholder="Email" aria-label="Email" />
+                    <span class="input-group-btn" data-bind="visible: $root.validEmail()">
+                        <a href="#" data-bind="attr: { href: 'mailto:' + $root.validEmail() }" class="btn btn-info"><span class="sr-only">Write e-mail</span><span class="fa ion ion-ios-at-outline"></span></a>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <select class="form-control" data-bind="value: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Birth Day (optional)', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
+            </div>
+            
+            <textarea class="form-control" data-bind="textInput: notesAboutClient, disable: $root.isLocked"
+                      placeholder="Notes about client (only seen by you)"></textarea>
+
+        </div>
+
+        <div class="LightForm-submitBar">
+            <button type="submit" class="btn btn-primary btn-block"
+                    data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked(), event: { click: confirmRemoval }, visible: !isNew()"></button>
+        </div>
+  </form>
+</div>

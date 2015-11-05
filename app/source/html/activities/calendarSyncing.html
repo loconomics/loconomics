@@ -1,0 +1,37 @@
+<!-- CalendarSyncing activity -->
+<div class="LightForm" data-activity="calendarSyncing">
+
+    <h2 class="SectionTitle">Calendar Syncing</h2>
+    <form data-bind="submit: save" class="container">
+        
+        <p class="isolated text-muted">
+            Do you use a calendar already? We can both import your availability and export your Loconomics bookings to ensure you never miss an appointment. 
+        </p>
+        
+        <div class="isolated">
+            <div class="form-group">
+                <label for="calendarSync-icalImportUrl">
+                    Please paste the URL from your iCal-supported calendar to import your free/busy information here:
+                </label>
+                <div>
+                    <input type="url" id="calendarSync-icalImportUrl" class="form-control"
+                           data-bind="value: sync.icalImportUrl, disable: isLocked"/>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+        </div>
+
+        <div class="form-group">
+            <label for="calendarSync-icalExportUrl">
+                Please copy this URL and paste it into your iCal-supported calendar to sync all your Loconomics appointments:
+            </label>
+            <div>
+                <input type="url" readonly id="calendarSync-icalExportUrl" class="form-control"
+                       data-bind="value: sync.icalExportUrl" />
+            </div>
+        </div>
+        <div class="isolated">
+            <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { click: reset }">Reset Private URL</button>
+        </div>
+    </form>
+</div>

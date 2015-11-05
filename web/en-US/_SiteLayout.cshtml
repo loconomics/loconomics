@@ -3,16 +3,18 @@
 @{
     Response.ContentEncoding = System.Text.Encoding.UTF8;
     var u = LcData.UserInfo.GetUserRow();
-    var isHomePage = PageData["IsHomePage"] ?? false;
     var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     // Updated assets version, to avoid problems with cache of css & js assets
     LcAssets.AssetsVersion = "20141216";
 
-    // Sniff IE browsers or based on its same engine (Trident).
-    var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident") : false;
+    // Sniff old IE browsers based on its engine (Trident) and version: so if it's Trident engine but is not the latest
+    // version 7.0, then is IE 10 or lower; Trident/7.0 is IE11, and it's fine. Compatibility mode uses a lower Trident version,
+    // same for other browsers based on the same engine, and IE-replacement Edge does not report Trident so will not exist greater
+    // versions than 7.0:
+    var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("Trident/") && !Request.UserAgent.Contains("Trident/7.0") : false;
     
-    // Main assets that allow minification
+    /*// Main assets that allow minification
     var styleCss = "Styles/common";
     var loadScripts = new List<string>();
     // Enabled only on dev
@@ -23,205 +25,59 @@
     } else {
         loadScripts.Add("common.min.js");
         styleCss += ".min.css";
-    }
-    
-    var onBehalfOf = LcHelpers.OnBehalfOf();
-    
-    bool showWelcomeHeader = PageData["ShowWelcomeHeader"] ?? false;
+    }*/
 
-    // Show welcome popup depending on the parameter passed from the page or
-    // detected automatically as true if anonymous user or provider without positions:
-    var showWelcomePopup = PageData["ShowWelcomePopup"] ?? 
-        (u == null ? true : u.IsProvider && LcData.UserInfo.GetUserPos().Count == 0);
-    var includeWelcomePopup = (showWelcomePopup && u == null) || u == null;
+    //var onBehalfOf = LcHelpers.OnBehalfOf();
 }
-@helper howItWorksLi(){
-                        <li>
-                            <dl class="how-it-works">
-                                <dt><a id="launchHowItWorks" href="@(LcUrl.LangPath)HelpCenter/HowItWorks/">How it works &#x25BC;</a></dt>
-                                <dd>
-                                    <ul>
-                                        <li><a href="@(LcUrl.LangPath)HelpCenter/HowItWorks/#howitworks-customers">Customers</a></li>
-                                        <li><a href="@(LcUrl.LangPath)HelpCenter/HowItWorks/#howitworks-providers">Service providers</a></li>
-                                    </ul>
-                                </dd>
-                            </dl>
-                        </li>
-}
-@* html attributes: data-base-url and data-culture are used by LcUrl.js. Data-culture is used by i18n.js too. *@
 <!doctype html>
-    <!--[if lt IE 8]>    <html class="no-js ie ie7 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
-    <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
-    <!--[if gt IE 8]> <html class="no-js ie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
-    <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode" data-culture="@culture" data-base-url="@LcUrl.AppPath" data-fb-appid="@Facebook.AppId"> <!--<![endif]-->
+    <html class="no-js" lang="@abbrLangCode" data-culture="@culture" data-base-url="@LcUrl.AppPath" data-fb-appid="@Facebook.AppId">
     <head>
         <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>Loconomics - @Page.Title</title>
         <meta name="description" content="Find service providers to do the job right. At your service!"/>
         <meta name="author" content="Loconomics Inc."/>
-        <meta name="viewport" content="width=device-width"/><!--,initial-scale=1-->
+        <meta name="viewport" content="width=device-width"/>
         
         <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
 
         @* Our styles *@
-        @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
+        @*LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
         @LcAssets.GetStylesTags()
-
         @foreach (var js in loadScripts)
         {
             @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/" + js)
-        }
+        }*@
         @* GetScriptsTags at the end of the document to delay load *@
 
         @if(isIE){
-        <!--[if lt IE 9]>
         <style type="text/css">
             body,html,iframe{overflow: hidden; overflow:hidden !important;}
         </style>
-        <![endif]-->
         }
     </head>
-    <body class="@PageData["BodyClass"] @(includeWelcomePopup && showWelcomePopup ? "strict-welcome-popup" : "")" data-facebook-appid="@Facebook.AppId" data-facebook-language="@Facebook.Language">
-        @if (includeWelcomePopup)
-        {
-            // Annonymous access, Welcome popup
-            <div id="welcome-popup-overlay" class="smooth-box-block-overlay @(showWelcomePopup ? "auto-show" : "")">
-                <div id="welcome-popup-container" class="smooth-box-block-element">
-                    @RenderPage(LcUrl.RenderLangPath + "Account/$WelcomePopup.cshtml")
-                </div>
-            </div>
-        }
+    <body data-facebook-appid="@Facebook.AppId" data-facebook-language="@Facebook.Language">
         @if (isIE)
         {
-            <!--[if lt IE 9]>
             <iframe width="100%" height="100%" border="0" style="border:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:9999;filter: alpha(opacity=90);" src="@(LcUrl.LangUrl)HelpCenter/UpgradeBrowser/"></iframe>
-            <![endif]-->
         }
-        @RenderBody()
-        <header id="site-header">
-
-            @if (showWelcomeHeader)
-            {
-                <div class="WelcomeHeader">
-                    <div class="wrap">
-                        <h1>Welcome to Loconomics.</h1>
-                        <span>We're glad you're here.</span>
-                    </div>
-                </div>
-            }
-
-		    <div class="wrap">
-			    <a id="logo" class="replace" href="@Href(LcUrl.LangPath)">Loconomics, at your service.</a>
-                @if (!showWelcomeHeader) {
-
-                    if (!WebSecurity.IsAuthenticated)
-                    {
-                        <ul class="anonymous-tools">
-                                @howItWorksLi()
-                                @*if (!showWelcomePopup) {*@
-                                <li><a class="register" href="@(LcUrl.LangPath)Account/Register/">Sign Up</a></li>
-                                <li><a class="login" href="@(LcUrl.LangPath)Account/Login/">Login</a></li>
-                        </ul>
-                    }
-			        <ul class="user-tools">
-                        @if (WebSecurity.IsAuthenticated)
-                        {
-                            <li>
-					            <dl class="user-nav">
-                                    @{
-                            var usermenuGreeting = "Welcome, {0}!";
-                            if (N.W(u.FirstName) == null)
-                            {
-                                usermenuGreeting = "Welcome!";
-                            }
-                            else
-                            {
-                                usermenuGreeting = String.Format(usermenuGreeting, u.FirstName);
-                            }
-						            <dt>@(usermenuGreeting) &#x25BC;</dt>
-                                    }
-						            <dd>
-                                        <ul>
-                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/")">My Dashboard</a></li>
-                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/messages/")">Messages</a></li>
-                                            @if (u.IsProvider)
-                                            {
-                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/availability/")">Availability</a></li>
-                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/your-work/")">Your Work</a></li>
-                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/promote/")">Promote</a></li>
-                                            }
-                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/about-you/")">About you</a></li>
-                                            <li><a href="@Href(LcUrl.LangPath + "dashboard/privacy/")">Privacy</a></li>
-                                            <li><a href="@Href(LcData.UserInfo.GetMyPublicURL())">Public Profile</a></li>
-                                            <li><a href="@Href(LcUrl.LangPath + "Account/Logout/")">Logout</a></li>
-                                        </ul>
-						            </dd>
-					            </dl>
-				            </li>
-                            @howItWorksLi()
-                        }
-				        <li>
-					        <dl class="lang-country">
-						        <dt class="current-lang-country @LcUrl.LangId">English (US) &#x25BC;</dt>
-						        <dd>
-                                    <ul>
-							            <li class="current"><a href="@Href(LcUrl.AppPath)en-US/">English (US)</a></li>
-                                    </ul>
-						        </dd>
-					        </dl>
-				        </li>
-                        @if (!WebSecurity.IsAuthenticated || !u.IsProvider)
-                        {
-			                <li class="actions"><a class="main-action" href="@(LcUrl.LangPath)Account/ProviderWelcome/">Become a provider</a></li>
-                        }
-			        </ul>
-                }
-                @if (onBehalfOf != null)
-                {
-                    <div style="float:right;clear:both;color:red;margin-top:5px;padding:0 5px;border:5px solid red;border-width:0 0 0 5px;">@onBehalfOf</div>
-                }
-		    </div>
-        </header>
-        <footer id="site-footer">
-            <div class="truste-seal">@if(LcHelpers.Channel != "localdev"){ @RenderPage(LcUrl.RenderLangPath + "HelpCenter/_TrusteSealWidget.cshtml") }</div>
-            <div class="social-links"><a class="replace icon facebook" href="http://www.facebook.com/loconomics">Facebook</a></div>
-            <div class="social-links"><a class="replace icon twitter" href="http://www.twitter.com/loconomics">Twitter</a></div>
-            <div class="site-links"><a href="@(LcUrl.LangPath)About/">About</a>|<a href="@(LcUrl.LangPath)About/TermsOfUse/">Terms of Use</a>|<a href="@(LcUrl.LangPath)About/PrivacyPolicy/">Privacy Policy</a>|<a href="@Href(LcUrl.LangPath + "HelpCenter/")">FAQs</a>|<a href="http://blog.loconomics.com/">Blog</a></div>
-        </footer>
-        <div class="scripts">           
-            @* Javascript linked from asp.net *@
-            @LcAssets.GetScriptsTags()
-            @if (PageData["InlineScript"] != null)
-            {
-                <script type="text/javascript">@Html.Raw(PageData["InlineScript"])</script>
-            }
-            @* Google Analytics *@
-            @if (LcHelpers.Channel == "live") {
-            <script type="text/javascript">
-                var _gaq = _gaq || [];
-  				_gaq.push(['_setAccount', 'UA-36860613-1']);
-  				_gaq.push(['_trackPageview']);
-  				(function() {
-    			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  				})();
-            </script>
-            }
-       
-        </div>
-        <div class="lc-ressources">
-            <span id="lcres-quit-without-save">@LcRessources.GetText("quit-without-save")</span>
-            <span id="lcres-changes-not-saved">@LcRessources.GetText("changes-not-saved")</span>
-            <span id="lcres-tab-has-changes-stay-on">@LcRessources.GetText("tab-has-changes-stay-on")</span>
-            <span id="lcres-tab-has-changes-continue-without-change">@LcRessources.GetText("tab-has-changes-continue-without-change")</span>
-        </div>
-
-        @if (LcHelpers.InLive)
+        else
         {
-            @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$OlarkIntegration.cshtml")
-            @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$ZendeskIntegration.cshtml")
+            @RenderBody()
+
+            <div class="scripts">           
+                @* Javascript linked from asp.net *@
+                @LcAssets.GetScriptsTags()
+                @if (PageData["InlineScript"] != null)
+                {
+                    <script type="text/javascript">@Html.Raw(PageData["InlineScript"])</script>
+                }
+            </div>
+            if (LcHelpers.InLive)
+            {
+                @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$GoogleAnalytics.cshtml")
+                @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$OlarkIntegration.cshtml")
+                @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$ZendeskIntegration.cshtml")
+            }
         }
     </body>
 </html>

@@ -1,0 +1,121 @@
+/**
+    Classes for .loadingSpinner and .is-loading and .is-saving states.
+    
+    The element to set the .loadingSpinner class is usually like:
+      <span class="spinner text-info">
+        <span class="fa ion ion-load-c"></span>
+      </span>
+**/
+
+@keyframes spin { 100% { transform:rotate(360deg); } }
+
+.loadingSpinner
+    font-size: 1em;
+    vertical-align: middle;
+    transition: opacity 1.5s;
+    opacity: 0;
+    pointer-events: none;
+    
+    &.loadingSpinner--big
+        font-size: 1.5em;
+
+    &.loadingSpinner--collapsed
+        display: none;
+
+    &.btn
+        opacity: 1;
+
+    // It floats the spinner using positioning, centering it
+    // and with background so keeps on top of other things
+    &.loadingSpinner--floating
+        position: absolute
+        z-index: 9000
+        left: 0
+        right: 0
+        text-align: center
+        background: white
+        
+    // It places the spinner centered in a row
+    // for itself.
+    &.loadingSpinner--row
+        text-align: center
+        // In normal state, keeps absolute to not reserve space
+        // But in is-loading is changed to static
+        position: absolute
+        left: 0
+        right: 0
+
+    // It floats the spinner to the right
+    &.loadingSpinner--onRight
+        position: absolute
+        top: 0
+        right: 0
+        z-index: 9000
+
+    &.loadingSpinner--bigger
+        font-size: 21px; //1.5em
+
+    .icon
+        transition: color 1.5s;
+        // Initial animation state, required to avoid problems on some cases
+        transform: rotate(0deg);
+
+// Support single loading icons, not inside the loadingSpinner structure (more versatil)
+.icon-loading
+    opacity 0
+    transition: opacity 1.5s, color 1.5s;
+    
+    &.icon-loading-spinner
+        transform: rotate(0deg);
+        // Avoiding clip problems when rotating
+        margin: 0 2px;
+        overflow: visible !important;
+        
+.is-loading
+    position: relative;
+
+    .loadingSpinner
+        opacity: 1;
+
+        &.loadingSpinner--collapsed
+            display: inline-block;
+
+        .icon
+            animation: spin 3s linear infinite;
+            
+        &.loadingSpinner--row
+            display: block;
+            position: static;
+            
+    // Support single loading icons, not inside the loadingSpinner structure (more versatil)
+    .icon-loading
+        opacity 1
+    .icon-loading-spinner 
+        animation: spin 3s linear infinite;
+
+.is-saving
+    @extend .is-loading
+
+    .loadingSpinner .icon
+    .icon-loading
+        color $state-warning-text
+
+.is-syncing
+    @extend .is-loading
+
+    .loadingSpinner .icon
+    .icon-loading
+        color $state-info-text
+
+.SectionTitle
+    .loadingSpinner--onRight
+        padding: 7px
+
+.input-group-addon
+    position relative
+    .loadingSpinner
+        background-color $gray-lighter !important
+        
+        &.loadingSpinner--floating
+            // Fix position for Webkit/blink based browsers
+            top: 8px;

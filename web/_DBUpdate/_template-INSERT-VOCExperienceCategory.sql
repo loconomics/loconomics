@@ -1,0 +1,20 @@
+INSERT INTO [VOCExperienceCategory]
+   ([VOCExperienceCategoryID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[VOCExperienceCategoryName]
+   ,[VOCExperienceCategoryDescription]
+   ,[CreateDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   (@VOCExperienceCategoryID
+   ,@LanguageID
+   ,@CountryID
+   ,@VOCExperienceCategoryName
+   ,@VOCExperienceCategoryDescription
+   ,@CreateDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active)

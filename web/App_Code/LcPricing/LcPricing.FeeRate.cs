@@ -8,6 +8,7 @@ using System.Web;
 /// </summary>
 public static partial class LcPricingModel
 {
+    [Obsolete("Use LcRest.PricingSummary methods with updated logic based on PricingType")]
     public class FeeRate
     {
         public decimal Percentage;

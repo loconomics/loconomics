@@ -1,0 +1,15 @@
+<!-- Activity textEditor -->
+<div class="container-fluid LightForm" data-activity="textEditor">
+
+  <h2 class="SectionTitle" id="textEditorTitle" data-bind="visible: headerText, text: headerText">Text</h2>
+
+  <div class="isolated">
+    <textarea id="textEditorText" data-bind="value: text, valueUpdate: 'afterkeydown'" aria-labelledby="textEditorTitle" class="form-control" rows="2"></textarea>
+  </div>
+
+  <div class="row LightForm-submitBar">
+    <div class="col-xs-6"><button type="button" class="btn btn-warning btn-block" data-bind="event: { click: cancel }">cancel</button></div>
+    <div class="col-xs-6"><button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }">Save</button></div>
+  </div>
+
+</div>

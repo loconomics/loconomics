@@ -1,0 +1,288 @@
+﻿@using WebMatrix.WebData;
+@*
+    Allows a client to create a booking, in other words: to book a service professional.
+    There is only POST access, no editing, no fetching.
+    On creation, the just created booking details are returned and later can
+    be fetched using the /bookings API.
+
+    Options:
+
+    - GET /
+        @params {
+            serviceProfessionalUserID:int,
+            jobTitleID:int,
+            bookCode:string [Optional]
+        }
+
+        @result RestBooking. See the /bookings API for details.
+    
+    - POST /
+        @params {
+            TODO complete list
+
+            serviceAddressID:int ID of the address where service will be performed (must belong to client or service professional
+                and is overwrited by the value of serviceAddress[addressID] if provided.
+            serviceAddress:Address Object to hold a serviceAddress[addressID] or the full details of a new
+                address saved for the client to be used as the place where service will be performed.
+        }
+
+        @result RestBooking. See the /bookings API for details.
+        
+    EXAMPLES {
+        "Book a service professional (client booking)": {
+            "url": "/api/v1/en-US/me/client-booking",
+            "post": {
+                "serviceProfessionalUserID": 141,
+                "jobTitleID": 106,
+                "serviceStartTime": "2015-10-19T08:30:00.000Z",
+                "alternative1StartTime": "2015-10-26T09:30:00.000Z",
+                "alternative2StartTime": null,
+                "serviceAddress": {
+                    "addressID": 240,
+                    "addressName": "Service Area",
+                    "addressLine1": "",
+                    "postalCode": 98001,
+                    "countryCode": "US",
+                    "latitude": 47.3394747,
+                    "longitude": -122.2667661,
+                },
+                "services": [8, 108],
+                "promotionalCode":null,
+                "billingAddress": {
+                    "postalCode": 90001,
+                    "paymentMethodID": "0",
+                    "nameOnCard": "",
+                    "cardNumber": "123456789456123",
+                    "expirationMonth": "01",
+                    "expirationYear": "2017",
+                    "securityCode": "1565",
+                    "savePayment": false
+                }
+            }
+        }
+    }
+*@
+@functions{
+    public class RestMeClientBooking : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0)
+                throw new HttpException(404, "Not Found");
+            
+            // Query to fetch information in order to start
+            // creation of a booking
+            var clientID = WebSecurity.IsAuthenticated ? WebSecurity.CurrentUserId : 0;
+            var serviceProfessionalID = Request["serviceProfessionalUserID"].AsInt();
+            var jobTitleID = Request["jobTitleID"].AsInt();
+            var bookCode = Request["bookCode"];
+            var locale = LcRest.Locale.Current;
+            var newBooking = LcRest.Booking.NewFor(clientID, serviceProfessionalID, jobTitleID, locale.languageID, locale.countryID, bookCode);
+            if (newBooking == null)
+                throw new HttpException(404, "Not Found");
+
+            return newBooking;
+        }
+
+        public override dynamic Post()
+        {
+            this.RequiresUser(LcData.UserInfo.UserType.User);
+            
+            if (UrlData.Count > 0)
+                throw new HttpException(405, "Method not allowed.");
+            
+            var userID = WebSecurity.CurrentUserId;
+
+            var itemID = CreateItem();
+
+            if (itemID > 0)
+            {
+                return LcRest.Booking.Get(itemID, true, false, userID);
+            }
+
+            throw new HttpException(500, "Something goes wrong");
+        }
+        
+        public dynamic CreateItem()
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            int itemID = 0;
+            
+            Validation.RequireField("serviceProfessionalUserID", LcRessources.RequiredField("Service Professional"));
+            Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
+            Validation.Add("serviceProfessionalUserID", Validator.Integer("Service Professional"));
+            Validation.Add("jobTitleID", Validator.Integer(LcRessources.RequiredField("Job Title")));
+            
+            // TODO Implement gratuity as of #659
+            //Validation.Add("gratuityAmount", Validator.Decimal("Gratuity must be a number"));
+            //Validation.Add("gratuityPercentage", Validator.Decimal("Gratuity must be a number"));
+            
+            var serviceProfessionalUserID = Request.Form["serviceProfessionalUserID"].AsInt();
+            var jobTitleID = Request.Form["jobTitleID"].AsInt();
+            var bookCode = Request.Form["bookCode"];
+            //var gratuityAmount = Request.Form["gratuityAmount"].AsDecimal();
+            //var gratuityPercentage = Request.Form["gratuityPercentage"].AsDecimal();
+            // TODO To implement on recurring bookings. It's expected that more fields are required, to know the recurrence repeatition pattern/rules
+            //var makeRepeatBooking = Request.Form["makeRepeatBooking"].AsBool();
+            
+            var locale = LcRest.Locale.Current;
+            // Get booking presets for current data, to know some fixed settings like instantBooking
+            var booking = LcRest.Booking.NewFor(userID, serviceProfessionalUserID, jobTitleID, locale.languageID, locale.countryID, bookCode);
+
+            /* TODO: Update to receive an array of object like
+                * { serviceProfessionalUserID: 0, totalPrice: 0, clientInputData: null,... }
+                * like the pricing estimate detail object.
+            */
+            if (!Request.Form.AllKeys.Contains<string>("services[]"))
+            {
+                ModelState.AddError("services", "Choose almost one service");
+            }
+            var pricing = Request.Form.GetValues("services[]");
+            var pricingIds = new List<int>();
+            if (pricing == null || pricing.Length < 1) {
+                ModelState.AddError("services", "Choose almost one service");
+            }
+            else {
+                foreach(var pricingItem in pricing) {
+                    var sid = pricingItem.AsInt(0);
+                    if (sid == 0) {
+                        ModelState.AddError("services", "Some specified services are wrong");
+                        break;
+                    }
+                    pricingIds.Add(sid);
+                }
+            }
+            
+            // Date/times: main and alternative1/2
+            var requiredStartTimeName = "Start date and time";
+            
+            DateTime? alternative1StartTime = null;
+            DateTime? alternative2StartTime = null;
+            if (!booking.instantBooking) {
+                requiredStartTimeName = "Preferred start date and time";
+                if (!Request.Form["alternative1StartTime"].IsEmpty()) {
+                    alternative1StartTime = DateTimeFromISO(Request.Form["alternative1StartTime"]);
+                    if (!alternative1StartTime.HasValue) {
+                        ModelState.AddError("alternative1StartTime", "Alternative date and time 1 is not valid");
+                    }
+                }
+                if (!Request.Form["alternative2StartTime"].IsEmpty()) {
+                    alternative2StartTime = DateTimeFromISO(Request.Form["alternative2StartTime"]);
+                    if (!alternative2StartTime.HasValue)
+                    {
+                        ModelState.AddError("alternative2StartTime", "Alternative date and time 2 is not valid");
+                    }
+                }
+            }
+
+            var serviceStartTime = DateTimeFromISO(Request.Form["serviceStartTime"]);
+            if (!serviceStartTime.HasValue)
+            {
+                ModelState.AddError("startTime", requiredStartTimeName + " is not valid");
+            }
+
+            var serviceAddress = new LcRest.Address
+            {
+                addressID = (Request["serviceAddress[addressID]"] ?? Request["serviceAddressID"]).AsInt(0),
+                addressLine1 = Request["serviceAddress[addressLine1]"],
+                addressLine2 = Request["serviceAddress[addressLine2]"],
+                addressName = Request["serviceAddress[addressName]"],
+                postalCode = Request["serviceAddress[postalCode]"],
+                specialInstructions = Request["serviceAddress[specialInstructions]"],
+                countryCode = Request["serviceAddress[countryCode]"] ?? locale.countryCode,
+                latitude = Request["serviceAddress[latitude]"].IsEmpty() ? (double?)null : (double)Request["serviceAddress[latitude]"].AsDecimal(),
+                longitude = Request["serviceAddress[longitude]"].IsEmpty() ? (double?)null : (double)Request["serviceAddress[longitude]"].AsDecimal()
+            };
+            if (serviceAddress.IsNewAddress()) {
+                serviceAddress.userID = userID;
+                
+                Validation.RequireField("serviceAddress[postalCode]", LcRessources.RequiredField("Zip Code"));
+                Validation.Add("serviceAddress[addressLine1]", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
+                Validation.Add("serviceAddress[addressLine2]", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
+                Validation.Add("serviceAddress[addressName]", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
+                Validation.Add("serviceAddress[specialInstructions]", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
+                Validation.Add("serviceAddress[latitude]", Validator.Decimal("Latitude must be a number"));
+                Validation.Add("serviceAddress[longitude]", Validator.Decimal("Longitude must be a number"));
+            }
+
+            if (!Validation.IsValid() || !ModelState.IsValid) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            try
+            {               
+                // Create booking
+                booking = LcRest.Booking.InsClientBooking(
+                    userID,
+                    serviceProfessionalUserID,
+                    jobTitleID,
+                    serviceAddress,
+                    serviceStartTime.Value,
+                    alternative1StartTime,
+                    alternative2StartTime,
+                    pricingIds,
+                    locale.languageID,
+                    locale.countryID,
+                    bookCode
+                );
+                itemID = booking.bookingID;
+                
+                // Collect payment
+                var address = new LcData.Address {
+                    AddressLine1 = Request["billingAddress[addressLine1]"],
+                    AddressLine2 = Request["billingAddress[addressLine2]"],
+                    PostalCode = Request["billingAddress[postalCode]"],
+                    CountryID = locale.countryID
+                };
+                var autoAddress = LcRest.Address.GetPostalCodeData(address.PostalCode, address.CountryID, true);
+                if (autoAddress != null) {
+                    address.StateProvinceCode = autoAddress.stateProvinceCode;
+                    address.City = autoAddress.city;
+                }
+                
+                var paymentErrors = booking.CollectPayment(new LcPayment.InputPaymentMethod
+                {
+                    paymentMethodID = Request["paymentMethod[paymentMethodID]"],
+                    cardNumber = Request["paymentMethod[cardNumber]"],
+                    nameOnCard = Request["paymentMethod[nameOnCard]"],
+                    expirationMonth = Request["paymentMethod[expirationMonth]"],
+                    expirationYear = Request["paymentMethod[expirationYear]"],
+                    securityCode = Request["paymentMethod[securityCode]"],
+                    billingAddress = address
+                }, Request["paymentMethod[savePayment]"].AsBool());
+
+                if (paymentErrors != null && paymentErrors.Count > 0)
+                {
+                    // At this point, we show errors and the API consumer must attempt
+                    // calls only to update the provided payment data for the generated bookingID
+                    // not to pass all the data again since the other details are saved and
+                    // available time reserved.
+                    foreach(var paymentErr in paymentErrors) {
+                        ModelState.AddError(paymentErr.Key, paymentErr.Value);
+                    }
+                    // TODO Needs return the errors and the bookingID
+                }
+                
+                // Send communication to client (email)
+                // TODO Reenable when reimplemented email templates
+                //LcMessaging.SendProviderBooking(itemID);
+            }
+            catch (ConstraintException delEx)
+            {
+                // The item cannot be inserted/updated:
+                throw new HttpException(400, delEx.Message);
+            }
+            
+            // Return ID
+            return itemID;
+        }
+    }
+}
+@{
+    // This API, *in an exceptional way*, allows anonymous access on GET, because we choosen to allow
+    // sign-up on the booking confirmation step. On that cases, a userID of 0 will be used for database
+    // checks.
+    //Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestMeClientBooking().JsonResponse(this);
+}

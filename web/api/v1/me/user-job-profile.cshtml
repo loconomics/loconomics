@@ -1,0 +1,360 @@
+﻿@*
+    Get the list and details of job titles attached to the logged user (a service professional).
+    The collection of job titles is called the "User Job Profile".
+    It allows to edit the data of each one, and special actions on each like deactive/reactive
+
+    TODO Complete docs
+
+    EXAMPLES {
+        "User Job Profile": {
+            "url": "/api/v1/en-US/me/user-job-profile",
+            "get": { },
+            "post": {
+                "jobTitleID": 106,
+                "intro": "Job title introduction",
+                "cancellationPolicyID": 1,
+                "instantBooking": true
+            }
+        },
+        "User Job Profile (item -- Job Title)": {
+            "url": "/api/v1/en-US/me/user-job-profile/106",
+            "get": { },
+            "put": {
+                "intro": "Job title introduction",
+                "cancellationPolicyID": 1,
+                "instantBooking": true
+            },
+            "delete": { }
+        },
+        "User Job Profile - Deactivation": {
+            "url": "/api/v1/en-US/me/user-job-profile/106/deactivate",
+            "post": { }
+        },
+        "User Job Profile - Reactivation": {
+            "url": "/api/v1/en-US/me/user-job-profile/106/reactivate",
+            "post": { }
+        }
+    }
+*@
+@functions{
+    public class RestUserJobProfile : RestWebPage
+    {
+        /// <summary>
+        /// Retrieve the full list of job titles or one by jobTitleID
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Get()
+        {
+            // Item ID
+            if (UrlData.Count == 1 && UrlData[0].IsInt()) {
+                return GetItem(UrlData[0].AsInt(0));
+            }
+            else if (UrlData.Count == 1) {
+                throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+            }
+            else if (UrlData.Count > 1) {
+                throw new HttpException(404, "Not Found");
+            }
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            
+            return LcData.JobTitle.GetUserJobTitles(userId);
+        }
+        
+        /// <summary>
+        /// Internal utility to get a record for a single job title
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        private dynamic GetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            if (itemID > 0)
+            {              
+                var items = LcData.JobTitle.GetUserJobTitles(userID, itemID);  
+                var item = items == null || items.Count == 0 ? null : items[0];
+                if (item != null) {
+                    return item;
+                }
+            }
+
+            throw new HttpException(404, "Job Title not found.");
+        }
+        
+        private dynamic PerformAction() {
+            
+            // Two segments:
+            // - jobTitleID
+            // - actionName to execute
+            if (UrlData.Count == 2) {
+                if (UrlData[0].IsInt()) {
+                    
+                    // Response must be OK if goes fine (by default for POST is 'Created'
+                    // it does not apply on this case)
+                    WebPage.Response.StatusCode = 200;
+                    
+                    // Parameters
+                    int userID = WebSecurity.CurrentUserId;
+                    var jobTitleID = UrlData[0].AsInt();
+                    
+                    // Result holders
+                    var done = false;
+                    
+                    switch (UrlData[1].ToLower()) {
+                        case "deactivate":
+                            done = LcData.JobTitle.DeactivateUserJobTitle(userID, jobTitleID);
+                            // It cannot be done if record not exists, notify:
+                            if (!done) {
+                                throw new HttpException(404, "Not found");
+                            }
+                            else {
+                                // Return an updated item
+                                return GetItem(jobTitleID);
+                            }
+
+                        case "reactivate":
+                            
+                            // Double check if item exists
+                            if (GetItem(jobTitleID) == null) {
+                                throw new HttpException(404, "Not found");
+                            }
+                            else {
+                                done = LcData.JobTitle.ReactivateUserJobTitle(userID, jobTitleID);
+                                
+                                if (!done) {
+                                    // It cannot be done, since we already know
+                                    // that the record exists, the problem only can
+                                    // be that constraints for 'active profile' were not
+                                    // fullfilled to allow manual activation.
+                                    // Notify about pending steps:
+                                    var alertsMsg = "You must complete another {0} steps to activate this profile.";
+                                    var alerts = LcData.GetActiveRequiredUserAlertsCount(userID, jobTitleID);
+                                    throw new HttpException(400, String.Format(alertsMsg, alerts));
+                                }
+                                else {
+                                    // Return an updated item
+                                    return GetItem(jobTitleID);
+                                }
+                            }
+
+                        default:
+                            throw new HttpException(404, "Not found");
+                    }
+                }
+                else {
+                    throw new HttpException(400, "Invalid Job Title ID");
+                }
+            }
+            
+            throw new HttpException(404, "Not found");
+        }
+        
+        /// <summary>
+        /// Add a new job title to the profile.
+        /// Or execute some actions on specific sub-URLs applied to 
+        /// a jobTitleID URL.
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 0) {
+
+                // Parameters
+                int userID = WebSecurity.CurrentUserId;
+                var jobTitleID = 0;
+                if (Request["jobTitleID"].IsInt()) {
+                    jobTitleID = Request["jobTitleID"].AsInt(0);
+                }
+                else if (UrlData.Count == 1) {
+                    throw new HttpException(400, "A Job Title is required");
+                }
+                
+                var jobTitleExists = false;
+
+                if (jobTitleID == 0) {
+                    // Look-up/new-job-title version: it's possible that the user wrotes a 
+                    // job title name without pick-up one from the list, we look-up for that in database
+                    // for a jobTitleID,
+                    // and may not exists, so we try to create a new one with a template.
+                    
+                    // Name for the job title is required, if there is no one (more than three letters, to avoid excesive generic names/searchs),
+                    // throw error of job title required
+                    var jobTitleName = Request.Form["jobTitleName"] ?? "";
+                    // Normalize name
+                    jobTitleName = jobTitleName.Trim().CollapseSpaces().ToTitleCase();
+                    if (jobTitleName.Length < 4) {
+                        throw new HttpException(400, "A Job Title is required");
+                    }
+
+                    // Search
+                    var jobTitle = LcData.JobTitle.SearchJobTitles(jobTitleName, LcRest.Locale.Current).FirstOrDefault();
+                    if (jobTitle != null) {
+                        // Use the first one
+                        jobTitleID = jobTitle.value;
+                        jobTitleExists = true;
+                    }
+                    else {
+                        //  Create a new job-title based on the given name #650
+                        jobTitleID = LcData.JobTitle.CreateJobTitleByName(jobTitleName, LcRest.Locale.Current.languageID, LcRest.Locale.Current.countryID, userID);
+                        // Check well know custom error codes
+                        if (jobTitleID == -1) {
+                            throw new HttpException(400, String.Format("The Job Title '{0}' is not allowed.", jobTitleName));
+                        }
+                        LcMessaging.NotifyNewJobTitle(jobTitleName, jobTitleID);
+                        jobTitleExists = true;
+                    }
+                }
+                else {
+                    // Double check that the job title exists
+                    jobTitleExists = LcData.JobTitle.GetJobTitle(jobTitleID) != null;
+                }
+                
+                if (jobTitleID > 0 && jobTitleExists) {
+                    // Read data; It stops on not valid:
+                    var data = GetValidatedItemBodyInput();
+                
+                    LcData.JobTitle.InsertUserJobTitle(
+                        userID,
+                        jobTitleID,
+                        data.policyID,
+                        data.intro,
+                        data.instantBooking,
+                        LcRest.Locale.Current.languageID,
+                        LcRest.Locale.Current.countryID
+                    );
+                }
+                else {
+                    throw new HttpException(404, "Job Title not found or disapproved");
+                }
+                
+                return GetItem(jobTitleID);
+            }
+            else {
+                return PerformAction();
+            }
+        }
+        
+        /// <summary>
+        /// Checks that there is a valid itemID in the URL,
+        /// emiting errors on fail and double checking that 
+        /// the item exists.
+        /// Returns the itemID on success.
+        /// </summary>
+        /// <returns></returns>
+        private int CheckAndGetItemID() {
+            // Item ID
+            var itemID = 0;
+            if (UrlData[0].IsInt()) {
+                itemID = UrlData[0].AsInt(0);
+            }
+            else if (UrlData.Count == 1) {
+                throw new HttpException(400, "Invalid Job Title ID");
+            }
+            else {
+                throw new HttpException(404, "Not Found");
+            }
+            
+            // Check that the item exists
+            if (GetItem(itemID) == null) {
+                throw new HttpException(404, "Job Title not found");
+            }
+            
+            return itemID;
+        }
+        
+        /// <summary>
+        /// Runs validation against the 'body' fields of an item, that is the editable
+        /// fields without the primary key.
+        /// It throws HttpException if error, returns an object with the
+        /// data or defaults on success.
+        /// </summary>
+        private dynamic GetValidatedItemBodyInput()
+        {
+            // Validation rules
+            Validation.Add("intro", Validator.StringLength(2000, 0, "Job title introduction must be fewer than 2000 characters"));
+            Validation.Add("cancellationPolicyID", Validator.Integer("Invalid cancellation policy"));
+            if (!Request["instantBooking"].IsEmpty() && !Request["instantBooking"].IsBool()) {
+                ModelState.AddError("instantBooking", "The scheduling option must be a boolean (true for instant booking)");
+            }
+
+            if (!Validation.IsValid() || !ModelState.IsValid) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+            
+            return new {
+                intro = Request["intro"] ?? null,
+                policyID = Request["cancellationPolicyID"].AsInt(LcData.Booking.DefaultCancellationPolicyID),
+                // False as default
+                instantBooking = Request["instantBooking"].AsBool(false)
+            };
+        }
+
+        /// <summary>
+        /// Update editable fields for the job title:
+        /// - intro
+        /// - cancellationPolicyID
+        /// - instantBooking
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Put()
+        {
+            // Item ID
+            var itemID = CheckAndGetItemID();
+
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            var jobTitleID = itemID;
+            
+            // Stop on not valid:
+            var data = GetValidatedItemBodyInput();
+
+            // Updating
+            LcData.JobTitle.UpdateUserJobTitle(
+                userID,
+                jobTitleID,
+                data.policyID,
+                data.intro,
+                data.instantBooking,
+                LcRest.Locale.Current.languageID,
+                LcRest.Locale.Current.countryID
+            );
+
+            // Return the updated item
+            return GetItem(itemID);
+        }
+
+        /// <summary>
+        /// Soft removal of a job title from the profile.
+        /// It is internally disabled but appears as deleted for the user,
+        /// could be enabled by re-adding the job title to the profile.
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Delete()
+        {
+            // Item ID
+            var itemID = CheckAndGetItemID();
+            
+            // Get item to be deleted.
+            // It already throws 'not found' 
+            // if doesn't exists
+            var item = GetItem(itemID);
+
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            var jobTitleID = itemID;
+
+            // Delete
+            LcData.JobTitle.SoftDeleteUserJobTitle(userID, jobTitleID);
+         
+            // Return 'deleted' item (internal updated info cannot be fetched)
+            return item;
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestUserJobProfile().JsonResponse(this);
+}

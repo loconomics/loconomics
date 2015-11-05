@@ -8,6 +8,7 @@ using System.Web;
 /// </summary>
 public static partial class LcPricingModel
 {
+    [Obsolete("Moved to LcEnum.PriceCalculationType")]
     public enum PriceCalculationType : short
     {
         FixedPrice,

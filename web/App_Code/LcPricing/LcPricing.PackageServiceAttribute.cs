@@ -11,6 +11,7 @@ public static partial class LcPricingModel
     /// <summary>
     /// Represents a Service Attribute attached to a package
     /// </summary>
+    [Obsolete("Not needed in new API, only used on old server-side UI")]
     public class PackageServiceAttribute
     {
         public int ID;

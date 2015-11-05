@@ -8,6 +8,7 @@ using System.Web;
 /// </summary>
 public static partial class LcPricingModel
 {
+    [Obsolete("Not needed on new workflow (REST API, internal LcRest API)")]
     public class PricingModelData
     {
         public bool Success = false;

@@ -1,0 +1,595 @@
+﻿@using WebMatrix.WebData;
+@*
+    Addresses API: addresses organized by Kind of address for the logged user.
+
+    Kind:
+        /home
+        /billing
+        /service
+
+    The kind string-flag is attached to the address info as read-only for any of that types.
+
+    Under each, different sets of addresses are managed, the single home address, the personal
+    billing addresses (when booking a service professional, as client), and the service addresses
+    attached to a Job Title. Service addresses can be attached to the special JobTitleID:0, that
+    means is a client address where a servicie is performed by other user (the service professional).
+
+    Technical back-end notes: Current database scheme is two tables for addresses, generic address and service specific address details.
+    It's more complex than need to be (see issue #677), so in the API is treated as a unique, flat table,
+    but keeping the two primary keys scheme of the [service-address] table (addressID and jobTitleID) to avoid breakage for the
+    time the two tables scheme is keep on database and any old data that has duplicated addressID
+    on service-addresses for several jobTitleID (formerly positionID).
+    Here the address structure is considered like a single table where the few service specific fields are only
+    used when kind=service, validation applies only on that cases, on any other kind those include default false/null values and discarded
+    if included in an update or creation.
+
+    ### API
+    /addresses/service/:jobTitleID
+        - GET: list all the addresses attached to the Job Title. Kind=service
+
+        - POST: create a new address for the Job Title.
+            - addressName:string REQUIRED For the special 'home' address is not editable but needs a value to be sent,
+                                    internally keeps being 'Home' discarding incoming value.
+            - addressLine1:string OPTIONAL-IF:isServiceArea=1
+            - addressLine2:string OPTIONAL
+            - postalCode:string REQUIRED Public Postal Code, internally translated to postalCodeID and computes City and StateProvinceID,
+                                it uses too the current CountryID (per API call).
+            - latitude:float OPTIONAL
+            - longitud:float OPTIONAL
+            - specialInstructions:string OPTIONAL
+            - isServiceLocation:bool NOTE:For kind=service addresses, one of both fields (isServiceLocation and isServiceArea) must
+                                        to be set as 1:true. A job title address cannot exists without almost one flag.
+            - isServiceArea:bool NOTE: see isServiceLocation note.
+            - serviceRadius:decimal NOTE: Required to be greater than zero if isServiceArea is set to 1:true.
+
+    /addresses/:jobTitleID/:addressID
+        - GET: single address.
+
+        - PUT: update an address for the Job Title. Same fields as POSTing a new address with the addition of:
+            - updatedDate:datetime Optional for now, in future to check for update collisions.
+
+        - DELETE: deletes the address. If the address is internally linked, will be soft deleted.
+
+    /addresses/home
+        - GET: get the home address (single, permanent -ever exists-). Kind=home
+        - PUT: update the home address. Fields as described in service addresses but without the service specific
+            fields (isServiceLocation, isServiceArea, serviceRadius)
+
+    /addresses/billing
+        - GET: get a list of personal billing addresses. Kind=billing
+        - POST: create a new billing address. Fields as described in service addresses but without the service specific
+            fields (isServiceLocation, isServiceArea, serviceRadius)
+
+    /addresses/billing/:addressID
+        - GET: single address
+
+        - PUT: Update a billing address. Same fields as in POST.
+
+        - DELETE: deletes the address. If the address is internally linked, will be soft deleted.
+
+    ### Structures
+        address {
+            addressID:int Auto
+            jobTitleID:int
+            userID:int
+            addressName:string Auto-per-case Editable-per-case
+            addressLine1:string Editable
+            addressLine2:string Editable
+            postalCode:string Editable Note:internally is stored as postalCodeID, performing a lookup, but transparent to the API
+            city:string Auto Note:is assigned and stored with an automatic internal lookup per postalCodeID
+            stateProvinceCode:string Computed Note:internally is stored as stateProvinceID, performing a lookup with the postalCodeID,
+                                        but this field shows the country official CODE that represents the entity (its a short string, usually 2 uppercase letters)
+            stateProvinceName:string Computed Note:internally is stored as stateProvinceID, performing a lookup with the postalCodeID,
+                                        but this field shows the country official NAME that represents the entity in the local language
+            countryCode:string Computed Note:internally is stored as countryID, based on API-call/user-country and is used along with Postal Code for lookups.
+                                        It shows the international code for the country (ISO 3 letters, uppercase).
+            latitude:float Editable Note:if not specified, can be calculated server-side using Geolocation where possible.
+            longitude:float Editable Note:if not specified, can be calculated server-side using Geolocation where possible.
+            specialInstructions:string Editable
+            isServiceLocation:bool Editable Flag marking the address as a location where services are performed.
+            isServiceArea:bool Editable Flag marking the address as the reference point for an area where the service professional travels to performa services.
+            serviceRadius:decimal Editable Only required if isServiceArea has value 1:true. Sets the approximate distance of the service area (in miles for USA).
+            createdDate:datetime Auto Note: since internally there are two records internally with this field duplicated, the public value is get from the
+                                        [address] table (the first record to be created). 
+            updatedDate:datetime Auto Note: since internally there are two records internally with this field duplicated, the public value is get from the
+                                        one with the newest/greater value.
+            kind:string Computed Note: possible set of server-set values is: home, billing, service. It matches every API path, and all addresses returned
+                                    from each path will have the same value for Kind matching that API path. Is just an informative field and cannot be 
+                                    specified by the user.
+        }
+
+    EXAMPLES {
+        "Addresses: home (ever single)": {
+            "url": "/api/v1/en-US/me/addresses/home",
+            "get": { },
+            "put": {
+                "addressName":"Home",
+                "addressLine1":"Avda Castelao",
+                "addressLine2":"44",
+                "postalCode":"90001",
+                "specialInstructions":""
+            }
+        },
+        "Addresses: service addresses per Job Title": {
+            "url": "/api/v1/en-US/me/addresses/service/106",
+            "get": { },
+            "post": {
+                "addressName":"Workshop",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "isServiceLocation":true,
+                "isServiceArea":false,
+                "serviceRadius":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            }
+        },
+        "Addresses: service addresses per Job Title (single)": {
+            "url": "/api/v1/en-US/me/addresses/service/106/95",
+            "get": { },
+            "put": {
+                "addressName":"Billing",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "isServiceLocation":true,
+                "isServiceArea":false,
+                "serviceRadius":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            },
+            "delete": { }
+        },
+        "Addresses: billing addresses": {
+            "url": "/api/v1/en-US/me/addresses/billing",
+            "get": { },
+            "post": {
+                "addressName":"Workshop",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            }
+        },
+        "Addresses: billing addresses (single)": {
+            "url": "/api/v1/en-US/me/addresses/billing/71",
+            "get": { },
+            "put": {
+                "addressName":"Workshop",
+                "addressLine1":"Second street",
+                "addressLine2":"102",
+                "postalCode":"90001",
+                "specialInstructions":"",
+                "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
+            },
+            "delete": { }
+        }
+    }
+*@
+@functions{
+    public class RestAddresses : RestWebPage
+    {
+        private dynamic GetServiceAddresses(int jobTitleID)
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            
+            // TODO: Strictly, if jobTitleID does not exists for the user, the result must be a Not Found rather than empty
+
+            return LcRest.Address.GetServiceAddresses(userId, jobTitleID);
+        }
+        
+        private dynamic GetBillingAddresses()
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            
+            // TODO: Strictly, if jobTitleID does not exists for the user, the result must be a Not Found rather than empty
+
+            return LcRest.Address.GetBillingAddresses(userId);
+        }
+        
+        private dynamic GetHomeAddress()
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            return LcRest.Address.GetHomeAddress(userId);
+        }
+
+        private dynamic GetServiceAddress(int jobTitleID, int addressID)
+        {   
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            var address = LcRest.Address.GetServiceAddress(userId, jobTitleID, addressID);
+            if (address != null)
+                return address;
+
+            throw new HttpException(404, "Not found");
+        }
+        
+        private dynamic GetBillingAddress(int addressID)
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            var address = LcRest.Address.GetBillingAddress(userId, addressID);
+            if (address != null)
+                return address;
+
+            throw new HttpException(404, "Not found");
+        }
+        
+        private LcRest.Address GetAddress(int userId, int jobTitleID, int addressID, string kind = null) {
+            switch (kind) {
+                case LcRest.Address.AddressKind.Service:
+                    return GetServiceAddress(jobTitleID, addressID);
+
+                case LcRest.Address.AddressKind.Billing:
+                    return GetBillingAddress(addressID);
+
+                case LcRest.Address.AddressKind.Home:
+                    return GetHomeAddress();
+
+                default:
+                    // Is 'impossible' to reach this if every case was implemented,
+                    // mostly an error for dev/debug time
+                    throw new HttpException(500, "Server Error: Address Kind not managed.");
+            }
+        }
+
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                
+                switch (UrlData[0]) {
+                    case "service": {
+                        
+                        // Route: /services/:jobTitleID[/:addressID]
+                        
+                        if (UrlData[1].IsInt()) {
+                            
+                            var jobTitleID = UrlData[1].AsInt(0);
+                            
+                            if (UrlData.Count == 3) {
+                                var addressID = UrlData[2].AsInt(0);
+
+                                if (addressID > 0) {
+                                    return GetServiceAddress(jobTitleID, addressID);
+                                }
+                            }
+                            else if (UrlData.Count == 2) {
+                                 return GetServiceAddresses(jobTitleID);
+                            }
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "billing": {
+         
+                        // Route: /billing[/:addressID]
+                        
+                        if (UrlData.Count == 2) {               
+                            var addressID = UrlData[1].AsInt(0);
+                        
+                            if (addressID > 0) {
+                                return GetBillingAddress(addressID);
+                            }
+                        }
+                        else if (UrlData.Count == 1) {   
+                            return GetBillingAddresses();
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "home": {
+                        
+                        // Route: /home
+                        
+                        return GetHomeAddress();
+                    }
+                }
+            }
+
+            throw new HttpException(404, "Not found");
+        }
+        
+        private bool IsValidAddress(int jobTitleID) {
+
+            Validation.RequireField("postalCode", LcRessources.RequiredField("Zip Code"));
+            Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
+            Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
+            Validation.Add("serviceRadius", Validator.Decimal("Service Radius must be a number"));
+            Validation.Add("addressName", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
+            Validation.Add("addressLine1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
+            Validation.Add("addressLine2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
+            Validation.Add("specialInstructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
+           
+            if (jobTitleID != LcRest.Address.NotAJobTitleID) {
+                // One of the service flags is required
+                if (!Request.Form["isServiceLocation"].AsBool() &&
+                    !Request.Form["isServiceArea"].AsBool()) {
+                    ModelState.AddFormError("The service address must be a service location or a service area.");
+                }
+            }
+
+            // This check makes required some fields (name and address line 1) optional
+            // on service areas
+            var isServiceLocation = Request.Form["isServiceLocation"].AsBool(false);
+            var isServiceArea = Request.Form["isServiceArea"].AsBool(false);
+            if (!isServiceArea)
+            {
+                Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
+                Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
+            }
+            
+            return Validation.IsValid() && ModelState.IsValid;
+        }
+        
+        /// <summary>
+        /// It builds an address object using the form
+        /// data, and the formal parameters
+        /// </summary>
+        /// <returns></returns>
+        private LcRest.Address GetFormAddress(int userId, int jobTitleID, int addressID = 0) {
+            
+            var locale = LcRest.Locale.Current;
+
+            return new LcRest.Address {
+                addressID = addressID,
+                userID = userId,
+                jobTitleID = jobTitleID,
+                countryCode = locale.countryCode,
+                addressLine1 = Request.Form["addressLine1"],
+                addressLine2 = Request.Form["addressLine2"],
+                addressName = Request.Form["addressName"] ?? "Home",
+                postalCode = Request.Form["postalCode"],
+                latitude = Request.Form["latitude"].IsEmpty() ? null : DataTypes.GetTypedValue<double?>(Request.Form["latitude"], 0),
+                longitude = Request.Form["longitude"].IsEmpty() ? null : DataTypes.GetTypedValue<double?>(Request.Form["longitude"], 0),
+                isServiceArea = Request.Form["isServiceArea"].AsBool(),
+                isServiceLocation = Request.Form["isServiceLocation"].AsBool(),
+                serviceRadius = Request.Form["serviceRadius"].IsEmpty() ? null : DataTypes.GetTypedValue<decimal?>(Request.Form["serviceRadius"], 0),
+                specialInstructions = Request.Form["specialInstructions"]
+            };
+        }
+        
+        /// <summary>
+        /// Validate and create/update an address with the form information and the given parameters
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="jobTitleID"></param>
+        /// <param name="kind"></param>
+        /// <returns></returns>
+        private LcRest.Address SetAddress(int userId, int jobTitleID, int addressID, string kind) {
+            // Validation
+            if (!IsValidAddress(jobTitleID)) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+                
+            // Get data
+            var address = GetFormAddress(userId, jobTitleID, addressID);
+
+            // validate kind
+            if (!LcRest.Address.AddressKind.IsValid(kind)) {
+                throw new HttpException(500, "Server Error: Invalid address Kind specified.");
+            }
+            // Set kind
+            address.kind = kind;
+            
+            // Aditional validation
+            // Per comment on #677 2015-03-07 (https://github.com/dani0198/Loconomics/issues/677#issuecomment-77714980)
+            // The constraint that makes only one service radius allowed at a time is removed but with code copy, so next lines are commented:
+            // // Validate that the service radius is unique
+            // // Issue #86, details. for now, only allow one 'travel from' location for a simpler client visualization of provider working zones.
+            // if (kind == LcRest.Address.AddressKind.Service &&
+            //     address.isServiceArea && !LcRest.Address.IsNewServiceAreaAllowed(userId, jobTitleID, addressID)) {
+            //     throw new HttpException(400, "You already have a service radius location (can be only one).");
+            // }
+                            
+            // Set address: even for updates, the ID is returned as treated as can be new (thats only on creation)
+			try {
+				var newAddressID = LcRest.Address.SetAddress(address);
+				if (newAddressID == 0) {
+					// NOTE: Very, very strange this errors happens with current logic, just an important unexpected database error.
+					// OR a code udpate on the SQL code broke the creation or retrieval off the @AddressID
+					// OR new constraints added to SetAddress() allowed to return zero rather than raise an exception, the recommended
+					// way.
+					throw new HttpException(500, "Server Error: impossible to create the address at this time.");
+				}
+
+				// Return created/updated address
+				return GetAddress(userId, jobTitleID, newAddressID, kind);
+			}
+			catch (ValidationException ex) {
+				// A bad argument on SetAddress is in fact a validation error.
+				// Mainly, bad postal code, no city and stateprovince resolved
+                if (String.IsNullOrEmpty(ex.ParamName)) {
+                    ModelState.AddFormError(ex.Message);
+                }
+                else {
+				    ModelState.AddError(ex.ParamName, ex.Message);
+                }
+
+				throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+			}
+        }
+
+        private LcRest.Address DeleteAddress(int userId, int jobTitleID, int addressID, string kind) {
+
+            // Validate Kind first
+            if (!LcRest.Address.AddressKind.IsValid(kind)) {
+                throw new HttpException(500, "Server Error: Invalid address Kind specified.");
+            }
+            
+            // Grab a copy of the address
+            var address = GetAddress(userId, jobTitleID, addressID, kind);
+
+            // Double check it exists (that means too that the addressID exists for that Kind of address and not
+            // another --avoid attempts to try delete an addressID using a Kind API that does not apply to the ID),
+            // but still, best to be explicit on that check:
+            if (address != null &&
+                address.kind == kind) {
+                // Delete
+                LcRest.Address.DelAddress(userId, jobTitleID, addressID);
+                return address;
+            }
+
+            // Does not exists, or not on that Kind
+            throw new HttpException(404, "Not found");
+        }
+
+        public override dynamic Post()
+        {           
+            int userId = WebSecurity.CurrentUserId;
+            
+            if (UrlData.Count > 0) {
+                
+                switch (UrlData[0]) {
+                    case "service": {
+                        
+                        // Route: /services/:jobTitleID
+                        
+                        // jobTitleID can be 0, used when a client creates an address where
+                        // a service professional will performs the service, but address is owned by client
+                        var jobTitleID = UrlData[1].AsInt(0);
+                        
+                        if (UrlData.Count == 2 &&
+                            UrlData[1].IsInt()) {
+                            
+                            return SetAddress(userId, jobTitleID, LcRest.Address.NewAddressID, LcRest.Address.AddressKind.Service);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "billing": {
+         
+                        // Route: /billing/
+
+                        if (UrlData.Count == 1) {
+                            return SetAddress(userId, LcRest.Address.NotAJobTitleID, LcRest.Address.NewAddressID, LcRest.Address.AddressKind.Billing);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                }
+            }
+
+            throw new HttpException(404, "Not found");
+        }
+
+        public override dynamic Put()
+        {
+            int userId = WebSecurity.CurrentUserId;
+            
+            if (UrlData.Count > 0) {
+                
+                switch (UrlData[0]) {
+                    case "service": {
+                        
+                        // Route: /services/:jobTitleID/:addressID
+                        
+                        // jobTitleID can be 0, used when a client creates an address where
+                        // a service professional will performs the service, but address is owned by client
+                        var jobTitleID = UrlData[1].AsInt(0);
+                        var addressID = UrlData[2].AsInt(0);
+                        
+                        if (UrlData.Count == 3 &&
+                            UrlData[1].IsInt() &&
+                            addressID > 0) {
+
+                            return SetAddress(userId, jobTitleID, addressID, LcRest.Address.AddressKind.Service);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "billing": {
+         
+                        // Route: /billing/:addressID
+                        
+                        var addressID = UrlData[1].AsInt(0);
+
+                        if (UrlData.Count == 2 &&
+                            addressID > 0) {
+                            
+                            return SetAddress(userId, LcRest.Address.NotAJobTitleID, addressID, LcRest.Address.AddressKind.Billing);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "home": {
+                        
+                        // Route: /home
+                        
+                        return SetAddress(userId, LcRest.Address.NotAJobTitleID, LcRest.Address.NotAnAddressID, LcRest.Address.AddressKind.Home);
+                    }
+                }
+            }
+
+            throw new HttpException(404, "Not found");
+        }
+        
+        public override dynamic Delete()
+        {
+            int userId = WebSecurity.CurrentUserId;
+            
+            if (UrlData.Count > 0) {
+                
+                switch (UrlData[0]) {
+                    case "service": {
+                        
+                        // Route: /services/:jobTitleID/:addressID
+                        
+                        // jobTitleID can be 0, used when a client creates an address where
+                        // a service professional will performs the service, but address is owned by client
+                        var jobTitleID = UrlData[1].AsInt(0);
+                        var addressID = UrlData[2].AsInt(0);
+                        
+                        if (UrlData.Count == 3 &&
+                            UrlData[1].IsInt() &&
+                            addressID > 0) {
+
+                            return DeleteAddress(userId, jobTitleID, addressID, LcRest.Address.AddressKind.Service);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "billing": {
+         
+                        // Route: /billing/:addressID
+                        
+                        var addressID = UrlData[1].AsInt(0);
+
+                        if (UrlData.Count == 2 &&
+                            addressID > 0) {
+                            
+                            return DeleteAddress(userId, LcRest.Address.NotAJobTitleID, addressID, LcRest.Address.AddressKind.Billing);
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
+                    }
+                    case "home": {
+                        throw new HttpException(405, "DELETE is not allowed");
+                    }
+                }
+            }
+
+            throw new HttpException(404, "Not found");
+        }
+    }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestAddresses().JsonResponse(this);
+}

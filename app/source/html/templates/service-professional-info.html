@@ -1,0 +1,14 @@
+<script type="text/html" id="service-professional-info-template">
+    <div class="ServiceProfessionalInfo ServiceProfessionalInfo--md">
+        <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: profile() && profile().photoUrl }"></div>
+        <h3 class="ServiceProfessionalInfo-name" data-bind="text: profile() && profile().fullName"></h3>
+        <div class="ServiceProfessionalInfo-jobTitle" data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></div>
+        <div class="ServiceProfessionalInfo-businessName" data-bind="text: profile() && profile().businessName"></div>
+        <div class="ServiceProfessionalInfo-meta">
+            <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings" class="text-secondary"></app-stars-rating>
+            <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)</span>
+            <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i></span>
+            <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" data-bind="css: { 'ion-ios-heart': isClientFavorite, 'ion-ios-heart-outline': !isClientFavorite() }, attr: { 'aria-description': isClientFavorite() ? 'Favorite' : '' }"></i></span>
+        </div>
+    </div>
+</script>

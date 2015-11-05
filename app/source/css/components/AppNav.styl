@@ -1,0 +1,288 @@
+/**
+    AppNav Component (extends .navbar)
+**/
+@import "nib";
+
+.AppNav {
+    
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    position: absolute;
+    
+    // Logo
+    .navbar-brand {
+        float: none;
+        display: inline-block;
+    
+        // magic number! For some reason, the only line-height
+        // that limits the full height to the navbar-height (44px now)
+        line-height: 13px;
+
+        text-indent: -99999px;
+        // manually vertical 'visually' centering (depends on icon)
+        background: url("../images/logo-loconomics-header-mini.png") no-repeat center 2px;
+        hr-image("../images/logo-loconomics-header-mini@2x.png", 100px, 39px);
+        min-width: 100px;
+        min-height: 39px;
+        height: $app-navbar-height;
+        @media $media-big-navbar {
+            height: $big-navbar-height;
+            
+            background-position: center;
+        }
+    }
+    
+    .navbar-toggle {
+      float: none;
+      margin-right: 0;
+    }
+    
+    // Special changes on the SmartNavBar
+    .SmartNavBar {
+        // Header in buttons needs a more simple design, not like the middle title
+        .SmartNavBar-btn h1 {
+            color: $gray;
+            font-weight: normal;
+        }
+    }
+
+    // Menus
+    .App-menus {
+        // General menus container
+        background: white;
+    
+        // Individual menus set-up
+        > .navbar-collapse {
+            position: fixed;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            bottom: 0;
+            top: 0;
+            padding-top: $app-navbar-height;
+            @media $media-big-navbar {
+                padding-top: $big-navbar-height;
+            }
+            
+            // iOS7-8.1 requires a explicit z-index:
+            z-index: 300;
+            // No border
+            border-top: none;
+        }
+    
+        > .navbar-collapse.collapsing {
+            // Avoid scrollbar during animation
+            overflow: hidden;
+        }
+        
+        // Customization of Bootstrap navigation bar for use as menus
+        .nav {
+            background: $AppNav-backColor;
+            margin-top: 0;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 200;
+        }
+        
+        .App-menus-header {
+            margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-left);
+            padding: 15px;
+            border-bottom: 1px solid White;
+            background: $AppNav-backColor;
+            color: White;
+            
+            font-size: 1.1em;
+            
+            .App-menus-header-user {
+                text-align: center;
+                font-size: 1em;
+                display: block;
+                margin: 10px 0 0 0;
+            }
+            
+            .App-menus-header-photo {
+                display: block;
+                margin: auto;
+                text-align: center;
+                background: none;
+
+                img {
+                    width: 60px;
+                    height: 60px;
+                    display: inline-block;
+                    border: 3px solid White;
+                    border-radius: 100%;
+                    background: white;
+                    overflow: hidden;
+                }
+            }
+        }
+
+        // Main nav and its content
+        .navbar-nav {
+
+            padding-top: 10px;
+            
+            a {
+                color: white;
+                
+                padding: 10px 15px 10px 40px;
+
+                &:hover,
+                &:active {
+                    color: $gray;
+                    background: $gray-lighter;
+                    outline: none;
+                }
+                
+                // icons
+                > i {
+                    color: $AppNav-iconColor;
+                    margin-right: 5px;
+                }
+            }
+            li.active > a {
+                color: $brand-primary;
+            }
+        }
+    }
+
+    // Changing icon of menu togglers when opened
+    transitionNavSetup() {
+        transition-property: transform, opacity;
+        transition-duration: $AppNav-transitionDuration;
+        transition-timing-function: ease-in-out;
+    }
+    
+    .navbar-toggle,
+    > .SmartNavBar > .SmartNavBar-edge {
+        // To avoid the rotation from create a larger
+        // box, overflow:hidden is required:
+        overflow: hidden;
+        text-overflow: clip !important;
+    }
+    
+    .SmartNavBar .SmartNavBar-btn {
+        // NOTE: Fixing the ridiculous size of ion icons used on navbar
+        .ion {
+            font-size: 2em;
+            line-height: $app-navbar-height;
+        }
+
+        // NOTE: Fixing a bug on the menu icon of ionicons used right now, that with
+        // the general size (2em->30px) looks missaligned the bars, increasing a pixel
+        // looks fine
+        .ion-navicon {
+            font-size: 31px;
+        }
+    }
+
+    .navbar-toggle {
+        transitionNavSetup();
+    
+        > * {
+            transitionNavSetup();
+            opacity: 1;
+    
+            // display added for Chrome/Webkit, for some strange reason
+            // inline does not hides the children with opacitiy:0 and no transition
+            // and 'block' sets the alinment correctly.
+            display: block;
+    
+            > .icon {
+                // Fixing alingment on Chrome/Webkit
+                display: block;
+            }
+        }
+        // DISABLED: with icons changes, rotation does not work as expected
+        //transform: rotate(0deg);
+
+        // Adding the 'close' icon
+        &:before {
+            //font-family: "Glyphicons Halflings";
+            //content: "";
+            font-family: "Ionicons";
+            content: "";
+            // NOTE: It requires to fix the ridiculous size of ion icons
+            font-size: 2em;
+            line-height: $app-navbar-height;
+            @media $media-big-navbar {
+                line-height: $big-navbar-height;
+            }
+
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+
+            text-align: center;
+
+            pointer-events: none;
+            opacity: 0;
+            // The whole button is being rotate so this
+            // icon rotation is not required, BUT we
+            // simulate better a plus icon becoming
+            // a cross using this:
+            // DISABLED: with icons changes, rotation does not work as expected
+            //transform: rotate(45deg);
+
+            transitionNavSetup();
+        }
+
+        &[aria-expanded="true"] {
+
+            > * {
+                opacity: 0;
+            }
+
+            // DISABLED: with icons changes, rotation does not work as expected
+            //transform: rotate(180deg);
+
+            &:before {
+                opacity: 1;
+                // DISABLED: with icons changes, rotation does not work as expected
+                //transform: rotate(0deg);
+            }
+        }
+    }
+}
+
+// On AppNav opened, match SmartNavBar style with nav
+body.has-appNav-open {
+    .SmartNavBar {
+        //background: $AppNav-backColor;
+        background: transparent;
+        border-bottom-color: transparent;
+        
+        .SmartNavBar-btn {
+            color: White;
+        }
+        
+        pointer-events: none;
+        .SmartNavBar-edge,
+        .SmartNavBar-btn {
+            pointer-events: auto;
+        }
+        h1 {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+}
+// enable CSS transitions for 'open' style
+.AppNav {
+    .SmartNavBar {
+        transition: background $AppNav-transitionDuration $cubic-easing, border $AppNav-transitionDuration $cubic-easing;
+        
+        .SmartNavBar-btn {
+            transition: color $AppNav-transitionDuration $cubic-easing;
+        }
+        
+        h1 {
+            transition: opacity $AppNav-transitionDuration $cubic-easing;
+            opacity: 1;
+        }
+    }
+}

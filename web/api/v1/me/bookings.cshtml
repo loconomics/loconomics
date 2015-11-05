@@ -1,0 +1,59 @@
+﻿@*
+    Get bookings of the logged user.
+
+    TODO Rework API for mixed booking/bookingrequests, new fields and statuses
+
+    EXAMPLES {
+        "Bookings (read only)": {
+            "url": "/api/v1/en-US/me/bookings",
+            "get": {
+                 "start": "2014-06-01T12:00:00",
+                 "end": "2014-09-30T10:00:00Z"
+            }
+        },
+        "Bookings (single; read only)": {
+            "url": "/api/v1/en-US/me/bookings/73",
+            "get": {}
+        }
+    }
+*@
+@functions{
+    public class RestBookings : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            // Item ID
+            if (UrlData[0].IsInt())
+            {
+                return GetItem(UrlData[0].AsInt(0));
+            }
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            var startTime = DateTimeFromISO(Request.QueryString["start"]) ?? DateTime.Today;
+            var endTime = DateTimeFromISO(Request.QueryString["end"]) ?? startTime.AddDays(1);
+            
+            return LcRest.Booking.GetList(userId, startTime, endTime, true);
+        }
+        
+        public dynamic GetItem(int itemID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            if (itemID > 0)
+            {                
+                var item = LcRest.Booking.Get(itemID, true, false, userID);
+                if (item != null) {
+                    return item;
+                }
+            }
+
+            throw new HttpException(404, "Booking not found.");
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestBookings().JsonResponse(this);
+}

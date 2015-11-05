@@ -1,0 +1,40 @@
+/**
+    Backdrop mixim, creates a layer on the :before
+    of the element to be applied, visually hidden and
+    disabled to be showed and enabled when the element
+    includes the 'use-backdrop' class.
+    Has a smooth transition.
+**/
+backdrop() {
+    &:before {
+        content: '';
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+        position: fixed;
+        top: 0;
+        /*top: $app-navbar-height;
+        @media $media-big-navbar {
+            top: $big-navbar-height;
+        }*/
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: $AppNav-backColor; //black
+        visibility: visible;
+        display: block;
+        overflow: hidden;
+
+        display: block;
+        opacity: 0;
+        z-index: 150;
+        pointer-events: none;
+        transition-duration: 300ms;
+        transition-property: opacity;
+        transition-timing-function: ease-in-out;
+    }
+
+    &.use-backdrop:before {
+        pointer-events: all;
+        opacity: 1; //.4
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "lib": {
+        "www": {
+            "id": "@(id)",
+            "version": "@(version)"
+        }
+    },
+    "phonegap": {
+        "id": @(phonegapbuildId)
+    }
+}

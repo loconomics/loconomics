@@ -1,0 +1,37 @@
+<!-- Jobtitles activity -->
+<div data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
+    <h2 class="SectionTitle">
+        <span data-bind="text: jobTitleName">Job Title</span>
+        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+    </h2>
+    <ul class="TilesList">
+        <li><a class="InfoTile" href="/serviceProfessionalService" data-bind="attr: { href: getJobUrlTo('serviceProfessionalService') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Pricing and services</div>
+                <em data-bind="text: pricingCount"></em>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: getJobUrlTo('serviceAddresses') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <div>Service locations</div>
+                <em data-bind="text: addressesCount"></em>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
+            </div>                
+            <div class="Tile-content">
+                <p>Add Book Now button</p>
+            </div>
+        </a></li>
+    </ul>
+
+    <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
+</div>

@@ -13,16 +13,26 @@
         //  Código que se ejecuta cuando se cierra la aplicación
 
     }
-        
+
     void Application_Error(object sender, EventArgs e) 
     {
         Exception ex = Server.GetLastError();
         // Special cases (each page creates its own log file)
         if (ex is HttpException)
         {
+            // IMPORTANT: Catch several errors, like 404 "Not Found" works here because
+            // we have the custom url rewriting code at _AppStart.cshtml, like:
+            //  RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/CustomURL.cshtml");
+            // That way, ANY URL that has not a static or asp.net page goes that cshtml page, and that
+            // returns an error that is catch here. Without that, this code will never run because IIS
+            // runs its own 'not found/errors' logic far before (and customErrors web.config seems to not
+            // work for some reason, maybe needs to be in the root config or something in the rewriting there
+            // breaks it or the hosting set-up avoids custom errors on web.config).
             switch (((HttpException)ex).GetHttpCode()){
                 case 404:
-                    Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+                    // IMPORTANT: To enable splash screen, all not founds goes to index silently
+                    //Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+                    Response.Redirect("/");
                     // Execution ends right here.
                     break;
                 case 403:
@@ -30,6 +40,18 @@
                     // Execution ends right here.
                     break;
             }
+        }
+
+        // The wildcard Route for the /api (REST service) will try to map the URL
+        // to a 'cshtml' file, if does not exists, the next error is triggered, so
+        // we catch it and return the correct message;
+        // NO NEED to log this, is just a regular not found, but not controlled by the
+        // routing system.
+        if (ex is InvalidOperationException && ex.Message.Contains("'WebPagesRouteHandler'"))
+        {
+            Response.StatusCode = 404;
+            Response.Write("Not Found");
+            Response.End();
         }
 
         if (ex is HttpUnhandledException && ex.InnerException != null)
@@ -41,25 +63,7 @@
         {
             try
             {
-                using (var logger = new LcLogger("aspnet-errors"))
-                {
-                    try
-                    {
-                        logger.Log("Page error, unhandled exception caugth at Global.asax, context:");
-                        logger.Log("User:: {0}:{1}", WebMatrix.WebData.WebSecurity.CurrentUserId, WebMatrix.WebData.WebSecurity.CurrentUserName);
-                        logger.Log("Request:: {0} {1}", Request.HttpMethod, Request.RawUrl);
-                        logger.Log("User-Agent:: {0}", Request.UserAgent);
-                        try
-                        {
-                            logger.Log("Form Data::");
-                            logger.LogData(ASP.LcHelpers.NameValueToString(Request.Form));
-                        }
-                        catch { }
-                        logger.LogEx("Page error details", ex);
-                    }
-                    catch { }
-                    logger.Save();
-                }
+                LcLogger.LogAspnetError(ex);
             }
             catch { }
 
@@ -118,6 +122,14 @@
         System.Threading.Thread.CurrentThread.CurrentCulture =
         System.Threading.Thread.CurrentThread.CurrentUICulture = 
         System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+        
+        // REST OPTIONS preflight request. Be fast and response OK
+        // Asp.net will always includes the custom headers from web.config
+        if (Request.HttpMethod == "OPTIONS")
+        {
+            Response.End();
+            return;
+        }
         
         // Autologin
         LcAuth.RequestAutologin(Request);

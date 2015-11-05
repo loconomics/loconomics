@@ -1,0 +1,25 @@
+// And addition to the Bootstrap input-group-addon styles
+// Add '.inset' class to a .input-group-addon or .input-group-btn
+// to make the addon to feel like inside the control
+.input-group-btn.inset,
+.input-group-addon.inset {
+    // Same background as .form-control
+    background: White;
+
+    // If after an inset;
+    // impossible to guess if before of one with CSS
+    // so use .inset in the control too
+    & + .form-control {
+        box-shadow: none;
+    }
+    
+    &:first-child {
+        padding-right: 0;
+    }
+    &:last-child {
+        padding-left: 0;
+    }
+}
+.form-control.inset {
+    box-shadow: none;
+}

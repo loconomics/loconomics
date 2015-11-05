@@ -1,0 +1,47 @@
+<!-- Activity account -->
+<div data-activity="account">
+    <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
+    
+    <ul class="TilesList">
+        <li data-bind="visible: !isServiceProfessional()"><a class="InfoTile" href="/contactInfo">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Contact information</p>
+            </div>
+        </a></li>
+        <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/ownerInfo">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-information-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Owner information</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="/privacySettings">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-eye-outline" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Privacy settings</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa fa-file-text-o" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Terms of Use</p>
+            </div>
+        </a></li>
+        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa fa-file-text-o" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Privacy policy</p>
+            </div>
+        </a></li>
+    </ul>
+</div>

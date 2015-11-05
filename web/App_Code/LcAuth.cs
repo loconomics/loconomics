@@ -47,7 +47,9 @@ public static class LcAuth
         bool isProvider,
         string marketingSource = null,
         int genderID = -1,
-        string aboutMe = null
+        string aboutMe = null,
+        string phone = null,
+        string signupDevice = null
     ) {
         using (var db = Database.Open("sqlloco"))
         {
@@ -85,10 +87,11 @@ public static class LcAuth
                 // Automatic transaction can be used now:
                 db.Execute("BEGIN TRANSACTION");
 
-                db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6",
+                // TODO:CONFIRM: SQL executed inside a procedure is inside the transaction? Some errors on testing showed that maybe not, and that's a problem.
+                db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6,@7",
                     userid, firstname, lastname,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
-                    genderID, aboutMe
+                    genderID, aboutMe, phone
                 );
 
                 // If is provider, update profile with that info (being both customer and provider)
@@ -117,6 +120,10 @@ public static class LcAuth
                 if (marketingSource != null)
                     db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, marketingSource);
 
+                // Device
+                if (!string.IsNullOrEmpty(signupDevice))
+                    db.Execute("UPDATE users SET SignupDevice = @1 WHERE UserID = @0", userid, signupDevice);
+
                 db.Execute("COMMIT TRANSACTION");
 
                 // All done:
@@ -132,6 +139,9 @@ public static class LcAuth
             {
                 db.Execute("ROLLBACK TRANSACTION");
 
+                // If profile creation failed, there was a rollback, now must ensure the userprofile record is removed too:
+                db.Execute("DELETE FROM UserProfile WHERE Email like @0", email);
+
                 throw ex;
             }
         }
@@ -143,12 +153,17 @@ public static class LcAuth
         {
             db = Database.Open("sqlloco");
         }
+
+        // Provider profiles must have a BookCode, so generate one
+        // (but not replace if one exists)
+        var bookCode = LcData.UserInfo.GenerateBookCode(userID);
         
         db.Execute(@"UPDATE Users SET 
             IsProvider = 1,
-            OnboardingStep = 'welcome'
+            OnboardingStep = 'welcome',
+            BookCode = @1
             WHERE UserID = @0
-        ", userID);
+        ", userID, bookCode);
 
         if (ownDb)
         {
@@ -300,21 +315,25 @@ public static class LcAuth
     /// </summary>
     public static void RequestAutologin(HttpRequest Request)
     {
+        // Using custom headers first, best for security using the REST API.
         var Q = Request.QueryString;
+        var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
+        var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
+
         // Autologin feature for anonymous sessions with autologin parameters on request
         if (!Request.IsAuthenticated
-            && Q["alk"] != null
-            && Q["alu"] != null)
+            && alk != null
+            && alu != null)
         {
             // 'alk' url parameter stands for 'Auto Login Key'
             // 'alu' url parameter stands for 'Auto Login UserID'
-            LcAuth.Autologin(Q["alu"], Q["alk"]);
+            LcAuth.Autologin(alu, alk);
         }
     }
     /// <summary>
     /// Get for the given userID the params and values for autologin in URL string format,
     /// ready to be appended to an URL
-    /// (without & or ? as prefix, but & as separator and last character).
+    /// (without &amp; or ? as prefix, but &amp; as separator and last character).
     /// To be used mainly by Email templates.
     /// </summary>
     /// <returns></returns>

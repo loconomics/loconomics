@@ -1,0 +1,67 @@
+/**
+    ItemTile: a two lines tile with a marker, text and an icon.
+**/
+@import 'Tile.styl'
+@import 'CompactLinkTile.styl'
+
+ItemTile-addMarker($internalHeight, $markerWidth = 70px, $markerGap = 11px) {
+    .Tile-marker {
+        float: left;
+        width: $markerWidth;
+        text-align: right;
+        padding-right: $markerGap;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        height: $internalHeight;
+
+        Tile-addDiv()
+        Tile-addEm()
+        Tile-addP($internalHeight)
+        
+        // This explicit width is needed to make it fill the space
+        // when shorter and get the correct text alignment
+        > p {
+            width: $markerWidth - $markerGap;
+        }
+    }
+    
+    // When it's an icon
+    i.Tile-marker {
+        height: $internalHeight;
+        line-height: $internalHeight;        
+        font-size: 24px;
+        text-align: center;
+        vertical-align: middle;
+        padding-left: $markerGap;
+        
+        &.Tile-marker--fullIcon {
+            font-size: $internalHeight;
+        }
+    }
+}
+
+.ItemTile {
+
+    Tile()
+
+    // 2 lines:
+    $internalHeight = line-height-computed * 2;
+    $vgap = 18px;
+    $heightLimit = $internalHeight + ($vgap * 2);
+    
+    Tile-addTagContentSupport($vgap)
+
+    padding: $vgap $Tile-hgap;
+
+    // Style
+    height: $heightLimit;
+    overflow: hidden;
+
+    ItemTile-addMarker($internalHeight);
+
+    Tile-addContent(2);
+    
+    CompactLinkTile-addIcon(line-height-computed / 2 + $vgap);
+}

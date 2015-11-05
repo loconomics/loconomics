@@ -8,6 +8,7 @@ using System.Web;
 /// </summary>
 public static partial class LcPricingModel
 {
+    [Obsolete("Do NOT work, use LcRest.PricingSummary for similar stuff, but the calculatiosn provided here are not needed because fees simplification")]
     public class PricingSummaryData
     {
         public decimal SubtotalPrice = 0M;

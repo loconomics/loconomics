@@ -1,0 +1,89 @@
+/**
+    Clients activity styles
+**/
+@import '../components/SectionTitle.styl';
+
+[data-activity=clients] {
+    
+    $indexWidth = 25px;
+    $fullIndexWidth = 32px;
+    $indexTop = 62px;
+
+    .SectionTitle {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        z-index: 100;
+        margin: 0 !important;
+    }
+
+    #clientsIndex {
+        overflow: hidden;
+        width: $fullIndexWidth;
+        
+        // Fixed has the problems of iOS with scrolling, and too the lack of scroll for itself
+        // Scroll context must be carefully placed in a sibling elements that acts as container for
+        // all the other parts of the Activity.
+        position: absolute;
+        right: 0px;
+        top: $indexTop;
+        z-index: 20;
+        overflow: auto;
+        bottom: 0;
+        box-sizing: border-box;
+        
+        > .nav {
+            border-bottom: none;
+            
+            a {
+                text-align: center;
+                font-weight: bold;
+                padding: 3px 6px 3px 15px;
+                border: none;
+                border-radius: 0;
+            }
+        }
+    }
+    
+    #clientsContent {
+        // Using absolute positioning rather than SmartViewContent (height:100%)
+        // because the need to left space (sometimes) for the SectionTitle on top
+        overflow: auto;        
+        position: absolute;
+        top: 0;
+        // Using padding for left positioning to allow negative margin on the list
+        left: 0;
+        padding-left: $container-padding-left;
+        right: $fullIndexWidth;
+        bottom: 0;
+
+        #clientsListView {
+            // List must start on the edge, per design
+            margin-left: (0 - $container-padding-left);
+            
+            .SimpleList-divider {
+                text-transform: uppercase;
+            }
+        }
+    }
+    
+    &.has-SectionTitle {
+        #clientsContent {
+            top: $SectionTitle-height;
+        }
+        
+        #clientsIndex {
+            top: $indexTop + $SectionTitle-height;
+        }
+    }
+    
+    &.is-searching {
+        #clientsAddNewButton {
+            display: none;
+        }
+        
+        .SimpleList-divider {
+            display: none;
+        }
+    }
+}

@@ -1,0 +1,56 @@
+<!-- Activity contactInfo -->
+<div class="container-fluid LightForm" data-activity="contactInfo">
+    <form role="form" data-bind="submit: save">
+        <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
+        <div>
+            <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Last name', value: profile.lastName, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Second Last name', value: profile.secondLastName, disable: isLocked" data-bind="visible: !!profile.secondLastName()"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Mobile phone', value: profile.phone, disable: isLocked"></app-unlabeled-input>
+            
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked" />
+                    Can receive SMS
+                </label>
+            </div>
+            
+            <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
+            
+            <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
+              <input type="number" class="form-control"
+                     placeholder="Zip code" aria-label="Zip code"
+                     data-bind="textInput: address.postalCode, disable: $root.isLocked,
+                                popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+            </div>
+            
+            <div class="form-group">
+                <p class="form-control-static">
+                    <span data-bind="visible: address.city() || address.stateProvinceCode()">
+                        <span data-bind="text: address.city"></span>, 
+                        <span data-bind="text: address.stateProvinceCode"></span>
+                    </span>
+                    <!-- White space to reserve vertical space -->
+                    &nbsp;
+                </p>
+            </div>
+            
+            <app-unlabeled-input params="placeholder: 'Business name (optional)', value: profile.businessName, disable: isLocked"
+                                 data-bind="visible: user.isServiceProfessional"></app-unlabeled-input>
+            <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
+            <div class="form-group">
+                <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: isLocked"></select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)', disable: isLocked"></select>
+            </div>
+        </div>
+
+        <div class="LightForm-submitBar">
+            <div>
+                <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+            </div>
+        </div>
+    </form>
+</div>

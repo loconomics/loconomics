@@ -1,0 +1,277 @@
+﻿@*
+    Messaging API: read and update threads and messages of the logged user, interacting
+    with a service professional or client.
+
+    ### API
+    /messaging
+        - GET: list the most recent user conversations (messagingThreads).
+            - limit:int Default:20. Sets the maximum amount of threads to include in the results.
+            - untilID:int Default:null. Ask for the inmediate older threads than the given threadID. The thread for that ID is not included in the results.
+            - sinceID:int Default:null. Ask for the inmediate newer threads than the given threadID. The thread for that ID is not included in the results.
+            - messagesLimit:int Default:1. Sets the maximum amount of messages to include per thread. By default it includes the latest message.
+        
+        - POST: create conversation with first message(s), pass first-time editable fields of a thread structure 
+            with the initial message in the bodyText property.
+            FUTURE: This is a simplification to avoid pass an array of *messages* with just *bodyText* and 
+                *createdDate* to detect the sort if several messages were included, but maybe on the future, allowing to
+                send several quick messages in a same request and post the same Thread structure as used locally even if
+                the read-only/auto fields are discarded.
+            - clientUserID:int Required
+            - serviceProfessionalUserID:int Required
+            - jobTitleID:int Required
+            - subject:string Required
+            - bodyText:string Required                
+
+        - Updates and delete not supported.
+
+    /messaging/:threadID
+        - GET: single conversation with list of messages.
+            - limit:int Default:20. Sets the maximum amount of messages to include in the results.
+            - untilID:int Default:null. Ask for the inmediate older messages than the given messageID. The message for that ID is not included in the results.
+            - sinceID:int Default:null. Ask for the inmediate newer messages than the given messageID. The message for that ID is not included in the results.
+        - POST: append a message to the conversation. Body is a single message structure. Essentially, a unique field is allowed:
+            - bodyText:string Required
+        - Update and delete not supported.
+
+    /messaging/:threadID/:messageID
+        - GET: show message for that ID on that conversation with full details
+        - Update and delete not supported.
+
+    ### Structures
+        - thread {
+            threadID:int Auto
+            clientUserID:int
+            serviceProfessionalUserID:int
+            jobTitleID:int
+            statusID:int Auto
+            subject:string
+            createdDate:datetime Auto
+            updatedDate:datetime Auto
+            messages:array<message>
+        }
+        - message {
+            messageID:int Auto
+            threadID:int Set-by-request
+            sentByUserID:int Auto
+            typeID:int internal-edit
+            auxT:string internal-edit
+            auxID:int internal-edit
+            bodyText:string
+            createdDate:datetime Auto
+            updatedDate:datetime Auto
+        }
+
+    EXAMPLES {
+        "Messaging: Threads": {
+            "url": "/api/v1/en-US/me/messaging",
+            "get": {
+                "limit": 20,
+                "untilID": null,
+                "sinceID": null,
+                "messagesLimit": 1
+            },
+            "post": {
+                "customerUserID": 141,
+                "freelancerUserID": 141,
+                "jobTitleID": 106,
+                "subject": 'Testing conversation',
+                "bodyText": 'Testing first message'
+            }
+        },
+        "Messaging: Single Thread": {
+            "url": "/api/v1/en-US/me/messaging/225",
+            "get": {
+                "limit": 20,
+                "untilID": null,
+                "sinceID": null
+            },
+            "post": {
+                "bodyText": "Answering to testing message (second)"
+            }
+        },
+        "Messaging: Single Message": {
+            "url": "/api/v1/en-US/me/messaging/225/525",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestMessaging : RestWebPage
+    {
+        private dynamic GetThreads()
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            var limit = Request["limit"].AsInt(20);
+            var messagesLimit = Request["messagesLimit"].AsInt(1);
+            int? untilID = Request["untilID"].IsInt() ? Request["untilID"].AsInt() : (int?)null;
+            int? sinceID = Request["sinceID"].IsInt() ? Request["sinceID"].AsInt() : (int?)null;
+
+            return LcMessaging.GetRestThreads(WebSecurity.CurrentUserId, limit, untilID, sinceID, messagesLimit);
+        }
+        private dynamic GetThread(int threadID) {
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            var limit = Request["limit"].AsInt(20);
+            int? untilID = Request["untilID"].IsInt() ? Request["untilID"].AsInt() : (int?)null;
+            int? sinceID = Request["sinceID"].IsInt() ? Request["sinceID"].AsInt() : (int?)null;
+            
+            // To be able to apply the filtering options to messages, we need to use the 
+            // API GetRestMessages directly, but previously use the GetRestThreads to 
+            // get the single thread record.
+            var thread = LcMessaging.GetRestThreads(userId, 1, threadID + 1, threadID - 1, 1);
+            if (thread.Count == 0) {
+                throw new HttpException(404, "Not found");
+            }
+
+            thread[0].messages = LcMessaging.GetRestThreadMessages(threadID, limit, untilID, sinceID);
+
+            return thread[0];
+        }
+        private dynamic GetMessage(int threadID, int messageID) {
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            // We need to double check that the user is involved in the thread to
+            // avoid security/privacy leaks.
+            var thread = GetThread(threadID);
+            if (thread.clientUserID == userId ||
+                thread.serviceProfessionalUserID == userId) {
+                var message = LcMessaging.GetRestThreadMessages(threadID, 1, messageID + 1, messageID - 1);
+                if (message.Count == 0) {
+                    throw new HttpException(404, "Not found");
+                }
+                return message[0];
+            }
+            else {
+                // Rather than an authorization exception, we throw a not found to don't
+                // let know it exists.
+                throw new HttpException(404, "Not found");
+            }
+        }
+
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                if (UrlData[0].IsInt()) {
+                    var threadID = UrlData[0].AsInt();
+                    
+                    if (UrlData[1].IsInt()) {
+                        var messageID = UrlData[1].AsInt();
+
+                        // Get Message
+                        var msg = GetMessage(threadID, messageID);
+                        if (msg == null) {
+                            throw new HttpException(404, "Not found");
+                        }
+                        else {
+                            return msg;
+                        }
+                    }
+                    else {
+                        // Get Thread
+                        return GetThread(threadID);
+                    }
+                }
+                throw new HttpException(404, "Not found");
+            }
+
+ 	        return GetThreads();
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 0) {
+                
+                // Parameters
+                int userId = WebSecurity.CurrentUserId;
+                int clientUserID = Request.Form["clientUserID"].AsInt(0);
+                int serviceProfessionalUserID = Request.Form["serviceProfessionalUserID"].AsInt(0);
+                int jobTitleID = Request.Form["jobTitleID"].AsInt(0);
+                string subject = Request.Form["subject"];
+                string bodyText = Request.Form["bodyText"];
+                
+                // Auto values and validation for userID's.
+                // Both userID fields are exclusive, if one is set, the other
+                // one gets as value the current userId. If both are set
+                // freelanceUserID takes precedence and client is set to userId,
+                // except if is the own userId
+                if (serviceProfessionalUserID > 0 &&
+                    serviceProfessionalUserID != userId ||
+                    clientUserID == 0) {
+                    clientUserID = userId;
+                } else {
+                    serviceProfessionalUserID = userId;
+                }
+                // Validation after auto-set values:
+                if (serviceProfessionalUserID == 0 ||
+                    clientUserID == 0) {
+                    ModelState.AddFormError("You must specify a recipient.");
+                }
+                // Validate special case
+                if (serviceProfessionalUserID == userId &&
+                    clientUserID == userId) {
+                    ModelState.AddFormError("Please, don't send messages to yourself :-)");
+                }
+                
+                // Validation
+                if (!Request["jobTitleID"].IsInt()) {
+                    ModelState.AddError("jobTitleID", LcRessources.RequiredField("Job Title"));
+                }
+                if (Request["subject"].IsEmpty()) {
+                    ModelState.AddError("subject", LcRessources.RequiredField("Subject"));
+                }
+                if (Request["bodyText"].IsEmpty()) {
+                    ModelState.AddError("bodyText", LcRessources.RequiredField("Message"));
+                }
+
+                if (!ModelState.IsValid) {
+                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                }
+  
+                // Create thread with initial message
+                var newThreadID = LcMessaging.PostRestThread(clientUserID, serviceProfessionalUserID, jobTitleID, subject, bodyText, userId);
+                if (newThreadID == 0) {
+                    throw new HttpException(400, "The recipient does not exists.");
+                }
+                
+                // Return created thread
+                return GetThread(newThreadID);
+            }
+            else if (UrlData.Count == 1) {
+                if (UrlData[0].IsInt()) {
+                    
+                    // Parameters
+                    int userId = WebSecurity.CurrentUserId;
+                    var threadID = UrlData[0].AsInt();
+                    string bodyText = Request.Form["bodyText"];
+                    
+                    // Validation
+                    if (Request["bodyText"].IsEmpty()) {
+                        ModelState.AddError("bodyText", LcRessources.RequiredField("Message"));
+                    }
+                    
+                    if (!ModelState.IsValid) {
+                        throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                    }
+                    
+                    // Add message to conversation
+                    var newMessageID = LcMessaging.PostRestMessage(threadID, bodyText, userId);
+                    if (newMessageID == 0) {
+                        throw new HttpException(404, "Not found");
+                    }
+                    
+                    return GetMessage(threadID, newMessageID);
+                }
+            }
+            
+            throw new HttpException(404, "Not found");
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestMessaging().JsonResponse(this);
+}

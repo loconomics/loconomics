@@ -597,7 +597,9 @@
     /*========= JSON =============*/
     public static void ReturnJson(object jsondata, bool endResponse = true){
         Response.ContentType = "application/json";
-        Json.Write(jsondata, Response.Output);
+        // JSON.NET Works Better: good datetime formatting as ISO-8601 and some bugfixes details.
+        Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(jsondata));
+        //Json.Write(jsondata, Response.Output);
         if (endResponse)
             Response.End();
         else
@@ -630,6 +632,12 @@
         SecurePage();
         if (LcData.UserInfo.GetUserRow().IsProvider == false) {
             Forbidden(LcData.UserInfo.UserType.Provider);
+        }
+    }
+    public static void MemberPage() {
+        SecurePage();
+        if (LcData.UserInfo.GetUserRow().IsMember == false) {
+            Forbidden(LcData.UserInfo.UserType.Member);
         }
     }
     public static void AdminPage() {
@@ -935,8 +943,8 @@
         }
         @{
             var email = data[dataPrefix + "Email"];
-            if (!String.IsNullOrEmpty(email)) {
-                <div class="user-email">E-mail: <span class="value"><a href="mailto:@email">@email</a></span></div>
+            if (!String.IsNullOrEmpty(LcRest.Client.GetEmailFromDb(email))) {
+                <div class="user-email">E-mail: <span class="value"><a href="mailto:@email">@LcRest.Client.GetEmailFromDb(email)</a></span></div>
             }
         }
         @{

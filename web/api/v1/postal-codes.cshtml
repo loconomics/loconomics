@@ -1,0 +1,50 @@
+﻿@**
+    Postal Code API.
+
+    It allows to ask for a postal code and get data for it, like
+    the state/province ID and Code and City name.
+    
+    It performs the search for the current country by the API URL
+
+    Options:
+
+    GET /@postalCode
+        Returns: {
+            stateProvinceCode:string,
+            stateProvinceName:string, // in current locale
+            city:string
+        }
+
+    EXAMPLES {
+        "Postal Codes": {
+            "url": "/api/v1/en-US/postal-codes/90001",
+            "get": {}
+        }
+    }
+**@
+@functions{
+    public class RestPostalCodes : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 1 &&
+                !UrlData[0].IsEmpty())
+            {
+                var postalCode = UrlData[0];
+
+                var item = LcRest.Address.GetPostalCodeData(postalCode, LcRest.Locale.Current.countryID, true);
+                
+                if (item != null)
+                    return item;
+                else
+                    throw new HttpException(404, "Postal Code Not Valid.");
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+    }
+}
+@{
+    // Public access
+    new RestPostalCodes().JsonResponse(this);
+}

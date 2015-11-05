@@ -1,0 +1,12 @@
+<!-- Knockout Template inbox-tile -->
+<script type="text/html" id="inbox-tile-template">
+    <a href="#" data-bind="attr: { href: link }"
+       class="MessageTile">
+        <h4 class="Tile-title" data-bind="text: client() && client().fullName() || '(no name)'"></h4>
+        <div class="Tile-subtitle" data-bind="text: quickDateTime"></div>
+        <p class="Tile-content">
+            <strong data-bind="visible: tag, css: classNames"><span data-bind="text: tag"></span> - </strong>
+            <span data-bind="text: subject"></span>
+        </p>
+    </a>
+</script>

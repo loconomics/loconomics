@@ -100,14 +100,22 @@ public static class LcFacebook
     #region Access Token
     static string GetUserAccessToken()
     {
-        var signed_request = GetSignedRequest();
-        
-        if (signed_request != null)
+        var token = Request["access_token"] ?? Request["accessToken"];
+        if (!String.IsNullOrEmpty(token))
         {
-            if (signed_request.oauth_token != null)
-                return signed_request.oauth_token;
-            else
-                return GetAccessTokenFromCode(N.W(signed_request.code) ?? Request["code"] ?? "");
+            return token;
+        }
+        else
+        {
+            var signed_request = GetSignedRequest();
+
+            if (signed_request != null)
+            {
+                if (signed_request.oauth_token != null)
+                    return signed_request.oauth_token;
+                else
+                    return GetAccessTokenFromCode(N.W(signed_request.code) ?? Request["code"] ?? "");
+            }
         }
         return null;
     }
@@ -138,7 +146,13 @@ public static class LcFacebook
         return null;
     }
 
-    static dynamic GetUserFromAccessToken(string userAccessToken)
+    /// <summary>
+    /// Retrieve the basic user data from Facebook servers
+    /// </summary>
+    /// <param name="facebookUserID"></param>
+    /// <param name="userAccessToken"></param>
+    /// <returns></returns>
+    public static dynamic GetUserFromAccessToken(string facebookUserID, string userAccessToken)
     {
         try
         {
@@ -146,18 +160,23 @@ public static class LcFacebook
             // Do a server request to Facebook to get the user information
             var url = String.Format(
                 "https://graph.facebook.com/{0}?access_token={1}", //&fields=id,name,first_name,last_name,gender,about",
-                Session["facebookUserId"] ?? "me",
-                (userAccessToken)
+                facebookUserID,
+                userAccessToken
             ); // YOUR_USER_ACCESS_TOKEN
-                
+
             var response = browser.DownloadString(url);
             //Response.Write(url + "<br/>\n" + response);
             //Response.End();
             // Response is OK (throw exception if not)
             return Json.Decode(response);
         }
-        catch {}
+        catch { }
         return null;
+    }
+
+    static dynamic GetUserFromAccessToken(string userAccessToken)
+    {
+        return GetUserFromAccessToken((string)Session["facebookUserId"] ?? "me", userAccessToken);
     }
     #endregion
 

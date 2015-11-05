@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 
 /// <summary>
-/// Extension of LcPricingModel
+/// PricingTypeConfigs
+/// 
+/// TODO Rename and move to LcRest
 /// </summary>
 public static partial class LcPricingModel
 {

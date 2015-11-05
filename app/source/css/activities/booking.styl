@@ -1,0 +1,120 @@
+/** Booking activity styles **/
+[data-activity=booking] {
+    .SectionTitle {
+        text-transform: none;
+        text-align: center;
+    }
+    
+    &.is-loading {
+        .booking-steps,
+        .Sidebar {
+            opacity: 0;
+        }
+    }
+    
+    .Sidebar,
+    .booking-steps {
+        transition: opacity 200ms;
+    }
+    
+    #bookingSelectLocation {
+        &.is-loading > * {
+            opacity: 0;
+            pointer-events: none;
+        }
+        > * {
+            opacity: 1;
+            transition: opacity 200ms;
+        }
+        > app-loading-spinner {
+            opacity: 1 !important;
+        }
+    }
+    
+    .booking-secure-form-warning {
+        display: table;
+        width: auto;
+        margin: auto;
+        > span {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 10px;
+        }
+    }
+    
+    // Animated transitions between steps:
+    &.animated {
+
+        .booking-steps {
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            position: absolute;
+
+            .booking-step {
+                transform: translateX(0px);
+                z-index: 2;
+                position: absolute;
+                transition-property: opacity, transform;
+                transition-duration: 200ms, 200ms;
+                transition-timing-function: $cubic-easing, $cubic-easing;
+                transition-delay: 150ms;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+                overflow: auto;
+
+                &[hidden] {
+                    opacity: 0;
+                    transition-delay: 0ms;
+                    display: block;
+                    z-index: 1;
+                    transform: translateX(-25%);
+                    pointer-events: none;
+                }
+            }
+        }
+        
+        @media $mediaMinMd {
+            // This container settings are needed to keep the booking-steps
+            // in the same place and width as set by its column set-up
+            > .container {
+                position: absolute;
+                left: 0px;
+                right: 0px;
+                top: 0px;
+                bottom: 0px;
+            }
+            
+            // Sidebar ever on top of content (for translated, hidden steps)
+            .Sidebar {
+                z-index: 5;
+            }
+
+            // The steps list is the layout right column (3/4)
+            // so some details needs adjustment to don't break
+            .booking-steps {
+                float: none;
+                width: auto;
+                padding-right: 0px;
+                padding-left: 0px;
+                margin-left: 15px;
+                left: 25%;
+                
+                .booking-step {
+                    // HACK: Because of the outline at Boxes, can get cut
+                    // on horizontal edges because the overflow and sizing
+                    // we add an additional pixel to hold that outline
+                    padding: 0px 1px;
+                    
+                    &[hidden] {
+                        // Fixed movement, a percentage can get too bigger on some screens
+                        transform: translateX(-100px);
+                    }
+                }
+            }
+        }
+    }
+}

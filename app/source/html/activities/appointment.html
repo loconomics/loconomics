@@ -1,0 +1,13 @@
+<!-- Activity appointment -->
+<div class="container-fluid" data-activity="appointment" data-bind="css: { 'in-edit': editMode }">
+    <!-- Appointment View (cards) -->
+    <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
+       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
+        
+        <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
+
+        <div class="CardsDeck-dots" data-bind="foreach: appointments">
+            <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+        </div>
+    </div>
+</div>

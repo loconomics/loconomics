@@ -1,0 +1,30 @@
+<div id="textEditorModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="textEditorModal-label" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="AppNav visible-xs">
+            <div class="SmartNavBar">
+                <div class="SmartNavBar-edge left">
+                    <a class="SmartNavBar-btn" href="#" data-dismiss="modal">
+                        <span class="fa ion ion-ios-arrow-left" aria-hidden="true"></span>
+                        <span><h1 data-bind="text: title"></h1></span>
+                    </a>
+                </div>
+            </div>
+          </div>
+
+        <div class="modal-header hidden-xs">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="textEditorModal-label" data-bind="text: title"></h4>
+        </div>
+        <div class="modal-body text-center">
+            <textarea data-bind="value: text, valueUpdate: 'afterkeydown'" aria-labelledby="textEditorTitle" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="col-xs-6"><button id="textEditorModal-cancel" type="button" class="btn btn-warning btn-block" data-dismiss="modal">Cancel</button></div>
+                <div class="col-xs-6"><button id="textEditorModal-save" type="button" class="btn btn-primary btn-block">Save</button></div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    Response.ContentEncoding = System.Text.Encoding.UTF8;
+    var u = LcData.UserInfo.GetUserRow();
+}
+<!doctype html>
+    <html>
+     <head>
+          <meta charset="utf-8"/>
+          <title>Loconomics - @Page.Title</title>
+          <meta name="description" content="Find service providers to do the job right. At your service!"/>
+          <meta name="author" content="Loconomics Inc."/>
+          <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+          <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+          <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
+           <style type="text/css">
+            .objectinfo span.type 
+            {
+                cursor: pointer;
+            }
+            .objectinfo .closedTree:before
+            {
+                content: '+';
+                position: relative;
+                left: -12px;
+            }
+body {
+    position: relative;
+    color: #333;
+    font-family: Helvetica,Arial,sans-serif;
+    line-height: 160%;
+    text-align: center;
+    background: #e2e2e2;
+}
+#container 
+{
+max-width: 960px;
+margin: 10px auto;
+text-align: left;
+padding: 40px 20px;
+background: White;
+border: 1px solid #333;
+}
+#userid 
+{
+    text-align: right;
+    margin-bottom: 10px;
+}
+[hidden] 
+{
+    display: none;
+}
+           </style>
+           <script type="text/javascript">
+               @* Our LcUrl class *@
+               @Html.Raw(LcUrl.ToJsVar())
+               @* OUR namespace (abbreviated Loconomics) *@
+               var LC = window['LC'] || {};
+                @* Additional scripts for Test pages *@
+                // Convert objectinfo in collapsable object
+               $(document).on('click', '.objectinfo span', function () {
+                   var te = $(this).siblings('.typeEnumeration, .typeContainer');
+                   te.toggle();
+                   if (te.length) $(this).toggleClass('closedTree');
+               });
+            </script>
+    </head>
+    <body>
+        <div id="container">
+            <div id="userid">
+                UserID: @Html.Raw(WebSecurity.CurrentUserId == -1 ? "<a href='#login' class='login'>Login</a>" : WebSecurity.CurrentUserId.ToString())
+            </div>
+            <div id="main">
+                @RenderBody()
+            </div>
+        </div>
+    </body>
+</html>

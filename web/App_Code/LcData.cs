@@ -10,6 +10,7 @@ using WebMatrix.Data;
 public static partial class LcData
 {
     #region Service Attributes and Categories
+    [Obsolete("Use LcRest.ServiceAttribute and LcRest.UserJobTitleServiceAttributes methods")]
     public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filters = null, int userId = 0)
     {
         var rcats = new Dictionary<int, Dictionary<string, object>>();
@@ -161,6 +162,7 @@ public static partial class LcData
     //public const int ServiceAttCatIDClientTypes = 7;
 
     #region Extra tables for Service attributes (Languages&Experience Levels)
+    [Obsolete("Use LcRest.ExperienceLevel API")]
     public static dynamic GetExperienceLevels(int UserID = 0, int PositionID = 0)
     {
         using (var db = Database.Open("sqlloco"))
@@ -185,6 +187,7 @@ public static partial class LcData
              UserID, PositionID);
         }
     }
+    [Obsolete("Unused language levels")]
     public static dynamic GetLanguageLevels()
     {
         using (var db = Database.Open("sqlloco"))
@@ -204,6 +207,7 @@ public static partial class LcData
     /// <param name="UserID"></param>
     /// <param name="PositionID"></param>
     /// <returns></returns>
+    [Obsolete("Unused language levels")]
     public static Dictionary<int, int> GetUserLanguageLevels(int UserID, int PositionID)
     {
         var userLangLevels = new Dictionary<int, int>();
@@ -241,7 +245,8 @@ public static partial class LcData
             case "ES":
                 return 2;
             default:
-                return 0;
+                // English as default
+                return 1;
         }
     }
     /// <summary>
@@ -260,7 +265,8 @@ public static partial class LcData
             case "ES":
                 return 2;
             default:
-                return 0;
+                // USA as default
+                return 1;
         }
     }
     #endregion
@@ -513,6 +519,10 @@ public static partial class LcData
                 WHERE
                     AddressID = @AddressID AND UserID = @1
         END
+
+        EXEC TestAlertPersonalInfo @1
+
+        SELECT @AddressID As AddressID
     ";
     public const string sqlSetServiceAddress = @"
         BEGIN TRAN
@@ -588,11 +598,13 @@ public static partial class LcData
 
             IF @Type like 'work'
                 UPDATE ServiceAddress SET
-                    ServicesPerformedAtLocation = 0
+                    ServicesPerformedAtLocation = 0,
+                    UpdatedDate = getdate()
                 WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
             ELSE IF @Type like 'travel'
                 UPDATE ServiceAddress SET
-                    TravelFromLocation = 0
+                    TravelFromLocation = 0,
+                    UpdatedDate = getdate()
                 WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
 
         END ELSE BEGIN
@@ -601,7 +613,7 @@ public static partial class LcData
             WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
 
             IF @@ERROR <> 0 BEGIN
-                -- Non deletable serviceaddress, because is linked, simply 'unactive' and remove its use (as work or travel)
+                -- Non deletable serviceaddress, because is linked, simply 'disable it' and remove its use (as work or travel)
                 DECLARE @bitWork bit, @bitTravel bit
                 IF @Type like 'work'
                     SET @bitWork = cast(1 as bit)
@@ -616,15 +628,37 @@ public static partial class LcData
                     Active = 0
                     ,ServicesPerformedAtLocation = @bitWork
                     ,TravelFromLocation = @bitTravel
-                WHERE   AddressID = @0 AND UserID = @1 AND PositionID = @2
+                    ,UpdatedDate = getdate()
+                WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
+
+                
+                -- Soft delete the linked address, if not used by other service-addresses
+                UPDATE Address SET
+                    Active = 0,
+                    UpdatedDate = getdate()
+                WHERE AddressID = @0 AND UserID = @1
+                    AND 0 = (SELECT count(*) FROM ServiceAddress As S2
+                        WHERE S2.AddressID = @0
+                            -- Dont count for this position, since obviously is linking it
+                            AND S2.PositionID <> @2
+                )
+
             END ELSE BEGIN
 
+                /* REMOVED THE CHECK OF NOT ALLOW TO REMOVE THE [UniquePerUser] ADDRESSES
+                    THAT FIELD WILL BE DEPRECATED, SO SEE NEXT LINES
                 -- Try to remove the Address record too, if is not 'special' ([UniquePerUser]).
                 DELETE FROM Address
                 WHERE AddressID = @0 AND
                     (SELECT TOP 1 A.UniquePerUser FROM AddressType As A WHERE 
                         A.AddressTypeID = (SELECT B.AddressTypeID FROM Address As B WHERE B.AddressID = @0 AND UserID = @1)
                     ) = 0
+                */
+
+                /* Try  to delete the address record, except if the special type Home, but allowed to any other. */
+                DELETE FROM Address
+                WHERE AddressID = @0
+                        AND AddressTypeID <> 1 -- Home
 
                 -- If is not possible, maybe is linked, do nothing (but read @@ERROR to not throw the error)
                 SELECT @@ERROR As ErrorNumber
@@ -826,7 +860,19 @@ public static partial class LcData
     {
         using (var db = Database.Open("sqlloco"))
         {
-            return db.QuerySingle(@"
+            return db.QuerySingle(SQLSelectFromPackage + @"
+                WHERE   p.ProviderPackageID = @0
+            ", providerPackageID);
+        }
+    }
+    public static dynamic GetProviderPackageServiceAttributes(int providerPackageID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(SQLGetPackageServiceAttributesByPackageID, providerPackageID, GetCurrentLanguageID(), GetCurrentCountryID());
+        }
+    }
+    public const string SQLSelectFromPackage = @"
                 SELECT  p.ProviderPackageID
                         ,p.PricingTypeID
                         ,p.ProviderUserID
@@ -842,19 +888,11 @@ public static partial class LcData
                         ,p.IsPhone
                         ,p.LanguageID
                         ,p.CountryID
+                        ,p.CreatedDate
+                        ,p.UpdatedDate
                         ,p.Active
                 FROM    ProviderPackage As P
-                WHERE   p.ProviderPackageID = @0
-            ", providerPackageID);
-        }
-    }
-    public static dynamic GetProviderPackageServiceAttributes(int providerPackageID)
-    {
-        using (var db = Database.Open("sqlloco"))
-        {
-            return db.Query(SQLGetPackageServiceAttributesByPackageID, providerPackageID, GetCurrentLanguageID(), GetCurrentCountryID());
-        }
-    }
+    ";
     public const string SQLGetPackageServiceAttributesByPackageID = @"
                 SELECT  PD.ServiceAttributeID
                         ,A.Name
@@ -873,24 +911,7 @@ public static partial class LcData
                         AND PD.ProviderPackageID = @0
                 ORDER BY A.Name ASC
     ";
-    public const string SQLGetPackagesByMulti = @"
-                SELECT  p.ProviderPackageID
-                        ,p.PricingTypeID
-                        ,p.ProviderUserID
-                        ,p.PositionID
-                        ,p.ProviderPackageName As Name
-                        ,p.ProviderPackageDescription As Description
-                        ,p.ProviderPackagePrice As Price
-                        ,p.ProviderPackageServiceDuration As ServiceDuration
-                        ,p.FirstTimeClientsOnly
-                        ,p.NumberOfSessions
-                        ,p.PriceRate
-                        ,p.PriceRateUnit
-                        ,p.IsPhone
-                        ,p.LanguageID
-                        ,p.CountryID
-                        ,p.Active
-                FROM    ProviderPackage As P
+    public const string SQLGetPackagesByMulti = SQLSelectFromPackage + @"
                          INNER JOIN
                         PricingType As PT
                           ON P.PricingTypeID = PT.PricingTypeID
@@ -903,7 +924,8 @@ public static partial class LcData
                             AND PPT.LanguageID = PT.LanguageID
                             AND PPT.CountryID = PT.CountryID
                             AND PPT.Active = 1
-                WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
+                WHERE   p.ProviderUserID = @0
+                         AND (@1 = -1 OR P.PositionID = @1)
                          AND 
                         p.LanguageID = @2 AND p.CountryID = @3
                          AND 
@@ -926,7 +948,8 @@ public static partial class LcData
                         ServiceAttribute As A
                           ON A.ServiceAttributeID = PD.ServiceAttributeID
                             AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
-                WHERE   P.ProviderUserID = @0 AND P.PositionID = @1
+                WHERE   P.ProviderUserID = @0
+                         AND (@1 = -1 OR P.PositionID = @1)
                          AND P.LanguageID = @2 AND P.CountryID = @3
                          AND PD.Active = 1 AND P.Active = 1
                          AND (@4 = -1 OR P.ProviderPackageID = @4)
@@ -934,6 +957,7 @@ public static partial class LcData
                          AND (@6 = -1 OR P.IsAddOn = @6)
                 ORDER BY A.Name ASC
     ";
+
     public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
     {
         dynamic packages, details;

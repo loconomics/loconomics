@@ -1,1 +1,0 @@
-  update [serviceattributecategory] set RequiredInput = 0 where serviceattributecategory like '%client type%'

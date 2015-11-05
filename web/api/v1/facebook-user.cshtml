@@ -1,0 +1,72 @@
+﻿@*
+    Retrieve the user info for the logged Facebook Account.
+
+    TODO To review use cases for do_login
+    TODO Renaming of params to camelCase
+    TODO Examples and info about real use
+
+    Methods supported:
+    - GET: get a 'user' object with properties userID, email, isProvider, firstName, postalCode; parameters
+        - do_login:bool Whether to perform the login in Loconomics if the user exists (creating login cookie).
+        - facebook_id:long The Facebook ID related to an existing User Account that will be retrieved
+        - signed_request:string The Facebook Signed Request from a succesfull client side user login,
+            or alternative to this the Facebook login cookie for this App ('fbsr_*') with the signed request.
+            This parameter includes the Facebook user ID and confirmation of a successul login (to avoid
+            expose publicly private data through the facebook_id parameter) so the facebook_id is just
+            to double check that the explicit requested user account matches the logged user.
+
+    EXAMPLES {
+        "Facebook User": {
+            "url": "/api/v1/en-US/facebook-user",
+            "get": {
+                "do_login": false,
+                "facebook_id": 324234123,
+                "signed_request": "fbsr_feSDf323fsf2"
+            }
+        }
+    }
+*@
+@functions{
+    public class RestFacebookUser : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var fid = Request["facebook_id"].AsLong(0);
+            var fuser = LcFacebook.GetUserFromCurrentRequest();
+            var fuserid = fuser != null ? ((string)fuser["id"] ?? "0").AsLong(0) : 0;
+            dynamic userInfo = null;
+
+            if (fid > 0 && fuserid == fid) {
+                var userID = LcAuth.GetFacebookUserID(fid);
+                if (userID.HasValue) {
+                    userInfo = LcData.UserInfo.GetUserRowWithContactData(userID.Value);
+                }
+            }
+            
+            if (userInfo == null) {
+                throw new HttpException(404, "User doesn't exists");
+            }
+            else {
+                var facebookUser = new {
+                    userID = userInfo.UserID,
+                    email = userInfo.Email,
+                    isProvider = userInfo.isProvider,
+                    firstName = userInfo.FirstName,
+                    postalCode = userInfo.PostalCode
+                };
+                
+                var doLogin = Request["do_login"].AsBool();
+                if (doLogin) {
+                    // Set user as logged
+                    FormsAuthentication.SetAuthCookie(userInfo.Email, false);
+                    LcData.UserInfo.RegisterLastLoginTime(userInfo.UserID);
+                }
+                
+                return new { user = facebookUser };
+            }
+        }
+    }
+}
+@{   
+    new RestFacebookUser().JsonResponse(this);
+}

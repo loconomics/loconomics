@@ -1,0 +1,29 @@
+<!-- Knockout Template service-professional-service -->
+<script type="text/html" id="service-professional-service-template">
+    <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+    </div>    
+    <div data-bind="foreach: groupedServices">
+        <div class="SectionTitle" data-bind="visible: !$parent.isAdditionMode()">
+            <span data-bind="text: group"></span>
+        </div>
+
+        <ul class="TilesList Box-sm" data-bind="foreach: { data: services, as: 'service' }">
+            <li><a href="#" class="ItemTile" data-bind="click: $parents[1].tapService, css: { active: service.isSelected }" role="button">
+                <div class="Tile-marker"><p data-bind="text: service.displayedPrice"></p></div>
+                <div class="Tile-content">
+                    <div data-bind="visible: service.sessionsAndDuration(), text: service.name"></div>
+                    <em data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></em>
+                    <p data-bind="visible: !service.sessionsAndDuration(), text: service.name"></p>
+                </div>
+                <div class="Tile-icon">
+                  <span data-bind="visible: $parents[1].isSelectionMode, attr: { 'aria-pressed': service.isSelected }" role="button"><span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': service.isSelected, 'ion-android-checkbox-outline-blank': !service.isSelected() }"></span><span class="sr-only">Selected?</span></span>
+                  <span data-bind="visible: !$parents[1].isSelectionMode()"><span class="fa ion ion-edit"></span><span class="sr-only">Edit</span></span>
+                </div>
+            </a></li>
+        </ul>
+
+        <a class="LinkTile" role="button" href="#!serviceProfessionalServiceEditor/"
+           data-bind="visible: $parent.allowAddServices, click: $parent.tapNewService, text: type() && type().addNewLabel()"></a>
+    </div>
+</script>

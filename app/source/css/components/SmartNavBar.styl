@@ -1,0 +1,234 @@
+/**
+    SmartNavBar component.
+
+    A navigation bar following
+    the design lines of iOS-7 adapted for 
+    Loconomics App Styleguide.
+
+    Three areas: two buttons on both sides with optional labels
+    and a centered title.
+    
+    Supports to have an overlapping notification for casual use, so the
+    full navbar area is used to display a short, timeout based, message.
+    The element SmartNavBar-notification can be included all the time and will
+    be hidden with display:none and the styles to make it fit the exact Navbar space,
+    use javascript to toggle visibility.
+
+    Based on code from the project: https://github.com/c2prods/Project-Tyson
+**/
+
+@import 'nib';
+
+$SmartNavBar-borderSize = 1px
+$SmartNavBar-height = $app-navbar-height;
+$SmartNavBar-lateralGap = $container-padding-left; //9px;
+$SmartNavBar-headerFontSize = 18px;
+$SmartNavBar-buttonFontSize = 15px;
+$SmartNavBar-buttonHeaderFontSize = 15px;
+$SmartNavBar-buttonMaxWidth = none; // 140px;
+$SmartNavBar-bgColor = White; //rgba(248, 248, 248, 0.9);
+$SmartNavBar-borderColor = $gray-background; //rgb(200, 199, 204);
+$SmartNavBar-buttonColor = $gray; // rgb(21, 125, 251);
+$SmartNavBar-headerColor = $brand-primary; //Black;
+$SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
+
+.SmartNavBar {
+    // IMPORTANT: A 'fixed' positioning will work perfect on Desktop, and even modern Android/Chrome (5.0+, maybe 4.4)
+    // but will break on iOS (almost up to 8.3, maybe future versions too) and old Android with strange effects, not
+    // fixed all the time (with keyboard open, on iOS gets moved out of screen).
+    // SO: using 'absolute', to ensure its permanently fixed on top, put the scrolling context on the content
+    // using the SmartViewContent mixim included in this file or its preset class name on elements
+    position: absolute; // fixed only good on Desktop, Android-5+
+    top: 0;
+    height: $SmartNavBar-height;
+    line-height: $SmartNavBar-height;
+    width: 100%;
+    padding-top: 0;
+    background-color: $SmartNavBar-bgColor;
+    
+    /* Problematic, for now, before confirm any problemm, go with simple border
+    // Creating the bottom-border with a gradient to avoid
+    // problem with Retina screens doubling the 1px border.
+    background-image: linear-gradient(0deg, $SmartNavBar-borderColor, $SmartNavBar-borderColor 50%, transparent 50%);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    */
+    border-bottom: 1px solid $SmartNavBar-borderColor;
+    
+    z-index: 500; // Higher even than menus
+    user-select: none;
+    -webkit-touch-callout: none;
+
+    /**
+        Scheme: a bar contains 2 edges (SmartNavBar-edge, .left and -right)
+        and a title (h1).
+        At the edges there are buttons (.SmartNavBar-btn).
+        An edge can contain only buttons or be the button itself at the same time.
+        Buttons can contain other elements or just text, but ensure are in-line.
+        A button can contain a title text inside a H1 element, used to replace
+        the title on the middle of the bar for some uses (like arrows).
+    **/
+
+    commonEdgeBtn() {
+        display: inline-block;
+        vertical-align: top;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        outline: 0;
+        box-sizing: border-box;
+        height: $SmartNavBar-height;
+        line-height: $SmartNavBar-height;
+        text-overflow: ellipsis !important; /* why so !important ? */
+        white-space: nowrap;
+
+        max-width: $SmartNavBar-buttonMaxWidth;
+    }
+    
+    .SmartNavBar-edge {
+        commonEdgeBtn();
+        
+        position: absolute;
+        top: 0;
+        z-index: 100;
+    
+        &.left {
+            left: 0;
+
+            &.SmartNavBar-btn,
+            .SmartNavBar-btn {
+                // Padding on both sides, not just the left,
+                // so the button is easier to press and there is
+                // a gap with the header/title in case is too big
+                padding: 0 $SmartNavBar-lateralGap;
+            }
+        }
+    
+        &.right {
+            right: 0;
+        
+            &.SmartNavBar-btn,
+            .SmartNavBar-btn {
+                text-align: right;
+                // Padding on both sides, not just the right,
+                // so the button is easier to press and there is
+                // a gap with the header/title in case is too big
+                padding: 0 $SmartNavBar-lateralGap;
+            }
+        }
+    }
+
+    .SmartNavBar-btn {
+        commonEdgeBtn();
+
+        /* Fix for Chrome and Firefox OS on button element */
+        background: transparent;
+
+        &:focus {
+            outline: 0;
+        }
+        
+        color: $SmartNavBar-buttonColor;
+        font-weight: 400;
+        font-size: $SmartNavBar-buttonFontSize;
+
+        /* Makes problems on Android (persistent :active state
+            after being pushed)
+        &:active {
+            opacity: 0.3;
+        }*/
+
+        &.bold {
+            font-weight: 500;
+        }
+
+        &.disabled,
+        [disabled] {
+            color: $SmartNavBar-disabledButtonColor;
+        }
+        
+        &:hover,
+        &:active {
+            text-decoration: none;
+        }
+        
+        // the button can contain a title, used normally when
+        // the button label content replace the centered title
+        // so the style must show different on that cases
+        h1 {
+            color: $SmartNavBar-headerColor;
+            font-size: $SmartNavBar-buttonHeaderFontSize;
+            display: inline;
+            // Headers here are expected to go along
+            // an icon, so give some space to avoid collision
+            margin: 0 .6em;
+            vertical-align: middle;
+        }
+        
+        // IMPORTANT: to fix missalignments, specially when icons needs a different
+        // base size, with the h1 alignment and icons alignment:
+        > span {
+            vertical-align: middle;
+        }
+    }
+        
+    h1 {
+        color: $SmartNavBar-headerColor;
+        display: block;
+        padding: 0;
+        font-size: $SmartNavBar-headerFontSize;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-align: center;
+        overflow: hidden;
+        box-flex: 1;
+        margin: 0 65px;
+        font-weight: 700; // 500;
+        line-height: $SmartNavBar-height;
+    }
+    
+    // Support for Bootstrap menu button
+    .navbar-toggle .icon-bar {
+        background-color: $SmartNavBar-buttonColor;
+    }
+    
+    // Icons well aligned (use of generic i, .icon, and Bootstrap, FontAwesone and Ion icons)
+    i,
+    .icon,
+    .glyphicon,
+    .fa,
+    .ion {
+        vertical-align: middle;
+    }
+    
+    .SmartNavBar-notification {
+        // Initially hidden, toggle with javascript
+        display: none;
+        
+        // Fits the navbar space
+        position: absolute;
+        z-index: 110;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
+        text-align: center;
+    }
+}
+
+// To fix positioning, scrolling and other behaviors, the use of a different
+// scrolling context than html/body is needed, use this EVER along the SmartNavBar
+SmartViewContent() {
+    // Scroll when needed
+    overflow: auto;
+    // Grow to all the available space (layout may need some adjustment)
+    // Check that document html/body and containers of this grow too.
+    height: 100%;
+}
+
+// Default class for scrolling areas
+.SmartViewContent {
+    SmartViewContent();
+}

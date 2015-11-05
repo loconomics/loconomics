@@ -1,0 +1,10 @@
+The styleguide content is obsolete right now, after started the following iterations to create the mobile App and new website UI this was used as a base but changed a lot and the results are keep in the /app subproject. 
+
+Its required to update current assets with developed code at /app, and reuse the Grunt tasks there to automate the generation of assets.
+Its required to manually update the documentation and examples on the html files.
+
+Current asset bundles were generated on the /web tasks and some on the /app tasks, but needs normalization through the code and tasks at /app.
+
+This pages require some note about what version of the assets are documenting, to compare status with current developed and deployed work.
+
+DELETE THIS FILE WHEN THE STYLEGUIDE IS PROPERLY UPDATED AND MAINTAINED.

@@ -1,0 +1,414 @@
+/**
+    Profile activity styles.
+    
+    TODO Refactor more of that, from Juvo code
+**/
+[data-activity=profile]
+
+    body, textarea 
+      background-color #FFF
+      font-family 'Open Sans', sans-serif
+      font-size 13.3px
+      font-weight 400
+      color #3d3d3d
+
+
+    // Variables
+    // --------------------------------------------------
+    $loco-primary =		#00989A
+    $loco-secondary =	#ff6765
+    $loco-info =		#777777
+    $loco-infolight =	#888888
+    $loco-warning =		#f0ad4e
+    $loco-common =		#FFFFFF
+
+
+
+
+    // --------------------------------------
+
+    //== borders
+
+    $border-grey =			#dfdfdf
+    $border-default =		1px solid
+
+    // --------------------------------------
+
+    //== padding
+    $padding-none =	0px
+    $margin-none = 0px
+    $margin10 = 10px
+    $margin5 = 5px
+
+
+    //== Colors
+    .loco-primary
+        color $loco-primary
+    .loco-common
+        color $loco-common
+    .loco-info
+        color $loco-info
+    .loco-secondary
+       color $loco-secondary
+    .loco-warning
+       color $loco-warning
+    .loco-infolight
+       color $loco-infolight
+
+    //== display
+    $display-block = block
+    $display-inline-block = inline-block
+
+    //== positions
+    $position-absolute = absolute
+    $position-relative = relative
+    $position-fixed = fixed
+
+
+    //== floats
+    $pull-right= right
+    $pull-left= left
+    
+    img
+        height auto
+        width 100%
+        
+    .profile
+        margin-top 40px
+
+    //panels
+    .panel
+        padding $margin10
+        border $border-default $border-grey
+
+    .panel-content section
+        background-color $loco-common
+        padding 0.1px $margin10 
+        margin 0 0px $margin10 0
+        position $position-relative
+        border-bottom $border-default #e8eaeb
+    .panel-content article
+        border-top $border-default $loco-secondary
+        padding $margin10 
+        margin $margin5 -10px
+
+    //== common class
+
+    .page-wrapper
+      background-color #ecf0f1
+
+    .form-wrapper
+      background-color $loco-common
+      font-size 16px
+      border-bottom $border-default #e8eaeb
+
+
+    .media-middle	
+      vertical-align middle !important
+
+    .profilename 
+      display $display-inline-block
+      height 20px
+      overflow hidden  
+      vertical-align sub
+      width 64px
+
+    .display-inline-block
+        display $display-inline-block
+
+    .display-block
+        display $display-block
+
+    .pointer	
+        cursor pointer
+
+    .pad5l 
+        padding-left $margin5
+
+    .pad5t 
+        padding-top $margin5
+
+    .pad5r 
+        padding-right $margin5
+
+    .pad10t 
+        padding-top $margin10 !important
+
+    .pad5b 
+        padding-bottom $margin5
+
+    .pad10b 
+        padding-bottom $margin10
+
+    .pad20b 
+        padding-bottom 20px !important
+
+    .pad20t 
+        padding-top 20px !important	
+
+    .bold 
+        font-weight bold
+
+    .margin-none
+        margin $margin-none !important
+
+    .margin5t 
+        margin-top $margin5
+
+    .margin10t 
+        margin-top $margin10
+
+    .margin0t
+        margin-top $margin-none
+
+    .margin5r 
+        margin-right $margin5
+
+    .margin0b 
+        margin-bottom $margin-none !important
+
+    .margin20b 
+        margin-bottom 20px !important
+
+    .border-right-blue
+      border-right 2px solid $loco-primary
+
+    .border-right-red
+      border-right 2px solid $loco-secondary
+
+    .border-right-grey
+      border-right 2px solid $loco-info
+
+    .border-right-yellow
+      border-right 2px solid $loco-warning
+
+    .border-bottom
+      border-bottom $border-default $loco-primary
+
+    .border-top
+      border-top $border-default $loco-primary
+
+    .table-border-bottom
+      border-bottom $border-default $loco-infolight
+
+    .border-none
+      border 0px !important
+
+    .pos-relative
+      position $position-relative
+    .center-block
+        float none
+
+    .sm-icons
+        font-size 28px
+        
+        .h4
+            font-size: 16px !important;
+
+        & :hover
+            color $loco-infolight
+            text-decoration none
+
+    .profile-share-icons
+        > a
+            display inline-block
+            
+    .user-in-card
+        h3
+            white-space nowrap
+            overflow hidden
+            text-overflow ellipsis
+            
+        h5
+            // two lines only
+            height 32px
+            overflow hidden
+
+    .editpen
+      border $border-default $loco-primary
+      border-radius: 50%;
+      display $display-block
+      height 22px
+      padding 0 $margin5
+      width 22px
+
+    .about
+      display none
+      
+    .user-review
+        top: 8px;
+        position: relative;
+  
+    .profile-book-btn
+        @media $mediaMinSm
+            margin-top 10px
+        
+    ///
+    // navmenu.styl (.rmm) -> .profile-menu
+    .profile-menu
+        display block
+        position relative
+        width 100%
+        padding 0px
+        margin 0px auto 25px !important
+        text-align center
+        line-height 19px !important
+        background-color $loco-primary
+        a
+            color #FFF
+            text-decoration none
+        ul
+            display block
+            width 100% !important
+            margin 0 auto !important
+            list-style none
+            
+            li
+                display inline
+                margin 0px !important
+
+                a
+                  color #FFF
+                  display inline-block
+                  padding 17px 15px
+                  margin 0px -3px 0px -3px
+                  font-size 15px
+
+                  &:hover
+                    border-bottom 4px solid
+                    padding-bottom 13px !important
+              
+      
+    ///
+    // Customized.styl
+    label
+      display inline-block
+      cursor pointer
+      position relative
+      margin-right 15px
+      font-size 13px
+      &:before
+        content ""
+        display inline-block
+        width 19px
+        height 19px
+        position absolute
+        left 0
+        bottom 1px
+        background-color #FFF
+        border 2px solid #4c4c4c
+
+
+    .wrapper
+      width 500px
+      margin 50px auto
+
+    input[type=radio],
+    input[type=checkbox]
+      display none
+
+    .radio
+      label
+        &:before
+          border-radius 8px
+
+    .checkbox
+      label
+        margin-bottom 0px
+        &:before
+          border-radius 2px
+
+    input[type=radio]:checked
+      & + label
+        &:before
+          content "\2022"
+          color #00989a
+          font-size 30px
+          text-align center
+          line-height 18px
+          border 2px solid #00989a
+
+    input[type=checkbox]:checked
+      & + label
+        &:before
+          content "\2713"
+          font-size 22px
+          color #00989a
+          text-align center
+          font-weight bold
+          line-height 8px
+          border 2px solid #00989a
+
+    ///
+    // media-queries.styl
+    @media (min-width: 1920px) and (max-width: 2560px)
+        .pad5r
+            padding-right: 15px;
+
+        .pad5l
+            padding-left: 15px;
+
+      @media (min-width: 2560px) and (max-width: 2880px)
+        .pad5r
+            padding-right: 15px;
+
+        .pad5l
+            padding-left: 15px;
+
+      @media (min-width: 1024px) and (max-width: 1920px)
+        .searchbar
+            min-width: 400px;
+
+        .pad5r
+            padding-right: 15px;
+
+        .pad5l
+            padding-left: 15px;
+
+     @media (min-width: 768px) and (max-width: 1023px)
+        .nav > li > a
+            padding 15px 7px
+
+        .searchbar
+            min-width 190px
+            input
+                width 85%
+
+        .sm-icons
+            font-size 22px
+
+     @media (min-width: 320px) and (max-width: 767px)
+        .form-wrapper
+            display none
+
+        .panel-content
+            width 100%
+            float none
+
+        .sm-icons
+            display none
+
+        .profile
+            text-align center
+
+        .profile h2
+            font-size 16px
+            font-weight 600
+            margin-top 30px
+
+        .profile h4
+            font-size 14px !important
+            font-weight 400
+
+        .profile .star
+            position relative
+            top -70px
+
+        .profile .loco-info
+            display none
+
+        .about,
+        .about .sm-icons
+            margin-top: 10px;
+            display: block;
+

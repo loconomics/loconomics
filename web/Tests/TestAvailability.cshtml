@@ -1,0 +1,123 @@
+﻿@*
+    Testing and developing area for new availability logic, increasing performance
+
+    Some numbers and comments about the performance variations when updating the API and creating the new logic
+
+## Small optimizations in first step APIs (get events info, compute recurrent rules occurrences, before availability logic)
+Records:179
+GetEventsByUserDateRange
+.19-21 original
+.16-18 tolist removed
+.10-12 no meta records
+.03-05 SQL - no entity. -> OptimizedGetEventsByUserDateRange
+.09-11 Added references SQLs, NEEDED, WAS BUGGY BEFORE. Done similar to EF, with Classes and iterations
+
+Records:146
+.08-.10 Added references SQLs,...
+.11-.13 Aggregated SQL for Exceptions and grouping on C#. DISCARDED
+.09-.11 Using EF in the Optimized to compare with the lost, just added, references SQLs. A bit worse, but not too much. DISCARDED, using SQL again
+
+Records:175  GetUtcFreeOccurrences (its just occurrences, not only free, bad temporary name)
+.049-.054 ievent.getOcurrences
+.168-.175 icalendar.getOcurrences
+.009-.009 DateRange
+
+Records:175 events-> 131232 slots
+GetFreeEvents
+.26-.30
+.23-.26
+.07-.10
+
+## New availability logic, using previous optimized occurrences calls
+GetTimeline (new availability algorithm) vs GetAvailability.Weekly (same output meaning, different format, working correctly after do unit testing with usual and edge cases)
+-8 days set
+.018-.033
+.704-.730
+-31 days set (natural month, 6 days passed off)
+.029-.039
+2.62-2.69
+(WOW!!! From seconds of a slow experience to less than 0.1. This is what I was looking for :-D!!)
+
+ *@
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    DateTime start = DateTime.Now;
+    
+    var cu = new CalendarDll.CalendarUtils();
+    var calUser = new CalendarDll.CalendarUser(141);
+    var startTime = new DateTime(2015, 10, 7); //new DateTime(2012, 1, 1); 
+    var endTime = new DateTime(2015, 10, 8);
+    
+    //var aux = cu.OptimizedGetEventsByUserDateRange(calUser, startTime, endTime, "");
+    //var data = aux.Select(ev => new { startTime = ev.Start.ToString("s"), endTime = ev.End.ToString("s"), uid = ev.UID, dow = ev.Start.DayOfWeek.ToString(), sum = ev.Summary });
+
+    //var data = cu.GetFreeEvents(calUser, startTime, endTime, DateTime.Today);
+}
+@*ObjectInfo.Print(data)
+
+PROCESS DURATION: @((DateTime.Now - start).ToString())
+*@
+@{
+    start = DateTime.Now;
+    //var occurrences = cu.GetEventsOccurrencesInAvailabilitySlotsByUser(calUser.Id, startTime, endTime);
+    //var data2 = LcCalendar.GetAvailability.GetTimeline(occurrences);
+
+    var data2 = LcCalendar.GetAvailability.Times(calUser.Id, startTime, endTime);
+    
+    //var testOutput = LcCalendar.GetAvailability.GetTimeline_UnitTests();
+}
+@*ObjectInfo.Print(testOutput)*@
+@ObjectInfo.Print(data2)
+@*ObjectInfo.Print(data2b)*@
+
+PROCESS DURATION: @((DateTime.Now - start).ToString())
+
+@{return;
+    start = DateTime.Now;
+    var data3 = LcCalendar.GetAvailability.Weekly(calUser.Id, startTime, endTime, false);
+}
+@ObjectInfo.Print(data3.Count)
+
+PROCESS DURATION: @((DateTime.Now - start).ToString())
+
+@*{
+    var ical = new DDay.iCal.iCalendar();
+    var ievent = new DDay.iCal.Event();
+    ievent.Start = new DDay.iCal.iCalDateTime(2015, 10, 12, 10, 0, 0, "");
+    ievent.End = new DDay.iCal.iCalDateTime(2015, 10, 12, 15, 0, 0, "");
+    ievent.Status = DDay.iCal.EventStatus.Confirmed;
+    ievent.UID = "1234";
+    var rrule = new DDay.iCal.RecurrencePattern();
+    rrule.ByDay.Add(new DDay.iCal.WeekDay(DayOfWeek.Monday));
+    rrule.FirstDayOfWeek = 0;
+    rrule.Interval = 1;
+    rrule.Frequency = DDay.iCal.FrequencyType.Weekly;
+    ievent.RecurrenceRules.Add(rrule);
+    ical.Events.Add(ievent);
+
+    var userEvents = cu.GetEventsByUserDateRange(calUser, new DateTime(2006, 1, 1), new DateTime(2006, 1, 1), "");
+    var userEvent = userEvents.First();
+
+    //ical.Events.Add(userEvent);
+
+    var data4 = userEvent.GetOccurrences(new DDay.iCal.iCalDateTime(2015, 10, 12, 10, 0, 0, ""), new DDay.iCal.iCalDateTime(2015, 11, 12, 15, 0, 0, ""))
+    .Select(occ => {
+        return new
+        {
+            start = occ.Period.StartTime.ToString(),
+            end = occ.Period.EndTime.ToString(),
+            uid = ((DDay.iCal.IEvent)occ.Period.StartTime.AssociatedObject).UID,
+            status = ((DDay.iCal.IEvent)occ.Period.StartTime.AssociatedObject).Status
+        };
+    });
+}
+@ObjectInfo.Print(data4)
+@ObjectInfo.Print(new {
+    start = userEvent.Start.ToString(),
+    end = userEvent.End.ToString(),
+    status = userEvent.Status,
+    uid = userEvent.UID,
+    rrule = userEvent.RecurrenceRules
+})*@
