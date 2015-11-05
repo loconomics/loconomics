@@ -122,8 +122,7 @@ function performLocalLogin(thisAppModel, username, password) {
             // use authorization key for each
             // new Rest request
             thisAppModel.rest.extraHeaders = {
-                alu: logged.userID,
-                alk: logged.authKey
+                Authorization: 'LC alu=' + logged.userID + ',alk=' + logged.authKey
             };
 
             // async local save, don't wait

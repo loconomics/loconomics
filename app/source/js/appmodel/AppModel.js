@@ -47,8 +47,7 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
                 // use authorization key for each
                 // new Rest request
                 this.rest.extraHeaders = {
-                    alu: credentials.userID,
-                    alk: credentials.authKey
+                    Authorization: 'LC alu=' + credentials.userID + ',alk=' + credentials.authKey
                 };
                 
                 // It has credentials! Has basic profile data?

@@ -264,6 +264,9 @@ public static class LcAuth
                     FROM    webpages_Membership
                     WHERE   UserId=@0
                 ", userid);
+                // TODO For performance and security, save a processed autologinkey in database
+                // and check against that rather than do this tasks every time; auto compute on
+                // any password change.
                 // Check if autologinkey and password (encrypted and then converted for url) match
                 if (autologinkey == LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(p)))
                 {
@@ -277,6 +280,7 @@ public static class LcAuth
                     // Clear current session to avoid conflicts:
                     if (HttpContext.Current.Session != null)
                         HttpContext.Current.Session.Clear();
+                    
                     // New authentication cookie: Logged!
                     System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
 
@@ -315,19 +319,34 @@ public static class LcAuth
     /// </summary>
     public static void RequestAutologin(HttpRequest Request)
     {
-        // Using custom headers first, best for security using the REST API.
-        var Q = Request.QueryString;
-        var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
-        var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
-
-        // Autologin feature for anonymous sessions with autologin parameters on request
-        if (!Request.IsAuthenticated
-            && alk != null
-            && alu != null)
+        // First, check standard 'Authorization' header
+        var auth = Request.Headers["Authorization"];
+        if (!String.IsNullOrEmpty(auth))
         {
-            // 'alk' url parameter stands for 'Auto Login Key'
-            // 'alu' url parameter stands for 'Auto Login UserID'
-            LcAuth.Autologin(alu, alk);
+            var m = System.Text.RegularExpressions.Regex.Match(auth, "^LC alu=([^,]+),alk=(.+)$");
+            if (m.Success)
+            {
+                var alu = m.Groups[1].Value;
+                var alk = m.Groups[2].Value;
+                LcAuth.Autologin(alu, alk);
+            }
+        }
+        else
+        {
+            // Using custom headers first, best for security using the REST API.
+            var Q = Request.QueryString;
+            var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
+            var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
+
+            // Autologin feature for anonymous sessions with autologin parameters on request
+            if (!Request.IsAuthenticated
+                && alk != null
+                && alu != null)
+            {
+                // 'alk' url parameter stands for 'Auto Login Key'
+                // 'alu' url parameter stands for 'Auto Login UserID'
+                LcAuth.Autologin(alu, alk);
+            }
         }
     }
     /// <summary>

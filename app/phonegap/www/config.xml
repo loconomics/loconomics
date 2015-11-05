@@ -46,7 +46,8 @@ id="com.loconomics.app" version="0.10.0">
   <preference name="disable-cursor" value="false" />
   <!-- android: MIN SDK version supported on the target device. MAX version
   is blank by default. -->
-  <preference name="android-minSdkVersion" value="11" />
+  <!-- Android: 7->2.1, 10->2.3.3, 11->3.0, 14->4.0. All: https://en.wikipedia.org/wiki/Android_version_history -->
+  <preference name="android-minSdkVersion" value="14" />
   <!-- android: app install location. 'auto' will choose. 'internalOnly'
   is device memory. 'preferExternal' is SDCard. -->
   <preference name="android-installLocation" value="auto" />
