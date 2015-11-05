@@ -119,6 +119,15 @@ namespace LcRest
             var forServiceProfessional = forUserID.HasValue && forUserID.Value == booking.serviceProfessionalUserID;
             var forClient = forUserID.HasValue && forUserID.Value == booking.clientUserID;
 
+            var reviewedByServiceProfessional = false;
+            var reviewedByClient = false;
+            try
+            {
+                reviewedByServiceProfessional = booking.reviewedByServiceProfessional;
+                reviewedByClient = booking.reviewedByClient;
+            }
+            catch { }
+
             return new Booking
             {
                 bookingID = booking.bookingID,
@@ -172,8 +181,8 @@ namespace LcRest
                 preNotesToSelf = (forServiceProfessional || internalUse ? booking.preNotesToSelf : ""),
                 postNotesToSelf = (forServiceProfessional || internalUse ? booking.postNotesToSelf : ""),
 
-                reviewedByServiceProfessional = booking.reviewedByServiceProfessional,
-                reviewedByClient = booking.reviewedByClient
+                reviewedByServiceProfessional = reviewedByServiceProfessional,
+                reviewedByClient = reviewedByClient
             };
         }
 
@@ -472,7 +481,6 @@ namespace LcRest
                              INNER JOIN
                             CalendarEvents As E
                               ON B.ServiceDateID = E.Id
-                             INNER JOIN
                     WHERE   
                             -- With payment enabled
                             B.PaymentEnabled = 1
@@ -858,6 +866,20 @@ namespace LcRest
                     TotalServiceFeesPaidByClient = @2
             WHERE   BookingId = @0
         ";
+        /// <summary>
+        /// Update SQL for internal processes, setting a booking as timedout.
+        /// Right now that means to remove references to eventIDs, that must
+        /// be removed
+        /// </summary>
+        private const string sqlUpdBookingAsTimedout = @"
+            UPDATE Booking SET
+                ServiceDateID = null
+                ,AlternativeDate1ID = null
+                ,AlternativeDate2ID = null
+                ,[UpdatedDate] = getdate()
+                ,[ModifiedBy] = 'sys'
+            WHERE BookingID = @0
+        ";
         #endregion
 
         /// <summary>
@@ -1014,6 +1036,7 @@ namespace LcRest
         {
             using (var db = new LcDatabase(sharedDb))
             {
+                db.Execute(sqlUpdBookingAsTimedout, booking.bookingID);
                 if (booking.serviceDateID.HasValue)
                     LcCalendar.DelUserAppointment(booking.serviceProfessionalUserID, booking.serviceDateID.Value);
                 if (booking.alternativeDate1ID.HasValue)
