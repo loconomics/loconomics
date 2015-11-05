@@ -18,9 +18,22 @@ COMMIT
 
 GO
 
+-- Zero: Collateral effects, Messages with AuxID/T must be updated to use bookingrequestID
+-- and name table as 'booking'
+-- Update the ID of related Bookings to be the bookingrequestID (this is the one that
+-- will be kept after apply mixing of tables)
+update [messages] set
+auxID = (SELECT TOP 1 BookingRequestID from booking where booking.bookingID = AuxID)
+where auxT like 'Booking' and auxID is not null
+-- Update the related AuxT table names 'Booking' and 'BookingRequest' to be 'booking'
+update [messages] set
+auxt = 'booking'
+where auxT in ('Booking', 'BookingRequest')
+GO
+
 -- Rename pricingestimate
 -- First, the KEYS
-BEGIN TRANSACTION
+-- BEGIN TRANSACTION
 GO
 EXECUTE sp_rename N'dbo.pricingestimate.PricingEstimateID', N'Tmp_PricingSummaryID', 'COLUMN' 
 GO
@@ -36,8 +49,8 @@ EXECUTE sp_rename N'dbo.pricingestimate.FirstSessionDuration', N'FirstSessionDur
 GO
 ALTER TABLE dbo.pricingestimate SET (LOCK_ESCALATION = TABLE)
 GO
-COMMIT
-BEGIN TRANSACTION
+-- COMMIT
+-- BEGIN TRANSACTION
 GO
 EXECUTE sp_rename N'dbo.pricingestimatedetail.PricingEstimateID', N'Tmp_PricingSummaryID_2', 'COLUMN' 
 GO
@@ -63,7 +76,7 @@ EXECUTE sp_rename N'dbo.pricingestimatedetail.Tmp_ClientDataInput_5', N'ClientDa
 GO
 ALTER TABLE dbo.pricingestimatedetail SET (LOCK_ESCALATION = TABLE)
 GO
-COMMIT
+-- COMMIT
 -- Now, tables
 EXEC sp_rename 'pricingestimate', 'pricingSummary'
 EXEC sp_rename 'pricingestimatedetail', 'pricingSummaryDetail'
@@ -71,16 +84,7 @@ EXEC sp_rename 'pricingestimatedetail', 'pricingSummaryDetail'
 GO
 
 -- Changes to BookingType table
-BEGIN TRANSACTION
-SET QUOTED_IDENTIFIER ON
-SET ARITHABORT ON
-SET NUMERIC_ROUNDABORT OFF
-SET CONCAT_NULL_YIELDS_NULL ON
-SET ANSI_NULLS ON
-SET ANSI_PADDING ON
-SET ANSI_WARNINGS ON
-COMMIT
-BEGIN TRANSACTION
+-- BEGIN TRANSACTION
 GO
 ALTER TABLE dbo.bookingtype
 	DROP CONSTRAINT DF__bookingty__Servi__2215F810
@@ -146,8 +150,8 @@ ALTER TABLE dbo.bookingtype ADD CONSTRAINT
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 
 GO
-COMMIT
-select Has_Perms_By_Name(N'dbo.bookingtype', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.bookingtype', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.bookingtype', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
+-- COMMIT
+select Has_Perms_By_Name(N'dbo.bookingtype', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.bookingtype', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.bookingtype', 'Object', 'CONTROL') as Contr_Per 
 GO
 ALTER TABLE dbo.bookingrequest ADD CONSTRAINT
 	FK__bookingre__Booki__5A1A5A11 FOREIGN KEY
@@ -162,7 +166,6 @@ ALTER TABLE dbo.bookingrequest ADD CONSTRAINT
 GO
 ALTER TABLE dbo.bookingrequest SET (LOCK_ESCALATION = TABLE)
 GO
-COMMIT
 
 -- Rename to TEMP name table Booking because a new one will be created
 EXEC sp_rename 'booking', 'BookingOLD'
@@ -488,6 +491,8 @@ INSERT INTO Bookingtype (BookingTypeID, BookingTypeName, BookingTypeDescription,
 GO
 
 -- Remove OLD Booking tables
+ALTER TABLE [dbo].[bookingOLD] 
+DROP CONSTRAINT FK__booking__Booking__0D99FE17
 DROP TABLE [dbo].[bookingOLD]
 GO
 DROP TABLE [bookingrequest]
@@ -506,6 +511,12 @@ EXEC sp_rename 'bookingstatus', 'bookingStatus'
 EXEC sp_rename 'bookingtype', 'bookingType'
 GO
 
+IF @@error = 0 BEGIN
 -----------------
 COMMIT TRANSACTION
 -----------------
+END ELSE BEGIN
+ROLLBACK TRANSACTION
+END
+
+SELECT @@error as error
