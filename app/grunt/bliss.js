@@ -74,7 +74,7 @@ module.exports = function(grunt) {
                 debug: false,
                 includedFiles: includedFiles,
                 cordovajs: true,
-                siteUrl: 'http://dev.loconomics.com',
+                siteUrl: 'https://loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang
             }
