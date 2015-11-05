@@ -11,7 +11,41 @@
 var $ = require('jquery');
 var escapeSelector = require('../escapeSelector');
 
+function getFlags() {
+    if (window.navigator && window.navigator.userAgent) {
+        var ua = window.navigator.userAgent;
+        var iOsWebview = /iOS|iPad|iPhone|iPod/.test(ua);
+        var iOsVersion = null;
+        if (iOsWebview) {
+            iOsVersion = { full: /OS ((\d+_?){2,3})\s/.exec(ua)[1] };
+            iOsVersion.parts = iOsVersion.full.split('_');
+            iOsVersion.major = iOsVersion.full.parts[0] |0;
+            iOsVersion.minor = iOsVersion.full.parts[1] |0;
+            iOsVersion.revision = iOsVersion.full.parts[2] |0;
+        }
+        // NO WAY to detect wkwebview versus uiwebview, we just use wkwebview on iOS 9 and later
+        // so next assumption works for us:
+        var isWkWebview = iOsVersion && iOsVersion.major >= 9;
+        var isAndroid = /Android/.test(ua);
+        // Chrome, browser or webview https://developer.chrome.com/multidevice/user-agent  Old webkit webviews gets discarded
+        var isChrome = /Chrome\//.test(ua);
+        var isMobile = iOsWebview || isAndroid;
+        
+        return {
+            isIos: iOsWebview,
+            iOsVersion: iOsVersion,
+            isWkWebview: isWkWebview,
+            isAndroid: isAndroid,
+            isChrome: isChrome,
+            isMobile: isMobile
+        };
+    }
+    
+    return {};
+}
+
 function DomItemsManager(settings) {
+    //jshint maxcomplexity:10
 
     this.idAttributeName = settings.idAttributeName || 'id';
     this.allowDuplicates = !!settings.allowDuplicates || false;
@@ -24,7 +58,16 @@ function DomItemsManager(settings) {
     // enough quick to not being visually perceived the delay.
     // NOTE: on tests on Nexus 5 Android 5.1 with Chrome engine, 40ms was enought to have all the previous
     // benefits, but was too quick for iOS (even 100ms was too quick for iOS 8.3).
-    this.switchDelay = settings.switchDelay || 140;
+    var defaultDelay = 140;
+    // NOTE:UPDATE: Using WkWebView on iOS (8.x with unofficial plugin with webserver, 9.x will be with official support no-webserver)
+    // it's fastest, so trying user-agent sniffing to use the fastest delay on this engine, chrome engine or desktop (non-mobile)
+    // and left he conservative delay for other cases (old iOS/webview, old android webkit engine).
+    var flags = getFlags();
+    // if not is mobile OR is Chrome OR is WKWebview
+    if (!flags.isMobile || flags.isChrome || flags.isWkWebview)
+        defaultDelay = 40;
+    
+    this.switchDelay = settings.switchDelay || defaultDelay;
 }
 
 module.exports = DomItemsManager;
