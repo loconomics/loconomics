@@ -80,6 +80,21 @@ module.exports = function(grunt) {
             }
           }
         },
+        phonegapDev: {
+          files: {
+            'phonegap/www/index.html': ['source/html/app.js.html']
+          },
+          options: {
+            context: {
+                debug: true,
+                includedFiles: includedFiles,
+                cordovajs: true,
+                siteUrl: 'https://dev.loconomics.com',
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang
+            }
+          }
+        },
         cordovaConfigJson: {
             files: {
                 'phonegap/.cordova/config.json': ['source/cordova-config.js.json']
@@ -101,6 +116,24 @@ module.exports = function(grunt) {
                     id: '<%= package.appId %>',
                     version: '<%= package.version %>',
                     name: '<%= package.appName %>',
+                    description: '<%= package.appDescription %>',
+                    author: {
+                      email: 'support@loconomics.com',
+                      url: 'https://loconomics.com',
+                      text: '<%= package.author %>'
+                    }
+                }
+            }
+        },
+        cordovaConfigXmlDev: {
+            files: {
+                'phonegap/www/config.xml': ['source/cordova-config.js.xml']
+            },
+            options: {
+                context: {
+                    id: '<%= package.devAppId %>',
+                    version: '<%= package.version %>',
+                    name: '<%= package.devAppName %>',
                     description: '<%= package.appDescription %>',
                     author: {
                       email: 'support@loconomics.com',

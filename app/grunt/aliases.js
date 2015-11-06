@@ -48,10 +48,19 @@ module.exports = {
         'notify:phonegap'
     ],
     
-    'build-phonegapbuild': [
+    'prepare-phonegapbuild': [
+        // Create 'DEV' version files on phonegap folder and bundle
+        'bliss:phonegapDev',
+        'bliss:cordovaConfigXmlDev',
+        'zip:phonegapDev',
+        
+        // Create 'LIVE' version files on phonegap folder (it replace previous ones) and bundle
+        'bliss:phonegap',
+        'bliss:cordovaConfigXml',
         'zip:phonegap'
-        //TODO: use REST to upload to phonegapbuild, environment credentials
     ],
+    
+    //TODO: task that uses the PhoneGapBuild REST API to upload for build, using environment credentials
 
 	'build-dev': [
 		'browserify',
@@ -67,7 +76,7 @@ module.exports = {
         'build-images',
         'build-fonts',
         'prepare-phonegap',
-        'build-phonegapbuild',
+        'prepare-phonegapbuild',
         'notify:build'
 	],
     'atwork': [
