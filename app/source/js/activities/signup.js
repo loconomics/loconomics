@@ -35,10 +35,12 @@ var A = Activity.extends(function SignupActivity() {
         event: 'signuperror',
         handler: function(err) {
             if (err) {
+                // Focus first field with error
+                var $el = this.$activity.find('.form-group.has-error:first').find('input');
                 setTimeout(function() {
-                    // Focus first field with error
-                    this.$activity.find('.form-group.has-error:first').find('input').focus();
-                }.bind(this), 100);
+                    // Because trying synchronously will not work on some cases
+                    $el.focus();
+                }, 100);
             }
         }.bind(this)
     });

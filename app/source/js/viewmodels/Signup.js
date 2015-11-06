@@ -113,10 +113,10 @@ function SignupVM(app) {
 
             ended();
             
+            // Use event to catch up the error, since the promise catch it
+            // since this will be triggered by a button and never will have change
+            // to detect the promise, showing up unknow errors in console
             this.emit('signuperror', err);
-            
-            // Throw error
-            throw err;
         }.bind(this));
         
     }.bind(this);

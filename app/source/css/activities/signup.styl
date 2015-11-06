@@ -5,6 +5,8 @@
     
     .Signup-formcontainer {
         margin-bottom: 60px;
+        // Fix problems with margin collapsing on iOS using overflow:
+        overflow: hidden;
 
         @media $mediaMinSm {
             padding: 15px 50px;
