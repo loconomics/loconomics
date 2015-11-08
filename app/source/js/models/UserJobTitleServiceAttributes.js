@@ -19,27 +19,58 @@ function extendValuesByCategory(obs) {
             return (key |0) === 0;
         });
     });
+    
+    // Indexed list of observers to detect changes in categories values, allowing
+    // the cat-atts observers to recompute only on changes on its categories, being more
+    // optimal.
+    var catsObs = {};
 
     // Gets an observable for array that keeps in sync with source changes
+    // DO NOT PUSH/REMOVE data to the resulting array, use the obs.push and obs.remove methods for data changes
     obs.getServiceCategoryAttributes = function(catID) {
-        return ko.pureComputed(function() {
-            // Recompute when source value changed, get
-            // category content.
-            return obs() && obs()[catID] || [];
+        var catObs = catsObs[catID] = catsObs[catID] || ko.observable({});
+        return ko.computed(function() {
+            // Recompute when source value changed for the cateogry
+            var base = obs.peek();
+            // access notifier observable so this recomputes on changes detected:
+            catObs();
+            // Get category data:
+            return base && base[catID] || [];
         });
     };
+    
+    // On a real bulk change, trigger al cats observers
+    var prevValue = obs();
+    obs.subscribe(function(v) {
+        // really changed?
+        if (v !== prevValue) {
+            prevValue = v;
+            Object.keys(catsObs).forEach(function(a) {
+                // notify changes
+                a.valueHasMutated();
+            });
+        }
+    });
 
     obs.push = function(catID, attID) {
         var v = obs();
         if (!v) {
+            // No value at all! Create object, and first category with this first attribute
             v = {};
             v[catID] = [attID];
             obs(v);
+            if (catsObs[catID]) catsObs[catID].valueHasMutated();
         }
         else {
             var cat = v[catID] || (v[catID] = []);
-            cat.push(attID);
-            obs.notifyChanges();
+            // Double check it does not exists already
+            if (cat.indexOf(attID) === -1) {
+                cat.push(attID);
+                // changes on all the data
+                obs.notifyChanges();
+                // changes on this category
+                if (catsObs[catID]) catsObs[catID].valueHasMutated();
+            }
         }
     };
 
@@ -50,8 +81,9 @@ function extendValuesByCategory(obs) {
             var i = cat.indexOf(attID);
             if (i > -1) {
                 cat.splice(i, 1);
+                obs.notifyChanges();
+                if (catsObs[catID]) catsObs[catID].valueHasMutated();
             }
-            obs.notifyChanges();
         }
     };
 }

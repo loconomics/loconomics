@@ -170,13 +170,28 @@ function AttributesCategoryVM(cat, userAtts) {
         }
     }, this);
 
-    //this.selectedAttributes = ko.observableArray(sampleDataList);
     this.selectedAttributes = ko.pureComputed(function() {
         var atts = cat.serviceAttributes().filter(function(att) {
             return selectedAttsIds().indexOf(att.serviceAttributeID()) > -1;
         });
 
         return atts.concat.apply(atts, this.proposedServiceAttributes());
+    }, this);
+
+    // Available, not selected, list of attributes
+    this.availableAttributes = ko.computed(function() {
+        var props = this.proposedServiceAttributes(),
+            atts = selectedAttsIds();
+        // BAD FILTERING
+        return cat.serviceAttributes().filter(function(att) {
+            var toInclude = atts.indexOf(att.serviceAttributeID()) === -1;
+            if (toInclude === false) return false;
+
+            // Not found in IDs, try with proposed Names:
+            return props.every(function(propAtt) {
+                return att.name() !== propAtt.name();
+            });
+        });
     }, this);
 
     this.attributeSearch = ko.observable('');
@@ -193,6 +208,10 @@ function AttributesCategoryVM(cat, userAtts) {
         }
         
         this.attributeSearch('');
+    };
+    
+    this.selectAttribute = function(att) {
+        userAtts.serviceAttributes.push(catID, att.serviceAttributeID());
     };
 
     this.removeAttribute = function(att) {
