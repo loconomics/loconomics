@@ -182,7 +182,6 @@ function AttributesCategoryVM(cat, userAtts) {
     this.availableAttributes = ko.computed(function() {
         var props = this.proposedServiceAttributes(),
             atts = selectedAttsIds();
-        // BAD FILTERING
         return cat.serviceAttributes().filter(function(att) {
             var toInclude = atts.indexOf(att.serviceAttributeID()) === -1;
             if (toInclude === false) return false;
@@ -221,4 +220,15 @@ function AttributesCategoryVM(cat, userAtts) {
         else
             userAtts.proposedServiceAttributes.remove(catID, att.name());
     }.bind(this);
+    
+    // Available attributes filtered out by the search text
+    var textSearch = require('../utils/textSearch');
+    this.autocompleteAttributes = ko.computed(function() {
+        var s = this.attributeSearch(),
+            a = this.availableAttributes();
+        
+        return a.filter(function(att) {
+            return textSearch(s, att.name());
+        });
+    }, this);
 }
