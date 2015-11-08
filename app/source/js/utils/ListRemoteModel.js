@@ -5,6 +5,10 @@
     without paging/cursor, with indexed access to each item by its ID.
     Is good for lists that keep small in the time.
     
+    TODO IMPORTANT The getList method, reused as sync, is returning an observable rather
+    than direct data. There are uses right now, double check if this chas any sense and update
+    affected code.
+    
     TODO To implement single item update mode, not full list each time, by set-up or method
 **/
 'use strict';
