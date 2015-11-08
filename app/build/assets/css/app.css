@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-11-06
+/*! LoconomicsApp 2015-11-08
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -6077,7 +6077,25 @@ body.use-backdrop:before {
   box-shadow: 0px 0px 2px -1px #000;
 }
 
-/* line 77 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WorkPhotos.styl */
+/* line 79 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\TagsList.styl */
+.TagsListAutocomplete {
+  position: absolute;
+  max-height: 204px;
+  overflow: auto;
+  z-index: 999999;
+  background: White none repeat scroll 0% 0%;
+  -webkit-box-shadow: 0 5px 6px 2px #777;
+  box-shadow: 0 5px 6px 2px #777;
+  left: 15px;
+  right: 15px;
+}
+
+/* line 89 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\TagsList.styl */
+.TagsListAutocomplete > ul {
+  margin: 0;
+}
+
+/* line 92 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WorkPhotos.styl */
 
 /* line 5 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WorkPhotos.styl */
 .WorkPhotos {

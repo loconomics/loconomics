@@ -15,6 +15,11 @@
                     <input type="text" class="form-control" data-bind="textInput: attributeSearch, disable: $parent.isLocked" />
                     <span class="input-group-btn"><button type="button" class="btn btn-primary" data-bind="click: addAttribute">Add</button></span>
                 </div>
+                <div class="TagsListAutocomplete" data-bind="visible: attributeSearch() && autocompleteAttributes().length">
+                    <ul data-bind="foreach: autocompleteAttributes" class="list-unstyled">
+                        <li><button type="button" class="btn btn-link btn-block" data-bind="text: name, click: $parent.selectAttribute"></button></li>
+                    </ul>
+                </div>
             </div>
             <ol class="TagsList" data-bind="foreach: selectedAttributes">
                 <li class="TagsList-item">
@@ -22,11 +27,6 @@
                     <button type="button" class="btn btn-link" data-bind="click: $parent.removeAttribute, disable: $parent.isLocked"><i class="fa ion ion-ios-close-outline" aria-hidden="true"></i> <span class="sr-only">Remove</span></button>
                 </li>
             </ol>
-            <div class="TagsList-autocomplete">
-                <ul data-bind="foreach: autocompleteAttributes" class="list-unstyled">
-                    <li><button type="button" class="btn btn-link btn-block" data-bind="text: name, click: $parent.selectAttribute"></button></li>
-                </ul>
-            </div>
         </div>
     </div>
 
