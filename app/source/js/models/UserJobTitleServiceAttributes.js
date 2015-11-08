@@ -47,7 +47,7 @@ function extendValuesByCategory(obs) {
             prevValue = v;
             Object.keys(catsObs).forEach(function(a) {
                 // notify changes
-                a.valueHasMutated();
+                a.valueHasMutated && a.valueHasMutated();
             });
         }
     });
