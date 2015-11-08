@@ -3597,6 +3597,11 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
               </li>
             </ol>
           </div>
+          <div class="form-group">
+             <h2 class="SectionTitle">Experience Level</h2>
+
+            <select class="form-control" data-bind="options: jobTitleServiceAttributes.experienceLevels, optionsText: 'name', optionsValue: 'experienceLevelID', optionsCaption: 'Select your experience level', value: serviceAttributes.experienceLevelID"></select>
+          </div>
         </div>
         <div class="LightForm-submitBar">
           <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>

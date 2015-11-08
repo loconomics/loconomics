@@ -16,7 +16,7 @@ function JobTitleServiceAttributes(values) {
             isArray: true,
             Model: ServiceAttributeCategory
         },
-        experienceLevel: {
+        experienceLevels: {
             isArray: true,
             Model: ExperienceLevel
         },
