@@ -1,5 +1,5 @@
 <!-- BookMeButton activity -->
-<div class="container-fluid LightForm" data-activity="bookMeButton">
+<div class="LightForm" data-activity="bookMeButton">
 
     <h2 class="SectionTitle">Book Me Now Button</h2>
     
@@ -22,18 +22,16 @@
         </div>
         
         <div class="form-group">
-            <label>
+            <label for="bookMeButton-code">
                 Using "Source" or "Code" view in your website editor, copy the code below and paste it into yours:
-                <textarea rows="6" readonly data-bind="value: buttonHtmlCode" class="form-control">
-                </textarea>
             </label>
+            <textarea id="bookMeButton-code" rows="6" readonly data-bind="value: buttonHtmlCode" class="form-control">
+            </textarea>
         </div>
         
-        <!-- TODO Unhide when implemented the handlers
-        <div class="row">
+        <div>
             <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked">Copy</button>
-            <button type="button" class="btn btn-default btn-block" data-bind="event: { click: sendByEmail }, disable: isLocked">E-mail to your tech person</button>
+            <a href="#" class="btn btn-default btn-block" data-bind="attr: { href: sendByEmailURL }, visible: !isLocked()">E-mail to your tech person</a>
         </div>
-        -->
     </form>
 </div>

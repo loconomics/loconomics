@@ -40,6 +40,22 @@ var A = Activity.extends(function BookMeButtonActivity() {
             });
         }.bind(this)
     });
+    
+    var $code = this.$activity.find('textarea');
+    this.viewModel.copyCode = function() {
+        var errMsg;
+        try {
+            $code.select();
+            if (!document.execCommand('copy')) {
+                errMsg = 'Impossible to copy text.';
+            }
+        } catch(err) {
+            errMsg = 'Impossible to copy text.';
+        }
+        if (errMsg) {
+            this.app.modals.showError({ error: errMsg });
+        }
+    }.bind(this);
 });
 
 exports.init = A.init;
@@ -111,13 +127,10 @@ function ViewModel(app) {
             return code;
         }
     }, this);
-    
-    // TODO Copy feature; will need a native plugin
-    this.copyCode = function() { };
-    
-    this.sendByEmail = function() {
-        // TODO Send by email, with window.open('mailto:&body=code');
-    };
+
+    this.sendByEmailURL = ko.pureComputed(function() {
+        return 'mailto:&body=' + encodeURIComponent('Loconomics Book Me Now Button HTML code: ' + this.buttonHtmlCode());
+    }, this);
 }
 
 function generateButtonCode(options) {

@@ -771,7 +771,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         </div>
       </div>
       <!-- BookMeButton activity -->
-      <div class="container-fluid LightForm" data-activity="bookMeButton">
+      <div class="LightForm" data-activity="bookMeButton">
          <h2 class="SectionTitle">Book Me Now Button</h2>
 
         <script type="text/html" id="bookMeButton-radioButton">
@@ -794,17 +794,15 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </div>
           </div>
           <div class="form-group">
-            <label>Using "Source" or "Code" view in your website editor, copy the code below
-              and paste it into yours:
-              <textarea rows="6" readonly data-bind="value: buttonHtmlCode"
-              class="form-control"></textarea>
-            </label>
+            <label for="bookMeButton-code">Using "Source" or "Code" view in your website editor, copy the code below
+              and paste it into yours:</label>
+            <textarea id="bookMeButton-code" rows="6"
+            readonly data-bind="value: buttonHtmlCode" class="form-control"></textarea>
           </div>
-          <!-- TODO Unhide when implemented the handlers <div class="row">
-            <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked">Copy</button>
-            <button type="button" class="btn btn-default btn-block" data-bind="event: { click: sendByEmail }, disable: isLocked">E-mail to your tech person</button>
-        </div>
-        -->
+          <div>
+            <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked">Copy</button> <a href="#" class="btn btn-default btn-block" data-bind="attr: { href: sendByEmailURL }, visible: !isLocked()">E-mail to your tech person</a>
+
+          </div>
         </form>
       </div>
       <!-- Activity booking -->
