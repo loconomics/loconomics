@@ -68,8 +68,8 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     
-    // Button type, can be: 'small', 'medium', 'large', 'link'
-    this.type = ko.observable('medium');
+    // Button type, can be: 'icon', 'link'
+    this.type = ko.observable('icon');
 
     this.isLocked = marketplaceProfile.isLocked;
     
@@ -77,7 +77,7 @@ function ViewModel(app) {
     
     var buttonTemplate =
         '<!-- begin Loconomics book-me-button -->' +
-        '<a style="display:inline-block"><img alt="" style="border:none" /></a>' + 
+        '<a style="display:inline-block"><img alt="" style="border:none" width="200" height="50" /></a>' + 
         '<!-- end Loconomics book-me-button -->';
     
     var linkTemplate =
@@ -99,7 +99,7 @@ function ViewModel(app) {
 
             var siteUrl = $('html').attr('data-site-url'),
                 linkUrl = siteUrl + '/book/' + this.bookCode() + '/' + this.jobTitleID() + '/',
-                imgUrl = siteUrl + '/img/extern/book-me-button-' + type + '.png';
+                imgUrl = siteUrl + '/img/extern/book-me-now-button.svg';
 
             var code = generateButtonCode({
                 tpl: tpl,
