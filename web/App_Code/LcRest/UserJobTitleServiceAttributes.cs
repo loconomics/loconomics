@@ -51,11 +51,11 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return (int)db.QueryValue(@"
+                return (int)((int?)db.QueryValue(@"
                     SELECT  UL.experienceLevelID
                     FROM    ServiceAttributeExperienceLevel As UL
                     WHERE   UL.UserID = @0 AND UL.PositionID = @1 AND UL.LanguageID = @2 AND UL.CountryID = @3
-                ", userID, jobTitleID, languageID, countryID);
+                ", userID, jobTitleID, languageID, countryID) ?? 0);
             }
         }
         #endregion
