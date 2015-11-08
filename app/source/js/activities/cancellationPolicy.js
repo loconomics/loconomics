@@ -27,7 +27,7 @@ var A = Activity.extends(function CancellationPolicyActivity() {
                 .then(function(userJobTitle) {
                     // Save for use in the view
                     this.viewModel.userJobTitle(userJobTitle);
-                    this.viewModel.selectedCancellationPolicyID(userJobTitle.cancellationPolicyID);
+                    this.viewModel.selectedCancellationPolicyID(userJobTitle.cancellationPolicyID());
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
