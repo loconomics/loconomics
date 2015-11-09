@@ -21,6 +21,9 @@ var A = Activity.extends(function TermsActivity() {
         e.preventDefault();
         e.stopImmediatePropagation();
         $(this).tab('show');
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, null, '#!terms/' + $(this).attr('href').replace(/^#/, ''));
+        }
     });
 });
 
@@ -29,7 +32,7 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-    var tabName = state && state.route.segments && state.route.segments[0];
+    var tabName = state && state.route.segments && state.route.segments[0] || 'terms-of-service';
     var tab = this.$activity.find('[href="#terms-' + tabName + '"]');
     if (tab.length) tab.tab('show');
 };

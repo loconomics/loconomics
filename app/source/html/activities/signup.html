@@ -22,17 +22,20 @@
     </div>
     
   <div class="LeadContent container Signup-formcontainer" data-bind="visible: profile">
-	<p class="Signup-login"><span>Already have an account? </span><a class="btn btn-link" href="/login">Login<a><p>
-    <h3>Sign up for free</h3>
+      <p class="Signup-login"><span>Already have an account? </span><a class="btn btn-link" href="/login">Login</a><p>
+    
+        <h3>Sign up for free</h3>
 
+  <!-- HIDDEN UNTIL GETS IMPLEMENTED ON APP -only web version works of Facebook Connect
     <div data-bind="visible: !facebookUserID()">
       <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
-      <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
+      <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-- >
     </div>
 
     <p class="isolated text-center Signup-or" data-bind="visible: !facebookUserID()">
       <span>or</span>
     </p>
+    -->
       
     <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }" novalidate>
         
@@ -78,8 +81,8 @@
     </form>
 
     <p class="isolated Signup-agreement">
-      By clicking on "Create account", you agree to our <a href="#!terms/terms-of-service" target="_blank">Terms of Use</a> &amp;
-        <a href="#!terms/privacy-policy" target="_blank">Privacy Policy</a>
+      By clicking on "Create account", you agree to our <a href="#!terms/terms-of-service?mustReturn=true">Terms of Use</a> &amp;
+        <a href="#!terms/privacy-policy?mustReturn=true">Privacy Policy</a>
     </p>
   </div>
 

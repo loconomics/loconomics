@@ -9245,16 +9245,17 @@ app-stars-rating {
   display: block;
   width: 100% !important;
   margin: 0 auto !important;
+  padding: 0;
   list-style: none;
 }
 
-/* line 28 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 29 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li {
   display: inline;
   margin: 0px !important;
 }
 
-/* line 32 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 33 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li a {
   color: #fff;
   display: inline-block;
@@ -9263,13 +9264,21 @@ app-stars-rating {
   font-size: 15px;
 }
 
-/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 40 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li a:hover {
   border-bottom: 4px solid;
   padding-bottom: 13px !important;
 }
 
-/* line 42 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\index.styl */
+/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+
+/* line 45 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+[data-activity=terms] .profile-menu ul li.active a {
+  border-bottom: 4px solid;
+  padding-bottom: 13px !important;
+}
+
+/* line 48 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\index.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\index.styl */
 
@@ -9486,7 +9495,17 @@ app-stars-rating {
   }
 }
 
-/* line 73 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
+/* line 54 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\login.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\login.styl */
+
+/* line 2 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\login.styl */
+[data-activity=login] .LeadContent {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* line 74 : D:\Iago\Proxectos\Loconomics\code\app\source\css\app.styl */
 /** Modals styles **/
 
 /* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\modals\textEditorModal.styl */

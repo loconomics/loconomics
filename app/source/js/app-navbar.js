@@ -57,6 +57,8 @@ exports.extends = function (app) {
 
     /**
         Update the nav model using the Activity defaults
+        // TODO Look a way to replace all this complex navbar logic, maybe per
+        // activity nabvars, more model helpers and global state helpers.
     **/
     app.updateAppNav = function updateAppNav(activity, state) {
 
@@ -78,11 +80,10 @@ exports.extends = function (app) {
             app.navBar(new NavBar());
         }
         
-        app.applyNavbarMustReturn(state);
-
-        // TODO Double check if needed.
-        // Latest changes, when needed
-        adjustUserBar();
+        if (!app.applyNavbarMustReturn(state)) {
+            // Changes depending on non-logged user
+            adjustUserBar();
+        }
         
         refreshNav();
         autoRefreshNav(app.navBar().leftAction());

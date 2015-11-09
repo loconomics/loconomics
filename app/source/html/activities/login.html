@@ -1,17 +1,19 @@
 <!-- Activity login -->
-<div class="container-fluid" data-activity="login">
+<div class="LightForm" data-activity="login">
 
   <div class="LeadContent">
     <h3>Log in to your account</h3>
 
+      <!-- HIDDEN UNTIL GETS IMPLEMENTED ON APP -only web version works of Facebook Connect
     <div>
       <a href="#facebook" class="btn btn-default btn-block btn-facebook" data-bind="click: facebook">Facebook</a>
-      <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
+      <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-- >
     </div>
 
     <p class="isolated text-center">
       or
     </p>
+      -->
 
     <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }" novalidate>
       <div class="form-group" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
@@ -26,6 +28,10 @@
         Log in
       </button>
     </form>
+    <div class="isolated text-center">
+        <a href="#!terms/terms-of-service?mustReturn=true">Terms of Use</a> &amp;
+        <a href="#!terms/privacy-policy?mustReturn=true">Privacy Policy</a>
+    </div>
   </div>
 
 </div>
