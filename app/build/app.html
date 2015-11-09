@@ -64,8 +64,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </li>
             <li class="go-feedback"><a href="/feedback"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Talk to us</a>
             </li>
-            <li class="go-search"><a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search Marketplace</a>
-            </li>
+            <!-- DISABLED FOR NOW <li class="go-search"><a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search Marketplace</a></li>-->
             <li class="go-logout"><a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a>
             </li>
           </ul>
@@ -76,8 +75,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             </li>
             <li class="go-login"><a href="/login">Login</a>
             </li>
-            <li class="go-search"><a href="/home"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Search</a>
-            </li>
+            <!--<li class="go-search"><a href="/home"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Search</a></li>-->
           </ul>
         </div>
         <div id="menuNewItem" class="navbar-collapse collapse">
@@ -1656,20 +1654,19 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
         </a>
 
       </div>
-      <div data-bind="visible: getMore.items().length">
-         <h1 class="SectionTitle">Get more from Loconomics</h1>
-
+      <!-- HIDDEN UNTIL MARKETPLACE-PROFILE IS FULLY IMPLEMENTED <div data-bind="visible:
+      getMore.items().length">
+        <h1 class="SectionTitle">Get more from Loconomics</h1>
         <ul class="TilesList" id="dashboardGetMore" data-bind="foreach: getMore.items()">
-          <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
+            <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
                 <div class="Tile-icon" aria-hidden="true">
                     <span data-bind="css: markerIcon"></span>
                 </div>                
                 <div class="Tile-content"><p data-bind="text: contentLine1()"></p></div>
-            </a>
-          </li>
+            </a></li>
         </ul>
-      </div>
     </div>
+    --></div>
     <!-- Activity datetimePicker -->
     <div class="Boxes-sm" data-activity="datetimePicker">
       <div class="container nogaps-sm">
@@ -2129,10 +2126,10 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
  <span class="sr-only">Search</span>
 </span>
           <input
-          type="text" class="form-control" placeholder="search inbox" data-bind="textInput: searchText"> <span class="input-group-btn">
+          type="text" class="form-control" placeholder="search inbox" data-bind="textInput: searchText">
+            <!-- NOT IMPLEMENTED <span class="input-group-btn">
             <button type="button" class="btn btn-secondary">New</button>
-        </span>
-
+        </span>-->
         </div>
         <!-- /input-group -->
       </div>
@@ -2502,29 +2499,30 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
       </ul>
       <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
     </div>
-    <!-- marketplaceProfile activity -->
-    <div data-activity="marketplaceProfile" data-bind="css: { 'is-loading': isLoading }">
-      <div data-bind="visible: user.isServiceProfessional">
-         <h2 class="SectionTitle">Job Profiles
+    <!-- marketplaceProfile activity. DISABLED UNTIL COMPLETE FOR APP VALIDATION
+    -->
+    <div data-activity="marketplaceProfile" DISABLEDdata-bind="css: { 'is-loading': isLoading }">
+      <div class="LeadContent">
+         <h1>Coming soon!</h1>
+
+      </div>
+      <!-- <div data-bind="visible: user.isServiceProfessional">
+        <h2 class="SectionTitle">Job Profiles
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
         </h2>
-
         <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
         <ul class="TilesList TilesList--openEnd">
-          <li><a class="CompactLinkTile" href="/addJobTitles">
+            <li><a class="CompactLinkTile" href="/addJobTitles">
                 <div class="Tile-content text-muted">Add a job profile</div>
                 <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-            </a>
-          </li>
-          <li class="LinkTile">
-            <div class="Tile-content"><a href="/profile" class="btn btn-default btn-block">Preview profile</a>
-            </div>
-          </li>
+            </a></li>
+            <li class="LinkTile">
+                <div class="Tile-content"><a href="/profile" class="btn btn-default btn-block">Preview profile</a></div>
+            </li>
         </ul>
-      </div>
-       <h2 class="SectionTitle">About You</h2>
-
-      <ul class="TilesList TilesList--openEnd">
+    </div>
+    <h2 class="SectionTitle">About You</h2>
+    <ul class="TilesList TilesList--openEnd">
         <li><a class="InfoTile" href="/profilePictureBio">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
@@ -2532,8 +2530,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             <div class="Tile-content">
                 <p>Profile picture and bio</p>
             </div>
-        </a>
-        </li>
+        </a></li>
         <li><a class="InfoTile" href="/verifications">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
@@ -2542,8 +2539,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
                 <div>Verifications <span data-bind="text: displayedVerificationsNumber"></span></div>
                 <em data-bind="text: verificationsSecondaryText"></em>
             </div>
-        </a>
-        </li>
+        </a></li>
         <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/education">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-university" aria-hidden="true"></span>
@@ -2551,8 +2547,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             <div class="Tile-content">
                 <p>Education</p>
             </div>
-        </a>
-        </li>
+        </a></li>
         <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/serviceProfessionalWebsite">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-link" aria-hidden="true"></span>
@@ -2560,8 +2555,7 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
             <div class="Tile-content">
                 <p>Your website</p>
             </div>
-        </a>
-        </li>
+        </a></li>
         <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/backgroundCheck">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-checkmark" aria-hidden="true"></span>
@@ -2570,11 +2564,11 @@ data-facebook-language="en-US" data-facebook-appid="180579422039773">
                 <div>Background check</div>
                 <em>Last run: <span data-bind="text: displayedLastBackgroundCheck"></span></em>
             </div>
-        </a>
-        </li>
-      </ul>
-      <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
-    </div>
+        </a></li>
+    </ul>
+
+    <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
+    --></div>
     <!-- OwnerInfo activity -->
     <div data-activity="ownerInfo">
        <h1 class="SectionTitle has-HelpPoint">Owner information</h1>
