@@ -93,6 +93,7 @@
     <gap:plugin name="cordova-plugin-wkwebview" version="0.6.5" source="npm" />
     <gap:plugin name="cordova-plugin-whitelist" version="1.0.0" source="npm" />
     <gap:plugin name="cordova-plugin-camera" version="1.2.0" source="npm" />
+    <gap:plugin name="com.instabug.phonegap" version="0.1.6" source="npm" />
 
     <!-- More official plugins examples -->
     <!--
