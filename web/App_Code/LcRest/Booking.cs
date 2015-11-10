@@ -415,7 +415,7 @@ namespace LcRest
             {
                 var sql = UserID.HasValue ? sqlGetItemForUser : sqlGetItem;
                 var b = FromDB(db.QuerySingle(sql, BookingID, UserID), internalUse, UserID);
-                if (fillLinks)
+                if (b != null && fillLinks)
                     b.FillLinks();
                 return b;
             }
@@ -427,7 +427,7 @@ namespace LcRest
                 return db.Query(sqlGetList, UserID, StartTime, EndTime).Select<dynamic, Booking>(booking =>
                  {
                      var b = FromDB(booking, false, UserID);
-                     if (fillLinks)
+                     if (b != null && fillLinks)
                          b.FillLinks();
                      return b;
                  });
