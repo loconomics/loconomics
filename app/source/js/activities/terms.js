@@ -22,7 +22,8 @@ var A = Activity.extends(function TermsActivity() {
         e.stopImmediatePropagation();
         $(this).tab('show');
         if (window.history && window.history.replaceState) {
-            window.history.replaceState(null, null, '#!terms/' + $(this).attr('href').replace(/^#/, ''));
+            var link = $(this).attr('href').replace(/^#terms-/, '');
+            window.history.replaceState(null, null, '#!terms/' + link);
         }
     });
 });

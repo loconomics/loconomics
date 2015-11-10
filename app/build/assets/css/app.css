@@ -9221,7 +9221,14 @@ app-stars-rating {
   background: White;
 }
 
-/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+[data-activity=terms] .container {
+  overflow: hidden;
+  word-wrap: break-word;
+  text-align: justify;
+}
+
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu {
   display: block;
   position: relative;
@@ -9233,13 +9240,13 @@ app-stars-rating {
   background-color: #00989a;
 }
 
-/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 28 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu a {
   color: #fff;
   text-decoration: none;
 }
 
-/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 31 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul {
   display: block;
   width: 100% !important;
@@ -9248,13 +9255,13 @@ app-stars-rating {
   list-style: none;
 }
 
-/* line 29 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 38 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li {
   display: inline;
   margin: 0px !important;
 }
 
-/* line 33 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 42 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li a {
   color: #fff;
   display: inline-block;
@@ -9263,21 +9270,21 @@ app-stars-rating {
   font-size: 15px;
 }
 
-/* line 40 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 49 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li a:hover {
   border-bottom: 4px solid;
   padding-bottom: 13px !important;
 }
 
-/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 53 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 
-/* line 45 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 54 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] .profile-menu ul li.active a {
   border-bottom: 4px solid;
   padding-bottom: 13px !important;
 }
 
-/* line 48 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\index.styl */
+/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\index.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\index.styl */
 

@@ -4,6 +4,15 @@
 [data-activity=terms]
     
     background White
+    
+    // Ensure contents don't create horizontal scroll
+    .container
+        overflow: hidden;
+        // Multiline for large words, like links. Seems only needed for Webkit;
+        // with and without it, Firefox do it similar and slightly better by default
+        word-wrap: break-word;
+        // Legal text better justified
+        text-align: justify;
         
     /// TODO Needs refactor, into it's own, shared, file, from here and the original profile.styl
     // navmenu.styl (.rmm) -> .profile-menu
