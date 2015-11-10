@@ -93,7 +93,7 @@
     <gap:plugin name="cordova-plugin-wkwebview" version="0.6.5" source="npm" />
     <gap:plugin name="cordova-plugin-whitelist" version="1.0.0" source="npm" />
     <gap:plugin name="cordova-plugin-camera" version="1.2.0" source="npm" />
-    <gap:plugin name="com.instabug.phonegap" version="0.1.6" source="npm" />
+    <!--<gap:plugin name="com.instabug.phonegap" version="0.1.6" source="npm" />-->
 
     <!-- More official plugins examples -->
     <!--
@@ -177,9 +177,15 @@
     <!-- iPhone / iPod Touch  --><!--
     <icon gap:platform="ios" src="res/icon/ios/icon-60.png" width="60" height="60" />
     <icon gap:platform="ios" src="res/icon/ios/icon-60@2x.png" width="120" height="120" />-->
-    <!-- iPad --><!--
+    <!-- iPad of exactly '76x76' pixels, in .png format for iOS versions >= 7.0.   -->
     <icon gap:platform="ios" src="res/icon/ios/icon-76.png" width="76" height="76" />
-    <icon gap:platform="ios" src="res/icon/ios/icon-76@2x.png" width="152" height="152" />-->
+    <icon gap:platform="ios" src="res/icon/ios/icon-76@2x.png" width="152" height="152" />
+    <!-- iPhone / iPod Touch of exactly '120x120' pixels, in .png format for iOS versions >= 7.0. -->
+    <icon gap:platform="ios" src="res/icon/ios/icon-120.png" width="120" height="120" />
+    <icon gap:platform="ios" src="res/icon/ios/icon-120@2x.png" width="240" height="240" />
+    <!-- iPad of exactly '152x152' pixels, in .png format for iOS versions >= 7.0 -->
+    <icon gap:platform="ios" src="res/icon/ios/icon-152.png" width="152" height="152" />
+    <icon gap:platform="ios" src="res/icon/ios/icon-152@2x.png" width="304" height="304" />
     <!-- iOS 6.1 -->
     <!-- Spotlight Icon --><!--
     <icon gap:platform="ios" src="res/icon/ios/icon-40.png" width="40" height="40" />

@@ -1,4 +1,4 @@
-/*! LoconomicsApp 2015-11-09
+/*! LoconomicsApp 2015-11-10
    Author: Loconomics Inc. */
 
 /* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -9156,66 +9156,65 @@ app-stars-rating {
 
 /* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 [data-activity=signup] .Signup-formcontainer {
-  margin-bottom: 60px;
-  overflow: hidden;
+  padding-bottom: 40px;
 }
 @media (min-width: 768px) {
 
-/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
   [data-activity=signup] .Signup-formcontainer {
     padding: 15px 50px;
   }
 }
 @media (min-width: 992px) {
 
-/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
   [data-activity=signup] .Signup-formcontainer {
     padding: 15px 65px;
   }
 }
 
-/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 16 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 [data-activity=signup] .Signup-login {
   text-align: center;
   padding: 10px 20px;
 }
 
-/* line 21 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 [data-activity=signup] .Signup-login > * {
   vertical-align: middle;
 }
 
-/* line 27 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 25 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] {
   background: #00989a;
 }
 
-/* line 31 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 29 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] .Signup {
   background: inherit;
 }
 
-/* line 35 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 33 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] .Signup-profiles {
   color: White;
 }
 
-/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 37 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] .Signup-selector .Signup-selector-option {
   background: White;
 }
 
-/* line 42 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 40 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] .Signup-selector .Signup-selector-option h3 {
   color: #555;
 }
 
-/* line 47 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
+/* line 45 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\signup.styl */
 .Splash [data-activity=signup] .Signup-logo {
   display: block;
 }
 
-/* line 51 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
+/* line 49 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 
 /* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\activities\terms.styl */
 [data-activity=terms] {

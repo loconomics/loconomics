@@ -8,13 +8,13 @@ module.exports = function getFlags() {
     if (window.navigator && window.navigator.userAgent) {
         var ua = window.navigator.userAgent;
         var iOsWebview = /iOS|iPad|iPhone|iPod/.test(ua);
-        var iOsVersion = null;
-        if (iOsWebview) {
-            iOsVersion = { full: /OS ((\d+_?){2,3})\s/.exec(ua)[1] };
+        var iOsVersion = /OS ((\d+_?){2,3})\s/.exec(ua);
+        if (iOsVersion && iOsVersion.length > 1) {
+            iOsVersion = { full: iOsVersion[1] || '' };
             iOsVersion.parts = iOsVersion.full.split('_');
-            iOsVersion.major = iOsVersion.full.parts[0] |0;
-            iOsVersion.minor = iOsVersion.full.parts[1] |0;
-            iOsVersion.revision = iOsVersion.full.parts[2] |0;
+            iOsVersion.major = iOsVersion.parts[0] |0;
+            iOsVersion.minor = iOsVersion.parts[1] |0;
+            iOsVersion.revision = iOsVersion.parts[2] |0;
         }
         // NO WAY to detect wkwebview versus uiwebview, we just use wkwebview on iOS 9 and later
         // so next assumption works for us:
@@ -23,7 +23,7 @@ module.exports = function getFlags() {
         // Chrome, browser or webview https://developer.chrome.com/multidevice/user-agent  Old webkit webviews gets discarded
         var isChrome = /Chrome\//.test(ua);
         var isMobile = iOsWebview || isAndroid;
-        
+
         return {
             isIos: iOsWebview,
             iOsVersion: iOsVersion,
