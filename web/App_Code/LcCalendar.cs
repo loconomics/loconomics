@@ -327,6 +327,9 @@ public static partial class LcCalendar
 
     public static CalendarEvents CreateWorkHourEvent(int userID, WorkHoursDay workHoursDay)
     {
+        // Normalize endTime
+        if (workHoursDay.EndTime == LastMinute)
+            workHoursDay.EndTime = TimeSpan.Zero;
         var allDay = workHoursDay.EndTime == TimeSpan.Zero && workHoursDay.StartTime == TimeSpan.Zero;
 
         // Start and End Dates are not used 'as is', they are

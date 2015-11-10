@@ -1,6 +1,8 @@
 ﻿@using WebMatrix.WebData;
 @*
     Gets and updates the weekly schedule of the user (it's general working hours, by week day).
+    Times that finish the end of the day can be passed in as '23:59:59' or '00:00:00' (12AM next day);
+    typical on full day cases.
 
     Options:
     
@@ -9,8 +11,8 @@
             "timeZone": "America/Los_Angeles",
             "sunday": [
                 {
-                    "start": "00:00:00",
-                    "end": "23:59:59"
+                    "start": "09:00:00",
+                    "end": "17:00:00"
                 }
             ],
             "monday": [
@@ -22,7 +24,7 @@
             "tuesday": [
                 {
                     "start": "00:00:00",
-                    "end": "23:59:59"
+                    "end": "00:00:00"
                 }
             ],
             "wednesday": [
@@ -55,7 +57,7 @@
             monday[0][start]=00:00:00
             monday[0][end]=23:59:59
             tuesday[0][start]=00:00:00
-            tuesday[0][end]=23:59:59
+            tuesday[0][end]=00:00:00
             wednesday[0][start]=00:00:00
             wednesday[0][end]=23:59:59
             friday=null
@@ -75,8 +77,8 @@
                 "timeZone": "America/Los_Angeles",
                 "sunday": [
                     {
-                        "start": "00:00:00",
-                        "end": "23:59:59"
+                        "start": "09:00:00",
+                        "end": "17:00:00"
                     }
                 ],
                 "monday": [
@@ -88,7 +90,7 @@
                 "tuesday": [
                     {
                         "start": "00:00:00",
-                        "end": "23:59:59"
+                        "end": "00:00:00"
                     }
                 ],
                 "wednesday": [

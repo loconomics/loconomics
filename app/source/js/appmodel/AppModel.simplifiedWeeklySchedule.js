@@ -132,6 +132,12 @@ function toWeeklySchedule(simplifiedWeeklySchedule) {
             }
 
             var simpleDay = simplifiedWeeklySchedule[weekday];
+            
+            // If end time is zero, we suppose is no time,
+            // so is not added.
+            if ((simpleDay.to |0) === 0) {
+                return;
+            }
 
             // Convert the minutes to ISO time format (00:00:00)
             // and add it to a new array with a single timeRange:
