@@ -71,7 +71,7 @@ var A = Activity.extends(function AddressEditorActivity() {
                     }
                 }, address)
                 // Avoid excessive requests by setting a timeout since the latest change
-                .extend({ rateLimit: { timeout: 200, method: 'notifyWhenChangesStop' } });
+                .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
             }
         }
     });
