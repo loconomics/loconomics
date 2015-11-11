@@ -5,8 +5,8 @@
  */
 
 /*!
- * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=11ff29a02bbf275c87fe)
- * Config saved to config.json and https://gist.github.com/11ff29a02bbf275c87fe
+ * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=d1cdadca1a856dbeb745)
+ * Config saved to config.json and https://gist.github.com/d1cdadca1a856dbeb745
  */
 /*!
  * Bootstrap v3.3.5 (http://getbootstrap.com)
@@ -337,13 +337,13 @@ fieldset[disabled] .btn-danger.active {
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
 .dropdown-menu > .active > a:focus {
-  background-image: -webkit-linear-gradient(top, #e0004f 0%, #c70046 100%);
-  background-image: -o-linear-gradient(top, #e0004f 0%, #c70046 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#e0004f), to(#c70046));
-  background-image: linear-gradient(to bottom, #e0004f 0%, #c70046 100%);
+  background-image: -webkit-linear-gradient(top, #ff6765 0%, #ff4e4b 100%);
+  background-image: -o-linear-gradient(top, #ff6765 0%, #ff4e4b 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff6765), to(#ff4e4b));
+  background-image: linear-gradient(to bottom, #ff6765 0%, #ff4e4b 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe0004f', endColorstr='#ffc70046', GradientType=0);
-  background-color: #c70046;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff6765', endColorstr='#ffff4e4b', GradientType=0);
+  background-color: #ff4e4b;
 }
 .navbar-default {
   background-image: -webkit-linear-gradient(top, #ffffff 0%, #f8f8f8 100%);
@@ -407,12 +407,12 @@ fieldset[disabled] .btn-danger.active {
   .navbar .navbar-nav .open .dropdown-menu > .active > a:hover,
   .navbar .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: #fff;
-    background-image: -webkit-linear-gradient(top, #e0004f 0%, #c70046 100%);
-    background-image: -o-linear-gradient(top, #e0004f 0%, #c70046 100%);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#e0004f), to(#c70046));
-    background-image: linear-gradient(to bottom, #e0004f 0%, #c70046 100%);
+    background-image: -webkit-linear-gradient(top, #ff6765 0%, #ff4e4b 100%);
+    background-image: -o-linear-gradient(top, #ff6765 0%, #ff4e4b 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#ff6765), to(#ff4e4b));
+    background-image: linear-gradient(to bottom, #ff6765 0%, #ff4e4b 100%);
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe0004f', endColorstr='#ffc70046', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff6765', endColorstr='#ffff4e4b', GradientType=0);
   }
 }
 .alert {
@@ -517,14 +517,14 @@ fieldset[disabled] .btn-danger.active {
 .list-group-item.active,
 .list-group-item.active:hover,
 .list-group-item.active:focus {
-  text-shadow: 0 -1px 0 #ad003d;
-  background-image: -webkit-linear-gradient(top, #e0004f 0%, #ba0042 100%);
-  background-image: -o-linear-gradient(top, #e0004f 0%, #ba0042 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#e0004f), to(#ba0042));
-  background-image: linear-gradient(to bottom, #e0004f 0%, #ba0042 100%);
+  text-shadow: 0 -1px 0 #ff3532;
+  background-image: -webkit-linear-gradient(top, #ff6765 0%, #ff413f 100%);
+  background-image: -o-linear-gradient(top, #ff6765 0%, #ff413f 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff6765), to(#ff413f));
+  background-image: linear-gradient(to bottom, #ff6765 0%, #ff413f 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe0004f', endColorstr='#ffba0042', GradientType=0);
-  border-color: #ba0042;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff6765', endColorstr='#ffff413f', GradientType=0);
+  border-color: #ff413f;
 }
 .list-group-item.active .badge,
 .list-group-item.active:hover .badge,
