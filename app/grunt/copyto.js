@@ -1,6 +1,13 @@
 'use strict';
 
 module.exports = {
+    images: {
+        expand: true,
+        cwd: 'source/images/',
+        src: ['*.png', '*.jpg', '*.svg', '*.ico'],
+        dest: 'build/assets/images/',
+        filter: 'isFile'
+    },
     jqueryuiimages: {
         expand: true,
         cwd: 'vendor/jquery-ui/images/',
@@ -27,6 +34,13 @@ module.exports = {
         dest: './phonegap/platforms/',
         cwd: './phonegap/platform-merges',
         src: '**/*.*'
+    },
+    'bootstrap-fonts': {
+        expand: true,
+        cwd: './vendor/bootstrap/fonts/',
+        src: '*.*',
+        dest: './build/assets/fonts/',
+        filter: 'isFile'
     },
     'font-awesome-fonts': {
         expand: true,

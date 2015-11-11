@@ -36,5 +36,11 @@ module.exports = {
             title: 'PhoneGap build complete',  // optional
             message: 'PhoneGap build finished successfully.' //required
         }
+    },
+    images: {
+        options: {
+            title: 'Images copy',  // optional
+            message: 'Images copied successfully.' //required
+        }
     }
 };

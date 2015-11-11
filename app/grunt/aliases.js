@@ -15,7 +15,9 @@ module.exports = {
 	],
 	'build-js': [
 		'jshint',//'newer:jshint',
-		'browserify',
+		'browserify:styleguidelibs',
+		'browserify:libs',
+		'browserify:app',
 		'uglify',//'newer:uglify'
         'notify:browserify'
 	],
@@ -27,9 +29,12 @@ module.exports = {
         'notify:css'
 	],
     'build-images': [
-        'copyto:jqueryuiimages'
+        'copyto:images',
+        'copyto:jqueryuiimages',
+        'notify:images'
     ],
     'build-fonts': [
+        'copyto:bootstrap-fonts',
         'copyto:font-awesome-fonts',
         'copyto:ionicons-fonts'
     ],
@@ -95,6 +100,7 @@ module.exports = {
         'bliss:splash',
         'notify:html',
         'build-fonts',
+        'copyto:images',
         'notify:build'
     ]
 };

@@ -31,6 +31,14 @@ module.exports = {
         ]
     },
     
+    images: {
+        files: ['./source/images/**/*.png', './source/images/**/*.jpg', './source/images/**/*.svg', './source/images/**/*.ico'],
+        tasks: [
+            'copyto:images',
+            'notify:images'
+        ]
+    },
+    
     html: {
         files: ['./source/html/app.js.html', './source/html/**/*.html', './source/html/modals/*.html'],
         tasks: ['build-html']

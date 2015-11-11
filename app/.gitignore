@@ -5,5 +5,5 @@ phonegap/www/assets
 phonegap/www/index.html
 phonegap/platforms/
 phonegap/plugins/
-build/*.zip
+build/
 .brackets.json
