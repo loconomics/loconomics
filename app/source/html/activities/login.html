@@ -18,7 +18,7 @@
     <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }" novalidate>
       <div class="form-group" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
         <label for="accountEmail">Email address</label>
-        <input type="email" class="form-control" id="accountEmail" placeholder="Enter email" data-bind="value: username, valueUpdate: 'keyup', popover: { content: username.error() || loginError(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+        <input type="email" class="form-control" id="accountEmail" placeholder="Enter email" data-bind="value: username, popover: { content: username.error() || loginError(), trigger: 'focus', container: 'body', placement: 'bottom' }">
       </div>
       <div class="form-group" data-bind="css: { 'has-warning': password.error }, 'has-success': !password.error()">
         <label for="accountPassword">Password</label>
