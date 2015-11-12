@@ -466,7 +466,7 @@ public static partial class LcCalendar
             var result = new Dictionary<string, object>();
 
             var cu = new CalendarDll.CalendarUtils();
-            var calUser = new CalendarDll.CalendarUser(141);
+            var calUser = new CalendarDll.CalendarUser(userID);
             var data = cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(calUser.Id, startTime, endTime);
 
             // Create result
