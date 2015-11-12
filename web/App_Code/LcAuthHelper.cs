@@ -86,7 +86,7 @@ public static class LcAuthHelper
     {
         // AVOID FRUSTRATION IN BETA PERIOD REMOVING THE LOCK CHECK
         // TODO: RE-ENABLE AFTER BETA
-        checkAccountIsLocked(username);
+        //checkAccountIsLocked(username);
 
         // DISABLED CONFIRMATION CHECK FOR BETA PERIOD, BECAUSE WE HAVE NOT THE EMAIL CONFIRMATION READY
         // AFTER THE WHOLE SITE AND MESSAGING CHANGE.
