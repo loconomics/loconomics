@@ -162,9 +162,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
 
     var prices = booking.pricingSummary();
     if (prices) {
-        // TODO Setting service professional price, for clients must be
-        // just totalPrice()
-        apt.price(prices.totalPrice() - prices.pFeePrice());
+        apt.price(prices.totalPrice());
     }
 
     apt.sourceBooking(booking);

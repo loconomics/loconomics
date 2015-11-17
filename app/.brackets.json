@@ -1,6 +1,7 @@
 {
     "jscodehints.detectedExclusions": [
         "C:/Users/Iago/Proxectos/Loconomics/code/app/phonegap/www/assets/js/styleguidelibs.min.js",
-        "C:/Users/Iago/Proxectos/Loconomics/code/app/source/js/activities/profile.js"
+        "C:/Users/Iago/Proxectos/Loconomics/code/app/source/js/activities/profile.js",
+        "C:/Users/Iago/Proxectos/Loconomics/code/app/phonegap/platforms/android/cordova/lib/android_sdk_version.js"
     ]
 }

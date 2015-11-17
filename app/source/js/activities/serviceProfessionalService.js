@@ -364,10 +364,7 @@ function ViewModel(app) {
             // selected address:
             this.returnSelected(
                 this.selectedServices().map(function(pricing) {
-                    return {
-                        serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
-                        totalPrice: ko.unwrap(pricing.price)
-                    };
+                    return pricing.model.toPlainObject(true);
                 }),
                 this.jobTitleID()
             );
@@ -418,10 +415,7 @@ function ViewModel(app) {
         if (this.isSelectionMode()) {
             request.selectedServices = this.selectedServices()
             .map(function(pricing) {
-                return {
-                    serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
-                    totalPrice: ko.unwrap(pricing.totalPrice)
-                };
+                return pricing.model.toPlainObject(true);
             });
         }
 

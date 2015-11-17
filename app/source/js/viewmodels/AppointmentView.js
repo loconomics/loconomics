@@ -81,9 +81,18 @@ module.exports = function AppointmentView(appointment, app) {
     
     ko.computed(function() {
         var pricing = appointment.pricing();
-        this.price(pricing.reduce(function(prev, cur) {
-            return prev + cur.price();
-        }, 0));
+        if (pricing.length === 0) {
+            this.price(0);
+        }
+        else {
+            // double check the pricing object is right (sometimes comes wrong), by checking
+            // the first value has a price value.
+            var p = pricing[0].price();
+            if (p === null || typeof(p) === 'undefined') return;
+            this.price(pricing.reduce(function(prev, cur) {
+                return prev + cur.price();
+            }, 0));
+        }
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 

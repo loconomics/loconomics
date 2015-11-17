@@ -287,7 +287,7 @@ function AppointmentCardViewModel(params) {
             .map(function(pricing) {
                 return {
                     serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
-                    totalPrice: ko.unwrap(pricing.totalPrice)
+                    price: ko.unwrap(pricing.price)
                 };
             })
         });
