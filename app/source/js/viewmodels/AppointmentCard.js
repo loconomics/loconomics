@@ -158,7 +158,7 @@ function AppointmentCardViewModel(params) {
                 // Update with remote data, the original appointment in the version,
                 // not the currentAppointment or in the index in the list to avoid
                 // race-conditions
-                version.original.model.updateWith(savedApt);
+                version.original.model.updateWith(savedApt, true);
                 // Do a pull so original and version gets the exact same data
                 version.pull({ evenIfNewer: true });
 
