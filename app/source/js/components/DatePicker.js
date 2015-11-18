@@ -184,7 +184,7 @@ DPGlobal.modesSet = {
 
 // Picker object
 var DatePicker = function(element, options) {
-    /*jshint maxstatements:40,maxcomplexity:24*/
+    /*jshint maxstatements:50,maxcomplexity:30*/
     this.element = $(element);
     this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
     
@@ -192,6 +192,7 @@ var DatePicker = function(element, options) {
     this.component = this.element.is('.date') ? this.element.find('.add-on') : false;
     this.isPlaceholder = this.element.is('.calendar-placeholder');
     
+    // Creating initial HTML
     this.picker = $(DPGlobal.template)
                         .appendTo(this.isPlaceholder ? this.element : 'body')
                         .on('click', $.proxy(this.click, this));
@@ -199,6 +200,26 @@ var DatePicker = function(element, options) {
     if (options.extraClasses)
         this.picker.addClass(options.extraClasses);
     
+    // Create base html for..
+    var html = '';
+    // ..Days
+    for(var r = 0; r < 6; r++) {
+        html += '<tr>';
+        for(var c = 0; c < 7; c++) {
+            html += '<td class="' + classes.monthDay + '"><span>&nbsp;</span></td>';
+        }
+        html += '</tr>';
+    }
+    this.picker.find('.' + classes.days + ' tbody').append(html);
+    // ..Years
+    html = '';
+    var yearCont = this.picker.find('.' + classes.years + ' td');
+    for (var i = -1; i < 11; i++) {
+        html += '<span class="' + classes.year + (i === -1 || i === 10 ? ' old' : '') + '"></span>';
+    }
+    yearCont.html(html);
+    
+    // Target set-up
     if (this.isPlaceholder) {
         this.picker.show();
         if (this.element.data('date') == 'today') {
@@ -318,7 +339,8 @@ DatePicker.prototype = {
         if (!this.isInput) {
             $(document).off('mousedown.datepicker', this.hide);
         }
-        //this.set();
+        this.set();
+        console.log('datepicker hide', this.viewMode);
         this.element.trigger({
             type: events.hide,
             date: this.date
@@ -467,73 +489,59 @@ DatePicker.prototype = {
             tbody.find('tr:eq(' + irow + ') td:eq(' + icol + ')').addClass(classes.active);        
             
             this._prevDate = new Date(this.viewDate);
-            // DONE:
-            return;
         }
-        this._prevDate = new Date(this.viewDate);
+        else {
+            this._prevDate = new Date(this.viewDate);
 
-        // Header
-        this.picker
-        .find('.' + classes.days + ' th:eq(1)')
-        .html(DPGlobal.dates.months[month] + ' ' + year);
+            // Header
+            this.picker
+            .find('.' + classes.days + ' th:eq(1)')
+            .html(DPGlobal.dates.months[month] + ' ' + year);
 
-        // Calculate ending
-        var nextMonth = new Date(prevMonth);
-        nextMonth.setDate(nextMonth.getDate() + 42);
-        nextMonth = nextMonth.valueOf();
-        var html = [];
-        var clsName,
-            prevY,
-            prevM;
-            
-        if (this._daysCreated !== true) {
-            // Create base html (first time only)
-            // TODO: Move to constructor
-            for(var r = 0; r < 6; r++) {
-                html.push('<tr>');
-                for(var c = 0; c < 7; c++) {
-                    html.push('<td class="' + classes.monthDay + '"><span>&nbsp;</span></td>');
+            // Calculate ending
+            var nextMonth = new Date(prevMonth);
+            nextMonth.setDate(nextMonth.getDate() + 42);
+            nextMonth = nextMonth.valueOf();
+            var clsName,
+                prevY,
+                prevM;
+
+            // Update days values    
+            var weekTr = this.picker.find('.' + classes.days + ' tbody tr:first-child()');
+            var dayTd = null;
+            while(prevMonth.valueOf() < nextMonth) {
+                var currentWeekDayIndex = prevMonth.getDay() - this.weekStart;
+
+                clsName = this.onRender(prevMonth);
+                prevY = prevMonth.getFullYear();
+                prevM = prevMonth.getMonth();
+                if ((prevM < month &&  prevY === year) ||  prevY < year) {
+                    clsName += ' old';
+                } else if ((prevM > month && prevY === year) || prevY > year) {
+                    clsName += ' new';
                 }
-                html.push('</tr>');
-            }
+                if (prevMonth.valueOf() === currentDate) {
+                    clsName += ' ' + classes.active;
+                }
 
-            this.picker.find('.' + classes.days + ' tbody').empty().append(html.join(''));
-            this._daysCreated = true;
+                dayTd = weekTr.find('td:eq(' + currentWeekDayIndex + ')');
+                dayTd
+                .attr('class', classes.monthDay + ' ' + clsName)
+                .data('date-time', prevMonth.toISOString())
+                .children('span').text(prevMonth.getDate());
+
+                this.picker.trigger(events.dayRendered, [dayTd]);
+
+                // Next week?
+                if (prevMonth.getDay() === this.weekEnd) {
+                    weekTr = weekTr.next('tr');
+                }
+                prevMonth.setDate(prevMonth.getDate()+1);
+            }
         }
 
-        // Update days values    
-        var weekTr = this.picker.find('.' + classes.days + ' tbody tr:first-child()');
-        var dayTd = null;
-        while(prevMonth.valueOf() < nextMonth) {
-            var currentWeekDayIndex = prevMonth.getDay() - this.weekStart;
-
-            clsName = this.onRender(prevMonth);
-            prevY = prevMonth.getFullYear();
-            prevM = prevMonth.getMonth();
-            if ((prevM < month &&  prevY === year) ||  prevY < year) {
-                clsName += ' old';
-            } else if ((prevM > month && prevY === year) || prevY > year) {
-                clsName += ' new';
-            }
-            if (prevMonth.valueOf() === currentDate) {
-                clsName += ' ' + classes.active;
-            }
-
-            dayTd = weekTr.find('td:eq(' + currentWeekDayIndex + ')');
-            dayTd
-            .attr('class', classes.monthDay + ' ' + clsName)
-            .data('date-time', prevMonth.toISOString())
-            .children('span').text(prevMonth.getDate());
-
-            this.picker.trigger(events.dayRendered, [dayTd]);
-
-            // Next week?
-            if (prevMonth.getDay() === this.weekEnd) {
-                weekTr = weekTr.next('tr');
-            }
-            prevMonth.setDate(prevMonth.getDate()+1);
-        }
-
+        // Fill month and year modes:
+        
         var currentYear = this.date.getFullYear();
         
         var months = this.picker.find('.' + classes.months)
@@ -545,7 +553,6 @@ DatePicker.prototype = {
             months.eq(this.date.getMonth()).addClass(classes.active);
         }
         
-        html = '';
         year = parseInt(year/10, 10) * 10;
         var yearCont = this.picker.find('.' + classes.years)
                             .find('th:eq(1)')
@@ -555,27 +562,13 @@ DatePicker.prototype = {
         
         year -= 1;
         var i;
-        if (this._yearsCreated !== true) {
-
-            for (i = -1; i < 11; i++) {
-                html += '<span class="' + classes.year + (i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' ' + classes.active : '')+'">'+year+'</span>';
-                year += 1;
-            }
-            
-            yearCont.html(html);
-            this._yearsCreated = true;
-        }
-        else {
-            
-            var yearSpan = yearCont.find('span:first-child()');
-            for (i = -1; i < 11; i++) {
-                //html += '<span class="year'+(i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' ' + classes.active : '')+'">'+year+'</span>';
-                yearSpan
-                .text(year)
-                .attr('class', 'year' + (i === -1 || i === 10 ? ' old' : '') + (currentYear === year ? ' ' + classes.active : ''));
-                year += 1;
-                yearSpan = yearSpan.next();
-            }
+        var yearSpan = yearCont.find('span:first-child()');
+        for (i = -1; i < 11; i++) {
+            yearSpan
+            .text(year)
+            .attr('class', classes.year + (i === -1 || i === 10 ? ' old' : '') + (currentYear === year ? ' ' + classes.active : ''));
+            year += 1;
+            yearSpan = yearSpan.next();
         }
     },
     
