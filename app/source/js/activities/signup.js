@@ -25,7 +25,7 @@ var A = Activity.extends(function SignupActivity() {
                 this.app.goDashboard();
             else
                 // In Splash
-                this.app.shell.go('#!splashThanks/' + this.profile());
+                this.app.shell.go('#!splashThanks/' + this.viewModel.profile());
         }.bind(this)
     });
     
