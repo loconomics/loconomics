@@ -47,6 +47,10 @@ exports.sortAppointments = function(a, b) {
 **/
 exports.fillPreparationTimeSlots = function fillPreparationTimeSlots(date, slots, preparationHours) {
     
+    // Avoid any task if no preparation times exists
+    if (preparationHours === 0)
+        return;
+    
     // Initial check of previous slot start and ends is the given date (at midnight)
     // so we avoid to insert slots out of the date.
     var prevEnd = date;
