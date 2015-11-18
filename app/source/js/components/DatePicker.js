@@ -339,8 +339,7 @@ DatePicker.prototype = {
         if (!this.isInput) {
             $(document).off('mousedown.datepicker', this.hide);
         }
-        this.set();
-        console.log('datepicker hide', this.viewMode);
+        //this.set();
         this.element.trigger({
             type: events.hide,
             date: this.date

@@ -83,6 +83,13 @@ var A = Activity.extends(function CalendarActivity() {
 
         }.bind(this)
     });
+    
+    this.hideDatepicker = function() {
+        // Run datepicker close logic by calling 'hide', it fixes some bugs
+        this.$datepicker.datepicker('hide')
+        // but keep the element itself visible, since we use container transition :-)
+        .children().show();
+    };
 
     // Showing datepicker when pressing the title
     this.registerHandler({
@@ -90,6 +97,7 @@ var A = Activity.extends(function CalendarActivity() {
         event: 'click',
         handler: function(e) {
             this.$datepicker.toggleClass('is-visible');
+            this.hideDatepicker();
             e.preventDefault();
             e.stopPropagation();
         }.bind(this)
@@ -114,6 +122,9 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
+    
+    // Avoid the bug of no-interaction if latest time the datepicker keep opened in a month or year mode
+    this.hideDatepicker();
 
     // Date from the parameter, fallback to today
     var sdate = options.route && options.route.segments && options.route.segments[0],
