@@ -184,7 +184,9 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
                 zIndex: 2
             });
             */
-            $to.css('zIndex', 2);
+            // Logically, 2 is a valid value, because of the relativeness of zIndex
+            // But to make it work with <=IE10, 201 works, 200 not.
+            $to.css('zIndex', 201);
             
             this.enableAccess();
             

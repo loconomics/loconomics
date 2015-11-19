@@ -86,8 +86,6 @@ var appInit = function appInit() {
         
         // The show logic may do a redirect, loading other activity, double check
         routeName = app.shell.currentRoute.name;
-        if (routeName !== actName)
-            return;
     });
     // When an activity is hidden
     app.shell.on(app.shell.events.closed, function($act) {
