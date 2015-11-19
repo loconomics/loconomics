@@ -4,7 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var A = Activity.extends(function PaymentsActivity() {
+var A = Activity.extend(function PaymentsActivity() {
 
     Activity.apply(this, arguments);
 

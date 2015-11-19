@@ -7,7 +7,7 @@ var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function WorkPhotosActivity() {
+var A = Activity.extend(function WorkPhotosActivity() {
 
     Activity.apply(this, arguments);
 

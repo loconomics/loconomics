@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     SignupVM = require('../viewmodels/Signup');
 
-var A = Activity.extends(function SignupActivity() {
+var A = Activity.extend(function SignupActivity() {
     
     Activity.apply(this, arguments);
 

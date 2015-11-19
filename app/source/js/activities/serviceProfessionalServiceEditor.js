@@ -11,7 +11,7 @@ var ko = require('knockout'),
     Activity = require('../components/Activity'),
     PricingType = require('../models/PricingType');
 
-var A = Activity.extends(function ServiceProfessionalServiceEditorActivity() {
+var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
     Activity.apply(this, arguments);
 

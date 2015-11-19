@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function SplashIndexActivity() {
+var A = Activity.extend(function SplashIndexActivity() {
     
     Activity.apply(this, arguments);
 });

@@ -5,7 +5,7 @@
 var ko = require('knockout'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function LearnMoreActivity() {
+var A = Activity.extend(function LearnMoreActivity() {
     
     Activity.apply(this, arguments);
 

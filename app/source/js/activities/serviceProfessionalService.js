@@ -10,7 +10,7 @@ var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function ServiceProfessionalServiceActivity() {
+var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
     Activity.apply(this, arguments);
 

@@ -7,7 +7,7 @@ var ko = require('knockout'),
     moment = require('moment'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function CancellationPolicyActivity() {
+var A = Activity.extend(function CancellationPolicyActivity() {
 
     Activity.apply(this, arguments);
 

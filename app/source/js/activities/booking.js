@@ -9,7 +9,7 @@ var Activity = require('../components/Activity'),
     ko = require('knockout'),
     SignupVM = require('../viewmodels/Signup');
 
-var A = Activity.extends(function BookingActivity() {
+var A = Activity.extend(function BookingActivity() {
 
     Activity.apply(this, arguments);
 

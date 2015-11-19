@@ -287,8 +287,10 @@ var createSingleton = function createSingleton(ActivityClass, $activity, app) {
     Static method extends to help inheritance.
     Additionally, it adds a static init method ready for the new class
     that generates/retrieves the singleton.
+    NOTE: 'extends' cannot be used, reserved keyword, breaks some browsers and some future may broke too
+    (so just removed the 's').
 **/
-Activity.extends = function extendsActivity(ClassFn) {
+Activity.extend = function extendsActivity(ClassFn) {
     
     ClassFn._inherits(Activity);
     

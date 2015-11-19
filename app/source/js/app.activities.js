@@ -6,7 +6,7 @@
 'use strict';
 
 var Activity = require('./components/Activity');
-var EmptyActivity = Activity.extends(function EmptyActivity() {
+var EmptyActivity = Activity.extend(function EmptyActivity() {
 
     Activity.apply(this, arguments);
 

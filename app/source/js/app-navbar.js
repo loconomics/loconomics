@@ -11,7 +11,7 @@ var ko = require('knockout'),
     NavBar = require('./viewmodels/NavBar'),
     NavAction = require('./viewmodels/NavAction');
 
-exports.extends = function (app) {
+exports.extend = function (app) {
     
     // REVIEW: still needed? Maybe the per activity navBar means
     // this is not needed. Some previous logic was already removed

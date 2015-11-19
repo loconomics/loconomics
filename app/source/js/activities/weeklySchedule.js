@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 
-var A = Activity.extends(function WeeklyScheduleActivity() {
+var A = Activity.extend(function WeeklyScheduleActivity() {
     
     Activity.apply(this, arguments);
     

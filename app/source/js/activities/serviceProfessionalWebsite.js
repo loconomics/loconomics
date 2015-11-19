@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout');
 
-var A = Activity.extends(function ServiceProfessionalWebsiteActivity() {
+var A = Activity.extend(function ServiceProfessionalWebsiteActivity() {
     
     Activity.apply(this, arguments);
     

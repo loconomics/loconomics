@@ -18,7 +18,7 @@ var ko = require('knockout'),
     Address = require('../models/Address'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function AddressEditorActivity() {
+var A = Activity.extend(function AddressEditorActivity() {
 
     Activity.apply(this, arguments);
 

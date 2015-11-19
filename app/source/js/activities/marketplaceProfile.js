@@ -8,7 +8,7 @@ var Activity = require('../components/Activity'),
     ko = require('knockout'),
     moment = require('moment');
 
-var A = Activity.extends(function MarketplaceProfileActivity() {
+var A = Activity.extend(function MarketplaceProfileActivity() {
 
     Activity.apply(this, arguments);
 

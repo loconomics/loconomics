@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
 
-var A = Activity.extends(function SchedulingActivity() {
+var A = Activity.extend(function SchedulingActivity() {
     
     Activity.apply(this, arguments);
 

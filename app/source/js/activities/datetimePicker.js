@@ -8,7 +8,7 @@ var ko = require('knockout'),
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function DatetimePickerActivity() {
+var A = Activity.extend(function DatetimePickerActivity() {
     
     Activity.apply(this, arguments);
 

@@ -9,7 +9,7 @@ var Activity = require('../components/Activity'),
     AppointmentView = require('../viewmodels/AppointmentView'),
     UserJobTitle = require('../models/UserJobTitle');
 
-var A = Activity.extends(function DashboardActivity() {
+var A = Activity.extend(function DashboardActivity() {
     
     Activity.apply(this, arguments);
 

@@ -11,7 +11,7 @@ require('../components/DatePicker');
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function AppointmentActivity() {
+var A = Activity.extend(function AppointmentActivity() {
     
     Activity.apply(this, arguments);
 

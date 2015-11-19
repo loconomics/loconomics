@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout');
 
-var A = Activity.extends(function JobtitlesActivity() {
+var A = Activity.extend(function JobtitlesActivity() {
     
     Activity.apply(this, arguments);
     

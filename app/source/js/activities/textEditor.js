@@ -8,7 +8,7 @@ var ko = require('knockout'),
     EventEmitter = require('events').EventEmitter,
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function TextEditorActivity() {
+var A = Activity.extend(function TextEditorActivity() {
     
     Activity.apply(this, arguments);
 

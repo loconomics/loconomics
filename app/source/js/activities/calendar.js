@@ -11,7 +11,7 @@ var datepickerAvailability = require('../utils/datepickerAvailability');
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function CalendarActivity() {
+var A = Activity.extend(function CalendarActivity() {
     
     Activity.apply(this, arguments);
 

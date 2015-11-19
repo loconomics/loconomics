@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     snapPoints = require('../utils/snapPoints');
 
-var A = Activity.extends(function HomeActivity() {
+var A = Activity.extend(function HomeActivity() {
 
     Activity.apply(this, arguments);
     this.navBar = null;

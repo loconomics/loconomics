@@ -6,7 +6,7 @@
 var ko = require('knockout'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function VerificationsActivity() {
+var A = Activity.extend(function VerificationsActivity() {
 
     Activity.apply(this, arguments);
 

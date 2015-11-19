@@ -9,7 +9,7 @@ var $ = require('jquery');
 // so thats being done in the entry point file
 //require('jquery-ui/autocomplete');
 
-var A = Activity.extends(function AddJobTitlesActivity() {
+var A = Activity.extend(function AddJobTitlesActivity() {
     
     Activity.apply(this, arguments);
 

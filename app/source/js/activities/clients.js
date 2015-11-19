@@ -8,7 +8,7 @@ var $ = require('jquery'),
     Activity = require('../components/Activity'),
     textSearch = require('../utils/textSearch');
 
-var A = Activity.extends(function ClientsActivity() {
+var A = Activity.extend(function ClientsActivity() {
     
     Activity.apply(this, arguments);
 

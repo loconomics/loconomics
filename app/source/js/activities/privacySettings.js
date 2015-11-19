@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 
-var A = Activity.extends(function PrivacySettingsActivity() {
+var A = Activity.extend(function PrivacySettingsActivity() {
     
     Activity.apply(this, arguments);
     

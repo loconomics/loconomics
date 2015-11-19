@@ -7,7 +7,7 @@ var Activity = require('../components/Activity');
 var ko = require('knockout'),
     $ = require('jquery');
 
-var A = Activity.extends(function BookMeButtonActivity() {
+var A = Activity.extend(function BookMeButtonActivity() {
     
     Activity.apply(this, arguments);
     

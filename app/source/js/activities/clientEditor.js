@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity');
 var is = require('is_js');
 
-var A = Activity.extends(function ClientEditionActivity() {
+var A = Activity.extend(function ClientEditionActivity() {
     
     Activity.apply(this, arguments);
     

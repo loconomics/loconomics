@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout');
 
-var A = Activity.extends(function SplashThanksActivity() {
+var A = Activity.extend(function SplashThanksActivity() {
     
     Activity.apply(this, arguments);
     

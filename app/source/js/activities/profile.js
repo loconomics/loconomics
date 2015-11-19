@@ -9,7 +9,7 @@ var ko = require('knockout');
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function ProfileActivity() {
+var A = Activity.extend(function ProfileActivity() {
     
     Activity.apply(this, arguments);
 

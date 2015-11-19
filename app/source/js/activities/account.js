@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function AccountActivity() {
+var A = Activity.extend(function AccountActivity() {
     
     Activity.apply(this, arguments);
 

@@ -8,7 +8,7 @@ var Activity = require('../components/Activity'),
     MessageView = require('../models/MessageView'),
     textSearch = require('../utils/textSearch');
 
-var A = Activity.extends(function InboxActivity() {
+var A = Activity.extend(function InboxActivity() {
     
     Activity.apply(this, arguments);
     

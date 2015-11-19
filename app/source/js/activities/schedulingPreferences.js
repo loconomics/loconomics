@@ -7,7 +7,7 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var moment = require('moment');
 
-var A = Activity.extends(function SchedulingPreferencesActivity() {
+var A = Activity.extend(function SchedulingPreferencesActivity() {
     
     Activity.apply(this, arguments);
     

@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
 
-var A = Activity.extends(function FeedbackFormActivity() {
+var A = Activity.extend(function FeedbackFormActivity() {
     
     Activity.apply(this, arguments);
     

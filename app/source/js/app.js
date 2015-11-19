@@ -128,7 +128,7 @@ var app = {
 
 /** Continue app creation with things that need a reference to the app **/
 
-require('./app-navbar').extends(app);
+require('./app-navbar').extend(app);
 
 require('./app-components').registerAll(app);
 
