@@ -103,6 +103,7 @@ When filing an issue, you must do the following:
       - Bug 
       - Feature 
       - Enhancement (to an existing feature)
+      - Usability (front end changes to make feature more usable)
       - Optimization (of an existing feature)
     - **Blue label** (feature area)
     - **P label** (priority:
