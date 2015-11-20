@@ -74,8 +74,7 @@
     <preference name="StatusBarOverlaysWebView"   value="false" />
     <preference name="StatusBarBackgroundColor"   value="transparent" />
     <!-- ios: black-translucent will appear black because the PhoneGap webview doesn't go beneath the status bar -->
-    <preference name="StatusBarStyle"             value="blackopaque" />
-    <preference name="ios-statusbarstyle"         value="blackopaque" />
+    <preference name="StatusBarStyle"             value="default" />
 
     <!--
         PhoneGap Build plugins

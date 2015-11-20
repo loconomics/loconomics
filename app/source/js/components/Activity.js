@@ -102,6 +102,9 @@ Activity.prototype.show = function show(options) {
         // changes from the same activity.
         this._handlersAreConnected = true;
     }
+    
+    // Scroll to top immediately:
+    this.$activity.scrollTop(0);
 };
 
 /**

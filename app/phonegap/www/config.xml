@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
-id="com.loconomics.app" version="0.13.0">
+id="com.loconomics.app" version="0.13.4">
   <name>Loconomics</name>
   <description>Make your life better</description>
   <author href="https://loconomics.com"
@@ -71,8 +71,7 @@ id="com.loconomics.app" version="0.13.0">
   <preference name="StatusBarBackgroundColor" value="transparent" />
   <!-- ios: black-translucent will appear black because the PhoneGap webview
   doesn't go beneath the status bar -->
-  <preference name="StatusBarStyle" value="blackopaque" />
-  <preference name="ios-statusbarstyle" value="blackopaque" />
+  <preference name="StatusBarStyle" value="default" />
   <!-- PhoneGap Build plugins -->
   <!-- fix problem with transparent overlay statusbar iOS 7 -->
   <gap:plugin name="cordova-plugin-statusbar" version="1.0.1" source="npm"

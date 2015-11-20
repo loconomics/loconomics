@@ -208,14 +208,30 @@ var appInit = function appInit() {
     };
     window.addEventListener('native.keyboardshow', trigLayout);
     window.addEventListener('native.keyboardhide', trigLayout);
+    
+    // IMPORTANT: WORKAROUND: iOS autoscroll problems
+    // Race conditions may happen, making need a second call just a delay
+    // after in case the first didn't make the trick
+    window.addEventListener('native.keyboardshow', function() {
+        // Removes iOS content scroll (no problems when used with an absolute positioned content)
+        // (minor flickering, best solution)
+        window.scrollTo(0, 0);
+        setTimeout(function() {
+            window.scrollTo(0, 0);
+        }, 100);
+    });
 
     // iOS-7+ status bar fix. Apply on plugin loaded (cordova/phonegap environment)
     // and in any system, so any other systems fix its solved too if needed 
     // just updating the plugin (future proof) and ensure homogeneous cross plaftform behavior.
     if (window.StatusBar) {
-        // Fix iOS-7+ overlay problem
-        // Is in config.xml too, but seems not to work without next call:
+        // Fix iOS-7+ overlay problem, and customize it
+        // Is in config.xml too, but seems only affects to start-up splash screen,
+        // so here can go different values.
         window.StatusBar.overlaysWebView(false);
+        // background like our top navbar
+        window.StatusBar.backgroundColorByHexString('#ffffff');
+        window.StatusBar.styleDefault();
     }
     
     // Force an update delayed to ensure update after some things did additional work
