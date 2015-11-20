@@ -416,102 +416,175 @@
         }
         return false;
     }
+    
+    public static int GetIeVersion() {
+        // Sniff old IE browsers based on its engine (Trident) and version: so if it's Trident engine but is not the latest
+        // version 7.0, then is IE 10 or lower; Trident/7.0 is IE11, and it's fine. Compatibility mode uses a lower Trident version,
+        // same for other browsers based on the same engine, and IE-replacement Edge does not report Trident so will not exist greater
+        // versions than 7.0:
+        // Compatibility modes on IE11 uses white space on Trident string like: Trident / 4.0  rather than Trident/4.0
+        var iePattern = @"(?:\b(?:MS)?IE\s)(\d+)";
+        var tridentPattern = @"(?:\bTrident\s?\/\s?)(\d+)";
+        var m = Regex.Match(Request.UserAgent, iePattern);
+        var ieVersion = 0;
+        if (m.Success)
+        {
+            ieVersion = m.Groups[1].Value.AsInt();
+        }
+        else
+        {
+            m = Regex.Match(Request.UserAgent, tridentPattern);
+            if (m.Success)
+            {
+                // Not really ie version, needs be mapped out
+                ieVersion = m.Groups[1].Value.AsInt();
+                // mapping trident to ie version like
+                // 4.0->MSIE 8 | 5.0->MSIE 9 | 6.0->MSIE 10 | 7.0->rv:11
+                ieVersion += 4;
+            }
+        }
+        return ieVersion;
+    }
+    
+    public static bool IsOldBrowser() {
+        var ieVersion = GetIeVersion();
+        return ieVersion > 0 && ieVersion < 11;
+    }
+
+    public static bool IsVeryOldBrowser()
+    {
+        var ieVersion = GetIeVersion();
+        return ieVersion > 0 && ieVersion < 9;
+    }
 }
+
+@helper OldBrowserNotice() {
+    <style type="text/css">
+        body,html,iframe{overflow: hidden; overflow:hidden !important;}
+    </style>
+    <iframe width="100%" height="100%" border="0" style="border:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:9999;filter: alpha(opacity=90);" src="@(LcUrl.LangUrl)HelpCenter/UpgradeBrowser/"></iframe>
+}
+
 @*===============
  * Form Helpers
  *@
-@helper CountryOptions(string selectedCountryID = null){
-    var sql = @"
+@helper CountryOptions(string selectedCountryID = null)
+    {
+        var sql = @"
         SELECT CountryID, CountryName, CountryCode
         FROM    Country
         WHERE   LanguageID=@0
         ORDER BY CountryName
     ";
-    using (var db = Database.Open("sqlloco")){
-        foreach (var country in db.Query(sql, LcData.GetCurrentLanguageID())){
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var country in db.Query(sql, LcData.GetCurrentLanguageID()))
+            {
             <option value="@country.CountryID" @IsSelected(selectedCountryID, country.CountryID)>@country.CountryName</option>
+            }
         }
-    }
 }
-@helper CountyOptions(string selectedCountyID = null){
-    var sql = @"
+@helper CountyOptions(string selectedCountyID = null)
+    {
+        var sql = @"
         SELECT CountyID, CountyName, FIPSCode, StateProvinceID
         FROM    County
         ORDER BY CountyName
     ";
-    using (var db = Database.Open("sqlloco")){
-        foreach (var county in db.Query(sql)){
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var county in db.Query(sql))
+            {
             <option value="@county.CountyID" @IsSelected(selectedCountyID, county.CountyID)>@county.CountyName</option>
+            }
         }
-    }
 }
-@helper StateProvinceOptions(int selectedStateID){
+@helper StateProvinceOptions(int selectedStateID)
+    {
     @StateProvinceOptions(selectedStateID.ToString())
 }
-@helper StateProvinceOptions(string selectedStateID){
-    var sql = @"
+@helper StateProvinceOptions(string selectedStateID)
+    {
+        var sql = @"
         SELECT StateProvinceID, StateProvinceName, StateProvinceCode
         FROM    StateProvince
         WHERE   CountryID=@0
         ORDER BY StateProvinceName
     ";
-    using (var db = Database.Open("sqlloco")){
-        foreach (var state in db.Query(sql, LcData.GetCurrentCountryID())){
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var state in db.Query(sql, LcData.GetCurrentCountryID()))
+            {
             <option data-stateprovince-code="@state.StateProvinceCode" value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID)>@state.StateProvinceName</option>
+            }
         }
-    }
 }
-@helper StateProvinceCodeOptions(string selectedStateCode){
-    var sql = @"
+@helper StateProvinceCodeOptions(string selectedStateCode)
+    {
+        var sql = @"
         SELECT StateProvinceName, StateProvinceCode
         FROM    StateProvince
         WHERE   CountryID=@0
         ORDER BY StateProvinceName
     ";
-    using (var db = Database.Open("sqlloco")){
-        foreach (var state in db.Query(sql, LcData.GetCurrentCountryID())){
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var state in db.Query(sql, LcData.GetCurrentCountryID()))
+            {
             <option value="@state.StateProvinceCode" @IsSelected(selectedStateCode, state.StateProvinceCode)>@state.StateProvinceName</option>
+            }
         }
-    }
 }
-@helper MonthOptions(string selectedMonth){
-    for (var i = 1; i < 13; i++) {
+@helper MonthOptions(string selectedMonth)
+    {
+        for (var i = 1; i < 13; i++)
+        {
         <option @IsSelected(selectedMonth, i) value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
-    }
+        }
 }
-@helper CardYearOptions(string selectedYear){
-    var year = DateTime.Today.Year;
-    var limitYear = year + 10;
-    for (; year < limitYear; year++) {
+@helper CardYearOptions(string selectedYear)
+    {
+        var year = DateTime.Today.Year;
+        var limitYear = year + 10;
+        for (; year < limitYear; year++)
+        {
         <option @IsSelected(selectedYear, year) value="@(year)">@(year)</option>
-    }
+        }
 }
-@helper IsChecked(object valueA, object valueB){
-    if (LcUtils.AreEquivalents(valueA, valueB)) {
+@helper IsChecked(object valueA, object valueB)
+    {
+        if (LcUtils.AreEquivalents(valueA, valueB))
+        {
         @Html.Raw("checked='checked'")
-    }
+        }
 }
-@helper IsSelected(object valueA, object valueB){
-    if (LcUtils.AreEquivalents(valueA, valueB)) {
+@helper IsSelected(object valueA, object valueB)
+    {
+        if (LcUtils.AreEquivalents(valueA, valueB))
+        {
         @Html.Raw("selected='selected'")
-    }
+        }
 }
-@helper CssCurrent(string a, string b, string className = "current"){
-    if (LcUtils.AreEquivalents(a, b)) {
+@helper CssCurrent(string a, string b, string className = "current")
+    {
+        if (LcUtils.AreEquivalents(a, b))
+        {
         @(className)
-    }
+        }
 }
 @functions{
-    static public string GetRedirectURLFromReferrer(string filter = ""){
-        return Request["RedirectURL"] ?? 
-                (Request.UrlReferrer != null && Request.UrlReferrer.PathAndQuery.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) > 0 ? 
-                Request.UrlReferrer.PathAndQuery : "" );
+    static public string GetRedirectURLFromReferrer(string filter = "")
+    {
+        return Request["RedirectURL"] ??
+                (Request.UrlReferrer != null && Request.UrlReferrer.PathAndQuery.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) > 0 ?
+                Request.UrlReferrer.PathAndQuery : "");
     }
 }
 @*=================
  * JavaScript
  *@
-@helper SetupStarRatingPlugin(){
+@helper SetupStarRatingPlugin()
+    {
     <script type="text/javascript">
         if (!jqueryStarRatingPluginLoaded) var jqueryStarRatingPluginLoaded = false;
         if (!jqueryStarRatingPluginLoaded) {
@@ -530,12 +603,14 @@
         }
     </script>
 }
-@helper GetValidationScripts(){
+@helper GetValidationScripts()
+    {
     <script type="text/javascript">
         @GetValidationScriptCode()
     </script>
 }
-@helper GetValidationScriptCode(){
+@helper GetValidationScriptCode()
+    {
     <text>
     if (window['LC'] && LC['setupValidation'])
         LC.setupValidation();
@@ -562,7 +637,8 @@
     {
         var upa = LcData.UserInfo.CheckUserPositionActivation(userID, beforePositionStatuses);
         // There is no positions information, maybe a customer?
-        if (upa == null) {
+        if (upa == null)
+        {
             return false;
         }
 
@@ -580,22 +656,24 @@
                     nextStepLabel = "Next step";
                     break;
             }
-            
-            ReturnJsonResult(6, new {
+
+            ReturnJsonResult(6, new
+            {
                 SuccessMessage = formSavedMessage,
                 AdditionalMessage = activationMessage,
                 OkLabel = okButtonLabel,
                 GoLabel = nextStepLabel,
                 GoURL = upa.NextAlert == null ? "" : LcData.CreateAlertURL(upa.NextAlert)
             });
-            
+
             return true;
         }
-        
+
         return false;
     }
     /*========= JSON =============*/
-    public static void ReturnJson(object jsondata, bool endResponse = true){
+    public static void ReturnJson(object jsondata, bool endResponse = true)
+    {
         Response.ContentType = "application/json";
         // JSON.NET Works Better: good datetime formatting as ISO-8601 and some bugfixes details.
         Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(jsondata));
@@ -610,7 +688,7 @@
         if (code >= 0)
             ReturnJsonResult(code, errorMessage, endResponse);
         else
-            ReturnJsonResult(code, new Dictionary<string, string>(){ { "ErrorMessage", errorMessage } }, endResponse);
+            ReturnJsonResult(code, new Dictionary<string, string>() { { "ErrorMessage", errorMessage } }, endResponse);
     }
     public static void ReturnJsonResult(int code, object result, bool endResponse = true)
     {
@@ -618,44 +696,56 @@
             { "Code", code }, { "Result", result } 
         }, endResponse);
     }
-    
+
     /*========= SECURITY ==========*/
     /* Ensure that only register users enter here, redirecting to login page when appropiated.
      * If request is an ajax request, a json object will be return in the response with code=2
      * that means un-authenticated and a Result string with the ajax login url.
     */
-    public static void SecurePage() {
+    public static void SecurePage()
+    {
         if (!WebSecurity.IsAuthenticated)
             RedirectToLogin();
     }
-    public static void ProviderPage() {
+    public static void ProviderPage()
+    {
         SecurePage();
-        if (LcData.UserInfo.GetUserRow().IsProvider == false) {
+        if (LcData.UserInfo.GetUserRow().IsProvider == false)
+        {
             Forbidden(LcData.UserInfo.UserType.Provider);
         }
     }
-    public static void MemberPage() {
+    public static void MemberPage()
+    {
         SecurePage();
-        if (LcData.UserInfo.GetUserRow().IsMember == false) {
+        if (LcData.UserInfo.GetUserRow().IsMember == false)
+        {
             Forbidden(LcData.UserInfo.UserType.Member);
         }
     }
-    public static void AdminPage() {
+    public static void AdminPage()
+    {
         SecurePage();
-        if (LcData.UserInfo.GetUserRow().IsAdmin == false && !(Session["OnBehalfOf_LoggedUserID"] is int)) {
+        if (LcData.UserInfo.GetUserRow().IsAdmin == false && !(Session["OnBehalfOf_LoggedUserID"] is int))
+        {
             Forbidden(LcData.UserInfo.UserType.Admin);
         }
     }
-    public static void TestArea() {
-        if (!Request.IsLocal) {
+    public static void TestArea()
+    {
+        if (!Request.IsLocal)
+        {
             AdminPage();
         }
     }
-    public static string OnBehalfOf() {
-        if (WebSecurity.IsAuthenticated) {
+    public static string OnBehalfOf()
+    {
+        if (WebSecurity.IsAuthenticated)
+        {
             // Only for Admin users, for any page executing this (SiteLayout is fine, will redirect)
             if (LcData.UserInfo.GetUserRow().IsAdmin == true
-                && Request["OnBehalfOf"].IsInt()) {
+                && Request["OnBehalfOf"].IsInt())
+            {
                 // Remember users data:
                 int oboID = Request["OnBehalfOf"].AsInt();
                 var loggedID = WebSecurity.CurrentUserId;
@@ -671,10 +761,12 @@
 
                 // New authentication cookie:
                 System.Web.Security.FormsAuthentication.SetAuthCookie(oboUser.Email, false);
-                
+
                 // Return to the original URL, setting the new cooking
                 Response.Redirect(LcUrl.GetTheGoodURL(Request.Url.OriginalString).Replace("OnBehalfOf", "_"));
-            } else if (Session["OnBehalfOf_LoggedUserID"] is int) {
+            }
+            else if (Session["OnBehalfOf_LoggedUserID"] is int)
+            {
                 return String.Format("Logged as {0}:{1} On Behalf Of {2}:{3}",
                     Session["OnBehalfOf_LoggedUserID"],
                     Session["OnBehalfOf_LoggedUserName"],
@@ -688,7 +780,8 @@
     /// Shows to the user the PageNotFound:404 page instead of the current one requested.
     /// Page is prevented from being processed.
     /// </summary>
-    public static void PageNotFound() {
+    public static void PageNotFound()
+    {
         Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
         // throw new HttpException(404, "Not Found");
     }
@@ -698,68 +791,89 @@
     /// </summary>
     /// <param name="requestedUserType">Lets know what user type was requested by this
     /// page and not satisfied by the current user to show a more detailed error.</param>
-    public static void Forbidden(LcData.UserInfo.UserType requestedUserType) {
+    public static void Forbidden(LcData.UserInfo.UserType requestedUserType)
+    {
         Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error403/?requires=" + requestedUserType.ToString());
         // throw new HttpException(403, "Forbidden");
     }
-    public static void RedirectToLogin() {
-            if (Request.IsAjaxRequest())
-                ReturnJsonResult(2, LcUrl.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(LcUrl.GetTheGoodURL(Request.UrlReferrer.PathAndQuery)));
-            else
-                Response.Redirect(LcUrl.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(LcUrl.GetTheGoodURL(Request.Url.PathAndQuery)));
+    public static void RedirectToLogin()
+    {
+        if (Request.IsAjaxRequest())
+            ReturnJsonResult(2, LcUrl.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(LcUrl.GetTheGoodURL(Request.UrlReferrer.PathAndQuery)));
+        else
+            Response.Redirect(LcUrl.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(LcUrl.GetTheGoodURL(Request.Url.PathAndQuery)));
     }
-    
+
     /*========= STRINGS ==============*/
-    public static string GetInitialLetter(string text) {
-        if (!String.IsNullOrEmpty(text)) {
+    public static string GetInitialLetter(string text)
+    {
+        if (!String.IsNullOrEmpty(text))
+        {
             // Is not empty, have almost 1 char:
             return text.Substring(0, 1).ToUpper();
-        } else {
+        }
+        else
+        {
             return "";
         }
     }
-    public static string JoinNotEmptyStrings(string delimiter, params string[] strs){
+    public static string JoinNotEmptyStrings(string delimiter, params string[] strs)
+    {
         return JoinNotEmptyStrings(delimiter, (IEnumerable<string>)strs);
     }
-    public static string JoinNotEmptyStrings(string delimiter, IEnumerable<string> strs){
+    public static string JoinNotEmptyStrings(string delimiter, IEnumerable<string> strs)
+    {
         List<string> newstrs = new List<string>();
         foreach (var str in strs)
             if (!String.IsNullOrWhiteSpace(str))
                 newstrs.Add(str);
         return String.Join(delimiter, newstrs);
     }
-    public static string NameValueToString(System.Collections.Specialized.NameValueCollection collection){
+    public static string NameValueToString(System.Collections.Specialized.NameValueCollection collection)
+    {
         var str = "";
         if (collection.AllKeys != null)
-        foreach(var n in collection.AllKeys){
-            var v = collection.GetValues(n);
-            var sv = "";
-            if (v == null)
-                sv = "NULL";
-            else
-                try {
-                    sv = (v.Length > 1 ? Json.Encode(v) : collection[n]);
-                } catch {
-                    sv = "{{ Can not be read }}";
-                }
-            str += String.Format("{0}={1}\n", n, sv);
-        }
+            foreach (var n in collection.AllKeys)
+            {
+                var v = collection.GetValues(n);
+                var sv = "";
+                if (v == null)
+                    sv = "NULL";
+                else
+                    try
+                    {
+                        sv = (v.Length > 1 ? Json.Encode(v) : collection[n]);
+                    }
+                    catch
+                    {
+                        sv = "{{ Can not be read }}";
+                    }
+                str += String.Format("{0}={1}\n", n, sv);
+            }
         return str;
     }
-    public static bool ReadBoolFrom(params object[] values) {
-        foreach (object val in values) {
-            if (val != null) {
-                if (val is bool) {
+    public static bool ReadBoolFrom(params object[] values)
+    {
+        foreach (object val in values)
+        {
+            if (val != null)
+            {
+                if (val is bool)
+                {
                     return (bool)val;
-                } else if (val is string && ((string)val).IsBool()) {
+                }
+                else if (val is string && ((string)val).IsBool())
+                {
                     return ((string)val).AsBool();
                 }
             }
         }
         return false;
     }
-    public static string GetLastStringChars(string str, int number){
-        if (str != null && str.Length > number) {
+    public static string GetLastStringChars(string str, int number)
+    {
+        if (str != null && str.Length > number)
+        {
             return str.Substring(str.Length - number, number);
         }
         return str;
@@ -785,11 +899,13 @@
 
         return str;
     }
-    
-    public static string ReplaceSpecialCharsWithAsciiEquivalent(string s, bool changeLowercases = true, bool changeUppercases = true){
+
+    public static string ReplaceSpecialCharsWithAsciiEquivalent(string s, bool changeLowercases = true, bool changeUppercases = true)
+    {
         string r = s ?? "";
-        
-        if (changeLowercases) {
+
+        if (changeLowercases)
+        {
             r = Regex.Replace(r, "[àáâãäåæ]", "a");
             r = Regex.Replace(r, "[èéêë]", "e");
             r = Regex.Replace(r, "[ìíîï]", "i");
@@ -800,7 +916,8 @@
             r = Regex.Replace(r, "[ç]", "c");
             r = Regex.Replace(r, "[ñ]", "n");
         }
-        if (changeUppercases) {
+        if (changeUppercases)
+        {
             r = Regex.Replace(r, "[ÀÁÂÃÄÅÆ]", "A");
             r = Regex.Replace(r, "[ÈÉÊË]", "E");
             r = Regex.Replace(r, "[ÌÍÎÏ]", "I");
@@ -811,11 +928,12 @@
             r = Regex.Replace(r, "[Ç]", "C");
             r = Regex.Replace(r, "[Ñ]", "N");
         }
-        
+
         return r;
     }
-    
-    public static string StripHtmlTags(string html) {
+
+    public static string StripHtmlTags(string html)
+    {
         return Regex.Replace(html, @"<[^>]*>", String.Empty);
     }
 
@@ -824,11 +942,12 @@
      * valid for Braintree, replacing all invalid chars to underscore (_)
      * and tilded characters to non tilded equivalent
      */
-    public static string ConvertToBraintreeToken(string str) {
+    public static string ConvertToBraintreeToken(string str)
+    {
         string r = str ?? "_";
-        
+
         r = ReplaceSpecialCharsWithAsciiEquivalent(r);
-        
+
         Regex all_non_valid = new Regex("[^a-zA-Z0-9-_]", RegexOptions.Compiled);
         r = all_non_valid.Replace(r, "_");
 
@@ -840,38 +959,46 @@
      * user FirstName=John LastName=Smith
      * The row object must contains the properties FirstName and LastName to work
      */
-    public static string GetUserDisplayName(dynamic row){
+    public static string GetUserDisplayName(dynamic row)
+    {
         if (row == null) { return ""; }
         return (row.FirstName ?? "") + "\xA0" + GetInitialLetter(row.LastName) + ".";
     }
-    public static string GetUserDisplayName(dynamic row, string fieldPrefix){
+    public static string GetUserDisplayName(dynamic row, string fieldPrefix)
+    {
         if (row == null) { return ""; }
         return (row[fieldPrefix + "FirstName"] ?? "") + "\xA0" + GetInitialLetter(row[fieldPrefix + "LastName"]) + ".";
     }
-    public static string GetUserDisplayNameHtml(dynamic row, string fieldPrefix) {
+    public static string GetUserDisplayNameHtml(dynamic row, string fieldPrefix)
+    {
         if (row == null) { return ""; }
         return "<span class='first-name'>" + (row[fieldPrefix + "FirstName"] ?? "") + "</span>"
             + "&nbsp;"
             + "<span class='last-name-initial'>" + GetInitialLetter(row[fieldPrefix + "LastName"]) + "." + "</span>";
     }
 }
-@helper PrintTextAsHtml(string text){
-    if (text != null) {
+@helper PrintTextAsHtml(string text)
+    {
+        if (text != null)
+        {
         @Html.Raw(text.Replace("\n", "<br/>"))
-    }
+        }
 }
 
 @* Address utilities *@
-@helper PrintAddress(LcData.Address address, bool editable){
+@helper PrintAddress(LcData.Address address, bool editable)
+    {
     <div class="address">
-        @if (!String.IsNullOrEmpty(address.Name)) {
+        @if (!String.IsNullOrEmpty(address.Name))
+        {
         <span class="address-name">@address.Name</span>
         }
         <span class="address-location">@address.AddressLine1 @address.AddressLine2</span>
         <span class="address-city">@address.City</span>
         <span class="address-state">@address.StateProvinceCode</span>
         <span class="address-zipcode">@address.PostalCode</span>
-        @if (editable) {
+        @if (editable)
+        {
         <div class="tools">
             <a href="#" class="edit">Edit</a>
             <a href="#" class="map">Map</a>
@@ -880,7 +1007,8 @@
         }
     </div>
 }
-@helper PrintAddressInLink(LcData.Address address) {
+@helper PrintAddressInLink(LcData.Address address)
+    {
     <div class="address">
         @PrintGoogleLink(GetLocationForGoogleMaps(address), GetOneLineAddress(address))
         @(String.IsNullOrWhiteSpace(address.SpecialInstructions)
@@ -889,10 +1017,12 @@
     </div>
 }
 @functions {
-    public static string GetLocationForGoogleMaps(dynamic data){
+    public static string GetLocationForGoogleMaps(dynamic data)
+    {
         return JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
-    public static string GetOneLineAddress(LcData.Address address, bool withSpecialInstructions = false) {
+    public static string GetOneLineAddress(LcData.Address address, bool withSpecialInstructions = false)
+    {
         return JoinNotEmptyStrings(", ",
             address.AddressLine1,
             address.AddressLine2,
@@ -900,42 +1030,50 @@
             address.StateProvinceCode,
             address.Country
         )
-        + 
+        +
         (!withSpecialInstructions || String.IsNullOrWhiteSpace(address.SpecialInstructions)
                 ? ""
                 : "(" + address.SpecialInstructions + ")"
         );
     }
 }
-@helper PrintGoogleMap(string location){
+@helper PrintGoogleMap(string location)
+    {
     <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
 }
-@helper PrintGoogleLink(string location, string label = "view map and directions"){
+@helper PrintGoogleLink(string location, string label = "view map and directions")
+    {
     <a class="google-map" href="http://maps.google.com/?q=@(location);z=16" target="_blank">@label</a>
 }
 
 @* Prints the HTML with the tagged contact information for the user at data.
     TODO: International Phone Prefix.
  *@
-@helper PrintContactInfo(dynamic data, string dataPrefix = "", bool withAddress = false) {
+@helper PrintContactInfo(dynamic data, string dataPrefix = "", bool withAddress = false)
+    {
     <div class="user-contact-data">
         <div class="user-full-name"><span class="value">@data[dataPrefix + "FirstName"] @data[dataPrefix + "MiddleIn"] @data[dataPrefix + "LastName"]</span></div>
-        @if(withAddress && data[dataPrefix + "StateProvinceCode"] != null) {
+        @if (withAddress && data[dataPrefix + "StateProvinceCode"] != null)
+        {
             <div class="user-address">Address: <span class="value">@data[dataPrefix + "AddressLine1"] @data[dataPrefix + "AddressLine2"]</span></div>
             <div class="user-location">@JoinNotEmptyStrings(", ", data[dataPrefix + "City"], data[dataPrefix + "StateProvinceCode"], data[dataPrefix + "PostalCode"])</div>
         }
         @{
             var mobile = data[dataPrefix + "MobilePhone"];
             var alternate = data[dataPrefix + "AlternatePhone"];
-            if (!String.IsNullOrEmpty(mobile) || !String.IsNullOrEmpty(alternate)) {
+            if (!String.IsNullOrEmpty(mobile) || !String.IsNullOrEmpty(alternate))
+            {
                 <div class="user-phones">Phone:
-                    @if(!String.IsNullOrEmpty(mobile)) {
+                    @if (!String.IsNullOrEmpty(mobile))
+                    {
                         <span class="user-mobile-phone"><span class="value">+1 @mobile</span> (mobile)</span>
                     }
-                    @if (!String.IsNullOrEmpty(mobile) && !String.IsNullOrEmpty(alternate)) {
+                    @if (!String.IsNullOrEmpty(mobile) && !String.IsNullOrEmpty(alternate))
+                    {
                         <span class="user-or-phone">or</span>   
                     }
-                    @if(!String.IsNullOrEmpty(alternate)) {
+                    @if (!String.IsNullOrEmpty(alternate))
+                    {
                         <span class="user-alternate-phone"><span class="value">+1 @alternate</span> (other)</span>
                     }
                 </div>
@@ -943,13 +1081,15 @@
         }
         @{
             var email = data[dataPrefix + "Email"];
-            if (!String.IsNullOrEmpty(LcRest.Client.GetEmailFromDb(email))) {
+            if (!String.IsNullOrEmpty(LcRest.Client.GetEmailFromDb(email)))
+            {
                 <div class="user-email">E-mail: <span class="value"><a href="mailto:@email">@LcRest.Client.GetEmailFromDb(email)</a></span></div>
             }
         }
         @{
             var website = data[dataPrefix + "ProviderWebsiteURL"];
-            if (!String.IsNullOrEmpty(website)) {
+            if (!String.IsNullOrEmpty(website))
+            {
                 <div class="user-website">Website: <span class="value"><a href="@website" target="_blank">@website</a></span></div>
             }
         }
