@@ -1,7 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en" class="Splash" data-site-url="" data-facebook-language="en-US"
 data-facebook-appid="180579422039773">
-  
   <head>
     <meta charset="utf-8">
     <meta name="description" content="Loconomics.com">
@@ -14,17 +13,73 @@ data-facebook-appid="180579422039773">
     @if (!LcHelpers.IsVeryOldBrowser())
     {
     <link href="assets/css/splash.min.20151118.css" rel="stylesheet" />
+    <script>
+        document.documentElement.className += ' js';
+    </script>
     <script src="assets/js/splash.min.20151118.js"></script>
     }
   </head>
-  
-  <body>
+    <body>
     @if (LcHelpers.IsVeryOldBrowser())
     {
         @LcHelpers.OldBrowserNotice()
     }
     else
     {
+        <!-- A div is used rather than actual noscript, because script blockers don't respect it. -->
+        <div class="noscript">
+            <style>
+                .noscript 
+                {
+                    display: block;
+                    max-width: 450px;
+                    margin: auto;
+                    padding: 40px 20px;
+                    color: Black;
+                    visibility: visible !important;
+                }
+                .noscript h1
+                {
+                    text-align: center;
+                    font-size: 24px;
+                    magin: 2em 0 1em;
+                }
+                .noscript p {
+                    margin: 2em 0;
+                    font-size: 16px;
+                }
+                .noscript img 
+                {
+                    border: none;
+                    display: block;
+                    margin: auto;
+                }
+                .js .noscript 
+                {
+                    display: none;
+                }
+                
+                .SplashScreen,
+                .App-activities 
+                {
+                    display: none;
+                }
+                .js .SplashScreen,
+                .js .App-activities 
+                {
+                    display: block;
+                }
+            </style>
+            <img align="center" alt="Loconomics At Your Service!" src="@(LcUrl.AppPath)img/fallback/logo-loconomics-header.png" />
+            <h1>Loconomics needs JavaScript enabled to function properly</h1>
+            <p>
+                A setting in your browser or other software needs to allow JavaScript to allow this page to load.
+            </p>
+            <p>
+                <a href="http://www.enable-javascript.com/" target="_blank">Please view these instructions to enable JavaScript.</a>
+            </p>
+        </div>
+
     <div class="SplashScreen">Loading...</div>
     <div class="App-activities">
       <!-- Activity index -->

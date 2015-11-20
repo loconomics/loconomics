@@ -1,14 +1,3 @@
 !.gitignore
-*.jpg
-*.png
-*.gif
-!userphotos/u0/*.*
-!theme/*.*
-!theme/*/*.*
-!theme/howitworks/*.*
-!email/*.*
-!email/*/*.*
-!extern/*.*
-!extern/*/*.*
+userphotos/
 .DS_Store
-*.DS_Store
