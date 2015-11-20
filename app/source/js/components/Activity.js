@@ -19,7 +19,10 @@ function Activity($activity, app) {
 
     // Default access level: anyone
     // Activities can use the enumeration: this.app.UserType
-    this.accessLevel = null; 
+    this.accessLevel = null;
+    
+    // By default, reset scroll to top on activity.show
+    this.resetScroll = true;
     
     // TODO: Future use of a viewState, plain object representation
     // of part of the viewModel to be used as the state passed to the
@@ -103,8 +106,9 @@ Activity.prototype.show = function show(options) {
         this._handlersAreConnected = true;
     }
     
-    // Scroll to top immediately:
-    this.$activity.scrollTop(0);
+    // Scroll to top immediately, if wanted by the activity (defaults to true):
+    if (this.resetScroll)
+        this.$activity.scrollTop(0);
 };
 
 /**
