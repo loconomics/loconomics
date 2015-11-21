@@ -101,6 +101,7 @@ When filing an issue, you must do the following:
     - Include: 
     - **Gray label** (issue type): 
       - Bug 
+      - Content
       - Feature 
       - Enhancement (to an existing feature)
       - Usability (front end changes to make feature more usable)
@@ -112,7 +113,8 @@ When filing an issue, you must do the following:
       - P3 (The issue will be seen by about half of users.)
       - P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
     - **R label** (readiness):
-      - R1 (The issue is ready to be put into a release with all supporting documentation completed.)
+      - R1 (The issue is ready to be put into a release with all supporting documentation completed. 
+        - **NEW ISSUE CREATED WITH CLEAN FORMAT & OLD ISSUE CLOSED & REFERENCED**)
       - R2 (The issue has been deemed necessary by users and business team. Supporting documentation is being completed.)
       - R3 (The issue is a well formed idea able to be articulated to users. Should be shared so that they may vote on it.)
       - R4 (The issue is just an idea with no or little supporting documentation.)
