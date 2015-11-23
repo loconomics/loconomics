@@ -40,7 +40,7 @@
         });
 **/
 'use strict';
-
+var extend = require('jquery').extend;
 var userAgentFlags = require('./userAgentFlags')();
 
 var defaultPhotoSettings = {
@@ -68,14 +68,20 @@ function getPreviewPhotoUrl(url) {
     if (!url) return null;
     // Check if we are in http connection and WkWebview (local server)
     // and we have a 'file:' uri.
-    var iFile = url.indexOf('file');
+    var iFile = url.indexOf('file://');
     if (userAgentFlags.isWkWebview &&
         window.location.protocol.indexOf('http') === 0 &&
         iFile === 0) {
         // Not only we need to remove the 'file', but all the initial part up
-        // to '/Documents/', because WkWebview needs the relative from the project dir.
-        var iRelative = url.indexOf('/Documents/');
-        return iRelative > -1 ? url.substr(iRelative) : url.substr(iFile);
+        // to the app root folder, because there is were the http server index is.
+        // Paths of iOS up to 9.1 are something like /var/mobile/Containers/Data/Application/B09324-23434-2234-3423423-42/
+        // followed by 'Documents/' for persisting content, or 'tmp/' for temporary (when taking a photo).
+        var m = /\/Application\/[^\/]+(.+)$/.exec(url);
+        if (m && m.length === 2)
+            return m[1];
+        else
+            // Fallback: just remove the file protocol, last ressource maybe does not work too.
+            return url.substr(iFile);
     }
     else {
         return url;
@@ -88,7 +94,7 @@ exports.getPreviewPhotoUrl = getPreviewPhotoUrl;
 **/
 function cameraGetPicture(settings) {
     return new Promise(function(resolve, reject) {
-        navigator.camera.getPicture(resolve, reject, settings || defaultPhotoSettings);
+        navigator.camera.getPicture(resolve, reject, extend(true, {}, defaultPhotoSettings, settings));
     });
 }
 exports.cameraGetPicture = cameraGetPicture;
@@ -153,6 +159,10 @@ function uploadLocalFile(localFileUri, remoteUri, options) {
             fuopts.fileName = localFileUri.substr(localFileUri.lastIndexOf('/') + 1);
         if (!fuopts.mimeType)
             fuopts.mimeType = 'image/jpeg';
+        
+        fuopts.headers = fuopts.headers || {};
+        // Fix an issue, commented here: http://grandiz.com/phonegap-development/phonegap-file-transfer-error-code-3-solved/
+        fuopts.headers.Connection = 'close';
 
         var ft = new FileTransfer();
 

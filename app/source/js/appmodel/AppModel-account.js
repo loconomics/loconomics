@@ -111,7 +111,7 @@ exports.plugIn = function (AppModel) {
     };
 };
 
-function performLocalLogin(thisAppModel, username, password) {
+function performLocalLogin(thisAppModel, username/*, password*/) {
 
     return function(logged) {
         
@@ -129,7 +129,6 @@ function performLocalLogin(thisAppModel, username, password) {
             localforage.setItem('credentials', {
                 userID: logged.userID,
                 username: username,
-                password: password,
                 authKey: logged.authKey
             });
             // IMPORTANT: Local name kept in sync with set-up at AppModel.userProfile

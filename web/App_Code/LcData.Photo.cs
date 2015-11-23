@@ -6,6 +6,8 @@ using WebMatrix.Data;
 using System.IO;
 using System.Web.WebPages;
 using System.Drawing;
+using System.Web.Helpers;
+using System.Drawing.Imaging;
 
 public static partial class LcData
 {
@@ -15,13 +17,14 @@ public static partial class LcData
     public static class Photo
     {
         #region Profile Picture
-        const int profilePictureFixedSizeWidth = 112;
-        const int profilePictureFixedSizeHeight = 118;
+        const int profilePictureFixedSizeWidth = 120;
+        const int profilePictureFixedSizeHeight = 120;
         const int profilePictureOriginalScale = 5;
         const string avatarName = "$avatar";
         const string avatarNamePrefix = avatarName + "-";
+        const LcImaging.SizeMode profilePictureSizeMode = LcImaging.SizeMode.Cover;
 
-        public static string PublicUserProfilePictureUrl = LcUrl.LangPath + "Profile/Photo/";
+        public static string PublicUserProfilePictureUrl = LcUrl.LangUrl + "Profile/Photo/";
 
         public static void UpdateProfilePictureOnDb(int userID, bool hasPhoto)
         {
@@ -78,7 +81,7 @@ public static partial class LcData
             {
 
                 // Resize to maximum allowed size (but not upscale) to allow user cropping later
-                var img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, LcImaging.SizeMode.Contain);
+                var img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode);
 
                 // Save:
                 img.Save(folder + avatarName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -132,6 +135,96 @@ public static partial class LcData
                 }
                 // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
             }
+        }
+
+        /// <summary>
+        /// Sends user profile picture, or default image, to the Web Response Output.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="type"></param>
+        public static void OutputProfilePicture(int userID, string type)
+        {
+            if (type == "2x")
+            {
+                type = "@2x";
+            }
+            else if (!String.IsNullOrWhiteSpace(type))
+            {
+                type = "-" + type;
+            }
+
+            var Response = HttpContext.Current.Response;
+            var userFolder = GetUserPhotoFolder(userID);
+            bool imageAdapted = false;
+            var sizeName = profilePictureFixedSizeWidth.ToString() + "x" + profilePictureFixedSizeHeight.ToString();
+
+            // And it happens again, new size change, so the next comment, just two times:
+            // To fix #558, because the change of size (so file name changed too), we do double try
+            // for a while
+            // TODO FUTURE: When there are no more oldSize (or a few, convert it manually), remove this and its use
+            const string veryOldSizeName = "176x184";
+            const string oldSizeName = "112x118";
+
+            // "$avatar"
+            // Standard name of pre-adapted image, just
+            // serve ever the profile adapted photo for now instead the big colored original:
+            var userPhoto = "$avatar-" + sizeName + "-gray" + type + ".jpg";
+            imageAdapted = true;
+            // Physical image path to userPhoto
+            var path = HttpContext.Current.Request.MapPath(LcUrl.RenderAppPath + userFolder + userPhoto);
+
+            // Try the OLD size if it doesn't exists the new:
+            if (!System.IO.File.Exists(path))
+            {
+                imageAdapted = false;
+                // Update name and path
+                userPhoto = "$avatar-" + oldSizeName + "-gray" + type + ".jpg";
+                path = HttpContext.Current.Request.MapPath(LcUrl.RenderAppPath + userFolder + userPhoto);
+            }
+            // Try the VERY OLD size if it doesn't exists the new:
+            if (!System.IO.File.Exists(path))
+            {
+                imageAdapted = false;
+                // Update name and path
+                userPhoto = "$avatar-" + veryOldSizeName + "-gray" + type + ".jpg";
+                path = HttpContext.Current.Request.MapPath(LcUrl.RenderAppPath + userFolder + userPhoto);
+            }
+
+            // Last fallback: default image
+            if (!System.IO.File.Exists(path))
+            {
+                imageAdapted = true;
+                if (type == "@2x")
+                {
+                    userPhoto = "img/userphotos/u0/avatar-2x.png";
+                }
+                else
+                {
+                    userPhoto = "img/userphotos/u0/avatar.png";
+                }
+                path = HttpContext.Current.Server.MapPath(LcUrl.RenderAppPath + userPhoto);
+            }
+
+            try
+            {
+                if (imageAdapted)
+                {
+                    new WebImage(path).Write();
+                }
+                else
+                {
+                    // Transform image to Grayscale and profile photo size to avoid big images:
+                    // Is inside a using block because ensure close the image ressources and the file
+                    using (var img = LcImaging.Grayscale(LcImaging.Resize(new System.Drawing.Bitmap(path), profilePictureFixedSizeWidth, profilePictureFixedSizeHeight, profilePictureSizeMode, LcImaging.AnchorPosition.Center)))
+                    {
+                        // Telling to the browser that this is a JPG image
+                        Response.ContentType = "image/jpg";
+                        // Send the transformed image to the browser
+                        img.Save(Response.OutputStream, ImageFormat.Jpeg);
+                    }
+                }
+            }
+            catch { }
         }
 
         #endregion

@@ -41,15 +41,17 @@
             }
 
             var userID = WebSecurity.CurrentUserId;
-
+            //LcHelpers.DebugLogger.Log("PUT profile-picture: " + userID);
             try {
                 var fileuploaded = Request.Files["profilePicture"];
                 if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName))
                 {
+                    //LcHelpers.DebugLogger.Log("PUT profile-picture:valerror:select an image:" + Request.Files.Count);
                     ModelState.AddFormError("Please, select an image");
                 }
                 else {
                     System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
+                    //LcHelpers.DebugLogger.Log("PUT profile-picture:image:" + fileinfo.Name);
                     if (Request.InputStream.Length > 0)
                     {
                         LcData.Photo.SaveEditableProfilePicture(userID, fileuploaded.InputStream);
@@ -66,6 +68,7 @@
                     }
                     else
                     {
+                        //LcHelpers.DebugLogger.Log("PUT profile-picture:input-stream=0");
                         // Emulate standard error, next its replaced by better message
                         ModelState.AddFormError("Maximum request length exceeded");
                     }
@@ -73,10 +76,12 @@
             }
             catch (Exception ex)
             {
+                //LcHelpers.DebugLogger.Log("PUT profile-picture:error:" + ex.Message);
                 ModelState.AddFormError(ex.Message);
             }
 
             if (ModelState.IsValid) {
+                //LcHelpers.DebugLogger.Log("PUT profile-picture:valid:return:" + LcData.Photo.PublicUserProfilePictureUrl);
                 return new
                 {
                     profilePictureUrl = LcData.Photo.PublicUserProfilePictureUrl,
@@ -85,12 +90,13 @@
             }
             else {
                 var errMsg = String.Join("; ", ModelState.Values.First().Errors);
+                //LcHelpers.DebugLogger.Log("PUT profile-picture:notvalid:" + errMsg);
 
                 // We don't want the ugly default asp.net message for file-size-exceeded
                 // As of #454 (https://github.com/dani0198/Loconomics/issues/454#issuecomment-37782181)
                 if (errMsg.Contains("Maximum request length exceeded"))
                 {
-
+                    //LcHelpers.DebugLogger.Log("PUT profile-picture:notvalid:max request length exceeded");
                     var max = LcHelpers.GetMaxRequestSize();
                     var printMax = "";
                     if (max > 0)

@@ -3,9 +3,9 @@
   <form role="form" data-bind="submit: save">
     <div>
         <h2 class="SectionTitle">Profile picture</h2>
-        <div class="profilePicture"><img data-bind="attr: { src: profile.photoUrl }" /></div>
+        <div class="Avatar Avatar--lg Avatar--primary"><img data-bind="attr: { src: previewPhotoUrl() || profile.photoUrl() }" /></div>
         <div class="LightForm-tool">
-            <button type="button" class="btn btn-block btn-primary" data-bind="click: takePhoto, visible: takePhotoSupported">
+            <button type="button" class="btn btn-block btn-primary" data-bind="click: takePhoto, visible: takePhotoSupported, disable: isLocked">
                 <span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span>
             </button>
         </div>

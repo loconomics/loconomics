@@ -5,7 +5,8 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout'),
-    photoTools = require('../utils/photoTools');
+    photoTools = require('../utils/photoTools'),
+    $ = require('jquery');
 
 var A = Activity.extend(function ProfilePictureBioActivity() {
     
@@ -86,34 +87,49 @@ function ViewModel(app) {
 
     this.discard = function discard() {
         profileVersion.pull({ evenIfNewer: true });
+        this.localPhotoUrl('');
+        this.previewPhotoUrl('');
     }.bind(this);
 
     this.save = function save() {
         Promise.all([
             profileVersion.pushSave(),
-            this.uploadPhoto
+            this.uploadPhoto()
         ])
-        .then(function() {
+        .then(function(data) {
             app.successSave();
+            if (data[1] && data[1].response) {
+                try {
+                    var result = JSON.parse(data[1]);
+                    // Force a request to the picture to ensure cache is updated with the new
+                    // for any reference on the app to that URL
+                    $.get(result.profilePictureUrl);
+                } catch(ex) {}
+            }
         })
         .catch(function(err) {
-            this.app.modals.showError({
+            app.modals.showError({
                 title: 'Error saving your data.',
                 error: err && err.error || err
             });
-        }.bind(this));
+        });
     }.bind(this);
     
     this.takePhotoSupported = photoTools.takePhotoSupported;
+    var cameraSettings = {
+        targetWidth: 600,
+        targetHeight: 600,
+        quality: 90
+    };
     
     this.previewPhotoUrl = ko.observable('');
     this.localPhotoUrl = ko.observable('');
     this.takePhoto = function takePhoto() {
         if (photoTools.takePhotoSupported()) {
-            photoTools.cameraGetPicture()
+            photoTools.cameraGetPicture(cameraSettings)
             .then(function(imgLocalUrl) {
-                this.previewUrl(imgLocalUrl);
-                this.localPhotoUrl(photoTools.getPreviewPhotoUrl(imgLocalUrl));
+                this.localPhotoUrl(imgLocalUrl);
+                this.previewPhotoUrl(photoTools.getPreviewPhotoUrl(imgLocalUrl));
             }.bind(this));
         }
         else {
@@ -124,14 +140,13 @@ function ViewModel(app) {
     }.bind(this);
     
     this.uploadPhoto = function() {
+        if (!this.localPhotoUrl()) return null;
         var uploadSettings = {
             fileKey: 'profilePicture',
             mimeType: 'image/jpeg',
             httpMethod: 'PUT',
-            headers: {
-                Authorization: window.sessionStorage.authorization || window.localStorage.authorization
-            }
+            headers: $.extend(true, {}, app.model.rest.extraHeaders)
         };
-        return photoTools.uploadLocalFile(this.localPhotoUrl(), 'me/marketplace-profile', uploadSettings);
+        return photoTools.uploadLocalFile(this.localPhotoUrl(), app.model.rest.baseUrl + 'me/profile-picture', uploadSettings);
     }.bind(this);
 }
