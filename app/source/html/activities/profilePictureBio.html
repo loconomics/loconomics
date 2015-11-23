@@ -5,7 +5,7 @@
         <h2 class="SectionTitle">Profile picture</h2>
         <div class="profilePicture"><img data-bind="attr: { src: profile.photoUrl }" /></div>
         <div class="LightForm-tool">
-            <button type="button" class="btn btn-block btn-primary">
+            <button type="button" class="btn btn-block btn-primary" data-bind="click: takePhoto, visible: takePhotoSupported">
                 <span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span>
             </button>
         </div>

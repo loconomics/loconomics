@@ -756,6 +756,18 @@
         "User Verifications": {
             "url": "/api/v1/en-US/me/verifications",
             "get": { }
+        },
+
+        "Upload My Profile Picture": {
+            "url": "/api/v1/en-US/me/profile-picture",
+            "put": {
+                "profilePicture": "Binary image/jpeg",
+                "x": 0,
+                "y": 0,
+                "w": 0,
+                "h": 0
+            },
+            "delete": {}
         }
     };
 

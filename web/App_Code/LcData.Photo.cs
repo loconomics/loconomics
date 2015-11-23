@@ -10,10 +10,133 @@ using System.Drawing;
 public static partial class LcData
 {
     /// <summary>
-    /// Getting and setting photos related to users on database and file system
+    /// Getting and setting photos related to users on database and file system (User Work Photos, Profile Picture)
     /// </summary>
     public static class Photo
     {
+        #region Profile Picture
+        const int profilePictureFixedSizeWidth = 112;
+        const int profilePictureFixedSizeHeight = 118;
+        const int profilePictureOriginalScale = 5;
+        const string avatarName = "$avatar";
+        const string avatarNamePrefix = avatarName + "-";
+
+        public static string PublicUserProfilePictureUrl = LcUrl.LangPath + "Profile/Photo/";
+
+        public static void UpdateProfilePictureOnDb(int userID, bool hasPhoto)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                // We set the name, now ever fixed as '$avatar', without extension, to allow TestAlertPhoto validate this,
+                // no more because is not need.
+                db.Execute(@"
+                    UPDATE  users
+                    SET     photo=@0
+                    WHERE   UserID=@1
+                    -- Check Alerts:
+                    EXEC TestAlertPhoto @1
+                ", hasPhoto ? "$avatar" : null, userID);
+            }
+        }
+
+        public static void DeleteProfilePicture(int userID)
+        {
+            string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
+            UpdateProfilePictureOnDb(userID, false);
+
+            var folder = System.Web.HttpContext.Current.Server.MapPath(virtualPath);
+
+            foreach (var f in Directory.GetFiles(folder, avatarName + "*", SearchOption.TopDirectoryOnly))
+            {
+                try
+                {
+                    File.Delete(f);
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>
+        /// Save the uploaded photo as an image on the user folder
+        /// with a greater size than usual but limited,
+        /// for later use on cropping and resizing tasks.
+        /// </summary>
+        /// <param name="photo"></param>
+        /// <param name="virtualPath"></param>
+        public static void SaveEditableProfilePicture(int userID, Stream photo)
+        {
+            // Check folder or create
+            string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
+            var folder = System.Web.HttpContext.Current.Server.MapPath(virtualPath);
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            // Use file as image
+            using (var srcImg = System.Drawing.Image.FromStream(photo))
+            {
+
+                // Resize to maximum allowed size (but not upscale) to allow user cropping later
+                var img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, LcImaging.SizeMode.Contain);
+
+                // Save:
+                img.Save(folder + avatarName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+
+            photo.Dispose();
+        }
+
+        /// <summary>
+        /// Sets the previously uploaded 'editable avatar' image as the
+        /// current user avatar, cropped with the given values and 
+        /// optimized sizes.
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        public static void SaveProfilePicture(int userID, int x, int y, int width, int height)
+        {
+            string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
+            var folder = System.Web.HttpContext.Current.Server.MapPath(virtualPath);
+
+            // Remove previous cropped/sized/adapted photos (except editable one), all start with avatarNamePrefix
+            // File.Delete doesn't allow wildcards, find and delete each one
+            foreach (var f in Directory.GetFiles(folder, avatarNamePrefix + "*", SearchOption.TopDirectoryOnly))
+                File.Delete(f);
+
+            // Create optimized files
+            using (var img = System.Drawing.Image.FromFile(folder + avatarName + ".jpg"))
+            {
+                // Crop
+                var cropImg = LcImaging.Crop(img, x, y, width, height);
+                img.Dispose();
+
+                // Size prefix
+                var sizeName = profilePictureFixedSizeWidth.ToString() + "x" + profilePictureFixedSizeHeight.ToString();
+
+                // Save image with profile size and original color
+                using (var modImg = LcImaging.Resize(cropImg, profilePictureFixedSizeWidth, profilePictureFixedSizeHeight, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))
+                {
+                    modImg.Save(folder + avatarNamePrefix + sizeName + ".jpg");
+                }
+
+                // Save image with profile size and grayscale (-gray)
+                using (var modImg = LcImaging.Grayscale(LcImaging.Resize(cropImg, profilePictureFixedSizeWidth, profilePictureFixedSizeHeight, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)))
+                {
+                    modImg.Save(folder + avatarNamePrefix + sizeName + "-gray.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                }
+
+                // Same as previous but for hi-res 2x devices: (real pixel sizes is double but preserve the original size name to recognize it better adding the @2x suffix
+                using (var modImg = LcImaging.Grayscale(LcImaging.Resize(cropImg, profilePictureFixedSizeWidth * 2, profilePictureFixedSizeHeight * 2, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)))
+                {
+                    modImg.Save(folder + avatarNamePrefix + sizeName + "-gray@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                }
+                // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
+            }
+        }
+
+        #endregion
+
+        #region Work Photos
         #region Info, Properties
         public static string GetUserPhotoFolder(int userID)
         {
@@ -251,8 +374,7 @@ public static partial class LcData
         }
 
         /// <summary>
-        /// Sets the previously uploaded 'editable avatar' image as the
-        /// current user avatar, cropped with the given values and 
+        /// Create from the 'editable image' processed versions: cropped with the given values and 
         /// optimized sizes.
         /// </summary>
         /// <param name="virtualPath"></param>
@@ -318,7 +440,6 @@ public static partial class LcData
         {
             using (var db = Database.Open("sqlloco"))
             {
-
                 return db.Query(@"
                 SELECT [ProviderServicePhotoID]
                       ,[PhotoCaption]
@@ -330,6 +451,7 @@ public static partial class LcData
             ", userID, positionID);
             }
         }
+        #endregion
         #endregion
     }
 }

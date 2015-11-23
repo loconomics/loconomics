@@ -1,0 +1,128 @@
+﻿@*
+    Updating the logged user profile picture.
+    Optionally, coordinates to crop the image can be provided.
+
+    Options:  
+    - PUT:
+        profilePicture:binary image/jpeg
+        x:int [Optional] Horizontal coordinate for the top left corner for cropping task.
+        y:int [Optional] Vertical coordinate for the top left corner for cropping task
+        w:int [Optional] Width of the cropped image. Zero will just mean 'original image width'
+        h:int [Optional] Height of the cropped image. Zero will just mean 'original image height'
+
+    - DELETE: No params, just remove current profile picture photo, public URL will return the default one from this point.
+
+    - @Result {
+        profilePictureUrl:string,
+        updatedDate:datetime Auto
+    }
+
+    EXAMPLES {
+        "Upload My Profile Picture": {
+            "url": "/api/v1/en-US/me/profile-picture",
+            "put": {
+                "profilePicture": "Binary image/jpeg",
+                "x": 0,
+                "y": 0,
+                "w": 0,
+                "h": 0
+            },
+            "delete": {}
+        }
+    }
+*@
+@functions{
+    public class RestMyProfilePicture : RestWebPage
+    {
+        public override dynamic Put()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+
+            var userID = WebSecurity.CurrentUserId;
+
+            try {
+                var fileuploaded = Request.Files["profilePicture"];
+                if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName))
+                {
+                    ModelState.AddFormError("Please, select an image");
+                }
+                else {
+                    System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
+                    if (Request.InputStream.Length > 0)
+                    {
+                        LcData.Photo.SaveEditableProfilePicture(userID, fileuploaded.InputStream);
+
+                        LcData.Photo.SaveProfilePicture(userID,
+                            (int)Math.Round(Request["x"].AsDecimal()),
+                            (int)Math.Round(Request["y"].AsDecimal()),
+                            (int)Math.Round(Request["w"].AsDecimal()),
+                            (int)Math.Round(Request["h"].AsDecimal())
+                        );
+
+                        // File saved, change the user preference at the database:
+                        LcData.Photo.UpdateProfilePictureOnDb(userID, true);                        
+                    }
+                    else
+                    {
+                        // Emulate standard error, next its replaced by better message
+                        ModelState.AddFormError("Maximum request length exceeded");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddFormError(ex.Message);
+            }
+
+            if (ModelState.IsValid) {
+                return new
+                {
+                    profilePictureUrl = LcData.Photo.PublicUserProfilePictureUrl,
+                    updatedDate = DateTime.Now
+                };
+            }
+            else {
+                var errMsg = String.Join("; ", ModelState.Values.First().Errors);
+
+                // We don't want the ugly default asp.net message for file-size-exceeded
+                // As of #454 (https://github.com/dani0198/Loconomics/issues/454#issuecomment-37782181)
+                if (errMsg.Contains("Maximum request length exceeded"))
+                {
+
+                    var max = LcHelpers.GetMaxRequestSize();
+                    var printMax = "";
+                    if (max > 0)
+                    {
+                        printMax = LcHelpers.PrettyFileSize(max * 1024);
+
+                        errMsg = "The file is too large, maximum file size is " + printMax;
+                    }
+                    else
+                    {
+                        errMsg = "The file is too large";
+                    }
+                    throw new ValidationException(errMsg, "profilePicture");
+                }
+
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+        }
+
+        public override dynamic Delete()
+        {
+            // Remove photo files (all 'avatar-*' files) an update db
+            LcData.Photo.DeleteProfilePicture(WebSecurity.CurrentUserId);
+            return new
+            {
+                profilePictureUrl = (string)null,
+                updatedDate = DateTime.Now
+            };
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestMyProfilePicture().JsonResponse(this);
+}

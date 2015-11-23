@@ -4,7 +4,8 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var ko = require('knockout');
+var ko = require('knockout'),
+    photoTools = require('../utils/photoTools');
 
 var A = Activity.extend(function ProfilePictureBioActivity() {
     
@@ -21,11 +22,12 @@ var A = Activity.extend(function ProfilePictureBioActivity() {
         target: this.app.model.marketplaceProfile,
         event: 'error',
         handler: function(err) {
-            var msg = err.task === 'save' ? 'Error saving your data.' : 'Error loading your data.';
-            this.app.modals.showError({
-                title: msg,
-                error: err && err.error || err
-            });
+            if (err.task === 'load' || err.task === 'sync') {
+                this.app.modals.showError({
+                    title: 'Error loading your data.',
+                    error: err && err.error || err
+                });
+            }
         }.bind(this)
     });
 });
@@ -87,12 +89,49 @@ function ViewModel(app) {
     }.bind(this);
 
     this.save = function save() {
-        profileVersion.pushSave()
+        Promise.all([
+            profileVersion.pushSave(),
+            this.uploadPhoto
+        ])
         .then(function() {
             app.successSave();
         })
-        .catch(function() {
-            // catch error, managed on event
-        });
+        .catch(function(err) {
+            this.app.modals.showError({
+                title: 'Error saving your data.',
+                error: err && err.error || err
+            });
+        }.bind(this));
+    }.bind(this);
+    
+    this.takePhotoSupported = photoTools.takePhotoSupported;
+    
+    this.previewPhotoUrl = ko.observable('');
+    this.localPhotoUrl = ko.observable('');
+    this.takePhoto = function takePhoto() {
+        if (photoTools.takePhotoSupported()) {
+            photoTools.cameraGetPicture()
+            .then(function(imgLocalUrl) {
+                this.previewUrl(imgLocalUrl);
+                this.localPhotoUrl(photoTools.getPreviewPhotoUrl(imgLocalUrl));
+            }.bind(this));
+        }
+        else {
+            app.modals.showNotification({
+                message: 'Take photo is not supported on the web right now'
+            });
+        }
+    }.bind(this);
+    
+    this.uploadPhoto = function() {
+        var uploadSettings = {
+            fileKey: 'profilePicture',
+            mimeType: 'image/jpeg',
+            httpMethod: 'PUT',
+            headers: {
+                Authorization: window.sessionStorage.authorization || window.localStorage.authorization
+            }
+        };
+        return photoTools.uploadLocalFile(this.localPhotoUrl(), 'me/marketplace-profile', uploadSettings);
     }.bind(this);
 }

@@ -16,9 +16,10 @@ module.exports = function getFlags() {
             iOsVersion.minor = iOsVersion.parts[1] |0;
             iOsVersion.revision = iOsVersion.parts[2] |0;
         }
-        // NO WAY to detect wkwebview versus uiwebview, we just use wkwebview on iOS 9 and later
-        // so next assumption works for us:
-        var isWkWebview = iOsVersion && iOsVersion.major >= 9;
+        // The way to detect WkWebview versus UiWebview is to feature detect 'indexedDB',
+        // and adding the check for 'cordova' we kwow we are in Cordova/Phonegap app rather than Safari, so webview,
+        // and additionally, check for iOS.
+        var isWkWebview = iOsWebview && window.cordova && window.indexedDB;
         var isAndroid = /Android/.test(ua);
         // Chrome, browser or webview https://developer.chrome.com/multidevice/user-agent  Old webkit webviews gets discarded
         var isChrome = /Chrome\//.test(ua);
