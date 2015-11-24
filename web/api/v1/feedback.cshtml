@@ -62,13 +62,18 @@
 
  	            LcRest.Feedback.PostFeedback(feedback);
 
+                var emailMsg = feedback.becomeACollaborator ? "Wants to become a collaborator\n" : "";
+                emailMsg += "User:" + feedback.userID + ":" + WebSecurity.CurrentUserName;
+                emailMsg += "\n\n" + feedback.message;
+                emailMsg += "\n\nDevice: " + feedback.userDevice;
+
                 // On support request, send an email
                 if (vocExperienceCategoryID == 2) {
-                    LcMessaging.SendMail("support@loconomics.zendesk.com", "Message to /feedback/support API", feedback.message, WebSecurity.CurrentUserName);
+                    LcMessaging.SendMail("support@loconomics.zendesk.com", "Message to /feedback/support API", emailMsg, WebSecurity.CurrentUserName);
                 }
                 else if (vocExperienceCategoryID == 1) {
                     // On ideas request, send an email
-                    LcMessaging.SendMail("support@loconomics.zendesk.com", "Message to /feedback/ideas API", feedback.message, WebSecurity.CurrentUserName);
+                    LcMessaging.SendMail("support@loconomics.zendesk.com", "Message to /feedback/ideas API", emailMsg, WebSecurity.CurrentUserName);
                 }
 
                 // User becomes an owner by its own request
