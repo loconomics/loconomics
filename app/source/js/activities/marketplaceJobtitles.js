@@ -73,6 +73,21 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                         error: err
                     });
                 }.bind(this));
+                
+                ////////////
+                // Work Photos
+                this.app.model.workPhotos.getList(jobTitleID)
+                .then(function(list) {
+                    list = this.app.model.workPhotos.asModel(list);
+                    this.viewModel.workPhotos(list);
+
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while your work photos.',
+                        error: err
+                    });
+                }.bind(this));
             }
             else {
                 this.viewModel.addresses([]);

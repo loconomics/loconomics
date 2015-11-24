@@ -152,7 +152,8 @@ function ViewModel(app) {
         .then(function(/*updatedWorkPhotos*/) {
             // all executed
             app.successSave();
-        })
+            this.removedItems.removeAll();
+        }.bind(this))
         .catch(function(err) {
             app.modals.showError({
                 title: 'Error saving your photos',
