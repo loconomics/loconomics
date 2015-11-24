@@ -9,6 +9,7 @@
     overflow: hidden;
     // For 'sortable' reordering
     position: relative;
+    margin: auto;
     
     > li {
         position: relative;
@@ -24,6 +25,16 @@
                 height:auto;
                 max-width:100%;
                 max-height:332px;
+                margin: auto;
+                // for cases when the image
+                // does not load or another kind of problem with it:
+                // 1- We add a minimum height so takes
+                // some visual space and don't looks weird.
+                min-height: 200px;
+                // 2- and a fine line, near invisible when an image (because of its low contrast
+                // with the background) but highlights the place of the image as a placeholder.
+                outline: 1px solid #dbdbdb;
+                outline-offset: -1px;
             }
 
             .WorkPhotos-editionLayer {

@@ -1,4 +1,5 @@
-﻿@*
+﻿@using WebMatrix.WebData;
+@*
     Get, Update, Upload and Delete the logged user work photos.
 
     Options:
@@ -73,7 +74,7 @@
         
         public override dynamic Post()
         {
-            if (UrlData.Count == 2) {
+            if (UrlData.Count == 1) {
                 return SetPhoto();
             }
             return base.Post();
@@ -81,7 +82,7 @@
         
         public override dynamic Put()
         {
-            if (UrlData.Count == 3)
+            if (UrlData.Count == 2)
             {
                 return SetPhoto();
             }
@@ -98,29 +99,27 @@
             var photoID = UrlData[1].AsInt(0);
             
             try {
+                Stream photoStream = null;
                 var fileuploaded = Request.Files["photo"];
-                if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName))
-                {
-                    ModelState.AddFormError("Please, select an image");
+                if (fileuploaded != null && !String.IsNullOrEmpty(fileuploaded.FileName)) {
+                    photoStream = fileuploaded.InputStream;
+                }
+                if (photoStream == null && photoID == 0) {
+                    ModelState.AddFormError("Please, include a photo");
+                }
+                else if (photoStream != null && photoStream.Length == 0) {
+                    // DOUBT: to check for this error, must be the photoStream or Request.InputStream.Length? Double check
+                    ModelState.AddFormError("Maximum request length exceeded");
                 }
                 else {
-                    System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
-                    if (Request.InputStream.Length > 0)
-                    {
-                        var caption = Request["caption"];
-                        var rankPosition = Request["rankPosition"].AsInt();
-                        var x = (int)Math.Round(Request["x"].AsDecimal());
-                        var y = (int)Math.Round(Request["y"].AsDecimal());
-                        var w = (int)Math.Round(Request["w"].AsDecimal());
-                        var h = (int)Math.Round(Request["h"].AsDecimal());
-                        // It returns the photoID, the given or the created one
-                        photoID = LcData.Photo.UploadWorkPhoto(userID, fileuploaded.InputStream, jobTitleID, photoID, caption, rankPosition, x, y, w, h);
-                    }
-                    else
-                    {
-                        // Emulate standard error, next its replaced by better message
-                        ModelState.AddFormError("Maximum request length exceeded");
-                    }
+                    var caption = Request["caption"];
+                    var rankPosition = Request["rankPosition"].AsInt();
+                    var x = (int)Math.Round(Request["x"].AsDecimal());
+                    var y = (int)Math.Round(Request["y"].AsDecimal());
+                    var w = (int)Math.Round(Request["w"].AsDecimal());
+                    var h = (int)Math.Round(Request["h"].AsDecimal());
+                    // It returns the photoID, the given or the created one
+                    photoID = LcData.Photo.UploadWorkPhoto(userID, photoStream, jobTitleID, photoID, caption, rankPosition, x, y, w, h);
                 }
             }
             catch (Exception ex)

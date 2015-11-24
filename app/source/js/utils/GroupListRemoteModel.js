@@ -52,7 +52,7 @@ function GroupListRemoteModel(settings) {
     this.fetchGroupFromLocal = notImplemented;
     this.fetchGroupFromRemote = notImplemented;
     this.pushGroupToLocal = notImplemented;
-    this.pushGroupToRemote = notImplemented;
+    this.pushItemToRemote = notImplemented;
     this.removeItemFromRemote = notImplemented;
 
     /** API definition **/
@@ -157,7 +157,7 @@ function GroupListRemoteModel(settings) {
     api.setItem = function setItem(data) {
         api.state.isSaving(true);
         // Send to remote first
-        return this.pushGroupToRemote(data)
+        return this.pushItemToRemote(data)
         .then(function(serverData) {
             // Success! update local copy with returned data
             // IMPORTANT: to use server data here so we get values set
@@ -298,11 +298,10 @@ GroupListRemoteModel.prototype.addRestSupport = function addRestSupport(restClie
     this.fetchGroupFromRemote = function fetchFromRemote(groupID) {
         return restClient.get(baseUrl + groupID);
     };
-    this.pushGroupToRemote = function pushToRemote(data) {
-
+    this.pushItemToRemote = function pushToRemote(data) {
         var groupID = data[this.settings.groupIdField],
             itemID = data[this.settings.itemIdField],
-            method = data[this.settings.itemIdField] ? 'put' : 'post';
+            method = itemID ? 'put' : 'post';
 
         var url = baseUrl + groupID + (
             itemID ? '/' + itemID : ''

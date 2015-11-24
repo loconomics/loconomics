@@ -180,6 +180,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.serviceAttributes = require('./AppModel.serviceAttributes').create(this);
     this.jobTitleServiceAttributes = require('./AppModel.jobTitleServiceAttributes').create(this);
     this.userVerifications = require('./AppModel.userVerifications').create(this);
+    this.workPhotos = require('./AppModel.workPhotos').create(this);
 };
 
 /**

@@ -14,7 +14,7 @@ public static partial class LcData
     /// <summary>
     /// Getting and setting photos related to users on database and file system (User Work Photos, Profile Picture)
     /// 
-    /// TODO: Converto to LcRest scheme?
+    /// TODO: Convert to LcRest scheme?
     /// </summary>
     public static class Photo
     {
@@ -242,6 +242,7 @@ public static partial class LcData
         #region Info, Properties
         public const int FixedSizeWidth = 442;
         public const int FixedSizeHeight = 332;
+        const int WorkPhotoOriginalScale = 3;
 
         public static int GetFileSizeLimit()
         {
@@ -460,26 +461,31 @@ public static partial class LcData
         /// <param name="height"></param>
         public static int UploadWorkPhoto(int userID, Stream photo, int jobTitleID, int photoID = 0, string caption = null, int? rankPosition = null, int x = 0, int y = 0, int width = 0, int height = 0)
         {
-            // Automatic name for new photo
-            string fileName = Guid.NewGuid().ToString().Replace("-", "");
-            string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
-            var path = HttpContext.Current.Server.MapPath(virtualPath);
+            string processedFileName = null;
+            if (photo != null)
+            {
+                // Automatic name for new photo
+                string fileName = Guid.NewGuid().ToString().Replace("-", "");
+                string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
+                var path = HttpContext.Current.Server.MapPath(virtualPath);
 
-            if (photoID > 0) {
-                var savedPhoto = GetUserWorkPhoto(userID, jobTitleID, photoID);
-                // Delete previous files
-                DeleteWorkPhotoFiles(path, savedPhoto.fileName);
+                if (photoID > 0)
+                {
+                    var savedPhoto = GetUserWorkPhoto(userID, jobTitleID, photoID);
+                    // Delete previous files
+                    DeleteWorkPhotoFiles(path, savedPhoto.fileName);
+                }
+
+                // New Photo File
+                UploadEditablePhoto(photo, path, fileName);
+                // Process best sizes and cropping
+                processedFileName = ProcessWorkPhoto(path, fileName, x, y, width, height);
             }
-
-            // New Photo File
-            UploadEditablePhoto(photo, path, fileName);
-            // Process best sizes and cropping
-            var processedFileName = ProcessWorkPhoto(path, fileName, x, y, width, height);
 
             // Save on database
             if (photoID > 0)
             {
-                SaveDbWorkPhoto(photoID, userID, jobTitleID, fileName, caption, rankPosition);
+                SaveDbWorkPhoto(photoID, userID, jobTitleID, processedFileName, caption, rankPosition);
             }
             else
             {
@@ -505,7 +511,7 @@ public static partial class LcData
             using (var srcImg = System.Drawing.Image.FromStream(photo)) {
 
                 // Editable image: Resize to maximum allowed size to allow user cropping later
-                var img = LcImaging.Resize(srcImg, FixedSizeWidth * 4, FixedSizeHeight * 4, LcImaging.SizeMode.Contain);
+                var img = LcImaging.Resize(srcImg, FixedSizeWidth * WorkPhotoOriginalScale, FixedSizeHeight * WorkPhotoOriginalScale, LcImaging.SizeMode.Contain);
 
                 // Save:
                 img.Save(path + fileName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -539,8 +545,8 @@ public static partial class LcData
                 // Crop, if any size
                 // On cropping:
                 // User used the reduced image (fixed size) to choose what to crop,
-                // while we will crop the 'original', 4x larger image, so multiply every unit
-                cropImg = width > 0 ? LcImaging.Crop(img, x * 4, y * 4, width * 4, height * 4) : img;
+                // while we will crop the 'original', x larger image, so multiply every unit
+                cropImg = width > 0 ? LcImaging.Crop(img, x * WorkPhotoOriginalScale, y * WorkPhotoOriginalScale, width * WorkPhotoOriginalScale, height * WorkPhotoOriginalScale) : img;
             
                 // Size prefix
                 var sizeName = "-" + FixedSizeWidth.ToString() + "x" + FixedSizeHeight.ToString();
@@ -580,6 +586,7 @@ public static partial class LcData
         {
             public int workPhotoID;
             public int userID;
+            public int jobTitleID;
             public string caption;
             public string fileName;
             public string url;
@@ -593,6 +600,7 @@ public static partial class LcData
                 {
                     workPhotoID = record.workPhotoID,
                     userID = record.userID,
+                    jobTitleID = record.jobTitleID,
                     caption = record.caption,
                     fileName = record.fileName,
                     url = LcUrl.AppUrl + GetUserPhotoFolder(record.userID) + record.fileName,
@@ -609,6 +617,7 @@ public static partial class LcData
                 return WorkPhoto.FromDB(db.QuerySingle(@"
                     SELECT [ProviderServicePhotoID] As workPhotoID
                           ,userID
+                          ,PositionID As jobTitleID
                           ,[PhotoCaption] As caption
                           ,[PhotoAddress] As fileName
                           ,rankPosition
@@ -628,6 +637,7 @@ public static partial class LcData
                 return db.Query(@"
                     SELECT [ProviderServicePhotoID] As workPhotoID
                           ,userID
+                          ,PositionID As jobTitleID
                           ,[PhotoCaption] As caption
                           ,[PhotoAddress] As fileName
                           ,rankPosition
