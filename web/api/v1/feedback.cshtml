@@ -64,11 +64,11 @@
 
                 // On support request, send an email
                 if (vocExperienceCategoryID == 2) {
-                    LcMessaging.SendMail("help@loconomics.com", "Message to /feedback/support API", feedback.message, WebSecurity.CurrentUserName);
+                    LcMessaging.SendMail("support@loconomics.zendesk.com", "Message to /feedback/support API", feedback.message, WebSecurity.CurrentUserName);
                 }
                 else if (vocExperienceCategoryID == 1) {
                     // On ideas request, send an email
-                    LcMessaging.SendMail("voc@loconomics.com", "Message to /feedback/ideas API", feedback.message, WebSecurity.CurrentUserName);
+                    LcMessaging.SendMail("support@loconomics.zendesk.com", "Message to /feedback/ideas API", feedback.message, WebSecurity.CurrentUserName);
                 }
 
                 // User becomes an owner by its own request
