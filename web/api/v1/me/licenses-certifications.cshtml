@@ -1,0 +1,155 @@
+﻿@using WebMatrix.WebData;
+@*
+    Get, Update, Upload and Delete the logged user work photos.
+
+    Options:
+    - GET /{jobTitleID}
+        Gets the list of licenses/certificates for user on that jobTitle
+
+    - POST /{jobTitleID}
+        photo:binary image/jpeg A photo of the license/certificate that we manually will check and fill database with its information.
+        stateProvinceCode:string State that applies to the given certificate image
+
+    /*
+    - PUT /{jobTitleID}/{licenseCertificationID}
+        photo:binary image/jpeg
+
+    - DELETE /{jobTitleID}/{photoID}
+    */
+
+    - @Result LcData.Photo.WorkPhoto class instance. On GET, it returns a list of them.
+
+    EXAMPLES {
+        "Upload a License/Certification Photo": {
+            "url": "/api/v1/en-US/me/work-photos/106",
+            "get": {},
+            "post": {
+                "photo": "binary image/* content",
+                "stateProvinceCode": "CA"
+            }
+        }
+    }
+*@
+@functions{
+    public class RestMyLicensesCertifications : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt()) {
+                var userID = WebSecurity.CurrentUserId;
+                var jobTitleID = UrlData[0].AsInt();
+
+                return LcData.Photo.GetUserWorkPhotos(userID, jobTitleID);
+            }
+
+            return base.Get();
+        }
+        
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 1) {
+                return SetPhoto();
+            }
+            return base.Post();
+        }
+        
+        public override dynamic Put()
+        {
+            if (UrlData.Count == 2)
+            {
+                return SetPhoto();
+            }
+            return base.Put();
+        }
+
+        public dynamic SetPhoto()
+        {
+            // Input Data
+            var userID = WebSecurity.CurrentUserId;
+            var jobTitleID = UrlData[0].AsInt();
+            // Will be just 0 on new records, it doesn't matters
+            // (and a previous UrlData.Count check prevents from receive a value on POST calls)
+            var photoID = UrlData[1].AsInt(0);
+            
+            try {
+                Stream photoStream = null;
+                var fileuploaded = Request.Files["photo"];
+                if (fileuploaded != null && !String.IsNullOrEmpty(fileuploaded.FileName)) {
+                    photoStream = fileuploaded.InputStream;
+                }
+                if (photoStream == null && photoID == 0) {
+                    ModelState.AddFormError("Please, include a photo");
+                }
+                else if (photoStream != null && photoStream.Length == 0) {
+                    // DOUBT: to check for this error, must be the photoStream or Request.InputStream.Length? Double check
+                    ModelState.AddFormError("Maximum request length exceeded");
+                }
+                else {
+                    var caption = Request["caption"];
+                    var rankPosition = Request["rankPosition"].AsInt();
+                    var x = (int)Math.Round(Request["x"].AsDecimal());
+                    var y = (int)Math.Round(Request["y"].AsDecimal());
+                    var w = (int)Math.Round(Request["w"].AsDecimal());
+                    var h = (int)Math.Round(Request["h"].AsDecimal());
+                    // It returns the photoID, the given or the created one
+                    photoID = LcData.Photo.UploadWorkPhoto(userID, photoStream, jobTitleID, photoID, caption, rankPosition, x, y, w, h);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddFormError(ex.Message);
+            }
+
+            if (ModelState.IsValid) {
+                return LcData.Photo.GetUserWorkPhoto(userID, jobTitleID, photoID);
+            }
+            else {
+                var errMsg = String.Join("; ", ModelState.Values.First().Errors);
+
+                // We don't want the ugly default asp.net message for file-size-exceeded
+                // As of #454 (https://github.com/dani0198/Loconomics/issues/454#issuecomment-37782181)
+                if (errMsg.Contains("Maximum request length exceeded"))
+                {
+                    //LcHelpers.DebugLogger.Log("PUT profile-picture:notvalid:max request length exceeded");
+                    var max = LcHelpers.GetMaxRequestSize();
+                    var printMax = "";
+                    if (max > 0)
+                    {
+                        printMax = LcHelpers.PrettyFileSize(max * 1024);
+
+                        errMsg = "The file is too large, maximum file size is " + printMax;
+                    }
+                    else
+                    {
+                        errMsg = "The file is too large";
+                    }
+                    throw new ValidationException(errMsg, "profilePicture");
+                }
+
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+        }
+
+        public override dynamic Delete()
+        {
+            if (UrlData.Count != 2)
+            {
+                return base.Put();
+            }
+
+            var userID = WebSecurity.CurrentUserId;
+            var jobTitleID = UrlData[0].AsInt();
+            var photoID = UrlData[1].AsInt();
+            // Get one to be deleted:
+            var record = LcData.Photo.GetUserWorkPhoto(userID, jobTitleID, photoID);
+
+            // Remove photo file an update db
+            LcData.Photo.DeleteWorkPhoto(photoID, userID, jobTitleID);
+            return record;
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestMyLicensesCertifications().JsonResponse(this);
+}

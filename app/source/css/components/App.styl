@@ -112,4 +112,20 @@
     .ion-ios-lightbulb {
         color: #f0ad4e;
     }
+    
+    // In order to support the component ActionSheet
+    // and because we have a global SmartNavBar right now,
+    // we need additional code to set the SmartNavBar/AppNav under
+    // a backdrop when the ActionSheet is opened.
+    .AppNav .SmartNavBar {
+        position: relative;
+    }
+    .AppNav:after {
+        content: '';
+        @extend .ActionSheetBackdrop
+    }
+    .has-ActionSheet-open .AppNav:after {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }

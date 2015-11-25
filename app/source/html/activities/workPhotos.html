@@ -1,43 +1,54 @@
 <!-- Activity workPhotos -->
-<div class="container-fluid LightForm" data-activity="workPhotos">
+<div class="LightForm" data-activity="workPhotos">
+    <div class="SmartNavView">
+        <div class="SmartNavContent container-fluid">
+          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': state.isSyncing }">
+              Photos of your work
+              <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+          </h2>
+            <div data-bind="css: { 'is-loading': state.isLoading }">
+                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+            </div>
 
-  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': state.isSyncing }">
-      Photos of your work
-      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-  </h2>
-    <div data-bind="css: { 'is-loading': state.isLoading }">
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-    </div>
-    
-    <div>
-        <ul class="list-unstyled WorkPhotos"
-            data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
-            <li>
-                <div class="WorkPhotos-imgBtn">
-                    <img src="nophoto.jpg" alt="Work photo" data-bind="attr: { src: url, alt: caption }" />
-                    <div class="WorkPhotos-editionLayer">
-                        <div class="WorkPhotos-toolbar">
-                            <a href="#move" type="button" class="btn btn-link btn-lg WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span></a>
-                            <button type="button" class="btn btn-link btn-lg WorkPhotos-removeBtn" data-bind="click: $root.removeImg"><span class="glyphicon glyphicon-remove"></span></button>
+            <div>
+                <ul class="list-unstyled WorkPhotos"
+                    data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
+                    <li>
+                        <div class="WorkPhotos-imgBtn">
+                            <img src="nophoto.jpg" alt="Work photo" data-bind="attr: { src: url, alt: caption }" />
+                            <div class="WorkPhotos-editionLayer">
+                                <div class="WorkPhotos-toolbar">
+                                    <a href="#move" type="button" class="btn btn-link btn-lg WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span></a>
+                                    <button type="button" class="btn btn-link btn-lg WorkPhotos-removeBtn" data-bind="click: $root.removeImg"><span class="glyphicon glyphicon-remove"></span></button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" data-bind="textInput: caption" placeholder="Photo caption" />
-                </div>
-            </li>
-        </ul>
-    </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" data-bind="textInput: caption" placeholder="Photo caption" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
 
-    <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
-        <button type="button" class="CompactLinkTile" data-bind="click: addNew, disable: state.isLocked">
-            <div class="Tile-content text-muted">Upload/take photo</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </button>
+            <div id="workPhotos-addNewButton" class="TilesList" data-bind="visible: jobTitleID()">
+                <button type="button" class="CompactLinkTile" data-bind="disable: state.isLocked" data-toggle="ActionSheet" data-target="workPhotos-photoSheet">
+                    <div class="Tile-content text-muted">Upload/take photo</div>
+                    <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+                </button>
+            </div>
+            <div class="LightForm-submitBar" data-bind="visible: list().length || removedItems().length">
+                <button type="button" class="btn btn-primary btn-block" data-bind="click: save, text: saveBtnText, disable: state.isLocked">Save</button>
+            </div>
+        </div>
+        <div class="ActionSheetBackdrop"></div>
+        <div class="ActionSheet" id="workPhotos-photoSheet" hidden="hidden">
+            <ul>
+                <li><a href="#takePhoto" data-bind="click: takePhotoForNew">Take a photo</a></li>
+                <li><a href="#pickPhoto" data-bind="click: pickPhotoForNew">Select a photo</a></li>
+            </ul>
+            <ul class="ActionSheet-close">
+                <li><a href="#close">Cancel</a></li>
+            </ul>
+        </div>
     </div>
-    
-    <div class="LightForm-submitBar" data-bind="visible: list().length || removedItems().length">
-        <button type="button" class="btn btn-primary btn-block" data-bind="click: save, text: saveBtnText, disable: state.isLocked">Save</button>
-    </div>
-
 </div>

@@ -409,6 +409,8 @@ var appInit = function appInit() {
             androidToken: '9856054e92e7ae7a8326f1666703d51d'
         });
     }
+    
+    require('./utils/toggleActionSheet').on();
 
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)

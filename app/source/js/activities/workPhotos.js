@@ -86,9 +86,9 @@ function ViewModel(app) {
         correctOrientation: true
     };
 
-    this.addNew = function() {
+    var addNew = function(fromCamera) {
         // Pick a new photo
-        this.openPhotoPicker()
+        this.openPhotoPicker(fromCamera)
         .then(function(data) {
             var newItem = new WorkPhoto({
                 workPhotoID: 0,
@@ -103,15 +103,28 @@ function ViewModel(app) {
             app.modals.showError({ error: err, title: 'Error getting photo.' });
         });
     }.bind(this);
+    
+    this.takePhotoForNew = function() {
+        addNew(true);
+    }.bind(this);
+    
+    this.pickPhotoForNew = function() {
+        addNew(false);
+    }.bind(this);
 
     this.removeImg = function(item) {
         this.removedItems.push(item);
         this.list.remove(item);
     }.bind(this);
 
-    this.openPhotoPicker = function() {
+    this.openPhotoPicker = function(fromCamera) {
+        var settings = $.extend({}, cameraSettings, {
+            sourceType: fromCamera ?
+                window.Camera && window.Camera.PictureSourceType.CAMERA :
+                window.Camera && window.Camera.PictureSourceType.PHOTOLIBRARY
+        });
         if (photoTools.takePhotoSupported()) {
-            return photoTools.cameraGetPicture(cameraSettings)
+            return photoTools.cameraGetPicture(settings)
             .then(function(imgLocalUrl) {
                 return {
                     localUrl: imgLocalUrl,

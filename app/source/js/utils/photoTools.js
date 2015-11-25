@@ -48,6 +48,7 @@ var defaultPhotoSettings = {
     targetWidth: 1024,
     targetHeight: 768,
     quality: 78,
+    mediaType: window.Camera && window.Camera.MediaType.PICTURE,
     saveToPhotoAlbum: false
 };
 exports.defaultPhotoSettings = defaultPhotoSettings;

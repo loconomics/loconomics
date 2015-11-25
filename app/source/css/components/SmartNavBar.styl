@@ -37,7 +37,7 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     // but will break on iOS (almost up to 8.3, maybe future versions too) and old Android with strange effects, not
     // fixed all the time (with keyboard open, on iOS gets moved out of screen).
     // SO: using 'absolute', to ensure its permanently fixed on top, put the scrolling context on the content
-    // using the SmartViewContent mixim included in this file or its preset class name on elements
+    // using the SmartNavView and SmartNavContent included in this file
     position: absolute; // fixed only good on Desktop, Android-5+
     top: 0;
     height: $SmartNavBar-height;
@@ -218,17 +218,54 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     }
 }
 
-// To fix positioning, scrolling and other behaviors, the use of a different
-// scrolling context than html/body is needed, use this EVER along the SmartNavBar
-SmartViewContent() {
-    // Scroll when needed
-    overflow: auto;
-    // Grow to all the available space (layout may need some adjustment)
-    // Check that document html/body and containers of this grow too.
-    height: 100%;
-}
-
-// Default class for scrolling areas
-.SmartViewContent {
-    SmartViewContent();
+// Container no-scrollable of SmartNavContent (and SmartNavBar --NOT NOW, STILL USING GLOBAL NAVBAR)
+// NOTE: Views can have more elements as children, MUST go to the end after Bar and Content, and this two in 
+// this strict order. The additional children usually are view overlays like local modals, ActionSheets, any
+// element expected to be content -usually all the time visible and not overlapping the navbar- must go
+// inside SmartNavContent.
+// IMPORTANT: Currently, because of global navbar and 'Activity' class set-up, the activities elements CANNOT
+// have the SmartNavView class, another element inside the activity with this class must be added.
+.SmartNavView {
+    
+    // IMPORTANT: If some day transitions/animations are added, the SmartNavBar must be local and 
+    // positioning of the View must be changed to 'fixed' since is the only way to create transition on iOS
+    // (absolute too increase the scroll area and make it keep visible all the time or just flicker)
+    // This 'fixed' element is not a problem on iOS since it's contanier and itself are not allowed to have
+    // scroll, but the scroll goes to the 'content' element included (on uses with scroll, fixed has problems on iOS).
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 210;
+    overflow: hidden;
+    // On implementation of transitions/animations, a background must exists to avoid ugly overlays
+    // now kept the inherit
+    //background: white;
+    
+    // media-app-navbar and big
+    /*top: $app-navbar-height;
+    @media $media-big-navbar {
+        top: $big-navbar-height;
+    }*/
+    .SmartNavContent {
+        // Absolute rather than fixed to avoid problems on mobile.
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        // Scroll
+        overflow: auto !important;
+        // iOS smooth scrolling
+        -webkit-overflow-scrolling: touch;
+        // Android needs z-index to have scroll without problems
+        z-index: 1;
+    }
+    
+    // Gap when SmartNavBar is included inside the view (local rather than global).
+    // To work, both elements must be consecutive siblings
+    .SmartNavBar + .SmartNavContent {
+        top: $app-navbar-height;
+    }
 }
