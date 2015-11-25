@@ -124,9 +124,14 @@ function ViewModel(app) {
     
     this.previewPhotoUrl = ko.observable('');
     this.localPhotoUrl = ko.observable('');
-    this.takePhoto = function takePhoto() {
+    var takePickPhoto = function takePhoto(fromCamera) {
+        var settings = $.extend({}, cameraSettings, {
+            sourceType: fromCamera ?
+                window.Camera && window.Camera.PictureSourceType.CAMERA :
+                window.Camera && window.Camera.PictureSourceType.PHOTOLIBRARY
+        });
         if (photoTools.takePhotoSupported()) {
-            photoTools.cameraGetPicture(cameraSettings)
+            photoTools.cameraGetPicture(settings)
             .then(function(imgLocalUrl) {
                 this.localPhotoUrl(imgLocalUrl);
                 this.previewPhotoUrl(photoTools.getPreviewPhotoUrl(imgLocalUrl));
@@ -137,6 +142,14 @@ function ViewModel(app) {
                 message: 'Take photo is not supported on the web right now'
             });
         }
+    }.bind(this);
+    
+    this.takePhoto = function() {
+        takePickPhoto(true);
+    }.bind(this);
+    
+    this.pickPhoto = function() {
+        takePickPhoto(false);
     }.bind(this);
     
     this.uploadPhoto = function() {

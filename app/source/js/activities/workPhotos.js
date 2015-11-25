@@ -50,7 +50,8 @@ var A = Activity.extend(function WorkPhotosActivity() {
         selector: '.WorkPhotos-imgBtn',
         event: 'click',
         handler: function(event) {
-            $(event.target).closest('li').toggleClass('is-selected');
+            if (!this.viewModel.state.isLocked())
+                $(event.target).closest('li').toggleClass('is-selected');
         }.bind(this)
     });
 });

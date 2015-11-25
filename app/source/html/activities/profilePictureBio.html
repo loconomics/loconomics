@@ -1,24 +1,38 @@
 <!-- Activity profilePictureBio -->
-<div class="container-fluid LightForm" data-activity="profilePictureBio">
-  <form role="form" data-bind="submit: save">
-    <div>
-        <h2 class="SectionTitle">Profile picture</h2>
-        <div class="Avatar Avatar--lg Avatar--primary"><img data-bind="attr: { src: previewPhotoUrl() || profile.photoUrl() }" /></div>
-        <div class="LightForm-tool">
-            <button type="button" class="btn btn-block btn-primary" data-bind="click: takePhoto, visible: takePhotoSupported, disable: isLocked">
-                <span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span>
-            </button>
-        </div>
-    
-        <h2 class="SectionTitle">Public bio</h2>
-        <div class="form-group">
-            <textarea aria-label="Public bio" id="profilePictureBio-publicBio" rows="6"
-                      class="form-control" data-bind="value: profile.publicBio, disable: isLocked"></textarea>
-        </div>
-    </div>
+<div class="LightForm" data-activity="profilePictureBio">
+    <div class="SmartNavView">
+        <div class="SmartNavContent container-fluid">
+            <form role="form" data-bind="submit: save">
+                <div>
+                    <h2 class="SectionTitle">Profile picture</h2>
+                    <div class="Avatar Avatar--lg Avatar--primary"><img data-bind="attr: { src: previewPhotoUrl() || profile.photoUrl() }" /></div>
+                    <div class="LightForm-tool">
+                        <button type="button" class="btn btn-block btn-primary" data-bind="visible: takePhotoSupported, disable: isLocked"
+                                data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet">
+                            <span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span>
+                        </button>
+                    </div>
 
-    <div class="LightForm-submitBar">
-        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+                    <h2 class="SectionTitle">Public bio</h2>
+                    <div class="form-group">
+                        <textarea aria-label="Public bio" id="profilePictureBio-publicBio" rows="6"
+                                  class="form-control" data-bind="value: profile.publicBio, disable: isLocked"></textarea>
+                    </div>
+                </div>
+                <div class="LightForm-submitBar">
+                    <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+                </div>
+            </form>
+        </div>
+        <div class="ActionSheetBackdrop"></div>
+        <div class="ActionSheet" id="profilePictureBio-photoSheet" hidden="hidden">
+            <ul>
+                <li><a href="#takePhoto" data-bind="click: takePhoto">Take a photo</a></li>
+                <li><a href="#pickPhoto" data-bind="click: pickPhoto">Select a photo</a></li>
+            </ul>
+            <ul class="ActionSheet-close">
+                <li><a href="#close">Cancel</a></li>
+            </ul>
+        </div>
     </div>
-  </form>
 </div>
