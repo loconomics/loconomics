@@ -99,7 +99,7 @@ function ViewModel(app) {
     }, this);
     
     this.submitText = ko.pureComputed(function() {
-        return this.isLoading() || this.isSyncing() ? 'Loading..' : this.isSaving() ? 'Saving..' : this.isDeleting() ? 'Deleting..' : 'Save';
+        return (this.isLoading() || this.isSyncing()) ? 'Loading..' : this.isSaving() ? 'Saving..' : this.isDeleting() ? 'Deleting..' : 'Save';
     }, this);
 
     this.isNew = ko.pureComputed(function() {

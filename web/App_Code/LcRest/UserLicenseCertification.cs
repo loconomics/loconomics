@@ -156,8 +156,8 @@ namespace LcRest
         public static void UploadPhoto(int userID, int jobTitleID, string stateProvinceCode, string originalFileName, Stream photo)
         {
             // File name with special prefix
-            var autofn = Guid.NewGuid().ToString().Replace("-", "") + ".jpg";
-            string fileName =  photoPrefix + (String.IsNullOrWhiteSpace(originalFileName) ? autofn : originalFileName);
+            var autofn = Guid.NewGuid().ToString().Replace("-", "");
+            string fileName =  photoPrefix + autofn + (System.IO.Path.GetExtension(originalFileName) ?? ".jpg");
             string virtualPath = LcUrl.RenderAppPath + LcData.Photo.GetUserPhotoFolder(userID);
             var path = HttpContext.Current.Server.MapPath(virtualPath);
 
