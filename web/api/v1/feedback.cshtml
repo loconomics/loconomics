@@ -68,12 +68,13 @@
                 emailMsg += "\n\nDevice: " + feedback.userDevice;
 
                 // On support request, send an email
+                var email = ASP.LcHelpers.InLive ? "support@loconomics.zendesk.com" : "iagosrl@gmail.com;joshdanielson@gmail.com;support@loconomics.zendesk.com";
                 if (vocExperienceCategoryID == 2) {
-                    LcMessaging.SendMail("support@loconomics.zendesk.com", "Message to /feedback/support API", emailMsg, WebSecurity.CurrentUserName);
+                    LcMessaging.SendMail(email, "Message to /feedback/support API", emailMsg, WebSecurity.CurrentUserName);
                 }
                 else if (vocExperienceCategoryID == 1) {
                     // On ideas request, send an email
-                    LcMessaging.SendMail("support@loconomics.zendesk.com", "Message to /feedback/ideas API", emailMsg, WebSecurity.CurrentUserName);
+                    LcMessaging.SendMail(email, "Message to /feedback/ideas API", emailMsg, WebSecurity.CurrentUserName);
                 }
 
                 // User becomes an owner by its own request

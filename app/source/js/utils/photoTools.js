@@ -45,8 +45,8 @@ var userAgentFlags = require('./userAgentFlags')();
 
 var defaultPhotoSettings = {
     destinationType: window.Camera && window.Camera.DestinationType.FILE_URI,
-    targetWidth: 1024,
-    targetHeight: 768,
+    //targetWidth: 1024,
+    //targetHeight: 768,
     quality: 78,
     mediaType: window.Camera && window.Camera.MediaType.PICTURE,
     saveToPhotoAlbum: false

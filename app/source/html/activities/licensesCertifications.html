@@ -17,7 +17,7 @@
                 </div>
                 <div class="Tile-content">
                     <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
-                    <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
+                    <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'do not expires' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
                 </div>
             </button></li>
         </ul>

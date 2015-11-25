@@ -37,9 +37,11 @@ function UserLicenseCertification(values) {
         createdDate: null, // Autofilled by server
         updatedDate: null, // Autofilled by server
         
-        licenseCertification: {
-            Model: LicenseCertification
-        }
+        licenseCertification: new LicenseCertification(),
+        
+        // Additional local data:
+        // path to local photo file, unsaved/not-uploaded still.
+        localTempFilePath: null
     }, values);
     
     this.model.defID(['userID', 'jobTitleID', 'licenseCertificationID']);

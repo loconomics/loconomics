@@ -4,7 +4,8 @@
 'use strict';
 
 var Activity = require('../components/Activity'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    photoTools = require('../utils/photoTools');
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
     
@@ -43,51 +44,21 @@ A.prototype.show = function show(state) {
     
     this.updateNavBarState();
     
-    // TODO Remove when AppModel
     var ModelVersion = require('../utils/ModelVersion'),
         UserLicenseCertification = require('../models/UserLicenseCertification');
     
     if (this.viewModel.isNew()) {
-        this.viewModel.version(new ModelVersion(new UserLicenseCertification()));
+        this.app.model.statesProvinces.getList()
+        .then(function(list) {
+            this.viewModel.statesProvinces(list());
+            this.viewModel.version(new ModelVersion(new UserLicenseCertification()));
+        }.bind(this));
     }
     else {
-        this.viewModel.version(new ModelVersion(new UserLicenseCertification({
-            userID: 141,
-            jobTitleID: 106,
-            statusID: 2,
-            licenseCertificationID: 18,
-            licenseCertificationNumber: 21341234,
-            stateProvinceID: 1,
-            countryID: 1,
-            expirationDate: new Date(2016, 1, 20),
-            lastVerifiedDate: new Date(2015, 3, 20),
-            createdDate: new Date(),
-            updatedDate: new Date()
-        })));
-    }
-    
-    
-    // TODO IT DOES NOT WORKS THIS WAY: in the website dahsboard, the licenseID is provided
-    // to the form, because there is a short list of them available, NOT auto-generated.
-    // CHECK if put a dropdown selection or list selection here and then show the form or 
-    // put the list of possible on the listing page (at /licensesCertifications)
-    
-    if (this.viewModel.licenseCertificationID() === 0) {
-        // NEW one
-        /* TODO Uncomment when AppModel
-        this.viewModel.version(this.app.model.licensesCertifications.newItem());
-        */
-    }
-    else {
-        // LOAD
-        /* TODO Uncomment when AppModel
-        this.app.model.education.createItemVersion(this.viewModel.educationID())
-        .then(function (educationVersion) {
-            if (educationVersion) {
-                this.viewModel.version(educationVersion);
-            } else {
-                throw new Error('No data');
-            }
+        this.app.model.userLicensesCertifications
+        .getItem(this.viewModel.jobTitleID(), this.viewModel.licenseCertificationID())
+        .then(function(data) {
+            this.viewModel.version(new ModelVersion(new UserLicenseCertification(data)));
         }.bind(this))
         .catch(function (err) {
             this.app.modals.showError({
@@ -98,23 +69,39 @@ A.prototype.show = function show(state) {
                 // On close modal, go back
                 this.app.shell.goBack();
             }.bind(this));
-        }.bind(this));*/
+        }.bind(this));
     }
 };
 
 function ViewModel(app) {
 
+    this.statesProvinces = ko.observable();
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
-    // TODO Uncomment when appmodel
-    this.isLoading = ko.observable(false); // app.model.licensesCertifications.state.isLoading;
-    this.isSaving = ko.observable(false); //app.model.licensesCertifications.state.isSaving;
-    this.isSyncing = ko.observable(false); //app.model.licensesCertifications.state.isSyncing;
-    this.isDeleting = ko.observable(false); //app.model.licensesCertifications.state.isDeleting;
-    this.isLocked = ko.observable(false); /*ko.computed(function() {
-        return this.isDeleting() || app.model.licensesCertifications.state.isLocked();
-    }, this);*/
+    this.isLoading = ko.pureComputed(function() {
+        return (
+            app.model.userLicensesCertifications.state.isLoading() ||
+            app.model.statesProvinces.state.isLoading()
+        );
+    }, this);
+    this.isSaving = app.model.userLicensesCertifications.state.isSaving;
+    this.isSyncing = app.model.userLicensesCertifications.state.isSyncing;
+    this.isDeleting = app.model.userLicensesCertifications.state.isDeleting;
+    this.isLocked = ko.pureComputed(function() {
+        return (
+            app.model.userLicensesCertifications.state.isLocked() ||
+            app.model.statesProvinces.state.isLocked()
+        );
+    }, this);
+    this.isReady = ko.pureComputed(function() {
+        var it = this.item();
+        return !!(it && it.stateProvinceCode() && it.localTempFilePath());
+    }, this);
     
+    this.submitText = ko.pureComputed(function() {
+        return this.isLoading() || this.isSyncing() ? 'Loading..' : this.isSaving() ? 'Saving..' : this.isDeleting() ? 'Deleting..' : 'Save';
+    }, this);
+
     this.isNew = ko.pureComputed(function() {
         return this.licenseCertificationID() === 0;
     }, this);
@@ -127,10 +114,6 @@ function ViewModel(app) {
         }
         return null;
     }, this);
-    
-    // Fields for the new-certification-file
-    this.stateProvinceID = ko.observable(0);
-    this.file = ko.observable('');
 
     this.unsavedChanges = ko.pureComputed(function() {
         var v = this.version();
@@ -146,7 +129,7 @@ function ViewModel(app) {
     }, this);
 
     this.save = function() {
-        app.model.licensesCertifications.setItem(this.item().model.toPlainObject())
+        app.model.userLicensesCertifications.setItem(this.item().model.toPlainObject())
         .then(function(serverData) {
             // Update version with server data.
             this.item().model.updateWith(serverData);
@@ -178,10 +161,9 @@ function ViewModel(app) {
     }.bind(this);
 
     this.remove = function() {
-        app.model.licensesCertifications.delItem(this.jobTitleID(), this.licenseCertificationID())
+        app.model.userLicensesCertifications.delItem(this.jobTitleID(), this.licenseCertificationID())
         .then(function() {
             // Go out
-            // TODO: custom message??
             app.successSave();
         }.bind(this))
         .catch(function(err) {
@@ -192,9 +174,29 @@ function ViewModel(app) {
         });
     }.bind(this);
     
-    // TODO COMPLETE; FROM A MODEL, REMOTE?
-    this.statesProvinces = ko.computed(function() {
-        // BLOB copy:
-        return [{"stateProvinceID":"23","name":"Alabama"},{"stateProvinceID":"49","name":"Alaska"},{"stateProvinceID":"52","name":"American Samoa"},{"stateProvinceID":"48","name":"Arizona"},{"stateProvinceID":"26","name":"Arkansas"},{"stateProvinceID":"60","name":"Armed Forces Americas (except Canada)"},{"stateProvinceID":"61","name":"Armed Forces Canada, Europe, Middle East, and Africa"},{"stateProvinceID":"62","name":"Armed Forces Pacific"},{"stateProvinceID":"1","name":"California"},{"stateProvinceID":"38","name":"Colorado"},{"stateProvinceID":"6","name":"Connecticut"},{"stateProvinceID":"2","name":"Delaware"},{"stateProvinceID":"51","name":"District of Columbia"},{"stateProvinceID":"57","name":"Federated States of Micronesia"},{"stateProvinceID":"28","name":"Florida"},{"stateProvinceID":"5","name":"Georgia"},{"stateProvinceID":"53","name":"Guam"},{"stateProvinceID":"50","name":"Hawaii"},{"stateProvinceID":"43","name":"Idaho"},{"stateProvinceID":"22","name":"Illinois"},{"stateProvinceID":"20","name":"Indiana"},{"stateProvinceID":"30","name":"Iowa"},{"stateProvinceID":"34","name":"Kansas"},{"stateProvinceID":"16","name":"Kentucky"},{"stateProvinceID":"19","name":"Louisiana"},{"stateProvinceID":"24","name":"Maine"},{"stateProvinceID":"58","name":"Marshall Islands"},{"stateProvinceID":"8","name":"Maryland"},{"stateProvinceID":"7","name":"Massachusetts"},{"stateProvinceID":"27","name":"Michigan"},{"stateProvinceID":"32","name":"Minnesota"},{"stateProvinceID":"21","name":"Mississippi"},{"stateProvinceID":"25","name":"Missouri"},{"stateProvinceID":"41","name":"Montana"},{"stateProvinceID":"37","name":"Nebraska"},{"stateProvinceID":"36","name":"Nevada"},{"stateProvinceID":"10","name":"New Hampshire"},{"stateProvinceID":"4","name":"New Jersey"},{"stateProvinceID":"47","name":"New Mexico"},{"stateProvinceID":"12","name":"New York"},{"stateProvinceID":"13","name":"North Carolina"},{"stateProvinceID":"39","name":"North Dakota"},{"stateProvinceID":"54","name":"Northern Mariana Islands"},{"stateProvinceID":"18","name":"Ohio"},{"stateProvinceID":"46","name":"Oklahoma"},{"stateProvinceID":"33","name":"Oregon"},{"stateProvinceID":"59","name":"Palau"},{"stateProvinceID":"3","name":"Pennsylvania"},{"stateProvinceID":"55","name":"Puerto Rico"},{"stateProvinceID":"14","name":"Rhode Island"},{"stateProvinceID":"9","name":"South Carolina"},{"stateProvinceID":"40","name":"South Dakota"},{"stateProvinceID":"17","name":"Tennessee"},{"stateProvinceID":"29","name":"Texas"},{"stateProvinceID":"56","name":"U.S. Virgin Islands"},{"stateProvinceID":"45","name":"Utah"},{"stateProvinceID":"15","name":"Vermont"},{"stateProvinceID":"11","name":"Virginia"},{"stateProvinceID":"42","name":"Washington"},{"stateProvinceID":"35","name":"West Virginia"},{"stateProvinceID":"31","name":"Wisconsin"},{"stateProvinceID":"44","name":"Wyoming"}];
-    });
+    var addNew = function(fromCamera) {
+        var settings = {
+            sourceType: fromCamera ?
+                window.Camera && window.Camera.PictureSourceType.CAMERA :
+                window.Camera && window.Camera.PictureSourceType.PHOTOLIBRARY
+        };
+        if (photoTools.takePhotoSupported()) {
+            return photoTools.cameraGetPicture(settings)
+            .then(function(imgLocalUrl) {
+                this.item().localTempFilePath(imgLocalUrl);
+                //photoTools.getPreviewPhotoUrl(imgLocalUrl)
+            }.bind(this));
+        }
+        else {
+            app.modals.showError({ error: 'Take photo is not supported on the web right now' });
+        }
+    }.bind(this);
+    
+    this.takePhotoForNew = function() {
+        addNew(true);
+    }.bind(this);
+    
+    this.pickPhotoForNew = function() {
+        addNew(false);
+    }.bind(this);
 }

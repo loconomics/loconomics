@@ -174,13 +174,14 @@ AppModel.prototype.loadModules = function loadModules() {
     this.postalCodes = require('./AppModel.postalCodes').create(this);
     this.feedback = require('./AppModel.feedback').create(this);
     this.education = require('./AppModel.education').create(this);
-    this.licensesCertifications = require('./AppModel.licensesCertifications').create(this);
     this.users = require('./AppModel.users').create(this);
     this.availability = require('./AppModel.availability').create(this);
     this.serviceAttributes = require('./AppModel.serviceAttributes').create(this);
     this.jobTitleServiceAttributes = require('./AppModel.jobTitleServiceAttributes').create(this);
     this.userVerifications = require('./AppModel.userVerifications').create(this);
     this.workPhotos = require('./AppModel.workPhotos').create(this);
+    this.userLicensesCertifications = require('./AppModel.userLicensesCertifications').create(this);
+    this.statesProvinces = require('./AppModel.statesProvinces').create(this);
 };
 
 /**

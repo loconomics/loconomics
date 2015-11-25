@@ -108,7 +108,7 @@ namespace LcRest
                 V.verifiedBy,
                 V.lastVerifiedDate,
                 V.createdDate,
-                V.updatedDate,
+                V.modifiedDate as updatedDate,
 
                 -- Added License fields in addition for 1 call load of all info
                 L.LicenseCertificationType As name,
@@ -130,7 +130,7 @@ namespace LcRest
                   ON C.CountyID = V.CountyID
                  INNER JOIN
                 Country As CY
-                  ON CY.CountryID = V.CountryID
+                  ON CY.CountryID = V.CountryID AND CY.LanguageID = 1
             WHERE
                 V.ProviderUserID = @0
                  AND
@@ -173,9 +173,9 @@ namespace LcRest
 
             var msg = "UserID: " + userID + " sends a photo of its License/Certification to being verified and added. It's for stateProvinceCode: " + stateProvinceCode + 
                 ". Can be found in the FTP an folder: " + virtualPath;
-            var email = ASP.LcHelpers.InLive ? "support@loconomics.com" : "iagosrl@gmail.com;support@loconomics.com";
+            var email = ASP.LcHelpers.InLive ? "support@loconomics.zendesk.com" : "iagosrl@gmail.com;joshdanielson@gmail.com;support@loconomics.zendesk.com";
 
-            LcMessaging.SendMail("support@loconomics.com", "License/Certification Verification Request", msg);
+            LcMessaging.SendMail(email, "License/Certification Verification Request", msg);
         }
         #endregion
     }

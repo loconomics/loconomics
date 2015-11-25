@@ -18,16 +18,15 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
 
     // On changing jobTitleID:
     // - load licenses/certifications
-    /* TODO Uncomment and update on implementing REST API AppModel
     this.registerHandler({
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
             if (jobTitleID) {
                 // Get data for the Job title ID
-                this.app.model.licensesCertifications.getList(jobTitleID)
+                this.app.model.userLicensesCertifications.getList(jobTitleID)
                 .then(function(list) {
                     // Save for use in the view
-                    this.viewModel.list(list);
+                    this.viewModel.list(this.app.model.userLicensesCertifications.asModel(list));
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
@@ -40,9 +39,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 this.viewModel.list([]);
             }
         }.bind(this)
-    });*/
-    // TODO Remove on implemented REST API
-    this.viewModel.list(testdata());
+    });
 });
 
 exports.init = A.init;
@@ -59,8 +56,8 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.list = ko.observableArray([]);
     
-    this.isSyncing = app.model.licensesCertifications.state.isSyncing();
-    this.isLoading = app.model.licensesCertifications.state.isLoading();
+    this.isSyncing = app.model.userLicensesCertifications.state.isSyncing();
+    this.isLoading = app.model.userLicensesCertifications.state.isLoading();
 
     this.addNew = function() {
         var url = '#!licensesCertificationsForm/' + this.jobTitleID(),
@@ -78,70 +75,4 @@ function ViewModel(app) {
             '&returnText=' + encodeURIComponent('Certifications/Licenses');
         app.shell.go(url, this.requestData);
     }.bind(this);
-}
-
-/// TESTDATA
-var UserLicenseCertification = require('../models/UserLicenseCertification');
-var LicenseCertification = require('../models/LicenseCertification');
-function testdata() {
-    
-    var base = {
-        17: new LicenseCertification({
-            licenseCertificationID: 17,
-            name: 'Certified Massage Therapist (CMT)',
-            stateProvinceID: 1,
-            countryID: 1,
-            description: 'Required to complete at least 500 hours of massage education and training at an approved massage therapy school.  CMTs also must undergo background checks, including fingerprinting and other identification verification procedures.',
-            authority: 'The California Massage Therapy Council (CAMTC)',
-            verificationWebsiteUrl: 'https://www.camtc.org/VerifyCertification.aspx',
-            howToGetLicensedUrl: 'https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf',
-            optionGroup: 'Certified Massage',
-            createdDate: new Date(),
-            updatedDate: new Date()
-        }),
-        18: new LicenseCertification({
-            licenseCertificationID: 18,
-            name: 'Certified Massage Practitioner (CMP)',
-            stateProvinceID: 1,
-            countryID: 1,
-            description: 'Generally must complete at least 250 hours of education and training.  CMPs also must undergo background checks, including fingerprinting and other identification verification procedures.',
-            authority: 'The California Massage Therapy Council (CAMTC)',
-            verificationWebsiteUrl: 'https://www.camtc.org/VerifyCertification.aspx',
-            howToGetLicensedUrl: 'https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf',
-            optionGroup: 'Certified Massage',
-            createdDate: new Date(),
-            updatedDate: new Date()
-        })
-    };
-
-    return [
-        (new UserLicenseCertification({
-            userID: 141,
-            jobTitleID: 106,
-            statusID: 2,
-            licenseCertificationID: 18,
-            licenseCertificationNumber: 21341234,
-            stateProvinceID: 1,
-            countryID: 1,
-            expirationDate: new Date(2016, 1, 20),
-            lastVerifiedDate: new Date(2015, 3, 20),
-            createdDate: new Date(),
-            updatedDate: new Date(),
-            licenseCertification: base['18']
-        })),
-        (new UserLicenseCertification({
-            userID: 141,
-            jobTitleID: 106,
-            statusID: 1,
-            licenseCertificationID: 17,
-            licenseCertificationNumber: 987654321,
-            stateProvinceID: 1,
-            countryID: 1,
-            expirationDate: new Date(2016, 1, 20),
-            lastVerifiedDate: new Date(2015, 3, 20),
-            createdDate: new Date(),
-            updatedDate: new Date(),
-            licenseCertification: base['17']
-        }))
-    ];
 }

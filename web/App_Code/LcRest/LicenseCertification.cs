@@ -21,7 +21,7 @@ namespace LcRest
         public string howToGetLicensedUrl;
         public string optionGroup;
         public DateTime createdDate;
-        public DateTime udpatedDate;
+        public DateTime updatedDate;
         #endregion
 
         #region Instances
@@ -42,7 +42,7 @@ namespace LcRest
                 howToGetLicensedUrl = record.howToGetLicensedUrl,
                 optionGroup = record.optionGroup,
                 createdDate = record.createdDate,
-                udpatedDate = record.udpatedDate
+                updatedDate = record.updatedDate
             };
         }
         #endregion
