@@ -172,3 +172,20 @@ function uploadLocalFile(localFileUri, remoteUri, options) {
 }
 exports.uploadLocalFile = uploadLocalFile;
 
+/**
+    Upload local file and return the response as JSON, or null if don't parse.
+**/
+exports.uploadLocalFileJson = function(localFileUri, remoteUri, options) {
+    return uploadLocalFile(localFileUri, remoteUri, options)
+    .then(function(data) {
+        if (data && data.response &&
+            typeof(data.response) === 'string') {
+            try {
+                return JSON.parse(data.response);
+            } catch(ex) {}
+        }
+        return null;
+    });
+};
+
+

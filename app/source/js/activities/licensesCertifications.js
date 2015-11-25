@@ -15,31 +15,6 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title');
-
-    // On changing jobTitleID:
-    // - load licenses/certifications
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-            if (jobTitleID) {
-                // Get data for the Job title ID
-                this.app.model.userLicensesCertifications.getList(jobTitleID)
-                .then(function(list) {
-                    // Save for use in the view
-                    this.viewModel.list(this.app.model.userLicensesCertifications.asModel(list));
-                }.bind(this))
-                .catch(function (err) {
-                    this.app.modals.showError({
-                        title: 'There was an error while loading.',
-                        error: err
-                    });
-                }.bind(this));
-            }
-            else {
-                this.viewModel.list([]);
-            }
-        }.bind(this)
-    });
 });
 
 exports.init = A.init;
@@ -48,7 +23,25 @@ A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
     var params = options && options.route && options.route.segments;
-    this.viewModel.jobTitleID(params[0] |0);
+    var jobTitleID = params[0] |0;
+    this.viewModel.jobTitleID(jobTitleID);
+    if (jobTitleID) {
+        // Get data for the Job title ID
+        this.app.model.userLicensesCertifications.getList(jobTitleID)
+        .then(function(list) {
+            // Save for use in the view
+            this.viewModel.list(this.app.model.userLicensesCertifications.asModel(list));
+        }.bind(this))
+        .catch(function (err) {
+            this.app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            });
+        }.bind(this));
+    }
+    else {
+        this.viewModel.list([]);
+    }
 };
 
 function ViewModel(app) {

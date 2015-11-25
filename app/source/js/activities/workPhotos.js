@@ -19,31 +19,6 @@ var A = Activity.extend(function WorkPhotosActivity() {
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title');
 
-    // On changing jobTitleID:
-    // - load photos
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-            if (jobTitleID) {
-                // Get data for the Job title ID
-                this.app.model.workPhotos.getList(jobTitleID)
-                .then(function(list) {
-                    // Save for use in the view
-                    this.viewModel.list(this.app.model.workPhotos.asModel(list));
-                }.bind(this))
-                .catch(function (err) {
-                    this.app.modals.showError({
-                        title: 'There was an error while loading.',
-                        error: err
-                    });
-                }.bind(this));
-            }
-            else {
-                this.viewModel.list([]);
-            }
-        }.bind(this)
-    });
-
     // Event handlers for photo list management
     this.registerHandler({
         target: this.$activity,
@@ -59,11 +34,33 @@ var A = Activity.extend(function WorkPhotosActivity() {
 exports.init = A.init;
 
 A.prototype.show = function show(options) {
+    // Reset
+    this.viewModel.list.removeAll();
+    this.viewModel.removedItems.removeAll();
+    this.viewModel.jobTitleID(0);
+    
     Activity.prototype.show.call(this, options);
 
     var params = options && options.route && options.route.segments;
-    this.viewModel.jobTitleID(params[0] |0);
-    this.viewModel.removedItems.removeAll();
+    var jobTitleID = params[0] |0;
+    this.viewModel.jobTitleID(jobTitleID);
+    if (jobTitleID) {
+        // Get data for the Job title ID
+        this.app.model.workPhotos.getList(jobTitleID)
+        .then(function(list) {
+            // Save for use in the view
+            this.viewModel.list(this.app.model.workPhotos.asModel(list));
+        }.bind(this))
+        .catch(function (err) {
+            this.app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            });
+        }.bind(this));
+    }
+    else {
+        this.viewModel.list([]);
+    }
 };
 
 function ViewModel(app) {

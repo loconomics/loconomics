@@ -58,7 +58,7 @@ exports.create = function create(appModel) {
                 params: data,
                 headers: extend(true, {}, appModel.rest.extraHeaders)
             };
-            return photoTools.uploadLocalFile(data.localTempFilePath, url, uploadSettings);
+            return photoTools.uploadLocalFileJson(data.localTempFilePath, url, uploadSettings);
         }
     }.bind(api);
     

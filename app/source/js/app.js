@@ -229,9 +229,16 @@ var appInit = function appInit() {
         // Is in config.xml too, but seems only affects to start-up splash screen,
         // so here can go different values.
         window.StatusBar.overlaysWebView(false);
-        // background like our top navbar
+        // background like our top navbar, since iOS styleguideline is to keep them homogeneous
         window.StatusBar.backgroundColorByHexString('#ffffff');
         window.StatusBar.styleDefault();
+        // Android needs special color, keeping the black because the 'style' doesn't works here
+        // the content keeps white, so cannot be read. And its styleguideline says to use a contrasting
+        // color:
+        if (window.cordova.platformId == 'android') {
+            // Just use the Loconomics color :-)
+            window.StatusBar.backgroundColorByHexString('#00989a');
+        }
     }
     
     // Force an update delayed to ensure update after some things did additional work

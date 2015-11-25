@@ -98,14 +98,8 @@ function ViewModel(app) {
         ])
         .then(function(data) {
             app.successSave();
-            if (data[1] && data[1].response) {
-                try {
-                    var result = JSON.parse(data[1]);
-                    // Force a request to the picture to ensure cache is updated with the new
-                    // for any reference on the app to that URL
-                    $.get(result.profilePictureUrl);
-                } catch(ex) {}
-            }
+            if (data && data[1])
+                $.get(data[1].profilePictureUrl);
         })
         .catch(function(err) {
             app.modals.showError({
@@ -160,6 +154,6 @@ function ViewModel(app) {
             httpMethod: 'PUT',
             headers: $.extend(true, {}, app.model.rest.extraHeaders)
         };
-        return photoTools.uploadLocalFile(this.localPhotoUrl(), app.model.rest.baseUrl + 'me/profile-picture', uploadSettings);
+        return photoTools.uploadLocalFileJson(this.localPhotoUrl(), app.model.rest.baseUrl + 'me/profile-picture', uploadSettings);
     }.bind(this);
 }
