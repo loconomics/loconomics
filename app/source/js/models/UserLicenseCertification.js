@@ -2,7 +2,9 @@
 'use strict';
 
 var Model = require('./Model'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    Verification = require('./Verification'),
+    LicenseCertification = require('../models/LicenseCertification');
 
 function UserLicenseCertification(values) {
 
@@ -14,14 +16,15 @@ function UserLicenseCertification(values) {
         statusID: 0,
         licenseCertificationID: 0,
         licenseCertificationUrl: '',
-        licenseCertificationNumber: 0,
-        licenseCertificationStatus: 0,
+        licenseCertificationNumber: '',
+        licenseCertificationStatus: '',
         expirationDate: null,
         issueDate: null,
-        countryID: 0,
-        stateProvinceID: 0,
-        countyID: 0,
-        city: '',
+        countryCode: '',
+        stateProvinceCode: null,
+        stateProvinceName: null,
+        countyName: null,
+        city: null,
         firstName: null,
         lastName: null,
         middleInitial: null,
@@ -33,22 +36,34 @@ function UserLicenseCertification(values) {
         lastVerifiedDate: null,
         createdDate: null, // Autofilled by server
         updatedDate: null, // Autofilled by server
+        
+        licenseCertification: {
+            Model: LicenseCertification
+        }
     }, values);
     
     this.model.defID(['userID', 'jobTitleID', 'licenseCertificationID']);
     
-    this.countyName = ko.pureComputed(function() {
-        // TODO Implement look-up of counties, a hardly cached version must exists ever
-        return 'Alameda';
+    // TODO statusText and isStatus copied from verifications, dedupe/refactor
+    this.statusText = ko.pureComputed(function() {
+        // L18N
+        var statusTextsenUS = {
+            'verification.status.confirmed': 'Confirmed',
+            'verification.status.pending': 'Pending',
+            'verification.status.revoked': 'Revoked',
+            'verification.status.obsolete': 'Obsolete'
+        };
+        var statusCode = Verification.getStatusName(this.statusID());
+        return statusTextsenUS['verification.status.' + statusCode];
     }, this);
-    this.stateProvinceName = ko.pureComputed(function() {
-        // TODO Implement look-up, a hardly cached version must exists ever
-        return 'California';
-    }, this);
-    this.stateProvinceCode = ko.pureComputed(function() {
-        // TODO Implement look-up, a hardly cached version must exists ever
-        return 'CA';
-    }, this);
+
+    /**
+        Check if verification has a given status by name
+    **/
+    this.isStatus = function (statusName) {
+        var id = this.statusID();
+        return Verification.status[statusName] === id;
+    };
 }
 
 module.exports = UserLicenseCertification;

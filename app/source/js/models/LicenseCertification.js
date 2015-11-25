@@ -10,15 +10,15 @@ function LicenseCertification(values) {
     this.model.defProperties({
         licenseCertificationID: 0,
         name: '',
-        stateProvinceID: 0,
-        countryID: 0,
-        description: null,
+        description: '',
+        stateProvinceCode: '',
+        countryCode: '',
         authority: null,
         verificationWebsiteUrl: null,
         howToGetLicensedUrl: null,
         optionGroup: null,
         createdDate: null, // Autofilled by server
-        updatedDate: null, // Autofilled by server
+        updatedDate: null // Autofilled by server
     }, values);
     
     this.model.defID(['licenseCertificationID']);

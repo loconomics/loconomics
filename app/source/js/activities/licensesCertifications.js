@@ -80,35 +80,6 @@ function ViewModel(app) {
     }.bind(this);
 }
 
-
-               
-// TODO SAME CODE AS IN verifications activity, to refactor and share
-var Model = require('../models/Model');
-function Verification(values) {
-    Model(this);
-    
-    this.model.defProperties({
-        name: ''
-    }, values);
-}
-Verification.status = {
-    confirmed: 1,
-    pending: 2,
-    revoked: 3,
-    obsolete: 4
-};
-function enumGetName(value, enumList) {
-    var found = null;
-    Object.keys(enumList).some(function(k) {
-        if (enumList[k] === value) {
-            found = k;
-            return true;
-        }
-    });
-    return found;
-}
-
-
 /// TESTDATA
 var UserLicenseCertification = require('../models/UserLicenseCertification');
 var LicenseCertification = require('../models/LicenseCertification');
@@ -142,39 +113,9 @@ function testdata() {
             updatedDate: new Date()
         })
     };
-    
-    // Augment Model with related info
-    function augment(m) {
-        m.licenseCertification = ko.computed(function() {
-            return base[this.licenseCertificationID()] || null;
-        }, m);
-        
-        // TODO statusText and isStatus copied from verifications, dedupe/refactor
-        m.statusText = ko.pureComputed(function() {
-            // L18N
-            var statusTextsenUS = {
-                'verification.status.confirmed': 'Confirmed',
-                'verification.status.pending': 'Pending',
-                'verification.status.revoked': 'Revoked',
-                'verification.status.obsolete': 'Obsolete'
-            };
-            var statusCode = enumGetName(this.statusID(), Verification.status);
-            return statusTextsenUS['verification.status.' + statusCode];
-        }, m);
-
-        /**
-            Check if verification has a given status by name
-        **/
-        m.isStatus = function (statusName) {
-            var id = this.statusID();
-            return Verification.status[statusName] === id;
-        }.bind(m);
-        
-        return m;
-    }
 
     return [
-        augment(new UserLicenseCertification({
+        (new UserLicenseCertification({
             userID: 141,
             jobTitleID: 106,
             statusID: 2,
@@ -185,9 +126,10 @@ function testdata() {
             expirationDate: new Date(2016, 1, 20),
             lastVerifiedDate: new Date(2015, 3, 20),
             createdDate: new Date(),
-            updatedDate: new Date()
+            updatedDate: new Date(),
+            licenseCertification: base['18']
         })),
-        augment(new UserLicenseCertification({
+        (new UserLicenseCertification({
             userID: 141,
             jobTitleID: 106,
             statusID: 1,
@@ -198,7 +140,8 @@ function testdata() {
             expirationDate: new Date(2016, 1, 20),
             lastVerifiedDate: new Date(2015, 3, 20),
             createdDate: new Date(),
-            updatedDate: new Date()
+            updatedDate: new Date(),
+            licenseCertification: base['17']
         }))
     ];
 }
