@@ -31,6 +31,7 @@ namespace LcRest
         public bool isServiceProfessional;
         public bool isClient;
         public bool isMember;
+        public bool isCollaborator;
 
         /// <summary>
         /// Used in the app with a different set of names, but the first one is the same: 'welcome'.
@@ -75,6 +76,7 @@ namespace LcRest
                 isServiceProfessional = record.isServiceProfessional,
                 isClient = record.isClient,
                 isMember = record.isMember,
+                isCollaborator = record.isCollaborator,
 
                 onboardingStep = record.onboardingStep,
                 accountStatusID = record.accountStatusID,
@@ -100,6 +102,7 @@ namespace LcRest
             ,isProvider as isServiceProfessional
             ,isCustomer as isClient
             ,isMember
+            ,isCollaborator
 
             ,alternativeEmail
             ,mobilePhone as phone

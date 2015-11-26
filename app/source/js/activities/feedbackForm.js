@@ -41,20 +41,15 @@ function ViewModel(app) {
     
     this.message = ko.observable('');
     this.becomeCollaborator = ko.observable(false);
-    this.wasSent = ko.observable(false);
+    // Get reference to know if is already a collaborator
+    this.isCollaborator = app.model.userProfile.data.isCollaborator;
     this.isSending = ko.observable(false);
     this.vocElementID = ko.observable(0);
 
-    var updateWasSent = function() {
-        this.wasSent(false);
-    }.bind(this);
-    this.message.subscribe(updateWasSent);
-    this.becomeCollaborator.subscribe(updateWasSent);
-    
     this.submitText = ko.pureComputed(function() {
-        return this.isSending() ? 'Sending..' : this.wasSent() ? 'Sent' : 'Send';
+        return this.isSending() ? 'Sending..' : 'Send';
     }, this);
-    
+
     this.send = function send() {
         this.isSending(true);
         app.model.feedback.postIdea({
@@ -63,10 +58,21 @@ function ViewModel(app) {
             vocElementID: this.vocElementID()
         })
         .then(function() {
+            // Update local profile in case marked becameCollaborator and was not already
+            if (!this.isCollaborator() && this.becomeCollaborator()) {
+                // Tag locally already
+                this.isCollaborator(true);
+                // But ask the profile to update, by request a 'save' even if
+                // will not save the flag but will get it updated from database and will cache it
+                app.model.userProfile.save();
+            }
+            // Success
+            app.successSave({
+                message: 'Sent! Thank you for your input.'
+            });
             // Reset after being sent
             this.message('');
             this.becomeCollaborator(false);
-            this.wasSent(true);
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({

@@ -3,7 +3,7 @@
 
     <h2 class="SectionTitle">Send us ideas or feedback</h2>
     <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
-    <div class="checkbox">
+    <div class="checkbox" data-bind="visible: !isCollaborator()">
         <label>
             <input type="checkbox" data-bind="checked: becomeCollaborator, disable: isSending" />
             I'd like to become an Owner Collaborator and help develop new tools 
