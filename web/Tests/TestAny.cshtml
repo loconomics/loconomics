@@ -1,12 +1,13 @@
 ﻿@* Placeholder testing area
  *@
 @{
-    LcHelpers.TestArea();
+    //LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
 
     DateTime start = DateTime.Now;
+    var data = LcMessaging.SendMail("test@iagosrl.com,iagosrl@gmail.com", "Testing Loconomics mail", "testing");
 
-    dynamic data = null;
+    //dynamic data = null;
 }
 @ObjectInfo.Print(data)
 

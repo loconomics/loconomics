@@ -68,7 +68,7 @@
                 emailMsg += "\n\nDevice: " + feedback.userDevice;
 
                 // On support request, send an email
-                var email = ASP.LcHelpers.InLive ? "support@loconomics.zendesk.com" : "iagosrl@gmail.com;joshdanielson@gmail.com;support@loconomics.zendesk.com";
+                var email = ASP.LcHelpers.InLive ? "support@loconomics.zendesk.com" : "iagosrl@gmail.com,joshdanielson@gmail.com,support@loconomics.zendesk.com";
                 if (vocExperienceCategoryID == 2) {
                     LcMessaging.SendMail(email, "Message to /feedback/support API", emailMsg, WebSecurity.CurrentUserName);
                 }

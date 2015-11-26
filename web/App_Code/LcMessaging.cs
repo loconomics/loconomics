@@ -1481,15 +1481,15 @@ public class LcMessaging
             }
         }
     }
-    public static void SendMail(string to, string subject, string body, string from = null)
+    public static bool SendMail(string to, string subject, string body, string from = null)
     {
         // No mails for local development.
-        if (LcHelpers.Channel == "localdev") return;
+        if (LcHelpers.Channel == "localdev") return false;
 
-        SendMailNow(to, subject, body, from);
-        //ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
+        return SendMailNow(to, subject, body, from);
+        //return ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
     }
-    private static void SendMailNow(string to, string subject, string body, string from = null)
+    private static bool SendMailNow(string to, string subject, string body, string from = null)
     {
         try
         {
@@ -1503,6 +1503,7 @@ public class LcMessaging
                     logger.Save();
                 }
             }
+            return true;
         }
         catch (Exception ex) {
             using (var logger = new LcLogger("SendMail"))
@@ -1518,6 +1519,7 @@ public class LcMessaging
                 logger.Save();
             }
         }
+        return false;
     }
     #endregion
 
