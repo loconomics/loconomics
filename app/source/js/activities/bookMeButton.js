@@ -24,7 +24,9 @@ var A = Activity.extend(function BookMeButtonActivity() {
         event: 'click',
         selector: 'textarea',
         handler: function() {
+            // Two versions, on Safari on setSelectionRange works
             $(this).select();
+            this.get(0).setSelectionRange(0, 99999);
         }
     });
     
@@ -45,9 +47,20 @@ var A = Activity.extend(function BookMeButtonActivity() {
     this.viewModel.copyCode = function() {
         var errMsg;
         try {
-            $code.select();
-            if (!document.execCommand('copy')) {
-                errMsg = 'Impossible to copy text.';
+            // If Cordova Plugin available, use that
+            if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard) {
+                window.cordova.plugins.clipboard.copy(this.viewModel.buttonHtmlCode());
+            }
+            else {
+                // Web standard version: will not work on old Firefox and current Safari (as of 2015-11-26)
+                // using setSelectionRange rather than select since seems more compatible (with Safari, but copy does not works
+                // there so...maybe for the future I hope :-)
+                $code
+                .select()
+                .get(0).setSelectionRange(0, 99999);
+                if (!document.execCommand('copy')) {
+                    errMsg = 'Impossible to copy text.';
+                }
             }
         } catch(err) {
             errMsg = 'Impossible to copy text.';
@@ -129,7 +142,8 @@ function ViewModel(app) {
     }, this);
 
     this.sendByEmailURL = ko.pureComputed(function() {
-        return 'mailto:&body=' + encodeURIComponent('Loconomics Book Me Now Button HTML code: ' + this.buttonHtmlCode());
+        var btn = this.buttonHtmlCode().replace(/\n+/, '');
+        return 'mailto:?body=' + encodeURIComponent('Loconomics Book Me Now Button HTML code: ' + btn);
     }, this);
 }
 
