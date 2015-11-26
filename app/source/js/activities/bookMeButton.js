@@ -68,6 +68,9 @@ var A = Activity.extend(function BookMeButtonActivity() {
         if (errMsg) {
             this.app.modals.showError({ error: errMsg });
         }
+        else {
+            this.viewModel.copyText('Copied!');
+        }
     }.bind(this);
 });
 
@@ -82,6 +85,7 @@ A.prototype.show = function show(state) {
     // Set the job title
     var jobID = state.route.segments[0] |0;
     this.viewModel.jobTitleID(jobID);
+    this.viewModel.copyText('Copy');
 };
 
 function ViewModel(app) {
@@ -96,6 +100,8 @@ function ViewModel(app) {
     });
     
     this.jobTitleID = ko.observable(0);
+    
+    this.copyText = ko.observable('Copy');
     
     // Button type, can be: 'icon', 'link'
     this.type = ko.observable('icon');
@@ -141,6 +147,9 @@ function ViewModel(app) {
         }
     }, this);
 
+    // Send email is disabled on html because on Android most of the code is cut (maybe is trying to be used as html?)
+    // and iOS simply do nothing (almost on WkWebView and iOS 9.1).
+    // AND NOT SO IMPORTANT
     this.sendByEmailURL = ko.pureComputed(function() {
         var btn = this.buttonHtmlCode().replace(/\n+/, '');
         return 'mailto:?body=' + encodeURIComponent('Loconomics Book Me Now Button HTML code: ' + btn);

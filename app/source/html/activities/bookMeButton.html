@@ -30,8 +30,8 @@
         </div>
         
         <div>
-            <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked">Copy</button>
-            <a href="#" class="btn btn-default btn-block" data-bind="attr: { href: sendByEmailURL }, visible: !isLocked()">E-mail to your tech person</a>
+            <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked, text: copyText">Copy</button>
+            <!--<a href="#" class="btn btn-default btn-block" data-bind="attr: { href: sendByEmailURL }, visible: !isLocked()">E-mail to your tech person</a>-->
         </div>
     </form>
 </div>
