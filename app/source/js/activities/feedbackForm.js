@@ -49,8 +49,17 @@ function ViewModel(app) {
     this.submitText = ko.pureComputed(function() {
         return this.isSending() ? 'Sending..' : 'Send';
     }, this);
+    
+    this.isValid = ko.pureComputed(function() {
+        var m = this.message();
+        return m && !/^\s*$/.test(m);
+    }, this);
 
     this.send = function send() {
+        // Check is valid, and do nothing if not
+        if (!this.isValid()) {
+            return;
+        }
         this.isSending(true);
         app.model.feedback.postIdea({
             message: this.message(),
