@@ -5,7 +5,7 @@
     
     - POST
         message:string
-        becomeACollaborator:bool (Only allowed on request to 'IDEAS')
+        becomeCollaborator:bool (Only allowed on request to 'IDEAS')
         vocElementID:int
         userDevice:string A JSON object encoded as string with a userAgent property from the webview/browser and
             additional optional fields like 'device' and 'model' from something like PhoneGap Device Plugin.
@@ -26,7 +26,7 @@
             "post": {
                 "message": "I have an idea!",
                 "vocElementID": 1,
-                "becomeACollaborator": true,
+                "becomeCollaborator": true,
                 "userDevice": "{ \"userAgent\": \"Mozilla/5.0 Some Browser\" }"
             }
         }
@@ -55,30 +55,34 @@
                     vocExperienceCategoryID = vocExperienceCategoryID,
                     userID = WebSecurity.CurrentUserId,
                     message = Request["message"],
-                    becomeACollaborator = vocExperienceCategoryID == 1 ? Request["becomeACollaborator"].AsBool() : false,
+                    becomeCollaborator = vocExperienceCategoryID == 1 ? Request["becomeCollaborator"].AsBool() : false,
                     vocElementID = Request["vocElementID"].AsInt(),
                     userDevice = Request["userDevice"]
                 };
 
  	            LcRest.Feedback.PostFeedback(feedback);
 
-                var emailMsg = feedback.becomeACollaborator ? "Wants to become a collaborator\n" : "";
+                var emailMsg = feedback.becomeCollaborator ? "Wants to become a collaborator\n" : "";
                 emailMsg += "User:" + feedback.userID + ":" + WebSecurity.CurrentUserName;
                 emailMsg += "\n\n" + feedback.message;
                 emailMsg += "\n\nDevice: " + feedback.userDevice;
 
                 // On support request, send an email
                 var email = ASP.LcHelpers.InLive ? "support@loconomics.zendesk.com" : "iagosrl@gmail.com,joshdanielson@gmail.com,support@loconomics.zendesk.com";
+                var subject = "Feedback";
                 if (vocExperienceCategoryID == 2) {
-                    LcMessaging.SendMail(email, "Message to /feedback/support API", emailMsg, WebSecurity.CurrentUserName);
+                    subject = "Message to /feedback/support API";
                 }
                 else if (vocExperienceCategoryID == 1) {
-                    // On ideas request, send an email
-                    LcMessaging.SendMail(email, "Message to /feedback/ideas API", emailMsg, WebSecurity.CurrentUserName);
+                    subject = "Message to /feedback/ideas API";
+                }
+                if (!LcMessaging.SendMail(email, subject, emailMsg, WebSecurity.CurrentUserName)) {
+                    // Failed e-mail, save copy in errors log
+                    LcLogger.LogAspnetError(new Exception(subject + "::" + emailMsg));
                 }
 
                 // User becomes an owner by its own request
-                if (feedback.becomeACollaborator) {
+                if (feedback.becomeCollaborator) {
                     LcData.UserInfo.BecomeCollaborator(feedback.userID);
                 }
 
