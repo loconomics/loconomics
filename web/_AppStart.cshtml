@@ -1,6 +1,7 @@
 ﻿@using WebMatrix.WebData;
 @using WebMatrix.Security;
 @using System.Web.Routing;
+@using System.Configuration;
 @{
     WebSecurity.InitializeDatabaseConnection("sqlloco", "userprofile", "UserId", "Email", false);
 
@@ -14,21 +15,6 @@
         consumerKey: "a",   // for Facebook, consumerKey is called AppID in the SDK 
         consumerSecret: "b");*/
 
-    /* WINHOST SMTP SETUP */
-    WebMail.SmtpServer = "mail.loconomics.com";
-    WebMail.SmtpPort = 25;
-    WebMail.EnableSsl = false;
-    WebMail.UserName = "automated@loconomics.com";
-    WebMail.Password = "Loconomic$2011";
-    WebMail.From = "Loconomics <automated@loconomics.com>";
-    /* SENDGRID SMTP SETUP *incomplete*
-    WebMail.SmtpServer = "smtp.sendgrid.net";
-    WebMail.SmtpPort = 465; // 25 and no ssl also valid
-    WebMail.EnableSsl = true;
-    WebMail.UserName = "";
-    WebMail.Password = "";
-    WebMail.From = "Loconomics <automated@loconomics.com>";
-     */
 
     // Facebook connection options to the Developer App Version 'Loconomics', SiteUrl: http://loconomics.com/
     // Facebook App Link: https://developers.facebook.com/apps/180579422039773
