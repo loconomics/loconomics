@@ -1,0 +1,17 @@
+<!-- serviceProfessionalProfileUrl activity -->
+<div class="container-fluid LightForm" data-activity="serviceProfessionalProfileUrl">
+    <h2 class="SectionTitle">Create a custom URL so that you can use your profile as your website</h2>
+    <form data-bind="submit: save">
+        <div class="form-group">
+            <label for="serviceProfessionalProfileUrl-url" class="sr-only">Enter your custom URL</label>
+            <div class="input-group">
+                <span class="input-group-addon">www.loconomics.com/</span>
+                <input type="text" id="serviceProfessionalProfileUrl-url" class="form-control"
+                       data-bind="value: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
+            </div>
+        </div>
+        <div class="LightForm-submitBar">
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+        </div>
+    </form>
+</div>
