@@ -421,14 +421,7 @@ var appInit = function appInit() {
 
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)
-    .then(function() {
-        // Mark the page as ready
-        $('html').addClass('is-ready');
-        // As app, hides splash screen
-        if (window.navigator && window.navigator.splashscreen) {
-            window.navigator.splashscreen.hide();
-        }
-        
+    .then(function() {    
         // Connect username in navbar, and type flags
         ko.computed(function() {
             var u = app.model.userProfile.data,
@@ -454,6 +447,12 @@ var appInit = function appInit() {
             app.shell.go(url);
         }
 
+        // Mark the page as ready
+        $('html').addClass('is-ready');
+        // As app, hides splash screen
+        if (window.navigator && window.navigator.splashscreen) {
+            window.navigator.splashscreen.hide();
+        }
     }, alertError);
 
     // DEBUG

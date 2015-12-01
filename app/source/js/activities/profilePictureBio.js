@@ -129,7 +129,13 @@ function ViewModel(app) {
             .then(function(imgLocalUrl) {
                 this.localPhotoUrl(imgLocalUrl);
                 this.previewPhotoUrl(photoTools.getPreviewPhotoUrl(imgLocalUrl));
-            }.bind(this));
+            }.bind(this))
+            .catch(function(err) {
+                // A user abort gives no error or 'no image selected' on iOS 9/9.1
+                if (err && err !== 'no image selected' && err !== 'has no access to camera') {
+                    app.modals.showError({ error: err, title: 'Error getting photo.' });
+                }
+            });
         }
         else {
             app.modals.showNotification({
