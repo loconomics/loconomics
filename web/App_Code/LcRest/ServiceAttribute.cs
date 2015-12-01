@@ -130,19 +130,24 @@ namespace LcRest
             ORDER BY s.DisplayRank ASC, s.Name ASC
         ";
 
+        const string sqlGetJobTitleReferenceCats = @"
+            SELECT 
+                se.serviceAttributeCategoryID,
+                se.ServiceAttributeCategory as serviceAttributeCategoryName,
+                se.ServiceAttributeCategoryDescription as serviceAttributeCategoryDescription,
+                se.requiredInput,
+                se.eligibleForPackages
+            FROM serviceattributecategory se
+            WHERE se.PositionReference = @0
+                AND se.LanguageID = @1
+                AND se.CountryID = @2
+        ";
+
         private static IEnumerable<dynamic> GetUserJobTitleListData(int userID, int jobTitleID, int serviceAttributeCategoryID, int languageID, int countryID)
         {
             using (var db = new LcDatabase())
             {
                 return db.Query(sqlGetUserList, jobTitleID, serviceAttributeCategoryID, languageID, countryID, userID);
-            }
-        }
-
-        private static IEnumerable<dynamic> GetJobTitleListData(int jobTitleID, int serviceAttributecategoryID, int languageID, int countryID)
-        {
-            using (var db = new LcDatabase())
-            {
-                return db.Query(sqlGetJobTitleList, jobTitleID, serviceAttributecategoryID, languageID, countryID);
             }
         }
 
@@ -188,8 +193,33 @@ namespace LcRest
         /// <returns></returns>
         public static IEnumerable<ServiceAttributeCategory> GetGroupedJobTitleAttributes(int jobTitleID, int languageID, int countryID)
         {
-            return GetJobTitleListData(jobTitleID, 0, languageID, countryID)
-            .GroupBy(att => (int)att.serviceAttributeCategoryID, (k, l) => (ServiceAttributeCategory)ServiceAttributeCategory.FromDB(l.First(), l));
+            using (var db = new LcDatabase())
+            {
+                // Get all existent attributes
+                var data = db.Query(sqlGetJobTitleList, jobTitleID, 0, languageID, countryID);
+
+                // Get all existent attributes grouped by category
+                var catAtts = data.GroupBy(att => (int)att.serviceAttributeCategoryID, (k, l) => (ServiceAttributeCategory)ServiceAttributeCategory.FromDB(l.First(), l));
+
+                // But we still need to read all the categories that has no attributes still
+                // and were assigned to the job-title using the special [PositionReference] field.
+                var referenceCats = db.Query(sqlGetJobTitleReferenceCats, jobTitleID, languageID, countryID)
+                    .Select<dynamic, ServiceAttributeCategory>(c => ServiceAttributeCategory.FromDB(c, new List<dynamic>())).ToList();
+                // We iterate and return all the cats with attributes
+                // while creating and index of IDs
+                var indexCats = new List<int>();
+                foreach (var cat in catAtts)
+                {
+                    yield return cat;
+                    indexCats.Add(cat.serviceAttributeCategoryID);
+                }
+                // Return empty reference cats, all the ones not included in the generated index
+                foreach (var cat in referenceCats)
+                {
+                    if (!indexCats.Contains(cat.serviceAttributeCategoryID))
+                        yield return cat;
+                }
+            }
         }
         #endregion
     }

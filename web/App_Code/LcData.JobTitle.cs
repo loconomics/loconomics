@@ -374,6 +374,7 @@ public static partial class LcData
                         ELSE
                             -- Exists and valid, return that ID:
                             SELECT @PositionID
+                            RETURN
                     END
                     
                     -- Create Position with new ID
