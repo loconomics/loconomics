@@ -25,8 +25,10 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
-    if (this.viewModel.user.isServiceProfessional())
+    if (this.viewModel.user.isServiceProfessional()) {
         this.viewModel.sync();
+        this.app.model.marketplaceProfile.sync();
+    }
 };
 
 function ViewModel(app) {
@@ -61,6 +63,15 @@ function ViewModel(app) {
     }, jobVm);
     
     jobVm.user = app.model.userProfile.data;
+    
+    jobVm.marketplaceProfileUrl = ko.computed(function() {
+        var example = 'www.loconomics.com/YOURNAME';
+        // IMPORTANT: the ProfileUrl ever returns a value, with automatic SEO URL when no custom slug
+        // so we check if there is slug or not to show the actual URL or the example
+        var slug = app.model.marketplaceProfile.data.serviceProfessionalProfileUrlSlug();
+        var url = app.model.marketplaceProfile.data.serviceProfessionalProfileUrl();
+        return slug ? url : example;
+    }, jobVm);
 
     return jobVm;
 }
