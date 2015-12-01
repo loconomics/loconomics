@@ -26,7 +26,7 @@ var A = Activity.extend(function BookMeButtonActivity() {
         handler: function() {
             // Two versions, on Safari on setSelectionRange works
             $(this).select();
-            this.get(0).setSelectionRange(0, 99999);
+            this.setSelectionRange(0, 99999);
         }
     });
     
@@ -105,6 +105,11 @@ function ViewModel(app) {
     
     // Button type, can be: 'icon', 'link'
     this.type = ko.observable('icon');
+    
+    this.type.subscribe(function() {
+        // On any change, restore copy label
+        this.copyText('Copy');
+    }.bind(this));
 
     this.isLocked = marketplaceProfile.isLocked;
     
