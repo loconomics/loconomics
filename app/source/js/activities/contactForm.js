@@ -41,29 +41,35 @@ var ko = require('knockout');
 function ViewModel(app) {
     
     this.message = ko.observable('');
-    this.wasSent = ko.observable(false);
     this.isSending = ko.observable(false);
     this.vocElementID = ko.observable(0);
-
-    var updateWasSent = function() {
-        this.wasSent(false);
-    }.bind(this);
-    this.message.subscribe(updateWasSent);
     
     this.submitText = ko.pureComputed(function() {
-        return this.isSending() ? 'Sending..' : this.wasSent() ? 'Sent' : 'Send';
+        return this.isSending() ? 'Sending..' : 'Send';
+    }, this);
+    
+    this.isValid = ko.pureComputed(function() {
+        var m = this.message();
+        return m && !/^\s*$/.test(m);
     }, this);
     
     this.send = function send() {
+        // Check is valid, and do nothing if not
+        if (!this.isValid()) {
+            return;
+        }
         this.isSending(true);
         app.model.feedback.postSupport({
             message: this.message(),
             vocElementID: this.vocElementID()
         })
         .then(function() {
+            // Success
+            app.successSave({
+                message: 'Thank you, we\'ll be in touch soon!'
+            });
             // Reset after being sent
             this.message('');
-            this.wasSent(true);
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
