@@ -173,7 +173,7 @@ namespace LcRest
 
             var msg = "UserID: " + userID + " sends a photo of its License/Certification to being verified and added. It's for stateProvinceCode: " + stateProvinceCode + 
                 ". Can be found in the FTP an folder: " + virtualPath;
-            var email = "support@loconomics.zendesk.com";
+            var email = "support@loconomics.com";
 
             LcMessaging.SendMail(email, "License/Certification Verification Request", msg);
         }
