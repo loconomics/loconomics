@@ -206,7 +206,7 @@ namespace LcRest
         /// <param name="jobTitleID"></param>
         /// <param name="bookCode"></param>
         /// <returns></returns>
-        public static Booking NewFor(int clientID, int serviceProfessionalID, int jobTitleID, int langID, int countryID, string bookCode)
+        public static Booking NewFor(int clientID, int serviceProfessionalID, int jobTitleID, int langID, int countryID, string bookCode, bool isServiceProfessionalBooking = false)
         {
             var booking = new Booking();
             booking.clientUserID = clientID;
@@ -214,6 +214,17 @@ namespace LcRest
             booking.jobTitleID = jobTitleID;
             booking.languageID = langID;
             booking.countryID = countryID;
+
+            // Set bookingType (IMPORTANT: before fill the user job title)
+            if (isServiceProfessionalBooking)
+            {
+                booking.bookingTypeID = (int)LcEnum.BookingType.serviceProfessionalBooking;
+            }
+            else
+            {
+                // Only supports auto-detect client BookNow and Marketplace bookings.
+                booking.bookingTypeID = (int)(IsValidBookCode(serviceProfessionalID, bookCode) ? LcEnum.BookingType.bookNowBooking : LcEnum.BookingType.marketplaceBooking);
+            }
 
             // Check service-job exists and enabled, and get its public preferences
             booking.FillUserJobTitle();
@@ -223,16 +234,11 @@ namespace LcRest
                 return null;
             }
 
-            // Only supports auto-detect client BookNow and Marketplace bookings. ServiceProfessional booking must be overwritted on its own API and
-            // other types are not yet implemented
-            booking.bookingTypeID = (int)(IsValidBookCode(serviceProfessionalID, bookCode) ? LcEnum.BookingType.bookNowBooking : LcEnum.BookingType.marketplaceBooking);
-
-            // Check payment enabled on the
-            // Payment is required for client bookings, but avoided on bookNow bookings.
+            // Payment is required for client bookings, but avoided on bookNow bookings. That's excludes service professional bookings too
             // TODO Per #590, a new check by job-title and bookNow preference may be required, allowing
             // optionally enabling payment through bookNow.
             booking.paymentEnabled = false;
-            if (booking.bookingTypeID != (int)LcEnum.BookingType.bookNowBooking)
+            if (!isServiceProfessionalBooking && booking.bookingTypeID != (int)LcEnum.BookingType.bookNowBooking)
             {
                 booking.paymentEnabled = IsMarketplacePaymentAccountActive(serviceProfessionalID);
                 if (!booking.paymentEnabled)
@@ -700,11 +706,17 @@ namespace LcRest
         }
 
         /// <summary>
-        /// 
+        /// Fills the data about the service professional and its profile for the job title in the booking.
+        /// IMPORTANT: Be aware that different rules apply the information load when the booking is created by the service professional,
+        /// so it's important to set the bookingType before call this; to avoid mistakes, the bookingTypeID must be set or an exception is throw.
         /// </summary>
         internal void FillUserJobTitle()
         {
-            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID);
+            if (!Enum.IsDefined(typeof(LcEnum.BookingType), bookingTypeID))
+                throw new Exception("BookingTypeID must be set before calling FillUserJobTitle");
+
+            var isServiceProfessionalBooking = bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
+            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking);
         }
 
         /// <summary>
@@ -1380,12 +1392,10 @@ namespace LcRest
                     throw new ConstraintException("Create a booking require select almost one service");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
-                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null);
+                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null, true);
                 if (booking == null)
                     throw new ConstraintException("Impossible to create a booking for that Job Title.");
 
-                // Booking type enforced by this API, required before calculate correctly the pricing:
-                booking.bookingTypeID = (int)LcEnum.BookingType.serviceProfessionalBooking;
                 if (booking.CreatePricing(services))
                     throw new ConstraintException("Choosen services does not belongs to the Job Title");
 

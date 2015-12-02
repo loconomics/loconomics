@@ -60,21 +60,26 @@ namespace LcRest
                     AND u.LanguageID = @1
                     AND u.CountryID = @2
                     AND u.Active = 1
-                    AND u.StatusID = 1 -- Only active/enabled positions
                     -- Double check for approved positions
                     AND positions.Active = 1
                     AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
         ";
         const string sqlAndJobTitleID = " AND @3 = u.PositionID ";
-        const string sqlGetItem = sqlSelectFromCommonWhere + sqlAndJobTitleID;
+        // filter by active only profiles.
+        const string sqlAndActiveProfiles = " AND u.StatusID = 1 ";
+        // filter by active or inactive profiles, but still discarding user deleted profiles (StatusID=0).
+        const string sqlAndActiveOrInactiveProfiles = " AND u.StatusID > 0 ";
+        const string sqlGetActiveItem = sqlSelectFromCommonWhere + sqlAndActiveProfiles + sqlAndJobTitleID;
+        const string sqlGetActiveOrInactiveItem = sqlSelectFromCommonWhere + sqlAndActiveOrInactiveProfiles + sqlAndJobTitleID;
         const string sqlGetList = sqlSelectFromCommonWhere;
         #endregion
 
-        public static PublicUserJobTitle Get(int serviceProfessionalUserID, int languageID, int countryID, int jobTitleID)
+        public static PublicUserJobTitle Get(int serviceProfessionalUserID, int languageID, int countryID, int jobTitleID, bool includeDeactivatedProfile = false)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetItem, serviceProfessionalUserID, languageID, countryID, jobTitleID));
+                var sql = includeDeactivatedProfile ? sqlGetActiveOrInactiveItem : sqlGetActiveItem;
+                return FromDB(db.QuerySingle(sql, serviceProfessionalUserID, languageID, countryID, jobTitleID));
             }
         }
 
