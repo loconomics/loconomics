@@ -6,8 +6,9 @@
 
     // Some values from the Bootstrap-Switch plugin styles
     $switchBtn-height = 32px;
-    $switchBtn-width = 106px;
+    $switchBtn-width = 108px;
     $gapWithSwitch = 14px;
+    $addRemBtn-width = 40px;
 
     .weeklySchedule-weekDay {
         
@@ -29,6 +30,27 @@
         .weeklySchedule-weekDay-timeSelectors {
             // IMPORTANT: is aligned with the label text.
             padding-left: $switchBtn-width + $gapWithSwitch;
+            // IMPORTANT: the remove/add buttons are aligned in the right with the top switch button
+            padding-left: $switchBtn-width - $addRemBtn-width; //68px;
+            .weeklySchedule-weekDay-timeRange {
+                // and the content select aligned with the label text
+                .btn + select {
+                    margin-left: $gapWithSwitch;
+                }
+                
+                margin-bottom: 2px;
+                
+                select {
+                    width: auto;
+                    display: inline-block;
+                    // Fix the total height and the strange margin added
+                    vertical-align: middle;
+                }
+            }
+
+            .btn {
+                border-radius: border-radius-base;
+            }
         }
     }
 

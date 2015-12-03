@@ -72,6 +72,33 @@ function WeekDaySchedule(obsArray) {
         }
     }).extend({ rateLimit: 0 });
     
+    obsArray.addTimeRange = function() {
+        var arr = obsArray();
+        var last = arr[arr.length - 1];
+        var lastTime = last && last.end() || '00:00:00';
+        var tr = new TimeRange({
+            start: lastTime
+        });
+        var nextHour = tr.fromMinute() + 60;
+        if (nextHour >= 1439) nextHour = 1410;
+        tr.fromMinute(nextHour);
+        nextHour += 60;
+        if (nextHour > 1439) nextHour = 1439;
+        tr.toMinute(nextHour);
+        obsArray.push(tr);
+    };
+    
+    obsArray.canAddMore = ko.computed(function() {
+        var arr = obsArray();
+        var last = arr[arr.length - 1];
+        var lastMinute = last && last.toMinute();
+        return lastMinute < 1439;
+    });
+
+    obsArray.removeTimeRange = function(timeRange) {
+        obsArray.remove(timeRange);
+    };
+    
     return obsArray;
 }
 

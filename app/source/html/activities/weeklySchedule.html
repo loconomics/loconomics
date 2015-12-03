@@ -4,7 +4,7 @@
     <h2 class="SectionTitle">Weekly schedule</h2>
     
     <script type="text/html" id="weeklySchedule-timeSelectorHourMinutesTpl">
-        <select data-bind="value: value, disable: isLocked, valueAllowUnset: true">
+        <select data-bind="value: value, disable: isLocked, valueAllowUnset: true" class="form-control">
             <!-- ko if: midnightAtBeginning --><option value="0">12:00am</option><!-- /ko -->
             <option value="30">12:30am</option>
             <option value="60">1:00am</option>
@@ -57,25 +57,26 @@
         </select>
     </script>
     <script type="text/html" id="weeklySchedule-timeRangeTpl">
-        <!-- ko template: { 
-                name: 'weeklySchedule-timeSelectorHourMinutesTpl',
-                data: {
-                    value: fromMinute,
-                    isLocked: $parent.isLocked,
-                    midnightAtBeginning: true,
-                    midnightAtEnd: false
-                }
-        } --><!-- /ko -->
-        <span>to</span>
-        <!-- ko template: { 
-                name: 'weeklySchedule-timeSelectorHourMinutesTpl',
-                data: {
-                    value: toMinute,
-                    isLocked: $parent.isLocked,
-                    midnightAtBeginning: false,
-                    midnightAtEnd: true
-                }
-        } --><!-- /ko -->
+        <div class="weeklySchedule-weekDay-timeRange"><button type="button" class="btn btn-default" data-bind="click: $parent.day.removeTimeRange">
+                <span class="glyphicon glyphicon-minus" aria-hidden="true"></span><span class="sr-only">Remove time</span>
+            </button><!-- ko template: { 
+                    name: 'weeklySchedule-timeSelectorHourMinutesTpl',
+                    data: {
+                        value: fromMinute,
+                        isLocked: $parent.isLocked,
+                        midnightAtBeginning: true,
+                        midnightAtEnd: false
+                    }
+            } --><!-- /ko --> <span>to</span> <!-- ko template: { 
+                    name: 'weeklySchedule-timeSelectorHourMinutesTpl',
+                    data: {
+                        value: toMinute,
+                        isLocked: $parent.isLocked,
+                        midnightAtBeginning: false,
+                        midnightAtEnd: true
+                    }
+            } -->
+        <!-- /ko --></div>
     </script>
     <script type="text/html" id="weeklySchedule-weekDayTpl">
         <div class="isolated weeklySchedule-weekDay">
@@ -88,8 +89,10 @@
             </div>
             <div class="weeklySchedule-weekDay-timeSelectors"
                  data-bind="visible: day.isEnabled">
-                <div class="weeklySchedule-weekDay-timeRange"
-                     data-bind="template: { name: 'weeklySchedule-timeRangeTpl', foreach: day() }"></div>
+                <!-- ko template: { name: 'weeklySchedule-timeRangeTpl', foreach: day() } --><!-- /ko -->
+                <button type="button" class="btn btn-default" data-bind="click: day.addTimeRange, visible: day.canAddMore">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="sr-only">Add times</span>
+                </button>
             </div>
         </div>
     </script>
