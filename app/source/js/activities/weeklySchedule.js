@@ -19,7 +19,7 @@ var A = Activity.extend(function WeeklyScheduleActivity() {
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
     
     this.registerHandler({
-        target: this.app.model.simplifiedWeeklySchedule,
+        target: this.app.model.weeklySchedule,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Error saving your weekly schedule.' : 'Error loading your weekly schedule.';
@@ -47,16 +47,16 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
     
     // Keep data updated:
-    this.app.model.simplifiedWeeklySchedule.sync();
+    this.app.model.weeklySchedule.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
 };
 
 function ViewModel(app) {
 
-    var simplifiedWeeklySchedule = app.model.simplifiedWeeklySchedule;
+    var weeklySchedule = app.model.weeklySchedule;
 
-    var scheduleVersion = simplifiedWeeklySchedule.newVersion();
+    var scheduleVersion = weeklySchedule.newVersion();
     scheduleVersion.isObsolete.subscribe(function(itIs) {
         if (itIs) {
             // new version from server while editing
@@ -74,8 +74,8 @@ function ViewModel(app) {
     // Actual data for the form:
     this.schedule = scheduleVersion.version;
 
-    this.isLocked = simplifiedWeeklySchedule.isLocked;
-    this.isSaving = simplifiedWeeklySchedule.isSaving;
+    this.isLocked = weeklySchedule.isLocked;
+    this.isSaving = weeklySchedule.isSaving;
 
     this.submitText = ko.pureComputed(function() {
         return (
@@ -87,7 +87,7 @@ function ViewModel(app) {
                         'saving...' : 
                         'Save'
         );
-    }, simplifiedWeeklySchedule);
+    }, weeklySchedule);
     
     this.discard = function discard() {
         scheduleVersion.pull({ evenIfNewer: true });

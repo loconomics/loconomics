@@ -1,6 +1,6 @@
 /**
-    SimplifiedWeeklySchedule model.
-    
+    WeeklySchedule model.
+
     Its 'simplified' because it provides an API
     for simple time range per week day,
     a pair of from-to times.
@@ -18,7 +18,8 @@
 var ko = require('knockout'),
     moment = require('moment-timezone'),
     Model = require('./Model'),
-    WeekDaySchedule = require('./WeekDaySchedule');
+    WeekDaySchedule = require('./WeekDaySchedule'),
+    TimeRange = require('./TimeRange');
 
 /**
     It attemps to locate local/system timezone,
@@ -50,18 +51,39 @@ function detectLocalTimezone() {
     per week date, or just set all days times
     as available with a single flag.
 **/
-function SimplifiedWeeklySchedule(values) {
-    
+function WeeklySchedule(values) {
+
     Model(this);
 
     this.model.defProperties({
-        sunday: new WeekDaySchedule(),
-        monday: new WeekDaySchedule(),
-        tuesday: new WeekDaySchedule(),
-        wednesday: new WeekDaySchedule(),
-        thursday: new WeekDaySchedule(),
-        friday: new WeekDaySchedule(),
-        saturday: new WeekDaySchedule(),
+        sunday: {
+            isArray: true,
+            Model: TimeRange
+        },
+        monday: {
+            isArray: true,
+            Model: TimeRange
+        },
+        tuesday: {
+            isArray: true,
+            Model: TimeRange
+        },
+        wednesday: {
+            isArray: true,
+            Model: TimeRange
+        },
+        thursday: {
+            isArray: true,
+            Model: TimeRange
+        },
+        friday: {
+            isArray: true,
+            Model: TimeRange
+        },
+        saturday: {
+            isArray: true,
+            Model: TimeRange
+        },
         isAllTime: false,
         timeZone: ''
     }, values);
@@ -76,6 +98,8 @@ function SimplifiedWeeklySchedule(values) {
         this.friday,
         this.saturday
     ];
+    
+    this.weekDays.forEach(WeekDaySchedule);
     
     this.timeZoneDisplayName = ko.computed(function() {
         var tzid = this.timeZone(),
@@ -102,4 +126,4 @@ function SimplifiedWeeklySchedule(values) {
     }, this);
 }
 
-module.exports = SimplifiedWeeklySchedule;
+module.exports = WeeklySchedule;

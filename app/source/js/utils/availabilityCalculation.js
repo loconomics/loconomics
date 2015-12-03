@@ -5,7 +5,7 @@
     following a given daySchedule and summarize the date availability status.
     
     It relies (directly or not) in models like Appointment, 
-    SimplifiedWeeklySchedule.WeekDaySchedule.
+    WeeklySchedule.WeekDaySchedule.
 **/
 'use strict';
 

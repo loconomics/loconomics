@@ -53,14 +53,14 @@
             <option value="1350">10:30pm</option>
             <option value="1380">11:00pm</option>
             <option value="1410">11:30pm</option>
-            <!-- ko if: midnightAtEnd --><option value="1440">12:00am</option><!-- /ko -->
+            <!-- ko if: midnightAtEnd --><option value="1439">12:00am</option><!-- /ko -->
         </select>
     </script>
     <script type="text/html" id="weeklySchedule-timeRangeTpl">
         <!-- ko template: { 
                 name: 'weeklySchedule-timeSelectorHourMinutesTpl',
                 data: {
-                    value: from,
+                    value: fromMinute,
                     isLocked: $parent.isLocked,
                     midnightAtBeginning: true,
                     midnightAtEnd: false
@@ -70,7 +70,7 @@
         <!-- ko template: { 
                 name: 'weeklySchedule-timeSelectorHourMinutesTpl',
                 data: {
-                    value: to,
+                    value: toMinute,
                     isLocked: $parent.isLocked,
                     midnightAtBeginning: false,
                     midnightAtEnd: true
@@ -82,14 +82,14 @@
             <div>
                 <label>
                     <input type="checkbox" class="checkbox"
-                           data-bind="switch: { disabled: isLocked, state: day().isEnabled }"
+                           data-bind="switch: { disabled: isLocked, state: day.isEnabled }"
                    /><span data-bind="text: label"></span>
                 </label>
             </div>
             <div class="weeklySchedule-weekDay-timeSelectors"
-                 data-bind="visible: day().isEnabled">
+                 data-bind="visible: day.isEnabled">
                 <div class="weeklySchedule-weekDay-timeRange"
-                     data-bind="template: { name: 'weeklySchedule-timeRangeTpl', data: day() }"></div>
+                     data-bind="template: { name: 'weeklySchedule-timeRangeTpl', foreach: day() }"></div>
             </div>
         </div>
     </script>

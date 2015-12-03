@@ -157,7 +157,7 @@ AppModel.prototype.loadModules = function loadModules() {
 
     this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
     this.calendarSyncing = require('./AppModel.calendarSyncing').create(this);
-    this.simplifiedWeeklySchedule = require('./AppModel.simplifiedWeeklySchedule').create(this);
+    this.weeklySchedule = require('./AppModel.weeklySchedule').create(this);
     this.marketplaceProfile = require('./AppModel.marketplaceProfile').create(this);
     this.homeAddress = require('./AppModel.homeAddress').create(this);
     this.privacySettings = require('./AppModel.privacySettings').create(this);

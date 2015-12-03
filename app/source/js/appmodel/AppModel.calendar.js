@@ -131,11 +131,12 @@ exports.create = function create(appModel) {
     /**
         Fetch appointments and schedule information for the date from remote
         in a convenient object to use with the DateAvailability model.
+        TODO OBSOLETE?
     **/
     var getRemoteDateAvailability = function getRemoteDateAvailability(date) {
         return Promise.all([
             getRemoteAppointmentsByDate(date),
-            appModel.simplifiedWeeklySchedule.load(),
+            appModel.weeklySchedule.load(),
             appModel.schedulingPreferences.load()
         ])
         .then(function(result) {
@@ -147,7 +148,8 @@ exports.create = function create(appModel) {
             var dateInfo = {
                 date: date,
                 appointmentsList: apts || [],
-                weekDaySchedule: weekDaySchedule,
+                // TODO Adapt multi time-ranges
+                weekDaySchedule: weekDaySchedule && weekDaySchedule[0],
                 schedulingPreferences: prefs
             };
 
@@ -228,11 +230,12 @@ exports.create = function create(appModel) {
         Fetch appointments and schedule information for the dates from remote
         in a convenient object to use with the DateAvailability model
         (returns an array of them).
+        TODO OBSOLETE?
     **/
     var getRemoteDatesAvailability = function getRemoteDatesAvailability(start, end) {
         return Promise.all([
             getRemoteAppointmentsByDates(start, end),
-            appModel.simplifiedWeeklySchedule.load(),
+            appModel.weeklySchedule.load(),
             appModel.schedulingPreferences.load()
         ])
         .then(function(result) {
@@ -248,7 +251,8 @@ exports.create = function create(appModel) {
                 var dateInfo = {
                     date: date,
                     appointmentsList: aptsDates[dateKey] || [],
-                    weekDaySchedule: weekDaySchedule,
+                    // TODO Adapt multi time-ranges
+                    weekDaySchedule: weekDaySchedule && weekDaySchedule[0],
                     schedulingPreferences: prefs
                 };
 
