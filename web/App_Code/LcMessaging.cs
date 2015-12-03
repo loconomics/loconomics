@@ -1315,7 +1315,7 @@ public class LcMessaging
         try
         {
             var channel = LcHelpers.Channel == "live" ? "" : " at " + LcHelpers.Channel;
-            SendMail("support@loconomics.com",
+            SendMail("support@loconomics.zendesk.com",
                 "New job title" + channel + ": " + jobTitleName,
                 "Generated new job title with name '" + jobTitleName + "', assigned ID: " + jobTitleID
             );
@@ -1332,7 +1332,7 @@ public class LcMessaging
             );
 
             var channel = LcHelpers.Channel == "live" ? "" : " at " + LcHelpers.Channel;
-            SendMail("support@loconomics.com",
+            SendMail("support@loconomics.zendesk.com",
                 "New service attributes" + channel,
                 msg
             );
