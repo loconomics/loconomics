@@ -278,12 +278,16 @@ namespace LcRest
                             if (String.IsNullOrWhiteSpace(attName)) {
                                 continue;
                             }
+
+                            // Clean-up, preparation of the new name
+                            var newAttName = attName.Capitalize().Replace(",", "");
+
                             // Register new attribute
                             int serviceAttributeID = db.QueryValue(sqlRegisterNewAttribute,
                                 serviceAttributes.languageID,
                                 serviceAttributes.countryID,
                                 null, // sourceID
-                                attName.Capitalize(),
+                                newAttName,
                                 null, // description
                                 serviceAttributes.jobTitleID,
                                 serviceAttributes.userID,
@@ -295,6 +299,10 @@ namespace LcRest
                                 cat.Key, serviceAttributeID, serviceAttributes.languageID, serviceAttributes.countryID);
                         }
                     }
+                }
+
+                if (serviceAttributes.proposedServiceAttributes.Count > 0) {
+                    LcMessaging.NotifyNewServiceAttributes(serviceAttributes.userID, serviceAttributes.jobTitleID, serviceAttributes.proposedServiceAttributes);
                 }
 
                 // Since ExperienceLevel is not a service category anymore else an independent table, we need

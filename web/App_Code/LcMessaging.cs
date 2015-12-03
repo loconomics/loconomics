@@ -1310,32 +1310,31 @@ public class LcMessaging
     #endregion
 
     #region Notification to Loconomics Stuff/Support
-    /// <summary>
-    /// OBSOLETE.
-    /// This email was used before the integration of Braintree Marketplace, to report about the
-    /// need for manual paymento to providers. Now payment is automatic, triggered by a refund or the ScheduledTask
-    /// that asks Braintree to proceed with the payment.
-    /// Then this email is not need, Loconomics stuff doesn't need to do anything for payment and this is just
-    /// informational.
-    /// </summary>
-    /// <param name="bookingID"></param>
-    public static void SendProviderPaymentRequestToLoconomics(int bookingID)
-    {
-        SendMail("support@loconomics.com", "Provider Payment Request",
-            ApplyTemplate(LcUrl.LangPath + "Email/EmailProviderPaymentRequest/",
-            new Dictionary<string,object> {
-                { "BookingID", bookingID },
-                { "EmailTo", "support@loconomics.com" }
-         }));
-    }
     public static void NotifyNewJobTitle(string jobTitleName, int jobTitleID)
     {
         try
         {
-            var channel = LcHelpers.Channel == "live" ? "" : " at" + LcHelpers.Channel;
+            var channel = LcHelpers.Channel == "live" ? "" : " at " + LcHelpers.Channel;
             SendMail("support@loconomics.com",
                 "New job title" + channel + ": " + jobTitleName,
                 "Generated new job title with name '" + jobTitleName + "', assigned ID: " + jobTitleID
+            );
+        }
+        catch { }
+    }
+    public static void NotifyNewServiceAttributes(int userID, int jobTitleID, Dictionary<int, List<string>> proposedAttributes)
+    {
+        try
+        {
+            var msg = String.Format("Generated new service attributes by userID:{0} for job title:{1}, pending of approval:<br/>\n<br/>\n", userID, jobTitleID);
+            msg += String.Join("<br/>\n", proposedAttributes
+                .Select(x => String.Format("- For serviceAttributeCategoryID {0}: {1}", x.Key, String.Join(", ", x.Value)))
+            );
+
+            var channel = LcHelpers.Channel == "live" ? "" : " at " + LcHelpers.Channel;
+            SendMail("support@loconomics.com",
+                "New service attributes" + channel,
+                msg
             );
         }
         catch { }
