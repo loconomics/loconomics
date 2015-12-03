@@ -4,8 +4,8 @@
     <h2 class="SectionTitle">Weekly schedule</h2>
     
     <script type="text/html" id="weeklySchedule-timeSelectorHourMinutesTpl">
-        <select data-bind="value: value, disable: isLocked">
-            <option value="0">12:00am</option>
+        <select data-bind="value: value, disable: isLocked, valueAllowUnset: true">
+            <!-- ko if: midnightAtBeginning --><option value="0">12:00am</option><!-- /ko -->
             <option value="30">12:30am</option>
             <option value="60">1:00am</option>
             <option value="90">1:30am</option>
@@ -53,60 +53,29 @@
             <option value="1350">10:30pm</option>
             <option value="1380">11:00pm</option>
             <option value="1410">11:30pm</option>
-            <option value="1440">12:00am</option>
+            <!-- ko if: midnightAtEnd --><option value="1440">12:00am</option><!-- /ko -->
         </select>
     </script>
-    <script type="text/html" id="weeklySchedule-timeSelectorHourTpl">
-        <select data-bind="value: value, disable: isLocked, valueAllowUnset: true">
-            <!-- ko if: midnightAtBeginning --><option value="0">12:00am</option><!-- /ko -->
-            <option value="1">1:00am</option>
-            <option value="1.5">1:30am</option>
-            <option value="2">2:00am</option>
-            <option value="2.5">2:30am</option>
-            <option value="3">3:00am</option>
-            <option value="3.5">3:30am</option>
-            <option value="4">4:00am</option>
-            <option value="4.5">4:30am</option>
-            <option value="5">5:00am</option>
-            <option value="5.5">5:30am</option>
-            <option value="6">6:00am</option>
-            <option value="6.5">6:30am</option>
-            <option value="7">7:00am</option>
-            <option value="7.5">7:30am</option>
-            <option value="8">8:00am</option>
-            <option value="8.5">8:30am</option>
-            <option value="9">9:00am</option>
-            <option value="9.5">9:30am</option>
-            <option value="10">10:00am</option>
-            <option value="10.5">10:30am</option>
-            <option value="11">11:00am</option>
-            <option value="11.5">11:30am</option>
-            <option value="12">12:00pm</option>
-            <option value="12.5">12:30pm</option>
-            <option value="13">1:00pm</option>
-            <option value="13.5">1:30pm</option>
-            <option value="14">2:00pm</option>
-            <option value="14.5">2:30pm</option>
-            <option value="15">3:00pm</option>
-            <option value="15.5">3:30pm</option>
-            <option value="16">4:00pm</option>
-            <option value="16.5">4:30pm</option>
-            <option value="17">5:00pm</option>
-            <option value="17.5">5:30pm</option>
-            <option value="18">6:00pm</option>
-            <option value="18.5">6:30pm</option>
-            <option value="19">7:00pm</option>
-            <option value="19.5">7:30am</option>
-            <option value="20">8:00pm</option>
-            <option value="20.5">8:30pm</option>
-            <option value="21">9:00pm</option>
-            <option value="21.5">9:30pm</option>
-            <option value="22">10:00pm</option>
-            <option value="22.5">10:30pm</option>
-            <option value="23">11:00pm</option>
-            <option value="23.5">11:30pm</option>
-            <!-- ko if: midnightAtEnd --><option value="24">12:00am</option><!-- /ko -->
-        </select>
+    <script type="text/html" id="weeklySchedule-timeRangeTpl">
+        <!-- ko template: { 
+                name: 'weeklySchedule-timeSelectorHourMinutesTpl',
+                data: {
+                    value: from,
+                    isLocked: $parent.isLocked,
+                    midnightAtBeginning: true,
+                    midnightAtEnd: false
+                }
+        } --><!-- /ko -->
+        <span>to</span>
+        <!-- ko template: { 
+                name: 'weeklySchedule-timeSelectorHourMinutesTpl',
+                data: {
+                    value: to,
+                    isLocked: $parent.isLocked,
+                    midnightAtBeginning: false,
+                    midnightAtEnd: true
+                }
+        } --><!-- /ko -->
     </script>
     <script type="text/html" id="weeklySchedule-weekDayTpl">
         <div class="isolated weeklySchedule-weekDay">
@@ -119,25 +88,8 @@
             </div>
             <div class="weeklySchedule-weekDay-timeSelectors"
                  data-bind="visible: day().isEnabled">
-                <!-- ko template: { 
-                        name: 'weeklySchedule-timeSelectorHourTpl',
-                        data: {
-                            value: day().fromHour,
-                            isLocked: isLocked,
-                            midnightAtBeginning: true,
-                            midnightAtEnd: false
-                        }
-                } --><!-- /ko -->
-                <span>to</span>
-                <!-- ko template: { 
-                        name: 'weeklySchedule-timeSelectorHourTpl',
-                        data: {
-                            value: day().toHour,
-                            isLocked: isLocked,
-                            midnightAtBeginning: false,
-                            midnightAtEnd: true
-                        }
-                } --><!-- /ko -->
+                <div class="weeklySchedule-weekDay-timeRange"
+                     data-bind="template: { name: 'weeklySchedule-timeRangeTpl', data: day() }"></div>
             </div>
         </div>
     </script>

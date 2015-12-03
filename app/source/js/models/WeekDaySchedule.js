@@ -11,6 +11,17 @@ var Model = require('./Model'),
     moment = require('moment'),
     ko = require('knockout');
 
+function forceInteger(target) {
+    return ko.pureComputed({
+        read: function() {
+            return target() |0;
+        },
+        write: function(v) {
+            target(v |0);
+        }
+    });
+}
+
 function WeekDaySchedule(values) {
 
     Model(this);
@@ -21,6 +32,10 @@ function WeekDaySchedule(values) {
         from: 0,
         to: 0
     }, values);
+    
+    // Auto convert strings to numbers on integer values 'from' and 'to'
+    this.from = forceInteger(this.from);
+    this.to = forceInteger(this.to);
     
     /**
         It allows to know if this week day is 
@@ -47,11 +62,11 @@ function WeekDaySchedule(values) {
         write: function(val) {
             if (val === true) {
                 // Default range 9a - 5p
-                this.fromHour(9);
-                this.toHour(17);
+                this.from(9 * 60);
+                this.to(17 * 60);
             }
             else {
-                this.toHour(0);
+                this.to(0);
                 this.from(0);
             }
         },
@@ -74,27 +89,7 @@ function WeekDaySchedule(values) {
     
     // Additional interfaces to get/set the from/to times
     // by using a different data unit or format.
-    
-    // Integer, rounded-up, number of hours
-    this.fromHour = ko.computed({
-        read: function() {
-            return Math.floor(this.from() / 60);
-        },
-        write: function(hours) {
-            this.from((hours * 60) |0);
-        },
-        owner: this
-    });
-    this.toHour = ko.computed({
-        read: function() {
-            return Math.ceil(this.to() / 60);
-        },
-        write: function(hours) {
-            this.to((hours * 60) |0);
-        },
-        owner: this
-    });
-    
+
     // String, time format ('hh:mm')
     this.fromTime = ko.computed({
         read: function() {
