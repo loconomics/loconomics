@@ -79,7 +79,7 @@
         <!-- /ko --></div>
     </script>
     <script type="text/html" id="weeklySchedule-weekDayTpl">
-        <div class="isolated weeklySchedule-weekDay">
+        <div class="weeklySchedule-weekDay">
             <div>
                 <label>
                     <input type="checkbox" class="checkbox"
@@ -105,7 +105,7 @@
                 <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime }" />
             </label>
         </div>
-        <div data-bind="visible: !schedule.isAllTime()">
+        <div class="weeklySchedule-days" data-bind="visible: !schedule.isAllTime()">
             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.monday, label: 'Monday', isLocked: isLocked } } --><!-- /ko -->
             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.tuesday, label: 'Tuesday', isLocked: isLocked } } --><!-- /ko -->
             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.wednesday, label: 'Wednesday', isLocked: isLocked } } --><!-- /ko -->

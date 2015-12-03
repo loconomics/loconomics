@@ -5,19 +5,31 @@
 [data-activity=weeklySchedule] {
 
     // Some values from the Bootstrap-Switch plugin styles
+    $switchBtn-partsWidth = 53px;
     $switchBtn-height = 32px;
-    $switchBtn-width = 108px;
+    // 2 visible handles/parts and 2px of lateral border:
+    $switchBtn-width = ($switchBtn-partsWidth * 2) + 2px;
     $gapWithSwitch = 14px;
     $addRemBtn-width = 40px;
+    
+    // Center the container, make it uses just the needed width
+    text-align: center;
+    > form.container {
+        margin: auto;
+        // Auto width
+        display: inline-block;
+        // Restore align for content
+        text-align: left;
+    }
 
     .weeklySchedule-weekDay {
         
-        isolated();
+        margin-bottom: 14px;
     
         /* The element with the label text on 
             the right of the switch button
         */
-        label div + span {
+        label > div + span {
             pointer-events: none;
             // IMPORTANT: A gap carefully aligned in vertical
             // with the dropdowns .weeklySchedule-weekDay-timeSelectors
@@ -26,16 +38,25 @@
             // using the Switch height:
             line-height: $switchBtn-height;
         }
+        
+        // IMPORTANT: Force SWITCH width to avoid it automatic size (based on text size,
+        // font-family varies from platform to platform)
+        // Using the wider handle size tested --on browser.
+        .bootstrap-switch-container {
+            > span {
+                width: $switchBtn-partsWidth !important;
+            }
+        }
 
         .weeklySchedule-weekDay-timeSelectors {
-            // IMPORTANT: is aligned with the label text.
-            padding-left: $switchBtn-width + $gapWithSwitch;
             // IMPORTANT: the remove/add buttons are aligned in the right with the top switch button
             padding-left: $switchBtn-width - $addRemBtn-width; //68px;
+
+            // IMPORTANT: Next left margins and select paddings are carefully choosen so
+            // it fits one row in a screen size of 320px (original iPhone).
             .weeklySchedule-weekDay-timeRange {
-                // and the content select aligned with the label text
                 .btn + select {
-                    margin-left: $gapWithSwitch;
+                    margin-left: 6px;
                 }
                 
                 margin-bottom: 2px;
@@ -45,6 +66,21 @@
                     display: inline-block;
                     // Fix the total height and the strange margin added
                     vertical-align: middle;
+                    // 5px horizontal is OK in iPhone: enought padding without requiring 2 lines,
+                    // while in Chrome and Firefox, for some reason, they add an additional internal
+                    // gap between padding and the beggining of the text. Thats make it a bit wider
+                    // in Chrome/Android, but not enought to have problems from 320px screen width.
+                    padding: 6px 5px;
+                    // Remove the arrow, it's breaking layout in iPhone (too wide)
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    // Hack to make it work on some browsers, like Firefox
+                    text-indent: 0.01px;
+                    text-overflow: '';
+                    /* for IE 10+ */
+                    &::-ms-expand {
+                        display: none;
+                    }
                 }
             }
 
