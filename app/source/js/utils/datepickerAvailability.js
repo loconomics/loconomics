@@ -48,47 +48,6 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
             isLoading(true);
         
         // Request the data
-        /*app.model.calendar.getDatesAvailability(start, end)
-        .then(function(resultByDates) {
-            // We are still in the same showed month? (loading is async, so could have changed)
-            if (month !== $datepicker.datepicker('getViewDate').getMonth()) return;
-
-            // We received a set of DateAvailability objects per date (iso string key)
-            // Iterate every day element, and use its date avail from the result
-            daysElements.each(function() {
-                // jshint maxcomplexity:10
-                var $dateTd = $(this),
-                    id = $dateTd.data('date-time'),
-                    dateAvail = resultByDates[moment(id).format('YYYY-MM-DD')];   
-
-                // Integrity check to avoid edge case exceptions (must not happens, but stronger code)
-                if (!id || !dateAvail) return;
-                
-                // Remove any previous 'tag-' class from the cell classNames and keep for later change
-                var cellClass = $dateTd.attr('class').replace(/(^|\s)tag-[^\s]+/, '');
-
-                // Set a date cell class based on its availability
-                var cls = '';
-                switch(dateAvail.availableTag()) {
-                    case 'past':
-                        cls = 'tag-muted';
-                        break;
-                    case 'full':
-                        cls = 'tag-blank';
-                        break;
-                    case 'medium':
-                        cls = 'tag-dark';
-                        break;
-                    case 'low':
-                        cls = 'tag-warning';
-                        break;
-                    case 'none':
-                        cls = 'tag-danger';
-                        break;
-                }
-                $dateTd.attr('class', cellClass + ' ' + cls);
-            });
-        })*/
         app.model.availability.times(userID, start, end)
         .then(function(result) {
             // We are still in the same showed month? (loading is async, so could have changed)

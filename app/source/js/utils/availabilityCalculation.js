@@ -190,17 +190,53 @@ exports.fillDayAvailability = function fillDayAvailability(date, appointmentsLis
     The range must be two times inside the same date (local time), format
     range { start:Date, end:Date }
     
-    weekDaySchedule is an instance of WeekDaySchedule Model, basically:
-    { from:observable(Date), to:observable(Date) }
+    weekDaySchedule is an instance of WeekDaySchedule Model, that inherits
+    from an observableArray of TimeRange's, adding some additional methods.
+    TimeRange structure is basically { start:observable(IsoTimeString), end:observable(IsoTimeString) }
+    extended with { fromMinute:WritableComputedObservable(int), toMinute:WritableComputedObservable(int) }
+    
+    IMPORTANT: Currently, days with multi time-ranges will generated additional, overlapping, 'unavailable' slots
+    because how is calculated in a per time-range basis (createScheduleSlotsForRanges).
+    Because it calculate free times correctly and in the UI we do NOT show the unavailable ones, it works good enough,
+    but any attempt to show unavailable slots generated or use that slots for other computation will fail.
+    As an example, for a Monday with weekDaySchedule: [
+        { start: '09:00', end: '17:00' },
+        { start: '18:00', end: '19:00' }
+    ]
+    This function will generate next slots list (special short notation, 'Un' Unavailable, 'Fr' Free and times):
+        Un: 00:00-09:00
+        Fr: 09:00-17:00
+        Un: 17:00-24:00
+        Un: 00:00-18:00
+        Fr: 18:00-19:00
+        Un: 19:00-24:00
+    Clearly, the Unavailable created for the first range (3th line), overlap the following Free an Unavailble slots,
+    because every creating does not take care of other time-ranges.
+    MAYBE: Just adding a second pass over that list generated, cutting or even remoging Unavailable slots when needed,
+    can fix the results.
 **/
 exports.createScheduleSlots = function createScheduleSlots(range, weekDaySchedule) {
+    var trs = weekDaySchedule();
+    if (trs.length) {
+        var lists = weekDaySchedule().map(function(timeRange) {
+            return exports.createScheduleSlotsForRanges(range.start, range.end, timeRange.fromMinute(), timeRange.toMinute());
+        });
+        var l = lists.reduce(function(l, nl) { return l.concat.apply(l, nl); }, []);
+        //if (trs.length > 1) console.log('createScheduleSlots', range, weekDaySchedule(), l);
+        return l;
+    }
+    else {
+        // when no availability on the day
+        return exports.createScheduleSlotsForRanges(range.start, range.end, 0, 0);
+    }
+};
+
+exports.createScheduleSlotsForRanges = function createScheduleSlotsForRanges(start, end, freeFromMinute, freeToMinute) {
     /*jshint maxcomplexity:10*/
     var list = [],
-        start = range.start,
-        end = range.end,
         date = moment(start).startOf('day'),
-        from = moment(date).add({ minutes: weekDaySchedule.from() }).toDate(),
-        to = moment(date).add({ minutes: weekDaySchedule.to() }).toDate();
+        from = moment(date).add({ minutes: freeFromMinute }).toDate(),
+        to = moment(date).add({ minutes: freeToMinute }).toDate();
 
     // It happens before the week day schedule starts
     var beforeSchedule = 

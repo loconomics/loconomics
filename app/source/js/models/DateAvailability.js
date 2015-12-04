@@ -10,6 +10,7 @@
 var Model = require('../models/Model');
 var Appointment = require('../models/Appointment'),
     WeekDaySchedule = require('../models/WeekDaySchedule'),
+    TimeRange = require('../models/TimeRange'),
     SchedulingPreferences = require('../models/SchedulingPreferences'),
     moment = require('moment'),
     ko = require('knockout'),
@@ -23,7 +24,8 @@ function DateAvailability(values) {
     this.model.defProperties({
         date: null, // Date
         weekDaySchedule: {
-            Model: WeekDaySchedule
+            isArray: true,
+            Model: TimeRange
         },
         appointmentsList: {
             isArray: true,
@@ -34,6 +36,8 @@ function DateAvailability(values) {
         }
     }, values);
     
+    WeekDaySchedule(this.weekDaySchedule);
+    
     /**
         :array<Appointment> List of appointments for all the times in the date.
         It introduces free and unavailable appointments using appointmentsList as base
@@ -41,7 +45,7 @@ function DateAvailability(values) {
     **/
     this.list = ko.pureComputed(function() {
         return availabilityCalculation.fillDayAvailability(
-            this.date(), this.appointmentsList(), this.weekDaySchedule(), this.schedulingPreferences()
+            this.date(), this.appointmentsList(), this.weekDaySchedule, this.schedulingPreferences()
         );
     }, this);
 
@@ -52,14 +56,15 @@ function DateAvailability(values) {
     **/
     this.workDayMinutes = ko.pureComputed(function() {
         var schedule = this.weekDaySchedule();
-        // from-to are minutes of the day, so its easy to calculate
-        return (schedule.to() - schedule.from()) |0;
+        return schedule.reduce(function(v, next) {
+            return v + (next.toMinute() - schedule.fromMinute());
+        }, 0);
     }, this);
 
     /**
         :int
         Number of minutes available to be scheduled in this date
-        inside the work time (weekDaySchedule.
+        inside the work time.
         It's the sum of all 'Free' appointments in the date.
     **/
     this.availableMinutes = ko.pureComputed(function() {
