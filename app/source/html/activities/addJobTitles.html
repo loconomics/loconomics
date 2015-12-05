@@ -14,6 +14,11 @@
                 <button type="button" class="btn btn-secondary" data-bind="event: { click: add }">Add</button>
             </span>
         </div><!-- /input-group -->
+        <div class="TagsListAutocomplete" data-bind="visible: searchText() && autocompleteSuggestions().length">
+            <ul data-bind="foreach: autocompleteSuggestions" class="list-unstyled">
+                <li><button type="button" class="btn btn-link btn-block" data-bind="text: label, click: $parent.addItem"></button></li>
+            </ul>
+        </div>
     </div>
     
   <div class="ListView ListView--twolines ListView--textualmarker"

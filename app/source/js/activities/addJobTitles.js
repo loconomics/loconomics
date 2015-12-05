@@ -4,10 +4,6 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var $ = require('jquery');
-//NOTE: IT DEPENDS on this, but jquery-ui touch events support requires special load order
-// so thats being done in the entry point file
-//require('jquery-ui/autocomplete');
 
 var A = Activity.extend(function AddJobTitlesActivity() {
     
@@ -16,35 +12,6 @@ var A = Activity.extend(function AddJobTitlesActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduling');
-    
-    // Setup autocomplete
-    var ac = this.$activity.find('#addJobTitles-search');
-    var vw = this.viewModel;
-    // Autocomplete positions and add to the list
-    ac.autocomplete({
-        source: function(request, response) {
-            vw.searchBy(request.term)
-            .then(function(results) {
-                response(results);
-            });
-        },
-        autoFocus: false,
-        minLength: 0,
-        select: function (event, ui) {
-            // No value, no action :(
-            if (!ui || !ui.item || !ui.item.value) return;
-
-            vw.addItem(ui.item);
-
-            return false;
-        },
-        focus: function (event, ui) {
-            if (!ui || !ui.item || !ui.item.positionSingular);
-            // We want the label in textbox, not the value
-            $(this).val(ui.item.positionSingular);
-            return false;
-        }
-    });
 });
 
 exports.init = A.init;
@@ -111,8 +78,10 @@ function ViewModel(app) {
         if (foundIndex === -1) {
             this.jobTitles.push(item);
         }
+        // Clear search, closing suggestions too
+        this.searchText('');
     }.bind(this);
-    
+
     this.add = function add() {
         var s = this.searchText();
         if (s) {
@@ -180,4 +149,35 @@ function ViewModel(app) {
             });
         }.bind(this));
     }.bind(this);
+    
+    // Autocomplete suggestions
+    this.autocompleteSuggestions = ko.observableArray();
+    this.searchText.subscribe(function(text) {
+        if (text) {
+            // Server search
+            this.searchBy(text)
+            .then(function(results) {
+                // Avoid race conditions: double check the search is still the same
+                // text checked with the server
+                if (this.searchText() === text) {
+                    this.autocompleteSuggestions(results);
+                }
+            }.bind(this));
+        }
+        else {
+            this.autocompleteSuggestions([]);
+        }
+    }, this);
+    
+    // TODO: Implement a local search with a local copy of all available job-titles (if is not too much data)
+    // rather than the previous server search on each typing
+    // Next suggestion code based on servicesOverview attributes search
+    /*var textSearch = require('../utils/textSearch');
+    this.autocompleteSuggestions = ko.computed(function() {
+        var s = this.searchText(),
+            a = this.availableJobTitles();
+        return a.filter(function(jt) {
+            return textSearch(s, jt.singularName());
+        });
+    }, this);*/
 }
