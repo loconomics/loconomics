@@ -128,16 +128,4 @@
         opacity: 1;
         pointer-events: auto;
     }
-    
-    // Global fix for jQuery-UI autocomplete widget bad z-index, because
-    // collision with other UI elements, and cannot be applied per activity because
-    // it's located out of them. Problem appeared at:
-    // - addJobTitles: the autocomplete is visible but not clickable/touchable
-    .ui-autocomplete {
-        z-index: 10100;
-        // Fix too bad sizing of the anchor, must be full width
-        a {
-            display: block;
-        }
-    }
 }

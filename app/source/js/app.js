@@ -183,8 +183,10 @@ var appInit = function appInit() {
     
     attachFastClick(document.body);
     
-    // Jquery-ui components used
-    require('jquery-ui/autocomplete');
+    // NOTE: Put any jQuery-UI used components here and document their use in the
+    //  activities that require them; do NOT require it there because will break
+    //  the use of touch-punch (few lines below). But is recommended to use
+    //  alternative approaches, like knockout--custom-css (like done in autocompletes)
     // Knockout binding for jquery-ui sortable.
     // It loads jquery-ui sortable and draggable as dependencies:
     require('knockout-sortable');
