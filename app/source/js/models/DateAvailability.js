@@ -57,7 +57,7 @@ function DateAvailability(values) {
     this.workDayMinutes = ko.pureComputed(function() {
         var schedule = this.weekDaySchedule();
         return schedule.reduce(function(v, next) {
-            return v + (next.toMinute() - schedule.fromMinute());
+            return v + (next.toMinute() - next.fromMinute());
         }, 0);
     }, this);
 
