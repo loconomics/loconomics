@@ -212,14 +212,22 @@ Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options
         goBackOptions.isShell = false;
     }
 
+    var helpLink = options.helpLink;
+    if (helpLink) {
+        var del = helpLink.indexOf('?') > -1 ? '&' : '?';
+        helpLink += del + 'mustReturn=true&returnText=' + encodeURIComponent(title);
+    }
+
+    var rightOptions = helpLink ?
+        NavAction.goHelpIndex.model.clone({
+            link: helpLink
+        }) :
+        NavAction.goHelpIndex;
+
     return new NavBar({
         title: '', // No title
         leftAction: NavAction.goBack.model.clone(goBackOptions),
-        rightAction: options.helpId ?
-            NavAction.goHelpIndex.model.clone({
-                link: '#' + options.helpId
-            }) :
-            NavAction.goHelpIndex
+        rightAction: rightOptions
     });
 };
 

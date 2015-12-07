@@ -15,9 +15,7 @@ var A = Activity.extend(function DatetimePickerActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel();    
     // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('', {
-        helpId: 'datetimePickerHelp'
-    });
+    this.navBar = Activity.createSubsectionNavBar('');
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
 
