@@ -1,6 +1,12 @@
-﻿@* This e-mail goes out to the service professional after the client has cancelled an appointment.
+@* This e-mail goes out to the service professional after the client has cancelled an appointment.
     If payment was collected and the service professional has a cancellation policy in effect, 
     a summary of cancellation fees charged to the client's card will be included.
+
+    Sender e-mail: automated@@loconomics.com
+    Sender name: Loconomics Scheduler
+    Subject: @(info.client.firstName) has cancelled their appointment
+    Send when: immediately
+    Restrictions: positions.HIPAA=0;
  *@
 @using WebMatrix.Data;
 @{
@@ -20,7 +26,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.serviceProfessional.firstName), Unfortunately, @(info.client.firstName) @(info.client.lastName) their appointment for your @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)).
+                Hi, @(info.serviceProfessional.firstName), Unfortunately, @(info.client.firstName) @(info.client.lastName) has cancelled their appointment for your @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)).
             </div>
         </td>
     </tr>
@@ -39,7 +45,7 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, @(info.client.firstName) @(info.client.lastName) their appointment for your @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)). Your schedule has been updated to reflect this.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, @(info.client.firstName) @(info.client.lastName) has cancelled their appointment for your @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)). Your schedule has been updated to reflect this.</td>
                             </tr>
 							@if (policy != null && info.booking.paymentCollected)
 							{
@@ -48,7 +54,7 @@
 								    @if (info.cancellationLimitDate <= DateTime.Now)  
 								    {
 									    <span>
-										    Since your cancellation policy states @(info.client.firstName) would have had to cancel their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, @(info.client.firstName) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is your cancellation fee of <strong>@(policy.refundIfCancelledBefore.ToString("0.##%")) of the cost of booked services</strong>. You'll receive payment shortly.
+										    Since your cancellation policy states @(info.client.firstName) would have had to cancel their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, @(info.client.firstName) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is your cancellation fee of <strong>@(policy.refundIfCancelledBefore.ToString("0.##%")) of the cost of booked services</strong>. You&rsquo;ll receive payment shortly.
 									    </span>
 								    }
 								    else

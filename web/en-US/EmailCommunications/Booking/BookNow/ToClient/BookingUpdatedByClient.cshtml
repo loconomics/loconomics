@@ -1,5 +1,11 @@
-﻿@* This e-mail goes out to the client after they have updated an appointment with any changes (services or time).
+@* This e-mail goes out to the client after they have updated an appointment with any changes (services or time).
     This can only be done within the cancellation policy limit or else it must be cancelled and a new booking made.
+
+    Sender e-mail: automated@@loconomics.com
+    Sender name: @(info.serviceProfessional.firstName) @(info.serviceProfessional.lastName)
+    Subject: Updated appointment confirmation
+    Send when: immediately
+    Restrictions: positions.HIPAA=0
  *@
 @using WebMatrix.Data;
 @{
@@ -18,7 +24,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), I'm just confirming that you've successfully updated your appointment for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. 
+                Hi, @(info.client.firstName), I&rsquo;m just confirming that you&rsquo;ve successfully updated your appointment for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. 
             </div>
         </td>
     </tr>
@@ -37,10 +43,10 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I'm just confirming that you've successfully updated your appointment for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. Please review the details below. I will see you <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I&rsquo;m just confirming that you&rsquo;ve successfully updated your appointment for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. Please review the details below. I will see you <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>.</td>
                             </tr>
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="E-mail:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
                             </tr>
                         </table>
                     </td>

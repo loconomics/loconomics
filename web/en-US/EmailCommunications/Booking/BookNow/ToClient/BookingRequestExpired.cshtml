@@ -1,5 +1,11 @@
-﻿@* Email to the client to communicate that the booking request they made expired. 
+@* Email to the client to communicate that the booking request they made expired. 
 	THIS MAY ONLY BE A MARKETPLACE feature...meaning BookNow bookings won't have this
+
+    Sender e-mail: automated@@loconomics.com
+    Sender name: @(info.serviceProfessional.firstName) @(info.serviceProfessional.lastName)
+    Subject: Your appointment request
+    Send when: after 24 hours from @booking.updatedDate
+    Restrictions: positions.HIPAA=0
  *@
 @using WebMatrix.Data;
 @{
@@ -18,7 +24,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), Unfortunately, I'm unable to accept your request for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. 
+                Hi, @(info.client.firstName), Unfortunately, I&rsquo;m unable to accept your request for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. 
             </div>
         </td>
     </tr>
@@ -37,7 +43,7 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, I'm unable to accept your request for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. Please accept my apologies, and feel free to book me again in the future.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, I&rsquo;m unable to accept your request for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. Please accept my apologies, and feel free to book me again in the future.</td>
                             </tr>
 							@if (info.booking.paymentCollected)
 							{
@@ -46,7 +52,7 @@
 							</tr>
 							}
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="E-mail:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
                             </tr>
                         </table>
                             <tr>

@@ -1,0 +1,35 @@
+@* Location where services will be performed.
+ *@
+@using WebMatrix.Data;
+@{
+    // All the data for this component:
+    var info = LcEmailTemplate.GetBookingInfo(PageData);
+
+    var thereAreNotes = !String.IsNullOrEmpty(info.booking.specialRequests);
+}
+@if (thereAreNotes)
+{
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center" style="border-bottom: 1px solid #d2d2d2; padding: 0 15px 40px 15px;" class="section-padding">
+            <table border="0" cellpadding="0" cellspacing="0" width="500" style="padding:0 0 20px 0;" class="responsive-table">
+                <tr>
+                    <td style="padding: 40px 0 0 0;" class="no-padding">
+                        <!-- ARTICLE -->
+                        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                            <tr>
+                                <td align="left" style="padding: 0 25px 5px 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Notes to @info.serviceProfessional.firstName</td>
+                            </tr>
+                            <tr>
+                                 <td align="left" style="padding: 10px 25px 15px 0; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">@info.booking.specialRequests</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="middle" style="padding: 20px 0 0 0;" class="mobile-hide"><a href="#" target="_blank"><img src="@(LcUrl.AppUrl)img/email/ion-clipboard.png" alt="alt text here" width="150" height="150" border="0" style="display: block; font-family: Arial; color: #666666; font-size: 14px;"></a></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<!-- $NotesToServiceProfessional END -->
+}
