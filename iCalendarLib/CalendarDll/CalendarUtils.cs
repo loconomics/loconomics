@@ -2216,10 +2216,23 @@ namespace CalendarDll
         /// </summary>
         /// <param name="anEvent"></param>
         public void UpdateEventDatesToSystemTimeZone(IEvent anEvent) {
+            // IMPORTANT:IagoSRL@2015-12-10: Assigning new values is being problematic, since there are some
+            // underlying calculations that overwrite the assigned values.
+            // Discovered while in issue #851, where any value assigned to End/DTEnd gets discarded and
+            // a new one, that has the original value and UTC mark, is put in place, resulting in no-change and
+            // the bug commented on that issue.
+            // After testing, it seems only affects to property End/DTEnd, but applying to both Start and End to ensure no more side-effects.
+            // Both (start, end) fields have ever a value, one obtained from file or autocalculated on parsing.
+            // EXAMPLE TO BE CLEAR, doing next is BUGGY
+            // anEvent.End = UpdateDateToSystemTimeZone(anEvent.End);
+            // GETS FIXED USING NEXT
+            // anEvent.End.CopyFrom(UpdateDateToSystemTimeZone(anEvent.End));
+            
             // IEvent.Start is an alias for DTStart.
-            anEvent.Start = UpdateDateToSystemTimeZone(anEvent.Start);
+            anEvent.Start.CopyFrom(UpdateDateToSystemTimeZone(anEvent.Start));
             // IEvent.End is an alias for DTEnd.
-            anEvent.End = UpdateDateToSystemTimeZone(anEvent.End);
+            anEvent.End.CopyFrom(UpdateDateToSystemTimeZone(anEvent.End));
+
             anEvent.DTStamp = UpdateDateToSystemTimeZone(anEvent.DTStamp);
             anEvent.Created = UpdateDateToSystemTimeZone(anEvent.Created);
             anEvent.LastModified = UpdateDateToSystemTimeZone(anEvent.LastModified);
