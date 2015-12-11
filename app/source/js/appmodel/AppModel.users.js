@@ -22,8 +22,8 @@ exports.create = function create(appModel) {
         information to start a booking process or the user information
         widgets.
     **/
-    api.getUser = function(userID) {
-        return appModel.rest.get('users/' + (userID |0));
+    api.getUser = function(userID, options) {
+        return appModel.rest.get('users/' + (userID |0), options);
     };
     
     api.getProfile = function(userID) {

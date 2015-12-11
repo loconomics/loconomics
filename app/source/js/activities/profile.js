@@ -26,7 +26,7 @@ A.prototype.loadData = function(userID, jobTitleID) {
     this.viewModel.reset();
     if (userID) {
         this.viewModel.isLoading(true);
-        this.app.model.users.getUser(userID)
+        this.app.model.users.getUser(userID, { includeFullJobTitleID: -1 })
         .then(function(data) {
             var pu = new PublicUser(data);
             this.viewModel.user(pu);
@@ -39,7 +39,7 @@ A.prototype.loadData = function(userID, jobTitleID) {
             // For service professionals:
             if (jobTitleID) {
                 this.viewModel.user().selectedJobTitleID(jobTitleID);
-                // TODO Load extra job data
+                // TODO Load extra job data (reviews)
             }
         }.bind(this))
         .catch(function(err) {
@@ -71,6 +71,7 @@ A.prototype.show = function show(options) {
 function ViewModel() {
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
+    this.reviews = ko.observableArray([]);
 
     this.reset = function() {
         this.user(null);

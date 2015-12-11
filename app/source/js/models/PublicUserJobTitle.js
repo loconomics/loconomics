@@ -11,9 +11,15 @@
 **/
 'use strict';
 
+var ko = require('knockout');
+var numeral = require('numeral');
 var Model = require('./Model'),
     PublicUserRating = require('./PublicUserRating'),
-    PublicUserVerificationsSummary = require('./PublicUserVerificationsSummary');
+    PublicUserVerificationsSummary = require('./PublicUserVerificationsSummary'),
+    Address = require('./Address'),
+    WorkPhoto = require('./WorkPhoto'),
+    PublicUserJobTitleServiceAttributes = require('./PublicUserJobTitleServiceAttributes'),
+    ServiceProfessionalService = require('./ServiceProfessionalService');
 
 function PublicUserJobTitle(values) {
     
@@ -27,12 +33,54 @@ function PublicUserJobTitle(values) {
         instantBooking: false,
         jobTitleSingularName: '',
         jobTitlePluralName: '',
-        
+
         rating: { Model: PublicUserRating },
         verificationsSummary: { Model: PublicUserVerificationsSummary },
+        serviceAddresses: {
+            Model: Address,
+            isArray: true
+        },
+        services: {
+            Model: ServiceProfessionalService,
+            isArray: true
+        },
+        serviceAttributes: {
+            Model: PublicUserJobTitleServiceAttributes
+        },
+        workPhotos: {
+            Model: WorkPhoto,
+            isArray: true
+        }
     }, values);
 
     this.model.defID(['userID', 'jobTitleID']);
+    
+    var findMinValue = function(services) {
+        var s = services;
+        if (s.length === 0) return null;
+        return s.reduce(function(last, serv) {
+            return (serv.priceRate() && serv.priceRate() < last.price) ? {
+                price: serv.priceRate(),
+                unit: serv.priceRateUnit()
+            } : (serv.price() && serv.price() < last.price) ? {
+                price: serv.price(),
+                unit: null
+            } : last;
+        }, { price: Number.MAX_VALUE });
+    };
+
+    this.minServiceValue = ko.pureComputed(function() {
+        var price = findMinValue(this.services());
+        if (!price) {
+            return '';
+        }
+        else if (price.unit) {
+            return numeral(price.price).format('$0') + '/' + price.unit;
+        }
+        else {
+            return numeral(price.price).format('$0.00');
+        }
+    }, this);
 }
 
 module.exports = PublicUserJobTitle;

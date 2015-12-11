@@ -15,11 +15,16 @@
     Options:
     
     - GET /
+        - includeFullJobTitleID:int (Optional) Set a jobTitleID to get it's object under jobProfile expanded with
+            all the public data related: services, serviceAddresses, serviceAttributes, workPhotos (as usually displayed in the profile page)
+            A special value of 0 or nothing will include nothing, while the special value -1 means 'all job titles'.
         @returns {
             profile: {}, // like /users/{userID}/profile
             rating: {}, // like /users/{userID}/rating
             verificationsSummary: {}, // like /users/{userID}/verifications-summary
-            jobProfile: [{}] // like /users/{userID}/jobProfile BUT extended with rating and verificationsSummary
+            jobProfile: [{}], // like /users/{userID}/jobProfile BUT extended with rating and verificationsSummary
+            stats: {},
+            education: [{}]
         }
 
     EXAMPLES {
@@ -39,6 +44,8 @@
             {
                 throw new HttpException(404, "User Not Found");
             }
+
+            var includeFullJobTitleID = Request.QueryString["includeFullJobTitleID"].AsInt(0);
             
             var profile = LcRest.PublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
             if (profile == null)
@@ -55,6 +62,8 @@
 
             var extendedJobProfile = jobProfile == null ? null : ((IEnumerable<LcRest.PublicUserJobTitle>)jobProfile).Select(x =>
             {
+                var full = includeFullJobTitleID == x.jobTitleID || includeFullJobTitleID == -1;
+
                 return new {
                     userID = x.userID,
                     jobTitleID = x.jobTitleID,
@@ -64,7 +73,11 @@
                     jobTitleSingularName = x.jobTitleSingularName,
                     jobTitlePluralName = x.jobTitlePluralName,
                     rating = LcRest.PublicUserRating.Get(userID, x.jobTitleID),
-                    verificationsSummary = LcRest.PublicUserVerificationsSummary.Get(userID, x.jobTitleID)
+                    verificationsSummary = LcRest.PublicUserVerificationsSummary.Get(userID, x.jobTitleID),
+                    serviceAddresses = full ? LcRest.Address.GetServiceAddresses(userID, x.jobTitleID) : null,
+                    services = full ? LcRest.ServiceProfessionalService.GetList(userID, x.jobTitleID) : null,
+                    serviceAttributes = full ? LcRest.PublicUserJobTitleServiceAttributes.Get(userID, x.jobTitleID, locale.languageID, locale.countryID) : null,
+                    workPhotos = full ? LcData.Photo.GetUserWorkPhotos(userID, x.jobTitleID) : null
                 };
             });
 
@@ -73,7 +86,8 @@
                 rating = rating,
                 verificationsSummary = verificationsSummary,
                 jobProfile = extendedJobProfile,
-                stats = LcRest.PublicUserStats.Get(userID)
+                stats = LcRest.PublicUserStats.Get(userID),
+                education = LcRest.Education.GetList(userID)
             };
         }
     }

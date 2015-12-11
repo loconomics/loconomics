@@ -118,7 +118,7 @@ module.exports = Model;
 function prepareValueByDef(val, def) {
     if (def.isArray && 
         !Array.isArray(val)) {
-        if (typeof(val) !== 'undefined')
+        if (val)
             val = [val];
         else
             val = [];
