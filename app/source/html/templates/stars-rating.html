@@ -1,9 +1,9 @@
 <!-- StarsRating -->
 <script type="text/html" id="stars-rating-template">
-    <span class="StarsRating">
+    <span class="StarsRating" data-bind="css: classes">
         <span class="sr-only StarsRating-label"><span class="StarsRating-rating" data-bind="text: rating"></span> stars</span>
         <span class="StarsRating-icons" data-bind="foreach: { data: stars, as: 'rate' }">
-            <i class="fa ion ion-android-star" aria-hidden="true" data-bind="css: { 'ion-android-star': rate === 1, 'ion-android-star-hal': rate === 0.5, 'ion-android-star-outline': rate === 0 }"></i>
+            <i class="fa ion ion-android-star" aria-hidden="true" data-bind="css: { 'ion-android-star': rate === 1, 'ion-android-star-half': rate === 0.5, 'ion-android-star-outline': rate === 0 }"></i>
         </span>
         <span class="StarsRating-total" data-bind="text: totalText"></span>
     </span>

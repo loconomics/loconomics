@@ -113,6 +113,7 @@ exports.registerAll = function(app) {
         viewModel: function(params) {
             this.rating = getObservable(params.rating || 2.5);
             this.total = getObservable(params.total || 0);
+            this.size = getObservable(params.size || '');
             
             this.stars = ko.pureComputed(function() {
                 var r = this.rating(),
@@ -127,6 +128,11 @@ exports.registerAll = function(app) {
             this.totalText = ko.pureComputed(function() {
                 // TODO Conditional formatting for big numbers cases
                 return '(' + this.total() + ')';
+            }, this);
+            
+            this.classes = ko.pureComputed(function() {
+                if (this.size()) return 'StarsRating--' + this.size();
+                return '';
             }, this);
         }
     });
