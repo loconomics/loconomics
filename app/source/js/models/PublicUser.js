@@ -11,6 +11,7 @@ var Model = require('./Model'),
     PublicUserRating = require('./PublicUserRating'),
     PublicUserVerificationsSummary = require('./PublicUserVerificationsSummary'),
     PublicUserJobTitle = require('./PublicUserJobTitle'),
+    PublicUserStats = require('./PublicUserStats'),
     ko = require('knockout');
 
 function PublicUser(values) {
@@ -25,6 +26,7 @@ function PublicUser(values) {
             Model: PublicUserJobTitle,
             isArray: true
         },
+        stats: { Model: PublicUserStats },
         // TODO To implement on server, REST API
         backgroundCheckPassed: null, // null, true, false
         // Utility data for ServiceProfessionalInfo; used to at /profile

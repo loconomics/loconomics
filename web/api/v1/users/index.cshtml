@@ -72,7 +72,8 @@
                 profile = profile,
                 rating = rating,
                 verificationsSummary = verificationsSummary,
-                jobProfile = extendedJobProfile
+                jobProfile = extendedJobProfile,
+                stats = LcRest.PublicUserStats.Get(userID)
             };
         }
     }
