@@ -43,6 +43,23 @@ function Address(values) {
         return list.filter(function(v) { return !!v; }).join(', ');
     }, this);
     
+    this.addressLine = ko.computed(function() {
+        var list = [
+            this.addressLine1(),
+            this.addressLine2()
+        ];        
+        return list.filter(function(v) { return !!v; }).join(', ');
+    }, this);
+    
+    this.cityStateLine = ko.computed(function() {
+        var list = [
+            this.city(),
+            this.stateProvinceCode(),
+            this.postalCode()
+        ];
+        return list.filter(function(v) { return !!v; }).join(', ');
+    }, this);    
+    
     // TODO: needed? l10n? must be provided by server side?
     var countries = {
         'US': 'United States',

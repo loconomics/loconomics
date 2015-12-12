@@ -31,10 +31,10 @@ params: { mod: 'row' }
                 <h4 class="loco-primary margin0t" data-bind="text: otherJobTitleNames"></h4>
 
                 <div class="star">
-                    <span class="display-inline-block pointer h4 margin0t">
+                    <span class="display-inline-block pointer h4 margin0t" data-bind="with: selectedJobTitle">
                         <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings, size: 'sm'" class="text-secondary"></app-stars-rating>
                     </span>
-                    <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)</span>
+                    <span class="VerificationsRating" data-bind="with: selectedJobTitle"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)</span>
                     <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i></span>
                     <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" data-bind="css: { 'ion-ios-heart': isClientFavorite, 'ion-ios-heart-outline': !isClientFavorite() }, attr: { 'aria-description': isClientFavorite() ? 'Favorite' : '' }"></i></span>
                 </div>
@@ -96,7 +96,7 @@ params: { mod: 'row' }
                             </div>
                         </div>
 
-                        <div id="profile-reviews">
+                        <div id="profile-reviews" data-bind="with: selectedJobTitle">
                             <h4 class="bold loco-info"><i class="icon ion-ios-chatboxes-outline h3"></i> Reviews <span class="h5 bold">(<span data-bind="text: rating() && rating().totalRatings"></span>)</span>
                                 <span class="display-inline-block pointer h4 margin0t">
                                     <app-stars-rating params="rating: rating() && rating().ratingAverage, size: 'sm'" class="text-secondary"></app-stars-rating>
@@ -127,7 +127,7 @@ params: { mod: 'row' }
                             </div>
 
                             <!--testimonials-->
-                            <div class="row margin10t" data-bind="visible: $parent.reviews().length">
+                            <div class="row margin10t" data-bind="visible: $root.reviews().length">
                                 <div class="panel-content col-xs-12 col-sm-6">
                                     <section>
                                         <div class="row">
@@ -181,25 +181,17 @@ params: { mod: 'row' }
                         <!--work-->
 
                         <!--location-->
-                        <div id="profile-locations">
+                        <div id="profile-locations" data-bind="visible: $root.serviceAddresses().length">
                             <h4 class="bold loco-info"><i class="icon ion-ios-location-outline h2 media-middle"></i> Locations</h4>
-                            <div class="row clearfix">
+                            <div class="row clearfix" data-bind="foreach: $root.serviceAddresses()">
                                 <div class="col-xs-12 col-sm-6">
                                     <div class="loco-info pad10b">
-                                        <h5 class="bold">ActivSpace (0.6 miles away)</h5> 
-
-                                        3150 18th street, suite 438 <br/>
-                                        San Francisco, CA 94110
+                                        <h5 class="bold"><span data-bind="text: addressName"></span><!--(0.6 miles away)--></h5>
+                                        <span data-bind="text: addressLine"></span><br/>
+                                        <span data-bind="text: cityStateLine"></span>
                                     </div>
-                                    <img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">
-                                </div>
-                                <div class="col-xs-12 col-sm-6">
-                                    <div class="loco-info pad10b">
-                                        <h5 class="bold">Service area</h5> 
-                                        2 mile radius from<br/>
-                                        San Francisco, CA 94110
-                                    </div>
-                                    <img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">
+                                    <!-- TODO Connect Map 
+                                    <img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">-->
                                 </div>
                             </div>
                         </div>

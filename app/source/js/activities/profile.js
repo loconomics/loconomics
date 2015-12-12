@@ -111,4 +111,11 @@ function ViewModel() {
     this.viewAllPhotos = function() {
         this.isShowingAllPhotos(true);
     }.bind(this);
+    
+    /// Addresses
+    this.serviceAddresses = ko.pureComputed(function() {
+        var u = this.user();
+        var adds = u && u.selectedJobTitle() && u.selectedJobTitle().serviceAddresses();
+        return adds || [];
+    }, this);
 }
