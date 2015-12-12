@@ -233,19 +233,22 @@ params: { mod: 'row' }
                                 <div class="clearfix"></div>
                             </div>
                         </div>
-                        <div id="profile-education">
+                        <div id="profile-education" data-bind="visible: education().length">
                             <h4 class="bold loco-info"><i class="icon ion-university loco-info h2 media-middle"></i> Education</h4>
-
-                            <div class="row">
-                                <div class="pull-left" style="padding:0px 10px 0 20px;"><br/>
-                                    <i class="icon ion-android-done"></i>
-                                </div>			  
-                                <div class="display-inline-block">Bachelor of Science in Business <br/>
-                                    <span class="text-muted">
-                                        University of Minnesota Twin Cities <br/>
-                                        Finance and Marketing <br/>
-                                        1997 - 2001</span> </div>
-                                <div class="clearfix"></div>
+                            <div class="row" data-bind="foreach: education">
+                                <div class="clearfix clearfix margin20b">
+                                    <div class="pull-left" style="padding:0px 10px 0 20px;"><br/>
+                                        <i class="icon ion-android-done"></i>
+                                    </div>
+                                    <div class="display-inline-block">
+                                        <span data-bind="text: degreeCertificate"></span><br/>
+                                        <span class="text-muted">
+                                            <span data-bind="text: institutionName"></span><br/>
+                                            <span data-bind="text: fieldOfStudy"></span><br/>
+                                            <span data-bind="visible: fromYearAttended() || toYearAttended()"><span data-bind="text: fromYearAttended"></span> - <span data-bind="text: toYearAttended"></span></span>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!--credentials-->
