@@ -76,4 +76,39 @@ function ViewModel() {
     this.reset = function() {
         this.user(null);
     };
+    
+    /// Work Photos utils
+    var DEFAULT_WORKPHOTOS_LIMIT = 2;
+    this.isShowingAllPhotos = ko.observable(false);
+    this.workPhotos = ko.pureComputed(function() {
+        var u = this.user();
+        var ph = u && u.selectedJobTitle() && u.selectedJobTitle().workPhotos();
+        if (!ph) {
+            return [];
+        }
+        else if (this.isShowingAllPhotos()) {
+            return ph;
+        }
+        else {
+            // Filter by 2 first photos:
+            var firsts = [];
+            ph.some(function(p, i) {
+                if (i > DEFAULT_WORKPHOTOS_LIMIT - 1)
+                    return true;
+                firsts.push(p);
+            });
+            return firsts;
+        }
+    }, this);
+    this.viewMoreWorkPhotosLabel = ko.pureComputed(function() {
+        var imgCount = this.user() && this.user().selectedJobTitle() && this.user().selectedJobTitle().workPhotos();
+        imgCount = imgCount && imgCount.length || 0;
+        if (this.isShowingAllPhotos() || imgCount === 0 || imgCount <= DEFAULT_WORKPHOTOS_LIMIT)
+            return '';
+        else
+            return 'View all ' + imgCount + ' images';
+    }, this);
+    this.viewAllPhotos = function() {
+        this.isShowingAllPhotos(true);
+    }.bind(this);
 }

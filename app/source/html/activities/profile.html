@@ -59,7 +59,7 @@ params: { mod: 'row' }
                     </div>
                 </div>
                 <p class="h5 text-center pad10b">
-                    <i>response time</i> <b data-bind="text: stats().responseTimeText"></b> <br/>
+                    <i>response time</i> <b data-bind="text: stats() && stats().responseTimeText"></b> <br/>
                     From <b data-bind="text: selectedJobTitle() && selectedJobTitle().minServiceValue()"></b>
                 </p>
             </div>
@@ -108,21 +108,21 @@ params: { mod: 'row' }
                             <div class="loco-info row">
                                 <div class="col-xs-5 col-sm-4 col-md-3">Quality of Work</div>
                                 <span class="pointer col-xs-5 col-sm-4">
-                                    <app-stars-rating params="rating: rating() && rating().rating1, size: 'sx'" class="text-secondary"></app-stars-rating>
+                                    <app-stars-rating params="rating: rating() && rating().rating1, size: 'xs'" class="text-secondary"></app-stars-rating>
                                 <div class="clearfix"></div>
                             </div>
 
                             <div class="loco-info row">
                                 <div class="col-xs-5 col-sm-4 col-md-3">Environment</div>
                                 <span class="pointer col-xs-5 col-sm-4">
-                                    <app-stars-rating params="rating: rating() && rating().rating2, size: 'sx'" class="text-secondary"></app-stars-rating>
+                                    <app-stars-rating params="rating: rating() && rating().rating2, size: 'xs'" class="text-secondary"></app-stars-rating>
                                 <div class="clearfix"></div>
                             </div>
 
                             <div class="loco-info row">
                                 <div class="col-xs-5 col-sm-4 col-md-3">Professionalism</div>
                                 <span class="pointer col-xs-5 col-sm-4">
-                                    <app-stars-rating params="rating: rating() && rating().rating3, size: 'sx'" class="text-secondary"></app-stars-rating>
+                                    <app-stars-rating params="rating: rating() && rating().rating3, size: 'xs'" class="text-secondary"></app-stars-rating>
                                 <div class="clearfix"></div>
                             </div>
 
@@ -164,24 +164,17 @@ params: { mod: 'row' }
                         </div>
 
                         <!--work-->
-                        <div id="profile-workphotos">
+                        <div id="profile-workphotos" data-bind="visible: $root.workPhotos().length">
                             <div class="loco-info">
-                                <h4 class="bold loco-info margin0b"><i class="icon ion-ios-camera-outline h2 media-middle"></i> Photos of Patricia's work</h4>
-                                <br/>
-                                <div class="row">
+                                <h4 class="bold loco-info"><i class="icon ion-ios-camera-outline h2 media-middle"></i> Photos of <span data-bind="text: profile().firstName"></span>'s work</h4>
+                                <div class="row" data-bind="foreach: $root.workPhotos">
                                     <div class="col-xs-12 col-sm-6">
-                                        <img src="https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg" class="display-block"> <br/>
-                                        <h5 class="text-center">Look, its really clean!</h5> <br/>
+                                        <img class="display-block" data-bind="attr: { src: url }">
+                                        <h5 class="text-center" data-bind="text: caption"></h5>
                                     </div>
-
-                                    <div class="col-xs-12 col-sm-6">
-                                        <img src="https://loconomics.com/img/userphotos/u296/0c95dbccafd14953a94bde86eff4d34a-442x332.jpg" class="display-block"> <br/>
-                                        <h5 class="text-center">Look, its really clean!</h5>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                    <div class="text-center margin10t col-sm-12">
-                                        <a href="#" class="btn-danger  btn-lg col-lg-4 center-block h5">View all 8 images</a>
-                                    </div>
+                                </div>
+                                <div class="text-center margin10t col-sm-12" data-bind="visible: $root.viewMoreWorkPhotosLabel()">
+                                    <a href="#" class="btn-danger btn-lg col-lg-4 center-block h5" data-bind="text: $root.viewMoreWorkPhotosLabel, click: $root.viewAllPhotos"></a>
                                 </div>
                             </div>
                         </div>
