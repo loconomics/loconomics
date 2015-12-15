@@ -1,7 +1,7 @@
-﻿// It executes the given 'ready' function as parameter when
+// It executes the given 'ready' function as parameter when
 // map environment is ready (when google maps api and script is
 // loaded and ready to use, or inmediately if is already loaded).
-
+/*global google*/
 var loader = require('./loader');
 
 // Private static collection of callbacks registered
@@ -11,7 +11,7 @@ var googleMapReady = module.exports = function googleMapReady(ready) {
     stack.push(ready);
 
     if (googleMapReady.isReady)
-        ready();
+        ready(google);
     else if (!googleMapReady.isLoading) {
         googleMapReady.isLoading = true;
         loader.load({
@@ -25,7 +25,7 @@ var googleMapReady = module.exports = function googleMapReady(ready) {
 
                         for (var i = 0; i < stack.length; i++)
                             try {
-                                stack[i]();
+                                stack[i](google);
                             } catch (e) { }
                     }
                 });

@@ -190,8 +190,7 @@ params: { mod: 'row' }
                                         <span data-bind="text: addressLine"></span><br/>
                                         <span data-bind="text: cityStateLine"></span>
                                     </div>
-                                    <!-- TODO Connect Map 
-                                    <img src="https://loconomics.com/img/userphotos/u296/3eb14073cb6a45138b6fd96b459bf3a1-442x332.jpg">-->
+                                    <app-address-map data-bind="visible: latitude() && longitude()" params="lat: latitude, lng: longitude, isServiceLocation: isServiceLocation, radius: serviceRadius"></app-address-map>
                                 </div>
                             </div>
                         </div>

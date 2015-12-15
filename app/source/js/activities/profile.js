@@ -6,7 +6,7 @@
 'use strict';
 
 var ko = require('knockout');
-
+var $ = require('jquery');
 var Activity = require('../components/Activity');
 var PublicUser = require('../models/PublicUser');
 
@@ -18,6 +18,14 @@ var A = Activity.extend(function ProfileActivity() {
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    
+    this.registerHandler({
+        event: 'layoutUpdate',
+        target: $(window),
+        handler: function() {
+            this.viewModel.refreshTs(new Date());
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;
@@ -66,12 +74,17 @@ A.prototype.show = function show(options) {
     var userID = (params[0] |0) || this.app.model.user().userID();
     var jobTitleID = params[1] |0;
     this.loadData(userID, jobTitleID);
+    this.viewModel.refreshTs(new Date());
 };
 
 function ViewModel() {
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
     this.reviews = ko.observableArray([]);
+    // Just a timestamp to notice that a request to refresh UI happens
+    // Is updated on 'show' and layoutUpdate (when inside this UI) currently
+    // just to notify app-address-map elements
+    this.refreshTs = ko.observable(new Date());
 
     this.reset = function() {
         this.user(null);
