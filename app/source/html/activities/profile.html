@@ -187,8 +187,9 @@ params: { mod: 'row' }
                                 <div class="col-xs-12 col-sm-6">
                                     <div class="loco-info pad10b">
                                         <h5 class="bold"><span data-bind="text: addressName"></span><!--(0.6 miles away)--></h5>
-                                        <span data-bind="text: addressLine"></span><br/>
-                                        <span data-bind="text: cityStateLine"></span>
+                                        <div data-bind="text: addressLine"></div>
+                                        <div data-bind="text: cityStateLine"></div>
+                                        <div data-bind="visible: !addressLine()" aria-hidden="true">&nbsp;</div>
                                     </div>
                                     <app-address-map data-bind="visible: latitude() && longitude()" params="lat: latitude, lng: longitude, isServiceLocation: isServiceLocation, radius: serviceRadius"></app-address-map>
                                 </div>
