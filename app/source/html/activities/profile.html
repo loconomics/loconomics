@@ -193,29 +193,29 @@
                         <!--location-->
 
                         <!--credentials-->
-                        <div id="profile-credentials" data-bind="visible: verifications().length || selectedJobTitle() && selectedJobTitle().verifications().length">
-                            <h4 class="bold loco-infolight"><i class="icon ion-ribbon-b loco-info h2 media-middle"></i> Credentials</h4>
-                            <h5 class="bold">Personal Information verified</h5>
-                            <div class="row clearfix" data-bind="foreach: verifications">
-                                <div class="col-xs-6 col-sm-3">
-                                    <div><i class="icon ion-android-done"></i> <span data-bind="text: verification().name"></span></div>
+                        <div id="profile-credentials">
+                            <div data-bind="visible: verifications().length || selectedJobTitle() && selectedJobTitle().verifications().length">
+                                <h4 class="bold loco-infolight"><i class="icon ion-ribbon-b loco-info h2 media-middle"></i> Credentials</h4>
+                                <h5 class="bold">Personal Information verified</h5>
+                                <div class="row clearfix" data-bind="foreach: verifications">
+                                    <div class="col-xs-6 col-sm-3">
+                                        <div><i class="icon ion-android-done"></i> <span data-bind="text: verification().name"></span></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row clearfix" data-bind="foreach: selectedJobTitle() && selectedJobTitle().verifications">
-                                <div class="col-xs-6 col-sm-3">
-                                    <div><i class="icon ion-android-done"></i> <span data-bind="text: verification().name"></span></div>
+                                <div class="row clearfix" data-bind="foreach: selectedJobTitle() && selectedJobTitle().verifications">
+                                    <div class="col-xs-6 col-sm-3">
+                                        <div><i class="icon ion-android-done"></i> <span data-bind="text: verification().name"></span></div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <h5 class="bold">Professional licenses and certificates</h5>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div><i class="icon ion-android-done"></i> Certified Massage Therapist (CMT)</div>
-                                </div>			 
-                                <div class="col-sm-6">
-                                    <div><i class="icon ion-android-done"></i> CPR Training</div>
+                            <div data-bind="visible: selectedJobTitle() && selectedJobTitle().licensesCertifications().length">
+                                <h5 class="bold">Professional licenses and certificates</h5>
+                                <div class="row clearfix" data-bind="foreach: selectedJobTitle() && selectedJobTitle().licensesCertifications">
+                                    <div class="col-sm-6">
+                                        <div><i class="icon ion-android-done"></i> <span data-bind="text: licenseCertification().name"></span></div>
+                                    </div>
                                 </div>
-                                <div class="clearfix"></div>
                             </div>
                         </div>
                         <div id="profile-education" data-bind="visible: education().length">

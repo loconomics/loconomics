@@ -78,7 +78,8 @@
                     services = full ? LcRest.ServiceProfessionalService.GetList(userID, x.jobTitleID) : null,
                     serviceAttributes = full ? LcRest.PublicUserJobTitleServiceAttributes.Get(userID, x.jobTitleID, locale.languageID, locale.countryID) : null,
                     workPhotos = full ? LcData.Photo.GetUserWorkPhotos(userID, x.jobTitleID) : null,
-                    verifications = full ? LcRest.PublicUserVerification.GetList(userID, x.jobTitleID) : null
+                    verifications = full ? LcRest.PublicUserVerification.GetList(userID, x.jobTitleID) : null,
+                    licensesCertifications = full ? LcRest.PublicUserLicenseCertification.GetList(userID, x.jobTitleID) : null
                 };
             });
 

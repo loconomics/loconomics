@@ -86,7 +86,6 @@ exports.registerAll = function(app) {
                     mods = (this.mod() || '').split(' ');
                 if (mods.length)
                     c += ' ' + base + '--' + mods.join(' ' + base + '--');
-                console.log('csscalass', c);
                 return c;
             }, this);
         }

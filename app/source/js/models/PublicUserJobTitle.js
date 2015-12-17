@@ -20,7 +20,8 @@ var Model = require('./Model'),
     WorkPhoto = require('./WorkPhoto'),
     PublicUserJobTitleServiceAttributes = require('./PublicUserJobTitleServiceAttributes'),
     ServiceProfessionalService = require('./ServiceProfessionalService'),
-    UserVerification = require('./UserVerification');
+    UserVerification = require('./UserVerification'),
+    UserLicenseCertification = require('./UserLicenseCertification');
 
 function PublicUserJobTitle(values) {
     
@@ -54,6 +55,10 @@ function PublicUserJobTitle(values) {
         },
         verifications: {
             Model: UserVerification,
+            isArray: true
+        },
+        licensesCertifications: {
+            Model: UserLicenseCertification,
             isArray: true
         }
     }, values);
