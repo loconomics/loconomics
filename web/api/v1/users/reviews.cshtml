@@ -1,0 +1,46 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetchs public reviews made by other users about this one.
+
+    Options:
+    
+    - GET /
+        Get reviews as customer, performed by service professionals
+    - GET /{jobTitleID}
+        Get reviews as service professionals, reviewed by its clients for the given Job Title
+        
+    EXAMPLES {
+        "User Public Reviews as Customer": {
+            "url": "/api/v1/en-US/users/141/reviews",
+            "get": {}
+        },
+        "User Public Reviews as Service Professional per Job Title": {
+            "url": "/api/v1/en-US/users/141/reviews/106",
+            "get": {}
+        }
+    }
+*@
+@functions{
+    public class RestUserReviews : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+            if (userID <= 0)
+            {
+                throw new HttpException(404, "User Not Found");
+            }
+            if (UrlData.Count <= 1) {
+                var jobTitleID = UrlData[0].AsInt(0);
+                var data = LcRest.PublicUserReview.Get(userID, jobTitleID);
+                if (data == null)
+                    throw new HttpException(404, "User Not Found");
+                return data;
+            }
+            return base.Get();
+        }
+    }
+}
+@{
+    new RestUserReviews().JsonResponse(this);
+}
