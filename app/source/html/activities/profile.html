@@ -1,11 +1,6 @@
 <!-- Activity profile -->
-<div data-activity="profile">
-    <div>
-        <!-- ko component: {
-name: 'app-loading-spinner',
-params: { mod: 'row' }
-} --><!-- /ko -->
-    </div>
+<div data-activity="profile" data-bind="css: { 'is-loading': isLoading }">
+    <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
     <!-- TODO: FROM JUVO, TO REFACTOR -->
     <!-- profile internal menu -->
     <div class="profile-menu hidden-xs">
@@ -198,29 +193,19 @@ params: { mod: 'row' }
                         <!--location-->
 
                         <!--credentials-->
-                        <div id="profile-credentials">
+                        <div id="profile-credentials" data-bind="visible: verifications().length || selectedJobTitle() && selectedJobTitle().verifications().length">
                             <h4 class="bold loco-infolight"><i class="icon ion-ribbon-b loco-info h2 media-middle"></i> Credentials</h4>
                             <h5 class="bold">Personal Information verified</h5>
-                            <div class="row">
+                            <div class="row clearfix" data-bind="foreach: verifications">
                                 <div class="col-xs-6 col-sm-3">
-                                    <div><i class="icon ion-android-done"></i> Name</div>
-                                    <div><i class="icon ion-android-done"></i> Linked-in Account</div>
+                                    <div><i class="icon ion-android-done"></i> <span data-bind="text: verification().name"></span></div>
                                 </div>
-
-                                <div class="col-xs-6 col-sm-2">
-                                    <div><i class="icon ion-android-done"></i> Email</div>
-                                </div>
-
-                                <div class="col-xs-6 col-sm-3">
-                                    <div><i class="icon ion-android-done"></i> Phone Number</div>
-                                </div>
-
-                                <div class="col-xs-6 col-sm-4">
-                                    <div><i class="icon ion-android-done"></i> Facebook Account</div>
-                                </div>
-                                <div class="clearfix"></div>
                             </div>
-
+                            <div class="row clearfix" data-bind="foreach: selectedJobTitle() && selectedJobTitle().verifications">
+                                <div class="col-xs-6 col-sm-3">
+                                    <div><i class="icon ion-android-done"></i> <span data-bind="text: verification().name"></span></div>
+                                </div>
+                            </div>
 
                             <h5 class="bold">Professional licenses and certificates</h5>
                             <div class="row">

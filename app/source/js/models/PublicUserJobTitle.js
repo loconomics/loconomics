@@ -19,7 +19,8 @@ var Model = require('./Model'),
     Address = require('./Address'),
     WorkPhoto = require('./WorkPhoto'),
     PublicUserJobTitleServiceAttributes = require('./PublicUserJobTitleServiceAttributes'),
-    ServiceProfessionalService = require('./ServiceProfessionalService');
+    ServiceProfessionalService = require('./ServiceProfessionalService'),
+    UserVerification = require('./UserVerification');
 
 function PublicUserJobTitle(values) {
     
@@ -49,6 +50,10 @@ function PublicUserJobTitle(values) {
         },
         workPhotos: {
             Model: WorkPhoto,
+            isArray: true
+        },
+        verifications: {
+            Model: UserVerification,
             isArray: true
         }
     }, values);

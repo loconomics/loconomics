@@ -13,6 +13,7 @@ var Model = require('./Model'),
     PublicUserJobTitle = require('./PublicUserJobTitle'),
     PublicUserStats = require('./PublicUserStats'),
     UserEducation = require('./UserEducation'),
+    UserVerification = require('./UserVerification'),
     ko = require('knockout');
 
 function PublicUser(values) {
@@ -30,6 +31,10 @@ function PublicUser(values) {
         stats: { Model: PublicUserStats },
         education: {
             Model: UserEducation,
+            isArray: true
+        },
+        verifications: {
+            Model: UserVerification,
             isArray: true
         },
         // TODO To implement on server, REST API

@@ -77,7 +77,8 @@
                     serviceAddresses = full ? LcRest.Address.GetServiceAddresses(userID, x.jobTitleID) : null,
                     services = full ? LcRest.ServiceProfessionalService.GetList(userID, x.jobTitleID) : null,
                     serviceAttributes = full ? LcRest.PublicUserJobTitleServiceAttributes.Get(userID, x.jobTitleID, locale.languageID, locale.countryID) : null,
-                    workPhotos = full ? LcData.Photo.GetUserWorkPhotos(userID, x.jobTitleID) : null
+                    workPhotos = full ? LcData.Photo.GetUserWorkPhotos(userID, x.jobTitleID) : null,
+                    verifications = full ? LcRest.PublicUserVerification.GetList(userID, x.jobTitleID) : null
                 };
             });
 
@@ -85,6 +86,7 @@
                 profile = profile,
                 rating = rating,
                 verificationsSummary = verificationsSummary,
+                verifications = LcRest.PublicUserVerification.GetList(userID, 0),
                 jobProfile = extendedJobProfile,
                 stats = LcRest.PublicUserStats.Get(userID),
                 education = LcRest.Education.GetList(userID)
