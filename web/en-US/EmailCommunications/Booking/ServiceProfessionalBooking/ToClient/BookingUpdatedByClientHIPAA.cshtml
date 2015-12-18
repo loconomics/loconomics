@@ -1,5 +1,11 @@
-﻿@* Email to the service professional to communicate that the booking request they made expired. 
-	THIS MAY ONLY BE A MARKETPLACE feature...meaning BookNow bookings won't have this
+@* This e-mail goes out to the client after they have updated an appointment with any changes (services or time).
+    This can only be done within the cancellation policy limit or else it must be cancelled and a new booking made.
+
+    Sender e-mail: automated@@loconomics.com
+    Sender name: @(info.serviceProfessional.firstName) @(info.serviceProfessional.lastName)
+    Subject: Updated appointment confirmation
+    Send when: immediately
+    Restrictions: positions.HIPAA=1
  *@
 @using WebMatrix.Data;
 @{
@@ -18,7 +24,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.serviceProfessional.firstName), Unfortunately, @(info.client.firstName)'s request for your <strong>@info.userJobTitle.jobTitleSingularName</strong> services has expired.
+                Hi, @(info.client.firstName), I&rsquo;m just confirming that you&rsquo;ve successfully updated your appointment for my services. 
             </div>
         </td>
     </tr>
@@ -34,21 +40,44 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
+                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, @(info.client.firstName) @(info.client.lastName)'s request for your <strong>@info.userJobTitle.jobTitleSingularName</strong> services has expired. We've let @(info.client.firstName) know and encouraged them to try to make another booking with you in a couple weeks.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I&rsquo;m just confirming that you&rsquo;ve successfully updated your appointment for my services. Log in to review the full details of the booking. I will see you <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>.</td>
                             </tr>
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>The Loconomics team</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)</td>
                             </tr>
                         </table>
-                     </td>
+                    </td>
                 </tr>
             </table>
         </td>
     </tr>
 </table>
+<!-- Booking Details -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center" style="padding: 40px 15px 15px 15px;" class="section-padding">
+            <table border="0" cellpadding="0" cellspacing="0" width="500" class="responsive-table">
+                <tr>
+                    <td>
+                        <!-- COPY -->
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td align="center"><a href="@(info.viewClientBookingCard)" target="_blank" style="padding: 0 0 0 0; font-size: 30px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ff6765;" class="padding-copy">Updated Booking Details</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+@RenderPage("MessageComponents/$TimeConfirmed.cshtml", info)
+@RenderPage("MessageComponents/$Location.cshtml", info)
+@RenderPage("MessageComponents/$PaymentStatus.cshtml", info)
+@RenderPage("MessageComponents/$CancellationPolicy.cshtml", info)
 <!-- FAQS -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -82,7 +111,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="#" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
+                                                        <td align="center"><a href="@(info.viewClientHelpCenter)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
                                                     </tr>
                                                 </table>
                                             </td>
@@ -97,4 +126,5 @@
         </td>
     </tr>
 </table>
+@RenderPage("MessageComponents/$MarketplaceMarketingMessage.cshtml", info)
 @RenderPage("MessageComponents/$Footer.cshtml", info)
