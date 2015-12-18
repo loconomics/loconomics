@@ -133,6 +133,18 @@ function ViewModel(app) {
         var adds = u && u.selectedJobTitle() && u.selectedJobTitle().serviceAddresses();
         return adds || [];
     }, this);
+    
+    this.changeJobTitle = function(jobTitle, event) {
+        this.user().selectedJobTitleID(jobTitle.jobTitleID());
+        this.reviews.reset(undefined, jobTitle.jobTitleID());
+        this.reviews.load({ limit: 2 });
+        if (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+        var url = event.target.getAttribute('href');
+        app.shell.pushState(null, null, url);
+    }.bind(this);
 }
 
 var PublicUserReview = require('../models/PublicUserReview');
@@ -146,7 +158,8 @@ function ReviewsVM(app) {
 
     this.reset = function reset(userID, jobTitleID) {
         this.list([]);
-        this.userID(userID);
+        if (userID)
+            this.userID(userID);
         this.jobTitleID(jobTitleID);
         this.endReached(false);
         if (currentXhr && currentXhr.abort) {

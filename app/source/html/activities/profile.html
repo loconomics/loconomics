@@ -23,7 +23,7 @@
             </div>
             <div class="col-xs-12 col-sm-6">
                 <h2 class="bold margin0t" data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></h2>
-                <h4 class="loco-primary margin0t" data-bind="text: otherJobTitleNames"></h4>
+                <h4 class="profile-otherJobTitles" data-bind="foreach: otherJobTitles"><a data-bind="text: jobTitleSingularName, attr: { href: '/profile/' + userID() + '/' + jobTitleID() }, click: $root.changeJobTitle"></a></h4>
 
                 <div class="star">
                     <span class="display-inline-block pointer h4 margin0t" data-bind="with: selectedJobTitle">
