@@ -115,12 +115,29 @@ exports.registerAll = function(app) {
             this.total = getObservable(params.total || 0);
             this.size = getObservable(params.size || '');
             
+            // Example: rating=3.6, starPosition=1 (or 2, 3, 4, 5)
+            function computeStarValue(rating, starPosition) {
+                var x = (rating / starPosition) |0;
+                var z = rating % 1;
+                if (x > 0) {
+                    return 1;
+                }
+                else if ((rating |0) === (starPosition - 1) && z !== 0) {
+                    if (z >= 0.5)
+                        return 0.5;
+                    else
+                        return 0;
+                }
+                else {
+                    return 0;
+                }
+            }
+            
             this.stars = ko.pureComputed(function() {
                 var r = this.rating(),
                     list = [];
                 for (var i = 1; i <= 5; i++) {
-                    // TODO Support half values
-                    list.push(i <= r ? 1 : 0);
+                    list.push(computeStarValue(r, i));
                 }
                 return list;
             }, this);
