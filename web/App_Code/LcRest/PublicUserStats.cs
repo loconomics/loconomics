@@ -12,7 +12,7 @@ namespace LcRest
     {
         #region Fields
         public int userID;
-        public decimal responseTimeMinutes;
+        public decimal? responseTimeMinutes;
         #endregion
 
         #region Instances
