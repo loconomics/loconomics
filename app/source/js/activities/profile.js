@@ -178,6 +178,17 @@ function ViewModel(app) {
         var photo = encodeURIComponent(u.profile().photoUrl());
         return 'http://pinterest.com/pin/create/button/?url=' + url + '&media=' + photo + '&description=' + encodeURIComponent(u.profile().fullName() + ': ' + url);
     }, this);
+    
+    this.getBookLink = ko.pureComputed(function() {
+        var u = this.user();
+        if (!u) return '';
+        return '#!booking/' + u.profile().userID() + '/' + u.selectedJobTitleID();
+    }, this);
+    this.getSendMessageLink = ko.pureComputed(function() {
+        var u = this.user();
+        if (!u) return '';
+        return '#!inbox/new/' + u.profile().userID();
+    }, this);
 }
 
 var PublicUserReview = require('../models/PublicUserReview');
