@@ -1,4 +1,10 @@
-﻿@* This e-mail is a reminder sent to the service professional 48 hours before an appointment.
+@* This e-mail is a reminder sent to the service professional 48 hours before an appointment.
+
+    Sender e-mail: automated@@loconomics.com
+    Sender name: Loconomics Scheduler
+    Subject: Reminder about your appointment with @(info.client.firstName)  @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime)
+    Send when: 48 hours before info.booking.serviceDate.startTime
+    Restrictions: positions.HIPAA=0;
  *@
 @using WebMatrix.Data;
 @{
@@ -36,7 +42,7 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">This is just a friendly reminder about your <strong>@info.userJobTitle.jobTitleSingularName</strong> services @(info.client.firstName) @(info.client.lastName) booked are coming up on <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>. If you need to cancel or reschedule, please do so ASAP by <a href="@(info.viewEmailUrl)" target="_blank" >clicking here</a>.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">This is just a friendly reminder about your <strong>@info.userJobTitle.jobTitleSingularName</strong> services @(info.client.firstName) @(info.client.lastName) booked are coming up on <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>. If you need to cancel or reschedule, please do so ASAP by <a href="@(info.viewServiceProfessionalBookingCard)" target="_blank" >clicking here</a>.</td>
                             </tr>
                             <tr>                               
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>The Loconomics team</td>
@@ -58,7 +64,7 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="center"><a href="@(info.viewEmailUrl)" target="_blank" style="padding: 0 0 0 0; font-size: 30px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ff6765;" class="padding-copy">Booking Details</td>
+                                <td align="center"><a href="@(info.viewServiceProfessionalBookingCard)" target="_blank" style="padding: 0 0 0 0; font-size: 30px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ff6765;" class="padding-copy">Booking Details</td>
                             </tr>
                         </table>
                     </td>
@@ -107,7 +113,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="https://loconomics.zendesk.com" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
+                                                        <td align="center"><a href="@(info.viewServiceProfessionalHelpCenter)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
                                                     </tr>
                                                 </table>
                                             </td>
