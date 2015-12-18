@@ -5,18 +5,33 @@
     Options:
     
     - GET /
-        Get reviews as customer, performed by service professionals
+        Get the most recent reviews as customer, performed by service professionals
+        - limit:int Default:20. Sets the maximum amount of threads to include in the results.
+        - untilID:int Default:null. Ask for the inmediate older reviews than the given bookingID. The review for that ID is not included in the results.
+        - sinceID:int Default:null. Ask for the inmediate newer reviews than the given bookingID. The review for that ID is not included in the results.
+        
     - GET /{jobTitleID}
-        Get reviews as service professionals, reviewed by its clients for the given Job Title
+        Get the most recent reviews as service professionals, reviewed by its clients for the given Job Title
+        - limit:int Default:20. Sets the maximum amount of threads to include in the results.
+        - untilID:int Default:null. Ask for the inmediate older reviews than the given bookingID. The review for that ID is not included in the results.
+        - sinceID:int Default:null. Ask for the inmediate newer reviews than the given bookingID. The review for that ID is not included in the results.
         
     EXAMPLES {
         "User Public Reviews as Customer": {
             "url": "/api/v1/en-US/users/141/reviews",
-            "get": {}
+            "get": {
+                "limit": 20,
+                "until": null,
+                "since": "2012-04-17T08:08:17.44Z"
+            }
         },
         "User Public Reviews as Service Professional per Job Title": {
             "url": "/api/v1/en-US/users/141/reviews/106",
-            "get": {}
+            "get": {
+                "limit": 20,
+                "until": null,
+                "since": "2012-04-17T08:08:17.44Z"
+            }
         }
     }
 *@
@@ -32,7 +47,12 @@
             }
             if (UrlData.Count <= 1) {
                 var jobTitleID = UrlData[0].AsInt(0);
-                var data = LcRest.PublicUserReview.Get(userID, jobTitleID);
+                var limit = Request["limit"].AsInt(20);
+                var messagesLimit = Request["messagesLimit"].AsInt(1);
+                DateTime? until = DateTimeFromISO(Request["until"]);
+                DateTime? since = DateTimeFromISO(Request["since"]);
+
+                var data = LcRest.PublicUserReview.GetList(userID, jobTitleID, limit, since, until);
                 if (data == null)
                     throw new HttpException(404, "User Not Found");
                 return data;

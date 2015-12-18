@@ -11,6 +11,7 @@ namespace LcRest
     public class PublicUserReview
     {
         #region Fields
+        public int bookingID;
         /// <summary>
         /// Can be 0 for reviews to customers
         /// </summary>
@@ -23,7 +24,7 @@ namespace LcRest
         public decimal rating3;
         public string publicReview;
         public decimal serviceHours;
-        public int helpfulReviewCount;
+        public long helpfulReviewCount;
         public DateTime updatedDate;
         private string reviewerFirstName;
         private string reviewerLastName;
@@ -45,6 +46,7 @@ namespace LcRest
             if (record == null) return null;
             return new PublicUserReview
             {
+                bookingID = record.bookingID,
                 jobTitleID = record.jobTitleID,
                 reviewedUserID = record.reviewedUserID,
                 reviewerUserID = record.reviewerUserID,
@@ -64,14 +66,15 @@ namespace LcRest
 
         #region SQL
         private const string sqlSelectJobReview = @"
-            SELECT
+            SELECT TOP @0
+                R.BookingID As bookingID,
                 R.PositionID As jobTitleID,
                 R.CustomerUserID As reviewerUserID,
                 R.ProviderUserID As reviewedUserID,
                 UC.FirstName As reviewerFirstName,
                 UC.LastName As reviewerLastName,
                 UC.CreatedDate As reviewerUserSince,
-                R.rating1, R.rating2, R.rating3
+                R.rating1, R.rating2, R.rating3,
                 R.publicReview,
                 R.updatedDate,
                 R.serviceHours,
@@ -82,19 +85,20 @@ namespace LcRest
                 Users As UC
                     ON UC.UserID = R.CustomerUserID
             WHERE
-                R.ProviderUserID = @0
+                R.ProviderUserID = @1
                     AND
-                R.PositionID = @1
+                R.PositionID = @2
         ";
         private const string sqlSelectClientReview = @"
-            SELECT
+            SELECT TOP @0
+                R.BookingID As bookingID,
                 R.PositionID As jobTitleID,
                 R.CustomerUserID As reviewedUserID,
                 R.ProviderUserID As reviewerUserID,
                 UC.FirstName As reviewerFirstName,
                 UC.LastName As reviewerLastName,
                 UC.CreatedDate As reviewerUserSince,
-                R.rating1, R.rating2, R.rating3
+                R.rating1, R.rating2, R.rating3,
                 R.publicReview,
                 R.updatedDate,
                 R.serviceHours,
@@ -105,9 +109,21 @@ namespace LcRest
                 Users As UC
                     ON UC.UserID = R.ProviderUserID
             WHERE
-                R.CustomerUserID = @0
+                R.CustomerUserID = @1
                     AND
                 R.PositionID = 0
+        ";
+        private const string sqlAndUntilSince = @"
+                    AND
+                (@3 is null OR R.UpdatedDate < @3)
+                    AND
+                (@4 is null OR R.UpdatedDate > @4)
+        ";
+        private const string sqlOrderDesc = @"
+            ORDER BY R.UpdatedDate DESC
+        ";
+        private const string sqlOrderAsc = @"
+            ORDER BY R.UpdatedDate ASC
         ";
         #endregion
 
@@ -115,11 +131,50 @@ namespace LcRest
         ///
         /// jobTitleID: must be 0 for customer review.
         ///
-        public static PublicUserReview Get(int userID, int jobTitleID)
+        public static IEnumerable<PublicUserReview> GetList(int userID, int jobTitleID, int limit = 20, DateTime? since = null, DateTime? until = null)
         {
+            // Maximum limit: 100
+            if (limit > 100)
+                limit = 100;
+            else if (limit < 1)
+                limit = 1;
+
+            var sql = jobTitleID == 0 ? sqlSelectClientReview : sqlSelectJobReview;
+            sql += sqlAndUntilSince;
+            // Generally, we get the more recent records (order desc), except
+            // if the parameter since was set without an until: we
+            // want the closest ones to that, in other words, 
+            // the older records that are more recent that sinceID.
+            // A final sorting is done to return rows in descending as ever.
+            var usingSinceOnly = since.HasValue && !until.HasValue;
+            if (usingSinceOnly)
+            {
+                sql += sqlOrderAsc;
+            }
+            else
+            {
+                // Default
+                sql += sqlOrderDesc;
+            }
+
+            // db.Query has a bug not processing parameters in 'select top @1'
+            // so manual replacement
+            // IMPORTANT: Still included 'limit' in the db.Query so it counts to the assignments by index
+            sql = sql.Replace("@0", limit.ToString());
+
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(jobTitleID == 0 ? sqlSelectClientReview : sqlSelectJobReview, userID, jobTitleID));
+                var data = db.Query(sql, limit, userID, jobTitleID, until, since).Select(FromDB);
+                if (usingSinceOnly)
+                {
+                    // Since rows were get in ascending, records need to be inverted
+                    // so we ever return data in descending order (latest first).
+                    return data.Reverse();
+                }
+                else
+                {
+                    return data;
+                }
             }
         }
         #endregion
