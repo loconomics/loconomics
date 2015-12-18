@@ -28,6 +28,33 @@ namespace LcRest
         public string serviceProfessionalProfileUrlSlug;
         public string serviceProfessionalWebsiteUrl;
 
+        /// <summary>
+        /// This full URL is not editable directly, just
+        /// a computed using the Loconomics URL and
+        /// the service professional choosen 'slug', or fallback
+        /// to the standard URL.
+        /// </summary>
+        public string serviceProfessionalProfileUrl
+        {
+            get
+            {
+                var url = MarketplaceProfile.BuildServiceProfessionalCustomURL(serviceProfessionalProfileUrlSlug);
+                if (String.IsNullOrWhiteSpace(url))
+                {
+                    // Gets the standard, base URL provided by Loconomics.
+                    // It's a SEO friendly URL that additionally to the userID
+                    // contains information like the city and the primary
+                    // job title name (if some information is missed it fallbacks
+                    // to the non-SEO, ID based, URL, ever a valid address).
+                    return LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(this.userID);
+                }
+                else
+                {
+                    return url;
+                }
+            }
+        }
+
         /// Fields protected, empty/null except for users that has a relationship together
         public string email;
         public string phone;

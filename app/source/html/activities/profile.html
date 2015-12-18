@@ -39,11 +39,11 @@
             <div class="col-xs-12 col-sm-3 pad5r pad5l">
                 <div class="sm-icons profile-share-icons">
                     <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>
-                    <a href="#" class="loco-info"><i class="icon ion-ios-email-outline"></i></a>
-                    <a href="#" class="loco-info"><i class="icon ion-social-facebook"></i></a> 
-                    <a href="#" class="loco-info"><i class="icon ion-social-twitter"></i> </a>
-                    <a href="#" class="loco-info"><i class="icon ion-social-googleplus"></i></a>
-                    <a href="#" class="loco-info"><i class="icon ion-social-pinterest"></i></a>
+                    <a class="loco-info" href="#" data-bind="attr: { href: $root.getEmailLink }" target="_blank" title="Share on Email"><i class="icon ion-ios-email-outline"></i></a>
+                    <a class="loco-info" href="#" data-bind="attr: { href: $root.getFacebookLink }" target="_blank" title="Share on Facebook"><i class="icon ion-social-facebook"></i></a> 
+                    <a class="loco-info" href="#" data-bind="attr: { href: $root.getTwitterLink }" target="_blank" title="Share on Twitter"><i class="icon ion-social-twitter"></i> </a>
+                    <a class="loco-info" href="#" data-bind="attr: { href: $root.getGooglePlusLink }" target="_blank" title="Share on Google Plus"><i class="icon ion-social-googleplus"></i></a>
+                    <a class="loco-info" href="#" data-bind="attr: { href: $root.getPinterestLink }" target="_blank" title="Share on Pinterest"><i class="icon ion-social-pinterest"></i></a>
                 </div>
                 <div class="row">
                     <div class="col-xs-6 col-sm-12">
@@ -227,11 +227,11 @@
                             <p class="loco-info" data-bind="text: profile().publicBio"></p>
                             <div class="sm-icons clearfix">
                                 <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>&nbsp;
-                                <a class="loco-info" href="#"><i class="icon ion-ios-email-outline"></i></a>
-                                <a class="loco-info" href="#"><i class="icon ion-social-facebook"></i></a> 
-                                <a class="loco-info" href="#"><i class="icon ion-social-twitter"></i> </a>
-                                <a class="loco-info" href="#"><i class="icon ion-social-googleplus"></i></a>
-                                <a class="loco-info" href="#"><i class="icon ion-social-pinterest"></i></a>
+                                <a class="loco-info" href="#" data-bind="attr: { href: $root.getEmailLink }" target="_blank" title="Share on Email"><i class="icon ion-ios-email-outline"></i></a>
+                                <a class="loco-info" href="#" data-bind="attr: { href: $root.getFacebookLink }" target="_blank" title="Share on Facebook"><i class="icon ion-social-facebook"></i></a> 
+                                <a class="loco-info" href="#" data-bind="attr: { href: $root.getTwitterLink }" target="_blank" title="Share on Twitter"><i class="icon ion-social-twitter"></i> </a>
+                                <a class="loco-info" href="#" data-bind="attr: { href: $root.getGooglePlusLink }" target="_blank" title="Share on Google Plus"><i class="icon ion-social-googleplus"></i></a>
+                                <a class="loco-info" href="#" data-bind="attr: { href: $root.getPinterestLink }" target="_blank" title="Share on Pinterest"><i class="icon ion-social-pinterest"></i></a>
                             </div>
                         </div>
 

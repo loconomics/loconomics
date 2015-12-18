@@ -19,6 +19,7 @@ function PublicUserProfile(values) {
         publicBio: 0,
         serviceProfessionalProfileUrlSlug: null,
         serviceProfessionalWebsiteUrl: null,
+        serviceProfessionalProfileUrl: null, // Server side generated
         photoUrl: null,
         email: null,
         phone: null,

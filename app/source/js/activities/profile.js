@@ -145,6 +145,39 @@ function ViewModel(app) {
         var url = event.target.getAttribute('href');
         app.shell.pushState(null, null, url);
     }.bind(this);
+    
+    /// Social links
+    this.getEmailLink = ko.pureComputed(function() {
+        var u = this.user();
+        if (!u) return '';
+        var url = encodeURIComponent(u.profile().serviceProfessionalProfileUrl());
+        return 'mailto:?body=' + encodeURIComponent(u.profile().fullName() + ': ') + url;
+    }, this);
+    this.getFacebookLink = ko.pureComputed(function() {
+        var u = this.user();
+        if (!u) return '';
+        var url = encodeURIComponent(u.profile().serviceProfessionalProfileUrl());
+        return 'http://www.facebook.com/share.php?u=' + url + '&t=' + encodeURIComponent(u.profile().fullName());
+    }, this);
+    this.getTwitterLink = ko.pureComputed(function() {
+        var u = this.user();
+        if (!u) return '';
+        var url = encodeURIComponent(u.profile().serviceProfessionalProfileUrl());
+        return 'http://twitter.com/intent/tweet?text=' + encodeURIComponent(u.profile().fullName() + ': ' + url);
+    }, this);
+    this.getGooglePlusLink = ko.pureComputed(function() {
+        var u = this.user();
+        if (!u) return '';
+        var url = encodeURIComponent(u.profile().serviceProfessionalProfileUrl());
+        return 'https://plus.google.com/share?url=' + url;
+    }, this);
+    this.getPinterestLink = ko.pureComputed(function() {
+        var u = this.user();
+        if (!u) return '';
+        var url = encodeURIComponent(u.profile().serviceProfessionalProfileUrl());
+        var photo = encodeURIComponent(u.profile().photoUrl());
+        return 'http://pinterest.com/pin/create/button/?url=' + url + '&media=' + photo + '&description=' + encodeURIComponent(u.profile().fullName() + ': ' + url);
+    }, this);
 }
 
 var PublicUserReview = require('../models/PublicUserReview');
