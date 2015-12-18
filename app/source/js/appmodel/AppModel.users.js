@@ -75,6 +75,17 @@ exports.create = function create(appModel) {
     api.getServiceAttributes = function getServiceAttributes(userID, jobTitleID) {
         return appModel.rest.get('users/' + (userID |0) + '/service-attributes/' + (jobTitleID |0));
     };
+    
+    /**
+        @options:Object {
+            limit:int,
+            since:Date,
+            until:Date
+        }
+    **/
+    api.getReviews = function getReviews(userID, jobTitleID, options) {
+        return appModel.rest.get('users/' + (userID |0) + '/reviews' + (jobTitleID ? '/' + (jobTitleID |0) : ''), options);
+    };
 
     return api;
 };

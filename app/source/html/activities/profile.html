@@ -122,37 +122,21 @@
                             </div>
 
                             <!--testimonials-->
-                            <div class="row margin10t" data-bind="visible: $root.reviews().length">
-                                <div class="panel-content col-xs-12 col-sm-6">
-                                    <section>
-                                        <div class="row">
-                                            <div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
-                                            <h5 class="bold margin0b">Joshua D.</h5>
-                                            <p class="bold loco-info"><small>Client since January 2011</small></p></div>
+                            <div class="row margin10t" data-bind="visible: $root.reviews.list().length">
+                                <div data-bind="foreach: $root.reviews.list()">
+                                    <div class="panel-content col-xs-12 col-sm-6">
+                                        <section>
+                                            <div class="row">
+                                                <div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
+                                                <h5 class="bold margin0b" data-bind="text: reviewerName"></h5>
+                                                <p class="bold loco-info"><small>Client since <span data-bind="text: reviewerUserSince, format: { type: 'datetime', format: 'MMMM YYYY' }"></span></small></p></div>
 
-                                        <article>
-                                            I reall can't say enough good things about Fernando. He's been my dog walker for three years and my dogs love him. if they could talk, I'm sure they'd tell you about all the beach days. 
-                                            I highly recommend Fernando's services.
-                                        </article>
-                                    </section>
-                                </div>	
-
-                                <div class="panel-content col-xs-12 col-sm-6">
-                                    <section>
-                                        <div class="row">
-                                            <div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary user-review"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
-                                            <h5 class="bold margin0b">Joshua D.</h5>
-                                            <p class="bold loco-info"><small>Client since January 2011</small></p></div>
-
-                                        <article>
-                                            I really can't say enough good things about Fernando. He's been my dog walker for three years and my dogs love him. if they could talk, 
-                                            I'm sure they'd tell you about all the beach days. I highly recommend Fernando's services.
-                                        </article>
-                                    </section>
+                                            <article data-bind="text: publicReview"></article>
+                                        </section>
+                                    </div>
                                 </div>
-                                <div class="clearfix"></div>			 
-                                <div class="text-center margin10t col-sm-12">
-                                    <a href="#" class="btn-danger  btn-lg col-lg-4 center-block h5">View all 23 reviews</a>
+                                <div class="text-center margin10t col-sm-12" data-bind="visible: !$root.reviews.endReached()">
+                                    <a href="#" class="btn-danger  btn-lg col-lg-4 center-block h5" data-bind="click: $root.reviews.loadOlder">View more reviews</a>
                                 </div>
                             </div>
                             <!--testimonials-->
