@@ -762,7 +762,7 @@ public static partial class LcData
                 }
             }
         }
-
+        [Obsolete]
         public static int GetPricingEstimateIDForBookingRequest(int bookingRequestID)
         {
             using (var db = Database.Open("sqlloco"))
@@ -771,6 +771,7 @@ public static partial class LcData
             }
         }
 
+        [Obsolete]
         public static string GetOneLineBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0, bool? addons = null)
         {
             // TODO Include Revision in parameters or/and database lookup
@@ -818,6 +819,7 @@ public static partial class LcData
         /// <param name="pricingEstimateID">Optionally for the possible extra data associated to the package on a specific pricing</param>
         /// <param name="pricingEstimateRevision">Optionally for the possible extra data associated to the package on a specific pricing</param>
         /// <returns></returns>
+        [Obsolete]
         public static string GetOneLinePackageSummary(LcPricingModel.PackageBaseData pak, int pricingEstimateID = 0, int pricingEstimateRevision = 1)
         {
             var f = "";
@@ -856,6 +858,7 @@ public static partial class LcData
             }
             return result;
         }
+        [Obsolete]
         public static string GetBookingRequestSubject(int BookingRequestID)
         {
             var getBookingRequest = @"
@@ -886,6 +889,7 @@ public static partial class LcData
             }
             return result;
         }
+        [Obsolete]
         public static string GetBookingSubject(int BookingID)
         {
             var getBookingRequest = @"
@@ -1143,7 +1147,7 @@ public static partial class LcData
             sb.Append(GetBookingRequestInformationForProviderAsTextOnly(BookingRequestID));
             // Previous ends in new-line but we add another new-line to get an empty line, and the phone:
             sb.AppendLine("\nCall Loconomics for help: (415) 735-6025");
-            sb.AppendLine("Full details at " + LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(BookingRequestID));
+            sb.AppendLine("Full details at " + LcUrl.LangUrl + LcEmailTemplate.BookingEmailInfo.GetBookingUrl(BookingRequestID));
             return sb.ToString();
         }
         /// <summary>
@@ -2487,14 +2491,6 @@ public static partial class LcData
                     break;
             }
             return String.Format(statusTitle, ASP.LcHelpers.GetUserDisplayName(pairUserData));
-        }
-        public static string GetUrlPathForBookingRequest(int bookingRequestID)
-        {
-            return String.Format("dashboard/messages/bookingrequest/{0}", bookingRequestID);
-        }
-        public static string GetUrlPathForBooking(int bookingID, int bookingRequestID = 0)
-        {
-            return String.Format("dashboard/messages/booking/{1}", bookingRequestID, bookingID);
         }
         #endregion
     }

@@ -150,6 +150,41 @@ public class LcMessaging
     }
     #endregion
 
+    #region Table Enumerations
+    enum MessageType : int
+    {
+        ClientInquiry = 1,
+        CopyOfClientInquiry = 2,
+        ProfessionalResponseToInquiry = 3,
+        ClientBookingRequest = 4,
+        CopyOfClientBookingRequest = 5,
+        BookingRequestClientConfirmation = 6,
+        BookingRequestProfessionalConfirmation = 7,
+        ClientMarketing = 8,
+        ClientDispute = 9,
+        ProfessionalResolution = 10,
+        PricingAdjustmentToProfessional = 12,
+        BookingRequestProfessionalDeclined = 13,
+        BookingRequestClientCancelled = 14,
+        BookingProfessionalUpdate = 15,
+        BookingClientUpdate = 16,
+        ProfessionalBookingReview = 17,
+        ClientBookingReview = 18,
+        BookingUpdate = 19,
+        ServicePerformed = 20,
+        BookingComplete = 21,
+        ProfessionalInquiry = 22,
+        ClientResponseToInquiry = 23,
+        //
+        ProfessionalBooking = 50
+    }
+    enum MessageThreadStatus : int
+    {
+        Respond = 1,
+        Responded = 2
+    }
+    #endregion
+
     #region Database queries (showing list, details, etc)
     private static readonly Dictionary<string, string> sqlListMessageThread = new Dictionary<string,string> {
     { "select", "SELECT " },    
@@ -240,6 +275,9 @@ public class LcMessaging
     #endregion
 
     #region REST
+    /// <summary>
+    /// TODO: Move to LcRest Namespace
+    /// </summary>
     public class RestThread
     {
         public int threadID;
@@ -744,7 +782,109 @@ public class LcMessaging
     }
     #endregion
 
-    #region Type:Booking and Booking Request
+    #region Type:Booking / ServiceProfessionalBooking
+    #region Utils
+    static string getBookingThreadSubject(LcEmailTemplate.BookingEmailInfo info)
+    {
+        return info.userJobTitle.jobTitleSingularName + " " +
+            info.booking.serviceDate.startTime.ToLongDateString() + ", " +
+            info.booking.serviceDate.startTime.ToShortTimeString() + " to " +
+            info.booking.serviceDate.endTime.ToShortTimeString();
+    }
+    /// <summary>
+    /// Get the package name and main information in one line of plain-text.
+    /// It shows the inperson-phone text if need, number of appointments,
+    /// duration and pricing-mod extra-details following its pricing-config
+    /// in a standard format for this package summary.
+    /// </summary>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    static string GetOneLinePackageSummary(LcRest.ServiceProfessionalService service, LcRest.PricingSummaryDetail pricing)
+    {
+        var f = "";
+        var inpersonphone = "";
+        
+        var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[service.pricingTypeID];
+        if (pricing.numberOfSessions > 1)
+        {
+            if (pricing.firstSessionDurationMinutes == 0)
+                f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
+            else
+                f = pricingConfig.NameAndSummaryFormatMultipleSessions;
+        }
+        else if (pricing.firstSessionDurationMinutes == 0)
+            f = pricingConfig.NameAndSummaryFormatNoDuration;
+        if (String.IsNullOrEmpty(f))
+            f = pricingConfig.NameAndSummaryFormat;
+
+        if (pricingConfig.InPersonPhoneLabel != null)
+            inpersonphone = service.isPhone
+                ? "phone"
+                : "in-person";
+
+        var extraDetails = "";
+        // Extra information for special pricings:
+        if (pricingConfig.Mod != null && pricing.pricingSummaryID > 0)
+        {
+            // TODO PackageMod class will need refactor/renamings
+            extraDetails = pricingConfig.Mod.GetPackagePricingDetails(service.serviceProfessionalServiceID, pricing.pricingSummaryID, pricing.pricingSummaryRevision);
+        }
+
+        // Show duration in a smart way.
+        var duration = ASP.LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes((double)pricing.firstSessionDurationMinutes));
+
+        var result = String.Format(f, pricing.serviceName, duration, pricing.numberOfSessions, inpersonphone);
+        if (!String.IsNullOrEmpty(extraDetails))
+        {
+            result += String.Format(" ({0})", extraDetails);
+        }
+        return result;
+    }
+    static string GetBookingThreadBody(LcEmailTemplate.BookingEmailInfo info)
+    {
+        // Using a services summary as first thread message body:
+        var servicePricings = LcEmailTemplate.ServicePricing.GetForPricingSummary(info.booking.pricingSummary);
+        var details = servicePricings.Select(v => GetOneLinePackageSummary(v.service, v.pricing));
+        return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
+    }
+    static bool IsJobTitleHipaa(int jobTitleID, int languageID, int countryID)
+    {
+        using (var db = new LcDatabase())
+        {
+            return (bool)db.QueryValue(@"
+                SELECT TOP 1 coalesce(HIPAA, cast(0 as bit))
+                FROM positions
+                WHERE positionID = @0 AND languageID = @1 AND countryID = @2
+            ", jobTitleID, languageID, countryID);
+        }
+    }
+
+    static int CreateBookingThread(LcEmailTemplate.BookingEmailInfo info, int messageType, int sentByUserID, int bookingID)
+    {
+        var threadSubject = getBookingThreadSubject(info);
+        var threadBody = GetBookingThreadBody(info);
+        return CreateThread(info.booking.clientUserID, info.booking.serviceProfessionalUserID, info.booking.jobTitleID, threadSubject, messageType, threadBody, sentByUserID, bookingID, "booking");
+    }
+    #endregion
+    public static void SendBooking_ServiceProfessionalBooking_InstantBookingConfirmed(int bookingID)
+    {
+        var info = LcEmailTemplate.GetBookingInfo(bookingID);
+        var subject = "Your appointment confirmation";
+        int threadID = CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.clientUserID, bookingID);
+        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+        var isHipaa = IsJobTitleHipaa(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/InstantBookingConfirmed" + (isHipaa ? "HIPAA" : "");
+        SendMail(info.client.email, subject,
+            ApplyTemplate(LcUrl.LangPath + tpl,
+            new Dictionary<string, object> {
+                { "bookingID", bookingID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }), emailFrom
+        );
+    }
+    #endregion
+
+    #region OLD Type:Booking and Booking Request
     /// <summary>
     /// A Booking Request is ever sent by a customer
     /// </summary>
@@ -1132,7 +1272,7 @@ public class LcMessaging
     }
     #endregion
 
-    #region Type:Inquiry
+    #region OLD? Type:Inquiry
     public static void SendCustomerInquiry(int CustomerUserID, int ProviderUserID, int PositionID, string InquirySubject, string InquiryText)
     {
         dynamic customer = null, provider = null;
@@ -1254,7 +1394,7 @@ public class LcMessaging
     }
     #endregion
 
-    #region Type:Welcome
+    #region OLD? Type:Welcome
     [Obsolete("Disabled because it's broken")]
     public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
@@ -1295,7 +1435,7 @@ public class LcMessaging
     }
     #endregion
 
-    #region Type:ReportAbuse
+    #region OLD? Type:ReportAbuse
     public static void SendReportUnauthorizedUse(int reportedByUserID, int reportedUserID, string message)
     {
         SendMail("legal@loconomics.com", "Report of Unauthorized Use",
@@ -1341,7 +1481,7 @@ public class LcMessaging
     }
     #endregion
 
-    #region Type:MerchantAccountNotification
+    #region OLD? Type:MerchantAccountNotification
     public static void SendMerchantAccountNotification(int providerUserID)
     {
         SendMail("support@loconomics.com", "Marketplace: Merchant Account Notification",
