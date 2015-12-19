@@ -117,7 +117,7 @@ public static class LcEmailTemplate
         #region URLs
         public static string GetBookingUrl(int bookingID)
         {
-            return LcUrl.AppUrl + "/appointment/" + bookingID.ToString();
+            return LcUrl.AppUrl + "appointment/" + bookingID.ToString();
         }
         /// <summary>
         /// URL: Opens a view in the website where the user can see the email content
@@ -126,7 +126,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.LangUrl + "/inbox/booking/" + booking.bookingID;
+                return LcUrl.LangUrl + "inbox/booking/" + booking.bookingID;
             }
         }
         /// <summary>
@@ -136,7 +136,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "/booking/" + booking.serviceProfessionalUserID.ToString() + "/" + booking.jobTitleID.ToString();
+                return LcUrl.AppUrl + "booking/" + booking.serviceProfessionalUserID.ToString() + "/" + booking.jobTitleID.ToString();
             }
         }
         /// <summary>
@@ -146,7 +146,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "/feedback";
+                return LcUrl.AppUrl + "feedback";
             }
         }
         /// <summary>
@@ -166,7 +166,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "/terms/terms-of-service";
+                return LcUrl.AppUrl + "terms/terms-of-service";
             }
         }
         /// <summary>
@@ -176,7 +176,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "/terms/privacy-policy";
+                return LcUrl.AppUrl + "terms/privacy-policy";
             }
         }
         /// <summary>
@@ -186,7 +186,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "/reviews/" + booking.bookingID.ToString();
+                return LcUrl.AppUrl + "reviews/" + booking.bookingID.ToString();
             }
         }
         /// <summary>
@@ -206,7 +206,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "/appointment/?clientID=" + booking.clientUserID.ToString();
+                return LcUrl.AppUrl + "appointment/?clientID=" + booking.clientUserID.ToString();
             }
         }
         /// <summary>
@@ -216,7 +216,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "/feedback";
+                return LcUrl.AppUrl + "feedback";
             }
         }
         /// <summary>
@@ -236,7 +236,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "/reviews/" + booking.bookingID.ToString();
+                return LcUrl.AppUrl + "reviews/" + booking.bookingID.ToString();
             }
         }
         /// <summary>
@@ -246,7 +246,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "/profile/" + booking.clientUserID.ToString();
+                return LcUrl.AppUrl + "profile/" + booking.clientUserID.ToString();
             }
         }
         #endregion
