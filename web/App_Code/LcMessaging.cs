@@ -152,7 +152,7 @@ public class LcMessaging
     #endregion
 
     #region Table Enumerations
-    enum MessageType : int
+    public enum MessageType : int
     {
         ClientInquiry = 1,
         CopyOfClientInquiry = 2,
@@ -179,9 +179,11 @@ public class LcMessaging
         //
         ProfessionalBooking = 50,
         RequestToReview = 51,
-        RequestToReviewReminder = 52
+        RequestToReviewReminder = 52,
+        BookingRequestExpired = 53,
+        BookingReminder = 54
     }
-    enum MessageThreadStatus : int
+    public enum MessageThreadStatus : int
     {
         Respond = 1,
         Responded = 2
@@ -792,6 +794,10 @@ public class LcMessaging
     /// The base SendBooking class works as a state machine with helper methods that prepare the data
     /// and performs common logic. Derivated classes based on type of booking implements the specific template messages,
     /// using the base class making implementation of each template easier and shorter.
+    /// 
+    /// Samples usage:
+    ///  LcMessaging.SendBooking.Marketplace.For(bookingID).BookingRequestExpired();
+    ///  LcMessaging.SendBooking.BookingReminder(b.bookingID);
     /// </summary>
     public class SendBooking
     {
@@ -934,6 +940,11 @@ public class LcMessaging
             info = LcEmailTemplate.GetBookingInfo(bookingID);
             flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
         }
+        void prepareData(LcEmailTemplate.BookingEmailInfo info)
+        {
+            this.info = info;
+            flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+        }
         void sendToClient(string tplName)
         {
             toEmail = info.client.email;
@@ -958,50 +969,53 @@ public class LcMessaging
         public class SendServiceProfessionalBooking : SendBooking
         {
             public SendServiceProfessionalBooking() : base("ServiceProfessionalBooking/") {}
-            public void InstantBookingConfirmed(int bookingID)
+            public SendServiceProfessionalBooking For(int bookingID)
             {
                 prepareData(bookingID);
+                return this;
+            }
+            public SendServiceProfessionalBooking For(LcEmailTemplate.BookingEmailInfo info)
+            {
+                prepareData(info);
+                return this;
+            }
+            public void InstantBookingConfirmed()
+            {
                 // Restriction:
                 if (!flags.autoReviewServiceProfessional) return;
                 subject = "Your appointment confirmation";
                 CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.serviceProfessionalUserID, bookingID);
                 sendToClient("InstantBookingConfirmed");
             }
-            public void RequestToReview(int bookingID, bool isReminder)
+            public void RequestToReview(bool isReminder)
             {
-                prepareData(bookingID);
                 // Restriction:
                 if (!flags.autoReviewServiceProfessional) return;
                 subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
                 CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
             }
-            public void BookingReminder(int bookingID)
+            public void BookingReminder()
             {
-                prepareData(bookingID);
                 subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
-                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
+                CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
-            public void BookingCancelledByServiceProfessional(int bookingID)
+            public void BookingCancelledByServiceProfessional()
             {
-                prepareData(bookingID);
                 var neutralSubject = String.Format("Appointment updated by {0}", info.serviceProfessional.firstName);
                 CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
                 subject = "Your appointment has been cancelled";
                 sendToClient("BookingCancelledByServiceProfessional");
             }
-            public void BookingUpdatedByServiceProfessional(int bookingID)
+            public void BookingUpdatedByServiceProfessional()
             {
-                prepareData(bookingID);
                 subject = "Your appointment has been updated";
                 CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
                 sendToClient("BookingUpdatedByServiceProfessional");
             }
-            public void BookingUpdatedByClient(int bookingID)
+            public void BookingUpdatedByClient()
             {
-                prepareData(bookingID);
-
                 var neutralSubject = String.Format("Appointment updated by {0}", info.client.firstName);
                 CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
 
@@ -1011,10 +1025,8 @@ public class LcMessaging
                 subject = String.Format("{0} has changed their appointment", info.client.firstName);
                 sendToServiceProfessional("BookingUpdatedByClient");
             }
-            public void BookingCancelledByClient(int bookingID)
+            public void BookingCancelledByClient()
             {
-                prepareData(bookingID);
-
                 var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
                 CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
 
@@ -1024,14 +1036,197 @@ public class LcMessaging
                 subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
                 sendToServiceProfessional("BookingCancelledByClient");
             }
+            public void ServicePerformed()
+            {
+                subject = "Service performed and pricing estimate 100% accurate";
+                CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
+            }
+            public void BookingComplete()
+            {
+                subject = "Client has paid in full and service professional has been paid in full";
+                CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
+            }
         }
         public class SendMarketplaceBooking : SendBooking
         {
             public SendMarketplaceBooking() : base("Marketplace/") { }
+            public SendMarketplaceBooking For(int bookingID)
+            {
+                prepareData(bookingID);
+                return this;
+            }
+            public SendMarketplaceBooking For(LcEmailTemplate.BookingEmailInfo info)
+            {
+                prepareData(info);
+                return this;
+            }
+            public void BookingReminder()
+            {
+                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("BookingReminder");
+            }
+            public void BookingRequestExpired()
+            {
+                var neutralSubject = "Booking request has expired";
+                CreateBookingMessage(info, (int)MessageType.BookingRequestExpired, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, true);
+
+                subject = "Your appointment request has expired";
+                sendToClient("BookingRequestExpired");
+
+                subject = String.Format("{0}'s appointment request has expired", info.client.firstName);
+                sendToServiceProfessional("BookingRequestExpired");
+            }
+            public void RequestToReview(bool isReminder)
+            {
+                // Restriction:
+                if (!flags.autoReviewServiceProfessional) return;
+                subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
+                CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
+            }
+            public void ServicePerformed()
+            {
+                subject = "Service performed and pricing estimate 100% accurate";
+                CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
+            }
+            public void BookingComplete()
+            {
+                subject = "Client has paid in full and service professional has been paid in full";
+                CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
+            }
         }
         public class SendBookNowBooking : SendBooking
         {
             public SendBookNowBooking() : base("BookNow/") { }
+            public SendBookNowBooking For(int bookingID)
+            {
+                prepareData(bookingID);
+                return this;
+            }
+            public SendBookNowBooking For(LcEmailTemplate.BookingEmailInfo info)
+            {
+                prepareData(info);
+                return this;
+            }
+            public void BookingReminder()
+            {
+                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("BookingReminder");
+            }
+            public void RequestToReview(bool isReminder)
+            {
+                // Restriction:
+                if (!flags.autoReviewServiceProfessional) return;
+                subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
+                CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
+            }
+            public void ServicePerformed()
+            {
+                subject = "Service performed and pricing estimate 100% accurate";
+                CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
+            }
+            public void BookingComplete()
+            {
+                subject = "Client has paid in full and service professional has been paid in full";
+                CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
+            }
+        }
+        #endregion
+        #region Generic calls, auto-detection of type of booking to use the specific template
+        public static void BookingReminder(int bookingID)
+        {
+            var info = LcEmailTemplate.GetBookingInfo(bookingID);
+            switch ((LcEnum.BookingType)info.booking.bookingTypeID)
+            {
+                case LcEnum.BookingType.bookNowBooking:
+                    BookNow.For(info).BookingReminder();
+                    break;
+                case LcEnum.BookingType.marketplaceBooking:
+                    Marketplace.For(info).BookingReminder();
+                    break;
+                case LcEnum.BookingType.serviceProfessionalBooking:
+                    ServiceProfessionalBooking.For(info).BookingReminder();
+                    break;
+                case LcEnum.BookingType.exchangeBooking:
+                    throw new NotImplementedException("Exchange BookingReminder");
+                case LcEnum.BookingType.partnerBooking:
+                    throw new NotImplementedException("Partner BookingReminder");
+            }
+        }
+        public static void RequestToReview(int bookingID, bool isReminder)
+        {
+            var info = LcEmailTemplate.GetBookingInfo(bookingID);
+            switch ((LcEnum.BookingType)info.booking.bookingTypeID)
+            {
+                case LcEnum.BookingType.bookNowBooking:
+                    BookNow.For(info).RequestToReview(isReminder);
+                    break;
+                case LcEnum.BookingType.marketplaceBooking:
+                    Marketplace.For(info).RequestToReview(isReminder);
+                    break;
+                case LcEnum.BookingType.serviceProfessionalBooking:
+                    ServiceProfessionalBooking.For(info).RequestToReview(isReminder);
+                    break;
+                case LcEnum.BookingType.exchangeBooking:
+                    throw new NotImplementedException("Exchange RequestToReview");
+                case LcEnum.BookingType.partnerBooking:
+                    throw new NotImplementedException("Partner RequestToReview");
+            }
+        }
+        public static void ServicePerformed(int bookingID)
+        {
+            var info = LcEmailTemplate.GetBookingInfo(bookingID);
+            switch ((LcEnum.BookingType)info.booking.bookingTypeID)
+            {
+                case LcEnum.BookingType.bookNowBooking:
+                    BookNow.For(info).ServicePerformed();
+                    break;
+                case LcEnum.BookingType.marketplaceBooking:
+                    Marketplace.For(info).ServicePerformed();
+                    break;
+                case LcEnum.BookingType.serviceProfessionalBooking:
+                    ServiceProfessionalBooking.For(info).ServicePerformed();
+                    break;
+                case LcEnum.BookingType.exchangeBooking:
+                    throw new NotImplementedException("Exchange RequestToReview");
+                case LcEnum.BookingType.partnerBooking:
+                    throw new NotImplementedException("Partner RequestToReview");
+            }
+        }
+        public static void BookingComplete(int bookingID)
+        {
+            var info = LcEmailTemplate.GetBookingInfo(bookingID);
+            switch ((LcEnum.BookingType)info.booking.bookingTypeID)
+            {
+                case LcEnum.BookingType.bookNowBooking:
+                    BookNow.For(info).BookingComplete();
+                    break;
+                case LcEnum.BookingType.marketplaceBooking:
+                    Marketplace.For(info).BookingComplete();
+                    break;
+                case LcEnum.BookingType.serviceProfessionalBooking:
+                    ServiceProfessionalBooking.For(info).BookingComplete();
+                    break;
+                case LcEnum.BookingType.exchangeBooking:
+                    throw new NotImplementedException("Exchange RequestToReview");
+                case LcEnum.BookingType.partnerBooking:
+                    throw new NotImplementedException("Partner RequestToReview");
+            }
         }
         #endregion
     }

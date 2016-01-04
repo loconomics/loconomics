@@ -71,7 +71,7 @@ public class ScheduleTask
                     if (result.Error == 0)
                     {
                         // Send message
-                        LcMessaging.SendBookingRequestInvalidation(b.bookingID, 1, 19);
+                        LcMessaging.SendBooking.Marketplace.For(b.bookingID).BookingRequestExpired();
 
                         // Update MessagingLog for the booking request
                         db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Booking Request Expiration]");
@@ -90,9 +90,9 @@ public class ScheduleTask
             totalmessages += messages;
 
             /*
-             * Check:: [24H Service Reminder] Booking will be on 24Hours
+             * Check:: [48H Service Reminder] Booking will be on 48Hours
              * If:: Confirmated bookings not cancelled
-             * If:: Current time is 24 hours before Confirmed Service StarTime
+             * If:: Current time is 48 hours before Confirmed Service StarTime
              * Action:: send a booking reminder email
              */
             messages = 0;
@@ -105,31 +105,31 @@ public class ScheduleTask
                           ON B.ServiceDateID = E.Id
                 WHERE   BookingStatusID = @0
                          AND
-                        -- at 24 hours before service starts (between 25 and 24 hours)
-                        getdate() > dateadd(hh, -25, E.StartTime)
+                        -- at 48 hours before service starts (between 49 and 48 hours)
+                        getdate() > dateadd(hh, -49, E.StartTime)
                          AND
-                        getdate() <= dateadd(hh, -24, E.StartTime)
+                        getdate() <= dateadd(hh, -48, E.StartTime)
                          AND
-                        B.MessagingLog not like '%[24H Service Reminder]%'
+                        B.MessagingLog not like '%[48H Service Reminder]%'
             ", (int)LcEnum.BookingStatus.confirmed))
             {
                 try
                 {
                     // Send message
-                    LcMessaging.SendBookingUpdate(b.BookingID, 's', 'b', "service");
+                    LcMessaging.SendBooking.BookingReminder(b.BookingID);
 
                     // Update MessagingLog for the booking
-                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[24H Service Reminder]");
+                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[48H Service Reminder]");
 
                     items++;
                     messages += 2;
                 }
                 catch (Exception ex)
                 {
-                    logger.LogEx("Booking 24H Reminders", ex);
+                    logger.LogEx("Booking 48H Reminders", ex);
                 }
             }
-            logger.Log("Total of Booking 24H Reminders: {0}, messages sent: {1}", items, messages);
+            logger.Log("Total of Booking 48H Reminders: {0}, messages sent: {1}", items, messages);
             totalitems += items;
             totalmessages += messages;
 
@@ -190,7 +190,7 @@ public class ScheduleTask
                         'b';
 
                     // Send message
-                    LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor, "review-firstreminder");
+                    LcMessaging.SendBooking.RequestToReview(b.BookingID, false);
 
                     // Update MessagingLog for the booking
                     db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[8AM Review Reminder]");
@@ -270,7 +270,7 @@ public class ScheduleTask
                         'b';
 
                     // Send message
-                    LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor, "review");
+                    LcMessaging.SendBooking.RequestToReview(b.BookingID, true);
 
                     // Update MessagingLog for the booking
                     db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[1W Review Reminder]");
@@ -315,7 +315,7 @@ public class ScheduleTask
                         // Send messages
 
                         // Notify customer and provider with an updated booking details:
-                        LcMessaging.SendBookingUpdate(b.bookingID, 's', 'b', null, 20);
+                        LcMessaging.SendBooking.ServicePerformed(b.bookingID);
 
                         // Update MessagingLog for the booking
                         db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[48H Service Performed]");
@@ -359,7 +359,7 @@ public class ScheduleTask
                                 // Send messages
 
                                 // Notify customer and provider with an updated booking details:
-                                LcMessaging.SendBookingUpdate(b.bookingID, 's', 'b', null, 21);
+                                LcMessaging.SendBooking.BookingComplete(b.bookingID);
 
                                 // Update MessagingLog for the booking
                                 db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Release Payment 120H New Provider]");
@@ -419,7 +419,7 @@ public class ScheduleTask
                                 // Send messages
 
                                 // Notify customer and provider with an updated booking details:
-                                LcMessaging.SendBookingUpdate(b.bookingID, 's', 'b', null, 21);
+                                LcMessaging.SendBooking.BookingComplete(b.bookingID);
 
                                 // Update MessagingLog for the booking
                                 db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Release Payment 24H]");
