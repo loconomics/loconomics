@@ -1453,7 +1453,7 @@ namespace LcRest
                 }
                 catch {}
 
-                LcMessaging.SendBooking_ServiceProfessionalBooking_InstantBookingConfirmed(booking.bookingID);
+                LcMessaging.SendBooking.ServiceProfessionalBooking.InstantBookingConfirmed(booking.bookingID);
 
                 return booking;
             }

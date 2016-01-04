@@ -785,255 +785,255 @@ public class LcMessaging
     }
     #endregion
 
-    #region Type:Booking / ServiceProfessionalBooking
-    #region Utils
-    static string getBookingThreadSubject(LcEmailTemplate.BookingEmailInfo info)
-    {
-        return info.userJobTitle.jobTitleSingularName + " " +
-            info.booking.serviceDate.startTime.ToLongDateString() + ", " +
-            info.booking.serviceDate.startTime.ToShortTimeString() + " to " +
-            info.booking.serviceDate.endTime.ToShortTimeString();
-    }
+    #region Type:Booking
     /// <summary>
-    /// Get the package name and main information in one line of plain-text.
-    /// It shows the inperson-phone text if need, number of appointments,
-    /// duration and pricing-mod extra-details following its pricing-config
-    /// in a standard format for this package summary.
+    /// Implements methods to send messages about bookings with the full set of
+    /// available templates for each type of booking.
+    /// The base SendBooking class works as a state machine with helper methods that prepare the data
+    /// and performs common logic. Derivated classes based on type of booking implements the specific template messages,
+    /// using the base class making implementation of each template easier and shorter.
     /// </summary>
-    /// <param name="service"></param>
-    /// <returns></returns>
-    static string GetOneLinePackageSummary(LcRest.ServiceProfessionalService service, LcRest.PricingSummaryDetail pricing)
+    public class SendBooking
     {
-        var f = "";
-        var inpersonphone = "";
-        
-        var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[service.pricingTypeID];
-        if (pricing.numberOfSessions > 1)
+        #region Static Utils
+        static string GetBookingThreadSubject(LcEmailTemplate.BookingEmailInfo info)
         {
-            if (pricing.firstSessionDurationMinutes == 0)
-                f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
-            else
-                f = pricingConfig.NameAndSummaryFormatMultipleSessions;
+            return info.userJobTitle.jobTitleSingularName + " " +
+                info.booking.serviceDate.startTime.ToLongDateString() + ", " +
+                info.booking.serviceDate.startTime.ToShortTimeString() + " to " +
+                info.booking.serviceDate.endTime.ToShortTimeString();
         }
-        else if (pricing.firstSessionDurationMinutes == 0)
-            f = pricingConfig.NameAndSummaryFormatNoDuration;
-        if (String.IsNullOrEmpty(f))
-            f = pricingConfig.NameAndSummaryFormat;
-
-        if (pricingConfig.InPersonPhoneLabel != null)
-            inpersonphone = service.isPhone
-                ? "phone"
-                : "in-person";
-
-        var extraDetails = "";
-        // Extra information for special pricings:
-        if (pricingConfig.Mod != null && pricing.pricingSummaryID > 0)
+        /// <summary>
+        /// Get the package name and main information in one line of plain-text.
+        /// It shows the inperson-phone text if need, number of appointments,
+        /// duration and pricing-mod extra-details following its pricing-config
+        /// in a standard format for this package summary.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        static string GetOneLinePackageSummary(LcRest.ServiceProfessionalService service, LcRest.PricingSummaryDetail pricing)
         {
-            // TODO PackageMod class will need refactor/renamings
-            extraDetails = pricingConfig.Mod.GetPackagePricingDetails(service.serviceProfessionalServiceID, pricing.pricingSummaryID, pricing.pricingSummaryRevision);
-        }
+            var f = "";
+            var inpersonphone = "";
 
-        // Show duration in a smart way.
-        var duration = ASP.LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes((double)pricing.firstSessionDurationMinutes));
-
-        var result = String.Format(f, pricing.serviceName, duration, pricing.numberOfSessions, inpersonphone);
-        if (!String.IsNullOrEmpty(extraDetails))
-        {
-            result += String.Format(" ({0})", extraDetails);
-        }
-        return result;
-    }
-    static string GetBookingThreadBody(LcEmailTemplate.BookingEmailInfo info)
-    {
-        // Using a services summary as first thread message body:
-        var servicePricings = LcEmailTemplate.ServicePricing.GetForPricingSummary(info.booking.pricingSummary);
-        var details = servicePricings.Select(v => GetOneLinePackageSummary(v.service, v.pricing));
-        return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
-    }
-    public class JobTitleMessagingFlags
-    {
-        public bool hipaa;
-        public bool autoReviewServiceProfessional;
-        public static JobTitleMessagingFlags FromDB(dynamic record)
-        {
-            if (record == null) return null;
-            return new JobTitleMessagingFlags
+            var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[service.pricingTypeID];
+            if (pricing.numberOfSessions > 1)
             {
-                hipaa = record.hipaa,
-                autoReviewServiceProfessional = record.autoReviewServiceProfessional
-            };
-        }
-        public static JobTitleMessagingFlags Get(int jobTitleID, int languageID, int countryID)
-        {
-            using (var db = new LcDatabase())
+                if (pricing.firstSessionDurationMinutes == 0)
+                    f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
+                else
+                    f = pricingConfig.NameAndSummaryFormatMultipleSessions;
+            }
+            else if (pricing.firstSessionDurationMinutes == 0)
+                f = pricingConfig.NameAndSummaryFormatNoDuration;
+            if (String.IsNullOrEmpty(f))
+                f = pricingConfig.NameAndSummaryFormat;
+
+            if (pricingConfig.InPersonPhoneLabel != null)
+                inpersonphone = service.isPhone
+                    ? "phone"
+                    : "in-person";
+
+            var extraDetails = "";
+            // Extra information for special pricings:
+            if (pricingConfig.Mod != null && pricing.pricingSummaryID > 0)
             {
-                return JobTitleMessagingFlags.FromDB(db.QuerySingle(@"
+                // TODO PackageMod class will need refactor/renamings
+                extraDetails = pricingConfig.Mod.GetPackagePricingDetails(service.serviceProfessionalServiceID, pricing.pricingSummaryID, pricing.pricingSummaryRevision);
+            }
+
+            // Show duration in a smart way.
+            var duration = ASP.LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes((double)pricing.firstSessionDurationMinutes));
+
+            var result = String.Format(f, pricing.serviceName, duration, pricing.numberOfSessions, inpersonphone);
+            if (!String.IsNullOrEmpty(extraDetails))
+            {
+                result += String.Format(" ({0})", extraDetails);
+            }
+            return result;
+        }
+        static string GetBookingThreadBody(LcEmailTemplate.BookingEmailInfo info)
+        {
+            // Using a services summary as first thread message body:
+            var servicePricings = LcEmailTemplate.ServicePricing.GetForPricingSummary(info.booking.pricingSummary);
+            var details = servicePricings.Select(v => GetOneLinePackageSummary(v.service, v.pricing));
+            return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
+        }
+        public class JobTitleMessagingFlags
+        {
+            public bool hipaa;
+            public bool autoReviewServiceProfessional;
+            public static JobTitleMessagingFlags FromDB(dynamic record)
+            {
+                if (record == null) return null;
+                return new JobTitleMessagingFlags
+                {
+                    hipaa = record.hipaa,
+                    autoReviewServiceProfessional = record.autoReviewServiceProfessional
+                };
+            }
+            public static JobTitleMessagingFlags Get(int jobTitleID, int languageID, int countryID)
+            {
+                using (var db = new LcDatabase())
+                {
+                    return JobTitleMessagingFlags.FromDB(db.QuerySingle(@"
                     SELECT TOP 1
                         coalesce(HIPAA, cast(0 as bit)) as hipaa,
                         coalesce(AutoReviewServiceProfessional, cast(0 as bit)) as autoReviewServiceProfessional
                     FROM positions
                     WHERE positionID = @0 AND languageID = @1 AND countryID = @2
                 ", jobTitleID, languageID, countryID));
+                }
             }
         }
-    }
-    static int CreateBookingThread(LcEmailTemplate.BookingEmailInfo info, int messageType, int sentByUserID, int bookingID)
-    {
-        var threadSubject = getBookingThreadSubject(info);
-        var threadBody = GetBookingThreadBody(info);
-        return CreateThread(info.booking.clientUserID, info.booking.serviceProfessionalUserID, info.booking.jobTitleID, threadSubject, messageType, threadBody, sentByUserID, bookingID, "booking");
-    }
-    static int CreateBookingMessage(LcEmailTemplate.BookingEmailInfo info, int messageType, int threadStatusID, int sentByUserID, string message, bool includeBookingDetails)
-    {
-        using (var db = new LcDatabase())
+        static int CreateBookingThread(LcEmailTemplate.BookingEmailInfo info, int messageType, int sentByUserID, int bookingID)
         {
-            // Get Thread info
-            var thread = db.QuerySingle(sqlGetThreadByAux, info.booking.bookingID, "booking");
-            if (includeBookingDetails)
-                message += (message[message.Length - 1] == '.' ? "" : ". ") + "\n" + GetBookingThreadBody(info);
-            return CreateMessage(thread.ThreadID, threadStatusID, messageType, message, sentByUserID, info.booking.bookingID, "booking");
+            var threadSubject = GetBookingThreadSubject(info);
+            var threadBody = GetBookingThreadBody(info);
+            return CreateThread(info.booking.clientUserID, info.booking.serviceProfessionalUserID, info.booking.jobTitleID, threadSubject, messageType, threadBody, sentByUserID, bookingID, "booking");
         }
-    }
-    #endregion
-    public static void SendBooking_ServiceProfessionalBooking_InstantBookingConfirmed(int bookingID)
-    {
-        var info = LcEmailTemplate.GetBookingInfo(bookingID);
-        var subject = "Your appointment confirmation";
-        int threadID = CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.serviceProfessionalUserID, bookingID);
-        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
-        var isHipaa = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID).hipaa;
-        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/InstantBookingConfirmed" + (isHipaa ? "HIPAA" : "");
-        SendMail(info.client.email, subject,
-            ApplyTemplate(LcUrl.LangPath + tpl,
-            new Dictionary<string, object> {
-                { "bookingID", bookingID }
-                ,{ "RequestKey", SecurityRequestKey }
-            }), emailFrom
-        );
-    }
-    public static void SendBooking_ServiceProfessionalBooking_RequestToReview(int bookingID, bool isReminder)
-    {
-        var info = LcEmailTemplate.GetBookingInfo(bookingID);
-        var subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
-        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
-        // Restriction:
-        if (!flags.autoReviewServiceProfessional) return;
+        static int CreateBookingMessage(LcEmailTemplate.BookingEmailInfo info, int messageType, int threadStatusID, int sentByUserID, string message, bool includeBookingDetails)
+        {
+            using (var db = new LcDatabase())
+            {
+                // Get Thread info
+                var thread = db.QuerySingle(sqlGetThreadByAux, info.booking.bookingID, "booking");
+                if (includeBookingDetails)
+                    message += (message[message.Length - 1] == '.' ? "" : ". ") + "\n" + GetBookingThreadBody(info);
+                return CreateMessage(thread.ThreadID, threadStatusID, messageType, message, sentByUserID, info.booking.bookingID, "booking");
+            }
+        }
+        #endregion
+        #region State data
+        string path = "EmailCommunications/Booking/";
+        string tpl = "";
+        string toEmail = "";
+        string fromEmail = "";
+        string subject = "";
+        int bookingID = 0;
+        LcEmailTemplate.BookingEmailInfo info;
+        JobTitleMessagingFlags flags;
+        #endregion
+        #region Internal methods
+        public SendBooking(string subPath)
+        {
+            path += subPath;
+        }
+        void send()
+        {
+            SendMail(toEmail, subject,
+                ApplyTemplate(LcUrl.LangPath + path + tpl,
+                new Dictionary<string, object> {
+                    { "bookingID", bookingID }
+                    ,{ "RequestKey", SecurityRequestKey }
+                }), fromEmail
+            );
+        }
+        void prepareData(int bookingID)
+        {
+            info = LcEmailTemplate.GetBookingInfo(bookingID);
+            flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+        }
+        void sendToClient(string tplName)
+        {
+            toEmail = info.client.email;
+            fromEmail = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+            tpl = "ToClient/" + tplName + (flags.hipaa ? "HIPAA" : "");
+            send();
+        }
+        void sendToServiceProfessional(string tplName)
+        {
+            toEmail = info.serviceProfessional.email;
+            fromEmail = "Loconomics Scheduler <automated@loconomics.com>";
+            tpl = "ToServiceProfessional/" + tplName + (flags.hipaa ? "HIPAA" : "");
+            send();
+        }
+        #endregion
+        #region Access to singletons for Types of Bookings
+        public static SendServiceProfessionalBooking ServiceProfessionalBooking = new SendServiceProfessionalBooking();
+        public static SendMarketplaceBooking Marketplace = new SendMarketplaceBooking();
+        public static SendBookNowBooking BookNow = new SendBookNowBooking();
+        #endregion
+        #region Types of Bookings
+        public class SendServiceProfessionalBooking : SendBooking
+        {
+            public SendServiceProfessionalBooking() : base("ServiceProfessionalBooking/") {}
+            public void InstantBookingConfirmed(int bookingID)
+            {
+                prepareData(bookingID);
+                // Restriction:
+                if (!flags.autoReviewServiceProfessional) return;
+                subject = "Your appointment confirmation";
+                CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.serviceProfessionalUserID, bookingID);
+                sendToClient("InstantBookingConfirmed");
+            }
+            public void RequestToReview(int bookingID, bool isReminder)
+            {
+                prepareData(bookingID);
+                // Restriction:
+                if (!flags.autoReviewServiceProfessional) return;
+                subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
+                CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
+            }
+            public void BookingReminder(int bookingID)
+            {
+                prepareData(bookingID);
+                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("BookingReminder");
+            }
+            public void BookingCancelledByServiceProfessional(int bookingID)
+            {
+                prepareData(bookingID);
+                var neutralSubject = String.Format("Appointment updated by {0}", info.serviceProfessional.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByServiceProfessional");
+            }
+            public void BookingUpdatedByServiceProfessional(int bookingID)
+            {
+                prepareData(bookingID);
+                subject = "Your appointment has been updated";
+                CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+            }
+            public void BookingUpdatedByClient(int bookingID)
+            {
+                prepareData(bookingID);
 
-        CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
-        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
-        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/RequestToReview" + (isReminder ? "Reminder" : "") + (flags.hipaa ? "HIPAA" : "");
-        SendMail(info.client.email, subject,
-            ApplyTemplate(LcUrl.LangPath + tpl,
-            new Dictionary<string, object> {
-                { "bookingID", bookingID }
-                ,{ "RequestKey", SecurityRequestKey }
-            }), emailFrom
-        );
-    }
-    public static void SendBooking_ServiceProfessionalBooking_BookingReminder(int bookingID)
-    {
-        var info = LcEmailTemplate.GetBookingInfo(bookingID);
-        var subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
-        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
-        CreateBookingMessage(info, (int)MessageType.RequestToReviewReminder, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
-        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
-        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/BookingReminder" + (flags.hipaa ? "HIPAA" : "");
-        SendMail(info.client.email, subject,
-            ApplyTemplate(LcUrl.LangPath + tpl,
-            new Dictionary<string, object> {
-                { "bookingID", bookingID }
-                ,{ "RequestKey", SecurityRequestKey }
-            }), emailFrom
-        );
-    }
-    public static void SendBooking_ServiceProfessionalBooking_BookingCancelledByServiceProfessional(int bookingID)
-    {
-        var info = LcEmailTemplate.GetBookingInfo(bookingID);
-        var subject = "Your appointment has been cancelled";
-        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
-        var neutralSubject = String.Format("Appointment cancelled by {0}", info.serviceProfessional.firstName);
-        CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
-        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
-        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/BookingCancelledByServiceProfessional" + (flags.hipaa ? "HIPAA" : "");
-        SendMail(info.client.email, subject,
-            ApplyTemplate(LcUrl.LangPath + tpl,
-            new Dictionary<string, object> {
-                { "bookingID", bookingID }
-                ,{ "RequestKey", SecurityRequestKey }
-            }), emailFrom
-        );
-    }
-    public static void SendBooking_ServiceProfessionalBooking_BookingUpdatedByServiceProfessional(int bookingID)
-    {
-        var info = LcEmailTemplate.GetBookingInfo(bookingID);
-        var subject = "Your appointment has been updated";
-        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
-        CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
-        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/BookingUpdatedByServiceProfessional" + (flags.hipaa ? "HIPAA" : "");
-        SendMail(info.client.email, subject,
-            ApplyTemplate(LcUrl.LangPath + tpl,
-            new Dictionary<string, object> {
-                { "bookingID", bookingID }
-                ,{ "RequestKey", SecurityRequestKey }
-            }), emailFrom
-        );
-    }
-    public static void SendBooking_ServiceProfessionalBooking_BookingUpdatedByClient(int bookingID)
-    {
-        var info = LcEmailTemplate.GetBookingInfo(bookingID);
-        var subject = "Updated appointment confirmation";
-        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
-        var neutralSubject = "Updated appointment";
-        CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
-        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
-        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/BookingUpdatedByClient" + (flags.hipaa ? "HIPAA" : "");
-        SendMail(info.client.email, subject,
-            ApplyTemplate(LcUrl.LangPath + tpl,
-            new Dictionary<string, object> {
-                { "bookingID", bookingID }
-                ,{ "RequestKey", SecurityRequestKey }
-            }), emailFrom
-        );
-        // To service professional:
-        subject = String.Format("{0} has changed their appointment", info.client.firstName);
-        emailFrom = "Loconomics Scheduler <automated@loconomics.com>";
-        tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToServiceProfessional/BookingUpdatedByClient" + (flags.hipaa ? "HIPAA" : "");
-        SendMail(info.serviceProfessional.email, subject,
-            ApplyTemplate(LcUrl.LangPath + tpl,
-            new Dictionary<string, object> {
-                { "bookingID", bookingID }
-                ,{ "RequestKey", SecurityRequestKey }
-            }), emailFrom
-        );
-    }
-    public static void SendBooking_ServiceProfessionalBooking_BookingCancelledByClient(int bookingID)
-    {
-        var info = LcEmailTemplate.GetBookingInfo(bookingID);
-        var subject = "Your appointment has been cancelled";
-        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
-        var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
-        CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
-        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
-        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/BookingCancelledByClient" + (flags.hipaa ? "HIPAA" : "");
-        SendMail(info.client.email, subject,
-            ApplyTemplate(LcUrl.LangPath + tpl,
-            new Dictionary<string, object> {
-                { "bookingID", bookingID }
-                ,{ "RequestKey", SecurityRequestKey }
-            }), emailFrom
-        );
-        // To service professional:
-        subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
-        emailFrom = "Loconomics Scheduler <automated@loconomics.com>";
-        tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToServiceProfessional/BookingCancelledByClient" + (flags.hipaa ? "HIPAA" : "");
-        SendMail(info.serviceProfessional.email, subject,
-            ApplyTemplate(LcUrl.LangPath + tpl,
-            new Dictionary<string, object> {
-                { "bookingID", bookingID }
-                ,{ "RequestKey", SecurityRequestKey }
-            }), emailFrom
-        );
+                var neutralSubject = String.Format("Appointment updated by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
+
+                subject = "Updated appointment confirmation";
+                sendToClient("BookingUpdatedByClient");
+
+                subject = String.Format("{0} has changed their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingUpdatedByClient");
+            }
+            public void BookingCancelledByClient(int bookingID)
+            {
+                prepareData(bookingID);
+
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
+
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByClient");
+
+                subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingCancelledByClient");
+            }
+        }
+        public class SendMarketplaceBooking : SendBooking
+        {
+            public SendMarketplaceBooking() : base("Marketplace/") { }
+        }
+        public class SendBookNowBooking : SendBooking
+        {
+            public SendBookNowBooking() : base("BookNow/") { }
+        }
+        #endregion
     }
     #endregion
 
