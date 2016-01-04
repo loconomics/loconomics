@@ -847,18 +847,33 @@ public class LcMessaging
         var details = servicePricings.Select(v => GetOneLinePackageSummary(v.service, v.pricing));
         return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
     }
-    static bool IsJobTitleHipaa(int jobTitleID, int languageID, int countryID)
+    public class JobTitleMessagingFlags
     {
-        using (var db = new LcDatabase())
+        public bool hipaa;
+        public bool autoReviewServiceProfessional;
+        public static JobTitleMessagingFlags FromDB(dynamic record)
         {
-            return (bool)db.QueryValue(@"
-                SELECT TOP 1 coalesce(HIPAA, cast(0 as bit))
-                FROM positions
-                WHERE positionID = @0 AND languageID = @1 AND countryID = @2
-            ", jobTitleID, languageID, countryID);
+            if (record == null) return null;
+            return new JobTitleMessagingFlags
+            {
+                hipaa = record.hipaa,
+                autoReviewServiceProfessional = record.autoReviewServiceProfessional
+            };
+        }
+        public static JobTitleMessagingFlags Get(int jobTitleID, int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return JobTitleMessagingFlags.FromDB(db.QuerySingle(@"
+                    SELECT TOP 1
+                        coalesce(HIPAA, cast(0 as bit)) as hipaa,
+                        coalesce(AutoReviewServiceProfessional, cast(0 as bit)) as autoReviewServiceProfessional
+                    FROM positions
+                    WHERE positionID = @0 AND languageID = @1 AND countryID = @2
+                ", jobTitleID, languageID, countryID));
+            }
         }
     }
-
     static int CreateBookingThread(LcEmailTemplate.BookingEmailInfo info, int messageType, int sentByUserID, int bookingID)
     {
         var threadSubject = getBookingThreadSubject(info);
@@ -872,8 +887,75 @@ public class LcMessaging
         var subject = "Your appointment confirmation";
         int threadID = CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.clientUserID, bookingID);
         var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
-        var isHipaa = IsJobTitleHipaa(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+        var isHipaa = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID).hipaa;
         var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/InstantBookingConfirmed" + (isHipaa ? "HIPAA" : "");
+        SendMail(info.client.email, subject,
+            ApplyTemplate(LcUrl.LangPath + tpl,
+            new Dictionary<string, object> {
+                { "bookingID", bookingID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }), emailFrom
+        );
+    }
+    public static void SendBooking_ServiceProfessionalBooking_RequestToReview(int bookingID, bool isReminder)
+    {
+        var info = LcEmailTemplate.GetBookingInfo(bookingID);
+        var subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
+        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+        // Restriction:
+        if (!flags.autoReviewServiceProfessional) return;
+
+        int threadID = CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.clientUserID, bookingID);
+        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/RequestToReview" + (isReminder ? "Reminder" : "") + (flags.hipaa ? "HIPAA" : "");
+        SendMail(info.client.email, subject,
+            ApplyTemplate(LcUrl.LangPath + tpl,
+            new Dictionary<string, object> {
+                { "bookingID", bookingID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }), emailFrom
+        );
+    }
+    public static void SendBooking_ServiceProfessionalBooking_BookingReminder(int bookingID)
+    {
+        var info = LcEmailTemplate.GetBookingInfo(bookingID);
+        var subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+        int threadID = CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.clientUserID, bookingID);
+        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/BookingReminder" + (flags.hipaa ? "HIPAA" : "");
+        SendMail(info.client.email, subject,
+            ApplyTemplate(LcUrl.LangPath + tpl,
+            new Dictionary<string, object> {
+                { "bookingID", bookingID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }), emailFrom
+        );
+    }
+    public static void SendBooking_ServiceProfessionalBooking_BookingCancelledByServiceProfessional(int bookingID)
+    {
+        var info = LcEmailTemplate.GetBookingInfo(bookingID);
+        var subject = "Your appointment has been cancelled";
+        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+        int threadID = CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.clientUserID, bookingID);
+        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/BookingCancelledByServiceProfessional" + (flags.hipaa ? "HIPAA" : "");
+        SendMail(info.client.email, subject,
+            ApplyTemplate(LcUrl.LangPath + tpl,
+            new Dictionary<string, object> {
+                { "bookingID", bookingID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }), emailFrom
+        );
+    }
+    public static void SendBooking_ServiceProfessionalBooking_BookingUpdatedByServiceProfessional(int bookingID)
+    {
+        var info = LcEmailTemplate.GetBookingInfo(bookingID);
+        var subject = "Your appointment has been updated";
+        var flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+        int threadID = CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.clientUserID, bookingID);
+        var emailFrom = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+        var tpl = "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/BookingUpdatedByServiceProfessional" + (flags.hipaa ? "HIPAA" : "");
         SendMail(info.client.email, subject,
             ApplyTemplate(LcUrl.LangPath + tpl,
             new Dictionary<string, object> {
