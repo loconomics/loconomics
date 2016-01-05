@@ -961,10 +961,51 @@ public class LcMessaging
         }
         #endregion
         #region Common Interface methods
+        /// <summary>
+        /// Connected: Yes (ScheduleTask)
+        /// </summary>
         public virtual void BookingReminder() { }
+        /// <summary>
+        /// Connected: Yes (ScheduleTask)
+        /// </summary>
+        /// <param name="isReminder"></param>
         public virtual void RequestToReview(bool isReminder) { }
+        /// <summary>
+        /// Connected: Yes (ScheduleTask)
+        /// </summary>
         public virtual void ServicePerformed() { }
+        /// <summary>
+        /// Connected: Yes (ScheduleTask)
+        /// </summary>
         public virtual void BookingComplete() { }
+        /// <summary>
+        /// Connected: Yes (LcRest.Booking.InsClientBooking)
+        /// </summary>
+        public virtual void BookingRequest() { }
+        /// <summary>
+        /// Connected: Yes (ScheduleTask)
+        /// </summary>
+        public virtual void BookingRequestExpired() { }
+        /// <summary>
+        /// Connected: Yes (LcRest.Booking.InsClientBooking and LcRest.Booking.InsServiceProfessionalBooking)
+        /// </summary>
+        public virtual void InstantBookingConfirmed() { }
+        /// <summary>
+        /// Connected: NO (there is no update-client API still)
+        /// </summary>
+        public virtual void BookingUpdatedByClient() { }
+        /// <summary>
+        /// Connected: NO
+        /// </summary>
+        public virtual void BookingCancelledByServiceProfessional() { }
+        /// <summary>
+        /// Connected: NO
+        /// </summary>
+        public virtual void BookingUpdatedByServiceProfessional() { }
+        /// <summary>
+        /// Connected: NO
+        /// </summary>
+        public virtual void BookingCancelledByClient() { }
         #endregion
         #region Access to singletons for Types of Bookings
         public static SendServiceProfessionalBooking ServiceProfessionalBooking = new SendServiceProfessionalBooking();
@@ -975,7 +1016,7 @@ public class LcMessaging
         public class SendServiceProfessionalBooking : SendBooking
         {
             public SendServiceProfessionalBooking() : base("ServiceProfessionalBooking/") {}
-            public SendServiceProfessionalBooking For(int bookingID)
+            public new SendServiceProfessionalBooking For(int bookingID)
             {
                 prepareData(bookingID);
                 return this;
@@ -985,7 +1026,7 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
-            public void InstantBookingConfirmed()
+            public override void InstantBookingConfirmed()
             {
                 // Restriction:
                 if (!flags.autoReviewServiceProfessional) return;
@@ -993,7 +1034,7 @@ public class LcMessaging
                 CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.serviceProfessionalUserID, bookingID);
                 sendToClient("InstantBookingConfirmed");
             }
-            public void RequestToReview(bool isReminder)
+            public override void RequestToReview(bool isReminder)
             {
                 // Restriction:
                 if (!flags.autoReviewServiceProfessional) return;
@@ -1001,26 +1042,26 @@ public class LcMessaging
                 CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
             }
-            public void BookingReminder()
+            public override void BookingReminder()
             {
                 subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
                 CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
-            public void BookingCancelledByServiceProfessional()
+            public override void BookingCancelledByServiceProfessional()
             {
                 var neutralSubject = String.Format("Appointment updated by {0}", info.serviceProfessional.firstName);
                 CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
                 subject = "Your appointment has been cancelled";
                 sendToClient("BookingCancelledByServiceProfessional");
             }
-            public void BookingUpdatedByServiceProfessional()
+            public override void BookingUpdatedByServiceProfessional()
             {
                 subject = "Your appointment has been updated";
                 CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
                 sendToClient("BookingUpdatedByServiceProfessional");
             }
-            public void BookingUpdatedByClient()
+            public override void BookingUpdatedByClient()
             {
                 var neutralSubject = String.Format("Appointment updated by {0}", info.client.firstName);
                 CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
@@ -1031,7 +1072,7 @@ public class LcMessaging
                 subject = String.Format("{0} has changed their appointment", info.client.firstName);
                 sendToServiceProfessional("BookingUpdatedByClient");
             }
-            public void BookingCancelledByClient()
+            public override void BookingCancelledByClient()
             {
                 var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
                 CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
@@ -1042,14 +1083,14 @@ public class LcMessaging
                 subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
                 sendToServiceProfessional("BookingCancelledByClient");
             }
-            public void ServicePerformed()
+            public override void ServicePerformed()
             {
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
                 sendToClient("BookingUpdatedByServiceProfessional");
                 sendToServiceProfessional("BookingUpdatedByServiceProfessional");
             }
-            public void BookingComplete()
+            public override void BookingComplete()
             {
                 subject = "Client has paid in full and service professional has been paid in full";
                 CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
@@ -1060,7 +1101,7 @@ public class LcMessaging
         public class SendMarketplaceBooking : SendBooking
         {
             public SendMarketplaceBooking() : base("Marketplace/") { }
-            public SendMarketplaceBooking For(int bookingID)
+            public new SendMarketplaceBooking For(int bookingID)
             {
                 prepareData(bookingID);
                 return this;
@@ -1070,13 +1111,62 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
-            public void BookingReminder()
+            public override void BookingRequest()
+            {
+                subject = "Appointment request received";
+                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID, bookingID);
+                sendToClient("BookingRequestSummary");
+                sendToServiceProfessional("BookingRequestSummary");
+            }
+            public override void InstantBookingConfirmed()
+            {
+                subject = "Your appointment confirmation";
+                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID, bookingID);
+                sendToClient("InstantBookingConfirmed");
+                sendToServiceProfessional("InstantBookingConfirmed");
+            }
+            public override void BookingReminder()
             {
                 subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
                 CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
-            public void BookingRequestExpired()
+            public override void BookingCancelledByServiceProfessional()
+            {
+                var neutralSubject = String.Format("Appointment updated by {0}", info.serviceProfessional.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByServiceProfessional");
+            }
+            public override void BookingUpdatedByServiceProfessional()
+            {
+                subject = "Your appointment has been updated";
+                CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+            }
+            public override void BookingUpdatedByClient()
+            {
+                var neutralSubject = String.Format("Appointment updated by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
+
+                subject = "Updated appointment confirmation";
+                sendToClient("BookingUpdatedByClient");
+
+                subject = String.Format("{0} has changed their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingUpdatedByClient");
+            }
+            public override void BookingCancelledByClient()
+            {
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
+
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByClient");
+
+                subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingCancelledByClient");
+            }
+            public override void BookingRequestExpired()
             {
                 var neutralSubject = "Booking request has expired";
                 CreateBookingMessage(info, (int)MessageType.BookingRequestExpired, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, true);
@@ -1087,7 +1177,7 @@ public class LcMessaging
                 subject = String.Format("{0}'s appointment request has expired", info.client.firstName);
                 sendToServiceProfessional("BookingRequestExpired");
             }
-            public void RequestToReview(bool isReminder)
+            public override void RequestToReview(bool isReminder)
             {
                 // Restriction:
                 if (!flags.autoReviewServiceProfessional) return;
@@ -1095,14 +1185,14 @@ public class LcMessaging
                 CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
             }
-            public void ServicePerformed()
+            public override void ServicePerformed()
             {
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
                 sendToClient("BookingUpdatedByServiceProfessional");
                 sendToServiceProfessional("BookingUpdatedByServiceProfessional");
             }
-            public void BookingComplete()
+            public override void BookingComplete()
             {
                 subject = "Client has paid in full and service professional has been paid in full";
                 CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
@@ -1113,7 +1203,7 @@ public class LcMessaging
         public class SendBookNowBooking : SendBooking
         {
             public SendBookNowBooking() : base("BookNow/") { }
-            public SendBookNowBooking For(int bookingID)
+            public new SendBookNowBooking For(int bookingID)
             {
                 prepareData(bookingID);
                 return this;
@@ -1123,13 +1213,73 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
-            public void BookingReminder()
+            public override void BookingRequest()
+            {
+                subject = "Appointment request received";
+                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID, bookingID);
+                sendToClient("BookingRequestSummary");
+                sendToServiceProfessional("BookingRequestSummary");
+            }
+            public override void InstantBookingConfirmed()
+            {
+                subject = "Your appointment confirmation";
+                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID, bookingID);
+                sendToClient("InstantBookingConfirmed");
+                sendToServiceProfessional("InstantBookingConfirmed");
+            }
+            public override void BookingReminder()
             {
                 subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
                 CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
-            public void RequestToReview(bool isReminder)
+            public override void BookingCancelledByServiceProfessional()
+            {
+                var neutralSubject = String.Format("Appointment updated by {0}", info.serviceProfessional.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByServiceProfessional");
+            }
+            public override void BookingUpdatedByServiceProfessional()
+            {
+                subject = "Your appointment has been updated";
+                CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+            }
+            public override void BookingUpdatedByClient()
+            {
+                var neutralSubject = String.Format("Appointment updated by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
+
+                subject = "Updated appointment confirmation";
+                sendToClient("BookingUpdatedByClient");
+
+                subject = String.Format("{0} has changed their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingUpdatedByClient");
+            }
+            public override void BookingCancelledByClient()
+            {
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
+
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByClient");
+
+                subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingCancelledByClient");
+            }
+            public override void BookingRequestExpired()
+            {
+                var neutralSubject = "Booking request has expired";
+                CreateBookingMessage(info, (int)MessageType.BookingRequestExpired, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, true);
+
+                subject = "Your appointment request has expired";
+                sendToClient("BookingRequestExpired");
+
+                subject = String.Format("{0}'s appointment request has expired", info.client.firstName);
+                sendToServiceProfessional("BookingRequestExpired");
+            }
+            public override void RequestToReview(bool isReminder)
             {
                 // Restriction:
                 if (!flags.autoReviewServiceProfessional) return;
@@ -1137,14 +1287,14 @@ public class LcMessaging
                 CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
             }
-            public void ServicePerformed()
+            public override void ServicePerformed()
             {
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
                 sendToClient("BookingUpdatedByServiceProfessional");
                 sendToServiceProfessional("BookingUpdatedByServiceProfessional");
             }
-            public void BookingComplete()
+            public override void BookingComplete()
             {
                 subject = "Client has paid in full and service professional has been paid in full";
                 CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
@@ -1153,7 +1303,11 @@ public class LcMessaging
             }
         }
         #endregion
-        #region Generic calls, auto-detection of type of booking to use the specific template
+        /// <summary>
+        /// Factory that provides the correct SendBooking instance based on the booking type and fills the booking data.
+        /// </summary>
+        /// <param name="bookingID"></param>
+        /// <returns></returns>
         public static SendBooking For(int bookingID)
         {
             var info = LcEmailTemplate.GetBookingInfo(bookingID);
@@ -1173,23 +1327,6 @@ public class LcMessaging
                     throw new NotImplementedException("Unknow booking type");
             }
         }
-        public static void BookingReminder(int bookingID)
-        {
-            For(bookingID).BookingReminder();
-        }
-        public static void RequestToReview(int bookingID, bool isReminder)
-        {
-            For(bookingID).RequestToReview(isReminder);
-        }
-        public static void ServicePerformed(int bookingID)
-        {
-            For(bookingID).ServicePerformed();
-        }
-        public static void BookingComplete(int bookingID)
-        {
-            For(bookingID).BookingComplete();
-        }
-        #endregion
     }
     #endregion
 

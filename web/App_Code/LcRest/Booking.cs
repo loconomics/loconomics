@@ -1547,6 +1547,8 @@ namespace LcRest
                 }
                 catch { }
 
+                LcMessaging.SendBooking.ServiceProfessionalBooking.For(booking.bookingID).BookingUpdatedByServiceProfessional();
+
                 return true;
             }
         }
@@ -1573,7 +1575,6 @@ namespace LcRest
         }
         /// <summary>
         /// Create an save a client booking.
-        /// TODO Payment info.
         /// </summary>
         /// <param name="clientUserID"></param>
         /// <param name="serviceProfessionalUserID"></param>
@@ -1737,6 +1738,12 @@ namespace LcRest
                     booking.UpdateEventDetails(db.Db);
                 }
                 catch {}
+
+                var send = LcMessaging.SendBooking.For(booking.bookingID);
+                if (booking.instantBooking)
+                    send.InstantBookingConfirmed();
+                else
+                    send.BookingRequest();
 
                 return booking;
             }
