@@ -960,6 +960,12 @@ public class LcMessaging
             send();
         }
         #endregion
+        #region Common Interface methods
+        public virtual void BookingReminder() { }
+        public virtual void RequestToReview(bool isReminder) { }
+        public virtual void ServicePerformed() { }
+        public virtual void BookingComplete() { }
+        #endregion
         #region Access to singletons for Types of Bookings
         public static SendServiceProfessionalBooking ServiceProfessionalBooking = new SendServiceProfessionalBooking();
         public static SendMarketplaceBooking Marketplace = new SendMarketplaceBooking();
@@ -1148,85 +1154,40 @@ public class LcMessaging
         }
         #endregion
         #region Generic calls, auto-detection of type of booking to use the specific template
-        public static void BookingReminder(int bookingID)
+        public static SendBooking For(int bookingID)
         {
             var info = LcEmailTemplate.GetBookingInfo(bookingID);
             switch ((LcEnum.BookingType)info.booking.bookingTypeID)
             {
                 case LcEnum.BookingType.bookNowBooking:
-                    BookNow.For(info).BookingReminder();
-                    break;
+                    return BookNow.For(info);
                 case LcEnum.BookingType.marketplaceBooking:
-                    Marketplace.For(info).BookingReminder();
-                    break;
+                    return Marketplace.For(info);
                 case LcEnum.BookingType.serviceProfessionalBooking:
-                    ServiceProfessionalBooking.For(info).BookingReminder();
-                    break;
+                    return ServiceProfessionalBooking.For(info);
                 case LcEnum.BookingType.exchangeBooking:
                     throw new NotImplementedException("Exchange BookingReminder");
                 case LcEnum.BookingType.partnerBooking:
                     throw new NotImplementedException("Partner BookingReminder");
+                default:
+                    throw new NotImplementedException("Unknow booking type");
             }
+        }
+        public static void BookingReminder(int bookingID)
+        {
+            For(bookingID).BookingReminder();
         }
         public static void RequestToReview(int bookingID, bool isReminder)
         {
-            var info = LcEmailTemplate.GetBookingInfo(bookingID);
-            switch ((LcEnum.BookingType)info.booking.bookingTypeID)
-            {
-                case LcEnum.BookingType.bookNowBooking:
-                    BookNow.For(info).RequestToReview(isReminder);
-                    break;
-                case LcEnum.BookingType.marketplaceBooking:
-                    Marketplace.For(info).RequestToReview(isReminder);
-                    break;
-                case LcEnum.BookingType.serviceProfessionalBooking:
-                    ServiceProfessionalBooking.For(info).RequestToReview(isReminder);
-                    break;
-                case LcEnum.BookingType.exchangeBooking:
-                    throw new NotImplementedException("Exchange RequestToReview");
-                case LcEnum.BookingType.partnerBooking:
-                    throw new NotImplementedException("Partner RequestToReview");
-            }
+            For(bookingID).RequestToReview(isReminder);
         }
         public static void ServicePerformed(int bookingID)
         {
-            var info = LcEmailTemplate.GetBookingInfo(bookingID);
-            switch ((LcEnum.BookingType)info.booking.bookingTypeID)
-            {
-                case LcEnum.BookingType.bookNowBooking:
-                    BookNow.For(info).ServicePerformed();
-                    break;
-                case LcEnum.BookingType.marketplaceBooking:
-                    Marketplace.For(info).ServicePerformed();
-                    break;
-                case LcEnum.BookingType.serviceProfessionalBooking:
-                    ServiceProfessionalBooking.For(info).ServicePerformed();
-                    break;
-                case LcEnum.BookingType.exchangeBooking:
-                    throw new NotImplementedException("Exchange RequestToReview");
-                case LcEnum.BookingType.partnerBooking:
-                    throw new NotImplementedException("Partner RequestToReview");
-            }
+            For(bookingID).ServicePerformed();
         }
         public static void BookingComplete(int bookingID)
         {
-            var info = LcEmailTemplate.GetBookingInfo(bookingID);
-            switch ((LcEnum.BookingType)info.booking.bookingTypeID)
-            {
-                case LcEnum.BookingType.bookNowBooking:
-                    BookNow.For(info).BookingComplete();
-                    break;
-                case LcEnum.BookingType.marketplaceBooking:
-                    Marketplace.For(info).BookingComplete();
-                    break;
-                case LcEnum.BookingType.serviceProfessionalBooking:
-                    ServiceProfessionalBooking.For(info).BookingComplete();
-                    break;
-                case LcEnum.BookingType.exchangeBooking:
-                    throw new NotImplementedException("Exchange RequestToReview");
-                case LcEnum.BookingType.partnerBooking:
-                    throw new NotImplementedException("Partner RequestToReview");
-            }
+            For(bookingID).BookingComplete();
         }
         #endregion
     }
