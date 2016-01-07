@@ -2,7 +2,8 @@
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
 
-    if (IsPost) {
+    if (IsPost)
+    {
         var url = Request["url"].Replace(LcUrl.SiteUrl, "");
         LcMessaging.SendMail(Request["email"], "Testing Email " + url,
             LcMessaging.ApplyTemplate(url, null));
@@ -19,62 +20,97 @@
         ,{ "EmailProviderReference", new List<string> { "Email/EmailProviderReference/?UserID=141&PositionID=14&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailResetPassword", new List<string> { "Email/EmailResetPassword/?UserID=141&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailWelcomeCustomer", new List<string> { "Email/EmailWelcomeCustomer/?UserID=141&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailRecommendation", new List<string> { "Profile/EmailRecommendation/?CustomerUserID=141&ProviderUserID=34&PositionID=14&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailRequestMoreServiceAttributes", new List<string> { "Email/EmailRequestMoreServiceAttributes/?ProviderUserID=141&PositionID=14&RequestKey=abcd3&EmailTo=providerhelp@loconomics.com&RequestedAttributes=example1, example2, example3, example4, example5" } }
         ,{ "EmailBackgroundCheckRequest", new List<string> { "Email/EmailBackgroundCheckRequest/?ProviderUserID=141&PositionID=14&BackgroundCheckID=1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailReportUnauthorizedUse", new List<string> { "Email/EmailReportUnauthorizedUse/?ReportedUserID=141&ReportedByUserID=141&Message=Reporting+some+problem&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailProviderPaymentRequest", new List<string> { "Email/EmailProviderPaymentRequest/?BookingID=31&emailto=iagosrl@gmail.com&RequestKey=abcd3" } }
-
-        ,{ "EmailBookingDetailsPage", new List<string> {
-            "Booking/EmailBookingDetailsPage/?BookingRequestID=144&BookingID=24&SentTo=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingDetailsPage/?BookingRequestID=144&BookingID=24&SentTo=Provider&RequestKey=abcd3" } }
-
-        ,{ "EmailBooking", new List<string> {
-            "Booking/EmailBooking/?BookingRequestID=144&BookingID=24&SentTo=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBooking/?BookingRequestID=144&BookingID=24&SentTo=Provider&RequestKey=abcd3" } }
-        ,{ "EmailBookingRequest", new List<string> {
-            "Booking/EmailBookingRequest/?BookingRequestID=144&SentTo=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequest/?BookingRequestID=144&SentTo=Provider&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequest/?BookingRequestID=157&SentTo=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequest/?BookingRequestID=157&SentTo=Provider&RequestKey=abcd3" } }
-        ,{ "EmailBookingRequestExpired", new List<string> {
-            "Booking/EmailBookingRequestExpired/?BookingRequestID=144&SentTo=Provider&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequestExpired/?BookingRequestID=144&SentTo=Customer&RequestKey=abcd3"} }
-        ,{ "EmailBookingRequestDeclined", new List<string> {
-            "Booking/EmailBookingRequestDeclined/?BookingRequestID=144&SentTo=Provider&SentBy=Provider&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequestDeclined/?BookingRequestID=144&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
-        ,{ "EmailBookingCancelled", new List<string> {
-            "Booking/EmailBookingCancelled/?BookingRequestID=144&BookingID=242&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingCancelled/?BookingRequestID=144&BookingID=24&SentTo=Customer&SentBy=Customer&RequestKey=abcd3"} }
-        ,{ "EmailBookingReminder", new List<string> {
-            "Booking/EmailBookingReminder/?BookingRequestID=144&BookingID=24&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingReminder/?BookingRequestID=144&BookingID=24&SentTo=Customer&SentBy=Customer&RequestKey=abcd3"} }
-        ,{ "EmailBookingReview", new List<string> {
-            "Booking/EmailBookingReview/?BookingRequestID=144&BookingID=24&SentTo=Provider&SentBy=Customer&RequestKey=abcd3&FirstReminder=true"
-            ,"Booking/EmailBookingReview/?BookingRequestID=144&BookingID=24&SentTo=Customer&SentBy=Customer&RequestKey=abcd3&FirstReminder=true"
-            ,"Booking/EmailBookingReview/?BookingRequestID=144&BookingID=24&SentTo=Provider&SentBy=Customer&RequestKey=abcd3&FirstReminder=false"
-            ,"Booking/EmailBookingReview/?BookingRequestID=144&BookingID=24&SentTo=Customer&SentBy=Customer&RequestKey=abcd3&FirstReminder=false"} }
     };
-}
-    
-        <h1>Testing Email Templates along the site</h1>
-        <h2>Use next links to test every template with some example data in the parameters</h2>
-        <ul>
-            @foreach(var l in list){
-                <li>@l.Key
-                    <ul>
-                        @foreach (var l2 in l.Value)
-                        {
-                            <li><a target="_blank" href="@(LcUrl.LangPath + l2)">@l2</a></li>
-                        }
-                    </ul>
-                </li>
-            }
-        </ul>
 
-        <form action="" method="post">
-            <h2>Send a testing email:</h2>
-            <input type="text" name="url" placeholder="Email template URL" style="width:80%" />
-            <input type="text" name="email" placeholder="Email to..." style="width:80%" />
-            <input type="submit" value="Send email" style="display:block" />
-        </form>
+    // Booking Template Names for new EmailCommunications
+    var bookingBookNowClient = new string[] {
+        "BookingCancelledByClient",
+        "BookingCancelledByServiceProfessional",
+        "BookingReminder",
+        "BookingRequestConfirmed",
+        "BookingRequestDeclined",
+        "BookingRequestExpired",
+        "BookingRequestSummary",
+        "BookingUpdatedByClient",
+        "BookingUpdatedByServiceProfessional",
+        "InstantBookingConfirmed",
+        "RequestToReview",
+        "RequestToReviewReminder"
+    };
+    var bookingBookNowServiceProfessional = new string[] {
+        "BookingCancelledByClient",
+        "BookingReminder",
+        "BookingRequestConfirmed",
+        "BookingRequestExpired",
+        "BookingRequestSummary",
+        "BookingUpdatedByClient",
+        "BookingUpdatedByServiceProfessional",
+        "InstantBookingConfirmed"
+    };
+    var bookingMarketplaceClient = new string[] {
+        "BookingRequestConfirmed",
+        "BookingrequestSummary"
+    };
+    var bookingServiceProfessionalBookingClient = new string[] {
+        "BookingCancelledByClient",
+        "BookingCancelledByServiceProfessional",
+        "BookingReminder",
+        "BookingUpdatedByClient",
+        "BookingUpdatedByServiceProfessional",
+        "InstantBookingConfirmed",
+        "RequestToReview",
+        "RequestToReviewReminder"
+    };
+    var bookingServiceProfessionalBookingServiceProfessional = new string[] {
+        "BookingCancelledByClient",
+        "BookingUpdatedByClient"
+    };
+    // Add Booking URLs
+    var testBookingID = Request["BookingID"].AsInt(628);
+    var bookingList = new Dictionary<string, List<string>> ();
+    bookingList.Add("BOOKING: BookNow ToClient",
+        bookingBookNowClient.Select(x => "EmailCommunications/Booking/BookNow/ToClient/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+    bookingList.Add("BOOKING: BookNow ToServiceProfessional",
+        bookingBookNowServiceProfessional.Select(x => "EmailCommunications/Booking/BookNow/ToServiceProfessional/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+    bookingList.Add("BOOKING: Marketplace ToClient",
+        bookingMarketplaceClient.Select(x => "EmailCommunications/Booking/Marketplace/ToClient/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+    // TODO Marketplace ToServiceProfessional
+    bookingList.Add("BOOKING: ServiceProfessionalBooking ToClient",
+        bookingServiceProfessionalBookingClient.Select(x => "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+    bookingList.Add("BOOKING: ServiceProfessionalBooking ToServiceProfessional",
+        bookingServiceProfessionalBookingServiceProfessional.Select(x => "EmailCommunications/Booking/ServiceProfessionalBooking/ToServiceProfessional/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+}
+@helper printList(Dictionary<string, List<string>> list)
+{
+    <ul>
+    @foreach (var l in list)
+    {
+        <li>@l.Key
+            <ul>
+                @foreach (var l2 in l.Value)
+                {
+                    <li><a target="_blank" href="@(LcUrl.LangPath + l2)">@l2</a></li>
+                }
+            </ul>
+        </li>
+    }
+    </ul>
+}
+    <h1>Testing Email Templates along the site</h1>
+    <h3>Use next links to test every template with some example data in the parameters</h3>
+    @printList(list)
+    <h3>Booking emails. Generate Booking templates for next BookingID:</h3>
+    <form action="" method="get">
+        <input type="text" name="BookingID" placeholder="BookingID" />
+        <input type="submit" value="Use BookingID" />
+    </form>
+    @printList(bookingList)
+    <form action="" method="post">
+        <h2>Send a testing email:</h2>
+        <input type="text" name="url" placeholder="Email template URL" style="width:80%" />
+        <input type="text" name="email" placeholder="Email to..." style="width:80%" />
+        <input type="submit" value="Send email" style="display:block" />
+    </form>
