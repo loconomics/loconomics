@@ -100,19 +100,19 @@
     }
     </ul>
 }
-    <h1>Testing Email Templates along the site</h1>
-    <h3>Use next links to test every template with some example data in the parameters</h3>
-    @printList(list)
-    <h3>Booking emails</h3>
-    <form action="" method="get">
-        <label>Use BookingID: <input type="text" name="BookingID" placeholder="BookingID" /></label>
-        <label><input type="checkbox" name="hippa" value="true" /> <span>Use HIPAA templates</span></label>
-        <input type="submit" value="APPLY" />
-    </form>
-    @printList(bookingList)
-    <form action="" method="post">
-        <h2>Send a testing email:</h2>
-        <input type="text" name="url" placeholder="Email template URL" style="width:80%" />
-        <input type="text" name="email" placeholder="Email to..." style="width:80%" />
-        <input type="submit" value="Send email" style="display:block" />
-    </form>
+<h1>Testing Email Templates along the site</h1>
+<h3>Use next links to test every template with some example data in the parameters</h3>
+@printList(list)
+<h3>Booking emails</h3>
+<form action="" method="get">
+    <label>Use BookingID: <input type="text" name="BookingID" placeholder="BookingID" /></label>
+    <label><input type="checkbox" name="hippa" value="true" /> <span>Use HIPAA templates</span></label>
+    <input type="submit" value="APPLY" />
+</form>
+@printList(bookingList)
+<form action="" method="post">
+    <h2>Send a testing email:</h2>
+    <input type="text" name="url" placeholder="Email template URL" style="width:80%" />
+    <input type="text" name="email" placeholder="Email to..." style="width:80%" />
+    <input type="submit" value="Send email" style="display:block" />
+</form>

@@ -868,14 +868,14 @@ public class LcMessaging
         public class JobTitleMessagingFlags
         {
             public bool hipaa;
-            public bool autoReviewServiceProfessional;
+            public bool sendReviewReminderToClient;
             public static JobTitleMessagingFlags FromDB(dynamic record)
             {
                 if (record == null) return null;
                 return new JobTitleMessagingFlags
                 {
                     hipaa = record.hipaa,
-                    autoReviewServiceProfessional = record.autoReviewServiceProfessional
+                    sendReviewReminderToClient = record.sendReviewReminderToClient
                 };
             }
             public static JobTitleMessagingFlags Get(int jobTitleID, int languageID, int countryID)
@@ -885,18 +885,18 @@ public class LcMessaging
                     return JobTitleMessagingFlags.FromDB(db.QuerySingle(@"
                     SELECT TOP 1
                         coalesce(HIPAA, cast(0 as bit)) as hipaa,
-                        coalesce(AutoReviewServiceProfessional, cast(0 as bit)) as autoReviewServiceProfessional
+                        coalesce(SendReviewReminderToClient, cast(0 as bit)) as sendReviewReminderToClient
                     FROM positions
                     WHERE positionID = @0 AND languageID = @1 AND countryID = @2
                 ", jobTitleID, languageID, countryID));
                 }
             }
         }
-        static int CreateBookingThread(LcEmailTemplate.BookingEmailInfo info, int messageType, int sentByUserID, int bookingID)
+        static int CreateBookingThread(LcEmailTemplate.BookingEmailInfo info, int messageType, int sentByUserID)
         {
             var threadSubject = GetBookingThreadSubject(info);
             var threadBody = GetBookingThreadBody(info);
-            return CreateThread(info.booking.clientUserID, info.booking.serviceProfessionalUserID, info.booking.jobTitleID, threadSubject, messageType, threadBody, sentByUserID, bookingID, "booking");
+            return CreateThread(info.booking.clientUserID, info.booking.serviceProfessionalUserID, info.booking.jobTitleID, threadSubject, messageType, threadBody, sentByUserID, info.booking.bookingID, "booking");
         }
         static int CreateBookingMessage(LcEmailTemplate.BookingEmailInfo info, int messageType, int threadStatusID, int sentByUserID, string message, bool includeBookingDetails)
         {
@@ -904,9 +904,15 @@ public class LcMessaging
             {
                 // Get Thread info
                 var thread = db.QuerySingle(sqlGetThreadByAux, info.booking.bookingID, "booking");
+                int threadID = 0;
+                // For security, if no thread exists yet (some problem or old version that didn't generate thread properly), create one now and get ID
+                if (thread == null)
+                    threadID = CreateBookingThread(info, messageType, sentByUserID);
+                else
+                    threadID = thread.threadID;
                 if (includeBookingDetails)
                     message += (message[message.Length - 1] == '.' ? "" : ". ") + "\n" + GetBookingThreadBody(info);
-                return CreateMessage(thread.ThreadID, threadStatusID, messageType, message, sentByUserID, info.booking.bookingID, "booking");
+                return CreateMessage(threadID, threadStatusID, messageType, message, sentByUserID, info.booking.bookingID, "booking");
             }
         }
         #endregion
@@ -916,7 +922,6 @@ public class LcMessaging
         string toEmail = "";
         string fromEmail = "";
         string subject = "";
-        int bookingID = 0;
         LcEmailTemplate.BookingEmailInfo info;
         JobTitleMessagingFlags flags;
         #endregion
@@ -930,7 +935,7 @@ public class LcMessaging
             SendMail(toEmail, subject,
                 ApplyTemplate(LcUrl.LangPath + path + tpl,
                 new Dictionary<string, object> {
-                    { "bookingID", bookingID }
+                    { "bookingID", info.booking.bookingID }
                     ,{ "RequestKey", SecurityRequestKey }
                 }), fromEmail
             );
@@ -1029,15 +1034,15 @@ public class LcMessaging
             public override void InstantBookingConfirmed()
             {
                 // Restriction:
-                if (!flags.autoReviewServiceProfessional) return;
+                if (!flags.sendReviewReminderToClient) return;
                 subject = "Your appointment confirmation";
-                CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.serviceProfessionalUserID, bookingID);
+                CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.serviceProfessionalUserID);
                 sendToClient("InstantBookingConfirmed");
             }
             public override void RequestToReview(bool isReminder)
             {
                 // Restriction:
-                if (!flags.autoReviewServiceProfessional) return;
+                if (!flags.sendReviewReminderToClient) return;
                 subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
                 CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
@@ -1050,7 +1055,7 @@ public class LcMessaging
             }
             public override void BookingCancelledByServiceProfessional()
             {
-                var neutralSubject = String.Format("Appointment updated by {0}", info.serviceProfessional.firstName);
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.serviceProfessional.firstName);
                 CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
                 subject = "Your appointment has been cancelled";
                 sendToClient("BookingCancelledByServiceProfessional");
@@ -1085,17 +1090,16 @@ public class LcMessaging
             }
             public override void ServicePerformed()
             {
+                // Service Performed is registered in the Inbox Thread but no e-mail is sent (decission to not send email at https://github.com/dani0198/Loconomics/issues/844#issuecomment-169066719)
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-                sendToClient("BookingUpdatedByServiceProfessional");
-                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
             }
             public override void BookingComplete()
             {
                 subject = "Client has paid in full and service professional has been paid in full";
                 CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
                 sendToClient("BookingUpdatedByServiceProfessional");
-                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
+                sendToServiceProfessional("BookingUpdatedByClient");
             }
         }
         public class SendMarketplaceBooking : SendBooking
@@ -1114,14 +1118,14 @@ public class LcMessaging
             public override void BookingRequest()
             {
                 subject = "Appointment request received";
-                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID, bookingID);
+                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID);
                 sendToClient("BookingRequestSummary");
                 sendToServiceProfessional("BookingRequestSummary");
             }
             public override void InstantBookingConfirmed()
             {
                 subject = "Your appointment confirmation";
-                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID, bookingID);
+                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID);
                 sendToClient("InstantBookingConfirmed");
                 sendToServiceProfessional("InstantBookingConfirmed");
             }
@@ -1133,7 +1137,7 @@ public class LcMessaging
             }
             public override void BookingCancelledByServiceProfessional()
             {
-                var neutralSubject = String.Format("Appointment updated by {0}", info.serviceProfessional.firstName);
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.serviceProfessional.firstName);
                 CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
                 subject = "Your appointment has been cancelled";
                 sendToClient("BookingCancelledByServiceProfessional");
@@ -1180,24 +1184,23 @@ public class LcMessaging
             public override void RequestToReview(bool isReminder)
             {
                 // Restriction:
-                if (!flags.autoReviewServiceProfessional) return;
+                if (!flags.sendReviewReminderToClient) return;
                 subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
                 CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
             }
             public override void ServicePerformed()
             {
+                // Service Performed is registered in the Inbox Thread but no e-mail is sent (decission to not send email at https://github.com/dani0198/Loconomics/issues/844#issuecomment-169066719)
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-                sendToClient("BookingUpdatedByServiceProfessional");
-                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
             }
             public override void BookingComplete()
             {
                 subject = "Client has paid in full and service professional has been paid in full";
                 CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
                 sendToClient("BookingUpdatedByServiceProfessional");
-                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
+                sendToServiceProfessional("BookingUpdatedByClient");
             }
         }
         public class SendBookNowBooking : SendBooking
@@ -1216,14 +1219,14 @@ public class LcMessaging
             public override void BookingRequest()
             {
                 subject = "Appointment request received";
-                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID, bookingID);
+                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID);
                 sendToClient("BookingRequestSummary");
                 sendToServiceProfessional("BookingRequestSummary");
             }
             public override void InstantBookingConfirmed()
             {
                 subject = "Your appointment confirmation";
-                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID, bookingID);
+                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID);
                 sendToClient("InstantBookingConfirmed");
                 sendToServiceProfessional("InstantBookingConfirmed");
             }
@@ -1235,7 +1238,7 @@ public class LcMessaging
             }
             public override void BookingCancelledByServiceProfessional()
             {
-                var neutralSubject = String.Format("Appointment updated by {0}", info.serviceProfessional.firstName);
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.serviceProfessional.firstName);
                 CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
                 subject = "Your appointment has been cancelled";
                 sendToClient("BookingCancelledByServiceProfessional");
@@ -1282,7 +1285,7 @@ public class LcMessaging
             public override void RequestToReview(bool isReminder)
             {
                 // Restriction:
-                if (!flags.autoReviewServiceProfessional) return;
+                if (!flags.sendReviewReminderToClient) return;
                 subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
                 CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
@@ -1298,7 +1301,7 @@ public class LcMessaging
                 subject = "Client has paid in full and service professional has been paid in full";
                 CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
                 sendToClient("BookingUpdatedByServiceProfessional");
-                sendToServiceProfessional("BookingUpdatedByServiceProfessional");
+                sendToServiceProfessional("BookingUpdatedByClient");
             }
         }
         #endregion

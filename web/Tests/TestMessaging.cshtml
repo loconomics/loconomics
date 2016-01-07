@@ -1,0 +1,106 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    var bookingID = Request["BookingID"].AsInt(628);
+    var instanceName = Request["instance"] ?? "auto";
+    var result = "";
+    if (IsPost) {
+        var method = Request["Method"];
+        var instance = LcMessaging.SendBooking.For(bookingID);
+        switch (instanceName) {
+            case "auto":
+            default:
+                // Left initial value
+                instanceName = "auto";
+                break;
+            case "BookNow":
+                instance = LcMessaging.SendBooking.BookNow.For(bookingID);
+                break;
+            case "Marketplace":
+                instance = LcMessaging.SendBooking.Marketplace.For(bookingID);
+                break;
+            case "ServiceProfessionalBooking":
+                instance = LcMessaging.SendBooking.ServiceProfessionalBooking.For(bookingID);
+                break;
+        }
+        result = "OK";
+        switch (method)
+        {
+            case "BookingReminder":
+                instance.BookingReminder();
+                break;
+            case "RequestToReview":
+                instance.RequestToReview(false);
+                break;
+            case "RequestToReviewReminder":
+                instance.RequestToReview(true);
+                break;
+            case "ServicePerformed":
+                instance.ServicePerformed();
+                break;
+            case "BookingComplete":
+                instance.BookingComplete();
+                break;
+            case "BookingRequest":
+                instance.BookingRequest();
+                break;
+            case "BookingRequestExpired":
+                instance.BookingRequestExpired();
+                break;
+            case "InstantBookingConfirmed":
+                instance.InstantBookingConfirmed();
+                break;
+            case "BookingUpdatedByClient":
+                instance.BookingUpdatedByClient();
+                break;
+            case "BookingCancelledByServiceProfessional":
+                instance.BookingCancelledByServiceProfessional();
+                break;
+            case "BookingUpdatedByServiceProfessional":
+                instance.BookingUpdatedByServiceProfessional();
+                break;
+            case "BookingCancelledByClient":
+                instance.BookingCancelledByClient();
+                break;
+            default:
+                result = "NOTHING";
+                break;
+        }
+    }
+
+    // Booking Template Names for new EmailCommunications
+    var methods = new string[] {
+        "BookingReminder",
+        "RequestToReview",
+        "RequestToReviewReminder",
+        "ServicePerformed",
+        "BookingComplete",
+        "BookingRequest",
+        "BookingRequestExpired",
+        "InstantBookingConfirmed",
+        "BookingUpdatedByClient",
+        "BookingCancelledByServiceProfessional",
+        "BookingUpdatedByServiceProfessional",
+        "BookingCancelledByClient"
+    };
+}
+<h1>Testing calls to LcMessaging.</h1>
+<h3>SendBooking API</h3>
+<form action="" method="post">
+    @if (!String.IsNullOrEmpty(result))
+    { <h4><strong style="color: red">@result</strong></h4> }
+    <label>Use BookingID: <input type="text" name="BookingID" placeholder="BookingID" value="@bookingID" /></label>
+    <ul>
+        <li><label><input type="radio" name="instance" value="auto" @LcHelpers.IsChecked("auto", instanceName) /> AUTO select Booking Type</label></li>
+        <li><label><input type="radio" name="instance" value="BookNow" @LcHelpers.IsChecked("BookNow", instanceName) /> BookNow</label></li>
+        <li><label><input type="radio" name="instance" value="Marketplace" @LcHelpers.IsChecked("Marketplace", instanceName) /> Marketplace</label></li>
+        <li><label><input type="radio" name="instance" value="ServiceProfessionalBooking" @LcHelpers.IsChecked("ServiceProfessionalBooking", instanceName) /> ServiceProfessionalBooking</label></li>
+    </ul>
+    <ul>
+    @foreach (var m in methods)
+    {
+        <li><button type="submit" name="method" value="@m">@m</button></li>
+    }
+    </ul>
+</form>
