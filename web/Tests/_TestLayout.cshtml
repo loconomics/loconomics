@@ -69,7 +69,7 @@ border: 1px solid #333;
     <body>
         <div id="container">
             <div id="userid">
-                UserID: @Html.Raw(WebSecurity.CurrentUserId == -1 ? "<a href='#login' class='login'>Login</a>" : WebSecurity.CurrentUserId.ToString())
+                UserID: @Html.Raw(WebSecurity.CurrentUserId == -1 ? "<a href='" + LcUrl.AppPath + "en-US/Account/Login?redirect=" + Request.Url.PathAndQuery + "' class='login' target='login'>Login</a>" : WebSecurity.CurrentUserId.ToString())
             </div>
             <div id="main">
                 @RenderBody()

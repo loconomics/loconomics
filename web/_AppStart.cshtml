@@ -43,6 +43,9 @@
     RouteTable.Routes.MapWebPageRoute("en-US/profile/photo", "~/_specialRoutes/UserProfilePhoto.cshtml");
     RouteTable.Routes.MapWebPageRoute("en-US/profile/photo/{userID}", "~/_specialRoutes/UserProfilePhoto.cshtml");
     RouteTable.Routes.MapWebPageRoute("en-US/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");    
+    
+    // Account
+    RouteTable.Routes.MapWebPageRoute("en-US/Account/Login", "~/_specialRoutes/Login.cshtml");
 
     // ENABLED SPLASH screen on Live
     if (LcHelpers.InLive)

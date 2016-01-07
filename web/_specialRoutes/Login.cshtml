@@ -1,0 +1,16 @@
+﻿@* Fallback simple server login
+ *@
+@{
+    Layout = "../Tests/_TestLayout.cshtml";
+    if (IsPost) {
+        if (LcAuth.Login(Request["username"], Request["pwd"])) {
+            Response.Redirect(Request["redirect"] ?? "/");
+        }
+    }
+}
+<h1>Login</h1>
+<form method="post">
+    <label>Username <input type="text" name="username" placeholder="Your e-mail" /></label>
+    <label>Password <input type="password" name="pwd" /></label>
+    <input type="submit" value="Login" />
+</form>
