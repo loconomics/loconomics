@@ -70,18 +70,19 @@
     };
     // Add Booking URLs
     var testBookingID = Request["BookingID"].AsInt(628);
+    var isHipaa = Request["hippa"].AsBool();
     var bookingList = new Dictionary<string, List<string>> ();
     bookingList.Add("BOOKING: BookNow ToClient",
-        bookingBookNowClient.Select(x => "EmailCommunications/Booking/BookNow/ToClient/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+        bookingBookNowClient.Select(x => "EmailCommunications/Booking/BookNow/ToClient/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
     bookingList.Add("BOOKING: BookNow ToServiceProfessional",
-        bookingBookNowServiceProfessional.Select(x => "EmailCommunications/Booking/BookNow/ToServiceProfessional/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+        bookingBookNowServiceProfessional.Select(x => "EmailCommunications/Booking/BookNow/ToServiceProfessional/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
     bookingList.Add("BOOKING: Marketplace ToClient",
-        bookingMarketplaceClient.Select(x => "EmailCommunications/Booking/Marketplace/ToClient/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+        bookingMarketplaceClient.Select(x => "EmailCommunications/Booking/Marketplace/ToClient/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
     // TODO Marketplace ToServiceProfessional
     bookingList.Add("BOOKING: ServiceProfessionalBooking ToClient",
-        bookingServiceProfessionalBookingClient.Select(x => "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+        bookingServiceProfessionalBookingClient.Select(x => "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
     bookingList.Add("BOOKING: ServiceProfessionalBooking ToServiceProfessional",
-        bookingServiceProfessionalBookingServiceProfessional.Select(x => "EmailCommunications/Booking/ServiceProfessionalBooking/ToServiceProfessional/" + x + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
+        bookingServiceProfessionalBookingServiceProfessional.Select(x => "EmailCommunications/Booking/ServiceProfessionalBooking/ToServiceProfessional/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
 }
 @helper printList(Dictionary<string, List<string>> list)
 {
@@ -102,10 +103,11 @@
     <h1>Testing Email Templates along the site</h1>
     <h3>Use next links to test every template with some example data in the parameters</h3>
     @printList(list)
-    <h3>Booking emails. Generate Booking templates for next BookingID:</h3>
+    <h3>Booking emails</h3>
     <form action="" method="get">
-        <input type="text" name="BookingID" placeholder="BookingID" />
-        <input type="submit" value="Use BookingID" />
+        <label>Use BookingID: <input type="text" name="BookingID" placeholder="BookingID" /></label>
+        <label><input type="checkbox" name="hippa" value="true" /> <span>Use HIPAA templates</span></label>
+        <input type="submit" value="APPLY" />
     </form>
     @printList(bookingList)
     <form action="" method="post">
