@@ -71,7 +71,7 @@ namespace LcRest
         const string sqlAndActiveOrInactiveProfiles = " AND u.StatusID > 0 ";
         const string sqlGetActiveItem = sqlSelectFromCommonWhere + sqlAndActiveProfiles + sqlAndJobTitleID;
         const string sqlGetActiveOrInactiveItem = sqlSelectFromCommonWhere + sqlAndActiveOrInactiveProfiles + sqlAndJobTitleID;
-        const string sqlGetList = sqlSelectFromCommonWhere + sqlAndActiveOrInactiveProfiles;
+        const string sqlGetList = sqlSelectFromCommonWhere + sqlAndActiveProfiles;
         #endregion
 
         public static PublicUserJobTitle Get(int serviceProfessionalUserID, int languageID, int countryID, int jobTitleID, bool includeDeactivatedProfile = false)
