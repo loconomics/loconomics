@@ -42,14 +42,31 @@
             <div class="Tile-content">
                 <p>Cooperative Bylaws</p>
             </div>
+        </a></li>-->
+        <li><a class="InfoTile" href="/boardMemberNominations">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa fa-gavel" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Owner account status</p>
+            </div>
         </a></li>
-        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/BoardNominationForm/" target="_blank">
+        <li class="InfoTile">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa fa-gavel" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <div>Owner account status</div>
+                <strong data-bind="text: ownerStatusName, css: { 'text-success': ownerStatusOK, 'text-danger': !ownerStatusOK() }"></strong>
+            </div>
+        </li>
+        <li><a class="InfoTile" href="/boardMemberNominations">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-ios-compose" aria-hidden="true"></span>
             </div>
             <div class="Tile-content">
-                <p>Board nominations</p>
+                <p>Board member nominations</p>
             </div>
-        </a></li>-->
+        </a></li>
     </ul>
 </div>

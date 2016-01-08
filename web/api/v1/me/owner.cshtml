@@ -1,0 +1,76 @@
+﻿@*
+    Owner account info
+
+    Options:
+
+    - GET: no params
+        @Result LcRest.Owner
+
+    - GET /payments
+        @Result LcRest.OwnerUserFeePayment[]
+
+    EXAMPLES {
+        "Owner Account Info": {
+            "url": "/api/v1/en-US/me/owner",
+            "get": { }
+        },
+        "Owner Payments": {
+            "url": "/api/v1/en-US/me/owner/payments",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestOwner : RestWebPage
+    {     
+        public override dynamic Get()
+        {
+            var userID = WebSecurity.CurrentUserId;
+
+            if (UrlData.Count == 0) {
+                var item = LcRest.Owner.Get(userID);
+                if (item == null)
+                    return new LcRest.Owner
+                    {
+                        userID = userID
+                    };
+                else
+                    return item;
+            }
+            else if (UrlData.Count == 1 && UrlData[0] == "payments") {
+                return LcRest.OwnerUserFeePayment.GetList(userID);
+            }
+            throw new HttpException(404, "Not found");
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 1 && UrlData[0] == "payments") {
+                var userID = WebSecurity.CurrentUserId;
+
+                var paymentData = new LcPayment.InputPaymentMethod
+                {
+                    paymentMethodID = Request["paymentMethod[paymentMethodID]"],
+                    cardNumber = Request["paymentMethod[cardNumber]"],
+                    nameOnCard = Request["paymentMethod[nameOnCard]"],
+                    expirationMonth = Request["paymentMethod[expirationMonth]"],
+                    expirationYear = Request["paymentMethod[expirationYear]"],
+                    securityCode = Request["paymentMethod[securityCode]"]
+                };
+
+                if (!ModelState.IsValid)
+                {
+                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                }
+                
+                // Pay with Braintree and save
+            }
+
+            throw new HttpException(404, "Not found");
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.Provider);
+    new RestOwner().JsonResponse(this);
+}
