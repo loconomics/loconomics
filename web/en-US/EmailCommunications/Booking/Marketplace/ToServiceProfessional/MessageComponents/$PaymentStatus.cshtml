@@ -1,0 +1,42 @@
+@* Location where services will be performed.
+ *@
+@using WebMatrix.Data;
+@{
+    // All the data for this component:
+    var info = LcEmailTemplate.GetBookingInfo(PageData);
+}
+
+<!-- COMPACT ARTICLE SECTION -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center" style="border-bottom: 1px solid #d2d2d2; padding: 0 15px 40px 15px;" class="section-padding">
+            <table border="0" cellpadding="0" cellspacing="0" width="500" style="padding:0 0 20px 0;" class="responsive-table">
+                <tr>
+                    <td  valign="middle" style="padding: 10px 0 0 0;" class="mobile-hide"><a href="#" target="_blank"><img src="@(LcUrl.AppUrl)img/email/ion-card.png" alt="alt text here" width="150" height="150" border="0" style="display: block; font-family: Arial; color: #666666; font-size: 14px;"></a></td>
+                    <td style="padding: 40px 0 0 0;" class="no-padding">
+                        <!-- ARTICLE -->
+                        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                            <tr>
+                                <td align="left" style="padding: 0 0 5px 25px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Payment</td>
+                            </tr>
+                            @if (info.booking.paymentCollected)
+                            	{
+								<tr>
+									 <td align="left" style="padding: 10px 0 15px 25px; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We’ve collected payment from @info.client.firstName and will been authorized for @(info.booking.pricingSummary.totalPrice.Value.ToString("c")). It will be charged after services are completed and deposited into your bank account shortly thereafter.
+									 </td>
+								</tr>
+								}
+							else
+								{
+								<tr>
+									 <td align="left" style="padding: 10px 0 15px 25px; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy"><strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong> is due at the appointment after services are completed.</td>
+								</tr>
+								}
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<!-- $PaymentStatus END -->

@@ -25,6 +25,7 @@
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
                 Hi, @(info.client.firstName), I&rsquo;ve just updated your appointment for my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. Please review the details below. I will see you <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>.
+            </div>
         </td>
     </tr>
 </table>
