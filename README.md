@@ -45,18 +45,18 @@ It uses:
 
 ### Adding new pages to the app
 **Add new files in (copy an existing example and rename):**
-app/source/html/activities
-app/source/css/activities
-app/source/js/activities
+- app/source/html/activities
+- app/source/css/activities
+- app/source/js/activities
 
 **Add line reference to new activity in (copy an existing line & edit with new activity name):**
-app/source/css/app.styl
-app/source/js/app.activities.js
+- app/source/css/app.styl
+- app/source/js/app.activities.js
 
 **Edit your new html, css, js files**
 
 **To access the new page:**
-http://localhost:8811/app.html#!/newActivity
+- http://localhost:8811/app.html#!/newActivity
 
 ### Build the source code
 **All next commands must be executed in a command line/terminal at the project directory**
