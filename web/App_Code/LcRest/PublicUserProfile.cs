@@ -73,8 +73,6 @@ namespace LcRest
 
         public bool isServiceProfessional;
         public bool isClient;
-        // TODO To decide if expose this publicly
-        //public bool isMember;
 
         public DateTime updatedDate;
         #endregion
@@ -101,7 +99,6 @@ namespace LcRest
 
                 isServiceProfessional = record.isServiceProfessional,
                 isClient = record.isClient,
-                //isMember = record.isMember,
 
                 updatedDate = record.updatedDate
             };
@@ -123,7 +120,6 @@ namespace LcRest
             -- User Type
             ,isProvider as isServiceProfessional
             ,isCustomer as isClient
-            ,isMember
 
             ,CASE WHEN PC.Active = 1 THEN UP.email ELSE null END as Email
             ,CASE WHEN PC.Active = 1 THEN Users.MobilePhone ELSE null END As phone

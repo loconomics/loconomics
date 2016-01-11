@@ -715,14 +715,6 @@
             Forbidden(LcData.UserInfo.UserType.Provider);
         }
     }
-    public static void MemberPage()
-    {
-        SecurePage();
-        if (LcData.UserInfo.GetUserRow().IsMember == false)
-        {
-            Forbidden(LcData.UserInfo.UserType.Member);
-        }
-    }
     public static void AdminPage()
     {
         SecurePage();

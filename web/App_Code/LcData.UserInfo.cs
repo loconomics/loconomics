@@ -131,7 +131,6 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
-                                ,IsMember
                                 ,AccountStatusID
 
                                 -- Only Providers:
@@ -213,7 +212,6 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
-                                ,IsMember
                                 ,AccountStatusID
 
                                 -- Only Providers:

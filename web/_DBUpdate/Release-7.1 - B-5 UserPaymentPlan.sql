@@ -1,4 +1,5 @@
-/****** Object:  Table [dbo].[Owner]    Script Date: 01/08/2016 11:41:20 ******/
+
+/****** Object:  Table [dbo].[UserPaymentPlan]    Script Date: 01/11/2016 22:05:51 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -8,18 +9,16 @@ GO
 SET ANSI_PADDING ON
 GO
 
-CREATE TABLE [dbo].[Owner](
+CREATE TABLE [dbo].[UserPaymentPlan](
 	[UserID] [int] NOT NULL,
-	[OwnerStatusID] [int] NOT NULL,
-	[OwnerPaymentPlan] [varchar](25) NULL,
-	[OwnerPaymentMethod] [varchar](25) NULL,
-	[OwnerPaymentPLanLastChangedDate] [datetime] NULL,
+	[PaymentPlan] [varchar](25) NULL,
+	[PaymentMethod] [varchar](25) NULL,
+	[PaymentPlanLastChangedDate] [datetime] NULL,
 	[NextPaymentDueDate] [datetime] NULL,
 	[NextPaymentAmount] [money] NULL,
 	[LastPaymentDate] [datetime] NULL,
 	[LastPaymentAmount] [money] NULL,
 	[TotalPastDueAmount] [money] NULL,
-	[OwnerAnniversaryDate] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[UserID] ASC

@@ -30,7 +30,6 @@ namespace LcRest
 
         public bool isServiceProfessional;
         public bool isClient;
-        public bool isMember;
         public bool isCollaborator;
 
         /// <summary>
@@ -75,7 +74,6 @@ namespace LcRest
 
                 isServiceProfessional = record.isServiceProfessional,
                 isClient = record.isClient,
-                isMember = record.isMember,
                 isCollaborator = record.isCollaborator,
 
                 onboardingStep = record.onboardingStep,
@@ -101,7 +99,6 @@ namespace LcRest
             -- User Type
             ,isProvider as isServiceProfessional
             ,isCustomer as isClient
-            ,isMember
             ,isCollaborator
 
             ,alternativeEmail
