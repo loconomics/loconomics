@@ -40,6 +40,9 @@ namespace LcRest
         public DateTime createdDate;
         public DateTime updatedDate;
 
+        public int? ownerStatusID;
+        public DateTime? ownerAnniversaryDate;
+
         // Automatic field right now, but is better
         // to communicate it than to expect the App or API client
         // to build it. It allows for future optimizations, like
@@ -79,7 +82,10 @@ namespace LcRest
                 onboardingStep = record.onboardingStep,
                 accountStatusID = record.accountStatusID,
                 createdDate = record.createdDate,
-                updatedDate = record.updatedDate
+                updatedDate = record.updatedDate,
+
+                ownerStatusID = record.ownerStatusID,
+                ownerAnniversaryDate = record.ownerAnniversaryDate
             };
         }
 
@@ -112,13 +118,17 @@ namespace LcRest
             ,createdDate
             ,updatedDate
 
+            ,ownerStatusID
+            ,ownerAnniversaryDate
+
         FROM Users
                 INNER JOIN
             UserProfile As UP
                 ON UP.UserID = Users.UserID
+                INNER JOIN
         WHERE Users.UserID = @0
             AND Active = 1
-    ";
+        ";
 
         private const string sqlUpdateProfile = @"
         DECLARE 
@@ -219,7 +229,7 @@ namespace LcRest
         EXEC TestAllUserAlerts @UserID
 
         COMMIT TRAN
-    ";
+        ";
         #endregion
 
         #region Fetch

@@ -1,21 +1,21 @@
 ﻿@*
-    Owner account info
+    User Payment Plan, for cooperative owners
 
     Options:
 
     - GET: no params
-        @Result LcRest.Owner
+        @Result LcRest.UserPaymentPlan
 
     - GET /payments
-        @Result LcRest.OwnerUserFeePayment[]
+        @Result LcRest.UserFeePayment[]
 
     EXAMPLES {
-        "Owner Account Info": {
-            "url": "/api/v1/en-US/me/owner",
+        "User Payment Plan": {
+            "url": "/api/v1/en-US/me/user-payment-plan",
             "get": { }
         },
-        "Owner Payments": {
-            "url": "/api/v1/en-US/me/owner/payments",
+        "User Payment Plan Payments": {
+            "url": "/api/v1/en-US/me/user-payment-plan/payments",
             "get": { }
         }
     }
@@ -28,7 +28,7 @@
             var userID = WebSecurity.CurrentUserId;
 
             if (UrlData.Count == 0) {
-                var item = LcRest.Owner.Get(userID);
+                var item = LcRest.UserPaymentPlan.Get(userID);
                 if (item == null)
                     return new LcRest.Owner
                     {
@@ -57,6 +57,11 @@
                     expirationYear = Request["paymentMethod[expirationYear]"],
                     securityCode = Request["paymentMethod[securityCode]"]
                 };
+                /*var sr = new Braintree.SubscriptionRequest
+                {
+                    PlanId = "",
+                    PaymentMethodToken = ""
+                };*/
 
                 if (!ModelState.IsValid)
                 {
