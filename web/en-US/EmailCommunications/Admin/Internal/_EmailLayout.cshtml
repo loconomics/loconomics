@@ -1,0 +1,188 @@
+﻿@{
+    Response.ContentEncoding = System.Text.Encoding.UTF8;
+    
+    var emailTo = PageData["emailTo"] ?? Request["EmailTo"];
+    var threadID = PageData["threadID"];
+    var messageID = PageData["messageID"];
+    var messageTitle = PageData["messageTitle"];
+    var messageSubtitle = PageData["messageSubtitle"];
+    var needHelpAddress = PageData["needHelpAddress"];
+    var helpReference = PageData["helpReference"];
+    var showSign = PageData["showSign"] ?? false;
+    var viewOnSiteUrl = PageData["viewOnSiteUrl"];
+    if (threadID != null) {
+        viewOnSiteUrl = LcUrl.LangUrl + "dashboard/messages/inquiry/" + threadID + "/";
+        if (messageID != null) {
+            viewOnSiteUrl += "/" + messageID + "/";
+        }
+    }
+    var isNotAUser = (bool)(PageData["isNotAUser"] ?? false);
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Loconomics - @(Page.Title ?? "Email")</title>
+    @* Some styles only for capable mail clients -some are features imposible to use without using style-element 
+        that is removed by gmail, hotmail and others services-; other are specific for some mail clients that support
+        'style' block and has special hacks -as yahoo mail, outlook- *@
+    <style type="text/css">
+        /* Boilerplate */
+            .ExternalClass {width:100%;} 
+            .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+                line-height: 100%;}
+            a, a:link {
+                color:#2A5DB0;
+                text-decoration: underline;
+            }
+            span.yshortcuts { color:#000; background-color:none; border:none;}
+            span.yshortcuts:hover,
+            span.yshortcuts:active,
+            span.yshortcuts:focus {color:#000; background-color:none; border:none;}
+                     
+            a:visited { color: #3c96e2; text-decoration: none}
+            a:focus   { color: #3c96e2; text-decoration: underline}
+            a:hover   { color: #3c96e2; text-decoration: underline}
+        /* End Boilerplate */
+            a.respond:hover {
+                box-shadow: 0 0 5px 2px #99C027;
+            }
+            .button-confirm-datetime:hover {
+                box-shadow: 0 0 5px 2px #99C027;
+            }
+            .button-decline-booking:hover {
+                box-shadow: 0 0 5px 2px #e95d0f;
+            }
+            body,table,table td,table th { @* Required to avoid problems with default sizes of table contents in some email clients that don't inherit the body font-size or inline table font-size (but gmail works file without this) *@
+                font-size:14px;
+            }
+            @*@@media only screen and (max-device-width: 480px) {
+            }
+            @@media only screen and (min-device-width: 768px) and (max-device-width: 1024px)  {          
+            }*@
+    </style>
+</head>
+<body alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#747474" yahoo="fix" style="margin:0;padding:0">
+    @***body_style*@<div style="padding:10px 0 30px 0;line-height:150%;margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;background:#ffffff;color:#747474;font-family:Arial,Helvetica,sans-serif;font-size:14px">
+        @***table_layout*@<table cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" width="600" align="center">
+            @***header*@<tr>
+                @* Title (status) and Subtitle (update time) removed for the new design, issue #174
+                <td width="420" style="padding: 0 20px 20px 0;">
+		            <h2 @LcEmailTemplateHelper.StyleH2(String.IsNullOrEmpty(messageSubtitle) ? "margin: 10px 0;" : "margin: 10px 0 0 0;")>@messageTitle</h2>
+                    @if (!String.IsNullOrEmpty(messageSubtitle)) {
+                        <span>@messageSubtitle</span>
+                    }
+                </td>*@
+                <td width="300" style="padding: 0 20px 15px 0;">
+                    <h1 style="font-size:1.4em;margin:0;padding:0"><a href="@LcUrl.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(LcUrl.AppUrl)img/email/@(LcUrl.LangId)/loconomics-logo.png" width="140" height="50" /></a></h1>
+                </td>
+                <td width="300" style="padding: 12px 30px 0 0;color:#747474;font-weight:bold;font-size:13px;" align="right" valign="top">
+                    <a style="color:#747474;text-decoration:none" href="@(LcUrl.LangUrl)Account/Login/">Login</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a style="color:#747474;text-decoration:none" href="@(LcUrl.LangUrl)HelpCenter/">Help</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a style="color:#747474;text-decoration:none" href="@(LcUrl.LangUrl)">Search</a>
+                    <!--<a style="color:#00989A" target="_blank" href="@viewOnSiteUrl">Click here if this message isn't displaying correctly.</a>-->
+                </td>
+            </tr>
+            @***content*@<tr style="padding:0 0 0 0">
+                <td colspan="2" style="padding:0 0 30px 0">
+                    @*<h2 @LcEmailTemplateHelper.StyleH2("margin:0;background: url('" + LcUrl.AppUrl + "img/email/tab-top.png') no-repeat 0 0;height:33px;")>
+                        <span style="display:block;padding:5px 0 0 30px;width:200px;font-size: 12px;font-weight: bold;line-height: 15px">@messageTitle</span>
+                    </h2>*@
+                    <table width="600" style="font-size:14px;border-collapse:collapse">
+                        <tr>
+                            <td colspan="5" style="padding:0">
+
+                                @RenderBody()
+
+                                @if (showSign)
+                                {
+                                <p style="margin-top:1.5em">
+			                    At your service.
+                                <br /><br />
+			                    The Loconomics team
+                                </p>
+                                }
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            @***footer*@
+            @if (!String.IsNullOrEmpty(needHelpAddress))
+            {
+                <tr align="left">
+                    <td colspan="2" style="padding-top:5px;padding-bottom:20px;border-top:1px solid #dadada;">
+                        <strong style="font-size:15px">Need Help?</strong><br />
+                        If you have a question or need to report a problem, <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">send us a note</a> or call us at <span style="white-space:nowrap">1 (415) 735-6025</span>.
+                        @if (!String.IsNullOrEmpty(helpReference))
+                        {
+                            <span>Please reference <strong>@(helpReference)</strong>.</span>
+                        }
+                    </td>
+                </tr>
+            }
+            <tr height="60" align="center">
+                <td colspan="2">
+                    This message was sent to <a href="mailto:@(emailTo)">@emailTo</a><br />
+                    @if (!isNotAUser) {
+                    <text>Visit <a target="_blank" href="@(LcUrl.LangUrl)dashboard/privacy/">alert preferences</a> to manage your email and mobile alerts. </text><br />
+                    }
+                    Please add <a href="mailto:automated@loconomics.com">automated@loconomics.com</a> to your address book to ensure delivery of our emails. <br />
+                    &#0169; @(DateTime.Today.Year) Loconomics, Inc. | All Rights Reserved. <br />
+                    3150 18th Street Suite 438, Mailbox 208, San Francisco, CA 94110 <br />
+                    <a target="_blank" href="@(LcUrl.LangUrl)About/PrivacyPolicy/">Privacy Policy</a> | <a target="_blank" href="@(LcUrl.LangUrl)About/TermsOfUse/">Terms of Use</a>
+                </td>
+            </tr>
+        </table>
+    @* IF something more is added, add it EVER INSIDE table_layout!!!
+        Some notes to create great html emails, more on http://htmlemailboilerplate.com and http://www.emailology.org
+        <p style="margin-top:0"></p>
+ 
+        <a href="http://www.emailonacid.html" style="color:#F00" target ="_blank" title="Email on Acid">Text Link Here</a>
+ 
+        <a href="http://www.emailonacid.pdf" style="color:#F00" target ="_blank" title="Email on Acid">External File</a>
+ 
+        <img src="http://www.emailonacid.com/images/EOA_logo.gif" alt="Info Here" title="Info Here" width="308" height="58"
+        style="display:block"  border="0"/>
+ 
+        <table cellpadding="2" cellspacing="2" border="0"> 
+            <tr>
+                <td valign="top">•</td>
+                <td>Test</td>
+            </tr>
+            <tr>
+                <td valign="top">1.)</td>
+                <td>Test</td>
+            </tr>
+        </table>  
+ 
+        <table cellpadding="0" cellspacing="0" border="0"> 
+            <tr>
+                <td valign="top" background="http://www.emailonacid.com/images/EOA_logo.gif" bgcolor="#006600"> </td>
+            </tr>
+        </table>  
+ 
+        <a href="http://www.emailonacid.com/email-preview/online_demo/C7" target="_blank">
+            <img src="http://www.emailonacid.com/images/widget_demo.jpg" alt="Online Demo" title="Online Demo" width="308"
+            height="106" style="display:block;" border="0" />
+        </a>
+         
+        <table width="150" cellspacing="3" cellpadding="0" border="0">
+            <tr>
+              <td width="150" height="35" align="center" background="http://www.emailonacid.com/emails/response_emails/
+              button_back.gif" style="background-repeat:repeat-x; background-position:top left; background-color:#3c96e2; 
+              border:1px solid #666666; color:#FFFFFF; font-weight:bold; white-space:nowrap; height:35px;">
+              <a href="http://www.emailonacid.com/email-preview/online_demo/C7" target="_blank" style="color:#FFFFFF; 
+              cursor:pointer; font-size:13px; text-align:center; text-decoration:none; vertical-align:baseline; font-weight:bold;"> 
+              <span style="padding:10px 10px; color:#FFF">Online Demo ››</span></a></td>
+            </tr>
+        </table>        
+    *@
+    </div>
+</body>
+</html>

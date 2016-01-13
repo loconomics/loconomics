@@ -10,19 +10,32 @@
     }
 
     var list = new Dictionary<string, List<string>>{
-        { "EmailWelcomeProvider", new List<string> {
-            "Email/EmailWelcomeProvider?UserID=141&RequestKey=abcd3"
-            ,"Email/EmailWelcomeProvider?UserID=141&ConfirmationURL=theurl&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailLicenseVerificationRequest", new List<string> { "Email/EmailLicenseVerificationRequest/?ProviderUserID=141&PositionID=14&LicenseCertificationID=18&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailInquiry", new List<string> {
-            "Messaging/EmailInquiry/?ThreadID=13&MessageID=26&Kind=-1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"
-            ,"Messaging/EmailInquiry/?ThreadID=13&MessageID=26&Kind=2&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"} }
-        ,{ "EmailProviderReference", new List<string> { "Email/EmailProviderReference/?UserID=141&PositionID=14&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailResetPassword", new List<string> { "Email/EmailResetPassword/?UserID=141&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailWelcomeCustomer", new List<string> { "Email/EmailWelcomeCustomer/?UserID=141&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailRequestMoreServiceAttributes", new List<string> { "Email/EmailRequestMoreServiceAttributes/?ProviderUserID=141&PositionID=14&RequestKey=abcd3&EmailTo=providerhelp@loconomics.com&RequestedAttributes=example1, example2, example3, example4, example5" } }
-        ,{ "EmailBackgroundCheckRequest", new List<string> { "Email/EmailBackgroundCheckRequest/?ProviderUserID=141&PositionID=14&BackgroundCheckID=1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailReportUnauthorizedUse", new List<string> { "Email/EmailReportUnauthorizedUse/?ReportedUserID=141&ReportedByUserID=141&Message=Reporting+some+problem&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
+        { "[needs review] EmailInquiry", new List<string> {
+            "Email/EmailInquiry/?ThreadID=13&MessageID=26&Kind=-1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"
+            ,"Email/EmailInquiry/?ThreadID=13&MessageID=26&Kind=2&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"} }
+        ,{ "[needs review] EmailProviderReference", new List<string> { "Email/EmailProviderReference/?UserID=141&PositionID=14&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
+        
+        ,{ "Welcome", new List<string> {
+            "EmailCommunications/Admin/ToClient/Welcome?UserID=141&RequestKey=abcd3"
+            ,"EmailCommunications/Admin/ToServiceProfessional/Welcome?UserID=141&RequestKey=abcd3"
+        } }
+        ,{ "ResetPassword", new List<string> {
+            "EmailCommunications/Admin/ToClient/ResetPassword?UserID=141&RequestKey=abcd3"
+            ,"EmailCommunications/Admin/ToServiceProfessional/ResetPassword?UserID=141&RequestKey=abcd3"
+        } }
+        ,{ "Admin/ToServiceProfessional (remaining templates)", new List<string> {
+            "EmailCommunications/Admin/ToServiceProfessional/BackgroundCheckRequestReceived?UserID=141&RequestKey=abcd3"
+            ,"EmailCommunications/Admin/ToServiceProfessional/OptionalCertificationVerificationRequestReceived?UserID=141&jobTitleID=106&RequestKey=abcd3"
+            ,"EmailCommunications/Admin/ToServiceProfessional/OwnerInvitation?UserID=141&RequestKey=abcd3"
+            ,"EmailCommunications/Admin/ToServiceProfessional/RequiredLicenseVerificationRequestReceived?UserID=141&jobTitleID=106&RequestKey=abcd3"
+        } }
+
+        ,{ "Admin/Internal", new List<string> {
+            "EmailCommunications/Admin/Internal/EmailBackgroundCheckRequest/?userID=141&jobTitleID=14&backgroundCheckID=1&RequestKey=abcd3"
+            ,"EmailCommunications/Admin/Internal/EmailLicenseVerificationRequest/?userID=141&jobTitleID=14&licenseCertificationID=18&RequestKey=abcd3"
+            ,"EmailCommunications/Admin/Internal/EmailProviderPaymentAccountNotification/?userID=141&RequestKey=abcd3"
+            ,"EmailCommunications/Admin/Internal/EmailReportUnauthorizedUse/?ReportedUserID=141&ReportedByUserID=141&Message=Reporting+some+problem&RequestKey=abcd3"
+        } }
     };
 
     // Booking Template Names for new EmailCommunications

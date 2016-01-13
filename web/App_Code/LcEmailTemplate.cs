@@ -387,7 +387,7 @@ public static class LcEmailTemplate
                 {
                     confirmationToken = LcAuth.GetConfirmationToken(userID);
                 }
-                return LcUrl.LangUrl + "account/confirm/?confirmationCode=" + HttpUtility.UrlEncode(confirmationToken);
+                return LcUrl.AppUrl + "account/confirm/?confirmationCode=" + HttpUtility.UrlEncode(confirmationToken);
             }
         }
         /// <summary>
@@ -397,7 +397,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return "";
+                return LcUrl.AppUrl + "dashboard";
             }
         }
         /// <summary>
@@ -407,7 +407,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return "";
+                return LcUrl.AppUrl + "marketplaceProfile";
             }
         }
         /// <summary>
@@ -417,7 +417,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return "";
+                return LcUrl.AppUrl + "paymentPlan";
             }
         }
         /// <summary>
@@ -427,7 +427,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return "";
+                return LcUrl.AppUrl + "becomeOwner";
             }
         }
         #endregion

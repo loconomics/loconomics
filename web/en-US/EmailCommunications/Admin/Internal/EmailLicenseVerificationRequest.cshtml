@@ -3,7 +3,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
+    Layout = "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - License Verification Request";
     
     var providerID = Request["userID"].AsInt();
