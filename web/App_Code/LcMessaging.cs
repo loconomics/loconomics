@@ -181,7 +181,8 @@ public class LcMessaging
         RequestToReview = 51,
         RequestToReviewReminder = 52,
         BookingRequestExpired = 53,
-        BookingReminder = 54
+        BookingReminder = 54,
+        BookingRequestDeclined = 55
     }
     public enum MessageThreadStatus : int
     {
@@ -1011,6 +1012,14 @@ public class LcMessaging
         /// Connected: NO
         /// </summary>
         public virtual void BookingCancelledByClient() { }
+        /// <summary>
+        /// Connected: NO
+        /// </summary>
+        public virtual void BookingRequestDeclined() { }
+        /// <summary>
+        /// Connected: NO
+        /// </summary>
+        public virtual void BookingRequestConfirmed() { }
         #endregion
         #region Access to singletons for Types of Bookings
         public static SendServiceProfessionalBooking ServiceProfessionalBooking = new SendServiceProfessionalBooking();
@@ -1031,6 +1040,47 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
+            public override void BookingCancelledByClient()
+            {
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
+
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByClient");
+
+                subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingCancelledByClient");
+            }
+            public override void BookingCancelledByServiceProfessional()
+            {
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.serviceProfessional.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByServiceProfessional");
+            }
+            public override void BookingReminder()
+            {
+                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("BookingReminder");
+            }
+            public override void BookingUpdatedByClient()
+            {
+                var neutralSubject = String.Format("Appointment updated by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
+
+                subject = "Updated appointment confirmation";
+                sendToClient("BookingUpdatedByClient");
+
+                subject = String.Format("{0} has changed their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingUpdatedByClient");
+            }
+            public override void BookingUpdatedByServiceProfessional()
+            {
+                subject = "Your appointment has been updated";
+                CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+            }
             public override void InstantBookingConfirmed()
             {
                 // Restriction:
@@ -1046,47 +1096,6 @@ public class LcMessaging
                 subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
                 CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
-            }
-            public override void BookingReminder()
-            {
-                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
-                CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
-                sendToClient("BookingReminder");
-            }
-            public override void BookingCancelledByServiceProfessional()
-            {
-                var neutralSubject = String.Format("Appointment cancelled by {0}", info.serviceProfessional.firstName);
-                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
-                subject = "Your appointment has been cancelled";
-                sendToClient("BookingCancelledByServiceProfessional");
-            }
-            public override void BookingUpdatedByServiceProfessional()
-            {
-                subject = "Your appointment has been updated";
-                CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-                sendToClient("BookingUpdatedByServiceProfessional");
-            }
-            public override void BookingUpdatedByClient()
-            {
-                var neutralSubject = String.Format("Appointment updated by {0}", info.client.firstName);
-                CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
-
-                subject = "Updated appointment confirmation";
-                sendToClient("BookingUpdatedByClient");
-
-                subject = String.Format("{0} has changed their appointment", info.client.firstName);
-                sendToServiceProfessional("BookingUpdatedByClient");
-            }
-            public override void BookingCancelledByClient()
-            {
-                var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
-                CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
-
-                subject = "Your appointment has been cancelled";
-                sendToClient("BookingCancelledByClient");
-
-                subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
-                sendToServiceProfessional("BookingCancelledByClient");
             }
             public override void ServicePerformed()
             {
@@ -1115,25 +1124,16 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
-            public override void BookingRequest()
+            public override void BookingCancelledByClient()
             {
-                subject = "Appointment request received";
-                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID);
-                sendToClient("BookingRequestSummary");
-                sendToServiceProfessional("BookingRequestSummary");
-            }
-            public override void InstantBookingConfirmed()
-            {
-                subject = "Your appointment confirmation";
-                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID);
-                sendToClient("InstantBookingConfirmed");
-                sendToServiceProfessional("InstantBookingConfirmed");
-            }
-            public override void BookingReminder()
-            {
-                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
-                CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
-                sendToClient("BookingReminder");
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
+
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByClient");
+
+                subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingCancelledByClient");
             }
             public override void BookingCancelledByServiceProfessional()
             {
@@ -1142,11 +1142,45 @@ public class LcMessaging
                 subject = "Your appointment has been cancelled";
                 sendToClient("BookingCancelledByServiceProfessional");
             }
-            public override void BookingUpdatedByServiceProfessional()
+            public override void BookingReminder()
             {
-                subject = "Your appointment has been updated";
-                CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-                sendToClient("BookingUpdatedByServiceProfessional");
+                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("BookingReminder");
+            }
+            public override void BookingRequestConfirmed()
+            {
+                subject = "Appointment confirmed";
+                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalConfirmation, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
+                subject = "Your appointment is confirmed";
+                sendToClient("BookingRequestConfirmed");
+                subject = String.Format("Your appointment with {0} is confirmed", info.client.firstName);
+                sendToServiceProfessional("BookingRequestConfirmed");
+            }
+            public override void BookingRequestDeclined()
+            {
+                var neutralSubject = "Declined appointment request";
+                CreateBookingMessage(info, (int)MessageType.BookingRequestDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, true);
+                subject = "Your appointment request has being declined";
+                sendToClient("BookingRequestDeclined");
+            }
+            public override void BookingRequestExpired()
+            {
+                var neutralSubject = "Booking request has expired";
+                CreateBookingMessage(info, (int)MessageType.BookingRequestExpired, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, true);
+
+                subject = "Your appointment request has expired";
+                sendToClient("BookingRequestExpired");
+
+                subject = String.Format("{0}'s appointment request has expired", info.client.firstName);
+                sendToServiceProfessional("BookingRequestExpired");
+            }
+            public override void BookingRequest()
+            {
+                subject = "Appointment request received";
+                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID);
+                sendToClient("BookingRequestSummary");
+                sendToServiceProfessional("BookingRequestSummary");
             }
             public override void BookingUpdatedByClient()
             {
@@ -1159,27 +1193,18 @@ public class LcMessaging
                 subject = String.Format("{0} has changed their appointment", info.client.firstName);
                 sendToServiceProfessional("BookingUpdatedByClient");
             }
-            public override void BookingCancelledByClient()
+            public override void BookingUpdatedByServiceProfessional()
             {
-                var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
-                CreateBookingMessage(info, (int)MessageType.BookingClientUpdate, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, true);
-
-                subject = "Your appointment has been cancelled";
-                sendToClient("BookingCancelledByClient");
-
-                subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
-                sendToServiceProfessional("BookingCancelledByClient");
+                subject = "Your appointment has been updated";
+                CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
             }
-            public override void BookingRequestExpired()
+            public override void InstantBookingConfirmed()
             {
-                var neutralSubject = "Booking request has expired";
-                CreateBookingMessage(info, (int)MessageType.BookingRequestExpired, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, true);
-
-                subject = "Your appointment request has expired";
-                sendToClient("BookingRequestExpired");
-
-                subject = String.Format("{0}'s appointment request has expired", info.client.firstName);
-                sendToServiceProfessional("BookingRequestExpired");
+                subject = "Your appointment confirmation";
+                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID);
+                sendToClient("InstantBookingConfirmed");
+                sendToServiceProfessional("InstantBookingConfirmed");
             }
             public override void RequestToReview(bool isReminder)
             {
@@ -1216,50 +1241,6 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
-            public override void BookingRequest()
-            {
-                subject = "Appointment request received";
-                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID);
-                sendToClient("BookingRequestSummary");
-                sendToServiceProfessional("BookingRequestSummary");
-            }
-            public override void InstantBookingConfirmed()
-            {
-                subject = "Your appointment confirmation";
-                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID);
-                sendToClient("InstantBookingConfirmed");
-                sendToServiceProfessional("InstantBookingConfirmed");
-            }
-            public override void BookingReminder()
-            {
-                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
-                CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
-                sendToClient("BookingReminder");
-            }
-            public override void BookingCancelledByServiceProfessional()
-            {
-                var neutralSubject = String.Format("Appointment cancelled by {0}", info.serviceProfessional.firstName);
-                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
-                subject = "Your appointment has been cancelled";
-                sendToClient("BookingCancelledByServiceProfessional");
-            }
-            public override void BookingUpdatedByServiceProfessional()
-            {
-                subject = "Your appointment has been updated";
-                CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-                sendToClient("BookingUpdatedByServiceProfessional");
-            }
-            public override void BookingUpdatedByClient()
-            {
-                var neutralSubject = String.Format("Appointment updated by {0}", info.client.firstName);
-                CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
-
-                subject = "Updated appointment confirmation";
-                sendToClient("BookingUpdatedByClient");
-
-                subject = String.Format("{0} has changed their appointment", info.client.firstName);
-                sendToServiceProfessional("BookingUpdatedByClient");
-            }
             public override void BookingCancelledByClient()
             {
                 var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
@@ -1271,6 +1252,35 @@ public class LcMessaging
                 subject = String.Format("{0} has cancelled their appointment", info.client.firstName);
                 sendToServiceProfessional("BookingCancelledByClient");
             }
+            public override void BookingCancelledByServiceProfessional()
+            {
+                var neutralSubject = String.Format("Appointment cancelled by {0}", info.serviceProfessional.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, false);
+                subject = "Your appointment has been cancelled";
+                sendToClient("BookingCancelledByServiceProfessional");
+            }
+            public override void BookingReminder()
+            {
+                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("BookingReminder");
+            }
+            public override void BookingRequestConfirmed()
+            {
+                subject = "Appointment confirmed";
+                CreateBookingMessage(info, (int)MessageType.BookingRequestProfessionalConfirmation, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
+                subject = "Your appointment is confirmed";
+                sendToClient("BookingRequestConfirmed");
+                subject = String.Format("Your appointment with {0} is confirmed", info.client.firstName);
+                sendToServiceProfessional("BookingRequestConfirmed");
+            }
+            public override void BookingRequestDeclined()
+            {
+                var neutralSubject = "Declined appointment request";
+                CreateBookingMessage(info, (int)MessageType.BookingRequestDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, true);
+                subject = "Your appointment request has being declined";
+                sendToClient("BookingRequestDeclined");
+            }
             public override void BookingRequestExpired()
             {
                 var neutralSubject = "Booking request has expired";
@@ -1281,6 +1291,37 @@ public class LcMessaging
 
                 subject = String.Format("{0}'s appointment request has expired", info.client.firstName);
                 sendToServiceProfessional("BookingRequestExpired");
+            }
+            public override void BookingRequest()
+            {
+                subject = "Appointment request received";
+                CreateBookingThread(info, (int)MessageType.ClientBookingRequest, info.booking.clientUserID);
+                sendToClient("BookingRequestSummary");
+                sendToServiceProfessional("BookingRequestSummary");
+            }
+            public override void BookingUpdatedByClient()
+            {
+                var neutralSubject = String.Format("Appointment updated by {0}", info.client.firstName);
+                CreateBookingMessage(info, (int)MessageType.BookingRequestClientCancelled, (int)MessageThreadStatus.Responded, info.booking.clientUserID, neutralSubject, false);
+
+                subject = "Updated appointment confirmation";
+                sendToClient("BookingUpdatedByClient");
+
+                subject = String.Format("{0} has changed their appointment", info.client.firstName);
+                sendToServiceProfessional("BookingUpdatedByClient");
+            }            
+            public override void BookingUpdatedByServiceProfessional()
+            {
+                subject = "Your appointment has been updated";
+                CreateBookingMessage(info, (int)MessageType.BookingProfessionalUpdate, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                sendToClient("BookingUpdatedByServiceProfessional");
+            }
+            public override void InstantBookingConfirmed()
+            {
+                subject = "Your appointment confirmation";
+                CreateBookingThread(info, (int)MessageType.BookingRequestClientConfirmation, info.booking.clientUserID);
+                sendToClient("InstantBookingConfirmed");
+                sendToServiceProfessional("InstantBookingConfirmed");
             }
             public override void RequestToReview(bool isReminder)
             {
