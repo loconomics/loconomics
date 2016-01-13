@@ -27,8 +27,35 @@
         result = "OK";
         switch (method)
         {
+            case "BookingCancelledByClient":
+                instance.BookingCancelledByClient();
+                break;
+            case "BookingCancelledByServiceProfessional":
+                instance.BookingCancelledByServiceProfessional();
+                break;
             case "BookingReminder":
                 instance.BookingReminder();
+                break;
+            case "BookingRequestConfirmed":
+                instance.BookingRequestConfirmed();
+                break;
+            case "BookingRequestDeclined":
+                instance.BookingRequestDeclined();
+                break;
+            case "BookingRequestExpired":
+                instance.BookingRequestExpired();
+                break;
+            case "BookingRequest":
+                instance.BookingRequest();
+                break;
+            case "BookingUpdatedByClient":
+                instance.BookingUpdatedByClient();
+                break;
+            case "BookingUpdatedByServiceProfessional":
+                instance.BookingUpdatedByServiceProfessional();
+                break;
+            case "InstantBookingConfirmed":
+                instance.InstantBookingConfirmed();
                 break;
             case "RequestToReview":
                 instance.RequestToReview(false);
@@ -42,27 +69,6 @@
             case "BookingComplete":
                 instance.BookingComplete();
                 break;
-            case "BookingRequest":
-                instance.BookingRequest();
-                break;
-            case "BookingRequestExpired":
-                instance.BookingRequestExpired();
-                break;
-            case "InstantBookingConfirmed":
-                instance.InstantBookingConfirmed();
-                break;
-            case "BookingUpdatedByClient":
-                instance.BookingUpdatedByClient();
-                break;
-            case "BookingCancelledByServiceProfessional":
-                instance.BookingCancelledByServiceProfessional();
-                break;
-            case "BookingUpdatedByServiceProfessional":
-                instance.BookingUpdatedByServiceProfessional();
-                break;
-            case "BookingCancelledByClient":
-                instance.BookingCancelledByClient();
-                break;
             default:
                 result = "NOTHING";
                 break;
@@ -71,18 +77,20 @@
 
     // Booking Template Names for new EmailCommunications
     var methods = new string[] {
+        "BookingCancelledByClient",
+        "BookingCancelledByServiceProfessional",
         "BookingReminder",
+        "BookingRequestConfirmed",
+        "BookingRequestDeclined",
+        "BookingRequestExpired",
+        "BookingRequest",
+        "BookingUpdatedByClient",
+        "BookingUpdatedByServiceProfessional",
+        "InstantBookingConfirmed",
         "RequestToReview",
         "RequestToReviewReminder",
         "ServicePerformed",
-        "BookingComplete",
-        "BookingRequest",
-        "BookingRequestExpired",
-        "InstantBookingConfirmed",
-        "BookingUpdatedByClient",
-        "BookingCancelledByServiceProfessional",
-        "BookingUpdatedByServiceProfessional",
-        "BookingCancelledByClient"
+        "BookingComplete"
     };
 }
 <h1>Testing calls to LcMessaging.</h1>

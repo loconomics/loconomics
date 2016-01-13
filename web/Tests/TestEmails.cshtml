@@ -11,7 +11,7 @@
 
     var list = new Dictionary<string, List<string>>{
         { "EmailWelcomeProvider", new List<string> {
-            "Email/EmailWelcomeProvider?UserID=141&ConfirmationURL=theurl&ConfirmationToken=sometoken&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"
+            "Email/EmailWelcomeProvider?UserID=141&RequestKey=abcd3"
             ,"Email/EmailWelcomeProvider?UserID=141&ConfirmationURL=theurl&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailLicenseVerificationRequest", new List<string> { "Email/EmailLicenseVerificationRequest/?ProviderUserID=141&PositionID=14&LicenseCertificationID=18&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailInquiry", new List<string> {
@@ -51,8 +51,30 @@
         "InstantBookingConfirmed"
     };
     var bookingMarketplaceClient = new string[] {
+        "BookingCancelledByClient",
+        "BookingCancelledByServiceProfessional",
+        "BookingReminder",
         "BookingRequestConfirmed",
-        "BookingrequestSummary"
+        "BookingRequestDeclined",
+        "BookingRequestExpired",
+        "BookingRequestSummary",
+        "BookingUpdatedByClient",
+        "BookingUpdatedByServiceProfessional",
+        "InstantBookingConfirmed",
+        "RequestToReview",
+        "RequestToReviewReminder"
+    };
+    var bookingMarketplaceServiceProfessional = new string[] {
+        "BookingCancelledByClient",
+        "BookingReminder",
+        "BookingRequestConfirmed",
+        "BookingRequestExpired",
+        "BookingRequestSummary",
+        "BookingUpdatedByClient",
+        "BookingUpdatedByServiceProfessional",
+        "InstantBookingConfirmed",
+        "RequestToReview",
+        "RequestToReviewReminder"
     };
     var bookingServiceProfessionalBookingClient = new string[] {
         "BookingCancelledByClient",
@@ -78,7 +100,8 @@
         bookingBookNowServiceProfessional.Select(x => "EmailCommunications/Booking/BookNow/ToServiceProfessional/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
     bookingList.Add("BOOKING: Marketplace ToClient",
         bookingMarketplaceClient.Select(x => "EmailCommunications/Booking/Marketplace/ToClient/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
-    // TODO Marketplace ToServiceProfessional
+    bookingList.Add("BOOKING: Marketplace ToServiceProfessional",
+        bookingMarketplaceServiceProfessional.Select(x => "EmailCommunications/Booking/Marketplace/ToServiceProfessional/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
     bookingList.Add("BOOKING: ServiceProfessionalBooking ToClient",
         bookingServiceProfessionalBookingClient.Select(x => "EmailCommunications/Booking/ServiceProfessionalBooking/ToClient/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
     bookingList.Add("BOOKING: ServiceProfessionalBooking ToServiceProfessional",
