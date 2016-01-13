@@ -1,13 +1,14 @@
-﻿@using WebMatrix.Data;
+﻿@*TODO Refactor*@
+@using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
     
     Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Provider Request More Service Attributes";
     
-    var providerID = Request["ProviderUserID"].AsInt();
-    var positionID = Request["PositionID"].AsInt();
-    var reqatts = Request["RequestedAttributes"];
+    var providerID = Request["userID"].AsInt();
+    var positionID = Request["jobTitleID"].AsInt();
+    var reqatts = Request["requestedAttributes"];
     var provider = LcData.UserInfo.GetUserRowWithContactData(providerID);
     var position = LcData.UserInfo.GetUserPos(providerID, positionID);
     

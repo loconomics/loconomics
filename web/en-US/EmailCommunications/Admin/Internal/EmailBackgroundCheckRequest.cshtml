@@ -1,18 +1,14 @@
-﻿@using WebMatrix.Data;
+﻿@*TODO Refactor*@
+@using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
     
     Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Background Check Request";
     
-    var providerID = Request["ProviderUserID"].AsInt();
-    var checkID = Request["BackgroundCheckID"].AsInt();
+    var providerID = Request["userID"].AsInt();
+    var checkID = Request["backgroundCheckID"].AsInt();
     var provider = LcData.UserInfo.GetUserRow(providerID);
-    
-    // Data for the EmailLayout:
-    PageData["messageTitle"] = "Background Check Request";
-    // Create URL:
-    PageData["viewOnSiteUrl"] = LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(providerID);
 
     var sqlGetBackgroundCheckRequest = @"
         SELECT  B.BackgroundCheckID
@@ -29,6 +25,7 @@
     }
 }
 <div>
+    <h2>Background Check Request</h2>
     <ul>
         <li><strong>User - UserID:</strong> @providerID</li>
         <li><strong>User - Email:</strong> @provider.Email</li>

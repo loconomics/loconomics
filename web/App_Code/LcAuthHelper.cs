@@ -189,10 +189,7 @@ public static class LcAuthHelper
 
         using (var db = new LcDatabase())
         {
-            string token = userId == -1 ? null :
-                // coalesce used to avoid the value 'DbNull' to be returned, just 'empty' when there is no token,
-                // is already confirmed
-                db.QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userId);
+            string token = LcAuth.GetConfirmationToken(userId);
             
             if (userId > -1 && !string.IsNullOrWhiteSpace(token))
             {

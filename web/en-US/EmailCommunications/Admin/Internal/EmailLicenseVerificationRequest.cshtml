@@ -1,20 +1,16 @@
-﻿@using WebMatrix.Data;
+﻿@*TODO Refactor*@
+@using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
     
     Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - License Verification Request";
     
-    var providerID = Request["ProviderUserID"].AsInt();
-    var positionID = Request["PositionID"].AsInt();
-    var licenseID = Request["LicenseCertificationID"].AsInt();
+    var providerID = Request["userID"].AsInt();
+    var positionID = Request["jobTitleID"].AsInt();
+    var licenseID = Request["licenseCertificationID"].AsInt();
     var provider = LcData.UserInfo.GetUserRowWithContactData(providerID);
     
-    // Data for the EmailLayout:
-    PageData["messageTitle"] = "License Verification Request";
-    // Create URL:
-    PageData["viewOnSiteUrl"] = LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(providerID);
-
     var sqlGetLicenseRequest = @"
         SELECT
             V.ProviderUserID,
@@ -59,6 +55,7 @@
     }
 }
 <div>
+    <h2>License Verification Request</h2>
     <ul>
         <li><strong>License Certification Type:</strong> @data.LicenseCertificationType</li>
         <li><strong>License Certification URL:</strong> <a href="@data.LicenseCertificationURL">@data.LicenseCertificationURL</a></li>

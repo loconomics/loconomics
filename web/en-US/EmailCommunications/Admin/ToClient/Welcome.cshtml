@@ -12,10 +12,7 @@
     Layout = "_EmailLayout.cshtml";
 
     // All the data for this email:
-    var info = LcEmailTemplate.GetBookingInfo();
-
-    // NOTE: Write some notes
-    // Write some more notes, maybe a second line?
+    var info = LcEmailTemplate.GetAccountInfo();
 }
 
 <!-- HEADER -->
@@ -105,11 +102,6 @@
                                     </table>                               
                                 </td>
                             </tr>
-                            <!--
-                            <tr>
-                                <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Alternatively, copy and paste the following link into your browser to verify your account: @confirmationURL Or go to <a href="@(LcUrl.LangUrl)Account/Confirm/?@(alq)">@(LcUrl.LangUrl)Account/Confirm/</a> and input the confirmation code: @confirmationToken</td>
-                            </tr>
-                            -->
                         </table>
                     </td>
                 </tr>
@@ -217,14 +209,14 @@
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">–We&rsquo;re always available to help answer any questions or address feedback.</td>
                             </tr>
                             <tr>
-                                                            <td align="center">
+                                <td align="center">
                                     <!-- BULLETPROOF BUTTON -->
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
                                         <tr>
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="@(info.viewClientlHelpCenter)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
+                                                        <td align="center"><a href="@(info.viewClientHelpCenter)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
                                                     </tr>
                                                 </table>
                                             </td>

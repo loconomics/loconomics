@@ -49,7 +49,68 @@ public static class LcEmailTemplate
         }
     }
 
-    public class BookingEmailInfo
+    public class BasicEmailInfo
+    {
+        /// <summary>
+        /// URL: Opens "talk to us" that a client sees.
+        /// </summary>
+        public string viewClientHelpCenter
+        {
+            get
+            {
+                return LcUrl.AppUrl + "feedback";
+            }
+        }
+        /// <summary>
+        /// Opens the Background Check Policy page.
+        /// </summary>
+        public string viewBackgroundCheckPolicy
+        {
+            get
+            {
+                return LcUrl.AppUrl + "terms/background-check-policy";
+            }
+        }
+        /// <summary>
+        /// URL: Opens the Terms page.
+        /// </summary>
+        public string viewTermsOfService
+        {
+            get
+            {
+                return LcUrl.AppUrl + "terms/terms-of-service";
+            }
+        }
+        /// <summary>
+        /// URL: Opens the Privacy Policy page.
+        /// </summary>
+        public string viewPrivacyPolicy
+        {
+            get
+            {
+                return LcUrl.AppUrl + "terms/privacy-policy";
+            }
+        }
+        /// <summary>
+        /// URL: Opens "talk to us" that a Service Professional sees.
+        /// </summary>
+        public string viewServiceProfessionalHelpCenter
+        {
+            get
+            {
+                return LcUrl.AppUrl + "feedback";
+            }
+        }
+        public string viewCommunicationPreferences
+        {
+            get
+            {
+                return LcUrl.AppUrl + "privacySettings";
+            }
+        }
+    }
+
+    public class BookingEmailInfo : BasicEmailInfo
     {
         public LcRest.Booking booking;
         //public List<ServicePricing> servicePricing;
@@ -140,16 +201,6 @@ public static class LcEmailTemplate
             }
         }
         /// <summary>
-        /// URL: Opens "talk to us" that a client sees.
-        /// </summary>
-        public string viewClientHelpCenter
-        {
-            get
-            {
-                return LcUrl.AppUrl + "feedback";
-            }
-        }
-        /// <summary>
         /// URL: Opens the booking card that the client sees.
         /// </summary>
         public string viewClientBookingCard
@@ -157,26 +208,6 @@ public static class LcEmailTemplate
             get
             {
                 return GetBookingUrl(booking.bookingID);
-            }
-        }
-        /// <summary>
-        /// URL: Opens the Terms page.
-        /// </summary>
-        public string viewTermsOfService
-        {
-            get
-            {
-                return LcUrl.AppUrl + "terms/terms-of-service";
-            }
-        }
-        /// <summary>
-        /// URL: Opens the Privacy Policy page.
-        /// </summary>
-        public string viewPrivacyPolicy
-        {
-            get
-            {
-                return LcUrl.AppUrl + "terms/privacy-policy";
             }
         }
         /// <summary>
@@ -207,16 +238,6 @@ public static class LcEmailTemplate
             get
             {
                 return LcUrl.AppUrl + "appointment/?clientID=" + booking.clientUserID.ToString();
-            }
-        }
-        /// <summary>
-        /// URL: Opens "talk to us" that a Service Professional sees.
-        /// </summary>
-        public string viewServiceProfessionalHelpCenter
-        {
-            get
-            {
-                return LcUrl.AppUrl + "feedback";
             }
         }
         /// <summary>
@@ -304,6 +325,144 @@ public static class LcEmailTemplate
         };
     }
 
+    public class AccountEmailInfo : BasicEmailInfo
+    {
+        public int userID;
+        string confirmationToken;
+
+        private LcRest.PublicUserProfile _user;
+        public LcRest.PublicUserProfile user
+        {
+            get
+            {
+                if (_user == null)
+                    _user = LcRest.PublicUserProfile.Get(userID, userID);
+                return _user;
+            }
+        }
+        /// <summary>
+        /// Alias
+        /// </summary>
+        public LcRest.PublicUserProfile client
+        {
+            get
+            {
+                return user;
+            }
+        }
+        /// <summary>
+        /// Alias
+        /// </summary>
+        public LcRest.PublicUserProfile serviceProfessional
+        {
+            get
+            {
+                return user;
+            }
+        }
+
+        public LcRest.PublicUserJobTitle userJobTitle;
+
+        #region URLs
+        /// <summary>
+        /// Link to to a page that prompts user with an email box and 'reset' button,
+        /// sending a message to the given e-mail with a button/link to create a new password
+        /// for the account linked to the email, for cases where user lost its password.
+        /// </summary>
+        public string viewPasswordResetURL
+        {
+            get
+            {
+                return LcUrl.AppUrl + "account/password-reset";
+            }
+        }
+        /// <summary>
+        /// One-click verifies their e-mail
+        /// </summary>
+        public string viewEmailVerificationURL
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(confirmationToken))
+                {
+                    confirmationToken = LcAuth.GetConfirmationToken(userID);
+                }
+                return LcUrl.LangUrl + "account/confirm/?confirmationCode=" + HttpUtility.UrlEncode(confirmationToken);
+            }
+        }
+        /// <summary>
+        /// Brings the professional to the on boarding for scheduling
+        /// </summary>
+        public string viewSchedulingOnboard
+        {
+            get
+            {
+                return "";
+            }
+        }
+        /// <summary>
+        /// Brings the professional to the on boarding for marketplace profile...I don't think we have actual on boarding so just brings them to the marketplace profile in the app
+        /// </summary>
+        public string viewMarketplaceProfileOnboard
+        {
+            get
+            {
+                return "";
+            }
+        }
+        /// <summary>
+        /// Brings the professional to the on boarding for selecting a payment plan and entering payment info. If all other steps to becoming an owner are complete, it brings them to BecomeOwnerOnboard
+        /// </summary>
+        public string viewPaymentPlanOnboard
+        {
+            get
+            {
+                return "";
+            }
+        }
+        /// <summary>
+        /// Brings the professional to the on boarding for becoming an owner (owner acknowledgment
+        /// </summary>
+        public string viewBecomeOwnerOnboard
+        {
+            get
+            {
+                return "";
+            }
+        }
+        #endregion
+    }
+
+    public static AccountEmailInfo GetAccountInfo(int userID, int? jobTitleID = null)
+    {
+        var a = new AccountEmailInfo
+        {
+            userID = userID
+        };
+
+        if (jobTitleID.HasValue)
+        {
+            var languageID = LcData.GetCurrentLanguageID();
+            var countryID = LcData.GetCurrentCountryID();
+            a.userJobTitle = LcRest.PublicUserJobTitle.Get(userID, languageID, countryID, jobTitleID.Value, true);
+        }
+
+        return a;
+    }
+
+    public static AccountEmailInfo GetAccountInfo()
+    {
+        return GetAccountInfo(Request["userID"].AsInt(), Request["jobTitleID"].IsInt() ? Request["jobTitleID"].AsInt() : (int?)null);
+    }
+
+    public static AccountEmailInfo GetAccountInfo(IDictionary<object, dynamic> PageData)
+    {
+        if (PageData[0] is AccountEmailInfo) return (AccountEmailInfo)PageData[0];
+        if (PageData["AccountEmailInfo"] is AccountEmailInfo) return (AccountEmailInfo)PageData["AccountEmailInfo"];
+        throw new Exception("Account info not found at Email component");
+    }
+
+    #region General utils
     public static string GetLocationForGoogleMaps(LcRest.Address address)
     {
         return ASP.LcHelpers.JoinNotEmptyStrings(", ", address.addressLine1, address.city, address.stateProvinceCode, address.countryCode);
@@ -313,4 +472,5 @@ public static class LcEmailTemplate
     {
         return "http://maps.google.com/?q=" + Uri.EscapeDataString(GetLocationForGoogleMaps(address));
     }
+    #endregion
 }

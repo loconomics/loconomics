@@ -362,4 +362,15 @@ public static class LcAuth
             userID,
             GetAutologinKey(userID));
     }
+
+    public static string GetConfirmationToken(int userID)
+    {
+        using (var db = new LcDatabase())
+        {
+            return userID == -1 ? null :
+                // coalesce used to avoid the value 'DbNull' to be returned, just 'empty' when there is no token,
+                // is already confirmed
+                db.QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userID);
+        }
+    }
 }
