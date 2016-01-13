@@ -175,9 +175,9 @@ public static class LcAuth
         var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(user.ConfirmationToken);
         // Sent welcome email (if there is a confirmationUrl and token values, the email will contain it to perform the required confirmation)
         if (user.IsProvider)
-            LcMessaging.SendWelcomeProvider(user.UserID, user.Email, confirmationUrl);
+            LcMessaging.SendWelcomeProvider(user.UserID, user.Email);
         else
-            LcMessaging.SendWelcomeCustomer(user.UserID, user.Email, confirmationUrl, user.ConfirmationToken);
+            LcMessaging.SendWelcomeCustomer(user.UserID, user.Email);
     }
 
     public static void ConnectWithFacebookAccount(int userID, long facebookID)

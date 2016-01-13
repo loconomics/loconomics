@@ -683,111 +683,6 @@ public class LcMessaging
     #endregion
     #endregion
 
-    #region Message Summary (building small reusable summaries, as of messages listings)
-    public class MessageSummary
-    {
-        private dynamic r;
-        private int displayToUserID;
-
-        public MessageSummary(dynamic messageRecord, int displayToUserID)
-        {
-            this.r = messageRecord;
-            this.displayToUserID = displayToUserID;
-        }
-
-        public static List<int> BookingRelatedMessageTypes = new List<int> {
-            4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 19, 17, 18
-        };
-
-        public string GetMessageTypeDependantSubject() {
-            var ret = "";
-            if (BookingRelatedMessageTypes.Contains((int)r.LastMessageTypeID)) {
-                ret = "for ";
-            } else {
-                ret = "about ";
-            }
-            ret += r.PositionSingular + " services";
-            return ret;
-        }
-
-        public string GetThreadParticipantFirstName() {
-            if (r.ProviderUserID == displayToUserID) {
-                return r.CustomerFirstName;
-            } else {
-                return r.ProviderFirstName;
-            }
-        }
-
-        public string GetMessageUrl(string baseUrl = null) {
-            if (baseUrl == null)
-            {
-                baseUrl = LcUrl.LangPath + "dashboard/";
-            }
-            var url = baseUrl;
-            switch ((string)r.LastMessageAuxT) {
-                default:
-                    url += "Messages/Inquiry/" + r.ThreadID + "/" + r.LastMessageID + "/";
-                    break;
-                case "Booking":
-                    url += "Messages/Booking/" + r.LastMessageAuxID + "/";
-                    break;
-                case "BookingRequest":
-                    url += "Messages/BookingRequest/" + r.LastMessageAuxID + "/";
-                    break;
-            }
-            return url;
-        }
-
-        public string GetMessageTypeLabel() {
-            var ret = "";
-            switch((int)r.LastMessageTypeID) {
-                default:            
-                case 1:
-                case 2:
-                case 3:
-                    ret = "Message";
-                    break;
-                case 4:
-                case 5:
-                    ret = "Booking request";
-                    break;
-                case 6:
-                case 7:
-                    ret = "Booking confirmation";
-                    break;
-                case 8:
-                    ret = "Marketing";
-                    break;
-                case 9:
-                    ret = "Booking dispute";
-                    break;
-                case 10:
-                    ret = "Booking resolution";
-                    break;
-                case 12:
-                    ret = "Pricing adjustment";
-                    break;
-                case 13:
-                    ret = "Booking declined";
-                    break;
-                case 14:
-                    ret = "Booking cancelled";
-                    break;
-                case 15:
-                case 16:
-                case 19:
-                    ret = "Booking update";
-                    break;
-                case 17:
-                case 18:
-                    ret = "Booking review";
-                    break;
-            }
-            return ret;
-        }
-    }
-    #endregion
-
     #region Type:Booking
     /// <summary>
     /// Implements methods to send messages about bookings with the full set of
@@ -1390,7 +1285,7 @@ public class LcMessaging
 
             // NOTE: Message from client to freelancer
             SendMail(provider.Email, "A Message From a Loconomics Client",
-                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+                ApplyTemplate(LcUrl.LangPath + "Email/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
                 ,{ "Kind", 1 } // Customer inquiry (first message)
@@ -1399,7 +1294,7 @@ public class LcMessaging
             }));
             // NOTE: Copy to the author. The author is a client sending message to a freelancer.
             SendMail(customer.Email, "Copy of your inquiry",
-                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+                ApplyTemplate(LcUrl.LangPath + "Email/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
                 ,{ "Kind", -1 } // Copy to author of Customer inquiry (first message)
@@ -1429,8 +1324,8 @@ public class LcMessaging
             int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer, thread.ProviderUserID);
 
             // NOTE: Message from freelancer to client, answering an inquiry started by the client.
-            SendMail(customer.Email, "A Message From a Loconomics Provider", 
-                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+            SendMail(customer.Email, "A Message From a Loconomics Provider",
+                ApplyTemplate(LcUrl.LangPath + "Email/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -1439,8 +1334,8 @@ public class LcMessaging
                 ,{ "EmailTo", customer.Email }
             }));
             // NOTE: Copy to the author. The author is a freelancer, answering to a client that started the inquiry.
-            SendMail(provider.Email, "Copy of your answer", 
-                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+            SendMail(provider.Email, "Copy of your answer",
+                ApplyTemplate(LcUrl.LangPath + "Email/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -1471,8 +1366,8 @@ public class LcMessaging
             int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer, thread.CustomerUserID);
 
             // NOTE: Message from client to freelancer, answering (or any further message) an inquiry started by the client (itself).
-            SendMail(provider.Email, "A Message From a Loconomics Client", 
-                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+            SendMail(provider.Email, "A Message From a Loconomics Client",
+                ApplyTemplate(LcUrl.LangPath + "Email/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -1482,8 +1377,8 @@ public class LcMessaging
             }));
             // NOTE: Copy to the author. The author is a client, answering to a freelancer (or any further message).
             // The client started the inquiry.
-            SendMail(customer.Email, "Copy of your answer", 
-                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
+            SendMail(customer.Email, "Copy of your answer",
+                ApplyTemplate(LcUrl.LangPath + "Email/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -1495,62 +1390,83 @@ public class LcMessaging
     }
     #endregion
 
-    #region OLD? Type:Welcome
-    [Obsolete("Disabled because it's broken")]
-    public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
+    #region Type:Admin Account
+    public static void SendWelcomeProvider(int userID, string userEmail)
     {
-        return;
-        SendMail(providerEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
-            ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeProvider/",
+        SendMail(userEmail, "[Action Required] Welcome to a new kind of marketplace",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/Welcome/",
             new Dictionary<string,object> {
-                { "UserID", providerID },
-                { "EmailTo", providerEmail },
-                { "ConfirmationURL", HttpUtility.UrlEncode(confirmationURL) }
-         }));
+                { "userID", userID }
+         }), "Loconomics Cooperative <automated@loconomics.com>");
     }
-    [Obsolete("Disabled because it's broken")]
-    public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
+    public static void SendWelcomeCustomer(int userID, string userEmail)
     {
-        return;
-        SendMail(userEmail, "[Action Required] Welcome to Loconomics-Please Verify Your Account",
-            ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeCustomer/",
+        SendMail(userEmail, "[Action Required] Welcome to a new kind of marketplace",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/Welcome/",
             new Dictionary<string, object> {
-                { "UserID", userID },
-                { "EmailTo", userEmail },
-                { "ConfirmationURL", HttpUtility.UrlEncode(confirmationURL) },
-                { "ConfirmationToken", HttpUtility.UrlEncode(confirmationToken) }
-        }));
+                { "userID", userID }
+        }), "Loconomics Cooperative <automated@loconomics.com>");
     }
-    [Obsolete("Disabled because it's broken")]
-    public static void SendResetPassword(int userID, string userEmail, string resetURL, string resetToken)
+    public static void SendResetPassword(int userID, string userEmail)
     {
-        return;
-        SendMail(userEmail, "[Action Required] Loconomics Password Recovery",
-            ApplyTemplate(LcUrl.LangPath + "Email/EmailResetPassword/",
+        SendMail(userEmail, "Forget being forgetful",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/EmailResetPassword/",
             new Dictionary<string, object> {
-                { "UserID", userID },
-                { "EmailTo", userEmail },
-                { "ResetURL", HttpUtility.UrlEncode(resetURL) },
-                { "ResetToken", HttpUtility.UrlEncode(resetToken) }
+                { "UserID", userID }
         }));
     }
     #endregion
 
-    #region OLD? Type:ReportAbuse
-    public static void SendReportUnauthorizedUse(int reportedByUserID, int reportedUserID, string message)
+    #region Type:Admin ServiceProfessional specifics
+    public static void SendBackgroundCheckRequestReceived(int userID, string userEmail)
     {
-        SendMail("legal@loconomics.com", "Report of Unauthorized Use",
-            ApplyTemplate(LcUrl.LangPath + "Email/EmailReportUnauthorizedUse/",
-            new Dictionary<string,object> {
-                { "ReportedByUserID", reportedByUserID },
-                { "ReportedUserID", reportedUserID },
-                { "Message", message },
-                { "EmailTo", "legal@loconomics.com" }
-         }));
+        SendMail(userEmail, "[Action Required] We've received your background check request",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/BackgroundCheckRequestReceived/",
+            new Dictionary<string, object> {
+                { "UserID", userID }
+        }), "Loconomics Marketplace <automated@loconomics.com>");
+    }
+    public static void SendOptionalCertificationVerificationRequestReceived(int userID, string userEmail)
+    {
+        SendMail(userEmail, "We've received your license/certification verification request",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/OptionalCertificationVerificationRequestReceived/",
+            new Dictionary<string, object> {
+                { "UserID", userID }
+        }), "Loconomics Marketplace <automated@loconomics.com>");
+    }
+    public static void SendRequiredLicenseVerificationRequestReceived(int userID, string userEmail)
+    {
+        SendMail(userEmail, "We've received your license/certification verification request",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/RequiredLicenseVerificationRequestReceived/",
+            new Dictionary<string, object> {
+                { "UserID", userID }
+        }), "Loconomics Marketplace <automated@loconomics.com>");
+    }
+    /// <summary>
+    /// Sended when scheduled task indicates service professional has their marketplace profile activated, and they've completed two bookings
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="userEmail"></param>
+    public static void SendOwnerInvitation(int userID, string userEmail)
+    {
+        SendMail(userEmail, "[Action Required] You're invited to become an owner",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/OwnerInvitation/",
+            new Dictionary<string, object> {
+                { "UserID", userID }
+        }), "Loconomics Marketplace <automated@loconomics.com>");
     }
     #endregion
 
-    #region Notification to Loconomics Stuff/Support
+    #region Type:Admin/Internal Notifications to Loconomics Stuff/Support
+    public static void NotifyError(string where, string url, string exceptionPageContent)
+    {
+        try
+        {
+            SendMail("support@loconomics.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
+                exceptionPageContent);
+        }
+        catch { }
+    }
     public static void NotifyNewJobTitle(string jobTitleName, int jobTitleID)
     {
         try
@@ -1580,16 +1496,42 @@ public class LcMessaging
         }
         catch { }
     }
-    #endregion
-
-    #region OLD? Type:MerchantAccountNotification
     public static void SendMerchantAccountNotification(int providerUserID)
     {
         SendMail("support@loconomics.com", "Marketplace: Merchant Account Notification",
-            ApplyTemplate(LcUrl.LangPath + "Email/EmailProviderPaymentAccountNotification/",
-            new Dictionary<string,object> {
-                { "ProviderID", providerUserID},
-                { "EmailTo", "support@loconomics.com" }
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/Internal/EmailProviderPaymentAccountNotification/",
+            new Dictionary<string, object> {
+                { "userID", providerUserID}
+         }));
+    }
+    public static void SendReportUnauthorizedUse(int reportedByUserID, int reportedUserID, string message)
+    {
+        SendMail("legal@loconomics.com", "Report of Unauthorized Use",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/Internal/EmailReportUnauthorizedUse/",
+            new Dictionary<string, object> {
+                { "ReportedByUserID", reportedByUserID },
+                { "ReportedUserID", reportedUserID },
+                { "Message", message },
+                { "EmailTo", "legal@loconomics.com" }
+         }));
+    }
+    public static void SendBackgroundCheckRequest(int userID, int backgroundCheckID)
+    {
+        SendMail("support@loconomics.com", "Background Check Request",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/Internal/EmailBackgroundCheckRequest/",
+            new Dictionary<string, object> {
+                { "userID", userID },
+                { "backgroundCheckID", backgroundCheckID }
+         }));
+    }
+    public static void SendLicenseVerificationRequest(int userID, int jobTitleID, int licenseCertificationID)
+    {
+        SendMail("support@loconomics.com", "License Verification Request",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/Internal/EmailLicenseVerificationRequest/",
+            new Dictionary<string, object> {
+                { "userID", userID },
+                { "jobTitleID", jobTitleID },
+                { "licenseCertificationID", licenseCertificationID }
          }));
     }
     #endregion
@@ -1691,18 +1633,6 @@ public class LcMessaging
         if ((LcHelpers.InLive && !HttpContext.Current.Request.IsLocal) ||
             HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
             throw new HttpException(403, "Forbidden");
-    }
-    #endregion
-
-    #region Generic app utilities
-    public static void NotifyError(string where, string url, string exceptionPageContent)
-    {
-        try
-        {
-            SendMail("support@loconomics.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
-                exceptionPageContent);
-        }
-        catch { }
     }
     #endregion
 

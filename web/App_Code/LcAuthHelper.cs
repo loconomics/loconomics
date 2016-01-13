@@ -200,11 +200,11 @@ public static class LcAuthHelper
 
                 if (isProvider)
                 {
-                    LcMessaging.SendWelcomeProvider(userId, username, confirmationUrl);
+                    LcMessaging.SendWelcomeProvider(userId, username);
                 }
                 else
                 {
-                    LcMessaging.SendWelcomeCustomer(userId, username, confirmationUrl, token);
+                    LcMessaging.SendWelcomeCustomer(userId, username);
                 }
 
                 /// http 409:Conflict
