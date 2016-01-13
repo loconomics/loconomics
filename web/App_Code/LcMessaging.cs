@@ -1056,7 +1056,7 @@ public class LcMessaging
             {
                 var neutralSubject = "Declined appointment request";
                 CreateBookingMessage(info, (int)MessageType.BookingRequestDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, true);
-                subject = "Your appointment request has being declined";
+                subject = "I'm unable to accept your booking request at this time";
                 sendToClient("BookingRequestDeclined");
             }
             public override void BookingRequestExpired()
@@ -1173,7 +1173,7 @@ public class LcMessaging
             {
                 var neutralSubject = "Declined appointment request";
                 CreateBookingMessage(info, (int)MessageType.BookingRequestDeclined, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, neutralSubject, true);
-                subject = "Your appointment request has being declined";
+                subject = "I'm unable to accept your booking request at this time";
                 sendToClient("BookingRequestDeclined");
             }
             public override void BookingRequestExpired()
