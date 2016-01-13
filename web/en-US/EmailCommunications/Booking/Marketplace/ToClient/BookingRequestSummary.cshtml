@@ -1,5 +1,11 @@
-﻿@* Email with updated information about a Booking Request, mainly to communicate to the
+@* Email with updated information about a Booking Request, mainly to communicate to the
     provider that a request was done (BookingRequestStatusID:2, but also generate content for other statuses)
+
+    Sender e-mail: automated@@loconomics.com
+    Sender name: Loconomics
+    Subject: Appointment request received
+    Send when: immediately
+    Restrictions: positions.HIPAA=0
  *@
 @using WebMatrix.Data;
 @{
@@ -17,12 +23,13 @@
     // NOTE: For booking requests, we were displaying the info.booking.requestConfirmationLimitDate so clients
     // know when will expire the request and service professionals knows the limit date-time to confirm it;
 }
-<!-- HIDDEN PREHEADER TEXT -->
+<!-- HEADER -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td bgcolor="#00989a">
+            <!-- HIDDEN PREHEADER TEXT -->
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), Thanks for requesting my @info.userJobTitle.jobTitleSingularName services. I’m either away or busy with a client but will confirm your appointment time as soon as I can.
+                Hi, @(info.client.firstName), Thanks for requesting @(info.serviceProfessional.firstName)&rsquo;'s @info.userJobTitle.jobTitleSingularName services. We will confirm your appointment time as soon as we can.
             </div>
             <div align="center" style="padding: 0px 15px 0px 15px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="500" class="wrapper">
@@ -49,8 +56,6 @@
     </tr>
 </table>
 
-
-<!-- Book Now: Booking Request Received -->
 <!-- MAIN COPY -->
 <!-- ONE COLUMN SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -65,35 +70,19 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thanks for requesting my <strong>@info.userJobTitle.jobTitleSingularName</strong> services. I’m either away or busy with a client but will confirm your appointment time as soon as I can.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thanks for requesting @(info.serviceProfessional.firstName)&rsquo;'s <strong>@info.userJobTitle.jobTitleSingularName</strong> services. We will confirm your appointment time as soon as we can.</td>
                             </tr>
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="Telephone:" width="20" height="20" border="0"> @(info.serviceProfessional.email)</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">At your service,<br><br>The Loconomics team</td>
                             </tr>
                         </table>
-                            <tr>
-                                <td align="center">
-                                    <!-- BULLETPROOF BUTTON -->
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
-                                        <tr>
-                                            <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
-                                                <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
-                                                    <tr>
-                                                        <td align="center"><a href="@(info.viewEmailUrl)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">View Booking Request</a></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
 </table>
-<!-- Confirmation Number -->
+<!-- Booking Request Details -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td bgcolor="#ffffff" align="center" style="padding: 40px 15px 15px 15px;" class="section-padding">
@@ -103,7 +92,7 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="left" style="padding: 0 0 0 0; font-size: 26px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Booking Request Confirmation Number: @(info.booking.bookingID))</td>
+                                <td align="center"><a href="@(info.viewClientBookingCard)" target="_blank" style="padding: 0 0 0 0; font-size: 30px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ff6765;" class="padding-copy">Booking Request Details</td>
                             </tr>
                         </table>
                     </td>
@@ -113,20 +102,7 @@
     </tr>
 </table>
 @RenderPage("MessageComponents/$PricingSummary.cshtml", info)
-<!-- Services -->
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td bgcolor="#E6E9ED" align="center" style="padding: 40px 15px 40px 15px;" class="section-padding">
-            <table border="0" cellpadding="0" cellspacing="0" width="500" style="padding:0 0 20px 0;" class="responsive-table">
-                <!-- TITLE -->
-                <tr>
-                    <td align="center" style="padding: 0 0 5px 25px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy" colspan="2">Services Requested</td>
-                </tr>
-                @RenderPage("MessageComponents/$Services.cshtml", info)
-                </table>
-        </td>
-    </tr>
-</table>
+@RenderPage("MessageComponents/$Services.cshtml", info)
 @RenderPage("MessageComponents/$TimesRequested.cshtml", info)
 @RenderPage("MessageComponents/$Location.cshtml", info)
 @RenderPage("MessageComponents/$PaymentStatus.cshtml", info)
@@ -165,7 +141,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="#" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
+                                                        <td align="center"><a href="@(info.viewClientHelpCenter)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
                                                     </tr>
                                                 </table>
                                             </td>
@@ -180,7 +156,4 @@
         </td>
     </tr>
 </table>
-@RenderPage("MessageComponents/$MarketplaceMarketingMessage.cshtml", info)
 @RenderPage("MessageComponents/$Footer.cshtml", info)
-
-

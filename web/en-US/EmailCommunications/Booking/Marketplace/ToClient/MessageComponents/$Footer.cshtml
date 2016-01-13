@@ -1,0 +1,22 @@
+@* Cancellation Policy as displayed to the client.
+ *@
+@using WebMatrix.Data;
+@{
+    // All the data for this component:
+    var info = LcEmailTemplate.GetBookingInfo(PageData);
+}
+<!-- FOOTER -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center" style="padding: 20px 0px;">
+            <!-- UNSUBSCRIBE COPY -->
+            <table width="500" border="0" cellspacing="0" cellpadding="0" align="center" class="responsive-table">
+                <tr>
+                    <td align="center" valign="middle" style="font-size: 12px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color:#666666;">
+                        <span class="appleFooter" style="color:#666666;">Sent from <a href="https://loconomics.com/?utm_source=bookingcommunications&utm_medium=email&utm_term=footer&utm_campaign=loconomicscooperativeinc">Loconomics Cooperative, Inc.</a> Please do not reply.<br>If you require assistance, please reference Booking ID @(info.booking.bookingID)<br>3150 18th Street, Suite 438, San Francisco, CA 94110, USA</span><br><a href="@(info.viewTermsOfService)" target="_blank" class="original-only" style="color: #666666; text-decoration: none;">Terms of Service</a><span class="original-only" style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><a href="@(info.viewPrivacyPolicy)" target="_blank" class="original-only" style="color: #666666; text-decoration: none;">Privacy Policy</a><span class="original-only" style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><a href="@(info.viewCommunicationPreferences)" target="_blank" class="original-only" style="color: #666666; text-decoration: none;">Email Preferences</a><span class="original-only" style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><a href="(@info.viewEmailUrl)" style="color: #666666; text-decoration: none;" target="_blank">View this email in your browser</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,62 @@
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
+    Page.Title = "Loconomics.com - Reported Unauthorized Use";
+    int reportedUserID = 0, reportedByUserID = 0;
+    dynamic reportedUser = null, reportedByUser = null;
+    string message = null;
+
+    reportedUserID = Request["ReportedUserID"].AsInt();
+    reportedByUserID = Request["ReportedByUserID"].AsInt();
+    reportedUser = LcData.UserInfo.GetUserRowWithContactData(reportedUserID);
+    reportedByUser = LcData.UserInfo.GetUserRowWithContactData(reportedByUserID);
+    message = Request["Message"];
+
+    // Data for the EmailLayout:
+    PageData["messageTitle"] = "Reported Unauthorized Use";
+    // Create URL:
+    PageData["viewOnSiteUrl"] = LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(reportedUserID);
+}
+<div>
+    <ul>
+        <li><strong>Reported User - UserID:</strong> @reportedUserID</li>
+        @if (reportedUser != null)
+        {
+        <li><strong>Reported User - Email:</strong> @reportedUser.Email</li>
+        <li><strong>Reported User - First Name:</strong> @reportedUser.FirstName</li>
+        <li><strong>Reported User - Last Name:</strong> @reportedUser.LastName</li>
+        if (reportedUser.CountryID == 1)
+        {
+        <li><strong>Reported User - Middle Initial:</strong> @reportedUser.MiddleIn</li>
+        }
+        if (reportedUser.CountryID == 2)
+        {
+        <li><strong>Reported User - Second Last Name:</strong> @reportedUser.SecondLastName</li>
+        }
+        <li><strong>Reported User - City:</strong> @reportedUser.City</li>
+        <li><strong>Reported User - State Name:</strong> @reportedUser.StateProvinceName</li>
+        }
+        
+        <li><strong>Message describing the unauthorized use:</strong> <div>@LcHelpers.PrintTextAsHtml(message)</div></li>
+
+        <li><strong>Reported BY User - UserID:</strong> @reportedByUserID</li>
+        @if (reportedByUser != null)
+        {
+        <li><strong>Reported BY User - Email:</strong> @reportedByUser.Email</li>
+        <li><strong>Reported BY User - First Name:</strong> @reportedByUser.FirstName</li>
+        <li><strong>Reported BY User - Last Name:</strong> @reportedByUser.LastName</li>
+        if (reportedByUser.CountryID == 1)
+        {
+        <li><strong>Reported BY User - Middle Initial:</strong> @reportedByUser.MiddleIn</li>
+        }
+        if (reportedByUser.CountryID == 2)
+        {
+        <li><strong>Reported BY User - Second Last Name:</strong> @reportedByUser.SecondLastName</li>
+        }
+        <li><strong>Reported BY User - City:</strong> @reportedByUser.City</li>
+        <li><strong>Reported BY User - State Name:</strong> @reportedByUser.StateProvinceName</li>
+        }
+    </ul>
+</div>
