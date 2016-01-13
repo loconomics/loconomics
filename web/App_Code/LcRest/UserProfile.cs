@@ -240,6 +240,15 @@ namespace LcRest
                 return FromDB(db.QuerySingle(sqlSelectProfile, userID));
             }
         }
+        public static string GetEmail(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return (string)db.QueryValue(@"
+                    SELECT email FROM UserProfile WHERE UserID = @0
+                ", userID);
+            }
+        }
         #endregion
 
         #region Create/Update
