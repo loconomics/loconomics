@@ -32,8 +32,19 @@
         <app-unlabeled-input params="placeholder: 'SSN', value: ssn, disable: $root.isLocked"></app-unlabeled-input>
 
         <h2 class="SectionTitle">Your bank account information</h2>
-        <app-unlabeled-input params="placeholder: 'ABA Routing number', value: routingNumber, disable: $root.isLocked"></app-unlabeled-input>
-        <app-unlabeled-input params="placeholder: 'Account number', value: accountNumber, disable: $root.isLocked"></app-unlabeled-input>
+        <p>
+            If you choose not to enter your bank information,
+            a <a href="https://venmo.com" target="_system">Venmo</a> account will be created and linked to your email.
+            You will then have to set up your Venmo account to release payments. We do not recommend this option as it requires an extra step.
+        </p>
+        <div class="form-group">
+            <label for="paymentAccount-routingNumber" class="control-label" data-bind="css: { 'sr-only': !status() }">ABA Routing Number</label>
+            <input type="text" class="form-control" data-bind="textInput: routingNumber, disable: $root.isLocked" placeholder="ABA Routing number">
+        </div>
+        <div class="form-group">
+            <label for="paymentAccount-routingNumber" class="control-label" data-bind="css: { 'sr-only': !status() }">Account number</label>
+            <input type="text" class="form-control" data-bind="textInput: accountNumber, disable: $root.isLocked" placeholder="Account number">
+        </div>
 
         <h2 class="SectionTitle">Agree to the terms of service</h2>
         <p>
