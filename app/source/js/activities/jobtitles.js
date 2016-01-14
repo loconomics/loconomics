@@ -160,4 +160,24 @@ function ViewModel(app) {
 
     }, this);
     
+    /// COPIED FROM marketplaceJobtitles
+    this.deleteJobTitle = function() {
+        var jid = this.jobTitleID();
+        if (jid) {
+            app.modals.confirm({
+                title: 'Delete job title',
+                message: 'Are you really sure you want to delete this job title?',
+                yes: 'Delete',
+                no: 'Keep'
+            }).then(function() {
+                app.model.userJobProfile.deleteUserJobTitle(jid);
+                app.shell.goBack();
+            })
+            .catch(function(err) {
+                if (err) {
+                    app.modals.showError({ error: err });
+                }
+            });
+        }
+    }.bind(this);
 }
