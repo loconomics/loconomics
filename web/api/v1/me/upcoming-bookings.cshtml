@@ -17,7 +17,7 @@
     {
         public override dynamic Get()
         {
- 	         return LcData.Booking.GetUpcomingBookingsInfo(WebSecurity.CurrentUserId);
+            return LcRest.UpcomingBookingsInfo.GetList(WebSecurity.CurrentUserId);
         }
     }
 }

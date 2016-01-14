@@ -13,6 +13,15 @@ namespace LcRest
     /// </summary>
     public class Booking
     {
+        #region Static Information
+        /// <summary>
+        /// After that time from the last update on a
+        /// booking request without provider confirmation,
+        /// the request will expire.
+        /// </summary>
+        public const int ConfirmationLimitInHours = 18;
+        #endregion
+
         #region Fields
         public int bookingID;
         public int clientUserID;
@@ -93,7 +102,7 @@ namespace LcRest
                 if (bookingStatusID == (int)LcEnum.BookingStatus.request &&
                     updatedDate.HasValue)
                 {
-                    return updatedDate.Value.AddHours(LcData.Booking.ConfirmationLimitInHours);
+                    return updatedDate.Value.AddHours(ConfirmationLimitInHours);
                 }
                 return null;
             }
@@ -668,7 +677,7 @@ namespace LcRest
                              AND
                             -- passed x hours from request or some change (some provider communication or customer change)
                             UpdatedDate < dateadd(hh, 0 - @0, getdate())
-                ", LcData.Booking.ConfirmationLimitInHours, (int)LcEnum.BookingStatus.request)
+                ", ConfirmationLimitInHours, (int)LcEnum.BookingStatus.request)
                  .Select<dynamic, Booking>(x => FromDB(x, true));
             }
         }
