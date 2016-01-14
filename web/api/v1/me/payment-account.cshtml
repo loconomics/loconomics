@@ -76,10 +76,6 @@
             Validation.RequireField("postalcode", LcRessources.RequiredField("Postal Code"));
             Validation.RequireField("city", LcRessources.RequiredField("City"));
 
-            if (!Validation.IsValid()) {
-                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
-            }
-
             var birthDate = Request["birthDate"].IsDateTime() ? (DateTime?)Request["birthdate"].AsDateTime() : null;
             if (!birthDate.HasValue)
             {
@@ -89,6 +85,11 @@
             if (!Request["agree"].AsBool())
             {
                 ModelState.AddError("agree", "You must agree the terms of service");
+            }
+
+            if (!Validation.IsValid() || !ModelState.IsValid)
+            {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
 
             // Parameters
