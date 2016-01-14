@@ -125,7 +125,6 @@ namespace LcRest
                 INNER JOIN
             UserProfile As UP
                 ON UP.UserID = Users.UserID
-                INNER JOIN
         WHERE Users.UserID = @0
             AND Active = 1
         ";
