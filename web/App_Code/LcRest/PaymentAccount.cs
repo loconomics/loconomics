@@ -80,8 +80,18 @@ namespace LcRest
                 return acc;
             }
             else {
+                // Automatically fetch personal data from our DB (this will work as a preset)
+                var data = LcRest.UserProfile.Get(userID);
+                var add = LcRest.Address.GetHomeAddress(userID);
                 return new PaymentAccount {
-                    userID = userID
+                    userID = userID,
+                    firstName = data.firstName,
+                    lastName = data.lastName,
+                    phone = data.phone,
+                    streetAddress = add.addressLine1,
+                    postalCode = add.postalCode,
+                    city = add.city,
+                    stateProvinceCode = add.stateProvinceCode
                 };
             }
         }
