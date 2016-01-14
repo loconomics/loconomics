@@ -182,6 +182,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.workPhotos = require('./AppModel.workPhotos').create(this);
     this.userLicensesCertifications = require('./AppModel.userLicensesCertifications').create(this);
     this.statesProvinces = require('./AppModel.statesProvinces').create(this);
+    this.paymentAccount = require('./AppModel.paymentAccount').create(this);
 };
 
 /**

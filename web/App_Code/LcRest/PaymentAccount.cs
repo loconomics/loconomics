@@ -28,6 +28,11 @@ namespace LcRest
         public string stateProvinceCode;
         public DateTime? birthDate;
         public bool? isVenmo;
+        /// <summary>
+        /// Status as notified by Braintree
+        /// </summary>
+        public string status;
+        public IEnumerable<string> errors;
         #endregion
 
         #region Fetch
@@ -51,6 +56,7 @@ namespace LcRest
                         (DateTime?)btAccount.IndividualDetails.DateOfBirth.AsDateTime() :
                         null,
                     ssn = String.IsNullOrEmpty(btAccount.IndividualDetails.SsnLastFour) ? "" : btAccount.IndividualDetails.SsnLastFour.PadLeft(10, '*'),
+                    status = btAccount.Status.ToString().ToLower()
                 };
                 // IMPORTANT: We need to strictly check for the null value of IndividualDetails and FundingDetails
                 // since errors can arise, see #554
@@ -60,6 +66,16 @@ namespace LcRest
                     acc.accountNumber = String.IsNullOrEmpty(btAccount.FundingDetails.AccountNumberLast4) ? "" : btAccount.FundingDetails.AccountNumberLast4.PadLeft(10, '*');
                     // Is Venmo account if there is no bank informatino
                     acc.isVenmo = String.IsNullOrEmpty(acc.accountNumber) && String.IsNullOrEmpty(acc.routingNumber);
+                }
+                if (btAccount.Status == Braintree.MerchantAccountStatus.SUSPENDED)
+                {
+                    var dbAccount = LcData.GetProviderPaymentAccount(userID);
+                    var gw = LcPayment.NewBraintreeGateway();
+                    var notification = gw.WebhookNotification.Parse((string)dbAccount.bt_signature, (string)dbAccount.bt_payload);
+                    var errors = new List<string>();
+                    errors.Add(notification.Message);
+                    notification.Errors.All().Select(x => x.Code + ": " + x.Message);
+                    acc.errors = errors;
                 }
                 return acc;
             }
@@ -76,10 +92,18 @@ namespace LcRest
         {
             // Gathering state and postal IDs and verifying they match
             var stateId = LcData.GetStateFromZipCode(data.postalCode);
-            var postalCodeId = LcData.GetPostalCodeID(data.postalCode, stateId);
-            if (LcData.GetStateProvinceCode(stateId) != data.stateProvinceCode)
+            var add = new LcRest.Address {
+                postalCode = data.postalCode,
+                countryID = LcRest.Locale.Current.countryID
+            };
+            if (!LcRest.Address.AutosetByCountryPostalCode(add))
             {
                 throw new ValidationException("Postal Code is not valid.", "postalcode");
+            }
+            else
+            {
+                data.city = add.city;
+                data.stateProvinceCode = add.stateProvinceCode;
             }
 
             var emulateBraintree = ASP.LcHelpers.Channel == "localdev";

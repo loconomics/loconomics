@@ -73,6 +73,14 @@
                 <em>Last run: <span data-bind="text: displayedLastBackgroundCheck"></span></em>
             </div>
         </a></li>-->
+        <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/paymentAccount">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-social-usd" aria-hidden="true"></span>
+            </div>
+            <div class="Tile-content">
+                <p>Activate Braintree Payment Account</p>
+            </div>
+        </a></li>
     </ul>
 
     <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>

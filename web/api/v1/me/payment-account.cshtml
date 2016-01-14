@@ -11,10 +11,8 @@
         routingNumber:string
         accountNumber:string
         ssn:string
-        city:string
         phone:string
         postalCode:string
-        stateProvinceCode:string
         streetAddress:string
         birthDate:string
         agree:bool Must be true to accept the changes
@@ -31,10 +29,8 @@
                 "routingNumber": "1234",
                 "accountNumber": "54321",
                 "ssn": "342323423",
-                "city": "San Francisco",
                 "phone": "013242345",
                 "postalCode": "90001",
-                "stateProvinceCode": "CA",
                 "streetAddress": "There 2th",
                 "birthDate": "1985-04-20T00:00Z",
                 "agree": true
@@ -72,9 +68,7 @@
             Validation.RequireField("lastName", LcRessources.RequiredField("Last name"));
             Validation.RequireField("birthDate", LcRessources.RequiredField("Date of Birth"));
             Validation.RequireField("streetAddress", LcRessources.RequiredField("Street address"));
-            Validation.RequireField("stateProvinceCode", LcRessources.RequiredField("State"));
             Validation.RequireField("postalcode", LcRessources.RequiredField("Postal Code"));
-            Validation.RequireField("city", LcRessources.RequiredField("City"));
 
             var birthDate = Request["birthDate"].IsDateTime() ? (DateTime?)Request["birthdate"].AsDateTime() : null;
             if (!birthDate.HasValue)
@@ -100,11 +94,9 @@
                 routingNumber = Request["routingNumber"],
                 accountNumber = Request["accountNumber"],
                 birthDate = birthDate,
-                city = Request["city"],
                 phone = Request["phone"],
                 postalCode = Request["postalCode"],
                 ssn = Request["ssn"],
-                stateProvinceCode = Request["stateProvinceCode"],
                 streetAddress = Request["streetAddress"]
             };
 
