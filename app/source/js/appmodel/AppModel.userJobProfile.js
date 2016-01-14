@@ -90,6 +90,16 @@ exports.create = function create(appModel) {
         });
     }
     
+    function deleteUserJobTitleFromCache(jobTitleID) {
+        // Delete from index
+        delete cache.userJobTitles[jobTitleID];
+        
+        // Remove from profile list: do from observable, that modifies plain cache
+        // and notify observers too
+        api.list.remove(function(j) { return j.jobTitleID() === jobTitleID; });
+        cache.userJobProfile.cache.touch();
+    }
+    
     /**
         Set a raw userJobProfile record (from server) and set it in the
         cache, creating or updating the model (so all the time the same model instance
@@ -159,6 +169,13 @@ exports.create = function create(appModel) {
             localforage.setItem('userJobProfile', raw);
             return mapToUserJobProfile(raw);
         });
+    };
+    
+    var saveCacheToLocal = function() {
+        var raw = cache.userJobProfile.list.map(function(j) {
+            return j.model.toPlainObject(true);
+        });
+        localforage.setItem('userJobProfile', raw);
     };
     
     /**
@@ -313,6 +330,16 @@ exports.create = function create(appModel) {
             // Save to cache and get model
             var m = setGetUserJobTitleToCache(raw);
             return m;
+        });
+    };
+    
+    api.deleteUserJobTitle = function(jobTitleID) {
+        return appModel.rest.delete('me/user-job-profile/' + (jobTitleID|0))
+        .then(function() {
+            // Remove from cache
+            deleteUserJobTitleFromCache(jobTitleID);
+            saveCacheToLocal();
+            return null;
         });
     };
     
