@@ -101,7 +101,13 @@ exports.registerAll = function(app) {
     ko.components.register('app-job-titles-list', {
         template: { element: 'job-titles-list-template' },
         viewModel: function(params) {
-            this.jobTitles = getObservable(params.jobTitles || []);
+            this.allJobTitles = getObservable(params.jobTitles || []);
+            // Filtered list, without records 'being deleted'
+            this.jobTitles = ko.pureComputed(function() {
+                return this().filter(function(j) {
+                    return !j.isBeingDeleted();
+                });
+            }, this.allJobTitles);
             this.selectJobTitle = params.selectJobTitle || function() {};
             this.showMarketplaceInfo = getObservable(params.showMarketplaceInfo || false);
         }

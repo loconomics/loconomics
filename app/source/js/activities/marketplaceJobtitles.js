@@ -288,12 +288,12 @@ function ViewModel(app) {
                 yes: 'Delete',
                 no: 'Keep'
             }).then(function() {
-                app.model.userJobProfile.deleteUserJobTitle(jid);
                 app.shell.goBack();
+                return app.model.userJobProfile.deleteUserJobTitle(jid);
             })
             .catch(function(err) {
                 if (err) {
-                    app.modals.showError({ error: err });
+                    app.modals.showError({ error: err, title: 'Error while deleting a job title' });
                 }
             });
         }
