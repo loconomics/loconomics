@@ -3,8 +3,23 @@
     <p>
         Getting paid is the easy part. We accept payments on your behalf, and Braintree (a leading credit card merchant provider) processes them with a deposit directly to your bank account. Braintree's transaction fee (2.9% plus $0.30 transaction fee) is subtracted from your payment. Easy, right? Complete the information below and, as always, let us know if you have questions. 
     </p>
-    <div data-bind="visible: paymentAccount.status">
+    <div data-bind="visible: paymentAccount.status()">
         <h2 class="SectionTitle">Account Status</h2>
+        <p data-bind="visible: paymentAccount.status() === 'active'">
+            You're all set up with Braintree payments
+        </p>
+        <p data-bind="visible: paymentAccount.status() === 'pending'">
+            Braintree is working on creating your account.
+        </p>
+        <div data-bind="visible: paymentAccount.status() === 'suspended'">
+            <p>There was an error in processing your Braintree application. Please contact Braintree at 877.434.2894.</p>
+            <div data-bind="visible: paymentAccount.errors().length">
+                <p>Error(s) reported by Braintree:</p>
+                <ul data-bind="foreach: paymentAccount.errors()">
+                    <li data-bind="text: this"></li>
+                </ul>
+            </div>
+        </div>
     </div>
     <div data-bind="with: paymentAccount">
         <h2 class="SectionTitle">Your contact information</h2>
