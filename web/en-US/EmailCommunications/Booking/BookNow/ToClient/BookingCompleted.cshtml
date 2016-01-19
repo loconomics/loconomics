@@ -2,7 +2,7 @@
     provider that a request was done (BookingRequestStatusID:2, but also generate content for other statuses)
 
     Sender e-mail: automated@@loconomics.com
-    Sender name: Loconomics
+    Sender name: @(info.serviceProfessional.firstName) @(info.serviceProfessional.lastName)
     Subject: Thank you and request to review my services
     Send when: 1 hour after @booking.serviceDate.endTime
     Restrictions: positions.HIPAA=0; positions.AutoReviewServiceProfessional=1
@@ -19,35 +19,12 @@
     // NOTE: Write some notes
     // Write some more notes, maybe a second line?
 }
-
-<!-- HEADER -->
+<!-- HIDDEN PREHEADER TEXT -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
-        <td bgcolor="#00989a">
-            <!-- HIDDEN PREHEADER TEXT -->
+        <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), We hope you enjoyed @(info.serviceProfessional.firstName)&rsquo;s <strong>@info.userJobTitle.jobTitleSingularName</strong> services today. 
-            </div>
-            <div align="center" style="padding: 0px 15px 0px 15px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="500" class="wrapper">
-                    <!-- LOGO/PREHEADER TEXT -->
-                    <tr>
-                        <td style="padding: 20px 0px 30px 0px;" class="logo">
-                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                <tr>
-                                    <td bgcolor="#00989a" width="100" align="left"><a href="#" target="_blank"><img alt="Logo" src="@(LcUrl.AppUrl)img/email/@(LcUrl.LangId)/logo-white-large.png" width="120" height="48" style="display: block; font-family: Helvetica, Arial, sans-serif; color: #666666; font-size: 16px;" border="0"></a></td>
-                                    <td bgcolor="#00989a" width="400" align="right" class="mobile-hide">
-                                        <table border="0" cellpadding="0" cellspacing="0">
-                                            <tr>
-                                                <td align="right" style="padding: 0 0 5px 0; font-size: 14px; font-family: Arial, sans-serif; color: #FFFFFF; text-decoration: none;"><span style="color: #FFFFFF; text-decoration: none;">Make life better.<br>Build local economies.</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
+                Hi, @(info.client.firstName), I hope you enjoyed my <strong>@info.userJobTitle.jobTitleSingularName</strong> services today. 
             </div>
         </td>
     </tr>
@@ -66,9 +43,18 @@
                             <tr>
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
+                            @if (info.booking.paymentCollected)
+                            {                            
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We hope you enjoyed @(info.serviceProfessional.firstName)&rsquo;s  <strong>@info.userJobTitle.jobTitleSingularName</strong> services today. If you did, we&rsquo;d love it if you&rsquo;d complete a review to help @(info.serviceProfessional.firstName) build their reputation and refer @(info.serviceProfessional.firstName) to any friends who would enjoy their services. It shouldn&rsquo;t take more than a couple minutes.</td>
+                            <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I hope you enjoyed my <strong>@info.userJobTitle.jobTitleSingularName</strong> services today. If you did, I&rsquo;d love it if you&rsquo;d complete a review to help me build my reputation and refer me to any friends who would enjoy my services. It shouldn&rsquo;t take more than a couple minutes. <strong>You&rsquo;ll also find your receipt below.</strong></td>
                             </tr>
+                            }
+                            else
+                            {
+                            <tr>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I hope you enjoyed my <strong>@info.userJobTitle.jobTitleSingularName</strong> services today. If you did, I&rsquo;d love it if you&rsquo;d complete a review to help me build my reputation and refer me to any friends who would enjoy my services. It shouldn&rsquo;t take more than a couple minutes.</td>
+                            </tr>
+                            }
                             <tr>
                                 <td align="center">
                                     <!-- BULLETPROOF BUTTON -->
@@ -77,7 +63,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="@(info.viewServiceProfessionalReviewForm)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Review @(info.serviceProfessional.firstName)</a></td>
+                                                        <td align="center"><a href="@(info.viewServiceProfessionalReviewForm)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Review my Services</a></td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -86,7 +72,7 @@
                                 </td>
                             </tr>
                             <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">At your service,<br><br>The Loconomics team</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">With gratitude,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="E-mail:" width="20" height="20" border="0"><a href="mailto:@(info.serviceProfessional.email)?subject=My @info.userJobTitle.jobTitleSingularName appt on @LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)" target="_blank">@(info.serviceProfessional.email)</a></td>
                             </tr>
                         </table>
                     </td>
@@ -95,6 +81,10 @@
         </td>
     </tr>
 </table>
+@if (info.booking.paymentCollected)
+{
+@RenderPage("MessageComponents/$Receipt.cshtml", info)
+}
 <!-- FAQS -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -143,4 +133,5 @@
         </td>
     </tr>
 </table>
+@RenderPage("MessageComponents/$MarketplaceMarketingMessage.cshtml", info)
 @RenderPage("MessageComponents/$Footer.cshtml", info)

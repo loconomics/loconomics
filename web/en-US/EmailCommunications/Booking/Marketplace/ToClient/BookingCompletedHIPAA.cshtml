@@ -1,10 +1,11 @@
-@* Email to client to remind them to leave a review.
+@* Email with updated information about a Booking Request, mainly to communicate to the
+    provider that a request was done (BookingRequestStatusID:2, but also generate content for other statuses)
 
     Sender e-mail: automated@@loconomics.com
-    Sender name: Loconomics Marketplace
-    Subject: Reminder to review my services
-    Send when: 7 days after @booking.serviceDate.endTime
-    Restrictions: positions.HIPAA=0; 
+    Sender name: Loconomics
+    Subject: Thank you and request to review my services
+    Send when: 1 hour after @booking.serviceDate.endTime
+    Restrictions: positions.HIPAA=1; positions.AutoReviewServiceProfessional=1
  *@
 @using WebMatrix.Data;
 @{
@@ -24,8 +25,7 @@
         <td bgcolor="#00989a">
             <!-- HIDDEN PREHEADER TEXT -->
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.serviceProfessional.firstName),
-                We hope all went well with your  <strong>@info.userJobTitle.jobTitleSingularName</strong> services with @(info.client.firstName). 
+                Hi, @(info.client.firstName), We hope you enjoyed @(info.serviceProfessional.firstName)&rsquo;s services today. 
             </div>
             <div align="center" style="padding: 0px 15px 0px 15px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="500" class="wrapper">
@@ -63,10 +63,15 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
+                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We hope all went well with your  <strong>@info.userJobTitle.jobTitleSingularName</strong> services with @(info.client.firstName). To keep our community strong and balanced, we&rsquo;d love it if you&rsquo;d complete a review to help your fellow service professionals in working with @(info.client.firstName). It shouldn&rsquo;t take more than a couple minutes.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We hope you enjoyed @(info.serviceProfessional.firstName)&rsquo;s services today. If you did, we&rsquo;d love it if you&rsquo;d complete a review to help @(info.serviceProfessional.firstName) build their reputation and refer @(info.serviceProfessional.firstName) to any friends who would enjoy their services. It shouldn&rsquo;t take more than a couple minutes. <strong>Also, your card
+										@if (!String.IsNullOrEmpty(info.booking.paymentLastFourCardNumberDigits)) 
+										{
+											<span>ending in @(info.booking.paymentLastFourCardNumberDigits)</span>
+										}
+										has been charged for @(info.booking.pricingSummary.totalPrice.Value.ToString("c")).</strong></td>
                             </tr>
                             <tr>
                                 <td align="center">
@@ -76,7 +81,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="@(info.viewClientReviewForm)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Review @(info.client.firstName)</a></td>
+                                                        <td align="center"><a href="@(info.viewServiceProfessionalReviewForm)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Review @(info.serviceProfessional.firstName)</a></td>
                                                     </tr>
                                                 </table>
                                             </td>

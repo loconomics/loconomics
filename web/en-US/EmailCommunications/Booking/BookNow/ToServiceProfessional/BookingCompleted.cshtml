@@ -2,10 +2,10 @@
     provider that a request was done (BookingRequestStatusID:2, but also generate content for other statuses)
 
     Sender e-mail: automated@@loconomics.com
-    Sender name: @(info.serviceProfessional.firstName) @(info.serviceProfessional.lastName)
-    Subject: Thank you and request to review my services
-    Send when: 1 hour after @booking.serviceDate.endTime
-    Restrictions: positions.HIPAA=1; positions.AutoReviewServiceProfessional=1
+    Sender name: Loconomics Marketplace
+    Subject: Your payment has been sent
+    Send when: BookingStatusID=8
+    Restrictions: positions.HIPAA=0; 
  *@
 @using WebMatrix.Data;
 @{
@@ -19,12 +19,15 @@
     // NOTE: Write some notes
     // Write some more notes, maybe a second line?
 }
-<!-- HIDDEN PREHEADER TEXT -->
+
+<!-- HEADER -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
-        <td>
+        <td bgcolor="#00989a">
+            <!-- HIDDEN PREHEADER TEXT -->
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), I hope you enjoyed my services today. 
+                Hi, @(info.serviceProfessional.firstName),
+                We hope all went well with your <strong>@info.userJobTitle.jobTitleSingularName</strong> services today with @(info.client.firstName). 
             </div>
         </td>
     </tr>
@@ -41,29 +44,22 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
+                                <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
                             </tr>
+                            @if (info.booking.paymentCollected)
+                            {                            
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I hope you enjoyed my services today. If you did, I&rsquo;d love it if you&rsquo;d complete a review to help me build my reputation and refer me to any friends who would enjoy my services. It shouldn&rsquo;t take more than a couple minutes.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We hope all went well with your <strong>@info.userJobTitle.jobTitleSingularName</strong> services with @(info.client.firstName). Below is a summary of those services. We&rsquo;ve charged @(info.client.firstName)&rsquo;s credit card so <strong>you should receive your payment within 2 to 3 business days.</strong></td>
                             </tr>
+                            }
+                            else
+                            {   
                             <tr>
-                                <td align="center">
-                                    <!-- BULLETPROOF BUTTON -->
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
-                                        <tr>
-                                            <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
-                                                <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
-                                                    <tr>
-                                                        <td align="center"><a href="@(info.viewServiceProfessionalReviewForm)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Review my Services</a></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>                               
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">With gratitude,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br></td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We hope all went well with your <strong>@info.userJobTitle.jobTitleSingularName</strong> services with @(info.client.firstName). Below is a summary of those services.</td>
+                            </tr>                                 
+                            }
+                            <tr>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">At your service,<br><br>The Loconomics team</td>
                             </tr>
                         </table>
                     </td>
@@ -72,6 +68,7 @@
         </td>
     </tr>
 </table>
+@RenderPage("MessageComponents/$ServicesCompleted.cshtml", info)
 <!-- FAQS -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -120,5 +117,4 @@
         </td>
     </tr>
 </table>
-@RenderPage("MessageComponents/$MarketplaceMarketingMessage.cshtml", info)
 @RenderPage("MessageComponents/$Footer.cshtml", info)

@@ -4,10 +4,10 @@
 @{
     // All the data for this component:
     var info = LcEmailTemplate.GetBookingInfo(PageData);
-    var hasPaymentProcessingFees = info.booking.pricingSummary.pFeePrice.HasValue && info.booking.pricingSummary.pFeePrice.Value != 0;
-    var totalDueToProfessional = (info.booking.pricingSummary.totalPrice -info.booking.pricingSummary.pFeePrice);
+    var hasFirstTimeFees = info.booking.pricingSummary.feePrice.HasValue && info.booking.pricingSummary.feePrice.Value != 0;
 }
 
+<!-- $PricingSummaryClientCopy We'll need one for ServiceProfessionals as well that shows the payment processing fees.-->
 <!-- ONE COLUMN SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -18,7 +18,7 @@
                         <!-- COPY -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                                <td align="center" style="padding: 0 0 0 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Pricing Summary</td>
+                                <td align="center" style="padding: 0 0 0 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Services Completed</td>
                             </tr>
                         </table>
                     </td>
@@ -71,7 +71,7 @@
                     </td>
                 </tr>
                 }
-                @if (hasPaymentProcessingFees)
+                @if (hasFirstTimeFees)
                 {
                     <tr>
                         <td>
@@ -85,7 +85,7 @@
                                                 <td style="padding: 0 0 10px 0;">
                                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                         <tr>
-                                                            <td align="left" style="font-family: Arial, sans-serif; color: #d9534f; font-size: 16px;">Payment processing fees*</td>
+                                                            <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">First-time booking fee*</td>
                                                         </tr>
                                                     </table>
                                                 </td>
@@ -97,7 +97,7 @@
                                                 <td style="padding: 0 0 10px 0;">
                                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                         <tr>
-                                                            <td align="right" style="font-family: Arial, sans-serif; color: #d9534f; font-size: 16px;">@(info.booking.pricingSummary.pFeePrice.Value.ToString("c"))</td>
+                                                            <td align="right" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">@(info.booking.pricingSummary.feePrice.Value.ToString("c"))</td>
                                                         </tr>
                                                     </table>
                                                 </td>
@@ -133,7 +133,7 @@
                                             <td>
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="right" style="font-family: Arial, sans-serif; color: #7ca230; font-size: 16px; font-weight: bold;">@((totalDueToProfessional ?? 0).ToString("c"))</td>
+                                                        <td align="right" style="font-family: Arial, sans-serif; color: #7ca230; font-size: 16px; font-weight: bold;">@((info.booking.pricingSummary.totalPrice ?? 0).ToString("c"))</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -148,7 +148,7 @@
         </td>
     </tr>
 </table>
-@if (hasPaymentProcessingFees) {
+@if (hasFirstTimeFees) {
 <!-- ONE COLUMN SECTION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
@@ -162,7 +162,7 @@
                                     <!-- COPY -->
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td align="left" style="padding: 0 0 0 0; text-align: left; font-size: 14px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color: #aaaaaa; font-style: italic;" class="padding-copy">*Payment processing fees are $0.30 plus 2.9% of the cost of services booked.</td>
+                                            <td align="left" style="padding: 0 0 0 0; text-align: left; font-size: 14px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color: #aaaaaa; font-style: italic;" class="padding-copy">*The first-time booking fee only applies the very first time you connect with a Professional and helps cover costs of running the marketplace. There are no fees for subsequent bookings.</td>
                                         </tr>
                                     </table>
                                 </td>
