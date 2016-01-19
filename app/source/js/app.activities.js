@@ -70,6 +70,7 @@ module.exports = {
     'home': require('./activities/home'),
     'booking': require('./activities/booking'),
     'terms': require('./activities/terms'),
+    'about': require('./activites/about'),
     'payments': require('./activities/payments'),
     'userFees': require('./activities/userFees'),
     'performance': require('./activities/performance'),
