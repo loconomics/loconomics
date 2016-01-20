@@ -251,7 +251,7 @@
             "post": { }
         },
 
-        "Book a service professional (client booking)": {
+        "Client Booking: Create booking": {
             "url": "/api/v1/en-US/me/client-booking",
             "post": {
                 "serviceProfessionalUserID": 141,
@@ -282,6 +282,10 @@
                 }
             }
         },
+        "Client Booking: Cancel booking": {
+            "url": "/api/v1/en-US/me/client-booking/34/cancel",
+            "post": {}
+        }
 
         "Clients (list and create)": {
             "url": "/api/v1/en-US/me/clients",
@@ -456,7 +460,7 @@
             }
         },
 
-        "Freelancer Bookings (post only)": {
+        "Service Professional Booking: Create booking": {
             "url": "/api/v1/en-US/me/service-professional-booking",
             "post": {
                 "clientUserID": 141,
@@ -469,7 +473,7 @@
                 "api comment": "Fields of the Simplified Freelancer Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing."
             }
         },
-        "Freelancer Bookings (single only)": {
+        "Service Professional Booking: Update booking": {
             "url": "/api/v1/en-US/me/service-professional-booking/73",
             "put": {
                 "addressID": 19,
@@ -482,6 +486,14 @@
                 "api comment": "Fields of the Simplified Freelancer Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing."
             }
         },
+        "Service Professional Booking: Cancel booking": {
+            "url": "/api/v1/en-US/me/service-professional-booking/73/cancel",
+            "post": {}
+        },
+        "Service Professional Booking: Deny/decline booking": {
+            "url": "/api/v1/en-US/me/service-professional-booking/73/deny",
+            "post": {}
+        }
 
         "Freelancer Pricing - All user pricing": {
             "url": "/api/v1/en-US/me/service-professional-services",
