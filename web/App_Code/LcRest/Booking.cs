@@ -1613,6 +1613,8 @@ namespace LcRest
             if (this.pricingSummary == null)
                 this.FillPricingSummary();
 
+            bookingStatusID = (int)LcEnum.BookingStatus.requestExpired;
+
             this.RefundPayment();
 
             using (var db = new LcDatabase())
@@ -1620,7 +1622,7 @@ namespace LcRest
                 var result = (string)db.QueryValue(
                     sqlInvalidateBooking,
                     bookingID,
-                    (int)LcEnum.BookingStatus.requestExpired
+                    bookingStatusID
                 );
                 if (!String.IsNullOrEmpty(result))
                     throw new Exception(result);
@@ -1988,6 +1990,8 @@ namespace LcRest
             if (this.pricingSummary == null)
                 this.FillPricingSummary();
 
+            bookingStatusID = (int)LcEnum.BookingStatus.cancelled;
+
             this.RefundPayment();
 
             using (var db = new LcDatabase())
@@ -1995,7 +1999,7 @@ namespace LcRest
                 var result = (string)db.QueryValue(
                     sqlInvalidateBooking,
                     bookingID,
-                    (int)LcEnum.BookingStatus.cancelled
+                    bookingStatusID
                 );
                 if (!String.IsNullOrEmpty(result))
                     throw new Exception(result);
@@ -2021,6 +2025,8 @@ namespace LcRest
             if (this.pricingSummary == null)
                 this.FillPricingSummary();
 
+            bookingStatusID = (int)LcEnum.BookingStatus.denied;
+
             this.RefundPayment();
 
             using (var db = new LcDatabase())
@@ -2028,7 +2034,7 @@ namespace LcRest
                 var result = (string)db.QueryValue(
                     sqlInvalidateBooking,
                     bookingID,
-                    (int)LcEnum.BookingStatus.denied
+                    bookingStatusID
                 );
                 if (!String.IsNullOrEmpty(result))
                     throw new Exception(result);
@@ -2249,6 +2255,8 @@ namespace LcRest
             if (this.pricingSummary == null)
                 this.FillPricingSummary();
 
+            bookingStatusID = (int)LcEnum.BookingStatus.cancelled;
+
             this.RefundPayment();
 
             using (var db = new LcDatabase())
@@ -2256,7 +2264,7 @@ namespace LcRest
                 var result = (string)db.QueryValue(
                     sqlInvalidateBooking,
                     bookingID,
-                    (int)LcEnum.BookingStatus.cancelled
+                    bookingStatusID
                 );
                 if (!String.IsNullOrEmpty(result))
                     throw new Exception(result);
