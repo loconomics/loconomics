@@ -33,7 +33,7 @@
 										else
 										{
 											<span>
-												 Cancel or reschedule by <strong>@(info.cancellationLimitDate.ToShortTimeString()) on @info.cancellationLimitDate.ToLongDateString()</strong> to receive a @(policy.refundIfCancelledBefore.ToString("0.##%")) refund. Click <a href="https://loconomics.com/">here</a> to make changes.
+												 Cancel or reschedule by <strong>@(info.cancellationLimitDate.ToShortTimeString()) on @info.cancellationLimitDate.ToLongDateString()</strong> to receive a @((1 - policy.cancellationFeeBefore).ToString("0.##%")) refund. Click <a href="https://loconomics.com/">here</a> to make changes.
 											</span>
 										}
                                  </td>

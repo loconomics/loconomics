@@ -1,0 +1,26 @@
+﻿INSERT INTO [cancellationpolicy]
+           ([CancellationPolicyID]
+           ,[LanguageID]
+           ,[CountryID]
+           ,[CancellationPolicyName]
+           ,[CancellationPolicyDescription]
+           ,[HoursRequired]
+           ,[CancellationFeeAfter]
+           ,[CancellationFeeBefore]
+           ,[CreatedDate]
+           ,[UpdatedDate]
+           ,[ModifiedBy]
+           ,[Active])
+     VALUES
+           (@CancellationPolicyID
+           ,@LanguageID
+           ,@CountryID
+           ,@CancellationPolicyName
+           ,@CancellationPolicyDescription
+           ,@HoursRequired
+           ,@CancellationFeeAfter
+           ,@CancellationFeeBefore
+           ,@CreatedDate
+           ,@UpdatedDate
+           ,@ModifiedBy
+           ,@Active)

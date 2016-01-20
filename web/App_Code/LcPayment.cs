@@ -167,86 +167,9 @@ public static partial class LcPayment
     }
 
     /// <summary>
-    /// Performs a Transaction.Sale for bookingID amount with the
-    /// given creditCardToken.
-    /// The obtained TransactionID is saved on database for the bookingID-its booking-request
-    /// </summary>
-    /// <param name="bookingID"></param>
-    /// <param name="creditCardToken"></param>
-    /// <param name="chargeNow">AKA 'submit for settlement' or just 'settle' the transaction,
-    /// charging the customer credit card right now (on true) or wait for later (false).</param>
-    /// <returns></returns>
-    [Obsolete("This makes use of database access to touch bookings, thats deprecated preferring methods that only manage payment stuff (AuthorizeBookingTransaction), left database work to specialized code")]
-    public static string SaleBookingTransaction(int bookingID, string creditCardToken, bool chargeNow)
-    {
-        Result<Transaction> r = null;
-
-        try
-        {
-            var booking = LcData.Booking.GetBooking(bookingID);
-
-            if (booking == null)
-                throw new Exception("The booking doesn't exists " + bookingID.ToString());
-
-            var gateway = NewBraintreeGateway();
-
-            TransactionRequest request = new TransactionRequest
-            {
-                Amount = booking.TotalPrice,
-                CustomerId = GetCustomerId(booking.CustomerUserID),
-                PaymentMethodToken = creditCardToken,
-                // Now, with Marketplace #408, the receiver of the money for each transaction is
-                // the provider through account at Braintree, and not the Loconomics account:
-                //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
-                MerchantAccountId = GetProviderPaymentAccountId(booking.ProviderUserID),
-                // Marketplace #408: since provider receive the money directly, Braintree must discount
-                // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
-                ServiceFeeAmount = booking.FeePrice,
-                Options = new TransactionOptionsRequest
-                {
-                    // Marketplace #408: don't pay provider still, wait for the final confirmation 'release scrow'
-                    HoldInEscrow = true,
-                    // Submit now or not?
-                    SubmitForSettlement = chargeNow
-                }
-            };
-
-            r = gateway.Transaction.Sale(request);
-
-            // Everything goes fine
-            if (r.IsSuccess())
-            {
-                // If the card is a TEMPorarly card (just to perform this transaction)
-                // it must be removed now since was successful used
-                if (creditCardToken.StartsWith(TempSavedCardPrefix))
-                    gateway.CreditCard.Delete(creditCardToken);
-
-                // Save the transactionID
-                if (r.Target != null
-                    && !String.IsNullOrEmpty(r.Target.Id))
-                {
-                    // r.Target.Id => transactionID
-                    LcData.Booking.SetBookingRequestTransaction(booking.BookingRequestID, r.Target.Id);
-                }
-                else
-                {
-                    // Transaction worked but impossible to know the transactionID (weird, is even possible?),
-                    // does not touch the DB (to still know the credit card token) and notify error
-                    return "Impossible to know transaction details, please contact support. BookingID #" + bookingID.ToString();
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            return ex.Message;
-        }
-        return (r == null || r.IsSuccess() ? null : r.Message);
-    }
-
-    /// <summary>
-    /// Do a transaction ('sale') to be submitted and payed now for the remaining amounts
-    /// of a refund operation.
-    /// It allows records for total refunds, that situation is well managed internally.
+    /// Do a transaction ('sale') to be submitted and payed now for the cancellation fee
+    /// of a booking. If as result of the booking internal rules the fee is zero, then
+    /// no payment is needed (is like a 'full refund')...???
     /// The removal of a temporary card is performed on any case (with or without transaction because of total refund)
     /// </summary>
     /// <param name="creditCardToken"></param>
@@ -254,7 +177,7 @@ public static partial class LcPayment
     /// <param name="customerID"></param>
     /// <param name="providerID"></param>
     /// <returns></returns>
-    public static string DoTransactionToRefundFromCard(string creditCardToken, dynamic refund, int customerID, int providerID)
+    public static string DoTransactionToRefundFromCard(string creditCardToken, LcRest.PricingSummary pricing, int customerID, int providerID)
     {
         string result = null;
 
@@ -262,11 +185,11 @@ public static partial class LcPayment
         {
             var gateway = NewBraintreeGateway();
 
-            if (!refund.IsTotalRefund && refund.TotalRemaining != 0)
+            if (pricing.cancellationFeeCharged.HasValue && pricing.cancellationFeeCharged > 0)
             {
                 TransactionRequest request = new TransactionRequest
                 {
-                    Amount = refund.TotalRemaining,
+                    Amount = pricing.cancellationFeeCharged.Value,
                     CustomerId = GetCustomerId(customerID),
                     PaymentMethodToken = creditCardToken,
                     // Now, with Marketplace #408, the receiver of the money for each transaction is
@@ -274,8 +197,8 @@ public static partial class LcPayment
                     //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
                     MerchantAccountId = GetProviderPaymentAccountId(providerID),
                     // Marketplace #408: since provider receive the money directly, Braintree must discount
-                    // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
-                    ServiceFeeAmount = refund.FeeRemaining,
+                    // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics)
+                    ServiceFeeAmount = pricing.feePrice,
                     Options = new TransactionOptionsRequest
                     {
                         // Marketplace #408: we normally hold it, but we are refunding so don't hold, pay at the moment
@@ -514,7 +437,7 @@ public static partial class LcPayment
                     {
                         // A new transactionID is given, update it in database
                         var newTransactionID = newResult.Target.Id;
-                        LcData.Booking.UpdateBookingTransactionID(transactionID, newTransactionID);
+                        LcRest.Booking.UpdateBookingTransactionID(transactionID, newTransactionID);
 
                         // Void original transaction
                         r = gateway.Transaction.Void(transactionID);

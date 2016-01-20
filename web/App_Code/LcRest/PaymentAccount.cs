@@ -101,7 +101,6 @@ namespace LcRest
         public static void Set(PaymentAccount data)
         {
             // Gathering state and postal IDs and verifying they match
-            var stateId = LcData.GetStateFromZipCode(data.postalCode);
             var add = new LcRest.Address {
                 postalCode = data.postalCode,
                 countryID = LcRest.Locale.Current.countryID

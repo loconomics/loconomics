@@ -54,7 +54,7 @@
 								    @if (info.cancellationLimitDate <= DateTime.Now)  
 								    {
 									    <span>
-										    My cancellation policy states you would have had to cancel your appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is my cancellation fee of <strong>@(policy.refundIfCancelledBefore.ToString("0.##%")) of the cost of booked services</strong>.
+										    My cancellation policy states you would have had to cancel your appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is my cancellation fee of <strong>@((1 - policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>.
 									    </span>
 								    }
 								    else

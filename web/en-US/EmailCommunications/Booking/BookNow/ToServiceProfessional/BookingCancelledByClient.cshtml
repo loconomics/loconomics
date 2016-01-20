@@ -54,7 +54,7 @@
 								    @if (info.cancellationLimitDate <= DateTime.Now)  
 								    {
 									    <span>
-										    Since your cancellation policy states @(info.client.firstName) would have had to cancel their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, @(info.client.firstName) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is your cancellation fee of <strong>@(policy.refundIfCancelledBefore.ToString("0.##%")) of the cost of booked services</strong>. You&rsquo;ll receive payment shortly.
+										    Since your cancellation policy states @(info.client.firstName) would have had to cancel their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, @(info.client.firstName) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is your cancellation fee of <strong>@((1 - policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. You&rsquo;ll receive payment shortly.
 									    </span>
 								    }
 								    else

@@ -550,7 +550,7 @@ public static partial class LcData
 
         #region Create
         public static void InsProviderPosition(int userID, int positionID,
-            int cancellationPolicyID = LcData.Booking.DefaultCancellationPolicyID,
+            int cancellationPolicyID = LcRest.CancellationPolicy.DefaultCancellationPolicyID,
             string intro = null,
             bool instantBooking = false)
         {

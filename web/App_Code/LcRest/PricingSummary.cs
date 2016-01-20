@@ -22,14 +22,34 @@ namespace LcRest
         public decimal? pFeePrice;
         public DateTime createdDate;
         public DateTime updatedDate;
-        public decimal? subtotalRefunded;
-        public decimal? feeRefunded;
-        public decimal? totalRefunded;
-        public decimal? dateRefunded;
+        public decimal? cancellationFeeCharged;
+        public DateTime? cancellationDate;
         #endregion
 
         #region Links
         public IEnumerable<PricingSummaryDetail> details;
+        #endregion
+
+        #region Instance utilities
+        internal bool IsFullRefund
+        {
+            get
+            {
+                return cancellationFeeCharged.HasValue && cancellationFeeCharged.Value == 0;
+            }
+        }
+        internal decimal AmountToRefund
+        {
+            get
+            {
+                if (cancellationFeeCharged.HasValue &&
+                    subtotalPrice.HasValue)
+                {
+                    return subtotalPrice.Value - cancellationFeeCharged.Value;
+                }
+                return 0;
+            }
+        }
         #endregion
 
         #region Instances
@@ -49,10 +69,8 @@ namespace LcRest
                 pFeePrice = record.pFeePrice,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
-                subtotalRefunded = record.subtotalRefunded,
-                feeRefunded = record.feeRefunded,
-                totalRefunded = record.totalRefunded,
-                dateRefunded = record.dateRefunded
+                cancellationFeeCharged = record.cancellationFeeCharged,
+                cancellationDate = record.cancellationDate
             };
         }
         #endregion
@@ -70,10 +88,8 @@ namespace LcRest
                 pFeePrice,
                 createdDate,
                 updatedDate,
-                subtotalRefunded,
-                feeRefunded,
-                totalRefunded,
-                dateRefunded
+                cancellationFeeCharged,
+                cancellationDate
             FROM
                 PricingSummary
             WHERE
@@ -146,11 +162,19 @@ namespace LcRest
 
             SELECT * FROM PricingSummary WHERE PricingSummaryID = @id AND PricingSummaryRevision = @revision
         ";
+        const string sqlUpdateCancellationFields = @"
+                UPDATE  PricingSummary
+                SET     cancellationFeeCharged = @2
+                        ,cancellationDate = @3
+                WHERE   PricingSummaryID = @0
+                         AND
+                        PricingSummaryRevision = @1
+        ";
         #endregion
 
         /// <summary>
         /// Save the given pricing summary and returns a copy of the record from database after
-        /// that (so it includes andy generated IDs, dates,..)
+        /// that (so it includes any generated IDs, dates,..)
         /// </summary>
         /// <param name="data"></param>
         public static PricingSummary Set(PricingSummary data, Database sharedDb = null)
@@ -187,6 +211,25 @@ namespace LcRest
                 newDetails.Add(PricingSummaryDetail.Set(detail, sharedDb));
             }
             return newDetails;
+        }
+
+        /// <summary>
+        /// Saves in database the information related to cancellation
+        /// for the given pricingSummary, updating its record.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="sharedDb"></param>
+        public static void SetCancellation(PricingSummary data, Database sharedDb = null)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                db.Execute(sqlUpdateCancellationFields,
+                    data.pricingSummaryID,
+                    data.pricingSummaryRevision,
+                    data.cancellationFeeCharged,
+                    data.cancellationDate
+                );
+            }
         }
         #endregion
 
@@ -246,6 +289,16 @@ namespace LcRest
                     this.firstSessionDurationMinutes = detail.firstSessionDurationMinutes;
                 }
             }
+
+            // TODO PricingMod calculations???
+            // OLD code from LcPricingModel.CalculatePackages:
+            /*
+            // Calculate time and price required for selected package
+            if (config.Mod != null)
+            {
+                // Applying calculation from the PackageMod
+                config.Mod.CalculateCustomerData(customerID, thePackage, fee, modelData, ModelState);
+            }*/
         }
 
         /// <summary>
@@ -325,6 +378,21 @@ namespace LcRest
             CalculateTotalPrice();
 
             CalculatePaymentProcessingFees(type);
+        }
+        #endregion
+
+        #region Query
+        /// <summary>
+        /// Returns a one-line text-only representation of all the services
+        /// included in the pricing summary
+        /// </summary>
+        /// <param name="pricingSummary"></param>
+        /// <returns></returns>
+        internal static string GetOneLineDescription(PricingSummary pricingSummary)
+        {
+            var servicePricings = LcEmailTemplate.ServicePricing.GetForPricingSummary(pricingSummary);
+            var details = servicePricings.Select(v => LcRest.PricingSummaryDetail.GetOneLineDescription(v.service, v.pricing));
+            return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
         }
         #endregion
     }

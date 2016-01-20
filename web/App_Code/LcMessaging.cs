@@ -705,61 +705,10 @@ public class LcMessaging
                 info.booking.serviceDate.startTime.ToShortTimeString() + " to " +
                 info.booking.serviceDate.endTime.ToShortTimeString();
         }
-        /// <summary>
-        /// Get the package name and main information in one line of plain-text.
-        /// It shows the inperson-phone text if need, number of appointments,
-        /// duration and pricing-mod extra-details following its pricing-config
-        /// in a standard format for this package summary.
-        /// </summary>
-        /// <param name="service"></param>
-        /// <returns></returns>
-        static string GetOneLinePackageSummary(LcRest.ServiceProfessionalService service, LcRest.PricingSummaryDetail pricing)
-        {
-            var f = "";
-            var inpersonphone = "";
-
-            var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[service.pricingTypeID];
-            if (pricing.numberOfSessions > 1)
-            {
-                if (pricing.firstSessionDurationMinutes == 0)
-                    f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
-                else
-                    f = pricingConfig.NameAndSummaryFormatMultipleSessions;
-            }
-            else if (pricing.firstSessionDurationMinutes == 0)
-                f = pricingConfig.NameAndSummaryFormatNoDuration;
-            if (String.IsNullOrEmpty(f))
-                f = pricingConfig.NameAndSummaryFormat;
-
-            if (pricingConfig.InPersonPhoneLabel != null)
-                inpersonphone = service.isPhone
-                    ? "phone"
-                    : "in-person";
-
-            var extraDetails = "";
-            // Extra information for special pricings:
-            if (pricingConfig.Mod != null && pricing.pricingSummaryID > 0)
-            {
-                // TODO PackageMod class will need refactor/renamings
-                extraDetails = pricingConfig.Mod.GetPackagePricingDetails(service.serviceProfessionalServiceID, pricing.pricingSummaryID, pricing.pricingSummaryRevision);
-            }
-
-            // Show duration in a smart way.
-            var duration = ASP.LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes((double)pricing.firstSessionDurationMinutes));
-
-            var result = String.Format(f, pricing.serviceName, duration, pricing.numberOfSessions, inpersonphone);
-            if (!String.IsNullOrEmpty(extraDetails))
-            {
-                result += String.Format(" ({0})", extraDetails);
-            }
-            return result;
-        }
         static string GetBookingThreadBody(LcEmailTemplate.BookingEmailInfo info)
         {
             // Using a services summary as first thread message body:
-            var servicePricings = LcEmailTemplate.ServicePricing.GetForPricingSummary(info.booking.pricingSummary);
-            var details = servicePricings.Select(v => GetOneLinePackageSummary(v.service, v.pricing));
-            return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
+            return LcRest.PricingSummary.GetOneLineDescription(info.booking.pricingSummary);
         }
         public class JobTitleMessagingFlags
         {
@@ -912,7 +861,7 @@ public class LcMessaging
         /// </summary>
         public virtual void BookingRequestDeclined() { }
         /// <summary>
-        /// Connected: NO
+        /// Connected: Yes
         /// </summary>
         public virtual void BookingRequestConfirmed() { }
         #endregion

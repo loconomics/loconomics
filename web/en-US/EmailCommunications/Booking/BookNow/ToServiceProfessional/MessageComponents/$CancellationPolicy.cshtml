@@ -33,7 +33,7 @@
 										else
 										{
 											<span>
-												 @info.client.firstName would need to cancel or reschedule by <strong>@(info.cancellationLimitDate.ToShortTimeString()) on @info.cancellationLimitDate.ToLongDateString()</strong> to receive a @(policy.refundIfCancelledBefore.ToString("0.##%")) refund.
+												 @info.client.firstName would need to cancel or reschedule by <strong>@(info.cancellationLimitDate.ToShortTimeString()) on @info.cancellationLimitDate.ToLongDateString()</strong> to receive a @((1 - policy.cancellationFeeBefore).ToString("0.##%")) refund.
 											</span>
 										}
                                  </td>

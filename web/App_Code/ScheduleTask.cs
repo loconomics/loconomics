@@ -67,22 +67,18 @@ public class ScheduleTask
                 try
                 {
                     // RequestStatusID:6:expired
-                    var result = LcData.Booking.InvalidateBookingRequest(b.bookingID, (int)LcEnum.BookingStatus.requestExpired);
-                    if (result.Error == 0)
-                    {
-                        // Send message
-                        LcMessaging.SendBooking.For(b.bookingID).BookingRequestExpired();
-
-                        // Update MessagingLog for the booking request
-                        db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Booking Request Expiration]");
-                    }
+                    b.ExpireBooking();
+                    // Send message
+                    LcMessaging.SendBooking.For(b.bookingID).BookingRequestExpired();
+                    // Update MessagingLog for the booking
+                    db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Booking Request Expiration]");
 
                     items++;
                     messages += 2;
                 }
                 catch (Exception ex)
                 {
-                    logger.LogEx("Requests Expired", ex);
+                    logger.LogEx("Booking Request Expired", ex);
                 }
             }
             logger.Log("Total invalidated as Expired Booking Requests: {0}, messages sent: {1}", items, messages);

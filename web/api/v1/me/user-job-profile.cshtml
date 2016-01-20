@@ -286,7 +286,7 @@
             
             return new {
                 intro = Request["intro"] ?? null,
-                policyID = Request["cancellationPolicyID"].AsInt(LcData.Booking.DefaultCancellationPolicyID),
+                policyID = Request["cancellationPolicyID"].AsInt(LcRest.CancellationPolicy.DefaultCancellationPolicyID),
                 // False as default
                 instantBooking = Request["instantBooking"].AsBool(false)
             };
