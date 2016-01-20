@@ -144,17 +144,36 @@
                 // The item cannot be inserted/updated:
                 throw new HttpException(400, delEx.Message);
             }
-            
+
             // Return database copy
             return GetItem(itemID);
         }
-        
+
         public override dynamic Post()
         {
-            if (UrlData.Count > 0)
-                throw new HttpException(405, "Method not allowed.");
-
-            return SetItem(0);
+            if (UrlData.Count == 0) {
+                return SetItem(0);
+            }
+            if (UrlData.Count ==  2) {
+                var userID = WebSecurity.CurrentUserId;
+                var bookingID = UrlData[0].AsInt();
+                var booking = LcRest.Booking.Get(bookingID, false, false, userID);
+                if (booking == null ||
+                    booking.serviceProfessionalUserID != userID) {
+                    throw new HttpException(404, "Not Found");
+                }
+                if (UrlData[1] == "cancel") {
+                    booking.CancelBookingByServiceProfessional();
+                    // fresh copy from db
+                    return LcRest.Booking.Get(bookingID, true);
+                }
+                else if (UrlData[1] == "deny") {
+                    booking.DeclineBooking();
+                    // fresh copy from db
+                    return LcRest.Booking.Get(bookingID, true);
+                }
+            }
+            throw new HttpException(405, "Method not allowed.");
         }
 
         public override dynamic Put()

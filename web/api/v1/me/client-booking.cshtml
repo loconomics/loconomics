@@ -87,20 +87,32 @@
         public override dynamic Post()
         {
             this.RequiresUser(LcData.UserInfo.UserType.User);
-            
-            if (UrlData.Count > 0)
-                throw new HttpException(405, "Method not allowed.");
-            
             var userID = WebSecurity.CurrentUserId;
+            if (UrlData.Count == 0) {
+                var itemID = CreateItem();
 
-            var itemID = CreateItem();
-
-            if (itemID > 0)
-            {
-                return LcRest.Booking.Get(itemID, true, false, userID);
+                if (itemID > 0)
+                {
+                    return LcRest.Booking.Get(itemID, true, false, userID);
+                }
+                throw new HttpException(500, "Something goes wrong");
             }
-
-            throw new HttpException(500, "Something goes wrong");
+            else if (UrlData.Count == 2) {
+                var bookingID = UrlData[0].AsInt();
+                var booking = LcRest.Booking.Get(bookingID, false, false, userID);
+                if (booking == null ||
+                    booking.clientUserID != userID) {
+                    throw new HttpException(404, "Not Found");
+                }
+                if (UrlData[1] == "cancel")
+                {
+                    booking.CancelBookingByClient();
+                    // fresh copy from db
+                    return LcRest.Booking.Get(bookingID, true);
+                }
+            }
+            
+            throw new HttpException(405, "Method not allowed.");
         }
         
         public dynamic CreateItem()

@@ -189,7 +189,7 @@ public static partial class LcPayment
             {
                 TransactionRequest request = new TransactionRequest
                 {
-                    Amount = pricing.cancellationFeeCharged.Value,
+                    Amount = pricing.cancellationFeeCharged.Value + (pricing.feePrice ?? 0),
                     CustomerId = GetCustomerId(customerID),
                     PaymentMethodToken = creditCardToken,
                     // Now, with Marketplace #408, the receiver of the money for each transaction is
