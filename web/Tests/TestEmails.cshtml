@@ -105,7 +105,7 @@
     };
     // Add Booking URLs
     var testBookingID = Request["BookingID"].AsInt(628);
-    var isHipaa = Request["hippa"].AsBool();
+    var isHipaa = Request["hipaa"].AsBool();
     var bookingList = new Dictionary<string, List<string>> ();
     bookingList.Add("BOOKING: BookNow ToClient",
         bookingBookNowClient.Select(x => "EmailCommunications/Booking/BookNow/ToClient/" + x + (isHipaa ? "HIPAA" : "") + "?RequestKey=abcd3&BookingID=" + testBookingID).ToList());
@@ -142,7 +142,7 @@
 <h3>Booking emails</h3>
 <form action="" method="get">
     <label>Use BookingID: <input type="text" name="BookingID" placeholder="BookingID" /></label>
-    <label><input type="checkbox" name="hippa" value="true" /> <span>Use HIPAA templates</span></label>
+    <label><input type="checkbox" name="hipaa" value="true" /> <span>Use HIPAA templates</span></label>
     <input type="submit" value="APPLY" />
 </form>
 @printList(bookingList)
