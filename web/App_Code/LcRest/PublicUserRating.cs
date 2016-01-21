@@ -51,7 +51,7 @@ namespace LcRest
                 coalesce(avg(Rating3), 0) As rating3,
                 (coalesce(avg(Rating1), 0) + coalesce(avg(Rating2), 0) + coalesce(avg(Rating3), 0)) / 3 As ratingAverage,
                 coalesce(sum(ServiceHours), 0) As serviceHours,
-                coalesce(max(UpdatedDate), 0) As lastRatingDate,
+                max(UpdatedDate) As lastRatingDate,
                 coalesce(sum(TotalRatings), 0) As totalRatings
                 -- ,coalesce(sum(Answer2), 0) As totalUsersSatisfied
         FROM    UserReviewScores

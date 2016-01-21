@@ -67,7 +67,7 @@ namespace LcRest
         {
             get
             {
-                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID;
+                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/profile/photo/" + userID;
             }
         }
 
