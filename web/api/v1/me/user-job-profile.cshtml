@@ -190,7 +190,7 @@
                     }
 
                     // Search
-                    var jobTitle = LcData.JobTitle.SearchJobTitles(jobTitleName, LcRest.Locale.Current).FirstOrDefault();
+                    var jobTitle = LcRest.JobTitle.AutocompleteSearch(jobTitleName, LcRest.Locale.Current).FirstOrDefault();
                     if (jobTitle != null) {
                         // Use the first one
                         jobTitleID = jobTitle.value;
@@ -209,7 +209,7 @@
                 }
                 else {
                     // Double check that the job title exists
-                    jobTitleExists = LcData.JobTitle.GetJobTitle(jobTitleID) != null;
+                    jobTitleExists = LcRest.JobTitle.Get(jobTitleID, LcRest.Locale.Current) != null;
                 }
                 
                 if (jobTitleID > 0 && jobTitleExists) {

@@ -548,32 +548,6 @@ public static partial class LcData
         }
         #endregion
 
-        #region Create
-        public static void InsProviderPosition(int userID, int positionID,
-            int cancellationPolicyID = LcRest.CancellationPolicy.DefaultCancellationPolicyID,
-            string intro = null,
-            bool instantBooking = false)
-        {
-            var jobTitleExists = LcData.JobTitle.GetJobTitle(positionID) != null;
-            if (jobTitleExists)
-            {
-                LcData.JobTitle.InsertUserJobTitle(
-                    userID,
-                    positionID,
-                    cancellationPolicyID,
-                    intro,
-                    instantBooking,
-                    LcData.GetCurrentLanguageID(),
-                    LcData.GetCurrentCountryID()
-                );
-            }
-            else
-            {
-                throw new Exception("The job title does not exists or is disapproved");
-            }
-        }
-        #endregion
-
         #region Utilities
         /// <summary>
         /// Creates a new random BookCode for the given provider.

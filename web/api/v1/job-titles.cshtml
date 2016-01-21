@@ -59,7 +59,7 @@
             {
                 var id = UrlData[0].AsInt(0);
                 
-                var item = LcData.JobTitle.GetJobTitle(id);
+                var item = LcRest.JobTitle.Get(id, LcRest.Locale.Current);
                 
                 if (item != null)
                     return item;
@@ -69,8 +69,8 @@
             else if (UrlData[0].ToLower() == "autocomplete") {
                 
                 var search = Request["search"] ?? Request["term"];
-                
-                return LcData.JobTitle.SearchJobTitles(search, LcRest.Locale.Current);
+
+                return LcRest.JobTitle.AutocompleteSearch(search, LcRest.Locale.Current);
             }
 
             throw new HttpException(404, "Not Found");
