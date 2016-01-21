@@ -297,12 +297,12 @@ namespace LcRest
         public void CalculatePaymentProcessingFees(BookingType type)
         {
             // Can only calculate with a notnull totalPrice, otherwise pFeePrice is null to state the impossibility of the calculation
-            if (subtotalPrice.HasValue)
+            if (totalPrice.HasValue)
             {
                 // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
                 // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
                 // or present more precision to the service professional (who will show how much received on their bank account).
-                pFeePrice = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage/100 * subtotalPrice.Value), 2);
+                pFeePrice = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage/100 * (totalPrice.Value - feePrice.Value)), 2);
             }
             else
             {
