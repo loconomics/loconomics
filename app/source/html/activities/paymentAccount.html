@@ -4,15 +4,17 @@
         Getting paid is the easy part. We accept payments on your behalf, and Braintree (a leading credit card merchant provider) processes them with a deposit directly to your bank account. Braintree's transaction fee (2.9% plus $0.30 transaction fee) is subtracted from your payment. Easy, right? Complete the information below and, as always, let us know if you have questions. 
     </p>
     <div data-bind="visible: paymentAccount.status()">
-        <h2 class="SectionTitle">Account Status</h2>
-        <p data-bind="visible: paymentAccount.status() === 'active'">
-            You're all set up with Braintree payments
+        <h2 class="SectionTitle">Merchant account status</h2>
+        <p data-bind="visible: paymentAccount.status() === 'active'" class="bg-success PaddedBox-xs">
+            You're all set up with Braintree. We'll deposit any payments due to you
+            <span data-bind="visible: paymentAccount.accountNumber">to your account ending in <span data-bind="text: paymentAccount.accountNumber"></span></span>
+            <span data-bind="visible: !paymentAccount.accountNumber()">to your Venmo account attached to e-mail address <span data-bind="text: paymentAccount.email"></span>.</span>
         </p>
-        <p data-bind="visible: paymentAccount.status() === 'pending'">
-            Braintree is working on creating your account.
+        <p data-bind="visible: paymentAccount.status() === 'pending'" class="bg-warning PaddedBox-xs">
+            We're working with Braintree to set up your merchant account. Please check back in 24 hours for an update.
         </p>
-        <div data-bind="visible: paymentAccount.status() === 'suspended'">
-            <p>There was an error in processing your Braintree application. Please contact Braintree at 877.434.2894.</p>
+        <div data-bind="visible: paymentAccount.status() === 'suspended'" class="bg-danger PaddedBox-xs">
+            <p>We're having problems setting up your Braintree account. Please <a href="//contactForm/general?mustReturn=true">contact us</a> for further assistance.</p>
             <div data-bind="visible: paymentAccount.errors().length">
                 <p>Error(s) reported by Braintree:</p>
                 <ul data-bind="foreach: paymentAccount.errors()">
@@ -20,8 +22,11 @@
                 </ul>
             </div>
         </div>
+        <div class="isolated text-center" data-bind="visible: !formVisible()">
+            <button type="button" class="btn btn-info" data-bind="click: showForm">Update Bank Info</button>
+        </div>
     </div>
-    <div data-bind="with: paymentAccount">
+    <div data-bind="with: paymentAccount, visible: formVisible">
         <h2 class="SectionTitle">Your contact information</h2>
         <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked"></app-unlabeled-input>
         <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked"></app-unlabeled-input>

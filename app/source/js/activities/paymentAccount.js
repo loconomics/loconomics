@@ -33,11 +33,11 @@ exports.init = A.init;
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
-    // Keep data updated:
-    this.app.model.paymentAccount.sync();
+
     // Discard any previous unsaved edit
     this.viewModel.discard();
+    // Keep data updated:
+    this.app.model.paymentAccount.sync();
 };
 
 function ViewModel(app) {
@@ -57,8 +57,11 @@ function ViewModel(app) {
             // Right now, just overwrite current changes with
             // remote ones:
             dataVersion.pull({ evenIfNewer: true });
+            if (dataVersion.version.status()) {
+                this.formVisible(false);
+            }
         }
-    });
+    }.bind(this));
     
     // Actual data for the form:
     this.paymentAccount = dataVersion.version;
@@ -77,6 +80,7 @@ function ViewModel(app) {
 
     this.discard = function discard() {
         dataVersion.pull({ evenIfNewer: true });
+        this.formVisible(false);
     }.bind(this);
 
     this.save = function save() {
@@ -128,4 +132,9 @@ function ViewModel(app) {
     }, this.paymentAccount)
     // Avoid excessive requests by setting a timeout since the latest change
     .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
+    
+    this.formVisible = ko.observable(false);
+    this.showForm = function() {
+        this.formVisible(true);
+    };
 }

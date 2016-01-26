@@ -16,6 +16,7 @@ namespace LcRest
         public string firstName;
         public string lastName;
         public string phone;
+        public string email;
         public string streetAddress;
         // Braintree is not storing the ExtendedAddress right now (confirmed by their support
         // on 2014-03-12, logged at issues #454), so keeps commented and unused.
@@ -48,6 +49,7 @@ namespace LcRest
                     firstName = btAccount.IndividualDetails.FirstName,
                     lastName = btAccount.IndividualDetails.LastName,
                     phone = btAccount.IndividualDetails.Phone,
+                    email = btAccount.IndividualDetails.Email,
                     streetAddress = btAccount.IndividualDetails.Address.StreetAddress,
                     //extendedAddress = btAccount.IndividualDetails.Address.ExtendedAddress,
                     city = btAccount.IndividualDetails.Address.Locality,
@@ -78,6 +80,7 @@ namespace LcRest
                     firstName = data.firstName,
                     lastName = data.lastName,
                     phone = data.phone,
+                    email = data.email,
                     streetAddress = add.addressLine1,
                     postalCode = add.postalCode,
                     city = add.city,
