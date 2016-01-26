@@ -4,7 +4,7 @@
     Sender name: @(info.serviceProfessional.firstName) @(info.serviceProfessional.lastName)
     Subject: Reminder to review my services
     Send when: 7 days after @booking.serviceDate.endTime
-    Restrictions: positions.HIPAA=1; positions.AutoReviewServiceProfessional=1
+    Restrictions: positions.HIPAA=1; positions.SendReviewReminderToClient=1
  *@
 @using WebMatrix.Data;
 @{
