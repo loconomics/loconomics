@@ -605,14 +605,33 @@ namespace LcRest
                         B2.BookingStatusID = @1
                     ) = 0 -- There is no complete bookings
         ";
+        private const string sqlPendingOfPaymentReleaseForServiceProfessionals = @"
+            SELECT  B.*
+            FROM    Booking As B
+                        INNER JOIN
+                    CalendarEvents As E
+                        ON B.ServiceDateID = E.Id
+            WHERE   PaymentEnabled = 1
+                     AND
+                    BookingStatusID = @0
+                        AND
+                    -- at 1 hour 15 min, after service ended (more than that is fine)
+                    getdate() >= dateadd(hh, 1.25, E.EndTime)
+                    /* AND
+                        getdate() < dateadd(hh, 2.25, E.EndTime)
+                    */
+        ";
         #endregion
-        public static IEnumerable<Booking> QueryPendingOfPaymentReleaseBookings(bool forNewServiceProfessionals, Database dbShared = null)
+        public static IEnumerable<Booking> QueryPendingOfPaymentReleaseBookings(bool? forNewServiceProfessionals, Database dbShared = null)
         {
             using (var db = new LcDatabase(dbShared))
             {
-                var sql = forNewServiceProfessionals ?
+                var sql = 
+                    forNewServiceProfessionals.HasValue ?
+                    forNewServiceProfessionals.Value ?
                     sqlPendingOfPaymentReleaseForNewServiceProfessionals :
-                    sqlPendingOfPaymentReleaseForVeteranServiceProfessionals;
+                    sqlPendingOfPaymentReleaseForVeteranServiceProfessionals :
+                    sqlPendingOfPaymentReleaseForServiceProfessionals;
 
                 return db.Query(sql, (int)LcEnum.BookingStatus.servicePerformed, (int)LcEnum.BookingStatus.completed)
                 .Select<dynamic, Booking>(x => FromDB(x, true));
@@ -621,7 +640,8 @@ namespace LcRest
 
         /// <summary>
         /// Return a list of bookings in Confirmed status that are ready to update to status ServicePerformed.
-        /// Conditions: being confirmed (not other statuses allowed) and 48 hours after service endTime.
+        /// Conditions: being confirmed (not other statuses allowed) and between the service endTime.
+        /// (before #844, was at 48H after service endTime)
         /// </summary>
         /// <param name="dbShared"></param>
         /// <returns></returns>
@@ -644,9 +664,9 @@ namespace LcRest
                     WHERE   BookingStatusID = @0
                              AND
                             -- at 48 hours after service ended (more than 48 hours is fine)
-                            getdate() >= dateadd(hh, 48, E.EndTime)
+                            getdate() >= E.EndTime -- dateadd(hh, 0, E.EndTime)
                             /* AND
-                             getdate() < dateadd(hh, 49, E.EndTime)
+                             getdate() < dateadd(hh, 1, E.EndTime)
                             */
                 ", (int)LcEnum.BookingStatus.confirmed).Select<dynamic, Booking>(x => FromDB(x, true));
             }
