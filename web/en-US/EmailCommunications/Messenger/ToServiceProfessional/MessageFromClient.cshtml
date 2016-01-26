@@ -1,10 +1,11 @@
-@* Email to client to remind them to leave a review.
+@* This e-mail goes out to the service professional right after a client sends them a message.
+
 
     Sender e-mail: automated@@loconomics.com
     Sender name: Loconomics Marketplace
-    Subject: Reminder to review my services
-    Send when: 7 days after @booking.serviceDate.endTime
-    Restrictions: positions.HIPAA=0; 
+    Subject: @(info.client.firstName) has sent you a message about your @info.userJobTitle.jobTitleSingularName services
+    Send when: immediately
+    Restrictions: positions.HIPAA=0;
  *@
 @using WebMatrix.Data;
 @{
@@ -14,18 +15,19 @@
 
     // All the data for this email:
     var info = LcEmailTemplate.GetBookingInfo();
+    var policy = info.cancellationPolicy;
 
     // NOTE: Write some notes
     // Write some more notes, maybe a second line?
 }
+
 <!-- HEADER -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td bgcolor="#00989a">
             <!-- HIDDEN PREHEADER TEXT -->
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.serviceProfessional.firstName),
-                We hope all went well with your  <strong>@info.userJobTitle.jobTitleSingularName</strong> services with @(info.client.firstName). 
+                Hi, @(info.serviceProfessional.firstName), Unfortunately, @(info.client.firstName) @(info.client.lastName) has cancelled their appointment for your @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)).
             </div>
             <div align="center" style="padding: 0px 15px 0px 15px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="500" class="wrapper">
@@ -66,24 +68,27 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We hope all went well with your  <strong>@info.userJobTitle.jobTitleSingularName</strong> services with @(info.client.firstName). To keep our community strong and balanced, we&rsquo;d love it if you&rsquo;d complete a review to help your fellow service professionals in working with @(info.client.firstName). It shouldn&rsquo;t take more than a couple minutes.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, @(info.client.firstName) @(info.client.lastName) has cancelled their appointment for your @info.userJobTitle.jobTitleSingularName services that were scheduled for @(LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)). Your schedule has been updated to reflect this.</td>
                             </tr>
-                            <tr>
-                                <td align="center">
-                                    <!-- BULLETPROOF BUTTON -->
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
-                                        <tr>
-                                            <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
-                                                <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
-                                                    <tr>
-                                                        <td align="center"><a href="@(info.viewClientReviewForm)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Review @(info.client.firstName)</a></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
+							@if (policy != null && info.booking.paymentCollected)
+							{
+                           <tr>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+								    @if (info.cancellationLimitDate <= DateTime.Now)  
+								    {
+									    <span>
+										    Since your cancellation policy states @(info.client.firstName) would have had to cancel their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, @(info.client.firstName) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is your cancellation fee of <strong>@(policy.refundIfCancelledBefore.ToString("0.##%")) of the cost of booked services</strong>. You&rsquo;ll receive payment shortly.
+									    </span>
+								    }
+								    else
+								    {
+									    <span>
+										    Since @(info.client.firstName) cancelled within your cancellation policy, they will not be charged.
+									    </span>
+								    }
+								</td>
+							</tr>
+							}
                             <tr>                               
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">At your service,<br><br>The Loconomics team</td>
                             </tr>
@@ -127,7 +132,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="@(info.viewClientHelpCenter)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
+                                                        <td align="center"><a href="@(info.viewServiceProfessionalHelpCenter)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
                                                     </tr>
                                                 </table>
                                             </td>

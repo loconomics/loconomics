@@ -25,7 +25,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), Unfortunately, I have to cancel the @info.userJobTitle.jobTitleSingularName services you were scheduled for <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>.
+                Hi, @(info.client.firstName), Unfortunately, I have to cancel the @info.userJobTitle.jobTitleSingularName services scheduled for <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>.
             </div>
         </td>
     </tr>
@@ -44,7 +44,7 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, I have to cancel the @info.userJobTitle.jobTitleSingularName services you were scheduled for <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>. Please accept my apologies, and feel free to choose another appointment time.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Unfortunately, I have to cancel the @info.userJobTitle.jobTitleSingularName services scheduled for <strong>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>. Please accept my apologies, and feel free to choose another appointment time.</td>
                             </tr>
 							@if (policy != null && info.booking.paymentCollected)
 							{
