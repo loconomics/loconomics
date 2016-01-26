@@ -173,7 +173,7 @@ public class LcMessaging
         ClientBookingReview = 18,
         BookingUpdate = 19,
         ServicePerformed = 20,
-        BookingComplete = 21,
+        BookingCompleted = 21,
         ProfessionalInquiry = 22,
         ClientResponseToInquiry = 23,
         //
@@ -827,7 +827,7 @@ public class LcMessaging
         /// <summary>
         /// Connected: Yes (ScheduleTask)
         /// </summary>
-        public virtual void BookingComplete() { }
+        public virtual void BookingCompleted() { }
         /// <summary>
         /// Connected: Yes (LcRest.Booking.InsClientBooking)
         /// </summary>
@@ -947,12 +947,12 @@ public class LcMessaging
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
             }
-            public override void BookingComplete()
+            public override void BookingCompleted()
             {
                 subject = "Client has paid in full and service professional has been paid in full";
-                CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                CreateBookingMessage(info, (int)MessageType.BookingCompleted, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                subject = "Thank you and request to review my services";
                 sendToClient("BookingUpdatedByServiceProfessional");
-                sendToServiceProfessional("BookingUpdatedByClient");
             }
         }
         public class SendMarketplaceBooking : SendBooking
@@ -1065,12 +1065,14 @@ public class LcMessaging
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
             }
-            public override void BookingComplete()
+            public override void BookingCompleted()
             {
                 subject = "Client has paid in full and service professional has been paid in full";
-                CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-                sendToClient("BookingUpdatedByServiceProfessional");
-                sendToServiceProfessional("BookingUpdatedByClient");
+                CreateBookingMessage(info, (int)MessageType.BookingCompleted, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                subject = "Thank you and request to review my services";
+                sendToClient("BookingCompleted");
+                subject = String.Format("How'd it go with {0}?", info.client.firstName);
+                sendToServiceProfessional("BookingCompleted");
             }
         }
         public class SendBookNowBooking : SendBooking
@@ -1182,12 +1184,14 @@ public class LcMessaging
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
             }
-            public override void BookingComplete()
+            public override void BookingCompleted()
             {
                 subject = "Client has paid in full and service professional has been paid in full";
-                CreateBookingMessage(info, (int)MessageType.BookingComplete, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-                sendToClient("BookingUpdatedByServiceProfessional");
-                sendToServiceProfessional("BookingUpdatedByClient");
+                CreateBookingMessage(info, (int)MessageType.BookingCompleted, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
+                subject = "Thank you and request to review my services";
+                sendToClient("BookingCompleted");
+                subject = "Your payment has been sent";
+                sendToServiceProfessional("BookingCompleted");
             }
         }
         #endregion
