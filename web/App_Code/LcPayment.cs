@@ -716,7 +716,7 @@ public static partial class LcPayment
     }
 
     /// <summary>
-    /// Create the payment account for the provider at the payment gateway (Braintree) given
+    /// Create or update the payment account for the provider at the payment gateway (Braintree) given
     /// that user information.
     /// On Braintree Marketplace, this is called 'Create a Sub Merchant'
     /// </summary>

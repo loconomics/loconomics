@@ -38,10 +38,11 @@ namespace LcRest
         #region Fetch
         public static PaymentAccount Get(int userID)
         {
+            PaymentAccount acc = null;
             var btAccount = LcPayment.GetProviderPaymentAccount(userID);
             if (btAccount != null)
             {
-                var acc = new PaymentAccount
+                acc = new PaymentAccount
                 {
                     userID = userID,
                     firstName = btAccount.IndividualDetails.FirstName,
@@ -67,23 +68,12 @@ namespace LcRest
                     // Is Venmo account if there is no bank informatino
                     acc.isVenmo = String.IsNullOrEmpty(acc.accountNumber) && String.IsNullOrEmpty(acc.routingNumber);
                 }
-                if (btAccount.Status == Braintree.MerchantAccountStatus.SUSPENDED)
-                {
-                    var dbAccount = LcData.GetProviderPaymentAccount(userID);
-                    var gw = LcPayment.NewBraintreeGateway();
-                    var notification = gw.WebhookNotification.Parse((string)dbAccount.bt_signature, (string)dbAccount.bt_payload);
-                    var errors = new List<string>();
-                    errors.Add(notification.Message);
-                    notification.Errors.All().Select(x => x.Code + ": " + x.Message);
-                    acc.errors = errors;
-                }
-                return acc;
             }
             else {
                 // Automatically fetch personal data from our DB (this will work as a preset)
                 var data = LcRest.UserProfile.Get(userID);
                 var add = LcRest.Address.GetHomeAddress(userID);
-                return new PaymentAccount {
+                acc = new PaymentAccount {
                     userID = userID,
                     firstName = data.firstName,
                     lastName = data.lastName,
@@ -94,6 +84,26 @@ namespace LcRest
                     stateProvinceCode = add.stateProvinceCode
                 };
             }
+            // Get data from our database as LAST step: both when there is data from Braintree and when not (this will let status to work
+            // on localdev environments too, for testing)
+            var dbAccount = LcData.GetProviderPaymentAccount(userID);
+            if (dbAccount != null)
+            {
+                // Status from Braintree is not working, or has a big delay setting up the first time so user don't see the status,
+                // using our saved copy:
+                acc.status = (string)dbAccount.Status;
+                //if (btAccount.Status == Braintree.MerchantAccountStatus.SUSPENDED)
+                if (dbAccount.status == "suspended")
+                {
+                    var gw = LcPayment.NewBraintreeGateway();
+                    var notification = gw.WebhookNotification.Parse((string)dbAccount.bt_signature, (string)dbAccount.bt_payload);
+                    var errors = new List<string>();
+                    errors.Add(notification.Message);
+                    notification.Errors.All().Select(x => x.Code + ": " + x.Message);
+                    acc.errors = errors;
+                }
+            }
+            return acc;
         }
         #endregion
 
