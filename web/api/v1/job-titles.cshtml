@@ -59,7 +59,7 @@
             {
                 var id = UrlData[0].AsInt(0);
                 
-                var item = LcRest.JobTitle.Get(id, LcRest.Locale.Current);
+                var item = LcRest.PublicJobTitle.Get(id, LcRest.Locale.Current);
                 
                 if (item != null)
                     return item;
@@ -70,7 +70,7 @@
                 
                 var search = Request["search"] ?? Request["term"];
 
-                return LcRest.JobTitle.AutocompleteSearch(search, LcRest.Locale.Current);
+                return LcRest.PublicJobTitle.AutocompleteSearch(search, LcRest.Locale.Current);
             }
 
             throw new HttpException(404, "Not Found");

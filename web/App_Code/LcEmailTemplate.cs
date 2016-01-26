@@ -142,6 +142,17 @@ public static class LcEmailTemplate
             }
         }
 
+        private LcRest.PublicJobTitle _jobTitle;
+        public LcRest.PublicJobTitle jobTitle
+        {
+            get
+            {
+                if (_jobTitle == null)
+                    _jobTitle = LcRest.PublicJobTitle.Get(booking.jobTitleID, booking.languageID, booking.countryID);
+                return _jobTitle;
+            }
+        }
+
         /// <summary>
         /// Gets the limit date-time to allow a cancellation for current booking,
         /// and different rules to get money refunded depending

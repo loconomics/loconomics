@@ -19,6 +19,7 @@ namespace LcRest
         public string aliases;
         public string description;
         public string searchDescription;
+        
         public DateTime createdDate;
         public DateTime updatedDate;
         #endregion
@@ -74,9 +75,13 @@ namespace LcRest
         #endregion
         public static JobTitle Get(int jobTitleID, Locale locale)
         {
+            return Get(jobTitleID, locale.languageID, locale.countryID);
+        }
+        public static JobTitle Get(int jobTitleID, int languageID, int countryID)
+        {
             using (var db = new LcDatabase())
             {
-                var r = FromDB(db.QuerySingle(sqlGetItem, jobTitleID, locale.languageID, locale.countryID));
+                var r = FromDB(db.QuerySingle(sqlGetItem, jobTitleID, languageID, countryID));
                 if (r == null) return null;
                 r.FillPricingTypes();
                 return r;
