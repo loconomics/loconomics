@@ -1,4 +1,4 @@
-﻿/**
+/**
     Website authentication pages must use the utilities
     given here on most cases rather than directly the LcAuth API
     since it helps with validate data from form for Log-in and
@@ -100,7 +100,7 @@ public static class LcAuthHelper
             return GetLoginResultForID(userId, returnProfile);
         }
         else {
-            throw new HttpException(400, "Incorrect Username or password.");
+            throw new HttpException(400, "Incorrect username or password.");
         }
     }
 
@@ -293,7 +293,8 @@ public static class LcAuthHelper
             Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
         page.Validation.RequireField("firstName", "You must specify your first name.");
         page.Validation.RequireField("lastName", "You must specify your last name.");
-        page.Validation.RequireField("postalCode", "You must specify your Zip code.");
+        page.Validation.RequireField("postalCode", "You must specify your postal/zip code.");
+        page.Validation.RequireField("countryID", "You must specify your country.");
 
         // First data
         var profileTypeStr = Request.Form["profileType"] ?? "";
@@ -306,7 +307,7 @@ public static class LcAuthHelper
         if (isServiceProfessional)
         {
             page.Validation.RequireField("phone", "You must specify your mobile phone number.");
-            page.Validation.RequireField("device", "You must select a device. In short, we will send you a link to download the app for your device.");
+            page.Validation.RequireField("device", "You must select a device. Soon we will send you a link to download the app for your device.");
         }
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
         if (!useFacebookConnect) {
@@ -324,14 +325,15 @@ public static class LcAuthHelper
 
         if (page.Validation.IsValid())
         {
-            var locale = LcRest.Locale.Current;
             var postalCode = Request.Form["postalCode"];
+            var countryID = Request.Form["countryID"];
 
             // Validate postal code before continue
-            if (!LcRest.Address.AutosetByCountryPostalCode(new LcRest.Address
+            if (countryID == 1 && !LcRest.Address.AutosetByCountryPostalCode(new LcRest.Address
             {
                 postalCode = postalCode,
-                countryCode = locale.countryCode
+                // TODO LcRest.Address needs to be updated to use countryID
+                countryID = countryID
             }))
             {
                 // bad postal code
@@ -405,7 +407,8 @@ public static class LcAuthHelper
                     <dt>Profile:</dt><dd>{0}</dd>
                     <dt>First Name:</dt><dd>{1}</dd>
                     <dt>Last Name:</dt><dd>{2}</dd>
-                    <dt>Zip code:</dt><dd>{3}</dd>
+                    <dt>Postal code:</dt><dd>{3}</dd>
+                    <dt>Country:</dt><dd>{9}</dd>
                     <dt>Referral code:</dt><dd>{4}</dd>
                     <dt>Device:</dt><dd>{5}</dd>
                     <dt>Phone:</dt><dd>{6}</dd>
@@ -432,7 +435,7 @@ public static class LcAuthHelper
                 // Set address
                 var address = LcRest.Address.GetHomeAddress(registered.UserID);
                 address.postalCode = postalCode;
-                address.countryCode = locale.countryCode;
+                address.countryID = countryID;
                 LcRest.Address.SetAddress(address);
 
                 if (useFacebookConnect)
@@ -451,7 +454,8 @@ public static class LcAuthHelper
                     <dt>Profile:</dt><dd>{0}</dd>
                     <dt>First Name:</dt><dd>{1}</dd>
                     <dt>Last Name:</dt><dd>{2}</dd>
-                    <dt>Zip code:</dt><dd>{3}</dd>
+                    <dt>Postal code:</dt><dd>{3}</dd>
+                    <dt>Zip code:</dt><dd>{9}</dd>
                     <dt>Referral code:</dt><dd>{4}</dd>
                     <dt>Device:</dt><dd>{5}</dd>
                     <dt>Phone:</dt><dd>{6}</dd>
@@ -459,7 +463,7 @@ public static class LcAuthHelper
                     <dt>UserID:</dt><dd>{8}</dd>
                     </dl>
                     </body></html>
-                ", profileTypeStr, firstName, lastName, postalCode, referralCode, device, phone, email, registered.UserID));
+                ", profileTypeStr, firstName, lastName, postalCode, referralCode, device, phone, email, registered.UserID, countryID));
 
                 // Auto login:
                 return Login(email, password, false, returnProfile, true);
