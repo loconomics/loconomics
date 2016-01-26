@@ -332,7 +332,7 @@ namespace LcRest
                 // otherwise feePrice will remain without value to mark it as not possible to calculate.
                 if (subtotalPrice.HasValue)
                 {
-                    var amount = Math.Round(type.firstTimeServiceFeeFixed + (type.firstTimeServiceFeePercentage/100 * subtotalPrice.Value), 2);
+                    var amount = Math.Round(type.firstTimeServiceFeeFixed + (type.firstTimeServiceFeePercentage * subtotalPrice.Value), 2);
                     feePrice = Math.Min(Math.Max(amount, type.firstTimeServiceFeeMinimum), type.firstTimeServiceFeeMaximum);
                 }
                 else
@@ -355,7 +355,7 @@ namespace LcRest
                 // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
                 // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
                 // or present more precision to the service professional (who will show how much received on their bank account).
-                pFeePrice = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage/100 * subtotalPrice.Value), 2);
+                pFeePrice = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage * subtotalPrice.Value), 2);
             }
             else
             {
