@@ -57,11 +57,8 @@
             case "InstantBookingConfirmed":
                 instance.InstantBookingConfirmed();
                 break;
-            case "RequestToReview":
-                instance.RequestToReview(false);
-                break;
             case "RequestToReviewReminder":
-                instance.RequestToReview(true);
+                instance.RequestToReviewReminder();
                 break;
             case "ServicePerformed":
                 instance.ServicePerformed();
@@ -87,7 +84,6 @@
         "BookingUpdatedByClient",
         "BookingUpdatedByServiceProfessional",
         "InstantBookingConfirmed",
-        "RequestToReview",
         "RequestToReviewReminder",
         "ServicePerformed",
         "BookingComplete"

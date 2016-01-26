@@ -819,7 +819,7 @@ public class LcMessaging
         /// Connected: Yes (ScheduleTask)
         /// </summary>
         /// <param name="isReminder"></param>
-        public virtual void RequestToReview(bool isReminder) { }
+        public virtual void RequestToReviewReminder() { }
         /// <summary>
         /// Connected: Yes (ScheduleTask)
         /// </summary>
@@ -933,13 +933,13 @@ public class LcMessaging
                 CreateBookingThread(info, (int)MessageType.ProfessionalBooking, info.booking.serviceProfessionalUserID);
                 sendToClient("InstantBookingConfirmed");
             }
-            public override void RequestToReview(bool isReminder)
+            public override void RequestToReviewReminder()
             {
                 // Restriction:
                 if (!flags.sendReviewReminderToClient) return;
-                subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
-                CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
-                sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
+                subject = "Reminder to review my services";
+                CreateBookingMessage(info, (int)MessageType.RequestToReviewReminder, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("RequestToReviewReminder");
             }
             public override void ServicePerformed()
             {
@@ -1050,13 +1050,14 @@ public class LcMessaging
                 sendToClient("InstantBookingConfirmed");
                 sendToServiceProfessional("InstantBookingConfirmed");
             }
-            public override void RequestToReview(bool isReminder)
+            public override void RequestToReviewReminder()
             {
                 // Restriction:
                 if (!flags.sendReviewReminderToClient) return;
-                subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
-                CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
-                sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
+                subject = "Reminder to review my services";
+                CreateBookingMessage(info, (int)MessageType.RequestToReviewReminder, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("RequestToReviewReminder");
+                sendToServiceProfessional("RequestToReviewReminder");
             }
             public override void ServicePerformed()
             {
@@ -1167,13 +1168,13 @@ public class LcMessaging
                 sendToClient("InstantBookingConfirmed");
                 sendToServiceProfessional("InstantBookingConfirmed");
             }
-            public override void RequestToReview(bool isReminder)
+            public override void RequestToReviewReminder()
             {
                 // Restriction:
                 if (!flags.sendReviewReminderToClient) return;
-                subject = isReminder ? "Reminder to review my services" : "Thank you and request to review my services";
-                CreateBookingMessage(info, (int)MessageType.RequestToReview, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
-                sendToClient("RequestToReview" + (isReminder ? "Reminder" : ""));
+                subject = "Reminder to review my services";
+                CreateBookingMessage(info, (int)MessageType.RequestToReviewReminder, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
+                sendToClient("RequestToReviewReminder");
             }
             public override void ServicePerformed()
             {
