@@ -355,7 +355,7 @@ public class ScheduleTask
                                 // Send messages
 
                                 // Notify customer and provider with an updated booking details:
-                                LcMessaging.SendBooking.For(b.bookingID).BookingComplete();
+                                LcMessaging.SendBooking.For(b.bookingID).BookingCompleted();
 
                                 // Update MessagingLog for the booking
                                 db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Release Payment 120H New Provider]");
@@ -415,7 +415,7 @@ public class ScheduleTask
                                 // Send messages
 
                                 // Notify customer and provider with an updated booking details:
-                                LcMessaging.SendBooking.For(b.bookingID).BookingComplete();
+                                LcMessaging.SendBooking.For(b.bookingID).BookingCompleted();
 
                                 // Update MessagingLog for the booking
                                 db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Release Payment 24H]");
