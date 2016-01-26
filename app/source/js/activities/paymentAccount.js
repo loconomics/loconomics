@@ -57,9 +57,7 @@ function ViewModel(app) {
             // Right now, just overwrite current changes with
             // remote ones:
             dataVersion.pull({ evenIfNewer: true });
-            if (dataVersion.version.status()) {
-                this.formVisible(false);
-            }
+            this.formVisible(!dataVersion.version.status());
         }
     }.bind(this));
     
@@ -80,7 +78,7 @@ function ViewModel(app) {
 
     this.discard = function discard() {
         dataVersion.pull({ evenIfNewer: true });
-        this.formVisible(false);
+        this.formVisible(!dataVersion.version.status());
     }.bind(this);
 
     this.save = function save() {
