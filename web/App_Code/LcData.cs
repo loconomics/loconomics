@@ -1342,7 +1342,7 @@ public static partial class LcData
                     ) VALUES (
                         @0
                         , @1
-                        , @2
+                        , coalesce(@2, 'pending')
                         , @3
                         , @4
                         , @5

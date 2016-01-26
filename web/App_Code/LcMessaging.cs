@@ -1057,7 +1057,10 @@ public class LcMessaging
                 subject = "Reminder to review my services";
                 CreateBookingMessage(info, (int)MessageType.RequestToReviewReminder, (int)MessageThreadStatus.Respond, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("RequestToReviewReminder");
-                sendToServiceProfessional("RequestToReviewReminder");
+                if (!flags.hipaa)
+                {
+                    sendToServiceProfessional("RequestToReviewReminder");
+                }
             }
             public override void ServicePerformed()
             {
