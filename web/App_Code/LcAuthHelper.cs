@@ -448,8 +448,8 @@ public static class LcAuthHelper
                     LcAuth.ConnectWithFacebookAccount(registered.UserID, facebookUserID);
                 }
 
-                // IMPORTANT: DO NOT send registering email for now, until full website or app are ready #773
-                //LcAuth.SendRegisterUserEmail(registered);
+                // Welcome and confirmation e-mail
+                LcAuth.SendRegisterUserEmail(registered);
 
                 // SPLASH BETA SIGNUP
                 LcMessaging.SendMail("joshua.danielson@loconomics.com", "Beta Sign-up", String.Format(@"
@@ -499,6 +499,8 @@ public static class LcAuthHelper
                 if (createAccount && isProvider)
                 {
                     LcAuth.BecomeProvider(user.UserID);
+                    user.IsProvider = true;
+                    LcAuth.SendRegisterUserEmail(user);
                 }
             }
             else
@@ -537,6 +539,7 @@ public static class LcAuthHelper
             //,facebookUser.gender
         );
         LcAuth.ConnectWithFacebookAccount(result.userID, facebookUser.id);
+        LcAuth.SendRegisterUserEmail(result);
         return result;
     }
 

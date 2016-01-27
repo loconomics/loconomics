@@ -172,7 +172,6 @@ public static class LcAuth
     }
     public static void SendRegisterUserEmail(RegisteredUser user)
     {
-        var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(user.ConfirmationToken);
         // Sent welcome email (if there is a confirmationUrl and token values, the email will contain it to perform the required confirmation)
         if (user.IsProvider)
             LcMessaging.SendWelcomeProvider(user.UserID, user.Email);
