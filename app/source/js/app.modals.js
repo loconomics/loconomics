@@ -84,7 +84,11 @@ exports.stringifyErrorsList = function (errors) {
     }
     else {
         msg = Object.keys(errors).map(function(key) {
-            return errors[key].join('\n');
+            var m = errors[key];
+            if (m && m.join)
+                return m.join('\n');
+            else
+                return m;
         }).join('\n');
     }
     return msg;
