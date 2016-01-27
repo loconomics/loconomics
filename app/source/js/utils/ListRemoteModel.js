@@ -147,7 +147,7 @@ function ListRemoteModel(settings) {
                         else {
                             // This promise is returned so will be consumed,
                             // just rethrow and let the other catch-blocks do the common stuff
-                            return err;
+                            throw err;
                         }
                     });
                     // Remote fallback: If no local, wait for remote
@@ -166,7 +166,7 @@ function ListRemoteModel(settings) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
                     // rethrow error
-                    return err;
+                    throw err;
                 });
             } else {
                 api.state.isSyncing(true);
@@ -186,7 +186,7 @@ function ListRemoteModel(settings) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
                     // rethrow error
-                    return err;
+                    throw err;
                 });
             }
         }
@@ -351,7 +351,7 @@ function ListRemoteModel(settings) {
         .catch(function(err) {
             api.state.isSaving(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     
@@ -377,7 +377,7 @@ function ListRemoteModel(settings) {
         .catch(function(err) {
             api.state.isDeleting(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     

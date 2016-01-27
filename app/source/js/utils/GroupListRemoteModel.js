@@ -93,7 +93,7 @@ function GroupListRemoteModel(settings) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
                     // rethrow error
-                    return err;
+                    throw err;
                 });
             } else {
                 api.state.isSyncing(true);
@@ -113,7 +113,7 @@ function GroupListRemoteModel(settings) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
                     // rethrow error
-                    return err;
+                    throw err;
                 });
             }
         }
@@ -180,7 +180,7 @@ function GroupListRemoteModel(settings) {
         .catch(function(err) {
             api.state.isSaving(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     
@@ -206,7 +206,7 @@ function GroupListRemoteModel(settings) {
         .catch(function(err) {
             api.state.isDeleting(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     

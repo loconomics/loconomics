@@ -48,7 +48,7 @@ exports.create = function create(appModel) {
                 return [];
             else
                 // Rethrow only if is not an 'abort'
-                return err;
+                throw err;
         });
         // Set again, removed by the catch returned promise
         request.xhr = publicSearchRequest;

@@ -106,7 +106,7 @@ function RemoteModel(options) {
                 // The version data keeps untouched, user may want to retry
                 // or made changes on its un-saved data.
                 // rethrow error
-                return error;
+                throw error;
             });
         }.bind(this);
 
@@ -174,7 +174,7 @@ function RemoteModel(options) {
             }
 
             // Rethrow error
-            return err;
+            throw err;
         }.bind(this));
     }.bind(this);
     
@@ -301,7 +301,7 @@ function RemoteModel(options) {
             }
             
             // Rethrow error
-            return err;
+            throw err;
         }.bind(this));
     };
     

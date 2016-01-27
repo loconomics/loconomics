@@ -65,7 +65,7 @@ exports.create = function create(appModel) {
             .catch(function(err) {
                 api.state.isLoading(false);
                 // Rethrow error
-                return err;
+                throw err;
             });
         }
     };

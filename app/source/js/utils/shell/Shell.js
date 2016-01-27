@@ -298,7 +298,7 @@ Shell.prototype.replace = function replace(state) {
         // notify as an event
         thisShell.emit('error', err);
         // and continue propagating the error
-        return err;
+        throw err;
     });
 
     return promise;

@@ -255,7 +255,7 @@
 //            }
 //
 //            // Rethrow error
-//            return err;
+//            throw err;
 //        }.bind(this));
 //    }.bind(this);
 //    
