@@ -25,6 +25,7 @@ function SignupVM(app) {
     this.lastName = newFieldObs();
     this.phone = newFieldObs();
     this.postalCode = newFieldObs();
+    this.countryID = newFieldObs();
     this.referralCode = newFieldObs();
     this.device = newFieldObs();
     
@@ -67,6 +68,7 @@ function SignupVM(app) {
             lastName: this.lastName(),
             phone: this.phone(),
             postalCode: this.postalCode(),
+            countryID: this.countryID(),
             referralCode: this.referralCode(),
             device: this.device(),
             facebookUserID: this.facebookUserID(),
@@ -131,6 +133,7 @@ function SignupVM(app) {
         this.lastName('');
         this.phone('');
         this.postalCode('');
+        this.countryID('');
         this.referralCode('');
         this.device('');
         this.facebookUserID('');
