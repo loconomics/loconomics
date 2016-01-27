@@ -331,7 +331,7 @@ public static class LcAuthHelper
             var countryID = Request.Form["countryID"].AsInt();
 
             // Validate postal code before continue
-            if (countryID == 1 && !LcRest.Address.AutosetByCountryPostalCode(new LcRest.Address
+            if (!LcRest.Address.AutosetByCountryPostalCode(new LcRest.Address
             {
                 postalCode = postalCode,
                 //countryCode = countryCode
@@ -339,7 +339,7 @@ public static class LcAuthHelper
             }))
             {
                 // bad postal code
-                page.ModelState.AddError("postalCode", "Invalid ZIP code");
+                page.ModelState.AddError("postalCode", "Invalid postal code");
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
 

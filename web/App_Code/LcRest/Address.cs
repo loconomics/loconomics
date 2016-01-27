@@ -459,7 +459,7 @@ namespace LcRest
             if (!AutosetByCountryPostalCode(address))
             {
                 // TODO l10n
-                throw new ValidationException("Invalid ZIP code", "postalCode", "address");
+                throw new ValidationException("Invalid postal code", "postalCode", "address");
             }
 
             // GPS
@@ -555,6 +555,14 @@ namespace LcRest
 
         #region Look up tasks
         /// <summary>
+        /// List used at AutosetByCountryPostalCode to apply validation only on full supported countries
+        /// TODO Update country filtering when postal code validation gets enabled for other countries.
+        /// </summary>
+        static readonly List<int> countryIdsWithPostalCodeValidation = new List<int>
+        {
+            1 // US
+        };
+        /// <summary>
         /// For an address with the Country (code or ID) and Postal Code information,
         /// it looks in database for the PostalCodeID, City and StateProvinceID and 
         /// set it in the passed address object.
@@ -568,11 +576,6 @@ namespace LcRest
         /// <returns>The success of the task.</returns>
         public static bool AutosetByCountryPostalCode(Address address)
         {
-            if (String.IsNullOrWhiteSpace(address.postalCode))
-            {
-                // TODO l10n
-                throw new ValidationException("Address must contain a postal code", "postalCode", "address");
-            }
             if (address.countryID <= 0)
             {
                 if (String.IsNullOrWhiteSpace(address.countryCode))
@@ -585,23 +588,41 @@ namespace LcRest
             else
             {
                 // Just ensure the Country Code is the correct for the given ID
-                address.countryCode = LcRest.Locale.GetCountryCodeByID(address.countryID);
+                if (address.countryCode == null)
+                    address.countryCode = LcRest.Locale.GetCountryCodeByID(address.countryID);
             }
 
-            // Get the information by postal code and country from database
-            var data = GetPostalCodeData(address.postalCode, address.countryID, false);
-            if (data != null)
+            // IMPORTANT: For now, only validate Postal Code for US since we only have that list complete, on the other
+            // cases we set some values to empty when null to avoid database not-null constraint errors.
+            if (countryIdsWithPostalCodeValidation.Contains(address.countryID))
             {
-                address.postalCodeID = data.PostalCodeID;
-                address.city = data.City;
-                address.stateProvinceID = data.StateProvinceID;
-                // Done:
-                return true;
+                if (String.IsNullOrWhiteSpace(address.postalCode))
+                {
+                    // TODO l10n
+                    throw new ValidationException("Address must contain a postal code", "postalCode", "address");
+                }
+
+                // Get the information by postal code and country from database
+                var data = GetPostalCodeData(address.postalCode, address.countryID, false);
+                if (data != null)
+                {
+                    address.postalCodeID = data.PostalCodeID;
+                    address.city = data.City;
+                    address.stateProvinceID = data.StateProvinceID;
+                    // Done:
+                    return true;
+                }
+                else
+                {
+                    // Failed look-up
+                    return false;
+                }
             }
             else
             {
-                // Failed look-up
-                return false;
+                if (address.city == null)
+                    address.city = "";
+                return true;
             }
         }
 
