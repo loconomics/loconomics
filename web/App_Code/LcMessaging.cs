@@ -1189,12 +1189,18 @@ public class LcMessaging
             }
             public override void BookingCompleted()
             {
-                subject = "Client has paid in full and service professional has been paid in full";
+                subject = info.booking.paymentCollected ? "Client has paid in full and service professional has been paid in full" : "Booking completed";
                 CreateBookingMessage(info, (int)MessageType.BookingCompleted, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-                subject = "Thank you and request to review my services";
-                sendToClient("BookingCompleted");
-                subject = "Your payment has been sent";
-                sendToServiceProfessional("BookingCompleted");
+                if (flags.sendReviewReminderToClient)
+                {
+                    subject = "Thank you and request to review my services";
+                    sendToClient("BookingCompleted");
+                }
+                if (flags.hipaa && info.booking.paymentCollected)
+                {
+                    subject = "Your payment has been sent";
+                    sendToServiceProfessional("BookingCompleted");
+                }
             }
         }
         #endregion
