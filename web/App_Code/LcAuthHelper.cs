@@ -326,13 +326,15 @@ public static class LcAuthHelper
         if (page.Validation.IsValid())
         {
             var postalCode = Request.Form["postalCode"];
-            var countryID = Request.Form["countryID"];
+            // TODO To use countryCode for a more 'open' public REST API, where 'code' is a well know ISO 2-letters CODE
+            //var countryCode = Request.Form["countryCode"];
+            var countryID = Request.Form["countryID"].AsInt();
 
             // Validate postal code before continue
             if (countryID == 1 && !LcRest.Address.AutosetByCountryPostalCode(new LcRest.Address
             {
                 postalCode = postalCode,
-                // TODO LcRest.Address needs to be updated to use countryID
+                //countryCode = countryCode
                 countryID = countryID
             }))
             {
@@ -350,7 +352,6 @@ public static class LcAuthHelper
             var phone = Request.Form["phone"];
             var returnProfile = Request.Form["returnProfile"].AsBool();
             
-
             var utm = Request.Url.Query;
 
             // If the user exists, try to log-in with the given password,
@@ -393,8 +394,9 @@ public static class LcAuthHelper
                     if (address.postalCode != postalCode)
                     {
                         address.postalCode = postalCode;
-                        address.countryCode = locale.countryCode;
-                        LcRest.Address.AutosetByCountryPostalCode(address);
+                        //address.countryCode = countryCode;
+                        address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
+                        address.countryID = countryID;
                         LcRest.Address.SetAddress(address);
                     }
                 }
@@ -416,7 +418,7 @@ public static class LcAuthHelper
                     <dt>UserID:</dt><dd>{8}</dd>
                     </dl>
                     </body></html>
-                ", profileTypeStr, firstName, lastName, postalCode, referralCode, device, phone, email, logged.userID));
+                ", profileTypeStr, firstName, lastName, postalCode, referralCode, device, phone, email, logged.userID, countryID));
 
                 return logged;
             }
@@ -435,6 +437,8 @@ public static class LcAuthHelper
                 // Set address
                 var address = LcRest.Address.GetHomeAddress(registered.UserID);
                 address.postalCode = postalCode;
+                //address.countryCode = countryCode;
+                address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
                 address.countryID = countryID;
                 LcRest.Address.SetAddress(address);
 
@@ -455,7 +459,7 @@ public static class LcAuthHelper
                     <dt>First Name:</dt><dd>{1}</dd>
                     <dt>Last Name:</dt><dd>{2}</dd>
                     <dt>Postal code:</dt><dd>{3}</dd>
-                    <dt>Zip code:</dt><dd>{9}</dd>
+                    <dt>Country:</dt><dd>{9}</dd>
                     <dt>Referral code:</dt><dd>{4}</dd>
                     <dt>Device:</dt><dd>{5}</dd>
                     <dt>Phone:</dt><dd>{6}</dd>

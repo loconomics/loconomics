@@ -23,6 +23,11 @@ namespace LcRest
             return languageCode.ToLower() + "-" + countryCode.ToUpper();
         }
 
+        /// <summary>
+        /// TODO Implement database look-up, throgh Country class
+        /// </summary>
+        /// <param name="CountryID"></param>
+        /// <returns></returns>
         public static string GetCountryCodeByID(int CountryID)
         {
             switch (CountryID)
@@ -37,6 +42,11 @@ namespace LcRest
             }
         }
 
+        /// <summary>
+        /// TODO Implement database look-up, throgh Country class
+        /// </summary>
+        /// <param name="CountryCode"></param>
+        /// <returns></returns>
         public static int GetCountryIDByCode(string CountryCode)
         {
             switch (CountryCode)
@@ -51,6 +61,11 @@ namespace LcRest
             }
         }
 
+        /// <summary>
+        /// TODO Implement database look-up, throgh Language class
+        /// </summary>
+        /// <param name="LanguageID"></param>
+        /// <returns></returns>
         public static string GetLanguageCodeByID(int LanguageID)
         {
             switch (LanguageID)
@@ -65,6 +80,11 @@ namespace LcRest
             }
         }
 
+        /// <summary>
+        /// TODO Implement database look-up, throgh Language class
+        /// </summary>
+        /// <param name="LanguageCode"></param>
+        /// <returns></returns>
         public static int GetLanguageIDByCode(string LanguageCode)
         {
             switch (LanguageCode)
