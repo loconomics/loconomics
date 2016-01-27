@@ -606,9 +606,11 @@ namespace LcRest
                 var data = GetPostalCodeData(address.postalCode, address.countryID, false);
                 if (data != null)
                 {
-                    address.postalCodeID = data.PostalCodeID;
-                    address.city = data.City;
-                    address.stateProvinceID = data.StateProvinceID;
+                    address.postalCodeID = data.postalCodeID;
+                    address.city = data.city;
+                    address.stateProvinceID = data.stateProvinceID;
+                    address.stateProvinceCode = data.stateProvinceCode;
+                    address.stateProvinceName = data.stateProvinceName;
                     // Done:
                     return true;
                 }
@@ -650,11 +652,17 @@ namespace LcRest
                     PC.CountryID = @1
         ";
             var sqlGetPostalCodeData = @"
-            SELECT  PostalCodeID, City, StateProvinceID
-            FROM    PostalCode
-            WHERE   PostalCode = @0
+            SELECT  PC.postalCodeID, PC.city, PC.stateProvinceID,
+                    SP.StateProvinceCode As stateProvinceCode,
+                    SP.StateProvinceName As stateProvinceName
+            FROM    PostalCode As PC
+                     INNER JOIN
+                    StateProvince As SP
+                      ON PC.StateProvinceID = SP.StateProvinceID
+                          AND PC.CountryID = SP.CountryID
+            WHERE   PC.PostalCode = @0
                         AND
-                    CountryID = @1
+                    PC.CountryID = @1
         ";
             using (var db = Database.Open("sqlloco"))
             {

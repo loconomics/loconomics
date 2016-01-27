@@ -783,7 +783,7 @@ public static partial class LcPayment
                     PostalCode = address.PostalCode,
                     Locality = address.City,
                     Region = address.StateProvinceCode,
-                    CountryCodeAlpha2 = address.CountryCodeAlpha2
+                    //CountryCodeAlpha2 = address.CountryCodeAlpha2
                 },
                 DateOfBirth = BirthDate.ToString("yyyy-MM-dd")
             },
@@ -839,7 +839,8 @@ public static partial class LcPayment
             return ret;
 
         } catch (Braintree.Exceptions.AuthorizationException ex) {
-            return null;
+            throw ex;
+            //return null;
         }
     }
 
