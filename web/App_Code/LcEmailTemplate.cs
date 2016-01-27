@@ -142,6 +142,17 @@ public static class LcEmailTemplate
             }
         }
 
+        private LcMessaging.SendBooking.JobTitleMessagingFlags _flags;
+        public LcMessaging.SendBooking.JobTitleMessagingFlags flags
+        {
+            get
+            {
+                if (_flags == null)
+                    _flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(booking.jobTitleID, booking.languageID, booking.countryID);
+                return _flags;
+            }
+        }
+
         private LcRest.PublicJobTitle _jobTitle;
         public LcRest.PublicJobTitle jobTitle
         {

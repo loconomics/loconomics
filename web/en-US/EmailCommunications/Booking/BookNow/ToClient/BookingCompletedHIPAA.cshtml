@@ -44,7 +44,7 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             @if (
-                            info.jobTitle.autoReviewServiceProfessional && info.booking.paymentCollected
+                            info.flags.sendReviewReminderToClient && info.booking.paymentCollected
                             )
                             {                            
                             <tr>
@@ -73,7 +73,7 @@
                             </tr>
                             }
                             @if (
-                            info.jobTitle.autoReviewServiceProfessional && !info.booking.paymentCollected
+                            info.flags.sendReviewReminderToClient && !info.booking.paymentCollected
                             )
                             {                            
                             <tr>
@@ -97,7 +97,7 @@
                             </tr>
                             }
                             @if (
-                            !info.jobTitle.autoReviewServiceProfessional && info.booking.paymentCollected
+                            !info.flags.sendReviewReminderToClient && info.booking.paymentCollected
                             )
                             {
                             <tr>
@@ -126,7 +126,7 @@
                             </tr>
                             }
                             @if (
-                            !info.jobTitle.autoReviewServiceProfessional && !info.booking.paymentCollected
+                            !info.flags.sendReviewReminderToClient && !info.booking.paymentCollected
                             )
                             {
                             <tr>
