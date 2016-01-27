@@ -27,6 +27,7 @@ namespace LcRest
         public string accountNumber;
         public string ssn;
         public string stateProvinceCode;
+        public string countryCode;
         public DateTime? birthDate;
         public bool? isVenmo;
         /// <summary>
@@ -55,6 +56,7 @@ namespace LcRest
                     city = btAccount.IndividualDetails.Address.Locality,
                     postalCode = btAccount.IndividualDetails.Address.PostalCode,
                     stateProvinceCode = btAccount.IndividualDetails.Address.Region,
+                    countryCode = btAccount.IndividualDetails.Address.CountryCodeAlpha2,
                     birthDate = btAccount.IndividualDetails.DateOfBirth.IsDateTime() ?
                         (DateTime?)btAccount.IndividualDetails.DateOfBirth.AsDateTime() :
                         null,
@@ -116,11 +118,11 @@ namespace LcRest
             // Gathering state and postal IDs and verifying they match
             var add = new LcRest.Address {
                 postalCode = data.postalCode,
-                countryID = LcRest.Locale.Current.countryID
+                countryCode = data.countryCode
             };
             if (!LcRest.Address.AutosetByCountryPostalCode(add))
             {
-                throw new ValidationException("Postal Code is not valid.", "postalcode");
+                throw new ValidationException("Postal Code is not valid.", "postalCode");
             }
             else
             {
@@ -156,7 +158,8 @@ namespace LcRest
                         AddressLine1 = data.streetAddress,
                         PostalCode = data.postalCode,
                         City = data.city,
-                        StateProvinceCode = data.stateProvinceCode
+                        StateProvinceCode = data.stateProvinceCode,
+                        CountryID = add.countryID
                     }, new LcPayment.BankInfo
                     {
                         RoutingNumber = data.routingNumber,

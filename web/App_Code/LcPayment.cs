@@ -783,6 +783,7 @@ public static partial class LcPayment
                     PostalCode = address.PostalCode,
                     Locality = address.City,
                     Region = address.StateProvinceCode,
+                    CountryCodeAlpha2 = address.CountryCodeAlpha2
                 },
                 DateOfBirth = BirthDate.ToString("yyyy-MM-dd")
             },

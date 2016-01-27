@@ -67,7 +67,7 @@
             Validation.RequireField("firstName", LcRessources.RequiredField("First name"));
             Validation.RequireField("lastName", LcRessources.RequiredField("Last name"));
             Validation.RequireField("streetAddress", LcRessources.RequiredField("Street address"));
-            Validation.RequireField("postalcode", LcRessources.RequiredField("Postal Code"));
+            Validation.RequireField("postalCode", LcRessources.RequiredField("Postal Code"));
 
             var birthDate = Request["birthDate"].IsDateTime() ? (DateTime?)Request["birthdate"].AsDateTime() : null;
             if (!birthDate.HasValue)
@@ -95,6 +95,7 @@
                 birthDate = birthDate,
                 phone = Request["phone"],
                 postalCode = Request["postalCode"],
+                countryCode = LcRest.Locale.Current.countryCode,
                 ssn = Request["ssn"],
                 streetAddress = Request["streetAddress"]
             };
