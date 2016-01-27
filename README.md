@@ -101,6 +101,14 @@ The file /app/source/cordova-config.js.xml has a list of all the plugins in use 
 this config is used by the PhoneGap Build service to automatically install them. The version in use is there too, but not
 git URL, the package name can be used to locate it at [npm](https://www.npmjs.com/) and found the project git URL there.
 
+##Updating the database
+- for scheme changes (new columns, tables, drops,..), if your program to access database generates SQLs for the task, save them in a file at the _DBUpdate with extension ".sql".
+- The naming of ".sql" files is : 'Release-' and release number, dash, a consecutive letter, dash, consecutive number, dash, a short descriptive name of the change. I see sometimes I forgot the last dash but doesn't matters, what is **important is to keep the order** in which changes were done. I use the letters to group changes that are part of a same consecutive task (like in this case, 1-add new column, 2-insert new data, both with the same letter that is the next one available -right now the D in Release-7.1).
+- Why the order is important? Because if you changes the order things can break, breaking *live* database and its data.
+- for data updates: if applied on *system* tables (the ones that we keep manually, no interaction from the code except to read it; like countries, statuses, types and that kind of things), I have a TestDBSync page to help with that, but may require create some SQL templates first, let to me for now.
+- for data updates: if applied over *user* tables, that's more complicated and need a manually written and well tested SQL script. Rare cases need it, mostly when changing how some existent data is stored.
+
+
 ## Filing Github Issues
 
 We use Github to track all development issues, marketing tasks, and a repository for for other related project information.
