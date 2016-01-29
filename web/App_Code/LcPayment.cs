@@ -101,15 +101,15 @@ public static partial class LcPayment
         TransactionRequest request = new TransactionRequest
         {
             Amount = booking.pricingSummary.totalPrice.Value,
+            // Marketplace #408: since provider receive the money directly, Braintree must discount
+            // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
+            ServiceFeeAmount = booking.pricingSummary.serviceFeeAmount,
             CustomerId = GetCustomerId(booking.clientUserID),
             PaymentMethodToken = paymentMethodID,
             // Now, with Marketplace #408, the receiver of the money for each transaction is
             // the provider through account at Braintree, and not the Loconomics account:
             //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
             MerchantAccountId = GetProviderPaymentAccountId(booking.serviceProfessionalUserID),
-            // Marketplace #408: since provider receive the money directly, Braintree must discount
-            // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
-            ServiceFeeAmount = booking.pricingSummary.feePrice.Value,
             Options = new TransactionOptionsRequest
             {
                 // Marketplace #408: don't pay provider still, wait for the final confirmation 'release scrow'
@@ -189,7 +189,7 @@ public static partial class LcPayment
             {
                 TransactionRequest request = new TransactionRequest
                 {
-                    Amount = pricing.cancellationFeeCharged.Value + (pricing.feePrice ?? 0),
+                    Amount = pricing.cancellationFeeCharged.Value + (pricing.clientServiceFeePrice ?? 0),
                     CustomerId = GetCustomerId(customerID),
                     PaymentMethodToken = creditCardToken,
                     // Now, with Marketplace #408, the receiver of the money for each transaction is
@@ -198,7 +198,7 @@ public static partial class LcPayment
                     MerchantAccountId = GetProviderPaymentAccountId(providerID),
                     // Marketplace #408: since provider receive the money directly, Braintree must discount
                     // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics)
-                    ServiceFeeAmount = pricing.feePrice,
+                    ServiceFeeAmount = pricing.clientServiceFeePrice,
                     Options = new TransactionOptionsRequest
                     {
                         // Marketplace #408: we normally hold it, but we are refunding so don't hold, pay at the moment

@@ -43,10 +43,11 @@ namespace LcRest
         public int pricingSummaryRevision;
         internal string paymentTransactionID;
         public string paymentLastFourCardNumberDigits;
-        public decimal? totalPricePaidByClient;
-        public decimal? totalServiceFeesPaidByClient;
-        public decimal? totalPaidToServiceProfessional;
-        public decimal? totalServiceFeesPaidByServiceProfessional;
+        public decimal? clientPayment;
+        public decimal? serviceProfessionalPaid;
+        public decimal? serviceProfessionalPPFeePaid;
+        internal decimal? loconomicsPaid;
+        internal decimal? loconomicsPPFeePaid;
 
         public bool instantBooking;
         public bool firstTimeBooking;
@@ -159,10 +160,11 @@ namespace LcRest
                 pricingSummaryRevision = booking.pricingSummaryRevision,
                 paymentTransactionID = internalUse ? booking.paymentTransactionID : null,
                 paymentLastFourCardNumberDigits = forClient || internalUse ? LcEncryptor.Decrypt(booking.paymentLastFourCardNumberDigits) : null,
-                totalPricePaidByClient = booking.totalPricePaidByClient,
-                totalServiceFeesPaidByClient = booking.totalServiceFeesPaidByClient,
-                totalPaidToServiceProfessional = booking.totalPaidToServiceProfessional,
-                totalServiceFeesPaidByServiceProfessional = booking.totalServiceFeesPaidByServiceProfessional,
+                clientPayment = booking.clientPayment,
+                serviceProfessionalPaid = booking.serviceProfessionalPaid,
+                serviceProfessionalPPFeePaid = booking.serviceProfessionalPPFeePaid,
+                loconomicsPaid = booking.loconomicsPaid,
+                loconomicsPPFeePaid = booking.loconomicsPPFeePaid,
                 
                 instantBooking = booking.instantBooking,
                 firstTimeBooking = booking.firstTimeBooking,
@@ -356,10 +358,11 @@ namespace LcRest
                 pricingSummaryRevision,
                 paymentTransactionID,
                 paymentLastFourCardNumberDigits,
-                totalPricePaidByClient,
-                totalServiceFeesPaidByClient,
-                totalPaidToServiceProfessional,
-                totalServiceFeesPaidByServiceProfessional,
+                clientPayment,
+                serviceProfessionalPaid,
+                serviceProfessionalPPFeePaid,
+                loconomicsPaid,
+                loconomicsPPFeePaid,
 
                 instantBooking,
                 firstTimeBooking,
@@ -902,8 +905,15 @@ namespace LcRest
         ";
         private const string sqlUpdClientPayment = @"
             UPDATE  Booking
-            SET     TotalPricePaidByClient = @1,
-                    TotalServiceFeesPaidByClient = @2
+            SET     ClientPayment = @1
+            WHERE   BookingId = @0
+        ";
+        private const string sqlUpdPaidFields = @"
+            UPDATE  Booking
+            SET     ServiceProfessionalPPFeePaid = @1,
+                    ServiceProfessionalPaid = @2,
+                    LoconomicsPaid = @3,
+                    LoconomicsPPFeePaid = @4
             WHERE   BookingId = @0
         ";
         /// <summary>
@@ -1033,21 +1043,38 @@ namespace LcRest
         }
 
         /// <summary>
-        /// Autoset the booking fields for prices finally paid by client
-        /// after complete the client payment process (charge customer, settling transaction)
+        /// Persist on database the booking fields for prices finally paid by client
+        /// after complete the client payment process (charge customer, settling transaction).
+        /// It's based on information
         /// </summary>
         /// <param name="booking"></param>
         public static void SetClientPayment(Booking booking)
         {
-            if (booking.pricingSummary == null)
-                booking.FillPricingSummary();
-
             using (var db = new LcDatabase())
             {
                 db.Execute(sqlUpdClientPayment,
                     booking.bookingID,
-                    booking.pricingSummary.totalPrice ?? 0,
-                    booking.pricingSummary.feePrice ?? 0
+                    booking.clientPayment
+                );
+            }
+        }
+
+        /// <summary>
+        /// Persist on database the booking fields for prices finally paid by service professional
+        /// and Loconomics (fields with suffix *Paid).
+        /// See SetClientPayment for client related fields.
+        /// </summary>
+        /// <param name="booking"></param>
+        public static void SetPaidFields(Booking booking)
+        {
+            using (var db = new LcDatabase())
+            {
+                db.Execute(sqlUpdPaidFields,
+                    booking.bookingID,
+                    booking.serviceProfessionalPPFeePaid,
+                    booking.serviceProfessionalPaid,
+                    booking.loconomicsPaid,
+                    booking.loconomicsPPFeePaid
                 );
             }
         }
@@ -1084,6 +1111,46 @@ namespace LcRest
                 if (booking.alternativeDate2ID.HasValue)
                     LcCalendar.DelUserAppointment(booking.serviceProfessionalUserID, booking.alternativeDate2ID.Value);
             }
+        }
+        #endregion
+
+        #region Calculations
+        private void CalculateClientPayment()
+        {
+            if (pricingSummary == null)
+                FillPricingSummary();
+
+            clientPayment = pricingSummary.totalPrice ?? 0;
+        }
+        private void CalculatePaidFields()
+        {
+            if (pricingSummary == null)
+                FillPricingSummary();
+
+            if (!pricingSummary.totalPrice.HasValue || !pricingSummary.clientServiceFeePrice.HasValue)
+                throw new Exception("Impossible to calculate payment without pricing summary values");
+
+            var type = BookingType.Get(bookingTypeID);
+            if (type == null)
+                throw new Exception("Impossible to calculate payment without booking type, processing fees not available");
+
+            serviceProfessionalPaid = (
+                pricingSummary.totalPrice.Value - (
+                    type.paymentProcessingFeeFixed + 
+                    type.paymentProcessingFeePercentage * (pricingSummary.totalPrice.Value - pricingSummary.clientServiceFeePrice.Value) +
+                    pricingSummary.clientServiceFeePrice.Value
+                )
+            );
+            serviceProfessionalPPFeePaid = (
+                type.paymentProcessingFeeFixed +
+                type.paymentProcessingFeePercentage * (pricingSummary.totalPrice.Value - pricingSummary.clientServiceFeePrice.Value)
+            );
+            loconomicsPaid = (
+                pricingSummary.clientServiceFeePrice.Value - type.paymentProcessingFeePercentage * pricingSummary.clientServiceFeePrice
+            );
+            loconomicsPPFeePaid = (
+                type.paymentProcessingFeePercentage * pricingSummary.clientServiceFeePrice.Value
+            );
         }
         #endregion
 
@@ -1392,6 +1459,7 @@ namespace LcRest
                     throw new Exception(settleError);
 
                 // Update booking database information, setting price payed by customer
+                CalculateClientPayment();
                 SetClientPayment(this);
 
                 return true;
@@ -1415,6 +1483,10 @@ namespace LcRest
                 if (!String.IsNullOrEmpty(errmsg))
                     throw new Exception(errmsg);
 
+                // Update booking information with final paid amounts
+                CalculatePaidFields();
+                SetPaidFields(this);
+
                 // Booking is complete
                 bookingStatusID = (int)LcEnum.BookingStatus.completed;
                 SetStatus(this);
@@ -1425,12 +1497,15 @@ namespace LcRest
         }
 
         /// <summary>
-        /// For a booking with a saved transactionID (actual transaction or saved card identifier)
-        /// it calculates the money for a cancellation that happens now: how many goes to the professional
-        /// and how to the client. If the client was already charged, the correct amount is refunded,
-        /// if not still charged, current pending charge is cancelled and is charged by the difference
-        /// (the 'cancellation fee').
-        /// On some cases there is no refund, on others is full, and some times is a fraction.
+        /// Runs all the operations needed to cancel/decline/avoid the pending payment of the booking,
+        /// usually *voiding* the pending, authorized, transaction or asking for *full refund* if already settle, to Braintree;
+        /// and sometimes running a new transaction to charge to the client some cancellation fees, on other cases may be nothing
+        /// so no new transaction is performed.
+        /// For temporarly saved payment methods, there is no actual transaction to void/refund, so only is charged with 
+        /// cancellation fee on the cases it needs to, and is removed when it finishes.
+        /// 
+        /// The task runs the cancellation calculation needed, that depends on the booking state (the new cancel/decline/expire state)
+        /// and other set-ups to choose what fees to apply.
         /// </summary>
         /// <returns></returns>
         public bool RefundPayment()

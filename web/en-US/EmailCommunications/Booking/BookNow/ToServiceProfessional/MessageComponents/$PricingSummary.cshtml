@@ -4,8 +4,8 @@
 @{
     // All the data for this component:
     var info = LcEmailTemplate.GetBookingInfo(PageData);
-    var hasPaymentProcessingFees = info.booking.pricingSummary.pFeePrice.HasValue && info.booking.pricingSummary.pFeePrice.Value != 0;
-    var totalDueToProfessional = (info.booking.pricingSummary.totalPrice -info.booking.pricingSummary.pFeePrice);
+    var hasPaymentProcessingFees = info.booking.pricingSummary.serviceFeeAmount.HasValue && info.booking.pricingSummary.serviceFeeAmount.Value != 0;
+    var totalDueToProfessional = (info.booking.pricingSummary.totalPrice -info.booking.pricingSummary.serviceFeeAmount);
 }
 
 <!-- ONE COLUMN SECTION -->
@@ -97,7 +97,7 @@
                                                 <td style="padding: 0 0 10px 0;">
                                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                         <tr>
-                                                            <td align="right" style="font-family: Arial, sans-serif; color: #d9534f; font-size: 16px;">@(info.booking.pricingSummary.pFeePrice.Value.ToString("c"))</td>
+                                                            <td align="right" style="font-family: Arial, sans-serif; color: #d9534f; font-size: 16px;">@(info.booking.pricingSummary.serviceFeeAmount.Value.ToString("c"))</td>
                                                         </tr>
                                                     </table>
                                                 </td>

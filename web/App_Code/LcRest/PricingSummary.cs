@@ -16,10 +16,41 @@ namespace LcRest
         public int pricingSummaryRevision;
         public decimal? serviceDurationMinutes;
         public decimal? firstSessionDurationMinutes;
+        /// <summary>
+        /// The sum of all pricingSummary.details.
+        /// In other words, cost of all services included.
+        /// See CalculateDetails for implementation details.
+        /// </summary>
         public decimal? subtotalPrice;
-        public decimal? feePrice;
+        /// <summary>
+        /// The "first time booking" fees, if any, zero on other cases.
+        /// If a cancellation happens and this fee is not refundable, will keep
+        /// it's original value, but if it happens that is refundable then will be updated
+        /// to zero or whatever value gets calculated.
+        /// </summary>
+        public decimal? clientServiceFeePrice;
+        /// <summary>
+        /// It's the final price charged to a client.
+        /// Initially, is the subtotalPrice plus clientServiceFeePrice, but a
+        /// booking cancellation will update it to whatever the client must pay,
+        /// depending on cancellation fees or not-refundable clientServiceFeePrice.
+        /// See booking cancellation calculations for implementation details.
+        /// </summary>
         public decimal? totalPrice;
-        public decimal? pFeePrice;
+        /// <summary>
+        /// It's the 'transaction service fee', part of it it's received by Loconomics
+        /// and the remaining is used to pay to Braintree the payment processing fees of the
+        /// whole transaction.
+        /// Substracting this from the TotalPrice is what 
+        /// the service professionals receives.
+        /// It was know as "payment processing fee" but is more than that since
+        /// it includes the clientServiceFeePrice too, and only the part of
+        /// the processing fees supported by the service professional since
+        /// Loconomics will be charged part of processing too.
+        /// It fills the Braintree.Transaction.ServiceFeeAmount field when asking for payment.
+        /// See calculateServiceFee for implementation details.
+        /// </summary>
+        public decimal? serviceFeeAmount;
         public DateTime createdDate;
         public DateTime updatedDate;
         public decimal? cancellationFeeCharged;
@@ -64,9 +95,9 @@ namespace LcRest
                 serviceDurationMinutes = record.serviceDurationMinutes,
                 firstSessionDurationMinutes = record.firstSessionDurationMinutes,
                 subtotalPrice = record.subtotalPrice,
-                feePrice = record.feePrice,
+                clientServiceFeePrice = record.clientServiceFeePrice,
                 totalPrice = record.totalPrice,
-                pFeePrice = record.pFeePrice,
+                serviceFeeAmount = record.serviceFeeAmount,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
                 cancellationFeeCharged = record.cancellationFeeCharged,
@@ -83,9 +114,9 @@ namespace LcRest
                 serviceDurationMinutes,
                 firstSessionDurationMinutes,
                 subtotalPrice,
-                feePrice,                        
+                clientServiceFeePrice,                        
                 totalPrice,
-                pFeePrice,
+                serviceFeeAmount,
                 createdDate,
                 updatedDate,
                 cancellationFeeCharged,
@@ -141,9 +172,9 @@ namespace LcRest
                 ServiceDurationMinutes,
                 FirstSessionDurationMinutes,
                 SubtotalPrice,
-                FeePrice,
+                clientServiceFeePrice,
                 TotalPrice,
-                PFeePrice,
+                serviceFeeAmount,
                 CreatedDate,
                 UpdatedDate,
                 ModifiedBy,
@@ -183,8 +214,8 @@ namespace LcRest
             {
                 PricingSummary newData = FromDB(db.QuerySingle(sqlInsertItem,
                     data.pricingSummaryID, data.serviceDurationMinutes, data.firstSessionDurationMinutes,
-                    data.subtotalPrice, data.feePrice,
-                    data.totalPrice, data.pFeePrice));
+                    data.subtotalPrice, data.clientServiceFeePrice,
+                    data.totalPrice, data.serviceFeeAmount));
 
                 if (data.details != null)
                 {
@@ -308,58 +339,62 @@ namespace LcRest
         public void CalculateTotalPrice()
         {
             if (!this.subtotalPrice.HasValue ||
-                !this.feePrice.HasValue)
+                !this.clientServiceFeePrice.HasValue)
             {
                 this.totalPrice = null;
             }
             else
             {
-                this.totalPrice = this.subtotalPrice.Value + this.feePrice.Value;
+                this.totalPrice = this.subtotalPrice.Value + this.clientServiceFeePrice.Value;
             }
         }
 
         /// <summary>
-        /// Calculate service fees (feePrice), based on subtotalPrice, and feels the feePrice property.
+        /// Calculate client fees (clientServiceFeePrice), based on subtotalPrice, and save at the clientServiceFeePrice property.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="firstTimeBooking"></param>
-        public void CalculateServiceFees(BookingType type, bool firstTimeBooking)
+        public void CalculateClientServiceFee(BookingType type, bool firstTimeBooking)
         {
             // Only are applied on firstTimeBookings, otherwise is zero
             if (firstTimeBooking)
             {
                 // Can only be calculated if there is a subtotal price previously calculated
-                // otherwise feePrice will remain without value to mark it as not possible to calculate.
+                // otherwise clientServiceFeePrice will remain without value to mark it as not possible to calculate.
                 if (subtotalPrice.HasValue)
                 {
                     var amount = Math.Round(type.firstTimeServiceFeeFixed + (type.firstTimeServiceFeePercentage * subtotalPrice.Value), 2);
-                    feePrice = Math.Min(Math.Max(amount, type.firstTimeServiceFeeMinimum), type.firstTimeServiceFeeMaximum);
+                    clientServiceFeePrice = Math.Min(Math.Max(amount, type.firstTimeServiceFeeMinimum), type.firstTimeServiceFeeMaximum);
                 }
                 else
                 {
-                    feePrice = null;
+                    clientServiceFeePrice = null;
                 }
             }
             else
             {
                 // No fees on other cases, just 0 :-)
-                feePrice = 0;
+                clientServiceFeePrice = 0;
             }
         }
 
-        public void CalculatePaymentProcessingFees(BookingType type)
+        /// <summary>
+        /// AKA "calculate PaymentProcessing fee".
+        /// </summary>
+        /// <param name="type"></param>
+        public void CalculateServiceFee(BookingType type)
         {
-            // Can only calculate with a notnull totalPrice, otherwise pFeePrice is null to state the impossibility of the calculation
-            if (subtotalPrice.HasValue)
+            // Can only calculate with a notnull totalPrice and feePrice, otherwise serviceFeeAmount is null to state the impossibility of the calculation
+            if (totalPrice.HasValue && clientServiceFeePrice.HasValue)
             {
                 // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
                 // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
                 // or present more precision to the service professional (who will show how much received on their bank account).
-                pFeePrice = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage * subtotalPrice.Value), 2);
+                serviceFeeAmount = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage * (totalPrice.Value - clientServiceFeePrice.Value)) + clientServiceFeePrice.Value, 2);
             }
             else
             {
-                pFeePrice = null;
+                serviceFeeAmount = null;
             }
         }
 
@@ -370,14 +405,14 @@ namespace LcRest
         /// <param name="firstTimeBooking"></param>
         public void CalculateFees(BookingType type, bool firstTimeBooking)
         {
-            // Calculate service fees (feePrice), based on subtotalPrice
-            CalculateServiceFees(type, firstTimeBooking);
+            // Calculate client fees (clientServiceFeePrice), based on subtotalPrice
+            CalculateClientServiceFee(type, firstTimeBooking);
 
-            // Total Price must be calculated before calculate the deducted payment processing fees (pFeePrice)
+            // Total Price must be calculated before calculate the deducted payment processing fees (serviceFeeAmount)
             // because is calculated on top of that (since is deducted by the payment processing platform over the total)
             CalculateTotalPrice();
 
-            CalculatePaymentProcessingFees(type);
+            CalculateServiceFee(type);
         }
         #endregion
 
