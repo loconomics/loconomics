@@ -167,10 +167,10 @@ public static partial class LcPayment
     }
 
     /// <summary>
-    /// Do a transaction ('sale') to be submitted and payed now for the cancellation fee
-    /// of a booking. If as result of the booking internal rules the fee is zero, then
-    /// no payment is needed (is like a 'full refund')...???
-    /// The removal of a temporary card is performed on any case (with or without transaction because of total refund)
+    /// Do a transaction ('sale') to be submitted and payed now for any cancellation fee
+    /// of a booking (previously calculated as TotalPrice and serviceFeeAmount).
+    /// It manages when there is no price to charge, and just skip the step since it's fine.
+    /// The removal of a temporary card is performed after all.
     /// </summary>
     /// <param name="creditCardToken"></param>
     /// <param name="refund"></param>
@@ -185,20 +185,20 @@ public static partial class LcPayment
         {
             var gateway = NewBraintreeGateway();
 
-            if (pricing.cancellationFeeCharged.HasValue && pricing.cancellationFeeCharged > 0)
+            if (pricing.totalPrice.HasValue && pricing.totalPrice > 0)
             {
                 TransactionRequest request = new TransactionRequest
                 {
-                    Amount = pricing.cancellationFeeCharged.Value + (pricing.clientServiceFeePrice ?? 0),
+                    Amount = pricing.totalPrice.Value,
+                    // Marketplace #408: since provider receive the money directly, Braintree must discount
+                    // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics)
+                    ServiceFeeAmount = pricing.serviceFeeAmount,
                     CustomerId = GetCustomerId(customerID),
                     PaymentMethodToken = creditCardToken,
                     // Now, with Marketplace #408, the receiver of the money for each transaction is
                     // the provider through account at Braintree, and not the Loconomics account:
                     //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
                     MerchantAccountId = GetProviderPaymentAccountId(providerID),
-                    // Marketplace #408: since provider receive the money directly, Braintree must discount
-                    // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics)
-                    ServiceFeeAmount = pricing.clientServiceFeePrice,
                     Options = new TransactionOptionsRequest
                     {
                         // Marketplace #408: we normally hold it, but we are refunding so don't hold, pay at the moment
@@ -305,8 +305,8 @@ public static partial class LcPayment
 
     #region Actions: Refund
     /// <summary>
-    /// Full refund a transaction ensuring that will be no charge to the customer
-    /// or will be refunded if there was.
+    /// Full refund: cancels an authorized transaction ensuring that will
+    /// be no charge to the customer or will be refunded if there was a charge already (is settled).
     /// If the transaction is invalid, was not accepted or another state that says that
     /// no charge happens, 'null' will be returned, just the same as if the refund operation
     /// was success.

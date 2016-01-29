@@ -61,28 +61,6 @@ namespace LcRest
         public IEnumerable<PricingSummaryDetail> details;
         #endregion
 
-        #region Instance utilities
-        internal bool IsFullRefund
-        {
-            get
-            {
-                return cancellationFeeCharged.HasValue && cancellationFeeCharged.Value == 0;
-            }
-        }
-        internal decimal AmountToRefund
-        {
-            get
-            {
-                if (cancellationFeeCharged.HasValue &&
-                    subtotalPrice.HasValue)
-                {
-                    return subtotalPrice.Value - cancellationFeeCharged.Value;
-                }
-                return 0;
-            }
-        }
-        #endregion
-
         #region Instances
         public PricingSummary() { }
 
@@ -175,6 +153,8 @@ namespace LcRest
                 clientServiceFeePrice,
                 TotalPrice,
                 serviceFeeAmount,
+                cancellationDate,
+                cancellationFeeCharged,
                 CreatedDate,
                 UpdatedDate,
                 ModifiedBy,
@@ -188,18 +168,12 @@ namespace LcRest
                 @4, -- fee price
                 @5, -- total price
                 @6, -- pfee price
+                @7, -- canc date
+                @8, -- canc fee
                 getdate(), getdate(), 'sys', 1
             )
 
             SELECT * FROM PricingSummary WHERE PricingSummaryID = @id AND PricingSummaryRevision = @revision
-        ";
-        const string sqlUpdateCancellationFields = @"
-                UPDATE  PricingSummary
-                SET     cancellationFeeCharged = @2
-                        ,cancellationDate = @3
-                WHERE   PricingSummaryID = @0
-                         AND
-                        PricingSummaryRevision = @1
         ";
         #endregion
 
@@ -213,9 +187,12 @@ namespace LcRest
             using (var db = new LcDatabase(sharedDb))
             {
                 PricingSummary newData = FromDB(db.QuerySingle(sqlInsertItem,
-                    data.pricingSummaryID, data.serviceDurationMinutes, data.firstSessionDurationMinutes,
+                    data.pricingSummaryID,
+                    data.serviceDurationMinutes, data.firstSessionDurationMinutes,
                     data.subtotalPrice, data.clientServiceFeePrice,
-                    data.totalPrice, data.serviceFeeAmount));
+                    data.totalPrice, data.serviceFeeAmount,
+                    data.cancellationDate, data.cancellationFeeCharged
+                ));
 
                 if (data.details != null)
                 {
@@ -242,25 +219,6 @@ namespace LcRest
                 newDetails.Add(PricingSummaryDetail.Set(detail, sharedDb));
             }
             return newDetails;
-        }
-
-        /// <summary>
-        /// Saves in database the information related to cancellation
-        /// for the given pricingSummary, updating its record.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="sharedDb"></param>
-        public static void SetCancellation(PricingSummary data, Database sharedDb = null)
-        {
-            using (var db = new LcDatabase(sharedDb))
-            {
-                db.Execute(sqlUpdateCancellationFields,
-                    data.pricingSummaryID,
-                    data.pricingSummaryRevision,
-                    data.cancellationFeeCharged,
-                    data.cancellationDate
-                );
-            }
         }
         #endregion
 

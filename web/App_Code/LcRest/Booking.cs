@@ -930,6 +930,72 @@ namespace LcRest
                 ,[ModifiedBy] = 'sys'
             WHERE BookingID = @0
         ";
+        #region SQL Invalidate booking
+        const string sqlInvalidateBooking = @"
+            -- Parameters
+            DECLARE @BookingID int, @BookingStatusID int
+            SET @BookingID = @0
+            SET @BookingStatusID = @1
+
+            DECLARE @ServiceAddressID int
+
+            BEGIN TRY
+                BEGIN TRAN
+
+                -- Get Service Address ID to be (maybe) removed later
+                SELECT  @ServiceAddressID = ServiceAddressID
+                FROM    Booking
+                WHERE   BookingID = @BookingID
+
+                -- Removing CalendarEvents:
+                DELETE FROM CalendarEvents
+                WHERE ID IN (
+                    SELECT TOP 1 ServiceDateID FROM Booking
+                    WHERE BookingID = @BookingID
+                    UNION
+                    SELECT TOP 1 AlternativeDate1ID FROM Booking
+                    WHERE BookingID = @BookingID
+                    UNION
+                    SELECT TOP 1 AlternativeDate2ID FROM Booking
+                    WHERE BookingID = @BookingID
+                )
+
+                /*
+                    * Updating Booking status, and removing references to the 
+                    * user selected dates and address
+                    */
+                UPDATE  Booking
+                SET     BookingStatusID = @BookingStatusID,
+                        ServiceDateID = null,
+                        AlternativeDate1ID = null,
+                        AlternativeDate2ID = null,
+                        ServiceAddressID = null,
+                        clientPayment = @2,
+                        serviceProfessionalPaid = @3,
+                        serviceProfessionalPPFeePaid = @4,
+                        loconomicsPaid = @5,
+                        loconomicsPPFeePaid = @6
+                WHERE   BookingID = @BookingID
+
+                -- Removing Service Address, if is not an user saved location (it has not AddressName)
+                DELETE FROM ServiceAddress
+                WHERE AddressID = @AddressID
+                        AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @AddressID AND AddressName is null) = 1
+                DELETE FROM Address
+                WHERE AddressID = @AddressID
+                        AND
+                        AddressName is null
+
+                COMMIT TRAN
+            END TRY
+            BEGIN CATCH
+                IF @@TRANCOUNT > 0
+                    ROLLBACK TRAN
+                -- We return error number and message
+                SELECT (ERROR_NUMBER() + ':' + ERROR_MESSAGE()) As ErrorMessage
+            END CATCH
+        ";
+        #endregion
         #endregion
 
         /// <summary>
@@ -1110,6 +1176,25 @@ namespace LcRest
                     LcCalendar.DelUserAppointment(booking.serviceProfessionalUserID, booking.alternativeDate1ID.Value);
                 if (booking.alternativeDate2ID.HasValue)
                     LcCalendar.DelUserAppointment(booking.serviceProfessionalUserID, booking.alternativeDate2ID.Value);
+            }
+        }
+
+        public static void SetAsInvalidated(Booking booking, Database sharedDb = null)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                var result = (string)db.QueryValue(
+                    sqlInvalidateBooking,
+                    booking.bookingID,
+                    booking.bookingStatusID,
+                    booking.clientPayment,
+                    booking.serviceProfessionalPaid,
+                    booking.serviceProfessionalPPFeePaid,
+                    booking.loconomicsPaid,
+                    booking.loconomicsPPFeePaid
+                );
+                if (!String.IsNullOrEmpty(result))
+                    throw new Exception(result);
             }
         }
         #endregion
@@ -1508,14 +1593,14 @@ namespace LcRest
         /// and other set-ups to choose what fees to apply.
         /// </summary>
         /// <returns></returns>
-        public bool RefundPayment()
+        public void RefundPayment()
         {
+            CalculateCancellation();
+
             if (paymentEnabled && paymentCollected)
-            {
+            { 
                 if (!LcPayment.IsFakeTransaction(paymentTransactionID))
                 {
-                    CalculateCancellation();
-
                     if (paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
                     {
                         // For saved cards, there is no transaction, we need to do
@@ -1531,48 +1616,41 @@ namespace LcRest
                     }
                     else
                     {
-                        // Different calls for total and partial refunds
-                        if (pricingSummary.IsFullRefund)
+                        // We have a transaction that can be in state: authorized, settled, or intermiadate states.
+                        // We need to cancel the authorization or perform a full refund on settled.
+                        // FULL REFUND
+                        var result = LcPayment.RefundTransaction(paymentTransactionID);
+                        if (!string.IsNullOrEmpty(result))
                         {
-                            // FULL REFUND
-                            var result = LcPayment.RefundTransaction(paymentTransactionID);
-                            if (!string.IsNullOrEmpty(result))
-                            {
-                                throw new Exception(result);
-                            }
+                            throw new Exception(result);
                         }
-                        else
+
+                        // If something to charge after calculate cancellation:
+                        if (pricingSummary.totalPrice.HasValue && pricingSummary.totalPrice.Value > 0)
                         {
-                            // Partial refund could be given with zero amount to refund (because cancellation
-                            // policy sets no refund), execute payment partial refund only with no zero values
-                            if (pricingSummary.AmountToRefund > 0)
-                            {
-                                // PARTIAL REFUND
-                                // Refund does the payment release
-                                var result = LcPayment.RefundTransaction(paymentTransactionID, pricingSummary.AmountToRefund);
-                                if (!String.IsNullOrEmpty(result))
-                                {
-                                    throw new Exception(result);
-                                }
-                            }
-                            else
-                            {
-                                // NO REFUND AT ALL
-                                // Marketplace #408: since there is no refund, release the payment
-                                // to the professional (it includes fees to us too).
-                                // NOTE: previous methods 'RefundTransaction' already performs the payment release.
-                                var result = LcPayment.ReleaseTransactionFromEscrow(paymentTransactionID);
-                                if (!String.IsNullOrEmpty(result))
-                                    throw new Exception(result);
-                            }
+                            // TODO Run new transaction to charge the updated totalPrice and serviceFee
+                            // that takes care of cancellation fees
+                            // using the saved paymentMethodToken (same as used in initial calculation)
                         }
                     }
                 }
-                // Save cancellation info to database
-                PricingSummary.SetCancellation(pricingSummary);
             }
 
-            return false;
+            // Save cancellation info to database
+            using (var db = new LcDatabase())
+            {
+                db.Execute("BEGIN TRANSACTION");
+                try
+                {
+                    PricingSummary.Set(pricingSummary, db.Db);
+                    SetAsInvalidated(this, db.Db);
+                    db.Execute("COMMIT TRANSACTION");
+                }
+                catch
+                {
+                    db.Execute("ROLLBACK TRANSACTION");
+                }
+            }
         }
         #endregion
 
@@ -1609,7 +1687,7 @@ namespace LcRest
                 var policy = CancellationPolicy.Get(cancellationPolicyID, languageID, countryID);
                 if (serviceDate == null)
                     FillServiceDates();
-                
+
                 var cancellationLimitDate = serviceDate.startTime.AddHours(0 - policy.hoursRequired);
                 if (DateTime.Now < cancellationLimitDate)
                 {
@@ -1621,77 +1699,38 @@ namespace LcRest
                     // AFTER cancellation limit
                     pricingSummary.cancellationFeeCharged = (pricingSummary.subtotalPrice ?? 0) * policy.cancellationFeeAfter;
                 }
+
+                // keeps same subtotal and clientServiceFee
+                // Recalculate total
+                pricingSummary.totalPrice = pricingSummary.cancellationFeeCharged + pricingSummary.clientServiceFeePrice;
+                // Recalculate other values using standard calculations:
+                var type = BookingType.Get(bookingTypeID);
+                pricingSummary.CalculateServiceFee(type);
+                CalculateClientPayment();
+                CalculatePaidFields();
             }
             else {
-                // Not cancelled by client, but professional, no policy apply, just
-                // no cancellation fee (aka 'full refund')
+                // Not cancelled by client, can be:
+                // - cancelled by the professional (its a service professional booking)
+                // - declined by the professional
+                // - expired booking
+                // Then: no policy apply, just no cancellation fee (aka 'full refund')
                 pricingSummary.cancellationFeeCharged = 0;
+                // keeps sutbottal and client fee
+                //pricingSummary.clientServiceFeePrice = 0;
+                // And Update totals to pay, all 0
+                pricingSummary.totalPrice = 0;
+                pricingSummary.serviceFeeAmount = 0;
+                clientPayment = 0;
+                serviceProfessionalPaid = 0;
+                serviceProfessionalPPFeePaid = 0;
+                loconomicsPaid = 0;
+                loconomicsPPFeePaid = 0;
             }
         }
         #endregion
 
         #region System Manipulations
-        #region SQL Invalidate booking
-        const string sqlInvalidateBooking = @"
-            -- Parameters
-            DECLARE @BookingID int, @BookingStatusID int
-            SET @BookingID = @0
-            SET @BookingStatusID = @1
-
-            DECLARE @ServiceAddressID int
-
-            BEGIN TRY
-                BEGIN TRAN
-
-                -- Get Service Address ID to be (maybe) removed later
-                SELECT  @ServiceAddressID = ServiceAddressID
-                FROM    Booking
-                WHERE   BookingID = @BookingID
-
-                -- Removing CalendarEvents:
-                DELETE FROM CalendarEvents
-                WHERE ID IN (
-                    SELECT TOP 1 ServiceDateID FROM Booking
-                    WHERE BookingID = @BookingID
-                    UNION
-                    SELECT TOP 1 AlternativeDate1ID FROM Booking
-                    WHERE BookingID = @BookingID
-                    UNION
-                    SELECT TOP 1 AlternativeDate2ID FROM Booking
-                    WHERE BookingID = @BookingID
-                )
-
-                /*
-                    * Updating Booking status, and removing references to the 
-                    * user selected dates and address
-                    */
-                UPDATE  Booking
-                SET     BookingStatusID = @BookingStatusID,
-                        ServiceDateID = null,
-                        AlternativeDate1ID = null,
-                        AlternativeDate2ID = null,
-                        ServiceAddressID = null
-                WHERE   BookingID = @BookingID
-
-                -- Removing Service Address, if is not an user saved location (it has not AddressName)
-                DELETE FROM ServiceAddress
-                WHERE AddressID = @AddressID
-                        AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @AddressID AND AddressName is null) = 1
-                DELETE FROM Address
-                WHERE AddressID = @AddressID
-                        AND
-                        AddressName is null
-
-                COMMIT TRAN
-            END TRY
-            BEGIN CATCH
-                IF @@TRANCOUNT > 0
-                    ROLLBACK TRAN
-                -- We return error number and message
-                SELECT (ERROR_NUMBER() + ':' + ERROR_MESSAGE()) As ErrorMessage
-            END CATCH
-        ";
-        #endregion
         /// <summary>
         /// Perform tasks to expire this booking, making any refund task if needed
         /// and persisting changes to database.
@@ -1711,17 +1750,6 @@ namespace LcRest
             bookingStatusID = (int)LcEnum.BookingStatus.requestExpired;
 
             this.RefundPayment();
-
-            using (var db = new LcDatabase())
-            {
-                var result = (string)db.QueryValue(
-                    sqlInvalidateBooking,
-                    bookingID,
-                    bookingStatusID
-                );
-                if (!String.IsNullOrEmpty(result))
-                    throw new Exception(result);
-            }
         }
 
         public static void UpdateBookingTransactionID(string oldTranID, string newTranID)
@@ -2089,17 +2117,6 @@ namespace LcRest
 
             this.RefundPayment();
 
-            using (var db = new LcDatabase())
-            {
-                var result = (string)db.QueryValue(
-                    sqlInvalidateBooking,
-                    bookingID,
-                    bookingStatusID
-                );
-                if (!String.IsNullOrEmpty(result))
-                    throw new Exception(result);
-            }
-
             LcMessaging.SendBooking.For(bookingID).BookingCancelledByServiceProfessional();
         }
         /// <summary>
@@ -2124,16 +2141,6 @@ namespace LcRest
 
             this.RefundPayment();
 
-            using (var db = new LcDatabase())
-            {
-                var result = (string)db.QueryValue(
-                    sqlInvalidateBooking,
-                    bookingID,
-                    bookingStatusID
-                );
-                if (!String.IsNullOrEmpty(result))
-                    throw new Exception(result);
-            }
             LcMessaging.SendBooking.For(bookingID).BookingRequestDeclined();
         }
         #endregion
@@ -2353,17 +2360,6 @@ namespace LcRest
             bookingStatusID = (int)LcEnum.BookingStatus.cancelled;
 
             this.RefundPayment();
-
-            using (var db = new LcDatabase())
-            {
-                var result = (string)db.QueryValue(
-                    sqlInvalidateBooking,
-                    bookingID,
-                    bookingStatusID
-                );
-                if (!String.IsNullOrEmpty(result))
-                    throw new Exception(result);
-            }
 
             LcMessaging.SendBooking.For(bookingID).BookingCancelledByClient();
         }
