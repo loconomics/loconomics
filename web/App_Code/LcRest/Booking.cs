@@ -1278,8 +1278,11 @@ namespace LcRest
             };
 
             var jobTitleID = summary.SetDetailServices(serviceProfessionalUserID, services);
+
+            var flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(jobTitleID, languageID, countryID);
+
             summary.CalculateDetails();
-            summary.CalculateFees(BookingType.Get(this.bookingTypeID), this.firstTimeBooking);
+            summary.CalculateFees(BookingType.Get(this.bookingTypeID), this.firstTimeBooking, flags.hipaa);
 
             pricingSummary = summary;
 

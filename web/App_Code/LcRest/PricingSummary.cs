@@ -312,10 +312,10 @@ namespace LcRest
         /// </summary>
         /// <param name="type"></param>
         /// <param name="firstTimeBooking"></param>
-        public void CalculateClientServiceFee(BookingType type, bool firstTimeBooking)
+        public void CalculateClientServiceFee(BookingType type, bool firstTimeBooking, bool isHipaa)
         {
-            // Only are applied on firstTimeBookings, otherwise is zero
-            if (firstTimeBooking)
+            // Only are applied on NOT-HIPAA firstTimeBookings, otherwise is zero
+            if (firstTimeBooking && !isHipaa)
             {
                 // Can only be calculated if there is a subtotal price previously calculated
                 // otherwise clientServiceFeePrice will remain without value to mark it as not possible to calculate.
@@ -361,10 +361,10 @@ namespace LcRest
         /// </summary>
         /// <param name="type"></param>
         /// <param name="firstTimeBooking"></param>
-        public void CalculateFees(BookingType type, bool firstTimeBooking)
+        public void CalculateFees(BookingType type, bool firstTimeBooking, bool isHipaa)
         {
             // Calculate client fees (clientServiceFeePrice), based on subtotalPrice
-            CalculateClientServiceFee(type, firstTimeBooking);
+            CalculateClientServiceFee(type, firstTimeBooking, isHipaa);
 
             // Total Price must be calculated before calculate the deducted payment processing fees (serviceFeeAmount)
             // because is calculated on top of that (since is deducted by the payment processing platform over the total)
