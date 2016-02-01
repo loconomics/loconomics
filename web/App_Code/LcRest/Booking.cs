@@ -43,6 +43,8 @@ namespace LcRest
         public int pricingSummaryRevision;
         internal string paymentTransactionID;
         public string paymentLastFourCardNumberDigits;
+        internal string paymentMethodID;
+        internal string cancellationPaymentTransactionID;
         public decimal? clientPayment;
         public decimal? serviceProfessionalPaid;
         public decimal? serviceProfessionalPPFeePaid;
@@ -160,6 +162,8 @@ namespace LcRest
                 pricingSummaryRevision = booking.pricingSummaryRevision,
                 paymentTransactionID = internalUse ? booking.paymentTransactionID : null,
                 paymentLastFourCardNumberDigits = forClient || internalUse ? LcEncryptor.Decrypt(booking.paymentLastFourCardNumberDigits) : null,
+                paymentMethodID = internalUse ? booking.paymentMethodID : null,
+                cancellationPaymentTransactionID = internalUse ? booking.cancellationPaymentTransactionID : null,
                 clientPayment = booking.clientPayment,
                 serviceProfessionalPaid = booking.serviceProfessionalPaid,
                 serviceProfessionalPPFeePaid = booking.serviceProfessionalPPFeePaid,
@@ -358,6 +362,8 @@ namespace LcRest
                 pricingSummaryRevision,
                 paymentTransactionID,
                 paymentLastFourCardNumberDigits,
+                paymentMethodID,
+                cancellationPaymentTransactionID,
                 clientPayment,
                 serviceProfessionalPaid,
                 serviceProfessionalPPFeePaid,
@@ -512,7 +518,7 @@ namespace LcRest
 
                              AND
                             -- Still not charged
-                            B.TotalPricePaidByClient is null
+                            B.ClientPayment is null
                 ").Select<dynamic, Booking>(x => FromDB(x, true));
             }
         }
@@ -552,7 +558,7 @@ namespace LcRest
 
                          AND
                         -- Still not charged or authorized
-                        B.TotalPricePaidByClient is null
+                        B.ClientPayment is null
                          AND
                         B.PaymentAuthorized = 0
                 ").Select<dynamic, Booking>(x => FromDB(x, true));
@@ -799,6 +805,8 @@ namespace LcRest
                 ,[PricingSummaryRevision]
                 ,[PaymentTransactionID]
                 ,[PaymentLastFourCardNumberDigits]
+                ,[paymentMethodID]
+                ,[CancellationPaymentTransactionID]
                 
                 ,[InstantBooking]
                 ,[FirstTimeBooking]
@@ -889,6 +897,8 @@ namespace LcRest
                 ,PaymentCollected = @2
                 ,PaymentAuthorized = @3
                 ,PaymentLastFourCardNumberDigits = @4
+                ,paymentMethodID = @5
+                ,cancellationPaymentTransactionID = @6
                 ,[UpdatedDate] = getdate()
                 ,[ModifiedBy] = 'sys'
             WHERE BookingID = @0
@@ -974,7 +984,9 @@ namespace LcRest
                         serviceProfessionalPaid = @3,
                         serviceProfessionalPPFeePaid = @4,
                         loconomicsPaid = @5,
-                        loconomicsPPFeePaid = @6
+                        loconomicsPPFeePaid = @6,
+                        pricingSummaryRevision = @7,
+                        cancellationPaymentTransactionID = @8
                 WHERE   BookingID = @BookingID
 
                 -- Removing Service Address, if is not an user saved location (it has not AddressName)
@@ -1036,6 +1048,8 @@ namespace LcRest
                         booking.pricingSummaryRevision,
                         booking.paymentTransactionID,
                         lastFour,
+                        booking.paymentMethodID,
+                        booking.cancellationPaymentTransactionID,
 
                         booking.instantBooking,
                         booking.firstTimeBooking,
@@ -1103,7 +1117,9 @@ namespace LcRest
                     booking.paymentTransactionID,
                     booking.paymentCollected,
                     booking.paymentAuthorized,
-                    lastFour
+                    lastFour,
+                    booking.paymentMethodID,
+                    booking.cancellationPaymentTransactionID
                 );
             }
         }
@@ -1191,7 +1207,9 @@ namespace LcRest
                     booking.serviceProfessionalPaid,
                     booking.serviceProfessionalPPFeePaid,
                     booking.loconomicsPaid,
-                    booking.loconomicsPPFeePaid
+                    booking.loconomicsPPFeePaid,
+                    booking.pricingSummaryRevision,
+                    booking.cancellationPaymentTransactionID
                 );
                 if (!String.IsNullOrEmpty(result))
                     throw new Exception(result);
@@ -1377,7 +1395,7 @@ namespace LcRest
         {
             if (!paymentEnabled)
                 throw new ConstraintException("Payment not enabled for this booking");
-            if (paymentCollected || !String.IsNullOrEmpty(paymentTransactionID))
+            if (paymentCollected || !String.IsNullOrEmpty(paymentMethodID))
                 throw new ConstraintException("Payment already collected for this booking");
             
             // The input paymentID must be one generated by Braintree, reset any (malicious) attempt
@@ -1388,7 +1406,9 @@ namespace LcRest
             // The steps on emulation allows a quick view of what the overall process does and data set.
             if (TESTING_EMULATEBRAINTREE)
             {
-                paymentTransactionID = LcPayment.CreateFakeTransactionId();
+                paymentTransactionID = null;
+                cancellationPaymentTransactionID = null;
+                paymentMethodID = LcPayment.CreateFakePaymentMethodId();
                 paymentLastFourCardNumberDigits = null;
                 paymentCollected = true;
                 paymentAuthorized = false;
@@ -1399,7 +1419,7 @@ namespace LcRest
                 // Find or create Customer on Braintree
                 var client = LcPayment.GetOrCreateBraintreeCustomer(clientUserID);
 
-                // Quick way for saved pyament method that does not needs to be updated
+                // Quick way for saved payment method that does not needs to be updated
                 var hasID = !String.IsNullOrWhiteSpace(paymentData.paymentMethodID);
                 if (hasID && !savePayment)
                 {
@@ -1429,7 +1449,7 @@ namespace LcRest
                         return validationResults;
 
                     // Save on Braintree secure Vault
-                    // It updates the ID if a new one was generated
+                    // It updates the paymentMethodID if a new one was generated
                     var saveCardError = paymentData.SaveInVault(client.Id);
                     if (!String.IsNullOrEmpty(saveCardError))
                     {
@@ -1438,19 +1458,22 @@ namespace LcRest
                     }
                 }
 
-                // We have a valid payment ID at this moment, create the transactionID with that
-                paymentTransactionID = LcPayment.TransactionIdIsCardPrefix + paymentData.paymentMethodID;
+                // We have a valid payment ID at this moment, save it on the booking
+                paymentMethodID = paymentData.paymentMethodID;
                 // Set card number (is processed later while saving to ensure only 4 and encrypted are persisted)
                 paymentLastFourCardNumberDigits = paymentData.cardNumber;
                 // Flags
                 paymentCollected = true;
                 paymentAuthorized = false;
+                paymentTransactionID = null;
+                cancellationPaymentTransactionID = null;
             }
 
             // Update status:
             bookingStatusID = (int)(instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
             // Persist on database:
             SetPaymentState(this);
+            SetStatus(this);
             // No errors:
             return null;
         }
@@ -1480,8 +1503,8 @@ namespace LcRest
         }
 
         /// <summary>
-        /// If the given transactionID is a Card Token, it performs a transaction to authorize, without charge/settle,
-        /// the amount on the card.
+        /// It performs a transaction to authorize, without charge/settle,
+        /// the amount on the saved payment method.
         /// This process ensures the money is available for the later moment the charge happens (withing the authorization
         /// period, the worse case 7 days) using 'SettleBookingTransaction', or manage preventively any error that arises.
         /// The transactionID generated (if any) is updated on database properly.
@@ -1493,34 +1516,32 @@ namespace LcRest
         /// If the authorization through Braintree fails, throw the error</returns>
         public bool AuthorizeTransaction()
         {
-            if (paymentCollected && !paymentAuthorized && !LcPayment.IsFakeTransaction(paymentTransactionID))
+            if (!paymentEnabled)
+                return false; // throw new ConstraintException("Payment not enabled for this booking");
+            if (!paymentCollected || String.IsNullOrEmpty(paymentMethodID))
+                throw new ConstraintException("Payment not collected for this booking, cannot be authorized");
+            if (paymentAuthorized)
+                throw new ConstraintException("Payment authorized for this booking already");
+
+            if (LcPayment.IsFakePaymentMethod(paymentMethodID))
             {
-                if (paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
-                {
-                    var cardToken = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
-
-                    if (!String.IsNullOrWhiteSpace(cardToken))
-                    {
-                        // We need pricing info, if not preloaded
-                        if (pricingSummary == null)
-                            FillPricingSummary();
-
-                        // Transaction authorization, so NOT charge/settle now
-                        paymentTransactionID = LcPayment.AuthorizeBookingTransaction(this, cardToken);
-                        paymentAuthorized = true;
-
-                        SetPaymentState(this);
-
-                        return true;
-                    }
-                    else
-                    {
-                        throw new ConstraintException("Transaction or card identifier gets lost, payment cannot be performed.");
-                    }
-                }
+                paymentTransactionID = LcPayment.CreateFakeTransactionId();
+                return true;
             }
+            else
+            {
+                // We need pricing info, if not preloaded
+                if (pricingSummary == null)
+                    FillPricingSummary();
 
-            return false;
+                // Transaction authorization, so NOT charge/settle now
+                paymentTransactionID = LcPayment.AuthorizeBookingTransaction(this);
+                paymentAuthorized = true;
+
+                SetPaymentState(this);
+
+                return true;
+            }
         }
 
         /// <summary>
@@ -1530,26 +1551,27 @@ namespace LcRest
         /// <returns></returns>
         public bool SettleTransaction()
         {
-            if (paymentCollected)
+            if (!paymentEnabled)
+                return false; // throw new ConstraintException("Payment not enabled for this booking");
+            if (!paymentCollected || String.IsNullOrEmpty(paymentMethodID))
+                throw new ConstraintException("Payment not collected for this booking, cannot be settle");
+
+            if (!paymentAuthorized)
             {
-                if (!paymentAuthorized)
-                {
-                    // First, request payment authorization from collected payment method (AKA saved credit card)
-                    AuthorizeTransaction();
-                }
-
-                // Require payment from authorized transaction
-                var settleError = LcPayment.SettleTransaction(paymentTransactionID);
-                if (!String.IsNullOrEmpty(settleError))
-                    throw new Exception(settleError);
-
-                // Update booking database information, setting price payed by customer
-                CalculateClientPayment();
-                SetClientPayment(this);
-
-                return true;
+                // First, request payment authorization from collected payment method (AKA saved credit card)
+                AuthorizeTransaction();
             }
-            return false;
+
+            // Require payment from authorized transaction
+            var settleError = LcPayment.SettleTransaction(paymentTransactionID);
+            if (!String.IsNullOrEmpty(settleError))
+                throw new Exception(settleError);
+
+            // Update booking database information, setting price payed by customer
+            CalculateClientPayment();
+            SetClientPayment(this);
+
+            return true;
         }
 
         /// <summary>
@@ -1562,26 +1584,34 @@ namespace LcRest
         /// <returns></returns>
         public bool ReleasePayment()
         {
-            if (paymentEnabled && paymentCollected)
+            if (!paymentEnabled)
+                return false; // throw new ConstraintException("Payment not enabled for this booking");
+            if (!paymentCollected || String.IsNullOrEmpty(paymentMethodID))
+                throw new ConstraintException("Payment not collected for this booking, cannot be released");
+
+            if (!paymentAuthorized)
             {
-                var errmsg = LcPayment.ReleaseTransactionFromEscrow(paymentTransactionID);
-                if (!String.IsNullOrEmpty(errmsg))
-                    throw new Exception(errmsg);
-
-                // Update booking information with final paid amounts
-                CalculatePaidFields();
-                SetPaidFields(this);
-
-                // Booking is complete
-                bookingStatusID = (int)LcEnum.BookingStatus.completed;
-                SetStatus(this);
-
-                return true;
+                // First authorize an settle
+                SettleTransaction();
             }
-            return false;
+
+            var errmsg = LcPayment.ReleaseTransactionFromEscrow(paymentTransactionID);
+            if (!String.IsNullOrEmpty(errmsg))
+                throw new Exception(errmsg);
+
+            // Update booking information with final paid amounts
+            CalculatePaidFields();
+            SetPaidFields(this);
+
+            // Booking is complete
+            bookingStatusID = (int)LcEnum.BookingStatus.completed;
+            SetStatus(this);
+
+            return true;
         }
 
         /// <summary>
+        /// "Perform Payment Cancellation" / "Perform Cancellation Payment"
         /// Runs all the operations needed to cancel/decline/avoid the pending payment of the booking,
         /// usually *voiding* the pending, authorized, transaction or asking for *full refund* if already settle, to Braintree;
         /// and sometimes running a new transaction to charge to the client some cancellation fees, on other cases may be nothing
@@ -1599,41 +1629,21 @@ namespace LcRest
 
             if (paymentEnabled && paymentCollected)
             { 
-                if (!LcPayment.IsFakeTransaction(paymentTransactionID))
+                // If we have a payment transaction, refund/void it first:
+                if (paymentAuthorized)
                 {
-                    if (paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
+                    // We have a transaction that can be in state: authorized, settled, or intermiedate states.
+                    // We need to cancel the authorization or perform a full refund on settled.
+                    // FULL REFUND
+                    var result = LcPayment.FullRefundTransaction(paymentTransactionID);
+                    if (!String.IsNullOrEmpty(result))
                     {
-                        // For saved cards, there is no transaction, we need to do
-                        // one to refund money, or just delete the card if was a full-refund,
-                        // all cases managed at LcPayment:
-                        var creditCard = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
-
-                        var result = LcPayment.DoTransactionToRefundFromCard(creditCard, pricingSummary, clientUserID, serviceProfessionalUserID);
-                        if (!String.IsNullOrEmpty(result))
-                        {
-                            throw new Exception(result);
-                        }
-                    }
-                    else
-                    {
-                        // We have a transaction that can be in state: authorized, settled, or intermiadate states.
-                        // We need to cancel the authorization or perform a full refund on settled.
-                        // FULL REFUND
-                        var result = LcPayment.RefundTransaction(paymentTransactionID);
-                        if (!string.IsNullOrEmpty(result))
-                        {
-                            throw new Exception(result);
-                        }
-
-                        // If something to charge after calculate cancellation:
-                        if (pricingSummary.totalPrice.HasValue && pricingSummary.totalPrice.Value > 0)
-                        {
-                            // TODO Run new transaction to charge the updated totalPrice and serviceFee
-                            // that takes care of cancellation fees
-                            // using the saved paymentMethodToken (same as used in initial calculation)
-                        }
+                        throw new Exception(result);
                     }
                 }
+                // ON ELSE: we have just a payment method collected, we just go to the last step anyway
+
+                cancellationPaymentTransactionID = LcPayment.BookingCancellationPaymentFromCard(this);
             }
 
             // Save cancellation info to database
@@ -1642,13 +1652,20 @@ namespace LcRest
                 db.Execute("BEGIN TRANSACTION");
                 try
                 {
-                    PricingSummary.Set(pricingSummary, db.Db);
+                    // Persists changes in the pricing (cancellation fees and new totals) generating
+                    // a new revision
+                    var ps = PricingSummary.Set(pricingSummary, db.Db);
+                    // Update booking revision to new one
+                    this.pricingSummaryRevision = ps.pricingSummaryRevision;
+                    // Save all changes in database and further "invalidation/clean-up" tasks:
                     SetAsInvalidated(this, db.Db);
                     db.Execute("COMMIT TRANSACTION");
                 }
-                catch
+                catch (Exception ex)
                 {
                     db.Execute("ROLLBACK TRANSACTION");
+                    LcMessaging.NotifyError("Booking payment was refunded and/or cancellation fee applied, but database couldn't get updated", "", "");
+                    throw ex;
                 }
             }
         }
@@ -1716,9 +1733,9 @@ namespace LcRest
                 // - expired booking
                 // Then: no policy apply, just no cancellation fee (aka 'full refund')
                 pricingSummary.cancellationFeeCharged = 0;
-                // keeps sutbottal and client fee
-                //pricingSummary.clientServiceFeePrice = 0;
+                // keeps sutbottal
                 // And Update totals to pay, all 0
+                pricingSummary.clientServiceFeePrice = 0;
                 pricingSummary.totalPrice = 0;
                 pricingSummary.serviceFeeAmount = 0;
                 clientPayment = 0;
@@ -1750,18 +1767,6 @@ namespace LcRest
             bookingStatusID = (int)LcEnum.BookingStatus.requestExpired;
 
             this.RefundPayment();
-        }
-
-        public static void UpdateBookingTransactionID(string oldTranID, string newTranID)
-        {
-            using (var db = new LcDatabase())
-            {
-                db.Execute(@"
-                    UPDATE  Booking
-                    SET     PaymentTransactionID = @1
-                    WHERE   PaymentTransactionID = @0
-                ", oldTranID, newTranID);
-            }
         }
         #endregion
 
@@ -1815,7 +1820,7 @@ namespace LcRest
                     throw new ConstraintException("Impossible to create a booking for that Job Title.");
 
                 if (booking.CreatePricing(services))
-                    throw new ConstraintException("Choosen services does not belongs to the Job Title");
+                    throw new ConstraintException("Chosen services does not belongs to the Job Title");
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.serviceDurationMinutes ?? 0));
@@ -2101,7 +2106,6 @@ namespace LcRest
         public void CancelBookingByServiceProfessional()
         {
             // Constraint
-            // TODO: Review constraint in diagram.
             if (bookingStatusID != (int)LcEnum.BookingStatus.confirmed ||
                 bookingTypeID != (int)LcEnum.BookingType.serviceProfessionalBooking)
             {

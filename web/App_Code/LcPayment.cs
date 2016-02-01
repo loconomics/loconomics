@@ -78,16 +78,18 @@ public static partial class LcPayment
     #region Actions: Create or prepare transactions and cards
 
     /// <summary>
-    /// Performs a transaction to authorize the transaction on the client payment method, but
+    /// Performs a transaction to authorize the payment on the client payment method, but
     /// not charging still, using the data from the given booking and the saved paymentMethodID.
     /// Booking is NOT checked before perform the task, use the LcRest.Booking API to securely run pre-condition
     /// checks before authorize transaction. The booking must have the data loaded for the pricingSummary.
-    /// It returns the transactionID generated, original booking object is not updated.
-    /// Errors in the process are throwed.
+    /// 
+    /// REVIEWED #771
     /// </summary>
     /// <param name="booking"></param>
     /// <param name="paymentMethodID">AKA creditCardToken</param>
-    public static string AuthorizeBookingTransaction(LcRest.Booking booking, string paymentMethodID)
+    /// <returns>It returns the transactionID generated, original booking object is not updated.
+    /// Errors in the process are throwed.</returns>
+    public static string AuthorizeBookingTransaction(LcRest.Booking booking)
     {
         if (booking.pricingSummary == null ||
             !booking.pricingSummary.totalPrice.HasValue ||
@@ -105,7 +107,7 @@ public static partial class LcPayment
             // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
             ServiceFeeAmount = booking.pricingSummary.serviceFeeAmount,
             CustomerId = GetCustomerId(booking.clientUserID),
-            PaymentMethodToken = paymentMethodID,
+            PaymentMethodToken = booking.paymentMethodID,
             // Now, with Marketplace #408, the receiver of the money for each transaction is
             // the provider through account at Braintree, and not the Loconomics account:
             //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
@@ -124,7 +126,7 @@ public static partial class LcPayment
         // Everything goes fine
         if (r.IsSuccess())
         {
-            // Save the transactionID
+            // Get the transactionID
             if (r.Target != null
                 && !String.IsNullOrEmpty(r.Target.Id))
             {
@@ -137,14 +139,14 @@ public static partial class LcPayment
                 // this minor error.
                 try
                 {
-                    if (paymentMethodID.StartsWith(TempSavedCardPrefix))
-                        gateway.CreditCard.Delete(paymentMethodID);
+                    if (booking.paymentMethodID.StartsWith(TempSavedCardPrefix))
+                        gateway.CreditCard.Delete(booking.paymentMethodID);
                 }
                 catch (Exception ex)
                 {
                     try
                     {
-                        LcMessaging.NotifyError("LcPayment.AuthorizeBookingTransaction..DeleteBraintreeTempCard(" + paymentMethodID + ");bookingID=" + booking.bookingID, "", ex.Message);
+                        LcMessaging.NotifyError(String.Format("LcPayment.AuthorizeBookingTransaction..DeleteBraintreeTempCard({0});bookingID={1}", booking.paymentMethodID, booking.bookingID), "", ex.Message);
                         LcLogger.LogAspnetError(ex);
                     }
                     catch { }
@@ -156,7 +158,7 @@ public static partial class LcPayment
             else
             {
                 // Transaction worked but impossible to know the transactionID (weird, is even possible?),
-                // recommended to do not touch the DB (to still know the credit card token) and notify error
+                // notify error
                 throw new Exception("Impossible to know transaction details, please contact support. BookingID #" + booking.bookingID.ToString());
             }
         }
@@ -167,67 +169,76 @@ public static partial class LcPayment
     }
 
     /// <summary>
-    /// Do a transaction ('sale') to be submitted and payed now for any cancellation fee
-    /// of a booking (previously calculated as TotalPrice and serviceFeeAmount).
-    /// It manages when there is no price to charge, and just skip the step since it's fine.
-    /// The removal of a temporary card is performed after all.
+    /// Request an immediate transaction for the booking cancellation fee, if any
+    /// (cancellation must be previously calculated on the booking, with amounts at pricing totalPrice and serviceFeeAmount, as usual).
+    /// It manages when there is no price to charge, and just skip the step without error.
+    /// The removal of a temporary card is performed after all (doesn't matter if a transaction was needed or not).
+    /// The transaction is "immediate" because is asked to be submitted and released now (the flow 
+    /// for a normal booking payment is to authorize, later settle, later release, but on this case
+    /// we require to Braintree to do all that steps at the moment).
+    /// 
+    /// REVIEWED #771
     /// </summary>
-    /// <param name="creditCardToken"></param>
-    /// <param name="refund"></param>
-    /// <param name="customerID"></param>
-    /// <param name="providerID"></param>
-    /// <returns></returns>
-    public static string DoTransactionToRefundFromCard(string creditCardToken, LcRest.PricingSummary pricing, int customerID, int providerID)
+    /// <param name="booking"></param>
+    /// <returns>It returns the transactionID generated, original booking object is not updated.
+    /// Errors in the process are throwed.</returns>
+    public static string BookingCancellationPaymentFromCard(LcRest.Booking booking)
     {
-        string result = null;
+        string cancellationTransactionID = null;
+        var gateway = NewBraintreeGateway();
 
+        if (booking.pricingSummary.totalPrice.HasValue && booking.pricingSummary.totalPrice > 0)
+        {
+            if (String.IsNullOrEmpty(booking.paymentMethodID))
+                throw new ConstraintException("Cannot charge booking cancellation fee because there is no payment method.");
+
+            TransactionRequest request = new TransactionRequest
+            {
+                Amount = booking.pricingSummary.totalPrice.Value,
+                // Marketplace #408: since provider receive the money directly, Braintree must discount
+                // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics)
+                ServiceFeeAmount = booking.pricingSummary.serviceFeeAmount,
+                CustomerId = GetCustomerId(booking.clientUserID),
+                PaymentMethodToken = booking.paymentMethodID,
+                // Now, with Marketplace #408, the receiver of the money for each transaction is
+                // the provider through account at Braintree, and not the Loconomics account:
+                //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+                MerchantAccountId = GetProviderPaymentAccountId(booking.serviceProfessionalUserID),
+                // We explicitely ask for an immediate transaction (it's the default, but let's being explicit):
+                Options = new TransactionOptionsRequest
+                {
+                    // Marketplace #408: we normally hold it, but this is a cancellation so don't hold, pay at the moment
+                    HoldInEscrow = false,
+                    // Submit now for charge
+                    SubmitForSettlement = true
+                }
+            };
+
+            var r = gateway.Transaction.Sale(request);
+
+            if (!r.IsSuccess())
+            {
+                throw new Exception(r.Message);
+            }
+            // Get the transactionID
+            else if (r.Target != null
+                && !String.IsNullOrEmpty(r.Target.Id))
+            {
+                cancellationTransactionID = r.Target.Id;
+            }
+        }
+
+        // Remove temporary card: It's a complementary task, so we avoid exceptions (if possible) to interrupt the process
         try
         {
-            var gateway = NewBraintreeGateway();
-
-            if (pricing.totalPrice.HasValue && pricing.totalPrice > 0)
-            {
-                TransactionRequest request = new TransactionRequest
-                {
-                    Amount = pricing.totalPrice.Value,
-                    // Marketplace #408: since provider receive the money directly, Braintree must discount
-                    // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics)
-                    ServiceFeeAmount = pricing.serviceFeeAmount,
-                    CustomerId = GetCustomerId(customerID),
-                    PaymentMethodToken = creditCardToken,
-                    // Now, with Marketplace #408, the receiver of the money for each transaction is
-                    // the provider through account at Braintree, and not the Loconomics account:
-                    //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
-                    MerchantAccountId = GetProviderPaymentAccountId(providerID),
-                    Options = new TransactionOptionsRequest
-                    {
-                        // Marketplace #408: we normally hold it, but we are refunding so don't hold, pay at the moment
-                        HoldInEscrow = false,
-                        // Submit now
-                        SubmitForSettlement = true
-                    }
-                };
-
-                var r = gateway.Transaction.Sale(request);
-
-                result = r.IsSuccess() ? null : r.Message;
-            }
-
-            // Everything goes fine
-            if (result == null)
-            {
-                // If the card is a TEMPorarly card (just to perform this transaction)
-                // it must be removed now since was successful used
-                if (creditCardToken.StartsWith(TempSavedCardPrefix))
-                    gateway.CreditCard.Delete(creditCardToken);
-            }
+            // If the card is a TEMPorarly card (just to perform this transaction)
+            // it must be removed now since was successful used
+            if (booking.paymentMethodID.StartsWith(TempSavedCardPrefix))
+                gateway.CreditCard.Delete(booking.paymentMethodID);
         }
-        catch (Exception ex)
-        {
-            return ex.Message;
-        }
+        catch { }
 
-        return result;
+        return cancellationTransactionID;
     }
 
     /// <summary>
@@ -235,72 +246,6 @@ public static partial class LcPayment
     /// for transactions that doesn't want to save it permanently.
     /// </summary>
     public const string TempSavedCardPrefix = "TEMPCARD_";
-
-    public const string TransactionIdIsCardPrefix = "CARD:";
-
-    [Obsolete("Use LcPayment.InputPaymentMethod class, and SaveInVault method")]
-    public static string SaveCardInVault(string customerIdOnBraintree, ref string creditCardToken,
-        string nameOnCard, string cardNumber,
-        string cardExpMonth, string cardExpYear, string cardCvv,
-        LcData.Address address)
-    {
-        BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
-
-        var isTemp = creditCardToken != null && creditCardToken.StartsWith(TempSavedCardPrefix);
-
-        var creditCardRequest = new CreditCardRequest
-        {
-            CustomerId = customerIdOnBraintree,
-            CardholderName = nameOnCard,
-            Number = cardNumber,
-            ExpirationDate = cardExpMonth + "/" + cardExpYear,
-            CVV = cardCvv,
-            BillingAddress = new CreditCardAddressRequest
-            {
-                StreetAddress = address.AddressLine1,
-                ExtendedAddress = address.AddressLine2,
-                Locality = address.City,
-                Region = address.StateProvinceCode,
-                PostalCode = address.PostalCode,
-                CountryCodeAlpha2 = address.CountryCodeAlpha2
-            }
-        };
-
-        Result<CreditCard> resultCreditCard = null;
-
-        // Find or create/update the payment method (credit card) for the customer
-        try{
-            // There is no card token, just throw to go on creation (no need to contact Braintree)
-            if (String.IsNullOrEmpty(creditCardToken))
-                throw new Braintree.Exceptions.NotFoundException("No card token");
-
-            // Find the card
-            gateway.CreditCard.Find(creditCardToken);
-                                    
-            // Update it:
-            resultCreditCard = gateway.CreditCard.Update(creditCardToken, creditCardRequest);
-
-        } catch (Braintree.Exceptions.NotFoundException ex) {
-            // Credit card for customer doesn't exist, create it:
-            if (isTemp)
-                // We set the Token on temp cards
-                creditCardRequest.Token = creditCardToken;
-
-            resultCreditCard = gateway.CreditCard.Create(creditCardRequest);
-        }
-                                
-        if (resultCreditCard.IsSuccess()) {
-            // New Token
-            creditCardToken = resultCreditCard.Target.Token;
-            ASP.LcHelpers.DebugLogger.Log("Created card {0}", creditCardToken);
-        }
-        else {
-            return resultCreditCard.Message;
-        }
-
-        // No error
-        return null;
-    }
     #endregion
 
     #region Actions: Refund
@@ -311,10 +256,12 @@ public static partial class LcPayment
     /// no charge happens, 'null' will be returned, just the same as if the refund operation
     /// was success.
     /// If there is an error, the error message will be returned.
+    /// 
+    /// REVIEWED #771
     /// </summary>
     /// <param name="transactionID"></param>
     /// <returns></returns>
-    public static string RefundTransaction(string transactionID)
+    public static string FullRefundTransaction(string transactionID)
     {
         if (IsFakeTransaction(transactionID))
             return null;
@@ -365,121 +312,14 @@ public static partial class LcPayment
         }
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
-    /// <summary>
-    /// Partial refund a transaction ensuring that customer will be charged only for the
-    /// difference or will be refunded for that amount.
-    /// If transaction was not settled still (will happen most time), original transaction
-    /// will be cloned by the different of amount (total less refunded), voiding original transaction.
-    /// </summary>
-    /// <param name="transactionID"></param>
-    /// <param name="amount"></param>
-    /// <returns></returns>
-    public static string RefundTransaction(string transactionID, decimal amount)
-    {
-        if (IsFakeTransaction(transactionID))
-            return null;
-
-        Result<Transaction> r = null;
-
-        try
-        {
-            var gateway = NewBraintreeGateway();
-
-            // Check if the transaction has something to refund (was not full refunded yet)
-            Transaction transaction = null;
-            try
-            {
-                transaction = gateway.Transaction.Find(transactionID);
-            }
-            catch (Braintree.Exceptions.NotFoundException ex) { }
-
-            if (transaction == null)
-                return "Payment transaction doesn't exists, impossible to perform the refund.";
-
-            if (transaction.Amount > 0)
-            {
-                // There is something to refund:
-                if (transaction.Status == TransactionStatus.SETTLED ||
-                    transaction.Status == TransactionStatus.SETTLING)
-                {
-                    // Partial refund transaction.
-                    r = gateway.Transaction.Refund(transactionID, amount);
-
-                    // Marketplace #408: just after refund to the customer its amount, pay the rest amount
-                    // to the provider (and fees to us)
-                    if (r.IsSuccess())
-                        r = gateway.Transaction.ReleaseFromEscrow(transactionID);
-                }
-                else if (transaction.Status == TransactionStatus.AUTHORIZED ||
-                    transaction.Status == TransactionStatus.AUTHORIZING ||
-                    transaction.Status == TransactionStatus.SUBMITTED_FOR_SETTLEMENT)
-                {
-                    // Cannot be partial refunded if not settled, we
-                    // clone the transaction to include (total - refunded) amount
-                    // and void original transation
-
-                    var request = new TransactionCloneRequest
-                    {
-                        // Total original amount less refunded amount
-                        Amount = transaction.Amount.Value - amount,
-                        Options = new TransactionOptionsCloneRequest
-                        {
-                            SubmitForSettlement = true
-                        }
-                    };
-                    Result<Transaction> newResult = gateway.Transaction.
-                      CloneTransaction(transactionID, request);
-
-                    // Check that all was fine in this subtask
-                    if (newResult.IsSuccess()
-                        && newResult.Target != null
-                        && !String.IsNullOrEmpty(newResult.Target.Id))
-                    {
-                        // A new transactionID is given, update it in database
-                        var newTransactionID = newResult.Target.Id;
-                        LcRest.Booking.UpdateBookingTransactionID(transactionID, newTransactionID);
-
-                        // Void original transaction
-                        r = gateway.Transaction.Void(transactionID);
-
-                        // Check error on Void, because if failed it means that more money was charged
-                        // to customer instead of refunded!
-                        if (!r.IsSuccess())
-                        {
-                            // Try to void new transaction
-                            gateway.Transaction.Void(newTransactionID);
-                        }
-                        else
-                        {
-                            // Marketplace #408: just after refund to the customer its amount, pay the rest amount
-                            // to the provider (and fees to us)
-                            r = gateway.Transaction.ReleaseFromEscrow(newTransactionID);
-                        }
-                    }
-                    else
-                    {
-                        return newResult.Message;
-                    }
-                }
-                else
-                {
-                    return "Impossible to refund payment: unknow transaction status.";
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            return ex.Message;
-        }
-
-        return (r == null || r.IsSuccess() ? null : r.Message);
-    }
     #endregion
 
     #region Actions: Confirming payment
     /// <summary>
     /// Submit to settlement a transaction to be full charged its authorized
     /// amount.
+    /// 
+    /// REVIEWED #771
     /// </summary>
     /// <param name="transactionID"></param>
     /// <returns></returns>
@@ -509,6 +349,8 @@ public static partial class LcPayment
     /// and the fees to the Marketplace Owner (us).
     /// A call for SettleTransaction there was need previous to this with enough
     /// time in advance.
+    /// 
+    /// REVIEWED #771
     /// </summary>
     /// <param name="transactionID"></param>
     /// <returns></returns>
@@ -639,7 +481,7 @@ public static partial class LcPayment
     }
     #endregion
 
-    #region Create Payment Account (Merchant Account)
+    #region Payment Account (Merchant Account). Needs refactor to simplify in one 'create' method
     /// <summary>
     /// Create the payment account for the provider at the payment gateway (Braintree) given
     /// its Loconomics UserID.
@@ -902,9 +744,17 @@ public static partial class LcPayment
     {
         return FakeTransactionPrefix + Guid.NewGuid().ToString();
     }
+    public static string CreateFakePaymentMethodId()
+    {
+        return FakeTransactionPrefix + Guid.NewGuid().ToString();
+    }
     public static bool IsFakeTransaction(string transactionId)
     {
         return String.IsNullOrEmpty(transactionId) || transactionId.StartsWith(FakeTransactionPrefix);
+    }
+    public static bool IsFakePaymentMethod(string paymentMethodID)
+    {
+        return String.IsNullOrEmpty(paymentMethodID) || paymentMethodID.StartsWith(FakeTransactionPrefix);
     }
     #endregion
 }
