@@ -494,6 +494,13 @@
             "url": "/api/v1/en-US/me/service-professional-booking/73/deny",
             "post": {}
         },
+        "Service Professional Booking: Confirm a client booking request": {
+            "url": "/api/v1/en-US/me/service-professional-booking/73/confirm",
+            "post": {
+                "dataType": "preferred",
+                "api comment": "dataType can be: preferred, alternative1 or alternative2. 'Preferred' will pick up the date currently on the 'serviceDateID'."
+            }
+        },
 
         "Freelancer Pricing - All user pricing": {
             "url": "/api/v1/en-US/me/service-professional-services",

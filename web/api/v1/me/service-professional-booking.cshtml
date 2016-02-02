@@ -40,6 +40,13 @@
         "Service Professional Booking: Deny/decline booking": {
             "url": "/api/v1/en-US/me/service-professional-booking/73/deny",
             "post": {}
+        },
+        "Service Professional Booking: Confirm a client booking request": {
+            "url": "/api/v1/en-US/me/service-professional-booking/73/confirm",
+            "post": {
+                "dataType": "preferred",
+                "api comment": "dataType can be: preferred, alternative1 or alternative2. 'Preferred' will pick up the date currently on the 'serviceDateID'."
+            }
         }
     }
 *@
@@ -177,6 +184,13 @@
                 }
                 else if (UrlData[1] == "deny") {
                     booking.DeclineBooking();
+                    // fresh copy from db
+                    return LcRest.Booking.Get(bookingID, true);
+                }
+                else if (UrlData[1] == "confirm")
+                {
+                    var dateType = Request["dateType"];
+                    booking.ConfirmBookingRequest(dateType);
                     // fresh copy from db
                     return LcRest.Booking.Get(bookingID, true);
                 }

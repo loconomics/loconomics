@@ -2044,32 +2044,33 @@ namespace LcRest
             END CATCH
         ";
         #endregion
+
         /// <summary>
         /// Method that allows a Service Professional to confirm a Booking in
         /// state 'Booking Request' using the specified date type
         /// </summary>
-        /// <param name="bookingID"></param>
         /// <param name="dateType">A string value from: PREFERRED, ALTERNATIVE1, ALTERNATIVE2;
         /// that date/event from the booking request will be confirmed.</param>
         /// <returns></returns>
-        public static bool ConfirmBookingRequest(int serviceProfessionalUserID, int bookingID, string dateType)
+        public bool ConfirmBookingRequest(string dateType)
         {
-            var booking = LcRest.Booking.Get(bookingID, false, false, serviceProfessionalUserID);
-            if (booking == null || booking.serviceProfessionalUserID != serviceProfessionalUserID)
-                // "not found", almost for that user
-                return false;
+            // Constraint
+            if (bookingStatusID != (int)LcEnum.BookingStatus.request)
+            {
+                throw new Exception("Booking cannot be confirmed. Status: " + bookingStatusID.ToString());
+            }
 
             int? dateID = null;
             switch (dateType.ToUpper())
             {
                 case "PREFERRED":
-                    dateID = booking.serviceDateID;
+                    dateID = serviceDateID;
                     break;
                 case "ALTERNATIVE1":
-                    dateID = booking.alternativeDate1ID;
+                    dateID = alternativeDate1ID;
                     break;
                 case "ALTERNATIVE2":
-                    dateID = booking.alternativeDate2ID;
+                    dateID = alternativeDate2ID;
                     break;
             }
             if (!dateID.HasValue)
@@ -2093,10 +2094,10 @@ namespace LcRest
                     throw new ConstraintException(err);
                 }
                 // Set in-memory object as confirmed too in order to...
-                booking.bookingStatusID = (int)LcEnum.BookingStatus.confirmed;
-                booking.serviceDateID = dateID.Value;
+                bookingStatusID = (int)LcEnum.BookingStatus.confirmed;
+                serviceDateID = dateID.Value;
                 // ..process the payment options of the booking, if any
-                booking.ProcessConfirmedBookingPayment();
+                ProcessConfirmedBookingPayment();
 
                 // LAST:
                 // Update the CalendarEvent to include contact data,
@@ -2105,7 +2106,7 @@ namespace LcRest
                 // (customer and provider can access contact data from the booking).
                 try
                 {
-                    booking.UpdateEventDetails(db.Db);
+                    UpdateEventDetails(db.Db);
                 }
                 catch { }
             }
