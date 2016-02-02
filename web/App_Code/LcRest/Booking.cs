@@ -508,6 +508,8 @@ namespace LcRest
                             -- With payment enabled
                             B.PaymentEnabled = 1
                              AND
+                            B.PaymentCollected = 1
+                             AND
                             B.BookingStatusID IN (" + validStatuses + @")
                              AND
                             -- almost 1 hour after service ended (more than that is fine)
@@ -538,8 +540,7 @@ namespace LcRest
             {
                 var validStatuses = String.Join(",", new List<int> {
                     (int)LcEnum.BookingStatus.confirmed,
-                    (int)LcEnum.BookingStatus.servicePerformed,
-                    (int)LcEnum.BookingStatus.completed
+                    (int)LcEnum.BookingStatus.servicePerformed
                 });
 
                 return db.Query(@"
@@ -548,19 +549,24 @@ namespace LcRest
                          INNER JOIN
                         CalendarEvents As E
                           ON B.ServiceDateID = E.Id
-                WHERE   BookingStatusID IN (" + validStatuses + @")
+                WHERE   
+                        -- With payment enabled
+                        B.PaymentEnabled = 1
+                         AND
+                        B.PaymentCollected = 1
+                         AND
+                        -- Still not charged or authorized
+                        B.ClientPayment is null
+                         AND
+                        B.PaymentAuthorized = 0
+                         AND
+                        BookingStatusID IN (" + validStatuses + @")
                          AND
                         -- at 48 hours before service starts (after that is fine)
                         getdate() >= dateadd(hh, -48, E.StartTime)
                         /* AND
                          getdate() < dateadd(hh, -49, E.StartTime)
                         */
-
-                         AND
-                        -- Still not charged or authorized
-                        B.ClientPayment is null
-                         AND
-                        B.PaymentAuthorized = 0
                 ").Select<dynamic, Booking>(x => FromDB(x, true));
             }
         }
@@ -573,6 +579,8 @@ namespace LcRest
                     CalendarEvents As E
                         ON B.ServiceDateID = E.Id
             WHERE   PaymentEnabled = 1
+                     AND
+                    B.PaymentCollected = 1
                      AND
                     BookingStatusID = @0
                         AND
@@ -598,6 +606,8 @@ namespace LcRest
                         ON B.ServiceDateID = E.Id
             WHERE   PaymentEnabled = 1
                      AND
+                    B.PaymentCollected = 1
+                     AND
                     BookingStatusID = @0
                         AND
                     -- at 120 hours, 5 days, after service ended (more than that is fine)
@@ -621,6 +631,8 @@ namespace LcRest
                     CalendarEvents As E
                         ON B.ServiceDateID = E.Id
             WHERE   PaymentEnabled = 1
+                     AND
+                    B.PaymentCollected = 1
                      AND
                     BookingStatusID = @0
                         AND

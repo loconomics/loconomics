@@ -131,11 +131,11 @@ public class ScheduleTask
 
             /*
              * Check:: Authorize postponed transactions 48hours previous to service start-time
-             * If:: Confirmated or performed bookings only, not cancelled or in dispute or completed (completed may be
+             * If:: Confirmed or performed bookings only, not cancelled or in dispute or completed (completed may be
              * and old booking already paid
              * If:: Current time is 48 hours before Confirmed Service StartTime
              * If:: BookingRequest PaymentTransactionID is a Card token rather than an actual TransactionID
-             * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
+             * If:: Customer was still not charged / transaction was not submitted for settlement ([ClientPayment] is null)
              * Action:: authorize booking transaction
              */
             items = 0;
