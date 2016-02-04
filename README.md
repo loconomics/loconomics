@@ -48,25 +48,27 @@ It uses:
   - /vendor: third party modules that are not at npm, or needed some custom build, or forked third party modules.
   - /package.js: NodeJS package definition file, keeps modules dependencies (npm) and some set-up variables.
   - /Gruntfile.js: file required by the Grunt task runner on the project root folder; more code is organized in the /grunt folder to don't have a fat Gruntfile.js file.
+  
 **- /web: all server-side and API files**
-    - /_DBUpdate: MS SQL files of any changes to the dev database to ensure the test and live databases get updated accordingly.
-    - /api/v1: CSHTML files that communicate with the server and retrieve API data
-      - /me: Information about a user requesting information about themselves, mostly private  
-      - /user: Information about a user requesting information about another user, mostly public  
-    - /App_Code/LcPricing: C# files that implements.....
-    - /App_Code/LcRest: C# files that implements the schemes for specific objects in the REST API, and static methods/queries/updates for database operations
-    - /en-US/EmailCommunications: CSTHML files for all e-mail communcations sent to users
-      - /Admin: Communications to users their account (welcome, password resets, etc.) 
-        - /Internal: Communications sent to employees about important user actions (background check/license verification requests)
-      - /Booking: Communications to users about bookings
-        - /BookNow: All communications for BookNow bookings (from a service professional's website)
-        - /Marketplace: All communications for Marketplace bookings (from the Loconomic's website/app)
-        - /ServiceProfessionalBooking: All communications for bookings made by the service professional 
+- /_DBUpdate: MS SQL files of any changes to the dev database to ensure the test and live databases get updated accordingly.
+  - /api/v1: CSHTML files that communicate with the server and retrieve API data
+    - /me: Information about a user requesting information about themselves, mostly private  
+    - /user: Information about a user requesting information about another user, mostly public  
+  - /App_Code/LcPricing: C# files that implements.....
+  - /App_Code/LcRest: C# files that implements the schemes for specific objects in the REST API, and static methods/queries/updates for database operations
+  - /en-US/EmailCommunications: CSTHML files for all e-mail communcations sent to users
+    - /Admin: Communications to users their account (welcome, password resets, etc.) 
+      - /Internal: Communications sent to employees about important user actions (background check/license verification requests)
+    - /Booking: Communications to users about bookings
+      - /BookNow: All communications for BookNow bookings (from a service professional's website)
+      - /Marketplace: All communications for Marketplace bookings (from the Loconomic's website/app)
+      - /ServiceProfessionalBooking: All communications for bookings made by the service professional 
         
 ### Adding new pages or data to the app
 **Step 1: Is there an existing endpoint/call/method already in the REST API (another page using it)?**
 - If no proceed to Step 2.
 - If yes, process to Step 4. 
+
 **Step 2: Is the data you need already in the database?**
 - If yes, proceed to Step 3. If not, continue.
 - Avoid renaming or deleting fields.
@@ -104,23 +106,12 @@ It uses:
 
 **Step 5: Edit your new html, css, js /activity files**
 - Change data-activity name to new name. Review and revise .js file to reference the appopriate /models and /appmodel files and functions. 
-- Change data-activity name to new name. Review and revise .html & .css files to have front end appearance you want. 
+- Change data-activity name to new name. Review and revise .html & .css files to have front end appearance you want referencing the css file of the same name. 
 - Change references the appopriate js functions in html.
-- Test any data you're using by placing console.log(data) in the .js file
-- 
-**Add new files in (copy an existing example and rename):**
-- app/source/html/activities
-- app/source/css/activities
-- app/source/js/activities
 
-**Add line reference to new activity in (copy an existing line & edit with new activity name):**
-- app/source/css/app.styl
-- app/source/js/app.activities.js
-
-
-
-**To access the new page:**
+**Step 6: Test new page:**
 - http://localhost:8811/app.html#!/newActivity
+- Test any data you're using by placing console.log(data) in the .js file and reviewing using the browser's developer console
 
 ### Build the source code
 **All next commands must be executed in a command line/terminal at the project directory**
