@@ -875,7 +875,7 @@ namespace CalendarDll
             
                 var listEventsFromDB =
                     db.CalendarEvents.
-                        Where(c => c.UserId == user.Id).ToList();
+                        Where(c => c.UserId == user.Id && c.Deleted == null).ToList();
 
                 var iCalEvents = new List<iEvent>();
 
@@ -938,7 +938,7 @@ namespace CalendarDll
                 var listEventsFromDB =
                     db.CalendarEvents.
                         // We filter by user and
-                        Where(c => c.UserId == user.Id &&
+                        Where(c => c.UserId == user.Id && c.Deleted == null &&
                             // By type NOT being free-hours (2) or imported (4). Commented on issue #228 2013-05-13
                             !(new int[]{2, 4}).Contains(c.EventType)).ToList();
 
@@ -999,7 +999,7 @@ namespace CalendarDll
                 // OR, if they are Recurrence, any Date Range
                 var listEventsFromDB =
                     db.CalendarEvents.Where(
-                        c => c.UserId == user.Id &&
+                        c => c.UserId == user.Id && c.Deleted == null &&
                         (
                             // IagoSRL: Date Ranges query updated from being
                             // 'only events that are completely included' (next commented code from CASS):
@@ -1209,11 +1209,12 @@ namespace CalendarDll
                           ,[TimeBlock]
                           ,[DayofWeek]
                           ,[Description]
+                          ,[Deleted]
                       FROM [CalendarEvents]
                     WHERE userId = {2} AND (
                         (StartTime < {0} AND EndTime >= {1})
                         OR EXISTS (SELECT id from CalendarReccurrence AS R where R.EventID = CalendarEvents.Id)
-                    )
+                    ) AND Deleted is null
                 ", endEvaluationDate, startEvaluationDate, user.Id);
 
                 foreach (var currEventFromDB in listEventsFromDB)

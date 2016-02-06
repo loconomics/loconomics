@@ -240,7 +240,7 @@ public static partial class LcCalendar
     {
         var ent = new loconomicsEntities();
         var events = ent.CalendarEvents
-            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+            .Where(c => c.UserId == userID && c.Deleted == null && c.EventType == 2).ToList();
 
         foreach (var ev in events)
         {
@@ -703,7 +703,7 @@ public static partial class LcCalendar
     public static CalendarEvents GetMonthlyScheduleEvent(int userID, DateTime date, loconomicsEntities ent)
     {
         // Events for the date:
-        var evs = ent.CalendarEvents.Where(e => e.UserId == userID && e.EventType == EventTypeMonthlySchedule && e.StartTime == date.Date);
+        var evs = ent.CalendarEvents.Where(e => e.UserId == userID && e.Deleted == null && e.EventType == EventTypeMonthlySchedule && e.StartTime == date.Date);
 
         CalendarEvents ev = null;
         if (evs != null)
@@ -745,7 +745,7 @@ public static partial class LcCalendar
     {
         using (var ent = new loconomicsEntities())
         {
-            return ent.CalendarEvents.Where(e => e.UserId == userID && e.EventType == EventTypeMonthlySchedule &&
+            return ent.CalendarEvents.Where(e => e.UserId == userID && e.Deleted == null && e.EventType == EventTypeMonthlySchedule &&
                 e.StartTime >= dates.Start.Date && e.StartTime <= dates.End.Date)
                 .ToList();
         }
@@ -844,6 +844,8 @@ public static partial class LcCalendar
                 WHERE
                     E.UserId = @0
                      AND
+                    E.Deleted is null
+                     AND
                     E.StartTime <= @2
                      AND
                     E.EndTime >= @1
@@ -895,12 +897,12 @@ public static partial class LcCalendar
             if (eventID > 0)
             {
                 query = data
-                .Where(c => c.UserId == userID && c.Id == eventID);
+                .Where(c => c.UserId == userID && c.Deleted == null && c.Id == eventID);
             }
             else
             {
                 query = data
-                .Where(c => c.UserId == userID && types.Contains(c.EventType) &&
+                .Where(c => c.UserId == userID && c.Deleted == null && types.Contains(c.EventType) &&
                     (start.HasValue ? c.EndTime > start : true) &&
                     (end.HasValue ? c.StartTime < end : true));
             }
@@ -1077,12 +1079,12 @@ public static partial class LcCalendar
             if (eventID > 0)
             {
                 query = data
-                .Where(c => c.UserId == userID && c.Id == eventID);
+                .Where(c => c.UserId == userID && c.Deleted == null && c.Id == eventID);
             }
             else
             {
                 query = data
-                .Where(c => c.UserId == userID && types.Contains(c.EventType) &&
+                .Where(c => c.UserId == userID && c.Deleted == null && types.Contains(c.EventType) &&
                     ((
                         // Dates Range
                         (c.EndTime > start) &&
@@ -1485,7 +1487,7 @@ public static partial class LcCalendar
                 .Include("CalendarEventType")
                 .Include("CalendarReccurrence")
                 .Include("CalendarReccurrence.CalendarReccurrenceFrequency")
-                .Where(c => c.UserId == userID && (c.EventType == 3 || c.EventType == 5))
+                .Where(c => c.UserId == userID && c.Deleted == null && (c.EventType == 3 || c.EventType == 5))
                 .ToList();
         }
     }
@@ -1496,7 +1498,7 @@ public static partial class LcCalendar
             return ent.CalendarEvents
                 .Include("CalendarReccurrence")
                 .Include("CalendarReccurrence.CalendarReccurrenceFrequency")
-                .Where(c => c.UserId == userID && c.Id == eventID).FirstOrDefault();
+                .Where(c => c.UserId == userID && c.Deleted == null && c.Id == eventID).FirstOrDefault();
          }
     }
     public static int SetUserAppointment(int userID, int CalendarEventID,

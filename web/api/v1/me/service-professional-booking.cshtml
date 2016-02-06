@@ -177,6 +177,7 @@
                     booking.serviceProfessionalUserID != userID) {
                     throw new HttpException(404, "Not Found");
                 }
+                StatusCode = 200;
                 if (UrlData[1] == "cancel") {
                     booking.CancelBookingByServiceProfessional();
                     // fresh copy from db

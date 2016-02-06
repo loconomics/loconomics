@@ -960,27 +960,21 @@ namespace LcRest
             SET @BookingStatusID = @1
 
             DECLARE @ServiceAddressID int
+            DECLARE @d1 int
+            DECLARE @d2 int
+            DECLARE @d3 int
+            
+            BEGIN TRAN
 
-            BEGIN TRY
-                BEGIN TRAN
+            BEGIN TRY   
 
                 -- Get Service Address ID to be (maybe) removed later
-                SELECT  @ServiceAddressID = ServiceAddressID
+                SELECT  @ServiceAddressID = ServiceAddressID,
+                        @d1 = ServiceDateID ,
+                        @d2 = AlternativeDate1ID,
+                        @d3 = AlternativeDate2ID
                 FROM    Booking
                 WHERE   BookingID = @BookingID
-
-                -- Removing CalendarEvents:
-                DELETE FROM CalendarEvents
-                WHERE ID IN (
-                    SELECT TOP 1 ServiceDateID FROM Booking
-                    WHERE BookingID = @BookingID
-                    UNION
-                    SELECT TOP 1 AlternativeDate1ID FROM Booking
-                    WHERE BookingID = @BookingID
-                    UNION
-                    SELECT TOP 1 AlternativeDate2ID FROM Booking
-                    WHERE BookingID = @BookingID
-                )
 
                 /*
                     * Updating Booking status, and removing references to the 
@@ -988,9 +982,9 @@ namespace LcRest
                     */
                 UPDATE  Booking
                 SET     BookingStatusID = @BookingStatusID,
-                        ServiceDateID = null,
-                        AlternativeDate1ID = null,
-                        AlternativeDate2ID = null,
+                        -- ServiceDateID = null,
+                        -- AlternativeDate1ID = null,
+                        -- AlternativeDate2ID = null,
                         ServiceAddressID = null,
                         clientPayment = @2,
                         serviceProfessionalPaid = @3,
@@ -1001,12 +995,19 @@ namespace LcRest
                         cancellationPaymentTransactionID = @8
                 WHERE   BookingID = @BookingID
 
+                -- Removing CalendarEvents:
+                -- DELETE FROM CalendarEvents
+                -- WHERE ID IN (@d1, @d2, @d3)
+                UPDATE CalendarEvents
+                SET Deleted = getdate()
+                WHERE ID IN (@d1, @d2, @d3)
+
                 -- Removing Service Address, if is not an user saved location (it has not AddressName)
                 DELETE FROM ServiceAddress
-                WHERE AddressID = @AddressID
-                        AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @AddressID AND AddressName is null) = 1
+                WHERE AddressID = @ServiceAddressID
+                        AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @ServiceAddressID AND AddressName is null) = 1
                 DELETE FROM Address
-                WHERE AddressID = @AddressID
+                WHERE AddressID = @ServiceAddressID
                         AND
                         AddressName is null
 
@@ -1016,7 +1017,7 @@ namespace LcRest
                 IF @@TRANCOUNT > 0
                     ROLLBACK TRAN
                 -- We return error number and message
-                SELECT (ERROR_NUMBER() + ':' + ERROR_MESSAGE()) As ErrorMessage
+                SELECT (Cast(ERROR_NUMBER() as varchar) + ':' + ERROR_MESSAGE()) As ErrorMessage
             END CATCH
         ";
         #endregion
@@ -1678,7 +1679,6 @@ namespace LcRest
                 }
                 catch (Exception ex)
                 {
-                    db.Execute("ROLLBACK TRANSACTION");
                     LcMessaging.NotifyError("Booking payment was refunded and/or cancellation fee applied, but database couldn't get updated", "", "");
                     throw ex;
                 }
