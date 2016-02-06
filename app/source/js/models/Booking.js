@@ -7,6 +7,7 @@
  **/
 'use strict';
 
+var ko = require('knockout');
 var Model = require('./Model'),
     PricingSummary = require('./PricingSummary'),
     PublicUserJobTitle = require('./PublicUserJobTitle'),
@@ -83,6 +84,32 @@ function Booking(values) {
             Model: PublicUserJobTitle
         }
     }, values);
+    
+    this.canBeCancelledByServiceProfessional = ko.pureComputed(function() {
+        return (
+            this.bookingStatusID() === Booking.status.confirmed &&
+            this.bookingTypeID() === Booking.type.serviceProfessionalBooking
+        );
+    }, this);
+    
+    this.canBeCancelledByClient = ko.pureComputed(function() {
+        return (
+            (this.bookingStatusID() === Booking.status.confirmed ||
+            this.bookingStatusID() === Booking.status.request) &&
+            this.bookingTypeID() !== Booking.type.serviceProfessionalBooking
+        );
+    }, this);
+    
+    this.canBeDeclinedByServiceProfessional = ko.pureComputed(function() {
+        return (
+            this.bookingStatusID() === Booking.status.request &&
+            this.bookingTypeID() !== Booking.type.serviceProfessionalBooking
+        );
+    }, this);
+    
+    this.isRequest = ko.pureComputed(function() {
+        return this.bookingStatusID() === Booking.status.request;
+    }, this);
 }
 
 module.exports = Booking;
@@ -94,4 +121,24 @@ Booking.from = function from(data) {
     else {
         return new Booking(data);
     }
+};
+
+Booking.status = {
+    incomplete: 1,
+    request: 2,
+    cancelled: 3,
+    denied: 4,
+    requestExpired: 5,
+    confirmed: 6,
+    servicePerformed: 7,
+    completed: 8,
+    dispute: 9
+};
+
+Booking.type = {
+    marketplaceBooking: 1,
+    bookNowBooking: 2,
+    serviceProfessionalBooking: 3,
+    exchangeBooking: 4,
+    partnerBooking: 5
 };

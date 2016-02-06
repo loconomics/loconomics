@@ -14,7 +14,7 @@ var ko = require('knockout'),
     PricingSummaryDetail = require('../models/PricingSummaryDetail');
 
 function AppointmentCardViewModel(params) {
-    /*jshint maxstatements: 40*/
+    /*jshint maxstatements: 60*/
 
     this.sourceItem = getObservable(params.sourceItem);
     var app = this.app = ko.unwrap(params.app);
@@ -143,6 +143,32 @@ function AppointmentCardViewModel(params) {
         this.editMode(true);
     }.bind(this);
     
+    var afterSave = function afterSave(savedApt) {
+        var version = this.editedVersion();
+        // Do not do a version push, just update with remote
+        //version.push({ evenIfObsolete: true });
+        // Update with remote data, the original appointment in the version,
+        // not the currentAppointment or in the index in the list to avoid
+        // race-conditions
+        version.original.model.updateWith(savedApt, true);
+        // Do a pull so original and version gets the exact same data
+        version.pull({ evenIfNewer: true });
+
+        // Go out edit mode
+        this.editMode(false);
+
+        // Notify
+        if (this.isBooking()) {
+
+            var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
+
+            app.modals.showNotification({
+                title: 'Confirmed!',
+                message: msg
+            });
+        }
+    }.bind(this);
+    
     this.save = function save() {
         if (this.isLocked()) return;
 
@@ -152,31 +178,7 @@ function AppointmentCardViewModel(params) {
         if (version && version.areDifferent()) {
             this.isSaving(true);
             app.model.calendar.setAppointment(version.version, this.allowBookUnavailableTime())
-            .then(function(savedApt) {
-                // Do not do a version push, just update with remote
-                //version.push({ evenIfObsolete: true });
-                // Update with remote data, the original appointment in the version,
-                // not the currentAppointment or in the index in the list to avoid
-                // race-conditions
-                version.original.model.updateWith(savedApt, true);
-                // Do a pull so original and version gets the exact same data
-                version.pull({ evenIfNewer: true });
-
-                // Go out edit mode
-                this.editMode(false);
-                
-                // Notify
-                if (this.isBooking()) {
-                    
-                    var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
-                    
-                    app.modals.showNotification({
-                        title: 'Confirmed!',
-                        message: msg
-                    });
-                }
-                
-            }.bind(this))
+            .then(afterSave)
             .catch(function(err) {
                 // The version data keeps untouched, user may want to retry
                 // or made changes on its un-saved data.
@@ -217,6 +219,120 @@ function AppointmentCardViewModel(params) {
             this.cancel();
         }.bind(this));
     }.bind(this);
+
+    // Delete Event
+    this.deleteEvent = function() {
+        // TODO
+    };
+    
+    /**
+        Special updates and related flags
+    **/
+    this.bookingID = ko.pureComputed(function() {
+        return this.item() && this.item().sourceBooking() && this.item().sourceBooking().bookingID();
+    }, this);
+
+    this.bookingCanBeCancelledByServiceProfessional = ko.computed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.canBeCancelledByServiceProfessional() : false;
+    }, this);
+    
+    this.bookingCanBeCancelledByClient = ko.computed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.canBeCancelledByClient() : false;
+    }, this);
+    
+    this.bookingCanBeDeclinedByServiceProfessional = ko.computed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.canBeDeclinedByServiceProfessional() : false;
+    }, this);
+    
+    this.isBookingRequest = ko.computed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.isRequest() : false;
+    }, this);
+
+    this.cancelBookingByServiceProfessional = function() {
+        if (!this.bookingCanBeCancelledByServiceProfessional()) return;
+        this.isSaving(true);
+        app.model.bookings.cancelBookingByServiceProfessional(this.bookingID())
+        .then(afterSave)
+        .catch(function(err) {
+            // The version data keeps untouched, user may want to retry
+            // or made changes on its un-saved data.
+            // Show error
+            app.modals.showError({
+                title: 'There was an error saving the data.',
+                error: err
+            });
+            // Don't replicate error, allow always
+        })
+        .then(function() {
+            // ALWAYS:
+            this.isSaving(false);
+        }.bind(this));
+    };
+    this.cancelBookingByClient = function() {
+        if (!this.bookingCanBeCancelledByClient()) return;
+        this.isSaving(true);
+        app.model.bookings.cancelBookingByClient(this.bookingID())
+        .then(afterSave)
+        .catch(function(err) {
+            // The version data keeps untouched, user may want to retry
+            // or made changes on its un-saved data.
+            // Show error
+            app.modals.showError({
+                title: 'There was an error saving the data.',
+                error: err
+            });
+            // Don't replicate error, allow always
+        })
+        .then(function() {
+            // ALWAYS:
+            this.isSaving(false);
+        }.bind(this));
+    };
+    this.declineBookingByServiceProfessional = function() {
+        if (!this.isBookingRequest()) return;
+        this.isSaving(true);
+        app.model.bookings.bookingCanBeDeclinedByServiceProfessional(this.bookingID())
+        .then(afterSave)
+        .catch(function(err) {
+            // The version data keeps untouched, user may want to retry
+            // or made changes on its un-saved data.
+            // Show error
+            app.modals.showError({
+                title: 'There was an error saving the data.',
+                error: err
+            });
+            // Don't replicate error, allow always
+        })
+        .then(function() {
+            // ALWAYS:
+            this.isSaving(false);
+        }.bind(this));
+    };
+    // dateType values allowed by REST API: 'preferred', 'alternative1', 'alternative2'
+    this.confirmBookingRequest = function(dateType) {
+        if (!this.isBookingRequest()) return;
+        this.isSaving(true);
+        app.model.bookings.confirmBookingRequest(this.bookingID(), dateType)
+        .then(afterSave)
+        .catch(function(err) {
+            // The version data keeps untouched, user may want to retry
+            // or made changes on its un-saved data.
+            // Show error
+            app.modals.showError({
+                title: 'There was an error saving the data.',
+                error: err
+            });
+            // Don't replicate error, allow always
+        })
+        .then(function() {
+            // ALWAYS:
+            this.isSaving(false);
+        }.bind(this));
+    };
 
     /**
         External actions

@@ -132,6 +132,35 @@ exports.create = function create(appModel) {
         });
     };
     
+    api.declineBookingByServiceProfessional = function declineBookingByServiceProfessional(bookingID) {
+        return appModel.rest.post('me/service-professional-booking/' + bookingID + '/decline')
+        .then(function(serverBooking) {
+            return new Booking(serverBooking);
+        });
+    };
+    
+    api.cancelBookingByServiceProfessional = function cancelBookingByServiceProfessional(bookingID) {
+        return appModel.rest.post('me/service-professional-booking/' + bookingID + '/cancel')
+        .then(function(serverBooking) {
+            return new Booking(serverBooking);
+        });
+    };
+    
+    api.cancelBookingByClient = function cancelBookingByClient(bookingID) {
+        return appModel.rest.post('me/client-booking/' + bookingID + '/cancel')
+        .then(function(serverBooking) {
+            return new Booking(serverBooking);
+        });
+    };
+    
+    // dateType values allowed by REST API: 'preferred', 'alternative1', 'alternative2'
+    api.confirmBookingRequest = function confirmBookingRequest(bookingID, dateType) {
+        return appModel.rest.post('me/service-professional-booking/' + bookingID + '/confirm', { dateType: dateType })
+        .then(function(serverBooking) {
+            return new Booking(serverBooking);
+        });
+    };
+    
     /**
         Using data to create a booking from a create client booking form,
         as: booking, billingAddress, paymentMethod, requestOptions (promotionalCode, bookCode, etc.)
