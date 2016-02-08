@@ -368,17 +368,24 @@ function AppointmentCardViewModel(params) {
             this.cancelBookingByServiceProfessional();
         }.bind(this));
     }.bind(this);
-    this.confirmDeclineBookingByServiceProfessional = function() {
-        this.app.modals.confirm({
-            title: 'Decline booking request',
-            message: 'Are you sure?',
-            yes: 'Yes',
-            no: 'No'
-        })
-        .then(function() {
-            // Confirmed:
-            this.declineBookingByServiceProfessional();
-        }.bind(this));
+    
+    /// Booking Request selectable options
+    this.selectedRequestDateType = ko.observable();
+    this.observerSelected = function(dateType) {
+        return ko.pureComputed(function() {
+            return this.selectedRequestDateType() === ko.unwrap(dateType);
+        }, this);
+    }.bind(this);
+    this.setSelectedRequestDateType = function(dateType) {
+        this.selectedRequestDateType(dateType);
+    }.bind(this);
+
+    this.performSelectedBookingRequestAnswer = function() {
+        var option = this.selectedRequestDateType();
+        if (option === 'deny')
+            return this.declineBookingByServiceProfessional();
+        else
+            return this.confirmBookingRequest(option);
     }.bind(this);
 
     /**
@@ -535,6 +542,9 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         // set off edit mode discarding unsaved data:
         this.cancel();
     }
+    
+    // Reset booking request option
+    this.selectedRequestDateType('');
 
     /// Manage specific single data from externally provided
     

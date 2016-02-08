@@ -198,7 +198,7 @@
                     </div>
                 </button>
             </li>
-            <li data-bind="visible: !isNew() && item().itStarted()">
+            <li data-bind="visible: !isBookingRequest() && !isNew() && item().itStarted()">
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToClient')">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-compose-outline"></span>
@@ -209,7 +209,7 @@
                     </div>
                 </button>
             </li>
-            <li data-bind="visible: !isNew() && item().itStarted()">
+            <li data-bind="visible: !isBookingRequest() && !isNew() && item().itStarted()">
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToSelf')">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-compose-outline"></span>
@@ -229,8 +229,57 @@
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: isEvent(), click: deleteEvent, disable: isLocked">Delete</button>
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeCancelledByServiceProfessional(), click: confirmCancelBookingByServiceProfessional, disable: isLocked">Cancel the booking</button>
         </div>
+
+        <ul class="TilesList TilesList--opendEnd" data-bind="if: isBookingRequest()">
+            <li class="LineTile LineTile--title">
+                Confirm a time or decline request
+            </li>
+            <li><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'preferred'), css: { active: observerSelected('preferred') }">
+                <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                <div class="Tile-content">
+                    <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                    <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
+                </div>
+                <div class="Tile-addon" aria-hidden="true">
+                    <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
+                          data-bind="css: { 'ion-ios-circle-filled': observerSelected('preferred'), 'ion-ios-circle-outline': !observerSelected('preferred')() }"></span>
+                </div>
+            </a></li>
+            <li data-bind="if: item().sourceBooking().alternativeDate1()"><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'alternative1'), css: { active: observerSelected('alternative1') }">
+                <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                <div class="Tile-content">
+                    <div data-bind="visible: item().sourceBooking().alternativeDate1().startTime(), text: item().sourceBooking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                    <div data-bind="visible: item().sourceBooking().alternativeDate1().startTime(), text: item().sourceBooking().alternativeDate1().displayedTimeRange()"></div>
+                </div>
+                <div class="Tile-addon" aria-hidden="true">
+                    <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
+                          data-bind="css: { 'ion-ios-circle-filled': observerSelected('alternative1'), 'ion-ios-circle-outline': !observerSelected('alternative1')() }"></span>
+                </div>
+            </a></li>
+            <li data-bind="if: item().sourceBooking().alternativeDate2()"><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'alternative2'), css: { active: observerSelected('alternative2') }">
+                <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                <div class="Tile-content">
+                    <div data-bind="visible: item().sourceBooking().alternativeDate2().startTime(), text: item().sourceBooking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                    <div data-bind="visible: item().sourceBooking().alternativeDate2().startTime(), text: item().sourceBooking().alternativeDate2().displayedTimeRange()"></div>
+                </div>
+                <div class="Tile-addon" aria-hidden="true">
+                    <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
+                          data-bind="css: { 'ion-ios-circle-filled': observerSelected('alternative2'), 'ion-ios-circle-outline': !observerSelected('alternative2')() }"></span>
+                </div>
+            </a></li>
+            <li><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'deny'), css: { active: observerSelected('deny') }">
+                <i class="Tile-marker fa fa-ban" aria-hidden="true"></i>
+                <div class="Tile-content">
+                    <p>Deny request</p>
+                </div>
+                <div class="Tile-addon" aria-hidden="true">
+                    <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
+                          data-bind="css: { 'ion-ios-circle-filled': observerSelected('deny'), 'ion-ios-circle-outline': !observerSelected('deny')() }"></span>
+                </div>
+            </a></li>
+        </ul>
         <div class="AppointmentCard-actions" data-bind="visible: isBookingRequest()">
-            <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeDeclinedByServiceProfessional(), click: confirmDeclineBookingByServiceProfessional, disable: isLocked">Decline request</button>            
+            <button type="button" class="btn btn-danger btn-block" data-bind="click: performSelectedBookingRequestAnswer, disable: isLocked">Confirm</button>
         </div>
     </div>
 </script>

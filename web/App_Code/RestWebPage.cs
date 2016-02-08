@@ -194,8 +194,8 @@ public class RestWebPage
         {
             result = new Dictionary<string, dynamic>();
             result["errorMessage"] = ex.Message;
-            // Internal server error:
-            WebPage.Response.StatusCode = 500;
+            // Bad Format code for "Constraint" or Internal server error:
+            WebPage.Response.StatusCode = ex is ConstraintException ? 400 : 500;
 
             if (ASP.LcHelpers.InDev)
                 result["exception"] = ex;

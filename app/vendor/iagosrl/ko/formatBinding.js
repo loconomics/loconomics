@@ -91,6 +91,9 @@ exports.types.datetime = {
             return def.default || def.invalid || '';
         
         var dt = moment(value);
+        if (def.locale)
+            dt = dt.locale(def.locale);
+        
         return dt.isValid() ? dt.format(def.format) : def.invalid || '';
     }
 };

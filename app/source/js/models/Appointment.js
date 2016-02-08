@@ -189,7 +189,9 @@ Appointment.listFromCalendarEventsBookings = function listFromCalendarEventsBook
     return events.map(function(event) {
         var booking = null;
         bookings.some(function(searchBooking) {
-            var found = searchBooking.serviceDateID() === event.calendarEventID();
+            var found = searchBooking.serviceDateID() === event.calendarEventID() ||
+                searchBooking.alternativeDate1ID() === event.calendarEventID() ||
+                searchBooking.alternativeDate2ID() === event.calendarEventID();
             if (found) {
                 booking = searchBooking;
                 return true;

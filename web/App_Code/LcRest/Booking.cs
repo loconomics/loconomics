@@ -1997,23 +1997,10 @@ namespace LcRest
             DECLARE @BookingID int
             SET @BookingID = @0            
             DECLARE @ConfirmedDateID int
-            SET @ConfirmedDateID = @1           
+            SET @ConfirmedDateID = @1
 
             BEGIN TRY
                 BEGIN TRAN
-
-                -- Removing non needed CalendarEvents:
-                DELETE FROM CalendarEvents
-                WHERE ID IN (
-                    SELECT TOP 1 ServiceDateID FROM Booking
-                    WHERE BookingID = @BookingID AND ServiceDateID <> @ConfirmedDateID
-                    UNION
-                    SELECT TOP 1 AlternativeDate1ID FROM Booking
-                    WHERE BookingID = @BookingID AND AlternativeDate1ID <> @ConfirmedDateID
-                    UNION
-                    SELECT TOP 1 AlternativeDate2ID FROM Booking
-                    WHERE BookingID = @BookingID AND AlternativeDate2ID <> @ConfirmedDateID
-                )
 
                 /*
                  * Update Availability of the CalendarEvent record for the ConfirmedDateID,
@@ -2034,13 +2021,27 @@ namespace LcRest
                         AlternativeDate2ID = null
                 WHERE   BookingID = @BookingID
 
+                -- Removing non needed CalendarEvents:
+                UPDATE CalendarEvents
+                SET Deleted = getdate()
+                WHERE ID IN (
+                    SELECT TOP 1 ServiceDateID FROM Booking
+                    WHERE BookingID = @BookingID AND ServiceDateID <> @ConfirmedDateID
+                    UNION
+                    SELECT TOP 1 AlternativeDate1ID FROM Booking
+                    WHERE BookingID = @BookingID AND AlternativeDate1ID <> @ConfirmedDateID
+                    UNION
+                    SELECT TOP 1 AlternativeDate2ID FROM Booking
+                    WHERE BookingID = @BookingID AND AlternativeDate2ID <> @ConfirmedDateID
+                )
+
                 COMMIT TRAN
             END TRY
             BEGIN CATCH
                 IF @@TRANCOUNT > 0
                     ROLLBACK TRAN
                 -- We return error number and message
-                SELECT (ERROR_NUMBER() + ':' + ERROR_MESSAGE()) As ErrorMessage
+                SELECT (Cast(ERROR_NUMBER() as varchar) + ':' + ERROR_MESSAGE()) As ErrorMessage
             END CATCH
         ";
         #endregion
@@ -2057,7 +2058,7 @@ namespace LcRest
             // Constraint
             if (bookingStatusID != (int)LcEnum.BookingStatus.request)
             {
-                throw new Exception("Booking cannot be confirmed. Status: " + bookingStatusID.ToString());
+                throw new ConstraintException("Booking cannot be confirmed. Status: " + bookingStatusID.ToString());
             }
 
             int? dateID = null;

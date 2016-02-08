@@ -10,11 +10,8 @@ using System.Web;
 /// </summary>
 public class ConstraintException : Exception
 {
-    public new string Message { get; set; }
 	public ConstraintException()
 	{}
     public ConstraintException(string message)
-    {
-        Message = message;
-    }
+        : base(message) { }
 }
