@@ -247,9 +247,14 @@ function AppointmentCardViewModel(params) {
         return b ? b.canBeDeclinedByServiceProfessional() : false;
     }, this);
     
-    this.isBookingRequest = ko.computed(function() {
+    this.isBookingRequest = ko.pureComputed(function() {
         var b = this.item() && this.item().sourceBooking();
         return b ? b.isRequest() : false;
+    }, this);
+    
+    this.isServiceProfessionalBooking = ko.pureComputed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.isServiceProfessionalBooking() : false;
     }, this);
     
     // For booking cancel/decline/confirm.

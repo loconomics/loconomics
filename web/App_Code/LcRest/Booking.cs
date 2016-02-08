@@ -1896,6 +1896,20 @@ namespace LcRest
                 return booking;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bookingID"></param>
+        /// <param name="serviceProfessionalUserID"></param>
+        /// <param name="serviceAddressID"></param>
+        /// <param name="startTime"></param>
+        /// <param name="services"></param>
+        /// <param name="preNotesToClient"></param>
+        /// <param name="preNotesToSelf"></param>
+        /// <param name="postNotesToClient"></param>
+        /// <param name="postNotesToSelf"></param>
+        /// <param name="allowBookUnavailableTime"></param>
+        /// <returns></returns>
         public static bool UpdServiceProfessionalBooking(
             int bookingID,
             int serviceProfessionalUserID,
@@ -1985,7 +1999,7 @@ namespace LcRest
                 }
                 catch { }
 
-                LcMessaging.SendBooking.ServiceProfessionalBooking.For(booking.bookingID).BookingUpdatedByServiceProfessional();
+                LcMessaging.SendBooking.For(booking.bookingID).BookingUpdatedByServiceProfessional();
 
                 return true;
             }

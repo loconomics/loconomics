@@ -110,6 +110,10 @@ function Booking(values) {
     this.isRequest = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.request;
     }, this);
+    
+    this.isServiceProfessionalBooking = ko.pureComputed(function() {
+        return this.bookingTypeID() === Booking.type.serviceProfessionalBooking;
+    }, this);
 }
 
 module.exports = Booking;
