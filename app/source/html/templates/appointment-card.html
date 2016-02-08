@@ -227,7 +227,7 @@
             <!--<button type="button" class="btn btn-danger btn-block" data-bind="event: { click: remove }, disable: isLocked">Cancel booking</button>-->
             <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: isEvent(), click: deleteEvent, disable: isLocked">Delete</button>
-            <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeCancelledByServiceProfessional(), click: cancelBookingByServiceProfessional, disable: isLocked">Cancel the booking</button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeCancelledByServiceProfessional(), click: confirmCancelBookingByServiceProfessional, disable: isLocked">Cancel the booking</button>
         </div>
     </div>
 </script>

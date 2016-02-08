@@ -333,6 +333,31 @@ function AppointmentCardViewModel(params) {
             this.isSaving(false);
         }.bind(this));
     };
+    
+    this.confirmCancelBookingByServiceProfessional = function() {
+        this.app.modals.confirm({
+            title: 'Cancel booking',
+            message: 'Are you sure?',
+            yes: 'Yes',
+            no: 'No'
+        })
+        .then(function() {
+            // Confirmed:
+            this.cancelBookingByServiceProfessional();
+        }.bind(this));
+    }.bind(this);
+    this.confirmDeclineBookingByServiceProfessional = function() {
+        this.app.modals.confirm({
+            title: 'Decline booking request',
+            message: 'Are you sure?',
+            yes: 'Yes',
+            no: 'No'
+        })
+        .then(function() {
+            // Confirmed:
+            this.declineBookingByServiceProfessional();
+        }.bind(this));
+    }.bind(this);
 
     /**
         External actions
