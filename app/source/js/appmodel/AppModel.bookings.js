@@ -133,7 +133,7 @@ exports.create = function create(appModel) {
     };
     
     api.declineBookingByServiceProfessional = function declineBookingByServiceProfessional(bookingID) {
-        return appModel.rest.post('me/service-professional-booking/' + bookingID + '/decline')
+        return appModel.rest.post('me/service-professional-booking/' + bookingID + '/deny')
         .then(function(serverBooking) {
             // Reset calendar availability cache
             appModel.calendar.clearCache();

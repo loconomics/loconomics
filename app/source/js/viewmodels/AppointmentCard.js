@@ -255,11 +255,16 @@ function AppointmentCardViewModel(params) {
     // For booking cancel/decline/confirm.
     var afterSaveBooking = function(booking) {
         var version = this.editedVersion();
-        version.original.sourceBooking(booking);
-        version.pull({ evenIfNewer: true });
-        
-        // Go out edit mode
-        this.editMode(false);
+        if (version) {
+            version.original.sourceBooking(booking);
+            version.pull({ evenIfNewer: true });
+
+            // Go out edit mode
+            this.editMode(false);
+        }
+        else {
+            this.sourceItem().sourceBooking(booking);
+        }
         
         var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
 
@@ -312,7 +317,7 @@ function AppointmentCardViewModel(params) {
     this.declineBookingByServiceProfessional = function() {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
-        app.model.bookings.bookingCanBeDeclinedByServiceProfessional(this.bookingID())
+        app.model.bookings.declineBookingByServiceProfessional(this.bookingID())
         .then(afterSaveBooking)
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry

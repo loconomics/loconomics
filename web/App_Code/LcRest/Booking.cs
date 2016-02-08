@@ -2147,7 +2147,7 @@ namespace LcRest
         {
             // Constraint
             if (bookingStatusID != (int)LcEnum.BookingStatus.request ||
-                bookingTypeID != (int)LcEnum.BookingType.serviceProfessionalBooking)
+                bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking)
             {
                 throw new Exception("Booking cannot be declined. Status: " + bookingStatusID.ToString() +
                     " Type: " + bookingTypeID.ToString()

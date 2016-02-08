@@ -100,6 +100,9 @@ function Appointment(values) {
             if (!this.sourceBooking()) {
                 text = 'Calendar block';
             }
+            else if (this.sourceBooking().bookingStatusID() === Booking.status.request) {
+                text = 'Accept/Decline booking request';
+            }
             else if (this.sourceBooking().bookingStatusID() === Booking.status.denied) {
                 text = 'Denied';
             }

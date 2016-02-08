@@ -40,12 +40,12 @@
         </ul>
 
         <div class="Card-title" data-bind="visible: currentID() > 0, css: headerClass">
-            <button type="button" class="LinkTile" data-bind="click: currentID() > 0 && !editMode() && edit, disable: item().readOnly">
+            <button type="button" class="LinkTile" data-bind="click: !isBookingRequest() && currentID() > 0 && !editMode() && edit, disable: item().readOnly">
                 <div class="Tile-content">
                     <div><small data-bind="text: editMode() ? 'Tap any section to edit' : item().stateHeader()"></small></div>
                     <div><strong data-bind="text: item().summary()"></strong></div>
                 </div>
-                <div class="Tile-icon">
+                <div class="Tile-icon" data-bind="visible: !isBookingRequest()">
                     <i class="fa ion ion-edit" aria-hidden="true"></i>
                 </div>
             </button>
@@ -228,6 +228,9 @@
             <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: isEvent(), click: deleteEvent, disable: isLocked">Delete</button>
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeCancelledByServiceProfessional(), click: confirmCancelBookingByServiceProfessional, disable: isLocked">Cancel the booking</button>
+        </div>
+        <div class="AppointmentCard-actions" data-bind="visible: isBookingRequest()">
+            <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeDeclinedByServiceProfessional(), click: confirmDeclineBookingByServiceProfessional, disable: isLocked">Decline request</button>            
         </div>
     </div>
 </script>
