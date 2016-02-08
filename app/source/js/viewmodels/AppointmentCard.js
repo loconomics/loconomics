@@ -251,12 +251,29 @@ function AppointmentCardViewModel(params) {
         var b = this.item() && this.item().sourceBooking();
         return b ? b.isRequest() : false;
     }, this);
+    
+    // For booking cancel/decline/confirm.
+    var afterSaveBooking = function(booking) {
+        var version = this.editedVersion();
+        version.original.sourceBooking(booking);
+        version.pull({ evenIfNewer: true });
+        
+        // Go out edit mode
+        this.editMode(false);
+        
+        var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
+
+        app.modals.showNotification({
+            title: 'Done!',
+            message: msg
+        });
+    }.bind(this);
 
     this.cancelBookingByServiceProfessional = function() {
         if (!this.bookingCanBeCancelledByServiceProfessional()) return;
         this.isSaving(true);
         app.model.bookings.cancelBookingByServiceProfessional(this.bookingID())
-        .then(afterSave)
+        .then(afterSaveBooking)
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
@@ -276,7 +293,7 @@ function AppointmentCardViewModel(params) {
         if (!this.bookingCanBeCancelledByClient()) return;
         this.isSaving(true);
         app.model.bookings.cancelBookingByClient(this.bookingID())
-        .then(afterSave)
+        .then(afterSaveBooking)
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
@@ -296,7 +313,7 @@ function AppointmentCardViewModel(params) {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
         app.model.bookings.bookingCanBeDeclinedByServiceProfessional(this.bookingID())
-        .then(afterSave)
+        .then(afterSaveBooking)
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
@@ -317,7 +334,7 @@ function AppointmentCardViewModel(params) {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
         app.model.bookings.confirmBookingRequest(this.bookingID(), dateType)
-        .then(afterSave)
+        .then(afterSaveBooking)
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.

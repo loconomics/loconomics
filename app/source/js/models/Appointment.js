@@ -93,11 +93,18 @@ function Appointment(values) {
     }, this);
     
     this.stateHeader = ko.pureComputed(function() {
+        //jshint maxcomplexity:10
         
         var text = '';
         if (this.id() > 0 && this.sourceEvent()) {
             if (!this.sourceBooking()) {
                 text = 'Calendar block';
+            }
+            else if (this.sourceBooking().bookingStatusID() === Booking.status.denied) {
+                text = 'Denied';
+            }
+            else if (this.sourceBooking().bookingStatusID() === Booking.status.cancelled) {
+                text = 'Cancelled';
             }
             else if (this.itStarted()) {
                 if (this.itEnded()) {

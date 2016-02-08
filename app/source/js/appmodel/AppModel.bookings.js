@@ -135,6 +135,8 @@ exports.create = function create(appModel) {
     api.declineBookingByServiceProfessional = function declineBookingByServiceProfessional(bookingID) {
         return appModel.rest.post('me/service-professional-booking/' + bookingID + '/decline')
         .then(function(serverBooking) {
+            // Reset calendar availability cache
+            appModel.calendar.clearCache();
             return new Booking(serverBooking);
         });
     };
@@ -142,6 +144,8 @@ exports.create = function create(appModel) {
     api.cancelBookingByServiceProfessional = function cancelBookingByServiceProfessional(bookingID) {
         return appModel.rest.post('me/service-professional-booking/' + bookingID + '/cancel')
         .then(function(serverBooking) {
+            // Reset calendar availability cache
+            appModel.calendar.clearCache();
             return new Booking(serverBooking);
         });
     };
@@ -149,6 +153,8 @@ exports.create = function create(appModel) {
     api.cancelBookingByClient = function cancelBookingByClient(bookingID) {
         return appModel.rest.post('me/client-booking/' + bookingID + '/cancel')
         .then(function(serverBooking) {
+            // Reset calendar availability cache
+            appModel.calendar.clearCache();
             return new Booking(serverBooking);
         });
     };
@@ -157,6 +163,8 @@ exports.create = function create(appModel) {
     api.confirmBookingRequest = function confirmBookingRequest(bookingID, dateType) {
         return appModel.rest.post('me/service-professional-booking/' + bookingID + '/confirm', { dateType: dateType })
         .then(function(serverBooking) {
+            // Reset calendar availability cache
+            appModel.calendar.clearCache();
             return new Booking(serverBooking);
         });
     };
