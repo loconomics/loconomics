@@ -1929,6 +1929,18 @@ namespace LcRest
                 if (booking == null || booking.serviceProfessionalUserID != serviceProfessionalUserID)
                     return false;
 
+                // NOTE: Service Professional Editing Rules
+                // Can change Pricing only if is a BookNow Booking withOUT payment collected OR is a service
+                // professional booking
+                var canChangePricing = 
+                    booking.bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking || (
+                        booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking &&
+                        !booking.paymentCollected
+                    )
+                ;
+                // ON ANY CASE: professional can update time(s), location, notes (this limitations are forced
+                // in the Booking.Set method for any update done by the service professional).
+
                 var provider = LcData.UserInfo.GetUserRowWithContactData(serviceProfessionalUserID);
                 var customer = LcData.UserInfo.GetUserRow(booking.clientUserID);
 
@@ -1944,14 +1956,14 @@ namespace LcRest
                     throw new ConstraintException("Impossible to update the booking for that Job Title.");
 
                 // 1º: calculating pricing and timing by checking services included
-                if (booking.CreatePricing(services))
+                if (canChangePricing && booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.serviceDurationMinutes ?? 0));
                 // Only if dates changed:
-                var eventInfo = LcCalendar.GetBasicEventInfo(booking.serviceDateID.Value, db.Db);
-                if (eventInfo.StartTime != startTime && eventInfo.EndTime != endTime)
+                booking.FillServiceDates();
+                if (booking.serviceDate.startTime != startTime && booking.serviceDate.endTime != endTime)
                 {
                     // Because this API is only for providers, we avoid the advance time from the checking
                     var isAvailable = allowBookUnavailableTime || LcCalendar.DoubleCheckEventAvailability(booking.serviceDateID.Value, startTime, endTime, true);
@@ -1970,12 +1982,15 @@ namespace LcRest
                     db.Execute("BEGIN TRANSACTION");
                 }
 
-                // 3º: Updating pricing estimate records
-                // save Summary on db, will set the ID and Revision on the returned summary
-                // and save details with updated IDs too
-                booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
-                booking.pricingSummaryID = booking.pricingSummary.pricingSummaryID;
-                booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
+                if (canChangePricing)
+                {
+                    // 3º: Updating pricing estimate records
+                    // save Summary on db, will set the ID and Revision on the returned summary
+                    // and save details with updated IDs too
+                    booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
+                    // Get new Revision so is persisted on Booking.Set later
+                    booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
+                }
 
                 // 4º: persisting booking on database
                 booking.serviceAddressID = serviceAddressID;

@@ -12,6 +12,7 @@ var ko = require('knockout'),
     ModelVersion = require('../utils/ModelVersion'),
     getDateWithoutTime = require('../utils/getDateWithoutTime'),
     PricingSummaryDetail = require('../models/PricingSummaryDetail');
+var Booking = require('../models/Booking');
 
 function AppointmentCardViewModel(params) {
     /*jshint maxstatements: 60*/
@@ -255,6 +256,22 @@ function AppointmentCardViewModel(params) {
     this.isServiceProfessionalBooking = ko.pureComputed(function() {
         var b = this.item() && this.item().sourceBooking();
         return b ? b.isServiceProfessionalBooking() : false;
+    }, this);
+    
+    // IMPORTANT Editing rule
+    this.canChangePricing = ko.pureComputed(function() {
+        if (this.isNew()) return true;
+        var b = this.item() && this.item().sourceBooking();
+        if (b) {
+            var bt = b.bookingTypeID();
+            return (
+                bt === Booking.type.serviceProfessionalBooking || (
+                    bt === Booking.type.bookNowBooking &&
+                    !b.paymentCollected
+                )
+            );
+        }
+        return false;
     }, this);
     
     // For booking cancel/decline/confirm.

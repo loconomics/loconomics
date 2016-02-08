@@ -40,12 +40,12 @@
         </ul>
 
         <div class="Card-title" data-bind="visible: currentID() > 0, css: headerClass">
-            <button type="button" class="LinkTile" data-bind="click: isServiceProfessionalBooking() /*!isBookingRequest()*/ && currentID() > 0 && !editMode() && edit, disable: item().readOnly">
+            <button type="button" class="LinkTile" data-bind="click: !isBookingRequest() && currentID() > 0 && !editMode() && edit, disable: item().readOnly">
                 <div class="Tile-content">
                     <div><small data-bind="text: editMode() ? 'Tap any section to edit' : item().stateHeader()"></small></div>
                     <div><strong data-bind="text: item().summary()"></strong></div>
                 </div>
-                <div class="Tile-icon" data-bind="visible: isServiceProfessionalBooking() /*!isBookingRequest()*/">
+                <div class="Tile-icon" data-bind="visible: !isBookingRequest()">
                     <i class="fa ion ion-edit" aria-hidden="true"></i>
                 </div>
             </button>
@@ -122,19 +122,19 @@
         
         <ul class="TilesList TilesList--opendEnd" data-bind="visible: isBooking()">
             <li>
-                <button type="button" class="InfoTile" data-bind="click: isServiceProfessionalBooking() && editMode() && pickDateTime">
+                <button type="button" class="InfoTile" data-bind="click: !isBookingRequest() && editMode() && pickDateTime">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-clock-outline"></span>
                     </div>
                     <div class="Tile-content">
                         <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
                         <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
-                        <p data-bind="visible: isServiceProfessionalBooking() && editMode() && !item().startTime()" class="text-muted">Select date/time</p>
+                        <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select date/time</p>
                     </div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: isServiceProfessionalBooking() && editMode() && isNew() && pickClient">
+                <button type="button" class="InfoTile" data-bind="click: editMode() && isNew() && pickClient">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-android-contact"></span>
                     </div>
@@ -145,7 +145,7 @@
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: isServiceProfessionalBooking() && editMode() && pickService">
+                <button type="button" class="InfoTile" data-bind="click: canChangePricing() && editMode() && pickService">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-pricetags-outline"></span>
                     </div>
@@ -156,7 +156,7 @@
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: isServiceProfessionalBooking() && editMode() && changePrice">
+                <button type="button" class="InfoTile" data-bind="click: canChangePricing() && editMode() && changePrice">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-social-usd"></span>
                     </div>
@@ -166,7 +166,7 @@
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: isServiceProfessionalBooking() && editMode() && pickLocation">
+                <button type="button" class="InfoTile" data-bind="click: !isBookingRequest() && editMode() && pickLocation">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-location-outline"></span>
                     </div>
@@ -222,7 +222,7 @@
             </li>
         </ul>
         
-        <div class="AppointmentCard-actions" data-bind="visible: editMode()">
+        <div class="AppointmentCard-actions" data-bind="visible: !isBookingRequest() && editMode()">
             <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save changes</button>
             <!--<button type="button" class="btn btn-danger btn-block" data-bind="event: { click: remove }, disable: isLocked">Cancel booking</button>-->
             <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
