@@ -79,7 +79,7 @@ namespace LcRest
             var leftToday = DateTime.Now;
             var tomorrow = DateTime.Today.AddDays(1);
             // Next week is from tomorrow up to 7 days
-            var nextWeekStart = tomorrow;
+            var nextWeekStart = tomorrow.AddDays(1).AddSeconds(-1);
             var nextWeekEnd = nextWeekStart.AddDays(7);
 
             using (var db = new LcDatabase())
@@ -95,7 +95,7 @@ namespace LcRest
                 };
 
                 // NOTE: what if there is a booking for several days and we are in the middel of that? First work hour on the date?
-                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, tomorrow, tomorrow.AddDays(1).AddSeconds(-1));
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, tomorrow, nextWeekStart);
                 ret.tomorrow = new Summary
                 {
                     quantity = d.count,

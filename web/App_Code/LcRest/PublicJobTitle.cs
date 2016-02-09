@@ -45,7 +45,9 @@ namespace LcRest
                 description = record.description,
                 searchDescription = record.searchDescription,
                 createdDate = record.createdDate,
-                updatedDate = record.updatedDate
+                updatedDate = record.updatedDate,
+                languageID = record.languageID,
+                countryID = record.countryID
             };
         }
         #endregion
@@ -61,7 +63,9 @@ namespace LcRest
                 PositionDescription As description,
                 PositionSearchDescription As searchDescription,
                 CreatedDate As createdDate,
-                UpdatedDate As updatedDate
+                UpdatedDate As updatedDate,
+                languageID,
+                countryID
             FROM
                 positions
             WHERE
