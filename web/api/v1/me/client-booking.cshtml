@@ -249,45 +249,43 @@
                 );
                 itemID = booking.bookingID;
                 
-                // Collect payment
-                var address = new LcData.Address {
-                    AddressLine1 = Request["billingAddress[addressLine1]"],
-                    AddressLine2 = Request["billingAddress[addressLine2]"],
-                    PostalCode = Request["billingAddress[postalCode]"],
-                    CountryID = locale.countryID
-                };
-                var autoAddress = LcRest.Address.GetPostalCodeData(address.PostalCode, address.CountryID, true);
-                if (autoAddress != null) {
-                    address.StateProvinceCode = autoAddress.stateProvinceCode;
-                    address.City = autoAddress.city;
-                }
-                
-                var paymentErrors = booking.CollectPayment(new LcPayment.InputPaymentMethod
-                {
-                    paymentMethodID = Request["paymentMethod[paymentMethodID]"],
-                    cardNumber = Request["paymentMethod[cardNumber]"],
-                    nameOnCard = Request["paymentMethod[nameOnCard]"],
-                    expirationMonth = Request["paymentMethod[expirationMonth]"],
-                    expirationYear = Request["paymentMethod[expirationYear]"],
-                    securityCode = Request["paymentMethod[securityCode]"],
-                    billingAddress = address
-                }, Request["paymentMethod[savePayment]"].AsBool());
-
-                if (paymentErrors != null && paymentErrors.Count > 0)
-                {
-                    // At this point, we show errors and the API consumer must attempt
-                    // calls only to update the provided payment data for the generated bookingID
-                    // not to pass all the data again since the other details are saved and
-                    // available time reserved.
-                    foreach(var paymentErr in paymentErrors) {
-                        ModelState.AddError(paymentErr.Key, paymentErr.Value);
+                if (booking.paymentEnabled) {
+                    // Collect payment
+                    var address = new LcData.Address {
+                        AddressLine1 = Request["billingAddress[addressLine1]"],
+                        AddressLine2 = Request["billingAddress[addressLine2]"],
+                        PostalCode = Request["billingAddress[postalCode]"],
+                        CountryID = locale.countryID
+                    };
+                    var autoAddress = LcRest.Address.GetPostalCodeData(address.PostalCode, address.CountryID, true);
+                    if (autoAddress != null) {
+                        address.StateProvinceCode = autoAddress.stateProvinceCode;
+                        address.City = autoAddress.city;
                     }
-                    // TODO Needs return the errors and the bookingID
-                }
                 
-                // Send communication to client (email)
-                // TODO Reenable when reimplemented email templates
-                //LcMessaging.SendProviderBooking(itemID);
+                    var paymentErrors = booking.CollectPayment(new LcPayment.InputPaymentMethod
+                    {
+                        paymentMethodID = Request["paymentMethod[paymentMethodID]"],
+                        cardNumber = Request["paymentMethod[cardNumber]"],
+                        nameOnCard = Request["paymentMethod[nameOnCard]"],
+                        expirationMonth = Request["paymentMethod[expirationMonth]"],
+                        expirationYear = Request["paymentMethod[expirationYear]"],
+                        securityCode = Request["paymentMethod[securityCode]"],
+                        billingAddress = address
+                    }, Request["paymentMethod[savePayment]"].AsBool());
+
+                    if (paymentErrors != null && paymentErrors.Count > 0)
+                    {
+                        // At this point, we show errors and the API consumer must attempt
+                        // calls only to update the provided payment data for the generated bookingID
+                        // not to pass all the data again since the other details are saved and
+                        // available time reserved.
+                        foreach(var paymentErr in paymentErrors) {
+                            ModelState.AddError(paymentErr.Key, paymentErr.Value);
+                        }
+                        // TODO Needs return the errors and the bookingID
+                    }
+                }
             }
             catch (ConstraintException delEx)
             {
