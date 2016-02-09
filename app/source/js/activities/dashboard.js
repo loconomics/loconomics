@@ -102,6 +102,8 @@ A.prototype.show = function show(options) {
         v.upcomingBookings.today.time(upcoming.today.time && new Date(upcoming.today.time));
         v.upcomingBookings.tomorrow.quantity(upcoming.tomorrow.quantity);
         v.upcomingBookings.tomorrow.time(upcoming.tomorrow.time && new Date(upcoming.tomorrow.time));
+        v.upcomingBookings.thisWeek.quantity(upcoming.thisWeek.quantity);
+        v.upcomingBookings.thisWeek.time(upcoming.thisWeek.time && new Date(upcoming.thisWeek.time));
         v.upcomingBookings.nextWeek.quantity(upcoming.nextWeek.quantity);
         v.upcomingBookings.nextWeek.time(upcoming.nextWeek.time && new Date(upcoming.nextWeek.time));
     })

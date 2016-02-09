@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -21,6 +21,7 @@ namespace LcRest
         #region Fields
         public Summary today;
         public Summary tomorrow;
+        public Summary thisWeek;
         public Summary nextWeek;
         public int? nextBookingID;
         #endregion
@@ -78,8 +79,13 @@ namespace LcRest
             // Preparing dates for further filtering
             var leftToday = DateTime.Now;
             var tomorrow = DateTime.Today.AddDays(1);
-            // Next week is from tomorrow up to 7 days
-            var nextWeekStart = tomorrow.AddDays(1).AddSeconds(-1);
+            // This week is today until the end of Sunday
+            int daysUntilSunday = (((int) DayOfWeek.Monday - (int) today.DayOfWeek + 7) % 7) + 1; 
+            var thisWeekStart = DateTime.Now;
+            var thisWeekEnd = leftToday.AddDays(daysUntilSunday).AddSeconds(-1);
+            
+            // Next week is from the next Monday until Sunday
+            var nextWeekStart = tomorrow.AddDays(daysUntilSunday + 1).AddSeconds(-1);
             var nextWeekEnd = nextWeekStart.AddDays(7);
 
             using (var db = new LcDatabase())
@@ -101,7 +107,14 @@ namespace LcRest
                     quantity = d.count,
                     time = d.startTime
                 };
-
+                
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, thisWeekStart, thisWeekEnd);
+                ret.thisWeek = new Summary
+                {
+                    quantity = d.count,
+                    time = d.startTime
+                };
+                
                 d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, nextWeekStart, nextWeekEnd);
                 ret.nextWeek = new Summary
                 {
