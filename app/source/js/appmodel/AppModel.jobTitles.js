@@ -54,15 +54,20 @@ exports.create = function create(appModel) {
     api.getJobTitle = function getJobTitle(id) {
         if (!id) return Promise.reject('Needs an ID to get a Job Title');
 
-        // First, in-memory cache
+        // Get cache control object
         var c = getCacheItem(id);
-        if (!c.mustRevalidate()) {
+        // Zero, there is a running request?
+        if (c.request) {
+            return c.request;
+        }
+        else if (!c.mustRevalidate()) {
+            // First, in-memory cache
             return Promise.resolve(c.data);
         }
         else {
             api.state.isLoading(true);
             // Second, local storage
-            return localforage.getItem('jobTitles/' + id)
+            c.request = localforage.getItem('jobTitles/' + id)
             .then(function(jobTitle) {
                 if (jobTitle) {
                     c.latest = new Date(jobTitle.updatedDate);
@@ -75,21 +80,26 @@ exports.create = function create(appModel) {
                         // Cache in local storage
                         localforage.setItem('jobTitles/' + id, raw);
                         api.state.isLoading(false);
+                        c.request = null;
                         // cache in memory and return the Model
                         return setCacheItem(id, raw).data;
                     });
                 }
                 else {
                     api.state.isLoading(false);
+                    c.request = null;
                     // The local copy is valid, set in memory and returns
                     return setCacheItem(id, jobTitle).data;
                 }
             })
             .catch(function(err) {
                 api.state.isLoading(false);
+                c.request = null;
                 // Rethrow error
                 throw err;
             });
+
+            return c.request;
         }
     };
 
