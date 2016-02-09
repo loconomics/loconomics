@@ -348,7 +348,7 @@ namespace LcRest
                 // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
                 // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
                 // or present more precision to the service professional (who will show how much received on their bank account).
-                serviceFeeAmount = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage/100 * (totalPrice.Value - clientServiceFeePrice.Value)) + clientServiceFeePrice.Value, 2);
+                serviceFeeAmount = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage * (totalPrice.Value - clientServiceFeePrice.Value)) + clientServiceFeePrice.Value, 2);
             }
             else
             {
