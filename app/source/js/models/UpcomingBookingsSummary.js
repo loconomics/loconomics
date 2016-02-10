@@ -22,6 +22,10 @@ function UpcomingBookingsSummary() {
         concept: 'tomorrow',
         timeFormat: ' [starting @] h:mma'
     });
+    this.thisWeek = new BookingSummary({
+        concept: 'this week',
+        timeFormat: null
+    });
     this.nextWeek = new BookingSummary({
         concept: 'next week',
         timeFormat: null
@@ -34,6 +38,8 @@ function UpcomingBookingsSummary() {
         items.push(this.today);
         //if (this.tomorrow.quantity())
         items.push(this.tomorrow);
+        //if (this.thisWeek.quantity())
+        items.push(this.thisWeek);
         //if (this.nextWeek.quantity())
         items.push(this.nextWeek);
 
