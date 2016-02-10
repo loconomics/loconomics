@@ -32,7 +32,7 @@
 
                     <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
 
-                    <div data-bind="visible: supportsGratuity && booking.paymentEnabled()">
+                    <div data-bind="visible: supportsGratuity() && booking.paymentEnabled()">
                         <h2 class="SectionTitle">Add gratuity</h2>
                         <script type="text/html" id="booking-gratuity-radioButton">
                             <label class="btn btn-default" data-bind="css: { 'btn-secondary': value() === itemValue }">
@@ -383,13 +383,13 @@
                                     <p data-bind="text: booking.pricingSummary() && booking.pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking.pricingSummary() && booking.pricingSummary().totalPrice())}"></p>
                                 </div>
                             </li>
-                            <li data-bind="if: supportsGratuity && booking.paymentEnabled()">
+                            <li data-bind="if: supportsGratuity() && booking.paymentEnabled()">
                                 <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'services')">
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-cash"></span>
                                     </div>
                                     <div class="Tile-content">
-                                        <p data-bind="text: summary.gratuity() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(summary.gratuity())}"> gratuity</p>
+                                        <p><span data-bind="text: summary.gratuity() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(summary.gratuity())}"></span> <span>gratuity</span></p>
                                     </div>
                                 </button>
                             </li>

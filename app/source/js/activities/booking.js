@@ -71,7 +71,7 @@ var stepsLabels = {
 
 A.prototype.servicesLoad = function() {
     // TODO Depends on jobTitle:
-    this.viewModel.supportsGratuity(true);    
+    this.viewModel.supportsGratuity(false);    
 };
 
 A.prototype.selectLocationLoad = function() {
