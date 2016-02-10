@@ -530,7 +530,7 @@ function PricingSummaryVM(values) {
     
     this.feesMessage = ko.pureComputed(function() {
         var f = numeral(this.fees()).format('$#,##0.00');
-        return '*includes a __fees__ first-time booking fee'.replace(/__fees__/g, f);
+        return '*The first-time __fees__ booking fee applies only to the very first time you connect with a professional and helps cover costs of running the marketplace. There are no fees for subsequent bookings with this professional.'.replace(/__fees__/g, f);
     }, this);
 
     this.items = ko.pureComputed(function() {
