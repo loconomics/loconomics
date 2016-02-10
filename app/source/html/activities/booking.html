@@ -75,7 +75,7 @@
                                     <th class="PricingSummary-concept">Total</th>
                                     <th class="PricingSummary-price"><span data-bind="text: summary.totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span>*</th>
                                 </tr>
-                                <tr>
+                                <tr data-bind="visible: summary.fees() > 0">
                                     <td class="PricingSummary-fees" colspan="2">
                                         <span data-bind="text: summary.feesMessage"></span>
                                     </td>

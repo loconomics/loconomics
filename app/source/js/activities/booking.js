@@ -545,7 +545,16 @@ function PricingSummaryVM(values) {
 
             items.push(new PricingSummaryDetail({
                 serviceName: gratuityLabel,
-                price: this.gratuity()
+                price: gratuity
+            }));
+        }
+        
+        var fees = this.fees();
+        if (fees > 0) {
+            var feesLabel = 'First-time booking fee*';
+            items.push(new PricingSummaryDetail({
+                serviceName: feesLabel,
+                price: fees
             }));
         }
 
