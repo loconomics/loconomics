@@ -304,7 +304,7 @@ namespace LcRest
                 {
                     this.subtotalPrice += detail.price;
                     this.serviceDurationMinutes += detail.serviceDurationMinutes;
-                    this.firstSessionDurationMinutes = detail.firstSessionDurationMinutes;
+                    this.firstSessionDurationMinutes += detail.firstSessionDurationMinutes;
                 }
             }
 
