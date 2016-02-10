@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -1444,7 +1444,7 @@ namespace LcRest
                     {
                         // Since we have not input data to save, we can only throw an error
                         // invalidSavedPaymentMethod
-                        throw new ConstraintException("Choosen payment method have expired");
+                        throw new ConstraintException("Chosen payment method has expired");
                     }
                 }
                 else

@@ -1,4 +1,4 @@
-﻿@using WebMatrix.WebData;
+@using WebMatrix.WebData;
 @*
     Allows a client to create a booking, in other words: to book a service professional.
     There is only POST access, no editing, no fetching.
@@ -157,18 +157,18 @@
             */
             if (!Request.Form.AllKeys.Contains<string>("services[]"))
             {
-                ModelState.AddError("services", "Choose almost one service");
+                ModelState.AddError("services", "Choose at least one service");
             }
             var pricing = Request.Form.GetValues("services[]");
             var pricingIds = new List<int>();
             if (pricing == null || pricing.Length < 1) {
-                ModelState.AddError("services", "Choose almost one service");
+                ModelState.AddError("services", "Choose at least one service");
             }
             else {
                 foreach(var pricingItem in pricing) {
                     var sid = pricingItem.AsInt(0);
                     if (sid == 0) {
-                        ModelState.AddError("services", "Some specified services are wrong");
+                        ModelState.AddError("services", "Some specified services are incorrect");
                         break;
                     }
                     pricingIds.Add(sid);

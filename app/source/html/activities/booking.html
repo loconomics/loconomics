@@ -32,7 +32,7 @@
 
                     <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
 
-                    <div data-bind="visible: supportsGratuity">
+                    <div data-bind="visible: supportsGratuity && booking.paymentEnabled()">
                         <h2 class="SectionTitle">Add gratuity</h2>
                         <script type="text/html" id="booking-gratuity-radioButton">
                             <label class="btn btn-default" data-bind="css: { 'btn-secondary': value() === itemValue }">
@@ -51,7 +51,7 @@
                                 <span>$</span>
                                 <input type="number" name="custom-gratuity" data-bind="textInput: gratuityAmount" class="form-control NumberField NumberField--xs NumberField--center">
                             </div>
-                            <p class="isolated"><small>You’ll have until 2 hours after your app’t to edit</small></p>
+                            <p class="isolated"><small>You’ll have until 1 hour after your app’t ends to adjust</small></p>
                         </div>
                     </div>
 
@@ -106,6 +106,12 @@
                 
                 <div id="bookingSelectLocation" class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }, css: { 'is-loading': isLoadingServiceAddresses }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                    <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
+                        <a href="/login" class="btn btn-link" data-bind="click: goLogin">
+                            <span class="text-muted">Already have an account?</span>
+                            <span class="text-secondary">Log In</span>
+                        </a>
+                    </div>
                     <h1 class="SectionTitle">Select location</h1>
                     <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
                     <div class="PaddedBox-xs-only isolated-sm">
@@ -116,6 +122,12 @@
                 </div>
                 
                 <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
+                    <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
+                        <a href="/login" class="btn btn-link" data-bind="click: goLogin">
+                            <span class="text-muted">Already have an account?</span>
+                            <span class="text-secondary">Log In</span>
+                        </a>
+                    </div>
                     <h1 class="SectionTitle">
                         <span data-bind="visible: isAtSelectTimes">Select up to 3 appointment times</span>
                         <span data-bind="visible: isAtSelectTime">Select a start day and time</span>                        &nbsp;
@@ -205,6 +217,12 @@
                 </div>
 
                 <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('payment')() }">
+                    <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
+                        <a href="/login" class="btn btn-link" data-bind="click: goLogin">
+                            <span class="text-muted">Already have an account?</span>
+                            <span class="text-secondary">Log In</span>
+                        </a>
+                    </div>
                     <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
                         <div data-bind="with: paymentMethod" class="WhiteForm">
 
@@ -266,6 +284,12 @@
                 </div>
                 
                 <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('confirm')() }">
+                    <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
+                        <a href="/login" class="btn btn-link" data-bind="click: goLogin">
+                            <span class="text-muted">Already have an account?</span>
+                            <span class="text-secondary">Log In</span>
+                        </a>
+                    </div>
                     
                     <div class="Signup" data-bind="visible: isAnonymous(), with: signupVM">
                         <h1 class="SectionTitle">Create account</h1>
@@ -359,13 +383,13 @@
                                     <p data-bind="text: booking.pricingSummary() && booking.pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking.pricingSummary() && booking.pricingSummary().totalPrice())}"></p>
                                 </div>
                             </li>
-                            <li data-bind="if: supportsGratuity">
+                            <li data-bind="if: supportsGratuity && booking.paymentEnabled()">
                                 <button type="button" class="InfoTile" data-bind="click: goStep.bind($data, 'services')">
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-cash"></span>
                                     </div>
                                     <div class="Tile-content">
-                                        <p data-bind="text: summary.gratuity() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(summary.gratuity())}"></p>
+                                        <p data-bind="text: summary.gratuity() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(summary.gratuity())}"> gratuity</p>
                                     </div>
                                 </button>
                             </li>
