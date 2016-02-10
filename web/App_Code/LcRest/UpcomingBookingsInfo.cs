@@ -78,21 +78,23 @@ namespace LcRest
 
             // Preparing dates for further filtering
             var leftToday = DateTime.Now;
+            var leftTodayEnd = DateTime.Today.AddDays(1).AddSeconds(-1);
             var tomorrow = DateTime.Today.AddDays(1);
+            var tomorrowEnd = tomorrow.AddDays(1).AddSeconds(-1);
             // This week is today until the end of Sunday
-            int daysUntilSunday = (((int) DayOfWeek.Monday - (int) today.DayOfWeek + 7) % 7) + 1; 
+            int daysUntilSunday = (((int)DayOfWeek.Monday - (int)DateTime.Today.DayOfWeek + 7) % 7);
             var thisWeekStart = DateTime.Now;
-            var thisWeekEnd = leftToday.AddDays(daysUntilSunday).AddSeconds(-1);
-            
+            var thisWeekEnd = DateTime.Today.AddDays(daysUntilSunday).AddSeconds(-1);
+
             // Next week is from the next Monday until Sunday
-            var nextWeekStart = tomorrow.AddDays(daysUntilSunday + 1).AddSeconds(-1);
-            var nextWeekEnd = nextWeekStart.AddDays(7);
+            var nextWeekStart = DateTime.Today.AddDays(daysUntilSunday);
+            var nextWeekEnd = nextWeekStart.AddDays(7).AddSeconds(-1);
 
             using (var db = new LcDatabase())
             {
                 dynamic d = null;
 
-                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, leftToday, tomorrow);
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, leftToday, leftTodayEnd);
                 ret.today = new Summary
                 {
                     quantity = d.count,
@@ -101,7 +103,7 @@ namespace LcRest
                 };
 
                 // NOTE: what if there is a booking for several days and we are in the middel of that? First work hour on the date?
-                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, tomorrow, nextWeekStart);
+                d = db.QuerySingle(sqlGetBookingsSumByDateRange, userID, tomorrow, tomorrowEnd);
                 ret.tomorrow = new Summary
                 {
                     quantity = d.count,
