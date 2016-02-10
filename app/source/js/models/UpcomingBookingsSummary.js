@@ -15,7 +15,7 @@ function UpcomingBookingsSummary() {
     // to simplify that
 
     this.today = new BookingSummary({
-        concept: 'more today',
+        concept: 'left today',
         timeFormat: ' [ending @] h:mma'
     });
     this.tomorrow = new BookingSummary({
@@ -34,13 +34,13 @@ function UpcomingBookingsSummary() {
     this.items = ko.pureComputed(function() {
         var items = [];
         
-        //if (this.today.quantity())
+        if (this.today.quantity())
         items.push(this.today);
-        //if (this.tomorrow.quantity())
+        if (this.tomorrow.quantity())
         items.push(this.tomorrow);
-        //if (this.thisWeek.quantity())
+        if (this.thisWeek.quantity())
         items.push(this.thisWeek);
-        //if (this.nextWeek.quantity())
+        if (this.nextWeek.quantity())
         items.push(this.nextWeek);
 
         return items;
