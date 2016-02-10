@@ -126,7 +126,7 @@ public static class LcEmailTemplate
             get
             {
                 if (_serviceProfessional == null)
-                    _serviceProfessional = LcRest.PublicUserProfile.Get(booking.serviceProfessionalUserID, booking.clientUserID);
+                    _serviceProfessional = LcRest.PublicUserProfile.GetForInternalUse(booking.serviceProfessionalUserID);
                 return _serviceProfessional;
             }
         }
@@ -137,7 +137,7 @@ public static class LcEmailTemplate
             get
             {
                 if (_client == null)
-                    _client = LcRest.PublicUserProfile.Get(booking.clientUserID, booking.serviceProfessionalUserID);
+                    _client = LcRest.PublicUserProfile.GetForInternalUse(booking.clientUserID);
                 return _client;
             }
         }
@@ -358,7 +358,7 @@ public static class LcEmailTemplate
             get
             {
                 if (_user == null)
-                    _user = LcRest.PublicUserProfile.Get(userID, userID);
+                    _user = LcRest.PublicUserProfile.GetForInternalUse(userID);
                 return _user;
             }
         }
