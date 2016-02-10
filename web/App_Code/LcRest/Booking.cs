@@ -267,7 +267,33 @@ namespace LcRest
             booking.bookingStatusID = (int)LcEnum.BookingStatus.incomplete;
             booking.cancellationPolicyID = booking.userJobTitle.cancellationPolicyID;
             booking.instantBooking = booking.userJobTitle.instantBooking;
-            booking.firstTimeBooking = IsFirstTimeBooking(serviceProfessionalID, clientID);            
+            booking.firstTimeBooking = IsFirstTimeBooking(serviceProfessionalID, clientID);
+        
+            // Fees:
+            var summary = new PricingSummary();
+            booking.pricingSummary = summary;
+            var flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(jobTitleID, langID, countryID);
+
+            var type = BookingType.Get(booking.bookingTypeID);
+            summary.paymentProcessingFeeFixed = type.paymentProcessingFeeFixed;
+            summary.paymentProcessingFeePercentage = type.paymentProcessingFeePercentage;
+
+            // Client Service Fees
+            // Only are applied on NOT-HIPAA NOT-book-now firstTimeBookings, otherwise is zero
+            if (flags.hipaa || !booking.firstTimeBooking || booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking)
+            {
+                summary.firstTimeServiceFeeFixed = 0;
+                summary.firstTimeServiceFeePercentage = 0;
+                summary.firstTimeServiceFeeMinimum = 0;
+                summary.firstTimeServiceFeeMaximum = 0;
+            }
+            else
+            {
+                summary.firstTimeServiceFeeFixed = type.firstTimeServiceFeeFixed;
+                summary.firstTimeServiceFeePercentage = type.firstTimeServiceFeePercentage;
+                summary.firstTimeServiceFeeMinimum = type.firstTimeServiceFeeMinimum;
+                summary.firstTimeServiceFeeMaximum = type.firstTimeServiceFeeMaximum;
+            }
 
             return booking;
         }
@@ -1275,8 +1301,8 @@ namespace LcRest
         /// Helper for in memory creation and calculation of the Pricing Summary 
         /// attached to the current booking isntance, given the services to include.
         /// It's must be saved later on database.
+        /// The pricingSummary must exists as an instance with the correct fees values in it.
         /// 
-        /// TODO Complete PricingSummary TODOs
         /// </summary>
         /// <param name="services"></param>
         /// <returns>It returns if the jobTitleID changed because of the given services.
@@ -1284,20 +1310,13 @@ namespace LcRest
         /// will be throw</returns>
         private bool CreatePricing(IEnumerable<int> services)
         {
-            var summary = new PricingSummary
-            {
-                pricingSummaryID = pricingSummaryID,
-                pricingSummaryRevision = pricingSummaryRevision
-            };
+            pricingSummary.pricingSummaryID = pricingSummaryID;
+            pricingSummary.pricingSummaryRevision = pricingSummaryRevision;
 
-            var jobTitleID = summary.SetDetailServices(serviceProfessionalUserID, services);
+            var jobTitleID = pricingSummary.SetDetailServices(serviceProfessionalUserID, services);
 
-            var flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(jobTitleID, languageID, countryID);
-
-            summary.CalculateDetails();
-            summary.CalculateFees(BookingType.Get(this.bookingTypeID), this.firstTimeBooking, flags.hipaa);
-
-            pricingSummary = summary;
+            pricingSummary.CalculateDetails();
+            pricingSummary.CalculateFees();
 
             var result = jobTitleID != this.jobTitleID;
             this.jobTitleID = jobTitleID;
@@ -1736,8 +1755,7 @@ namespace LcRest
                 // Recalculate total
                 pricingSummary.totalPrice = pricingSummary.cancellationFeeCharged + pricingSummary.clientServiceFeePrice;
                 // Recalculate other values using standard calculations:
-                var type = BookingType.Get(bookingTypeID);
-                pricingSummary.CalculateServiceFee(type);
+                pricingSummary.CalculateServiceFee();
                 CalculateClientPayment();
                 CalculatePaidFields();
             }

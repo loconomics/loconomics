@@ -311,6 +311,10 @@ function ViewModel(app) {
         this.promotionalCode('');
         this.makeRepeatBooking(false);
         this.paymentMethod(null);
+        this.summary.firstTimeServiceFeeFixed(0);
+        this.summary.firstTimeServiceFeePercentage(0);
+        this.summary.firstTimeServiceFeeMaximum(0);
+        this.summary.firstTimeServiceFeeMinimum(0);
     }.bind(this);
     
     this.isPhoneServiceOnly = ko.pureComputed(function() {
@@ -363,6 +367,10 @@ function ViewModel(app) {
                 ipm.billingAddress(new Address());
                 this.paymentMethod(ipm);
             }
+            this.summary.firstTimeServiceFeeFixed(bookingData.pricingSummary.firstTimeServiceFeeFixed);
+            this.summary.firstTimeServiceFeePercentage(bookingData.pricingSummary.firstTimeServiceFeePercentage);
+            this.summary.firstTimeServiceFeeMaximum(bookingData.pricingSummary.firstTimeServiceFeeMaximum);
+            this.summary.firstTimeServiceFeeMinimum(bookingData.pricingSummary.firstTimeServiceFeeMinimum);
 
             this.isLoadingNewBooking(false);
             this.newDataReady(true);
@@ -498,7 +506,10 @@ function PricingSummaryVM(values) {
         },
         gratuityPercentage: 0,
         gratuityAmount: 0,
-        feesPercentage: 10
+        firstTimeServiceFeeFixed: null,
+        firstTimeServiceFeePercentage: null,
+        firstTimeServiceFeeMaximum: null,
+        firstTimeServiceFeeMinimum: null
     }, values);
 
     this.subtotalPrice = ko.pureComputed(function() {
@@ -509,9 +520,13 @@ function PricingSummaryVM(values) {
     }, this);
     
     this.fees = ko.pureComputed(function() {
-        var t = this.subtotalPrice(),
-            f = this.feesPercentage();
-        return t * (f / 100);
+        var t = +this.subtotalPrice(),
+            f = +this.firstTimeServiceFeeFixed(),
+            p = +this.firstTimeServiceFeePercentage(),
+            min = +this.firstTimeServiceFeeMinimum(),
+            max = +this.firstTimeServiceFeeMaximum();
+        var a = Math.round((f + ((p / 100) * t)) * 100) / 100;
+        return Math.min(Math.max(a, min), max);
     }, this);
     
     this.gratuity = ko.pureComputed(function() {
@@ -588,7 +603,7 @@ function PricingSummaryVM(values) {
     this.toPricingSummary = function() {
         var plain = this.model.toPlainObject(true);
         plain.subtotalPrice = this.subtotalPrice();
-        plain.feePrice = this.fees();
+        plain.clientServiceFeePrice = this.fees();
         plain.totalPrice = this.totalPrice();
         plain.serviceDurationMinutes = this.serviceDurationMinutes();
         plain.firstSessionDurationMinutes = this.firstSessionDurationMinutes();

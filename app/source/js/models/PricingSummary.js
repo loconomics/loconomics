@@ -17,13 +17,17 @@ module.exports = function PricingSummary(values) {
         firstSessionDurationMinutes: null,
         
         subtotalPrice: null,
-        feePrice: null,
+        clientServiceFeePrice: null,
         totalPrice: null,
-        pFeePrice: null,
-        subtotalRefunded: null,
-        feeRefunded: null,
-        totalRefunded: null,
-        dateRefunded: null,
+        serviceFeeAmount: null,
+        cancellationFeeCharged: null,
+        cancellationDate: null,
+        firstTimeServiceFeeFixed: null,
+        firstTimeServiceFeePercentage: null,
+        paymentProcessingFeePercentage: null,
+        paymentProcessingFeeFixed: null,
+        firstTimeServiceFeeMaximum: null,
+        firstTimeServiceFeeMinimum: null,
         
         createdDate: null,
         updatedDate: null,
@@ -34,7 +38,7 @@ module.exports = function PricingSummary(values) {
         }
     }, values);
     
-    this.servicesSummary = ko.computed(function() {
+    this.servicesSummary = ko.pureComputed(function() {
         return this.details()
         .map(function(detail) {
             return detail.serviceName();
