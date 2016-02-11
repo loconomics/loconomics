@@ -327,6 +327,15 @@ function ViewModel(app) {
         this.timeFieldToBeSelected('alternativeDate2');
     }.bind(this);
     
+    this.hasSomeDateSelected = ko.pureComputed(function() {
+        var b = this.booking;
+        return (
+            b.serviceDate() && b.serviceDate().startTime() ||
+            b.alternativeDate1() && b.alternativeDate1().startTime() ||
+            b.alternativeDate2() && b.alternativeDate2().startTime()
+        );
+    }, this);
+    
     ///
     /// Progress management
     this.nextStep = function() {

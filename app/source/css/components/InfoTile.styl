@@ -4,12 +4,9 @@
 **/
 @import 'Tile.styl'
 
-.InfoTile {
-
-    Tile()
-    
+InfoTile($linesNumber) {
     // Two lines
-    $internalHeight = line-height-computed * 2;
+    $internalHeight = line-height-computed * $linesNumber;
     $gap = 18px;
     $heightLimit = $internalHeight + ($gap * 2);
     
@@ -30,5 +27,16 @@
         }
     }
 
-    Tile-addContent(2);
+    Tile-addContent($linesNumber);
+}
+
+.InfoTile {
+    Tile()
+    InfoTile(2)
+}
+
+// Larger tile with 3 lines
+.InfoTile3L {
+    Tile()
+    InfoTile(3)
 }
