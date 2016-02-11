@@ -275,8 +275,18 @@ namespace LcRest
             var flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(jobTitleID, langID, countryID);
 
             var type = BookingType.Get(booking.bookingTypeID);
-            summary.paymentProcessingFeeFixed = type.paymentProcessingFeeFixed;
-            summary.paymentProcessingFeePercentage = type.paymentProcessingFeePercentage;
+
+            // Payment fees only if payment enabled
+            if (booking.paymentEnabled)
+            {
+                summary.paymentProcessingFeeFixed = type.paymentProcessingFeeFixed;
+                summary.paymentProcessingFeePercentage = type.paymentProcessingFeePercentage;
+            }
+            else
+            {
+                summary.paymentProcessingFeeFixed = 0;
+                summary.paymentProcessingFeePercentage = 0;
+            }
 
             // Client Service Fees
             // Only are applied on NOT-HIPAA NOT-book-now firstTimeBookings, otherwise is zero
