@@ -2208,6 +2208,8 @@ namespace LcRest
             bookingStatusID = (int)LcEnum.BookingStatus.denied;
 
             this.RefundPayment();
+            // Remove relationship (will internally do it only if no other bookings active)
+            Client.DeleteServiceProfessionalClient(serviceProfessionalUserID, clientUserID);
 
             LcMessaging.SendBooking.For(bookingID).BookingRequestDeclined();
         }

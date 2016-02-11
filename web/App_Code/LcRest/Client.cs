@@ -548,35 +548,59 @@ namespace LcRest
         {
             using (var db = Database.Open("sqlloco"))
             {
+                db.Execute("BEGIN TRANSACTION");
+                DeleteServiceProfessionalClient(serviceProfessionalUserID, clientUserID, db);
+
                 db.Execute(@"
-                DELETE FROM ServiceProfessionalClient
-                WHERE ServiceProfessionalUserID = @0
-                      AND ClientUserID = @1
-
-                -- If there is no more providers linked to this client
-                IF 0 = (
-                        SELECT count(*) FROM ServiceProfessionalClient WHERE ClientUserID = @1
-                    )
-                    -- And serviceProfessional own this user record (is editable for him)
-                    AND EXISTS (
-                        SELECT * FROM users
-                        WHERE UserID = @1 -- The client
-                            AND ReferredByUserID = @0 -- This serviceProfessional
+                    -- If there is no more providers linked to this client
+                    IF 0 = (
+                            SELECT count(*) FROM ServiceProfessionalClient WHERE ClientUserID = @1
+                        )
+                        -- And serviceProfessional own this user record (is editable for him)
+                        AND EXISTS (
+                            SELECT * FROM users
+                            WHERE UserID = @1 -- The client
+                                AND ReferredByUserID = @0 -- This serviceProfessional
+                                AND AccountStatusID = 6 -- In 'editable by serviceProfessional creator' state
+                    ) BEGIN          
+                        -- Try to delete the User record, but only if
+                        -- is owned by the serviceProfessional
+                        DELETE FROM users
+                        WHERE UserID = @1
+                            AND ReferredByUserID = @0
                             AND AccountStatusID = 6 -- In 'editable by serviceProfessional creator' state
-                ) BEGIN          
-                    -- Try to delete the User record, but only if
-                    -- is owned by the serviceProfessional
-                    DELETE FROM users
-                    WHERE UserID = @1
-                        AND ReferredByUserID = @0
-                        AND AccountStatusID = 6 -- In 'editable by serviceProfessional creator' state
 
-                    -- Delete the userprofile record
-                    DELETE FROM userprofile
-                    WHERE UserID = @1
-                END
-            ",
-                serviceProfessionalUserID, clientUserID);
+                        -- Can fail if was not removed from [users] because of the 'where', fail silently
+                        BEGIN TRY
+                            -- Delete the userprofile record
+                            DELETE FROM userprofile
+                            WHERE UserID = @1
+                        END TRY
+                        BEGIN CATCH
+                        END CATCH
+                    END
+                ", serviceProfessionalUserID, clientUserID);
+                db.Execute("COMMIT TRANSACTION");
+            }
+        }
+        /// <summary>
+        /// Just remove relationship between professional and client.
+        /// Will work only if there is no bookings that related both users, unless 'declined', 'expired' ones. 
+        /// </summary>
+        /// <param name="serviceProfessionalUserID"></param>
+        /// <param name="clientUserID"></param>
+        /// <param name="sharedDb"></param>
+        internal static void DeleteServiceProfessionalClient(int serviceProfessionalUserID, int clientUserID, Database sharedDb = null)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                db.Execute(@"
+                    IF NOT EXISTS (SELECT * FROM Bookings WHERE serviceProfessionalUserID = @0 AND clientUserID = @1 AND BookingStatusID NOT IN (4, 5))
+                    THEN
+                        DELETE FROM ServiceProfessionalClient
+                        WHERE ServiceProfessionalUserID = @0
+                            AND ClientUserID = @1
+                ", serviceProfessionalUserID, clientUserID);
             }
         }
         #endregion
