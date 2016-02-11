@@ -593,23 +593,17 @@
                                         <span class="fa ion ion-ios-clock-outline"></span>
                                     </div>
                                     <div class="Tile-content" data-bind="visible: !booking.instantBooking()">
-                                        <div>
+                                        <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime()">
                                             <strong>1st choice: </strong>
-                                            <span data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime()">
                                                 <span data-bind="text: booking.serviceDate() && booking.serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().displayedTimeRange()"></span>
-                                            </span>
                                         </div>
-                                        <div>
+                                        <div data-bind="visible: booking.alternativeDate1() && booking.alternativeDate1().startTime()">
                                             <strong>2nd choice: </strong>
-                                            <span data-bind="visible: booking.alternativeDate1() && booking.alternativeDate1().startTime()">
                                                 <span data-bind="text: booking.alternativeDate1() && booking.alternativeDate1().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="text: booking.alternativeDate1() && booking.alternativeDate1().displayedTimeRange()"></span>
-                                            </span>
                                         </div>
-                                        <div>
+                                        <div data-bind="visible: booking.alternativeDate2() && booking.alternativeDate2().startTime()">
                                             <strong>3rd choice: </strong>
-                                            <span data-bind="visible: booking.alternativeDate2() && booking.alternativeDate2().startTime()">
                                                 <span data-bind="text: booking.alternativeDate2() && booking.alternativeDate2().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="text: booking.alternativeDate2() && booking.alternativeDate2().displayedTimeRange()"></span>
-                                            </span>
                                         </div>
                                         <p data-bind="visible: !hasSomeDateSelected()" class="text-muted">Select preferred times</p>
                                     </div>
