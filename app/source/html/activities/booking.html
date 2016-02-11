@@ -274,7 +274,7 @@
                             <p>
                                 Your card will be authorized for $<span data-bind="text: summary.totalPrice"></span>.
                                 <span data-bind="visible: !booking.instantBooking()">
-                                    If you rrequest is accepted (within 18 hours), we'll change your card the day <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span> performs the scheduled services.
+                                    If your request is accepted (within 18 hours), we'll change your card the day <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span> performs the scheduled services.
                                     
                                 </span>
                             </p>
@@ -347,9 +347,15 @@
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-ios-clock-outline"></span>
                                     </div>
-                                    <div class="Tile-content">
-                                        <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                                        <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().displayedTimeRange()"></div>
+                                    <div class="Tile-content, Tile-addContent(3)">
+                                        <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime() && !booking.alternativeDate1()"><span data-bind="text: booking.serviceDate() && booking.serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().displayedTimeRange()"></span>
+                                        </div>
+                                        <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime() && booking.alternativeDate1()"><strong>1st choice: </strong><span data-bind="text: booking.serviceDate() && booking.serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().displayedTimeRange()"></span>
+                                        </div>
+                                        <div data-bind="visible: booking.alternativeDate1() && booking.alternativeDate1().startTime()"><strong>2nd choice: </strong><span data-bind="text: booking.alternativeDate1() && booking.alternativeDate1().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="text: booking.alternativeDate1() && booking.alternativeDate1().displayedTimeRange()"></span>
+                                        </div>
+                                            <div data-bind="visible: booking.alternativeDate2() && booking.alternativeDate2().startTime()"><strong>3rd choice: </strong><span data-bind="text: booking.alternativeDate2() && booking.alternativeDate2().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="text: booking.alternativeDate2() && booking.alternativeDate2().displayedTimeRange()"></span>
+                                        </div>
                                         <p data-bind="visible: !(booking.serviceDate() && booking.serviceDate().startTime())" class="text-muted">Select date/time</p>
                                     </div>
                                 </button>
@@ -424,7 +430,7 @@
                             <a target="_blank" data-bind="attr: { href: urlTos }">Terms of Service</a>,
                             <a target="_blank" data-bind="attr: { href: urlBcp }">Background Check Policy</a>,
                             <a target="_blank" data-bind="attr: { href: urlPp }">Privacy Policy</a>, &amp;
-                            <a target="_blank" data-bind="attr: { href: urlCp }">Patricia's Cancellation Policy</a>
+                            <a target="_blank" data-bind="attr: { href: urlCp }"><span data-bind="text:  serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s Cancellation Policy</a>
                         </div>
                     </div>
                 </div>

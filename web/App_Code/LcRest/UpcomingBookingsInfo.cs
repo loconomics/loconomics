@@ -49,6 +49,7 @@ namespace LcRest
                          AND
                         E.StartTime <= @2
                     )
+                    AND B.BookingStatusID = 6
         ";
         private const string sqlGetNextBookingID = @"
             SELECT  TOP 1
@@ -68,6 +69,7 @@ namespace LcRest
                     (   
                         E.StartTime >= @1
                     )
+                     AND B.BookingStatusID = 6
             ORDER BY E.StartTime ASC
         ";
         #endregion
