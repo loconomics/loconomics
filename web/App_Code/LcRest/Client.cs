@@ -410,7 +410,7 @@ namespace LcRest
                         UpdatedDate,
                         Active
                     ) VALUES (
-                        @0, @1, @2,
+                        @0, @1, coalesce(@2, ''),
                         12, -- source: created by serviceProfessional (12:ProviderExistingClient)
                         getdate(),
                         getdate(),
