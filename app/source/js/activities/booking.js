@@ -480,9 +480,9 @@ function ViewModel(app) {
     
     ///
     /// URLs
-    this.urlTos = ko.observable('https://loconomics.com/en-US/About/TermsOfUse/');
-    this.urlPp = ko.observable('https://loconomics.com/en-US/About/PrivacyPolicy/');
-    this.urlBcp = ko.observable('https://loconomics.com/en-US/About/BackgroundCheckPolicy/');
+    this.urlTos = ko.observable('terms/terms-of-service');
+    this.urlPp = ko.observable('terms/privacy-policy');
+    this.urlBcp = ko.observable('terms/background-check-policy');
     this.urlCp = ko.observable('https://loconomics.com/en-US/About/CancellationPolicy/');
     
     
