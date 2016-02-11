@@ -1860,7 +1860,7 @@ namespace LcRest
                 // Because this API is only for providers, we avoid the advance time from the checking
                 var isAvailable = allowBookUnavailableTime || LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, true);
                 if (!isAvailable)
-                    throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
+                    throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
 
                 // Event data
                 var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
