@@ -2383,6 +2383,14 @@ namespace LcRest
                     booking.bookingStatusID = (int)(booking.instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
                 }
                 Booking.Set(booking, clientUserID, db.Db);
+                if (booking.firstTimeBooking)
+                {
+                    // Create client-professional relationship. Without this, professional cannot fetch information about the client
+                    Client.SetServiceProfessionalClient(booking.serviceProfessionalUserID, new Client
+                    {
+                        clientUserID = booking.clientUserID
+                    }, db.Db);
+                }
 
                 // Persisting all or nothing:
                 db.Execute("COMMIT TRANSACTION");

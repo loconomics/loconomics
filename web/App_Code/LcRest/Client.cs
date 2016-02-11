@@ -387,14 +387,15 @@ namespace LcRest
         /// </summary>
         /// <param name="serviceProfessionalUserID"></param>
         /// <param name="client"></param>
-        private static void SetServiceProfessionalClient(int serviceProfessionalUserID, Client client)
+        internal static void SetServiceProfessionalClient(int serviceProfessionalUserID, Client client, Database sharedDb = null)
         {
-            using (var db = Database.Open("sqlloco"))
+            using (var db = new LcDatabase(sharedDb))
             {
                 db.Execute(@"
                 IF EXISTS (SELECT * FROM ServiceProfessionalClient WHERE ServiceProfessionalUserID = @0 AND ClientUserID = @1)
                     UPDATE ServiceProfessionalClient SET
-                        NotesAboutClient = @2,
+                        -- Passing null, will keep current notes; to delete them, pass in an empty string
+                        NotesAboutClient = coalesce(@2, NotesAboutClient),
                         UpdatedDate = getdate()
                     WHERE
                         ServiceProfessionalUserID = @0
@@ -417,7 +418,7 @@ namespace LcRest
                     )
             ", serviceProfessionalUserID,
                  client.clientUserID,
-                 client.notesAboutClient ?? "");
+                 client.notesAboutClient);
             }
         }
 
