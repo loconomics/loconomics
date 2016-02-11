@@ -10,8 +10,15 @@ function ServiceAddressesViewModel() {
     // Especial mode when instead of pick and edit we are just selecting
     // (when editing an appointment)
     this.isSelectionMode = ko.observable(false);
-
     this.sourceAddresses = ko.observableArray([]);
+    this.selectedAddress = ko.observable(null);
+    
+    this.reset = function() {
+        this.isSelectionMode(false);
+        this.sourceAddresses([]);
+        this.selectedAddress(null);
+    };
+    
     this.addresses = ko.computed(function() {
         var list = this.sourceAddresses();
         if (this.isSelectionMode()) {
@@ -23,7 +30,6 @@ function ServiceAddressesViewModel() {
         return list;
     }, this);
     
-    this.selectedAddress = ko.observable(null);
 
     this.selectAddress = function(selectedAddress, event) {
         this.selectedAddress(selectedAddress);

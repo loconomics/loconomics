@@ -26,6 +26,20 @@ function ServiceProfessionalServiceViewModel(app) {
     this.requestData = ko.observable();
     this.cancelLink = ko.observable(null);
     
+    this.reset = function() {
+        this.isLoading(false);
+        this.list([]);
+        this.jobTitleID(0);
+        this.serviceProfessionalID(null);
+        this.jobTitle(null);
+        this.isAdditionMode(false);
+        this.isSelectionMode(false);
+        this.selectedServices([]);
+        this.preSelectedServices([]);
+        this.requestData();
+        this.cancelLink(null);
+    };
+    
     this.allowAddServices = ko.pureComputed(function() {
         return this.serviceProfessionalID() === null;
     }, this);

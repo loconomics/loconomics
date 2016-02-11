@@ -133,7 +133,7 @@ function ViewModel(app) {
     //jshint maxstatements:100
     
     ///
-    /// Booking Data, request options and related entities
+    /// Data properties
     this.booking = new Booking();
     this.newDataReady = ko.observable(false);
     this.summary = new PricingSummaryVM();
@@ -144,6 +144,82 @@ function ViewModel(app) {
     this.makeRepeatBooking = ko.observable(false);
     this.promotionalCode = ko.observable('');
     this.paymentMethod = ko.observable(null); // InputPaymentMethod
+    /// Signup
+    this.signupVM = new SignupVM(app);
+    /// Address
+    this.serviceAddresses = new ServiceAddresses();
+    this.isLoadingServiceAddresses = ko.observable(false);
+    this.serviceAddresses.selectedAddress.subscribe(this.booking.serviceAddress, this);
+    /// Gratuity
+    this.supportsGratuity = ko.observable(false);
+    this.customGratuity = ko.observable(0);
+    this.presetGratuity = ko.observable(0);
+    this.gratuityAmount = ko.observable(0);
+    /// Date time picker(s) ViewModel:
+    // IMPORTANT: Is filled by the component binding with the DatePicker VM API
+    this.serviceStartDatePickerView = ko.observable(null);
+    /// Date time picker(s)
+    this.timeFieldToBeSelected = ko.observable('');
+    /// Progress management
+    // Se inicializa con un estado previo al primer paso
+    // (necesario para el manejo de reset y preparación del activity)
+    this.progress = new BookingProgress({ step: -1 });
+    /// States (other states are computed)
+    this.isSaving = ko.observable(false);
+    this.isLoadingNewBooking = ko.observable(false);
+    ///
+    /// URLs (constants, don't need reset)
+    this.urlTos = ko.observable('https://loconomics.com/en-US/About/TermsOfUse/');
+    this.urlPp = ko.observable('https://loconomics.com/en-US/About/PrivacyPolicy/');
+    this.urlBcp = ko.observable('https://loconomics.com/en-US/About/BackgroundCheckPolicy/');
+    this.urlCp = ko.observable('https://loconomics.com/en-US/About/CancellationPolicy/');    
+    
+    ///
+    /// Reset
+    this.reset = function reset() {
+        this.booking.model.reset();
+        this.newDataReady(false);
+        this.summary.model.reset();
+        this.bookCode(null);
+        
+        this.serviceProfessionalServices.reset();
+        this.serviceProfessionalServices.isSelectionMode(true);
+        this.serviceProfessionalServices.preSelectedServices([]);
+
+        this.promotionalCode('');
+        this.paymentMethod(null);
+        this.makeRepeatBooking(false);
+        
+        this.signupVM.reset();
+        this.serviceAddresses.reset();
+        this.isLoadingServiceAddresses(false);
+        
+        this.supportsGratuity(false);
+        this.customGratuity(0);
+        this.presetGratuity(0);
+        this.gratuityAmount(0);
+        
+        // NEVER RESET this.serviceStartDatePickerView IT'S A VW API
+        
+        this.timeFieldToBeSelected('');
+        this.progress.step(-1);
+        this.isSaving(false);
+        this.isLoadingNewBooking(false);
+    }.bind(this);
+    
+    ///
+    /// Computed observables and View Functions
+    
+    /// Gratuity
+    // TODO Complete support for gratuity, server-side
+    this.gratuityPercentage = ko.pureComputed(function() {
+        var preset = this.presetGratuity();
+        if (preset === 'custom')
+            return 0;
+        else
+            return preset;
+    }, this);
+
     this.isAnonymous = ko.pureComputed(function() {
         var u = app.model.user();
         return u && u.isAnonymous();
@@ -167,31 +243,6 @@ function ViewModel(app) {
         }
     }, this);
     
-    ///
-    /// Signup
-    this.signupVM = new SignupVM(app);
-
-    ///
-    /// Address
-    this.serviceAddresses = new ServiceAddresses();
-    this.isLoadingServiceAddresses = ko.observable(false);
-    this.serviceAddresses.selectedAddress.subscribe(this.booking.serviceAddress, this);
-
-    ///
-    /// Gratuity
-    // TODO Complete support for gratuity, server-side
-    this.supportsGratuity = ko.observable(false);
-    this.customGratuity = ko.observable(0);
-    this.presetGratuity = ko.observable(0);
-    this.gratuityAmount = ko.observable(0);
-    this.gratuityPercentage = ko.pureComputed(function() {
-        var preset = this.presetGratuity();
-        if (preset === 'custom')
-            return 0;
-        else
-            return preset;
-    }, this);
-    
     // Sync: Automatic updates between dependent models:
     this.booking.jobTitleID.subscribe(this.serviceProfessionalServices.jobTitleID);
     this.booking.serviceProfessionalUserID.subscribe(this.serviceProfessionalServices.serviceProfessionalID);
@@ -213,11 +264,13 @@ function ViewModel(app) {
     
     ///
     /// Service Professional Info
+    // IMPORTANT: RESET IS FORBIDDEN, since is updated with a change at booking.serviceProfessionalUserID
     this.serviceProfessionalInfo = ko.observable(new PublicUser());
     this.isLoadingServiceProfessionalInfo = ko.observable(false);
     this.booking.serviceProfessionalUserID.subscribe(function(userID) {
         if (!userID) {
             this.serviceProfessionalInfo().model.reset();
+            this.isLoadingServiceProfessionalInfo(false);
             return;
         }
 
@@ -237,8 +290,6 @@ function ViewModel(app) {
     
     ///
     /// Date time picker(s)
-    this.serviceStartDatePickerView = ko.observable(null);
-    this.timeFieldToBeSelected = ko.observable('');
     ko.computed(function triggerSelectedDatetime() {
         var v = this.serviceStartDatePickerView(),
             dt = v && v.selectedDatetime(),
@@ -278,19 +329,13 @@ function ViewModel(app) {
     
     ///
     /// Progress management
-    // Se inicializa con un estado previo al primer paso
-    // (necesario para el manejo de reset y preparación del activity)
-    this.progress = new BookingProgress({ step: -1 });
-    
     this.nextStep = function() {
         this.progress.next();
     };
-    
     this.goStep = function(stepName) {
         var i = this.progress.stepsList().indexOf(stepName);
         this.progress.step(i > -1 ? i : 0);
     };
-
     this.getStepLabel = function(stepName) {
         return stepsLabels[stepName] || stepName;
     };
@@ -298,24 +343,7 @@ function ViewModel(app) {
     // Reused step observers
     this.isAtSelectTimes = this.progress.observeStep('selectTimes');
     this.isAtSelectTime = this.progress.observeStep('selectTime');
-    
-    ///
-    /// Reset
-    this.reset = function reset() {
-        this.newDataReady(false);
-        this.booking.model.reset();
-        this.serviceProfessionalServices.preSelectedServices([]);
-        this.customGratuity(0);
-        this.presetGratuity(0);
-        this.gratuityAmount(0);
-        this.promotionalCode('');
-        this.makeRepeatBooking(false);
-        this.paymentMethod(null);
-        this.summary.firstTimeServiceFeeFixed(0);
-        this.summary.firstTimeServiceFeePercentage(0);
-        this.summary.firstTimeServiceFeeMaximum(0);
-        this.summary.firstTimeServiceFeeMinimum(0);
-    }.bind(this);
+
     
     this.isPhoneServiceOnly = ko.pureComputed(function() {
         return this.serviceProfessionalServices.selectedServices().every(function(service) {
@@ -349,7 +377,6 @@ function ViewModel(app) {
 
     ///
     /// New Booking data
-    this.isLoadingNewBooking = ko.observable(false);
     this.initBooking = function(serviceProfessionalID, jobTitleID, bookCode) {
         this.reset();
         this.bookCode(bookCode);
@@ -401,7 +428,6 @@ function ViewModel(app) {
             this.serviceProfessionalServices.isLoading()
         );
     }, this);
-    this.isSaving = ko.observable();
     this.isLocked = ko.pureComputed(function() {
         return this.isLoading() || this.isSaving();
     }, this);
@@ -478,14 +504,6 @@ function ViewModel(app) {
         });
     }.bind(this);
     
-    ///
-    /// URLs
-    this.urlTos = ko.observable('https://loconomics.com/en-US/About/TermsOfUse/');
-    this.urlPp = ko.observable('https://loconomics.com/en-US/About/PrivacyPolicy/');
-    this.urlBcp = ko.observable('https://loconomics.com/en-US/About/BackgroundCheckPolicy/');
-    this.urlCp = ko.observable('https://loconomics.com/en-US/About/CancellationPolicy/');
-    
-    
     this.goLogin = function(d, e) {
         app.shell.go('/login', { redirectUrl: app.shell.currentRoute.url });
         if (e) {
@@ -506,10 +524,10 @@ function PricingSummaryVM(values) {
         },
         gratuityPercentage: 0,
         gratuityAmount: 0,
-        firstTimeServiceFeeFixed: null,
-        firstTimeServiceFeePercentage: null,
-        firstTimeServiceFeeMaximum: null,
-        firstTimeServiceFeeMinimum: null
+        firstTimeServiceFeeFixed: 0,
+        firstTimeServiceFeePercentage: 0,
+        firstTimeServiceFeeMaximum: 0,
+        firstTimeServiceFeeMinimum: 0
     }, values);
 
     this.subtotalPrice = ko.pureComputed(function() {
