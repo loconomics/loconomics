@@ -105,6 +105,8 @@ function SignupVM(app) {
             this.reset();
             
             this.emit('signedup', signupData);
+            
+            return signupData;
 
         }.bind(this))
         .catch(function(err) {
@@ -130,12 +132,20 @@ function SignupVM(app) {
 
             this.isSigningUp(false);
             
-            // Use event to catch up the error, since the promise catch it
-            // since this will be triggered by a button and never will have change
-            // to detect the promise, showing up unknow errors in console
-            this.emit('signuperror', err);
+            throw err;
         }.bind(this));
         
+    }.bind(this);
+    
+    // For buttons
+    this.clickSignup = function() {
+        this.performSignup()
+        .catch(function(err) {
+            // Use event to catch up the error, since the promise catch it
+            // since this will be triggered by a button and never will have chance
+            // to detect the promise, showing up unknow errors in console
+            this.emit('signuperror', err);
+        });
     }.bind(this);
 
     this.forServiceProfessional = ko.pureComputed(function() {
