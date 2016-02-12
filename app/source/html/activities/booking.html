@@ -111,8 +111,55 @@
                             <span class="text-secondary">Log In</span>
                         </a>
                     </div>
-                    <h1 class="SectionTitle">Select location</h1>
-                    <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                    <div data-bind="visible: !addressEditorOpened()">
+                        <h1 class="SectionTitle">Select location</h1>
+                        <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                        <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
+                        <div class="Box-sm" data-bind="visible: hasServiceArea">
+                            <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">
+                                <li><button type="button" class="ItemAddonTile" data-bind="click: $parent.addAddress">
+                                    <i class="Tile-marker" aria-hidden="true"></i>
+                                    <div class="Tile-content">
+                                        <p>Add your location within <span data-bind="text: serviceRadius"></span> miles of <span data-bind="text: postalCode"></span></p>
+                                    </div>
+                                    <div class="Tile-addon" aria-hidden="true">
+                                        <span class="fa fa-xl ion ion-ios-plus-outline" aria-hidden="true"></span>
+                                    </div>
+                                </button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div data-bind="visible: addressEditorOpened(), with: booking.serviceAddress">
+                        <h1 class="SectionTitle">Add your location details</h1>
+                        <div class="WhiteForm PaddedBox-sm-only PaddedBox-xs-only">
+                            <div class="form-group" data-bind="css: { 'has-error': $parent.errorMessages.postalCode() }">
+                                <input type="number" class="form-control"
+                                     placeholder="Zip code" aria-label="Zip code"
+                                     data-bind="value: postalCode, disable: $parent.isLocked,
+                                                popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                            </div>
+                            <div class="form-group">
+                                <p class="form-control-static">
+                                    <span data-bind="visible: city() || stateProvinceCode()">
+                                        <span data-bind="text: city"></span>, 
+                                        <span data-bind="text: stateProvinceCode"></span>
+                                    </span>
+                                    <!-- White space to reserve space -->
+                                    &nbsp;
+                                </p>
+                            </div>
+                            <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $parent.isLocked"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $parent.isLocked"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Location name', value: addressName, disable: $parent.isLocked"></app-unlabeled-input>
+                            <div class="form-group">
+                                <label class="sr-only" for="bookingAddressEditorSpecialInstructions">Special instructions</label>
+                                <textarea rows="2" class="form-control" placeholder="Special instructions" id="bookingAddressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $parent.isLocked"></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary btn-block" data-bind="disable: $parent.isLocked, click: $parent.nextStep">Save and continue</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
@@ -217,9 +264,9 @@
                             <span class="text-secondary">Log In</span>
                         </a>
                     </div>
-                    <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
-                        <div data-bind="with: paymentMethod" class="WhiteForm">
-
+                    <h1 class="SectionTitle">Add payment</h1>
+                    <div class="WhiteForm PaddedBox-sm-only PaddedBox-xs-only">
+                        <div data-bind="with: paymentMethod">
                             <div class="form-group">
                                 <span class="input-group">
                                     <input type="text" class="form-control" data-bind="textInput: cardNumber, disable: $parent.isLocked" placeholder="Card number">
@@ -249,12 +296,10 @@
                                     <span class="input-group-addon"><span class="fa ion fa-lg ion-ios-home-outline"></span></span>
                                 </span>
                             </div>
-
                         </div>
-                        <div class="isolated">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
-                            </div>
+
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
                         </div>
                         <div class="booking-secure-form-warning">
                             <span>
@@ -270,7 +315,7 @@
                                 Your card will be authorized for $<span data-bind="text: summary.totalPrice"></span>.
                                 <span data-bind="visible: !booking.instantBooking()">
                                     If your request is accepted (within 18 hours), we'll change your card the day <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span> performs the scheduled services.
-                                    
+
                                 </span>
                             </p>
                         </div>

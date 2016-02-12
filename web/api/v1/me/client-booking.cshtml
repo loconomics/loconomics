@@ -219,6 +219,7 @@
                 serviceAddress.userID = userID;
                 
                 Validation.RequireField("serviceAddress[postalCode]", LcRessources.RequiredField("Zip Code"));
+                Validation.RequireField("serviceAddress[addressLine1]", LcRessources.RequiredField("Address Line 1"));
                 Validation.Add("serviceAddress[addressLine1]", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
                 Validation.Add("serviceAddress[addressLine2]", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
                 Validation.Add("serviceAddress[addressName]", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));

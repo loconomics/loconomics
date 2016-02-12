@@ -30,6 +30,15 @@ function ServiceAddressesViewModel() {
         return list;
     }, this);
     
+    // Useful list of only service-area addresses for
+    // uses in some selection modes, like in booking
+    this.serviceAreas = ko.computed(function() {
+        var list = this.sourceAddresses();
+        // Filter by service area
+        return list.filter(function(add) {
+            return add.isServiceArea();
+        });
+    }, this);
 
     this.selectAddress = function(selectedAddress, event) {
         this.selectedAddress(selectedAddress);

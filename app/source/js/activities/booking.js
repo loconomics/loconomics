@@ -57,6 +57,59 @@ var A = Activity.extend(function BookingActivity() {
         }
         nav.title(label);
     }, this.viewModel.progress);
+    
+    // Remote postal code look-up
+    // NOTE: copied the code from addressEditor.js with slight changes
+    var app = this.app,
+        viewModel = this.viewModel;
+    this.registerHandler({
+        target: this.viewModel.booking.serviceAddress,
+        handler: function(address) {
+            if (address &&
+               !address.postalCode._hasLookup) {
+                address.postalCode._hasLookup = true;
+                
+                // On change to a valid code, do remote look-up
+                ko.computed(function() {
+                    // Only on addresses being edited by the user, with the editor opened
+                    if (!viewModel.addressEditorOpened()) return;
+                    
+                    var postalCode = this.postalCode();
+                    
+                    if (postalCode && !/^\s*$/.test(postalCode)) {
+                        app.model.postalCodes.getItem(postalCode)
+                        .then(function(info) {
+                            if (info) {
+                                address.city(info.city);
+                                address.stateProvinceCode(info.stateProvinceCode);
+                                address.stateProvinceName(info.stateProvinceName);
+                                viewModel.errorMessages.postalCode('');
+                            }
+                        })
+                        .catch(function(err) {
+                            address.city('');
+                            address.stateProvinceCode('');
+                            address.stateProvinceName('');
+                            // Expected errors, a single message, set
+                            // on the observable
+                            var msg = typeof(err) === 'string' ? err : null;
+                            if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
+                                viewModel.errorMessages.postalCode(msg || err.responseJSON.errorMessage);
+                            }
+                            else {
+                                // Log to console for debugging purposes, on regular use an error on the
+                                // postal code is not critical and can be transparent; if there are 
+                                // connectivity or authentification errors will throw on saving the address
+                                console.error('Server error validating Zip Code', err);
+                            }
+                        });
+                    }
+                }, address)
+                // Avoid excessive requests by setting a timeout since the latest change
+                .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
+            }
+        }
+    });
 });
 
 exports.init = A.init;
@@ -105,15 +158,28 @@ A.prototype.selectLocationLoad = function() {
     this.viewModel.isLoadingServiceAddresses(true);
     this.app.model.users.getServiceAddresses(this.viewModel.booking.serviceProfessionalUserID(), this.viewModel.booking.jobTitleID())
     .then(function(list) {
-        list = this.app.model.serviceAddresses.asModel(list);
-        this.viewModel.serviceAddresses.sourceAddresses(list);
+        // Save addresses: the serviceAddresses viewmodel will create separated lists for 
+        // selectable (service location) addresses and service areas
+        this.viewModel.serviceAddresses.sourceAddresses(this.app.model.serviceAddresses.asModel(list));
+        // Load user personal addresses too if the service professional has serviceArea
+        if (this.viewModel.serviceAddresses.serviceAreas().length) {
+            // jobTitleID:0 for client service addresses.
+            return this.app.model.serviceAddresses.getList(0);
+        }
+        // No client addresses (result for the next 'then'):
+        return null;
+    }.bind(this))
+    .then(function(clientList) {
+        if (clientList) {
+            this.viewModel.clientAddresses.sourceAddresses(this.app.model.serviceAddresses.asModel(clientList));
+        }
+        // All finished
         this.viewModel.isLoadingServiceAddresses(false);
-        // TODO: Load user personal addresses too if the service professional has serviceRadius
     }.bind(this))
     .catch(function(err) {
         this.viewModel.isLoadingServiceAddresses(false);
         this.app.modals.showError({ error: err });
-    });
+    }.bind(this));
 };
 
 A.prototype.selectTimesLoad = function() {
@@ -171,10 +237,13 @@ function ViewModel(app) {
     this.paymentMethod = ko.observable(null); // InputPaymentMethod
     /// Signup
     this.signupVM = new SignupVM(app);
-    /// Address
+    /// Addresses
     this.serviceAddresses = new ServiceAddresses();
     this.serviceAddresses.isSelectionMode(true);
     this.isLoadingServiceAddresses = ko.observable(false);
+    this.clientAddresses = new ServiceAddresses();
+    this.clientAddresses.isSelectionMode(true);
+    this.addressEditorOpened = new ko.observable(false);
     /// Gratuity
     this.supportsGratuity = ko.observable(false);
     this.customGratuity = ko.observable(0);
@@ -198,6 +267,11 @@ function ViewModel(app) {
     this.urlPp = ko.observable('https://loconomics.com/en-US/About/PrivacyPolicy/');
     this.urlBcp = ko.observable('https://loconomics.com/en-US/About/BackgroundCheckPolicy/');
     this.urlCp = ko.observable('https://loconomics.com/en-US/About/CancellationPolicy/');    
+    ///
+    // List of possible error messages registered by name
+    this.errorMessages = {
+        postalCode: ko.observable('')
+    };
     
     ///
     /// Reset
@@ -219,6 +293,9 @@ function ViewModel(app) {
         this.serviceAddresses.reset();
         this.serviceAddresses.isSelectionMode(true);
         this.isLoadingServiceAddresses(false);
+        this.clientAddresses.reset();
+        this.clientAddresses.isSelectionMode(true);
+        this.addressEditorOpened(false);
         
         this.supportsGratuity(false);
         this.customGratuity(0);
@@ -231,6 +308,8 @@ function ViewModel(app) {
         this.progress.step(-1);
         this.isSaving(false);
         this.isLoadingNewBooking(false);
+        
+        this.errorMessages.postalCode('');
     }.bind(this);
     
     ///
@@ -294,6 +373,17 @@ function ViewModel(app) {
         this.booking.serviceAddress(add);
         this.nextStep();
     }, this);
+    this.hasServiceArea = ko.pureComputed(function() {
+        return this.serviceAddresses.serviceAreas().length > 0;
+    }, this);
+    this.addAddress = function(serviceArea, event) {
+        event.preventDefault();
+        // We use directly the booking address, but reset to prevent a previous
+        // address details and ID from appear
+        this.booking.serviceAddress(new Address());
+        // Display client service address form
+        this.addressEditorOpened(true);
+    }.bind(this);
     
     ///
     /// Service Professional Info
@@ -373,7 +463,7 @@ function ViewModel(app) {
     /// Progress management
     this.nextStep = function() {
         this.progress.next();
-    };
+    }.bind(this);
     this.goStep = function(stepName) {
         var i = this.progress.stepsList().indexOf(stepName);
         this.progress.step(i > -1 ? i : 0);
