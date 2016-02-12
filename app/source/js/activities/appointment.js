@@ -145,7 +145,7 @@ A.prototype.show = function show(options) {
         //referrer && referrer.replace(/\/?appointment\//i, 'calendar/');
         var reg = /\/?appointment\/([^\/]*)\/((\-3)|(\-4))/i;
         if (referrer && reg.test(referrer)) {
-            referrer.replace(reg, '/appointment/$1/');
+            referrer = referrer.replace(reg, '/appointment/$1/');
         }
         
         this.requestData.cancelLink = referrer;

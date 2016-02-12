@@ -16,7 +16,10 @@ var A = Activity.extend(function BookingActivity() {
     // Any, we provide login and signup options integrated here
     //this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSectionNavBar('Booking');
+    this.navBar = Activity.createSubsectionNavBar('Booking', {
+        helpLink: '/faqs/booking'
+    });
+    this.navBar.title('Booking');
     
     // Only on change (not first time), when choosed the option 'custom'
     // from gratuity, focus the textbox to input the custom value
@@ -47,6 +50,16 @@ exports.init = A.init;
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
+
+    var referrer = this.app.shell.referrerRoute;
+    referrer = referrer && referrer.url;
+    // Avoid links to this same page
+    var reg = /\/?booking/i;
+    if (!referrer || reg.test(referrer)) {
+        referrer = '/';
+    }
+    this.convertToCancelAction(this.navBar.leftAction(), referrer);
+    
 
     var params = state && state.route && state.route.segments;
     var bookCode = state && state.route && state.route.query.bookCode;
