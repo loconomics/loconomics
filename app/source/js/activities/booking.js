@@ -173,8 +173,8 @@ function ViewModel(app) {
     this.signupVM = new SignupVM(app);
     /// Address
     this.serviceAddresses = new ServiceAddresses();
+    this.serviceAddresses.isSelectionMode(true);
     this.isLoadingServiceAddresses = ko.observable(false);
-    this.serviceAddresses.selectedAddress.subscribe(this.booking.serviceAddress, this);
     /// Gratuity
     this.supportsGratuity = ko.observable(false);
     this.customGratuity = ko.observable(0);
@@ -217,6 +217,7 @@ function ViewModel(app) {
         
         this.signupVM.reset();
         this.serviceAddresses.reset();
+        this.serviceAddresses.isSelectionMode(true);
         this.isLoadingServiceAddresses(false);
         
         this.supportsGratuity(false);
@@ -286,6 +287,13 @@ function ViewModel(app) {
         this.booking.pricingSummary(this.summary.toPricingSummary());
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+    
+    ///
+    /// Service Address
+    this.serviceAddresses.selectedAddress.subscribe(function(add) {
+        this.booking.serviceAddress(add);
+        this.nextStep();
+    }, this);
     
     ///
     /// Service Professional Info

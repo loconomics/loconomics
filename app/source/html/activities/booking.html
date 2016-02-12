@@ -113,11 +113,6 @@
                     </div>
                     <h1 class="SectionTitle">Select location</h1>
                     <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
-                    <div class="PaddedBox-xs-only isolated-sm">
-                        <div>
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
-                        </div>
-                    </div>
                 </div>
                 
                 <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
