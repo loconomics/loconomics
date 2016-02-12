@@ -44,6 +44,19 @@ var A = Activity.extend(function BookingActivity() {
         }.bind(this)
     });
 
+    var labelTpl = '__step__ of __total__';
+    var nav = this.navBar;
+    ko.computed(function() {
+        var step = this.step() + 1;
+        var total = this.totalSteps();
+        var label = 'Booking';
+        if (step > 0 && total > 1) {
+            label = labelTpl
+            .replace('__step__', step)
+            .replace('__total__', total);
+        }
+        nav.title(label);
+    }, this.viewModel.progress);
 });
 
 exports.init = A.init;
@@ -59,7 +72,6 @@ A.prototype.show = function show(state) {
         referrer = '/';
     }
     this.convertToCancelAction(this.navBar.leftAction(), referrer);
-    
 
     var params = state && state.route && state.route.segments;
     var bookCode = state && state.route && state.route.query.bookCode;
