@@ -4,7 +4,7 @@ module.exports = {
     images: {
         expand: true,
         cwd: 'source/images/',
-        src: ['*.png', '*.jpg', '*.svg', '*.ico'],
+        src: ['**/*.png', '**/*.jpg', '**/*.svg', '**/*.ico'],
         dest: 'build/assets/images/',
         filter: 'isFile'
     },
