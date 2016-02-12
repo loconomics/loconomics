@@ -162,7 +162,8 @@ A.prototype.selectLocationLoad = function() {
         // selectable (service location) addresses and service areas
         this.viewModel.serviceAddresses.sourceAddresses(this.app.model.serviceAddresses.asModel(list));
         // Load user personal addresses too if the service professional has serviceArea
-        if (this.viewModel.serviceAddresses.serviceAreas().length) {
+        if (this.viewModel.serviceAddresses.serviceAreas().length &&
+            !this.viewModel.isAnonymous()) {
             // jobTitleID:0 for client service addresses.
             return this.app.model.serviceAddresses.getList(0);
         }
