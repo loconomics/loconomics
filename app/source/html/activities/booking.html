@@ -150,7 +150,12 @@
                             </div>
                             <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $parent.isLocked"></app-unlabeled-input>
                             <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $parent.isLocked"></app-unlabeled-input>
-                            <app-unlabeled-input params="placeholder: 'Location name', value: addressName, disable: $parent.isLocked"></app-unlabeled-input>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">Save as:</span>
+                                    <input type="text" class="form-control" data-bind="textInput: addressName, disable: $parent.isLocked" placeholder="Location name">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="sr-only" for="bookingAddressEditorSpecialInstructions">Special instructions</label>
                                 <textarea rows="2" class="form-control" placeholder="Special instructions" id="bookingAddressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $parent.isLocked"></textarea>
