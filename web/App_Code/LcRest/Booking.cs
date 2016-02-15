@@ -1557,6 +1557,8 @@ namespace LcRest
             if (paymentData.IsTemporaryID())
                 paymentData.paymentMethodID = null;
 
+            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT, AFTER CONTSTRAINTS");
+
             try
             {
                 // The steps on emulation allows a quick view of what the overall process does and data being set.
@@ -1575,6 +1577,8 @@ namespace LcRest
                     // Find or create Customer on Braintree
                     var client = LcPayment.GetOrCreateBraintreeCustomer(clientUserID);
 
+                    //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT, Braintree preparation, client " + clientUserID);
+
                     // Quick way for saved payment method that does not needs to be updated
                     var hasID = !String.IsNullOrWhiteSpace(paymentData.paymentMethodID);
                     if (hasID && !savePayment)
@@ -1582,6 +1586,7 @@ namespace LcRest
                         // Just double check payment exists to avoid mistake/malicious attempts:
                         if (!paymentData.ExistsOnVault())
                         {
+                            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: Chosen payment method has expired");
                             // Since we have not input data to save, we can only throw an error
                             // invalidSavedPaymentMethod
                             throw new ConstraintException("Chosen payment method has expired");
@@ -1603,8 +1608,12 @@ namespace LcRest
                         var validationResults = paymentData.Validate();
                         if (validationResults.Count > 0)
                         {
+                            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: validation errors, before delete booking");
+
                             // Remove
                             DeleteBooking(this);
+
+                            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: validation errors, before return them");
 
                             return validationResults;
                         }
@@ -1614,6 +1623,7 @@ namespace LcRest
                         var saveCardError = paymentData.SaveInVault(client.Id);
                         if (!String.IsNullOrEmpty(saveCardError))
                         {
+                            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: saveCardError: " + saveCardError);
                             // paymentDataError
                             throw new ConstraintException(saveCardError);
                         }
@@ -1628,12 +1638,18 @@ namespace LcRest
                     paymentAuthorized = false;
                     paymentTransactionID = null;
                     cancellationPaymentTransactionID = null;
+
+                    //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: finished Braintree tasks");
                 }
             }
             catch (Exception ex)
             {
+                //ASP.LcHelpers.DebugLogger.LogEx("COLLECT PAYMENT CATCHES Braintree", ex);
+
                 // Impossible to collect payment, or some Braintree validation error
                 DeleteBooking(this);
+
+                //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT CATCHES Braintree error, after delete booking befor rethrow");
 
                 // Re-throw exception
                 throw ex;
@@ -1641,6 +1657,8 @@ namespace LcRest
 
             try
             {
+                //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT: Will save booking status after success collecting");
+
                 // Update status (since from it's creation it keeps as 'incomplete'):
                 bookingStatusID = (int)(instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
                 // Persist on database:
@@ -1652,13 +1670,17 @@ namespace LcRest
                     send.InstantBookingConfirmed();
                 else
                     send.BookingRequest();
+
+                //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT: success booking save status");
             }
             catch (Exception ex)
             {
+                //ASP.LcHelpers.DebugLogger.LogEx("COLLECT PAYMENT CATCHES", ex);
                 try
                 {
                     // Communicate Loconomics Stuff
                     var jsbooking = Newtonsoft.Json.JsonConvert.SerializeObject(this);
+                    //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT CATCH, TO NOTIFY STUFF, jsbooking: " + jsbooking);
                     LcMessaging.NotifyError("Payment collected for a booking, but booking at database could not update status", "Booking.CollectPayment", "Booking: " + jsbooking);
                 }
                 catch { }
@@ -1666,7 +1688,7 @@ namespace LcRest
                 // re-throw exception
                 throw ex;
             }
-
+            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT SUCCESS, NO ERRORS!");
             // No errors:
             return null;
         }

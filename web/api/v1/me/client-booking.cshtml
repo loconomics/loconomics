@@ -108,7 +108,7 @@
             }
             else if (UrlData.Count == 2) {
                 var bookingID = UrlData[0].AsInt();
-                var booking = LcRest.Booking.Get(bookingID, false, false, userID);
+                var booking = LcRest.Booking.Get(bookingID, true, false, userID);
                 if (booking == null ||
                     booking.clientUserID != userID) {
                     throw new HttpException(404, "Not Found");
@@ -117,7 +117,7 @@
                 {
                     booking.CancelBookingByClient();
                     // fresh copy from db
-                    return LcRest.Booking.Get(bookingID, true);
+                    return LcRest.Booking.Get(bookingID, true, false, userID);
                 }
             }
             
@@ -284,7 +284,8 @@
                         foreach(var paymentErr in paymentErrors) {
                             ModelState.AddError(paymentErr.Key, paymentErr.Value);
                         }
-                        // TODO Needs return the errors and the bookingID
+                        // Throws errors
+                        throw new HttpException(400, "We weren't able to process your payment, please review");
                     }
                 }
             }
