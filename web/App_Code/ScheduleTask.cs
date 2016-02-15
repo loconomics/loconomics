@@ -276,7 +276,7 @@ public class ScheduleTask
              * If:: If provider is a new provider (it has not previous completed bookings)
              * If:: Performed bookings only, without pricing adjustment
              * If:: Current time is 5 days after Confirmed Service EndTime
-             * Action:: set booking status as 'performed without pricing adjustment',
+             * Action:: set booking status as 'completed',
              *          send a message to the provider notifying that payment is released.
              */
             /* REMOVED AS OF #844, 2016-01-26
@@ -335,10 +335,10 @@ public class ScheduleTask
             /*
              * Check:: Release Payment for Service Complete: 1 hour 15 min after service is performed
              * (before #844 was 1 day after the service is performed)
-             * If:: Provider has already completed bookings (is not a new provider)
+             * //If:: Provider has already completed bookings (is not a new provider)
              * If:: Performed bookings only, without pricing adjustment
              * If:: Current time is 1 hour 15 min after Confirmed Service EndTime (before #844 was 1 day)
-             * Action:: set booking status as 'performed',
+             * Action:: set booking status as 'completed',
              *          send a messages.
              */
             messages = 0;
@@ -390,6 +390,61 @@ public class ScheduleTask
                 }
             }
             logger.Log("Total of Booking Release Payment after 1H: {0}, messages sent: {1}", items, messages);
+            totalitems += items;
+            totalmessages += messages;
+
+            /*
+             * Check:: Setting No-Payment Bookings as Complete: 1 hour 15 min after service is performed
+             * If:: Performed bookings only
+             * If:: Current time is 1 hour 15 min after Confirmed Service EndTime
+             * Action:: set booking status as 'completed',
+             *          send messages.
+             */
+            messages = 0;
+            items = 0;
+            {
+                foreach (var b in LcRest.Booking.QueryPendingOfCompleteWithoutPaymentBookings(db))
+                {
+                    try
+                    {
+                        // Release the payment
+                        try
+                        {
+                            b.SetBookingAsCompleted();
+                            items++;
+
+                            // Send messages
+
+                            // Notify customer and provider with an updated booking details:
+                            LcMessaging.SendBooking.For(b.bookingID).BookingCompleted();
+
+                            // Update MessagingLog for the booking
+                            db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Complete - no payment]");
+
+                            messages += 2;
+                        }
+                        catch (Exception ex)
+                        {
+
+                            var errTitle = "Setting No-Payment Bookings as Complete after 1H15M to providers";
+                            var errDesc = String.Format(
+                                "BookingID: {0}, Error: {1}",
+                                b.bookingID,
+                                ex.Message
+                            );
+
+                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+
+                            logger.Log("Error on: " + errTitle + "; " + errDesc);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogEx("Setting No-Payment Bookings as Complete 1H15M", ex);
+                    }
+                }
+            }
+            logger.Log("Total of No-Payment Bookings set as Complete after 1H15M: {0}, messages sent: {1}", items, messages);
             totalitems += items;
             totalmessages += messages;
 

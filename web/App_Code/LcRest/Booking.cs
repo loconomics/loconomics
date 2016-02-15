@@ -761,6 +761,33 @@ namespace LcRest
                  .Select<dynamic, Booking>(x => FromDB(x, true));
             }
         }
+
+        #region SQL PendingOfCompleteWithoutPaymentBookings
+        private const string sqlPendingOfCompleteWithoutPaymentBookings = @"
+            SELECT  B.*
+            FROM    Booking As B
+                        INNER JOIN
+                    CalendarEvents As E
+                        ON B.ServiceDateID = E.Id
+            WHERE   PaymentEnabled = 0
+                     AND
+                    BookingStatusID = @0
+                        AND
+                    -- at 1 hour 15 min, after service ended (more than that is fine)
+                    getdate() >= dateadd(hh, 1.25, E.EndTime)
+                    /* AND
+                        getdate() < dateadd(hh, 2.25, E.EndTime)
+                    */
+        ";
+        #endregion
+        public static IEnumerable<Booking> QueryPendingOfCompleteWithoutPaymentBookings(Database dbShared = null)
+        {
+            using (var db = new LcDatabase(dbShared))
+            {
+                return db.Query(sqlPendingOfCompleteWithoutPaymentBookings, (int)LcEnum.BookingStatus.servicePerformed)
+                .Select<dynamic, Booking>(x => FromDB(x, true));
+            }
+        }
         #endregion
 
         #region Links
@@ -1368,26 +1395,22 @@ namespace LcRest
             if (!pricingSummary.totalPrice.HasValue || !pricingSummary.clientServiceFeePrice.HasValue)
                 throw new Exception("Impossible to calculate payment without pricing summary values");
 
-            var type = BookingType.Get(bookingTypeID);
-            if (type == null)
-                throw new Exception("Impossible to calculate payment without booking type, processing fees not available");
-
             serviceProfessionalPaid = (
                 pricingSummary.totalPrice.Value - (
-                    type.paymentProcessingFeeFixed + 
-                    type.paymentProcessingFeePercentage * (pricingSummary.totalPrice.Value - pricingSummary.clientServiceFeePrice.Value) +
+                    pricingSummary.paymentProcessingFeeFixed +
+                    pricingSummary.paymentProcessingFeePercentage * (pricingSummary.totalPrice.Value - pricingSummary.clientServiceFeePrice.Value) +
                     pricingSummary.clientServiceFeePrice.Value
                 )
             );
             serviceProfessionalPPFeePaid = (
-                type.paymentProcessingFeeFixed +
-                type.paymentProcessingFeePercentage * (pricingSummary.totalPrice.Value - pricingSummary.clientServiceFeePrice.Value)
+                pricingSummary.paymentProcessingFeeFixed +
+                pricingSummary.paymentProcessingFeePercentage * (pricingSummary.totalPrice.Value - pricingSummary.clientServiceFeePrice.Value)
             );
             loconomicsPaid = (
-                pricingSummary.clientServiceFeePrice.Value - type.paymentProcessingFeePercentage * pricingSummary.clientServiceFeePrice
+                pricingSummary.clientServiceFeePrice.Value - pricingSummary.paymentProcessingFeePercentage * pricingSummary.clientServiceFeePrice
             );
             loconomicsPPFeePaid = (
-                type.paymentProcessingFeePercentage * pricingSummary.clientServiceFeePrice.Value
+                pricingSummary.paymentProcessingFeePercentage * pricingSummary.clientServiceFeePrice.Value
             );
         }
         #endregion
@@ -1769,13 +1792,7 @@ namespace LcRest
             if (!String.IsNullOrEmpty(errmsg))
                 throw new Exception(errmsg);
 
-            // Update booking information with final paid amounts
-            CalculatePaidFields();
-            SetPaidFields(this);
-
-            // Booking is complete
-            bookingStatusID = (int)LcEnum.BookingStatus.completed;
-            SetStatus(this);
+            SetBookingAsCompleted();
 
             return true;
         }
@@ -1916,6 +1933,20 @@ namespace LcRest
         #endregion
 
         #region System Manipulations
+        public void SetBookingAsCompleted()
+        {
+            if (bookingStatusID != (int)LcEnum.BookingStatus.servicePerformed)
+                return;
+
+            // Update booking information with final paid amounts
+            // (it use pricing fees, will be 0 fees and pricing totals for no-payment bookings)
+            CalculatePaidFields();
+            SetPaidFields(this);
+
+            // Booking is complete
+            bookingStatusID = (int)LcEnum.BookingStatus.completed;
+            SetStatus(this);
+        }
         /// <summary>
         /// Perform tasks to expire this booking, making any refund task if needed
         /// and persisting changes to database.
