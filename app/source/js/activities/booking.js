@@ -172,7 +172,13 @@ A.prototype.selectLocationLoad = function() {
     }.bind(this))
     .then(function(clientList) {
         if (clientList) {
-            this.viewModel.clientAddresses.sourceAddresses(this.app.model.serviceAddresses.asModel(clientList));
+            this.viewModel.clientAddresses.sourceAddresses(clientList.map(function(a) {
+                // We wanted it to appear in the widget, must be a service location
+                // (comes as 'false' from REST service since they are currently user client addresses
+                // not actual 'service' addresses, even they comes from 'service' API).
+                a.isServiceLocation = true;
+                return this.app.model.serviceAddresses.asModel(a);
+            }.bind(this)));
         }
         // All finished
         this.viewModel.isLoadingServiceAddresses(false);
@@ -370,10 +376,12 @@ function ViewModel(app) {
     
     ///
     /// Service Address
-    this.serviceAddresses.selectedAddress.subscribe(function(add) {
+    var setAddress = function(add) {
         this.booking.serviceAddress(add);
         this.nextStep();
-    }, this);
+    }.bind(this);
+    this.serviceAddresses.selectedAddress.subscribe(setAddress);
+    this.clientAddresses.selectedAddress.subscribe(setAddress);
     this.hasServiceArea = ko.pureComputed(function() {
         return this.serviceAddresses.serviceAreas().length > 0;
     }, this);
