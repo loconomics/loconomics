@@ -192,35 +192,38 @@ namespace LcRest
 
                 ,L.AddressTypeID as addressTypeID
 
-        FROM    Address As L
-                 INNER JOIN
-                StateProvince As SP
-                  ON L.StateProvinceID = SP.StateProvinceID
-                 INNER JOIN
-                PostalCode As PC
-                  ON PC.PostalCodeID = L.PostalCodeID
-                 INNER JOIN
-                Country As C
-                  ON L.CountryID = C.CountryID
-                    AND C.LanguageID = @0
-                 LEFT JOIN
-                ServiceAddress As SA
-                  -- Special case when the jobtitle/position requested is zero
-                  -- just dont let make the relation to avoid bad results
-                  -- because of internally reused addressID.
-                  ON @2 > 0 AND L.AddressID = SA.AddressID
-        WHERE   L.Active = 1
-    ";
+            FROM    Address As L
+                     INNER JOIN
+                    StateProvince As SP
+                      ON L.StateProvinceID = SP.StateProvinceID
+                     INNER JOIN
+                    PostalCode As PC
+                      ON PC.PostalCodeID = L.PostalCodeID
+                     INNER JOIN
+                    Country As C
+                      ON L.CountryID = C.CountryID
+                        AND C.LanguageID = @0
+                     LEFT JOIN
+                    ServiceAddress As SA
+                      -- Special case when the jobtitle/position requested is zero
+                      -- just dont let make the relation to avoid bad results
+                      -- because of internally reused addressID.
+                      ON @2 > 0 AND L.AddressID = SA.AddressID
+            WHERE   L.Active = 1
+        ";
         private const string sqlAndUserID = @" AND L.UserID = @1 ";
         private const string sqlAndJobTitleID = @"
-        AND coalesce(SA.PositionID, 0) = @2
-    ";
+            AND coalesce(SA.PositionID, 0) = @2
+        ";
         private const string sqlAndAddressID = @"
-        AND L.AddressID = @3
-    ";
+            AND L.AddressID = @3
+        ";
         private const string sqlAndTypeID = @"
-        AND L.AddressTypeID = @4
-    ";
+            AND L.AddressTypeID = @4
+        ";
+        private const string sqlcondOnlyNamedAddresses = @"
+            AND L.AddressName is not null AND L.AddressName not like ''
+        ";
         // Since user can delete addresses from being available on its list but still
         // we need preserve that addresses information for cases in that is linked to 
         // a booking, that addresses get 'soft deleted', changing its flags for kind
@@ -245,7 +248,8 @@ namespace LcRest
         {
             using (var db = Database.Open("sqlloco"))
             {
-                return db.Query(sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlcondOnlyActiveServiceAddress,
+                var sql = sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + (jobTitleID > 0 ? sqlcondOnlyActiveServiceAddress : sqlcondOnlyNamedAddresses);
+                return db.Query(sql,
                     LcData.GetCurrentLanguageID(), userID, jobTitleID)
                     .Select(FromDB)
                     .ToList();
