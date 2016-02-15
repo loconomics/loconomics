@@ -1015,6 +1015,44 @@ namespace LcRest
                     AND
                     AddressName is null
         ";
+        private const string sqlDeleteBooking = @"
+            DECLARE @ServiceAddressID int
+            DECLARE @d1 int
+            DECLARE @d2 int
+            DECLARE @d3 int
+            DECLARE @ps int
+
+            -- Get Service Address ID to be (maybe) removed later
+            SELECT  @ServiceAddressID = ServiceAddressID,
+                    @d1 = ServiceDateID ,
+                    @d2 = AlternativeDate1ID,
+                    @d3 = AlternativeDate2ID,
+                    @ps = PricingSummaryID
+            FROM    Booking
+            WHERE   BookingID = @0
+
+            DELETE FROM Booking
+            WHERE BookingID = @0
+
+            DELETE FROM PricingSummaryDetail
+            WHERE PricingSummaryID = @ps
+            DELETE FROM PricingSummary
+            WHERE PricingSummaryID = @ps
+
+            -- Removing CalendarEvents:
+            DELETE FROM CalendarEvents
+            WHERE ID IN (@d1, @d2, @d3)
+
+            -- Removing Service Address, if is not an user saved location (it has not AddressName)
+            DELETE FROM ServiceAddress
+            WHERE AddressID = @ServiceAddressID
+                    AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @ServiceAddressID AND AddressName is null) = 1
+            DELETE FROM Address
+            WHERE AddressID = @ServiceAddressID
+                    AND
+                    AddressName is null
+        ";
+
         #region SQL Invalidate booking
         const string sqlInvalidateBooking = @"
             -- Parameters
@@ -1291,6 +1329,27 @@ namespace LcRest
                     throw new Exception(result);
             }
         }
+
+        /// <summary>
+        /// Deletes the Booking, it's pricingSummary (all revisions),
+        /// related specifically created records for serviceAddress
+        /// and calendarEvents.
+        /// IMPORTANT: Does NOT manages inbox Messages/Threads created
+        /// for the booking, since this method is intended for internal
+        /// use when booking is in an intermiadate, incomplete, state
+        /// and no messages where created/sent still.
+        /// </summary>
+        /// <param name="booking"></param>
+        private static void DeleteBooking(Booking booking)
+        {
+            using (var db = new LcDatabase())
+            {
+                db.Execute(
+                    sqlDeleteBooking,
+                    booking.bookingID
+                );
+            }
+        }
         #endregion
 
         #region Calculations
@@ -1521,8 +1580,8 @@ namespace LcRest
                         var validationResults = paymentData.Validate();
                         if (validationResults.Count > 0)
                         {
-                            // 'Remove'
-                            SetAsTimedout(this);
+                            // Remove
+                            DeleteBooking(this);
 
                             return validationResults;
                         }
@@ -1551,7 +1610,7 @@ namespace LcRest
             catch (Exception ex)
             {
                 // Impossible to collect payment, or some Braintree validation error
-                SetAsTimedout(this);
+                DeleteBooking(this);
 
                 // Re-throw exception
                 throw ex;
