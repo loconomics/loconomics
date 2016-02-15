@@ -112,9 +112,9 @@
                         </a>
                     </div>
                     <div data-bind="visible: !addressEditorOpened()">
-                        <h1 data-bind="visible: serviceAddresses" class="SectionTitle">Select one of <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations</h1>
+                        <h1 data-bind="visible: serviceAddresses.hasAddresses" class="SectionTitle">Select one of <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations</h1>
                         <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
-                        <h1 data-bind="visible: clientAddresses" class="SectionTitle">Select one of your locations</h1>
+                        <h1 data-bind="visible: clientAddresses.hasAddresses" class="SectionTitle">Select one of your locations</h1>
                         <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
                         <div class="Box-sm" data-bind="visible: hasServiceArea">
                             <h1 class="SectionTitle">Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</h1>

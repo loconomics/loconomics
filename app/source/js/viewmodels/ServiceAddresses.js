@@ -19,7 +19,7 @@ function ServiceAddressesViewModel() {
         this.selectedAddress(null);
     };
     
-    this.addresses = ko.computed(function() {
+    this.addresses = ko.pureComputed(function() {
         var list = this.sourceAddresses();
         if (this.isSelectionMode()) {
             // Filter by service addresses (excluding service area)
@@ -30,9 +30,14 @@ function ServiceAddressesViewModel() {
         return list;
     }, this);
     
+    this.hasAddresses = ko.pureComputed(function() {
+        var adds = this.addresses();
+        return (adds && adds.length > 0);
+    }, this);
+    
     // Useful list of only service-area addresses for
     // uses in some selection modes, like in booking
-    this.serviceAreas = ko.computed(function() {
+    this.serviceAreas = ko.pureComputed(function() {
         var list = this.sourceAddresses();
         // Filter by service area
         return list.filter(function(add) {

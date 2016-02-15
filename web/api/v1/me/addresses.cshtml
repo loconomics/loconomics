@@ -177,7 +177,6 @@
             int userId = WebSecurity.CurrentUserId;
             
             // TODO: Strictly, if jobTitleID does not exists for the user, the result must be a Not Found rather than empty
-
             return LcRest.Address.GetServiceAddresses(userId, jobTitleID);
         }
         
