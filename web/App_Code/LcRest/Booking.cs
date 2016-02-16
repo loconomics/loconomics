@@ -2314,12 +2314,17 @@ namespace LcRest
                 throw new ConstraintException("A valid date must be choosen to confirm the booking request");
             }
 
-            if (!LcCalendar.DoubleCheckEventAvailability(dateID.Value))
+            // Disabled *excessive* double check: client only can choose an available time and professional knows what is confirming
+            // AND it's buggy for this concrete case, a booking request, since the double check takes care only of one event at a time,
+            // while it must discard all three events choosen in the request to avoid that one of the times collides with the other one
+            // (commented at #735, as the case of a first time of 12:00-13:00 and second of 12:30-13:30, checking any of them will fail
+            // because of the other one overlapping it).
+            /*if (!LcCalendar.DoubleCheckEventAvailability(dateID.Value, null, null, true))
             {
                 // Text: message to be showed to provider and must care that the time was available when selected
                 // but is not now because a (very) recent change (race condition).
                 throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
-            }
+            }*/
 
             using (var db = new LcDatabase())
             {
