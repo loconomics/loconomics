@@ -300,6 +300,7 @@ function ViewModel(app) {
     /// States (other states are computed)
     this.isSaving = ko.observable(false);
     this.isLoadingNewBooking = ko.observable(false);
+    this.isRestoring = ko.observable(false);
     ///
     /// URLs (constants, don't need reset)
     this.urlTos = ko.observable('https://loconomics.com/en-US/About/TermsOfUse/');
@@ -346,6 +347,7 @@ function ViewModel(app) {
         this.progress.step(-1);
         this.isSaving(false);
         this.isLoadingNewBooking(false);
+        this.isRestoring(false);
         
         this.errorMessages.postalCode('');
     }.bind(this);
@@ -394,7 +396,7 @@ function ViewModel(app) {
         return saveLastBooking(s);
 
     }.bind(this);
-    this.isRestoring = ko.observable(false);
+    
     /**
         Restore the last booking state from local storage,
         but only if it matches the identification data for the
@@ -404,7 +406,10 @@ function ViewModel(app) {
         this.isRestoring(true);
         return loadLastBooking().then(function(s) {
             //jshint maxdepth:6, maxcomplexity:11
-            if (!s) return;
+            if (!s) {
+                this.isRestoring(false);
+                return;
+            }
             
             // Once is used, delete (is not last anymore)
             clearLastBooking();
@@ -483,14 +488,13 @@ function ViewModel(app) {
                 if (pm && this.paymentMethod()) {
                     this.paymentMethod().model.updateWith(pm, true);
                 }
-                
-                this.isRestoring(false);
             }
+            this.isRestoring(false);
         }.bind(this))
         .catch(function(err) {
             console.error('Last Booking state could not being restored', err);
             this.isRestoring(false);
-        });
+        }.bind(this));
     }.bind(this);
     
     ///
@@ -551,12 +555,22 @@ function ViewModel(app) {
     ///
     /// Service Address
     var setAddress = function(add) {
+        if (!add) return;
         this.booking.serviceAddress(add);
         if (!this.isRestoring())
             this.nextStep();
     }.bind(this);
-    this.serviceAddresses.selectedAddress.subscribe(setAddress);
-    this.clientAddresses.selectedAddress.subscribe(setAddress);
+    // IMPORTANT: selection from one list must deselect from the other one
+    this.serviceAddresses.selectedAddress.subscribe(function(add) {
+        if (!add) return;
+        setAddress(add);
+        this.clientAddresses.selectedAddress(null);
+    }.bind(this));
+    this.clientAddresses.selectedAddress.subscribe(function(add) {
+        if (!add) return;
+        setAddress(add);
+        this.serviceAddresses.selectedAddress(null);
+    }.bind(this));
     this.hasServiceArea = ko.pureComputed(function() {
         return this.serviceAddresses.serviceAreas().length > 0;
     }, this);
