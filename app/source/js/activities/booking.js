@@ -8,6 +8,7 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout'),
     SignupVM = require('../viewmodels/Signup');
+var localforage = require('localforage');
 
 var A = Activity.extend(function BookingActivity() {
 
@@ -253,7 +254,6 @@ function ViewModel(app) {
     this.addressEditorOpened = new ko.observable(false);
     /// Gratuity
     this.supportsGratuity = ko.observable(false);
-    this.customGratuity = ko.observable(0);
     this.presetGratuity = ko.observable(0);
     this.gratuityAmount = ko.observable(0);
     /// Date time picker(s) ViewModel:
@@ -305,7 +305,6 @@ function ViewModel(app) {
         this.addressEditorOpened(false);
         
         this.supportsGratuity(false);
-        this.customGratuity(0);
         this.presetGratuity(0);
         this.gratuityAmount(0);
         
@@ -317,6 +316,123 @@ function ViewModel(app) {
         this.isLoadingNewBooking(false);
         
         this.errorMessages.postalCode('');
+    }.bind(this);
+    
+    ///
+    /// Save and Restore State
+    this.saveState = function saveState() {
+        // IMPORTANT: Not all booking and view observables data is saved, since
+        // lot of that are managed by the initial booking setup, state
+        // info, and other data needs a verification, like the list of selected
+        // services, cannot be copied into the booking 'as is' since needs to
+        // be checked against the list of available services (could have changed,
+        // most times because of first-time only services).
+        
+        // Base and identification data:
+        var s = {
+            serviceProfessionalUserID: this.booking.serviceProfessionalUserID(),
+            jobTitleID: this.booking.jobTitleID(),
+            bookCode: this.bookCode()
+        };
+        
+        var services = this.serviceProfessionalServices.selectedServices();
+        s.services = services.map(function(serv) {
+            return serv.serviceProfessionalServiceID();
+        });
+        
+        s.presetGratuity = this.presetGratuity();
+        s.gratuityAmount = this.gratuityAmount();
+        s.promotionalCode = this.promotionalCode();
+        
+        var add = this.booking.serviceAddress();
+        s.serviceAddress = add && add.model.toPlainObject(true) || null;
+        
+        s.serviceDate = this.booking.serviceDate();
+        s.serviceDate = s.serviceDate ? s.serviceDate.model.toPlainObject() : null;
+        s.alternativeDate1 = this.booking.alternativeDate1();
+        s.alternativeDate1 = s.alternativeDate1 ? s.alternativeDate1.model.toPlainObject() : null;
+        s.alternativeDate2 = this.booking.alternativeDate2();
+        s.alternativeDate2 = s.alternativeDate2 ? s.alternativeDate2.model.toPlainObject() : null;
+        
+        s.specialRequests = this.booking.specialRequests();
+        
+        var pm = this.paymentMethod();
+        s.paymentMethod = pm ? pm.model.toPlainObject(true) : null;
+
+        return localforage.setItem('lastBooking', s);
+
+    }.bind(this);
+    /**
+        Restore the last booking state from local storage,
+        but only if it matches the identification data for the
+        booking being loaded (booking already initialized).
+    **/
+    this.restoreState = function restoreState() {
+        return localforage.getItem('lastBooking').then(function(s) {
+            //jshint maxdepth:6, maxcomplexity:11
+            if (!s) return;
+                
+            var spuid = this.booking.serviceProfessionalUserID();
+            var jid = this.booking.jobTitleID();
+            if (s.serviceProfessionalUserID === spuid &&
+                s.jobTitleID === jid) {
+                this.bookCode(s.bookCode);
+
+                // List of selected services is expected to be empty/reseted at this time
+                // and source list loaded
+                this.serviceProfessionalServices.list().forEach(function(serv) {
+                    if (s.services.indexOf(serv.serviceProfessionalServiceID()) > -1) {
+                        serv.isSelected(true);
+                        this.serviceProfessionalServices.selectedServices.push(serv);
+                    }
+                }.bind(this));
+
+                this.presetGratuity(s.presetGratuity);
+                this.gratuityAmount(s.gratuityAmount);
+                this.promotionalCode(s.promotionalCode);
+
+                if (s.serviceAddress) {
+                    if (s.serviceAddress.addressID) {
+                        // Search in lists
+                        var foundAddress;
+                        var searchAddress = function(add) {
+                            if (add.addressID() === s.serviceAddress.addressID) {
+                                foundAddress = add;
+                                return true;
+                            }
+                        };
+                        this.serviceAddresses.addresses().some(searchAddress);
+                        if (foundAddress) {
+                            this.serviceAddresses.selectedAddress(foundAddress);
+                        }
+                        else {
+                            this.clientAddresses.addresses().some(searchAddress);
+                            if (foundAddress) {
+                                this.clientAddresses.selectedAddress(foundAddress);
+                            }
+                        }
+                    } else {
+                        // It's a client new address
+                        this.booking.serviceAddress(new Address(s.serviceAddress));
+                        this.addressEditorOpened(true);
+                    }
+                }
+                
+                this.booking.serviceDate(s.serviceDate ? new EventDates(s.serviceDate) : null);
+                this.booking.alternativeDate1(s.alternativeDate1 ? new EventDates(s.alternativeDate1) : null);
+                this.booking.alternativeDate2(s.alternativeDate2 ? new EventDates(s.alternativeDate2) : null);
+                
+                this.booking.specialRequests(s.specialRequests);
+                
+                var pm = s.paymentMethod;
+                if (pm && this.paymentMethod()) {
+                    this.paymentMethod.model.updateWith(pm, true);
+                }
+            }
+        }.bind(this))
+        .catch(function(err) {
+            console.error('Last Booking state could not being restored', err);
+        });
     }.bind(this);
     
     ///
@@ -539,7 +655,9 @@ function ViewModel(app) {
             this.summary.firstTimeServiceFeePercentage(bookingData.pricingSummary.firstTimeServiceFeePercentage);
             this.summary.firstTimeServiceFeeMaximum(bookingData.pricingSummary.firstTimeServiceFeeMaximum);
             this.summary.firstTimeServiceFeeMinimum(bookingData.pricingSummary.firstTimeServiceFeeMinimum);
-
+            
+            return this.restoreState();
+        }.bind(this)).then(function() {
             this.isLoadingNewBooking(false);
             this.newDataReady(true);
             
@@ -646,12 +764,13 @@ function ViewModel(app) {
     }.bind(this);
     
     this.goLogin = function(d, e) {
+        this.saveState();
         app.shell.go('/login', { redirectUrl: app.shell.currentRoute.url });
         if (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
         }
-    };
+    }.bind(this);
 }
 
 function PricingSummaryVM(values) {
