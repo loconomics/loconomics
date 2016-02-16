@@ -132,6 +132,11 @@ A.prototype.show = function show(state) {
     this.viewModel.initBooking(params[0] |0, params[1] |0, bookCode);
 };
 
+A.prototype.hide = function hide() {
+    Activity.prototype.hide.call(this);
+    this.viewModel.saveState();
+};
+
 // L18N
 // List of all possible steps by name providing the language for the UI
 var stepsLabels = {
@@ -389,12 +394,14 @@ function ViewModel(app) {
         return saveLastBooking(s);
 
     }.bind(this);
+    this.isRestoring = ko.observable(false);
     /**
         Restore the last booking state from local storage,
         but only if it matches the identification data for the
         booking being loaded (booking already initialized).
     **/
     this.restoreState = function restoreState() {
+        this.isRestoring(true);
         return loadLastBooking().then(function(s) {
             //jshint maxdepth:6, maxcomplexity:11
             if (!s) return;
@@ -408,13 +415,17 @@ function ViewModel(app) {
                 s.jobTitleID === jid) {
                 this.bookCode(s.bookCode);
 
-                // List of selected services is expected to be empty/reseted at this time
-                // and source list loaded
-                this.serviceProfessionalServices.list().forEach(function(serv) {
-                    if (s.services.indexOf(serv.serviceProfessionalServiceID()) > -1) {
-                        serv.isSelected(true);
-                        this.serviceProfessionalServices.selectedServices.push(serv);
-                    }
+                this.serviceProfessionalServices.once('loaded', function() {
+                    this.isRestoring(true);
+                    // List of selected services is expected to be empty/reseted at this time
+                    // and source list loaded
+                    this.serviceProfessionalServices.list().forEach(function(serv) {
+                        if (s.services.indexOf(serv.serviceProfessionalServiceID()) > -1) {
+                            serv.isSelected(true);
+                            this.serviceProfessionalServices.selectedServices.push(serv);
+                        }
+                    }.bind(this));
+                    this.isRestoring(false);
                 }.bind(this));
 
                 this.presetGratuity(s.presetGratuity);
@@ -422,30 +433,44 @@ function ViewModel(app) {
                 this.promotionalCode(s.promotionalCode);
 
                 if (s.serviceAddress) {
-                    if (s.serviceAddress.addressID) {
-                        // Search in lists
-                        var foundAddress;
-                        var searchAddress = function(add) {
-                            if (add.addressID() === s.serviceAddress.addressID) {
-                                foundAddress = add;
-                                return true;
-                            }
-                        };
-                        this.serviceAddresses.addresses().some(searchAddress);
-                        if (foundAddress) {
-                            this.serviceAddresses.selectedAddress(foundAddress);
-                        }
-                        else {
-                            this.clientAddresses.addresses().some(searchAddress);
+                    // Attach a callback to run the 'restore selected address' once
+                    // the data has being loaded.
+                    // We want that Only ONCE, for that we get subscription and we remove it
+                    // at fist callback run
+                    var addressSubscription = this.isLoadingServiceAddresses.subscribe(function(isIn) {
+                        if (isIn) return;
+                        // No more than once:
+                        addressSubscription.dispose();
+                        
+                        this.isRestoring(true);
+                        
+                        if (s.serviceAddress.addressID) {
+                            // Search in lists
+                            var foundAddress;
+                            var searchAddress = function(add) {
+                                if (add.addressID() === s.serviceAddress.addressID) {
+                                    foundAddress = add;
+                                    return true;
+                                }
+                            };
+                            this.serviceAddresses.addresses().some(searchAddress);
                             if (foundAddress) {
-                                this.clientAddresses.selectedAddress(foundAddress);
+                                this.serviceAddresses.selectedAddress(foundAddress);
                             }
+                            else {
+                                this.clientAddresses.addresses().some(searchAddress);
+                                if (foundAddress) {
+                                    this.clientAddresses.selectedAddress(foundAddress);
+                                }
+                            }
+                        } else {
+                            // It's a client new address
+                            this.booking.serviceAddress(new Address(s.serviceAddress));
+                            this.addressEditorOpened(true);
                         }
-                    } else {
-                        // It's a client new address
-                        this.booking.serviceAddress(new Address(s.serviceAddress));
-                        this.addressEditorOpened(true);
-                    }
+                        
+                        this.isRestoring(false);
+                    }.bind(this));
                 }
                 
                 this.booking.serviceDate(s.serviceDate ? new EventDates(s.serviceDate) : null);
@@ -458,10 +483,13 @@ function ViewModel(app) {
                 if (pm && this.paymentMethod()) {
                     this.paymentMethod().model.updateWith(pm, true);
                 }
+                
+                this.isRestoring(false);
             }
         }.bind(this))
         .catch(function(err) {
             console.error('Last Booking state could not being restored', err);
+            this.isRestoring(false);
         });
     }.bind(this);
     
@@ -524,7 +552,8 @@ function ViewModel(app) {
     /// Service Address
     var setAddress = function(add) {
         this.booking.serviceAddress(add);
-        this.nextStep();
+        if (!this.isRestoring())
+            this.nextStep();
     }.bind(this);
     this.serviceAddresses.selectedAddress.subscribe(setAddress);
     this.clientAddresses.selectedAddress.subscribe(setAddress);
@@ -794,7 +823,6 @@ function ViewModel(app) {
     }.bind(this);
     
     this.goLogin = function(d, e) {
-        this.saveState();
         app.shell.go('/login', { redirectUrl: app.shell.currentRoute.url });
         if (e) {
             e.preventDefault();

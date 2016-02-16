@@ -7,7 +7,11 @@ var ko = require('knockout'),
     _ = require('lodash'),
     $ = require('jquery');
 
+var EventEmitter = require('events').EventEmitter;
+
 function ServiceProfessionalServiceViewModel(app) {
+    
+    EventEmitter.call(this);
 
     this.isLoading = ko.observable(false);
     this.list = ko.observableArray([]);
@@ -231,6 +235,8 @@ function ServiceProfessionalServiceViewModel(app) {
                 this.list(list);
                 
                 this.isLoading(false);
+                
+                this.emit('loaded');
 
             }.bind(this))
             .catch(function (err) {
@@ -252,5 +258,7 @@ function ServiceProfessionalServiceViewModel(app) {
         loadDataFor(this.serviceProfessionalID(), this.jobTitleID());
     }.bind(this)).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
+
+ServiceProfessionalServiceViewModel._inherits(EventEmitter);
 
 module.exports = ServiceProfessionalServiceViewModel;
