@@ -11,8 +11,13 @@ var moment = require('moment');
     with a size and that fit in a given duration.
     @param from Date or ISO datetime string
     @param to Date or ISO datetime string
+    @param size:int Size in minutes of the slots to generate.
+    @param duration:int Amount of consecutive time required for slots to be useful (aka time required)
+    @param roundUp:bool Require to roundUp the 'from' time to time fragments of 'size'.
+        This basically converts a range like: 10:12 - 10:42 - and so on
+        into this: 10:15 - 10:45 (if size 15), 10:30 - 11:00 (if size 30) or 11:00 - 12:00 (if size 60)
 **/
-exports.forRange = function forRange(from, to, size, duration) {
+exports.forRange = function forRange(from, to, size, duration, roundUp) {
     from = new Date(from);
     to = new Date(to);
     var i = moment(from),
@@ -20,6 +25,19 @@ exports.forRange = function forRange(from, to, size, duration) {
         slots = [],
         now = new Date(),
         enought;
+    
+    // Round up if required
+    if (roundUp) {
+        var r = moment(from);
+        var minutes = r.minutes();
+        // Calculate the minutes of the hour we must set
+        // substracting the excess of minutes per size and adding the size
+        // to go the next fraction.
+        minutes = minutes - (minutes % size) + size;
+        // set the minutes, without seconds:
+        from = r.minutes(minutes).seconds(0).toDate();
+        i = r;
+    }
 
     // Shortcut if bad 'to' (avoid infinite loop)
     if (to <= from)
@@ -46,12 +64,12 @@ exports.forRange = function forRange(from, to, size, duration) {
     duration for all the AvailabilitSlots in the list with availability 'free'
     Source list as a consecutive, sorted, non-overlapping list of availabilitySlots
 **/
-exports.forList = function forList(list, size, duration) {
+exports.forList = function forList(list, size, duration, roundUp) {
     var slots = [];
     // Iterate every free time range/AvailabilitySlot
     list.forEach(function (item) {
         if (item.availability === 'free') {
-            slots.push.apply(slots, exports.forRange(item.startTime, item.endTime, size, duration));
+            slots.push.apply(slots, exports.forRange(item.startTime, item.endTime, size, duration, roundUp));
         }
     });
     return slots;
