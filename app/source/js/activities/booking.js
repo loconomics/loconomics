@@ -8,7 +8,6 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout'),
     SignupVM = require('../viewmodels/Signup');
-var localforage = require('localforage');
 
 var A = Activity.extend(function BookingActivity() {
 
@@ -228,6 +227,34 @@ var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalSer
     EventDates = require('../models/EventDates'),
     PublicUser = require('../models/PublicUser');
 
+// Functions to manage the lastBooking info, for save/restore state feature
+// IMPORTANT: initially used localforage, but this is cleared on a logout/login,
+// being completely unuseful for the expected use of case, that is restore an imcomplete
+// booking after user chooses to log-in.
+//var localforage = require('localforage');
+function saveLastBooking(s) {
+    //return localforage.setItem('lastBooking', s);
+    return new Promise(function(resolve) {
+        var d = JSON.stringify(s);
+        sessionStorage.setItem('lastBooking', d);
+        resolve(d);
+    });
+}
+function loadLastBooking() {
+    //return localforage.getItem('lastBooking');
+    return new Promise(function(resolve) {
+        var d = sessionStorage.getItem('lastBooking');
+        resolve(JSON.parse(d));
+    });
+}
+function clearLastBooking() {
+    //return localforage.removeItem('lastBooking');
+    return new Promise(function(resolve) {
+        sessionStorage.removeItem('lastBooking');
+        resolve();
+    });
+}
+
 function ViewModel(app) {
     //jshint maxstatements:100
     
@@ -359,7 +386,7 @@ function ViewModel(app) {
         var pm = this.paymentMethod();
         s.paymentMethod = pm ? pm.model.toPlainObject(true) : null;
 
-        return localforage.setItem('lastBooking', s);
+        return saveLastBooking(s);
 
     }.bind(this);
     /**
@@ -368,9 +395,12 @@ function ViewModel(app) {
         booking being loaded (booking already initialized).
     **/
     this.restoreState = function restoreState() {
-        return localforage.getItem('lastBooking').then(function(s) {
+        return loadLastBooking().then(function(s) {
             //jshint maxdepth:6, maxcomplexity:11
             if (!s) return;
+            
+            // Once is used, delete (is not last anymore)
+            clearLastBooking();
                 
             var spuid = this.booking.serviceProfessionalUserID();
             var jid = this.booking.jobTitleID();
@@ -426,7 +456,7 @@ function ViewModel(app) {
                 
                 var pm = s.paymentMethod;
                 if (pm && this.paymentMethod()) {
-                    this.paymentMethod.model.updateWith(pm, true);
+                    this.paymentMethod().model.updateWith(pm, true);
                 }
             }
         }.bind(this))
