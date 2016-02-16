@@ -172,7 +172,9 @@
             if (UrlData.Count ==  2) {
                 var userID = WebSecurity.CurrentUserId;
                 var bookingID = UrlData[0].AsInt();
-                var booking = LcRest.Booking.Get(bookingID, false, false, userID);
+                // IMPORTANT: Internal use booking: (needed to confirm and other tasks)
+                // After any task, a new fetched, public, booking record is returned
+                var booking = LcRest.Booking.Get(bookingID, false, true, userID);
                 if (booking == null ||
                     booking.serviceProfessionalUserID != userID) {
                     throw new HttpException(404, "Not Found");

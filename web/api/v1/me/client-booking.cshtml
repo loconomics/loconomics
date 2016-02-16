@@ -108,7 +108,9 @@
             }
             else if (UrlData.Count == 2) {
                 var bookingID = UrlData[0].AsInt();
-                var booking = LcRest.Booking.Get(bookingID, true, false, userID);
+                // IMPORTANT: Internal use booking: (tasks may need some internal information)
+                // After any task, a new fetched, public, booking record is returned
+                var booking = LcRest.Booking.Get(bookingID, true, true, userID);
                 if (booking == null ||
                     booking.clientUserID != userID) {
                     throw new HttpException(404, "Not Found");
