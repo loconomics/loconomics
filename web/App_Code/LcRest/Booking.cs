@@ -2412,6 +2412,7 @@ namespace LcRest
         /// <summary>
         /// Utility for client bookings, to check service professional availability for the given input
         /// data, thow a ConstraintException if not available and returns the calculated endTime if available.
+        /// It takes care of the advanceTime
         /// </summary>
         /// <param name="startTime"></param>
         /// <param name="serviceDurationMinutes"></param>
@@ -2421,7 +2422,7 @@ namespace LcRest
         {
             var endTime = startTime.AddMinutes((double)(serviceDurationMinutes ?? 0));
             // Because this API is only for providers, we avoid the advance time from the checking
-            var isAvailable = LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, true);
+            var isAvailable = LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, false);
             if (!isAvailable)
                 throw new ConstraintException(String.Format("The time {0} is not available, it conflicts with a recent appointment!", startTime));
 
