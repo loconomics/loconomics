@@ -2237,6 +2237,22 @@ namespace LcRest
             BEGIN TRY
                 BEGIN TRAN
 
+                /* 
+                 * Soft Delete not needed CalendarEvents:
+                 */
+                UPDATE CalendarEvents
+                SET Deleted = getdate()
+                WHERE ID IN (
+                    SELECT TOP 1 ServiceDateID FROM Booking
+                    WHERE BookingID = @BookingID AND ServiceDateID <> @ConfirmedDateID
+                    UNION
+                    SELECT TOP 1 AlternativeDate1ID FROM Booking
+                    WHERE BookingID = @BookingID AND AlternativeDate1ID <> @ConfirmedDateID
+                    UNION
+                    SELECT TOP 1 AlternativeDate2ID FROM Booking
+                    WHERE BookingID = @BookingID AND AlternativeDate2ID <> @ConfirmedDateID
+                )
+
                 /*
                  * Update Availability of the CalendarEvent record for the ConfirmedDateID,
                  * from 'tentative' to 'busy'
@@ -2255,20 +2271,6 @@ namespace LcRest
                         AlternativeDate1ID = null,
                         AlternativeDate2ID = null
                 WHERE   BookingID = @BookingID
-
-                -- Removing non needed CalendarEvents:
-                UPDATE CalendarEvents
-                SET Deleted = getdate()
-                WHERE ID IN (
-                    SELECT TOP 1 ServiceDateID FROM Booking
-                    WHERE BookingID = @BookingID AND ServiceDateID <> @ConfirmedDateID
-                    UNION
-                    SELECT TOP 1 AlternativeDate1ID FROM Booking
-                    WHERE BookingID = @BookingID AND AlternativeDate1ID <> @ConfirmedDateID
-                    UNION
-                    SELECT TOP 1 AlternativeDate2ID FROM Booking
-                    WHERE BookingID = @BookingID AND AlternativeDate2ID <> @ConfirmedDateID
-                )
 
                 COMMIT TRAN
             END TRY

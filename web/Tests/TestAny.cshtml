@@ -12,6 +12,9 @@
         two = LcCalendar.DoubleCheckEventAvailability(6800991, null, null, true),
         three = LcCalendar.DoubleCheckEventAvailability(6800992, null, null, true)
     };
+
+    var b = LcRest.Booking.Get(737, false, true);
+    b.ConfirmBookingRequest("preferred");
 }
 @ObjectInfo.Print(data)
 
