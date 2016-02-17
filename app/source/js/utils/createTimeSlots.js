@@ -33,7 +33,10 @@ exports.forRange = function forRange(from, to, size, duration, roundUp) {
         // Calculate the minutes of the hour we must set
         // substracting the excess of minutes per size and adding the size
         // to go the next fraction.
-        minutes = minutes - (minutes % size) + size;
+        // But only in case we are not already at an exact point (rest is zero)
+        var rest = minutes % size;
+        if (rest)
+           minutes = minutes - (rest) + size;
         // set the minutes, without seconds:
         from = r.minutes(minutes).seconds(0).toDate();
         i = r;
