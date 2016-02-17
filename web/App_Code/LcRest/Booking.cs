@@ -2044,7 +2044,7 @@ namespace LcRest
                     throw new ConstraintException("Chosen services does not belongs to the Job Title");
 
                 // 2º: Preparing event date-times, checking availability and creating event
-                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.serviceDurationMinutes ?? 0));
+                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Because this API is only for providers, we avoid the advance time from the checking
                 var isAvailable = allowBookUnavailableTime || LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, true);
                 if (!isAvailable)
@@ -2166,7 +2166,7 @@ namespace LcRest
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
-                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.serviceDurationMinutes ?? 0));
+                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Only if dates changed:
                 booking.FillServiceDates();
                 if (booking.serviceDate.startTime != startTime && booking.serviceDate.endTime != endTime)
@@ -2479,13 +2479,13 @@ namespace LcRest
                     throw new ConstraintException("Choosen services does not belongs to the Job Title");
 
                 // 2º: Preparing event date-times, checking availability and creating event
-                var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.serviceDurationMinutes, serviceProfessionalUserID);
+                var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID);
                 DateTime? alternative1EndTime = null;
                 DateTime? alternative2EndTime = null;
                 if (!booking.instantBooking)
                 {
-                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTime?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.serviceDurationMinutes, serviceProfessionalUserID) : null;
-                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTime?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.serviceDurationMinutes, serviceProfessionalUserID) : null;
+                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTime?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
+                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTime?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
                 }
 
                 // Event data
