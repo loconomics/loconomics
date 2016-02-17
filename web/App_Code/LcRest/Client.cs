@@ -595,11 +595,12 @@ namespace LcRest
             using (var db = new LcDatabase(sharedDb))
             {
                 db.Execute(@"
-                    IF NOT EXISTS (SELECT * FROM Bookings WHERE serviceProfessionalUserID = @0 AND clientUserID = @1 AND BookingStatusID NOT IN (4, 5))
-                    THEN
+                    IF NOT EXISTS (SELECT * FROM Booking WHERE serviceProfessionalUserID = @0 AND clientUserID = @1 AND BookingStatusID NOT IN (4, 5))
+                    BEGIN
                         DELETE FROM ServiceProfessionalClient
                         WHERE ServiceProfessionalUserID = @0
                             AND ClientUserID = @1
+                    END
                 ", serviceProfessionalUserID, clientUserID);
             }
         }
