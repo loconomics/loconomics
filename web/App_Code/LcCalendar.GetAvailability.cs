@@ -481,20 +481,24 @@ public static partial class LcCalendar
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> Times(int userID, DateTime startTime, DateTime endTime)
+        public static Dictionary<string, object> Times(int userID, DateTime startTime, DateTime endTime, bool useAdvanceTime)
         {
             var result = new Dictionary<string, object>();
 
             var cu = new CalendarDll.CalendarUtils();
             var data = cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(userID, startTime, endTime);
             var prefs = LcCalendar.GetSchedulingPreferences(userID);
-            // NOTE: To avoid to show as available past time or inside the AdvanceTime period,
-            // we need to add an unavailable slot (if needed)
-            // IMPORTANT: This is still not perfect, still on some queries may return a slot as 'free'
-            // before the date because the problem of start-end times not being filtered to the queried ones
-            // (because dates from the read occurrences are used, a bug of GetTimeline), BUT IS SOLVED AT THE APP
-            // by filtering there.
-            data = OccurrencesWithAdvanceTimeSlot(data, startTime, (double)prefs.advanceTime);
+
+            if (useAdvanceTime)
+            {
+                // NOTE: To avoid to show as available past time or inside the AdvanceTime period,
+                // we need to add an unavailable slot (if needed)
+                // IMPORTANT: This is still not perfect, still on some queries may return a slot as 'free'
+                // before the date because the problem of start-end times not being filtered to the queried ones
+                // (because dates from the read occurrences are used, a bug of GetTimeline), BUT IS SOLVED AT THE APP
+                // by filtering there.
+                data = OccurrencesWithAdvanceTimeSlot(data, startTime, (double)prefs.advanceTime);
+            }
 
             // Create result
             result["times"] = GetTimelinePublicOutputFormat(GetTimeline(data));

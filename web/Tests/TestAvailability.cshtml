@@ -64,7 +64,7 @@ PROCESS DURATION: @((DateTime.Now - start).ToString())
     //var occurrences = cu.GetEventsOccurrencesInAvailabilitySlotsByUser(calUser.Id, startTime, endTime);
     //var data2 = LcCalendar.GetAvailability.GetTimeline(occurrences);
 
-    var data2 = LcCalendar.GetAvailability.Times(calUser.Id, startTime, endTime);
+    var data2 = LcCalendar.GetAvailability.Times(calUser.Id, startTime, endTime, false);
     
     //var testOutput = LcCalendar.GetAvailability.GetTimeline_UnitTests();
 }
