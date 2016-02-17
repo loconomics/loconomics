@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -952,7 +952,7 @@ public class LcMessaging
                 subject = "Client has paid in full and service professional has been paid in full";
                 CreateBookingMessage(info, (int)MessageType.BookingCompleted, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
                 subject = "Thank you and request to review my services";
-                sendToClient("BookingUpdatedByServiceProfessional");
+                sendToClient("BookingCompleted");
             }
         }
         public class SendMarketplaceBooking : SendBooking
