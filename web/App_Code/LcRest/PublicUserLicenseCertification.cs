@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -49,7 +49,7 @@ namespace LcRest
                 V.ProviderUserID As userID,
                 V.PositionID As jobTitleID,
                 V.licenseCertificationID,
-                V.statusID,
+                V.VerificationStatusID as StatusID,
                 V.licenseCertificationNumber,
                 V.licenseCertificationUrl,
                 V.LicenseStatus As licenseCertificationStatus,
@@ -98,7 +98,7 @@ namespace LcRest
                 V.PositionID = @1
                  AND
                 L.Active = 1
-                 AND V.statusID = 1 -- ONLY confirmed ones
+                 AND V.VerificationStatusID = 1 -- ONLY confirmed ones
         ";
         #endregion
 
