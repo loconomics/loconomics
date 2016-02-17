@@ -5,6 +5,7 @@
     than independent date-ranges; that way, full month queries are filtered
     and splited in per date caches, and further queries for a single date
     are fetched from cache rather than perform a new remote query.
+    The utils/createTimeSlots has a function to do that, it seems.
 **/
 'use strict';
 
