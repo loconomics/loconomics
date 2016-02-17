@@ -98,7 +98,7 @@
                     </div>-->
                     <div class="PaddedBox-xs-only isolated-sm">
                         <div>
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked() || !hasServicesSelected(), click: nextStep">Save and continue</button>
                         </div>
                     </div>
                 </div>

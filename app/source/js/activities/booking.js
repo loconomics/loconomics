@@ -536,6 +536,11 @@ function ViewModel(app) {
     // Sync: Automatic updates between dependent models:
     this.booking.jobTitleID.subscribe(this.serviceProfessionalServices.jobTitleID);
     this.booking.serviceProfessionalUserID.subscribe(this.serviceProfessionalServices.serviceProfessionalID);
+    
+    this.hasServicesSelected = ko.pureComputed(function() {
+        var s = this.serviceProfessionalServices.selectedServices();
+        return s && s.length > 0 || false;
+    }, this);
 
     this.gratuityPercentage.subscribe(this.summary.gratuityPercentage);
     this.gratuityAmount.subscribe(this.summary.gratuityAmount);
