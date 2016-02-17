@@ -1,5 +1,10 @@
 /**
     It uses the server-side availability API.
+    
+    TODO: implement a cache that saves by full local Date rather
+    than independent date-ranges; that way, full month queries are filtered
+    and splited in per date caches, and further queries for a single date
+    are fetched from cache rather than perform a new remote query.
 **/
 'use strict';
 
@@ -19,34 +24,45 @@ exports.create = function create(appModel) {
     
     var cache = {
         times: {/*
-            "userID-startTime-endTime": {
-                // From server:
-                incrementsSizeInMinutes: 15,
-                times: [{startTime:isodatetime, endTime:isodatetime, availability:string],
-                control: new CacheControl()
+            "userID": {
+                "startTime-endTime" {
+                    // From server:
+                    incrementsSizeInMinutes: 15,
+                    times: [{startTime:isodatetime, endTime:isodatetime, availability:string],
+                    control: new CacheControl()
+                }
             }
         */}
     };
-    
+
     api.clearCache = function clearCache() {
         cache.times = {};
         this.emit('clearCache');
     };
     
+    api.clearUserCache = function clearUserCache(userID) {
+        delete cache.times[userID];
+        this.emit('clearCache', { userID: userID });
+    };
+
     appModel.on('clearLocalData', function() {
         api.clearCache();
     });
-    
+
     var createTimeSlots = require('../utils/createTimeSlots');
-    function saveTimesInCache(queryKey, data) {
-        var c = cache.times[queryKey];
+    function saveTimesInCache(userID, queryKey, data) {
+        var userC = cache.times[userID];
+        var c = userC && userC[queryKey];
         if (c) {
             c.times = data.times;
             c.incrementsSizeInMinutes = data.incrementsSizeInMinutes;
             c.control.touch();
         }
         else {
-            c = cache.times[queryKey] = {
+            if (!userC) {
+                userC = cache.times[userID] = {};
+            }
+            c = userC[queryKey] = {
                 times: data.times,
                 incrementsSizeInMinutes: data.incrementsSizeInMinutes,
                 control: new CacheControl({ ttl: { minutes: 1 } }),
@@ -58,14 +74,21 @@ exports.create = function create(appModel) {
         }
         return c;
     }
+    
+    function getTimesFromCache(userID, queryKey) {
+        var userC = cache.times[userID];
+        var c = userC && userC[queryKey];
+        if (c && !c.control.mustRevalidate())
+            return c;
+    }
 
     api.times = function times(userID, start, end) {
         if (!end) end = moment(start).add(1, 'day').toDate();
-        var queryKey = userID + '-' + start.toISOString() + '-' + end.toISOString();
+        var queryKey = start.toISOString() + '-' + end.toISOString();
 
-        if (cache.times.hasOwnProperty(queryKey) &&
-            !cache.times[queryKey].control.mustRevalidate()) {
-            return Promise.resolve(cache.times[queryKey]);
+        var cached = getTimesFromCache(userID, queryKey);
+        if (cached) {
+            return Promise.resolve(cached);
         }
         else {
             // Remote loading data
@@ -78,7 +101,7 @@ exports.create = function create(appModel) {
                 // SO: Ensure only the wanted set of data is saved
                 data.times = createTimeSlots.filterListBy(data.times, start, end);
                 // Save and return:
-                return saveTimesInCache(queryKey, data);
+                return saveTimesInCache(userID, queryKey, data);
             });
         }
     };

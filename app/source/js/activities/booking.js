@@ -784,6 +784,10 @@ function ViewModel(app) {
             this.isSaving(false);
             this.booking.model.updateWith(serverBooking);
             
+            // Forget availability cache for this professional, since is not needed
+            // and any new booking with it needs a refresh to avoid problems. See #905
+            app.model.availability.clearUserCache(this.booking.serviceProfessionalUserID());
+            
             app.modals.showNotification({
                 title: 'Done!',
                 message: 'Your booking was created!'
