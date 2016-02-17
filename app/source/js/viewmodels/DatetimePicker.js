@@ -18,6 +18,7 @@ function DatetimePickerVM(app, element) {
     this.userID = ko.observable();
     this.isLoading = ko.observable(false);
     this.requiredDurationMinutes = ko.observable(0);
+    this.includeEndTime = ko.observable(false);
     
     this.durationDisplay = ko.pureComputed(function() {
         var fullMinutes = this.requiredDurationMinutes();
@@ -40,6 +41,7 @@ function DatetimePickerVM(app, element) {
     this.groupedSlots = ko.computed(function(){
         
         var requiredDurationMinutes = this.requiredDurationMinutes();
+        var includeEndTime = this.includeEndTime();
         
         /*
           before 12:00pm (noon) = morning
@@ -71,7 +73,7 @@ function DatetimePickerVM(app, element) {
         ];
 
         // Populate groups with the time slots
-        var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(requiredDurationMinutes) || [];
+        var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(requiredDurationMinutes, undefined, includeEndTime) || [];
         // Iterate to organize by group
         slots.forEach(function(slot) {
             // Check every group
