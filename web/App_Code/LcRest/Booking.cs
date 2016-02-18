@@ -1988,6 +1988,9 @@ namespace LcRest
             bookingStatusID = (int)LcEnum.BookingStatus.requestExpired;
 
             this.RefundPayment();
+
+            // Remove relationship (will internally verify if must or not delete it)
+            ServiceProfessionalClient.CancelFromBooking(serviceProfessionalUserID, clientUserID);
         }
         #endregion
 
