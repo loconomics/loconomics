@@ -70,10 +70,52 @@ CREATE TABLE dbo.alert (
 	PRIMARY KEY (AlertID,AlertTypeID,CountryID,LanguageID)
 );
 
+CREATE TABLE dbo."alert-new" (
+	AlertID int NOT NULL,
+	AlertTypeID int NOT NULL,
+	LanguageID int NOT NULL,
+	CountryID int NOT NULL,
+	AlertName varchar(30) NOT NULL,
+	AlertHeadlineDisplay varchar(200),
+	AlertTextDisplay varchar(300) NOT NULL,
+	AlertDescription varchar(500),
+	AlertEmailText varchar(25),
+	ProviderProfileCompletePoints int NOT NULL,
+	CustomerProfileCompletePoints int NOT NULL,
+	CreatedDate datetime NOT NULL,
+	UpdatedDate datetime NOT NULL,
+	ModifiedBy varchar(25) NOT NULL,
+	Active bit NOT NULL,
+	AlertPageURL varchar(2000),
+	Required bit NOT NULL,
+	PositionSpecific bit DEFAULT ((0)) NOT NULL,
+	DisplayRank int DEFAULT ((1)) NOT NULL,
+	ProviderAlert bit DEFAULT ((1)) NOT NULL,
+	CustomerAlert bit DEFAULT ((0)) NOT NULL,
+	deletethiscolumn bit DEFAULT ((0)) NOT NULL,
+	iconClass varchar(200),
+	ShowAfterAlertIDComplete int,
+	PRIMARY KEY (AlertID,AlertTypeID,CountryID,LanguageID)
+);
+
 CREATE TABLE dbo.alerttype (
 	AlertTypeID int NOT NULL,
-	AlertTypeName varchar(25) NOT NULL,
+	AlertTypeName varchar(200),
 	AlertTypeDescription varchar(200),
+	CreatedDate datetime NOT NULL,
+	UpdatedDate datetime NOT NULL,
+	ModifiedBy varchar(25) NOT NULL,
+	Active bit NOT NULL,
+	LanguageID int DEFAULT ((1)) NOT NULL,
+	CountryID int DEFAULT ((1)) NOT NULL,
+	DisplayRank int DEFAULT ((1)) NOT NULL,
+	PRIMARY KEY (AlertTypeID)
+);
+
+CREATE TABLE dbo."alerttype-new" (
+	AlertTypeID int NOT NULL,
+	AlertTypeName varchar(100),
+	AlertTypeDescription varchar(300),
 	CreatedDate datetime NOT NULL,
 	UpdatedDate datetime NOT NULL,
 	ModifiedBy varchar(25) NOT NULL,
@@ -98,6 +140,16 @@ CREATE TABLE dbo.backgroundcheck (
 	PRIMARY KEY (BackgroundCheckID,CountryID,LanguageID)
 );
 
+CREATE TABLE dbo.backgroundchecktier (
+	BackgroundCheckTierID int NOT NULL,
+	backgroundCheckTierName varchar(100) NOT NULL,
+	backgroundCheckTierDescription varchar(3000),
+	CreatedDate datetime NOT NULL,
+	ModifiedDate datetime NOT NULL,
+	ModifiedBy varchar(3) NOT NULL,
+	PRIMARY KEY (BackgroundCheckTierID)
+);
+
 CREATE TABLE dbo.booking (
 	BookingID int IDENTITY(1,1) NOT NULL,
 	ClientUserID int,
@@ -117,10 +169,13 @@ CREATE TABLE dbo.booking (
 	PricingSummaryRevision int NOT NULL,
 	PaymentTransactionID varchar(250),
 	PaymentLastFourCardNumberDigits varchar(64),
-	TotalPricePaidByClient decimal(25,2),
-	TotalServiceFeesPaidByClient decimal(25,2),
-	TotalPaidToServiceProfessional decimal(25,2),
-	TotalServiceFeesPaidByServiceProfessional decimal(25,2),
+	paymentMethodID varchar(250),
+	cancellationPaymentTransactionID varchar(250),
+	ClientPayment decimal(25,2),
+	ServiceProfessionalPaid decimal(25,2),
+	ServiceProfessionalPPFeePaid decimal(25,2),
+	LoconomicsPaid decimal(25,2),
+	LoconomicsPPFeePaid decimal(25,2),
 	InstantBooking bit DEFAULT ((0)) NOT NULL,
 	FirstTimeBooking bit NOT NULL,
 	SendReminder bit DEFAULT ((0)) NOT NULL,
@@ -245,6 +300,7 @@ CREATE TABLE dbo.CalendarEvents (
 	TimeBlock time,
 	DayofWeek int,
 	Description nvarchar(max),
+	Deleted datetime,
 	PRIMARY KEY (Id)
 );
 
@@ -331,13 +387,12 @@ CREATE TABLE dbo.cancellationpolicy (
 	CancellationPolicyName varchar(50) NOT NULL,
 	CancellationPolicyDescription varchar(1000),
 	HoursRequired int,
-	RefundIfCancelledBefore float(53),
-	RefundIfCancelledAfter float(53),
+	CancellationFeeAfter decimal(5,2),
+	CancellationFeeBefore decimal(5,2),
 	CreatedDate datetime NOT NULL,
 	UpdatedDate datetime NOT NULL,
 	ModifiedBy varchar(25) NOT NULL,
 	Active bit NOT NULL,
-	RefundOfLoconomicsFee float(53) DEFAULT ((0.0)) NOT NULL,
 	PRIMARY KEY (CancellationPolicyID,CountryID,LanguageID)
 );
 
@@ -368,6 +423,21 @@ CREATE TABLE dbo.country (
 	PRIMARY KEY (CountryID,LanguageID)
 );
 
+CREATE TABLE dbo.countryNEW (
+	CountryID int NOT NULL,
+	LanguageID int NOT NULL,
+	CountryName varchar(100) NOT NULL,
+	CountryCode varchar(3) NOT NULL,
+	CountryCodeAlpha2 char(2),
+	CountryCallingCode varchar(3),
+	CreatedDate datetime,
+	UpdatedDate datetime,
+	ModifiedBy varchar(25),
+	Active bit NOT NULL,
+	numcode int DEFAULT (NULL),
+	PRIMARY KEY (CountryID,LanguageID)
+);
+
 CREATE TABLE dbo.county (
 	CountyID int NOT NULL,
 	CountyName varchar(100),
@@ -378,14 +448,6 @@ CREATE TABLE dbo.county (
 	ModifiedBy varchar(25) NOT NULL,
 	Active bit NOT NULL,
 	PRIMARY KEY (CountyID)
-);
-
-CREATE TABLE dbo.exDate (
-	exDateID int IDENTITY(1,1) NOT NULL,
-	rRuleID int NOT NULL,
-	date datetime NOT NULL,
-	type varchar(6) NOT NULL,
-	PRIMARY KEY (exDateID)
 );
 
 CREATE TABLE dbo.ExperienceLevel (
@@ -432,6 +494,19 @@ CREATE TABLE dbo.institution (
 	PRIMARY KEY (InstitutionID)
 );
 
+CREATE TABLE dbo.jobTitleLicense (
+	PositionID int NOT NULL,
+	LicenseCertificationID varchar(25) NOT NULL,
+	StateProvinceID varchar(25) NOT NULL,
+	CountryID varchar(25) NOT NULL,
+	Required bit NOT NULL,
+	CreatedDate datetime NOT NULL,
+	UpdatedDate datetime NOT NULL,
+	ModifiedBy varchar(25) NOT NULL,
+	Active bit NOT NULL,
+	PRIMARY KEY (CountryID,LicenseCertificationID,PositionID,StateProvinceID)
+);
+
 CREATE TABLE dbo.language (
 	LanguageID int NOT NULL,
 	CountryID int NOT NULL,
@@ -470,7 +545,21 @@ CREATE TABLE dbo.licensecertification (
 	UpdatedDate datetime NOT NULL,
 	ModifiedBy varchar(25) NOT NULL,
 	Active bit NOT NULL,
+	LocaleID int DEFAULT ((0)) NOT NULL,
+	Required bit DEFAULT ((0)) NOT NULL,
 	PRIMARY KEY (LicenseCertificationID)
+);
+
+CREATE TABLE dbo.locale (
+	LocaleID int NOT NULL,
+	StateProvinceID int NOT NULL,
+	CountryID int NOT NULL,
+	LocalName varchar(100) NOT NULL,
+	CreatedDate datetime NOT NULL,
+	UpdatedDate datetime NOT NULL,
+	ModifiedBy varchar(3) DEFAULT ('SYS') NOT NULL,
+	Active bit DEFAULT ((1)) NOT NULL,
+	PRIMARY KEY (CountryID,LocaleID,StateProvinceID)
 );
 
 CREATE TABLE dbo.Messages (
@@ -526,6 +615,25 @@ CREATE TABLE dbo.MessagingThreads (
 	PRIMARY KEY (ThreadID)
 );
 
+CREATE TABLE dbo.OwnerStatus (
+	OwnserStatusID int NOT NULL,
+	OwnerStatusName varchar(50) NOT NULL,
+	OwnerStatusDescription varchar(200),
+	CreatedDate datetime NOT NULL,
+	UpdatedDate datetime NOT NULL,
+	Active bit NOT NULL,
+	UpdatedBy varchar(3),
+	PRIMARY KEY (OwnserStatusID)
+);
+
+CREATE TABLE dbo.OwnerStatusHistory (
+	UserID int NOT NULL,
+	OwnerStatusChangedDate datetime NOT NULL,
+	OwnerStatusID int NOT NULL,
+	OwnerStatusChangedBy varchar(3) NOT NULL,
+	PRIMARY KEY (OwnerStatusChangedDate,UserID)
+);
+
 CREATE TABLE dbo.positionbackgroundcheck (
 	PositionID int NOT NULL,
 	BackgroundCheckID varchar(25) NOT NULL,
@@ -550,18 +658,6 @@ CREATE TABLE dbo.positionlicense (
 	ModifiedBy varchar(25) NOT NULL,
 	Active bit NOT NULL,
 	PRIMARY KEY (CountryID,LicenseCertificationID,PositionID,StateProvinceID)
-);
-
-CREATE TABLE dbo.positionpackageserviceattributecategory (
-	PositionID int NOT NULL,
-	ServiceAttributeCategoryID int NOT NULL,
-	LanguageID int NOT NULL,
-	CountryID int NOT NULL,
-	CreateDate datetime DEFAULT ('sysdate') NOT NULL,
-	UpdatedDate datetime DEFAULT ('sysdate') NOT NULL,
-	ModifiedBy varchar(25) DEFAULT ('sys') NOT NULL,
-	Active bit DEFAULT ((1)) NOT NULL,
-	PRIMARY KEY (CountryID,LanguageID,PositionID,ServiceAttributeCategoryID)
 );
 
 CREATE TABLE dbo.positionpricingtype (
@@ -621,6 +717,9 @@ CREATE TABLE dbo.positions (
 	PricingTypeComplete bit DEFAULT ((0)) NOT NULL,
 	EnteredByUserID int,
 	Approved bit,
+	AddGratuity int DEFAULT ((0)) NOT NULL,
+	HIPAA bit DEFAULT ((0)) NOT NULL,
+	SendReviewReminderToClient bit DEFAULT ((1)) NOT NULL,
 	CanBeRemote bit DEFAULT ((0)) NOT NULL,
 	PRIMARY KEY (CountryID,LanguageID,PositionID)
 );
@@ -660,17 +759,21 @@ CREATE TABLE dbo.pricingSummary (
 	ServiceDurationMinutes int,
 	FirstSessionDurationMinutes int,
 	SubtotalPrice decimal(7,2),
-	FeePrice decimal(7,2),
+	ClientServiceFeePrice decimal(7,2),
 	TotalPrice decimal(7,2),
-	PFeePrice decimal(7,2) DEFAULT ((0)),
+	ServiceFeeAmount decimal(7,2) DEFAULT ((0)),
 	CreatedDate datetime NOT NULL,
 	UpdatedDate datetime NOT NULL,
 	ModifiedBy varchar(25) NOT NULL,
 	Active bit NOT NULL,
-	SubtotalRefunded decimal(7,2),
-	FeeRefunded decimal(7,2),
-	TotalRefunded decimal(7,2),
-	DateRefunded datetime,
+	CancellationDate datetime,
+	CancellationFeeCharged decimal(7,2),
+	FirstTimeServiceFeeFixed decimal(5,2) DEFAULT ((0)) NOT NULL,
+	FirstTimeServiceFeePercentage decimal(5,2) DEFAULT ((0)) NOT NULL,
+	PaymentProcessingFeePercentage decimal(5,2) DEFAULT ((0)) NOT NULL,
+	PaymentProcessingFeeFixed decimal(5,2) DEFAULT ((0)) NOT NULL,
+	FirstTimeServiceFeeMaximum decimal(5,2) DEFAULT ((0)) NOT NULL,
+	FirstTimeServiceFeeMinimum decimal(5,2) DEFAULT ((0)) NOT NULL,
 	PRIMARY KEY (PricingSummaryID,PricingSummaryRevision)
 );
 
@@ -702,7 +805,7 @@ CREATE TABLE dbo.pricingtype (
 	UpdatedDate datetime NOT NULL,
 	ModifiedBy varchar(50) NOT NULL,
 	Active bit DEFAULT ((1)) NOT NULL,
-	DisplayRank int DEFAULT ((0)) NOT NULL,
+	DisplayRank int NOT NULL,
 	PRIMARY KEY (CountryID,LanguageID,PricingTypeID)
 );
 
@@ -755,7 +858,7 @@ CREATE TABLE dbo.PricingVariableValue (
 
 CREATE TABLE dbo.providerpackage (
 	ProviderPackageID int IDENTITY(1,1) NOT NULL,
-	PricingTypeID int,
+	PricingTypeID int NOT NULL,
 	ProviderUserID int NOT NULL,
 	PositionID int NOT NULL,
 	LanguageID int NOT NULL,
@@ -865,59 +968,10 @@ CREATE TABLE dbo.providertaxform (
 	PRIMARY KEY (ProviderUserID)
 );
 
-CREATE TABLE dbo.providertransaction (
-	ProviderUserID int NOT NULL,
-	PaymentPreferencyTypeID int NOT NULL,
-	ProcessorTransactionID varchar(255),
-	AccountTypeID int,
-	CreatedDate datetime,
-	UpdatedDate datetime,
-	ModifiedBy varchar(50),
-	ProviderTransactionID int NOT NULL,
-	BookingID int NOT NULL,
-	PaymentProcessorFees decimal(5),
-	PRIMARY KEY (ProviderTransactionID)
-);
-
 CREATE TABLE dbo.ReferralSource (
 	ReferralSourceID int NOT NULL,
 	Name nvarchar(80) NOT NULL,
 	PRIMARY KEY (ReferralSourceID)
-);
-
-CREATE TABLE dbo.rRule (
-	rRuleID int IDENTITY(1,1) NOT NULL,
-	vEventID int NOT NULL,
-	class varchar(12) DEFAULT ('public') NOT NULL,
-	created datetime DEFAULT (getutcdate()) NOT NULL,
-	description nvarchar(max),
-	dtStart datetime NOT NULL,
-	dtEnd datetime,
-	duration varchar(20),
-	geoLat float(53),
-	geoLng float(53),
-	lastModified datetime DEFAULT (getutcdate()) NOT NULL,
-	location nvarchar(max),
-	organizerCN nvarchar(50),
-	organizerMailTo nvarchar(100),
-	seq int DEFAULT ((0)) NOT NULL,
-	status varchar(9) DEFAULT ('confirmed') NOT NULL,
-	summary nvarchar(75),
-	transparent bit DEFAULT ((0)) NOT NULL,
-	freq varchar(8) DEFAULT ('daily') NOT NULL,
-	until datetime,
-	"count" int,
-	interval int DEFAULT ((1)) NOT NULL,
-	bySecond varchar(170),
-	byMinute varchar(170),
-	byHour varchar(61),
-	byDay varchar(35),
-	byMonthDay varchar(200),
-	byYearDay varchar(3078),
-	byWeekNo varchar(353),
-	byMonth varchar(29),
-	wkSt char(2) DEFAULT ('mo'),
-	PRIMARY KEY (rRuleID)
 );
 
 CREATE TABLE dbo.serviceaddress (
@@ -1043,17 +1097,6 @@ CREATE TABLE dbo.servicecategorypositionattribute (
 	PRIMARY KEY (CountryID,LanguageID,PositionID,ServiceAttributeCategoryID,ServiceAttributeID)
 );
 
-CREATE TABLE dbo.serviceestimatevars (
-	ServiceEstimateVarID int IDENTITY(1,1) NOT NULL,
-	PositionID int NOT NULL,
-	EstimateVarID int NOT NULL,
-	PricingTypeID int NOT NULL,
-	CreatedDate datetime NOT NULL,
-	UpdatedDate datetime NOT NULL,
-	ModifiedBy varchar(50) NOT NULL,
-	PRIMARY KEY (EstimateVarID,PositionID,PricingTypeID)
-);
-
 CREATE TABLE dbo.ServiceProfessionalClient (
 	ServiceProfessionalUserID int NOT NULL,
 	ClientUserID int NOT NULL,
@@ -1177,6 +1220,7 @@ CREATE TABLE dbo.userbackgroundcheck (
 	Summary varchar(200),
 	VerifiedBy varchar(25),
 	LastVerifiedDate datetime,
+	backgroundCheckTierID int DEFAULT ((0)) NOT NULL,
 	PRIMARY KEY (BackgroundCheckID,UserID)
 );
 
@@ -1197,7 +1241,19 @@ CREATE TABLE dbo.usereducation (
 	PRIMARY KEY (UserEducationID)
 );
 
+CREATE TABLE dbo.UserFeePayments (
+	UserID int NOT NULL,
+	PaymentTransactionID varchar(250) NOT NULL,
+	PaymentDate datetime NOT NULL,
+	PaymentAmount money,
+	PaymentMethod varchar(25),
+	PaymentPlan varchar(50),
+	PaymentStatus varchar(50),
+	PRIMARY KEY (PaymentTransactionID,UserID)
+);
+
 CREATE TABLE dbo.userlicenseverification (
+	userLicenseVerificationID int IDENTITY(1,1) NOT NULL,
 	ProviderUserID int NOT NULL,
 	PositionID int NOT NULL,
 	LicenseCertificationID int NOT NULL,
@@ -1215,7 +1271,7 @@ CREATE TABLE dbo.userlicenseverification (
 	CreatedDate datetime NOT NULL,
 	ModifiedDate datetime NOT NULL,
 	ModifiedBy varchar(25) NOT NULL,
-	StatusID int NOT NULL,
+	VerificationStatusID int NOT NULL,
 	LicenseStatus varchar(50),
 	ExpirationDate datetime,
 	IssueDate datetime,
@@ -1223,7 +1279,24 @@ CREATE TABLE dbo.userlicenseverification (
 	Comments varchar(500),
 	VerifiedBy varchar(25),
 	LastVerifiedDate datetime,
-	PRIMARY KEY (LicenseCertificationID,PositionID,ProviderUserID)
+	BackgroundCheckTierID int DEFAULT ((0)) NOT NULL,
+	Required bit DEFAULT ((0)) NOT NULL,
+	PublicLicenseURL varchar(255),
+	PRIMARY KEY (userLicenseVerificationID)
+);
+
+CREATE TABLE dbo.UserPaymentPlan (
+	UserID int NOT NULL,
+	SubscriptionID varchar(250),
+	PaymentPlan varchar(25),
+	PaymentMethod varchar(25),
+	PaymentPlanLastChangedDate datetime,
+	NextPaymentDueDate datetime,
+	NextPaymentAmount money,
+	LastPaymentDate datetime,
+	LastPaymentAmount money,
+	TotalPastDueAmount money,
+	PRIMARY KEY (UserID)
 );
 
 CREATE TABLE dbo.userprofile (
@@ -1241,7 +1314,7 @@ CREATE TABLE dbo.userprofilepositions (
 	UpdatedDate datetime,
 	ModifiedBy varchar(3),
 	Active bit,
-	PositionIntro varchar(2000),
+	PositionIntro varchar(400),
 	StatusID int DEFAULT ((1)) NOT NULL,
 	CancellationPolicyID int,
 	additionalinfo1 nvarchar(500),
@@ -1314,12 +1387,11 @@ CREATE TABLE dbo.users (
 	SecondLastName varchar(145) NOT NULL,
 	NickName varchar(50),
 	PublicBio varchar(4000),
-	GenderID int NOT NULL,
+	GenderID int DEFAULT ((-1)) NOT NULL,
 	PreferredLanguageID int,
 	PreferredCountryID int,
-	IsProvider bit NOT NULL,
-	IsCustomer bit NOT NULL,
-	IsMember bit DEFAULT ((0)) NOT NULL,
+	IsProvider bit DEFAULT ((0)) NOT NULL,
+	IsCustomer bit DEFAULT ((0)) NOT NULL,
 	IsAdmin bit DEFAULT ((0)) NOT NULL,
 	IsCollaborator bit DEFAULT ((0)) NOT NULL,
 	Photo varchar(150),
@@ -1351,16 +1423,14 @@ CREATE TABLE dbo.users (
 	AlternativeEmail nvarchar(56),
 	ReferredByUserID int,
 	SignupDevice nvarchar(20),
+	OwnerStatusID int,
+	OwnerAnniversaryDate datetime,
 	PRIMARY KEY (UserID)
 );
 
 CREATE TABLE dbo.usersignup (
 	UserId int IDENTITY(1,1) NOT NULL,
 	Email nvarchar(56) NOT NULL,
-	FirstName varchar(25),
-	Position varchar(25),
-	UserType bit NOT NULL,
-	CreatedDate datetime,
 	PRIMARY KEY (UserId)
 );
 
@@ -1432,12 +1502,6 @@ CREATE TABLE dbo.verificationstatus (
 	PRIMARY KEY (CountryID,LanguageID,VerificationStatusID)
 );
 
-CREATE TABLE dbo.vEvent (
-	vEventID int IDENTITY(1,1) NOT NULL,
-	title nvarchar(200) NOT NULL,
-	PRIMARY KEY (vEventID)
-);
-
 CREATE TABLE dbo.VOCElement (
 	VOCElementID int NOT NULL,
 	LanguageID int NOT NULL,
@@ -1502,6 +1566,34 @@ CREATE TABLE dbo.VOCFlag (
 	PRIMARY KEY (CountryID,LanguageID,VOCFlagID)
 );
 
+CREATE TABLE dbo.VOCIdeas (
+	VOCIdeaID int NOT NULL,
+	IdeaShortDesc varchar(50) NOT NULL,
+	IdeaLongDesc varchar(1000),
+	IdeaUpVotes int,
+	IdeaDownVotes int,
+	VOCExperienceCategoryID int NOT NULL,
+	VOCIdeaStatusID int NOT NULL,
+	VOCElementID int,
+	GitHubIssueID int,
+	EstimatedRelease varchar(25),
+	CreatedDate datetime NOT NULL,
+	UpdatedDate datetime NOT NULL,
+	Modifiedby varchar(3) NOT NULL,
+	NotesFromBusinessTeam varchar(2000),
+	PRIMARY KEY (VOCIdeaID)
+);
+
+CREATE TABLE dbo.VOCIdeaStatus (
+	VOCIdeaStatusID int NOT NULL,
+	VOCIdeaStatusName varchar(50) NOT NULL,
+	VOCIdeaStatusDescription varchar(1000),
+	CreatedDate datetime NOT NULL,
+	UpdatatedDate datetime NOT NULL,
+	ModifiedBy varchar(3) NOT NULL,
+	PRIMARY KEY (VOCIdeaStatusID)
+);
+
 CREATE TABLE dbo.VOCScores (
 	VOCScoresID int NOT NULL,
 	UserID int NOT NULL,
@@ -1555,10 +1647,6 @@ CREATE TABLE dbo.webpages_UsersInRoles (
 );
 
 ALTER TABLE dbo.booking
-	ADD FOREIGN KEY (ParentBookingID) 
-	REFERENCES booking (BookingID);
-
-ALTER TABLE dbo.booking
 	ADD FOREIGN KEY (CountryID) 
 	REFERENCES positions (CountryID);
 
@@ -1577,18 +1665,6 @@ ALTER TABLE dbo.booking
 ALTER TABLE dbo.booking
 	ADD FOREIGN KEY (BookingTypeID) 
 	REFERENCES bookingType (BookingTypeID);
-
-ALTER TABLE dbo.booking
-	ADD FOREIGN KEY (CancellationPolicyID) 
-	REFERENCES cancellationpolicy (CancellationPolicyID);
-
-ALTER TABLE dbo.booking
-	ADD FOREIGN KEY (CountryID) 
-	REFERENCES positions (CountryID);
-
-ALTER TABLE dbo.booking
-	ADD FOREIGN KEY (LanguageID) 
-	REFERENCES positions (LanguageID);
 
 ALTER TABLE dbo.booking
 	ADD FOREIGN KEY (ServiceAddressID) 
@@ -1615,6 +1691,22 @@ ALTER TABLE dbo.booking
 	REFERENCES pricingSummary (PricingSummaryRevision);
 
 ALTER TABLE dbo.booking
+	ADD FOREIGN KEY (CancellationPolicyID) 
+	REFERENCES cancellationpolicy (CancellationPolicyID);
+
+ALTER TABLE dbo.booking
+	ADD FOREIGN KEY (CountryID) 
+	REFERENCES positions (CountryID);
+
+ALTER TABLE dbo.booking
+	ADD FOREIGN KEY (LanguageID) 
+	REFERENCES positions (LanguageID);
+
+ALTER TABLE dbo.booking
+	ADD FOREIGN KEY (AwaitingResponseFromUserID) 
+	REFERENCES users (UserID);
+
+ALTER TABLE dbo.booking
 	ADD FOREIGN KEY (ClientUserID) 
 	REFERENCES users (UserID);
 
@@ -1623,8 +1715,8 @@ ALTER TABLE dbo.booking
 	REFERENCES users (UserID);
 
 ALTER TABLE dbo.booking
-	ADD FOREIGN KEY (AwaitingResponseFromUserID) 
-	REFERENCES users (UserID);
+	ADD FOREIGN KEY (ParentBookingID) 
+	REFERENCES booking (BookingID);
 
 
 
@@ -1681,12 +1773,12 @@ ALTER TABLE dbo.CalendarEventsContacts
 
 
 ALTER TABLE dbo.CalendarReccurrence
-	ADD FOREIGN KEY (EventID) 
-	REFERENCES CalendarEvents (Id);
-
-ALTER TABLE dbo.CalendarReccurrence
 	ADD FOREIGN KEY (Frequency) 
 	REFERENCES CalendarRecurrenceFrequencyTypes (ID);
+
+ALTER TABLE dbo.CalendarReccurrence
+	ADD FOREIGN KEY (EventID) 
+	REFERENCES CalendarEvents (Id);
 
 
 
@@ -1708,12 +1800,6 @@ ALTER TABLE dbo.county
 
 
 
-ALTER TABLE dbo.exDate
-	ADD FOREIGN KEY (rRuleID) 
-	REFERENCES rRule (rRuleID);
-
-
-
 ALTER TABLE dbo.institution
 	ADD FOREIGN KEY (StateProvinceID) 
 	REFERENCES stateprovince (StateProvinceID);
@@ -1726,33 +1812,11 @@ ALTER TABLE dbo.licensecertification
 
 
 
-ALTER TABLE dbo.Messages
-	ADD FOREIGN KEY (MessageTypeID) 
-	REFERENCES messagetype (MessageTypeID);
-
-ALTER TABLE dbo.Messages
-	ADD FOREIGN KEY (ThreadID) 
-	REFERENCES MessagingThreads (ThreadID);
-
-
-
 ALTER TABLE dbo.MessagingThreads
 	ADD FOREIGN KEY (MessageThreadStatusID) 
 	REFERENCES messagethreadstatus (MessageThreadStatusID);
 
 
-
-ALTER TABLE dbo.positionpricingtype
-	ADD FOREIGN KEY (CountryID) 
-	REFERENCES pricingtype (CountryID);
-
-ALTER TABLE dbo.positionpricingtype
-	ADD FOREIGN KEY (LanguageID) 
-	REFERENCES pricingtype (LanguageID);
-
-ALTER TABLE dbo.positionpricingtype
-	ADD FOREIGN KEY (PricingTypeID) 
-	REFERENCES pricingtype (PricingTypeID);
 
 ALTER TABLE dbo.positionpricingtype
 	ADD FOREIGN KEY (ClientTypeID) 
@@ -1778,6 +1842,18 @@ ALTER TABLE dbo.positionpricingtype
 	ADD FOREIGN KEY (PositionID) 
 	REFERENCES positions (PositionID);
 
+ALTER TABLE dbo.positionpricingtype
+	ADD FOREIGN KEY (CountryID) 
+	REFERENCES pricingtype (CountryID);
+
+ALTER TABLE dbo.positionpricingtype
+	ADD FOREIGN KEY (LanguageID) 
+	REFERENCES pricingtype (LanguageID);
+
+ALTER TABLE dbo.positionpricingtype
+	ADD FOREIGN KEY (PricingTypeID) 
+	REFERENCES pricingtype (PricingTypeID);
+
 
 
 ALTER TABLE dbo.postalcode
@@ -1793,12 +1869,6 @@ ALTER TABLE dbo.pricingSummary
 ALTER TABLE dbo.pricingSummary
 	ADD FOREIGN KEY (PricingSummaryRevision) 
 	REFERENCES pricingSummary (PricingSummaryRevision);
-
-
-
-ALTER TABLE dbo.rRule
-	ADD FOREIGN KEY (vEventID) 
-	REFERENCES vEvent (vEventID);
 
 
 
@@ -1863,6 +1933,10 @@ ALTER TABLE dbo.userlicenseverification
 
 
 ALTER TABLE dbo.userprofilepositions
+	ADD FOREIGN KEY (UserID) 
+	REFERENCES users (UserID);
+
+ALTER TABLE dbo.userprofilepositions
 	ADD FOREIGN KEY (CountryID) 
 	REFERENCES positions (CountryID);
 
@@ -1873,10 +1947,6 @@ ALTER TABLE dbo.userprofilepositions
 ALTER TABLE dbo.userprofilepositions
 	ADD FOREIGN KEY (PositionID) 
 	REFERENCES positions (PositionID);
-
-ALTER TABLE dbo.userprofilepositions
-	ADD FOREIGN KEY (UserID) 
-	REFERENCES users (UserID);
 
 ALTER TABLE dbo.userprofilepositions
 	ADD FOREIGN KEY (StatusID) 
@@ -1901,6 +1971,18 @@ ALTER TABLE dbo.userprofileserviceattributes
 	REFERENCES userprofilepositions (UserID);
 
 
+
+ALTER TABLE dbo.users
+	ADD FOREIGN KEY (UserID) 
+	REFERENCES users (UserID);
+
+ALTER TABLE dbo.users
+	ADD FOREIGN KEY (OwnerStatusID) 
+	REFERENCES OwnerStatus (OwnserStatusID);
+
+ALTER TABLE dbo.users
+	ADD FOREIGN KEY (AccountStatusID) 
+	REFERENCES accountstatus (AccountStatusID);
 
 ALTER TABLE dbo.users
 	ADD FOREIGN KEY (UserID) 
@@ -2197,7 +2279,15 @@ BEGIN
 END
 ;
 
-
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 06/29/2012
+-- Description:	Returns 1 (as bit, means true)
+-- if that alert must be checked for
+-- that user, because the user type (IsCustomer,
+-- IsProvider) and the AlertTypeID (only
+-- providers alert, only customers, both)
+-- =============================================
 CREATE FUNCTION [dbo].[fxCheckAlertAffectsUser] (
 	@UserID int,
 	@AlertID int
@@ -2255,6 +2345,7 @@ RETURNS VARCHAR(8000) AS BEGIN
 END
 RETURN @r ;
 END;
+
 
 -- =============================================
 -- Author:		Iago Lorenzo Salgueiro
@@ -2377,7 +2468,14 @@ BEGIN
 END
 ;
 
-
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 2012-06-03
+-- Description:	Converts an existing user 
+-- (a customer) into a provider, allowing
+-- update some user data and setting needed
+-- provider fields as in CreateProvider proc.
+-- =============================================
 CREATE PROCEDURE [dbo].[CreateProviderFromUser] (
 	@UserID int,
 	@Firstname varchar(45),
@@ -2389,9 +2487,10 @@ CREATE PROCEDURE [dbo].[CreateProviderFromUser] (
     @emailcontact bit,
     @BookCode varchar(64)
 ) AS BEGIN
-	
-	
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
+
 	UPDATE Users SET
 		FirstName = coalesce(@FirstName, FirstName),
 		LastName = coalesce(@LastName, LastName),
@@ -2399,11 +2498,11 @@ CREATE PROCEDURE [dbo].[CreateProviderFromUser] (
 		PreferredCountryID = coalesce(@CountryID, PreferredCountryID),
 		BookCode = @BookCode,
 		IsProvider = 1,
-		
-		
-		
-		
-		
+		-- This proc is used most of time by providers registered from facebook, or users
+		-- that start using the normal register form and then continues with the provider-sign-up,
+		-- but only wants be providers: here we update the IsCustomer field based on if user
+		-- have activity as customer of not (if it have bookingrequests, is customer, else
+		-- only provider)
 		IsCustomer = (CASE WHEN (
 			SELECT	count(*)
 			FROM	BookingRequest
@@ -2414,10 +2513,10 @@ CREATE PROCEDURE [dbo].[CreateProviderFromUser] (
 		Active = 1
 	WHERE	UserID = @UserID
 	
-	
+	-- Set the address
 	EXEC SetHomeAddress @UserID, '', '', '', @StateProvinceID, @PostalCodeID, @CountryID, @LangID
 	
-	
+	-- Check alerts for the user to get its state updated
 	EXEC TestAllUserAlerts @UserID
 END
 ;
@@ -2613,7 +2712,12 @@ where userid = @UserID AND PositionID = @PositionID
 
 END;
 
-
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 2013-07-15
+-- Description:	Delete a user-verification
+-- record, if there is one.
+-- =============================================
 CREATE PROCEDURE DelUserVerification
 	@UserID int,
 	@VerificationID int,
@@ -2659,36 +2763,6 @@ BEGIN
 END
 
 
-;
-
--- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
-CREATE PROCEDURE [dbo].[GetPositions]
-	-- Add the parameters for the stored procedure here
-	@SearchTerm varchar(150),
-	@LanguageID int = 1,
-	@CountryID int = 1
-
---exec dbo.GetPositions '%Cleaner%',1,1
-	
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-
-    -- Insert statements for procedure here
-	SELECT DISTINCT PositionSingular, PositionID, PositionDescription
-	FROM positions 
-	WHERE PositionSingular LIKE @SearchTerm 
-		AND LanguageID = @LanguageID 
-		AND CountryID = @CountryID
-		AND Active = 1
-	ORDER BY PositionSingular
-END
 ;
 
 CREATE PROCEDURE [dbo].[GetSearchResults]
@@ -2951,6 +3025,7 @@ BEGIN
 END
 ;
 
+
 CREATE PROC [dbo].[GetUserCalendarProviderAttributes]
 
 @UserID int
@@ -3035,8 +3110,8 @@ END
 
 ;
 
-
 CREATE PROC [dbo].[InsertCalendarProviderAttributes]
+
 @UserID int,
 @AdvanceTime decimal(10, 2),
 @MinTime decimal(10, 2),
@@ -3046,9 +3121,14 @@ CREATE PROC [dbo].[InsertCalendarProviderAttributes]
 @CalendarType varchar(200),
 @CalendarURL varchar(500),
 @PrivateCalendarToken varchar(128)
+
 as
+
+
 IF EXISTS (SELECT * FROM CalendarProviderAttributes WHERE UserID = @UserID)
+
 BEGIN 
+
         
         UPDATE CalendarProviderAttributes
         SET AdvanceTime = @AdvanceTime,
@@ -3066,7 +3146,9 @@ ELSE
 BEGIN
       
       INSERT INTO CalendarProviderAttributes VALUES (@UserID,@AdvanceTime,@MinTime,@MaxTime,@BetweenTime,@UseCalendarProgram,@CalendarType,@CalendarURL,@PrivateCalendarToken)
+
 END
+
 ;
 
 CREATE PROC [dbo].[InsertUserProfilePositions]
@@ -3146,91 +3228,6 @@ END
 END CATCH
  
  
-;
-
--- =============================================
--- Author:		Iago Lorenzo Salgueiro
--- Create date: 2012-12-28
--- Description:	Changes the state of a Booking
--- Request and clean related no need records
--- in a safety way, to don't allow orphans
--- records.
--- Based on the code initially created on 
--- LcData.Booking.cs.
--- Be careful with the passed StatusID, is not
--- checked to be one of the valid 'invalid
--- request' statuses.
--- =============================================
-CREATE PROCEDURE InvalidateBookingRequest
-	@BookingRequestID int
-	,@BookingRequestStatusID int
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-
-	DECLARE @AddressID int
-
-    BEGIN TRY
-        BEGIN TRAN
-
-        -- Get Service Address ID to be (maybe) removed later
-        SELECT  @AddressID = AddressID
-        FROM    BookingRequest
-        WHERE   BookingRequestID = @BookingRequestID
-
-        -- Removing CalendarEvents:
-        DELETE FROM CalendarEvents
-        WHERE ID IN (
-            SELECT TOP 1 PreferredDateID FROM BookingRequest
-            WHERE BookingRequestID = @BookingRequestID
-            UNION
-            SELECT TOP 1 AlternativeDate1ID FROM BookingRequest
-            WHERE BookingRequestID = @BookingRequestID
-            UNION
-            SELECT TOP 1 AlternativeDate2ID FROM BookingRequest
-            WHERE BookingRequestID = @BookingRequestID
-        )
-
-        /*
-         * Updating Booking Request status, and removing references to the 
-         * user selected dates.
-         */
-        UPDATE  BookingRequest
-        SET     BookingRequestStatusID = @BookingRequestStatusID,
-                PreferredDateID = null,
-                AlternativeDate1ID = null,
-                AlternativeDate2ID = null,
-                AddressID = null,
-                UpdatedDate = getdate()
-        WHERE   BookingRequestID = @BookingRequestID
-
-        -- Removing Service Address, if is not an user saved location (it has not AddressName)
-        DELETE FROM ServiceAddress
-        WHERE AddressID = @AddressID
-              AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @AddressID AND AddressName is null) = 1
-        DELETE FROM Address
-        WHERE AddressID = @AddressID
-               AND
-              AddressName is null
-
-        COMMIT TRAN
-
-        -- We return sucessful operation with Error=0
-        SELECT 0 As Error
-		RETURN 0
-    END TRY
-    BEGIN CATCH
-        IF @@TRANCOUNT > 0
-            ROLLBACK TRAN
-        -- We return error number and message
-        DECLARE @error int
-        SET @error = ERROR_NUMBER()
-        SELECT @error As Error, ERROR_MESSAGE() As ErrorMessage
-        RETURN @error
-    END CATCH
-END
 ;
 
 
@@ -3362,14 +3359,29 @@ tpur.Rating2,
 tpur.Rating3
 ;
 
+CREATE PROCEDURE [dbo].[SearchPositions]
+
+/*
+Highlight and execute the following statement to drop the procedure
+before executing the create statement.
+
+DROP PROCEDURE dbo.SearchPositions;
+
+CREATE PROCEDURE [dbo].[SearchPositions]
+
+*/
+
 -- =============================================
 -- Author:		<Author,,Name>
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[SearchPositions]
 	-- Add the parameters for the stored procedure here
 	@SearchTerm varchar(150),
+	@SearchDistance int = 30,
+	@origLat DECIMAL(12, 9) = 37.788479,
+	@origLong DECIMAL(12, 9) = -122.40297199999998,
+	@orig geography, 
 	@LanguageID int = 1,
 	@CountryID int = 1
 
@@ -3379,57 +3391,81 @@ AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
+	SET NOCOUNT ON
 
     -- Insert statements for procedure here
-	SELECT DISTINCT 
-		c.PositionSingular, c.PositionID, c.PositionDescription
-	FROM positions c
-	WHERE  
-		c.LanguageID = @LanguageID 
-		AND c.CountryID = @CountryID
-		AND c.Active = 1
-		AND (c.Approved = 1 Or c.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
-		AND dbo.fx_IfNW(c.PositionSingular, null) is not null
-		AND (
-			c.PositionSingular like @SearchTerm
-			 OR
-			c.PositionPlural like @SearchTerm
-			 OR
-			c.PositionDescription like @SearchTerm
-			 OR
-			c.Aliases like @SearchTerm
-			 OR
-			c.GovPosition like @SearchTerm
-			 OR
-			c.GovPositionDescription like @SearchTerm
-			 OR
-			EXISTS (
-				SELECT *
-				FROM	ServiceCategoryPositionAttribute As SP
-						 INNER JOIN
-						ServiceAttribute As SA
-						  ON SP.ServiceAttributeID = SA.ServiceAttributeID
-							AND SP.Active = 1
-							AND SA.Active = 1
-							AND SA.LanguageID = SP.LanguageID
-							AND SA.CountryID = SP.CountryID
-				WHERE
-						SP.PositionID = c.PositionID
-						AND SA.LanguageID = @LanguageID
-						AND SA.CountryID = @CountryID
-						AND (
-						 SA.Name like @SearchTerm
-						  OR
-						 SA.ServiceAttributeDescription like @SearchTerm
-						)
-			)
-		)
-		
-	ORDER BY PositionSingular
-END
-;
-
+	SELECT JobTitlePlural, JobTitleID, JobTitleDescription, JobTitleUserCount
+	FROM
+	(SELECT DISTINCT 
+	        p.PositionPlural as JobTitlePlural, p.PositionID as JobTitleID, p.PositionDescription as JobTitleDescription
+	    FROM positions p
+	    WHERE  
+	        p.LanguageID = @LanguageID 
+	        AND p.CountryID = @CountryID
+	        AND p.Active = 1
+	        AND (p.Approved = 1 Or p.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
+	        AND dbo.fx_IfNW(p.PositionSingular, null) is not null
+	        AND (
+	            p.PositionSingular like @SearchTerm
+	             OR
+	            p.PositionPlural like @SearchTerm
+	             OR
+	            p.PositionDescription like @SearchTerm
+	             OR
+	            p.Aliases like @SearchTerm
+	             OR
+	            p.GovPosition like @SearchTerm
+	             OR
+	            p.GovPositionDescription like @SearchTerm
+	             OR
+	            EXISTS (
+	                SELECT *
+	                FROM    UserProfileServiceAttributes As SP
+	                         INNER JOIN
+	                        ServiceAttribute As SA
+	                          ON SP.ServiceAttributeID = SA.ServiceAttributeID
+	                            AND SP.Active = 1
+	                            AND SA.Active = 1
+	                            AND SA.LanguageID = SP.LanguageID
+	                            AND SA.CountryID = SP.CountryID
+	                WHERE
+	                        SP.PositionID = p.PositionID
+	                        AND SA.LanguageID = @LanguageID
+	                        AND SA.CountryID = @CountryID
+	                        AND (
+	                         SA.Name like @SearchTerm
+	                          OR
+	                         SA.ServiceAttributeDescription like @SearchTerm
+	                        )
+	            )
+	        )
+	        ) JobTitles
+	LEFT JOIN
+	    (SELECT up.PositionID, COUNT (up.UserID) as JobTitleUserCount
+	    FROM address a
+	    INNER JOIN
+	    serviceaddress sa
+	    ON a.addressID=sa.addressID
+	    INNER JOIN UserProfilePositions up
+	    ON sa.userID = up.UserID
+	    AND sa.PositionID = up.PositionID
+	    WHERE 
+	    a.Latitude IS NOT NULL
+	    AND a.Longitude IS NOT NULL
+	    AND @orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371 <=
+	    (CASE WHEN (ServicesPerformedAtLocation = 0 AND sa.ServiceRadiusFromLocation IS NOT NULL) THEN
+	    CONVERT(FLOAT, ServiceRadiusFromLocation)
+	    ELSE 
+	    @SearchDistance
+	    END)
+	    AND up.StatusID=1
+	    AND up.Active=1
+	    GROUP BY
+	    up.PositionID) JobTitleCounts
+	    ON
+	    JobTitles.JobTitleID = JobTitleCounts.PositionID    
+	ORDER BY JobTitleUserCount DESC
+END;
 
 -- =============================================
 -- Author:		Iago Lorenzo Salgueiro
@@ -3445,8 +3481,6 @@ CREATE PROCEDURE [dbo].[SearchPositionsByCategory]
 	,@City nvarchar(400)
 AS
 BEGIN
-	
-	
 	SET NOCOUNT ON;
 	
 	DECLARE @ServiceCategoryID AS INT
@@ -3456,14 +3490,12 @@ BEGIN
 		AND LanguageID = @LanguageID 
 		AND CountryID = @CountryID
 
-    SELECT	P.PositionID
-			,P.PositionPlural
-			,P.PositionSingular
-			,P.PositionDescription
-			,P.PositionSearchDescription
-			
-			
-			
+    SELECT	P.PositionID as jobTitleID
+			,P.PositionPlural as pluralName
+			,P.PositionSingular as singularName
+			,P.PositionDescription as description
+			,P.PositionSearchDescription as searchDescription
+
 			,coalesce((SELECT
 				avg( (coalesce(UR2.Rating1, 0) + coalesce(UR2.Rating2, 0) + coalesce(UR2.Rating3, 0)) / 3) As AVR
 			  FROM UserReviews As UR2
@@ -3476,13 +3508,12 @@ BEGIN
 					AND UP2.Active = 1
 					AND UP2.StatusID = 1
 			  WHERE UR2.PositionID = P.PositionID
-			), 0) As AverageRating
+			), 0) As averageRating
 			
-			
-			,sum(ur.TotalRatings) As TotalRatings
-			,avg(US.ResponseTimeMinutes) As AverageResponseTimeMinutes
-			,avg(PHR.HourlyRate) As AverageHourlyRate
-			,count(UP.UserID) As ProvidersCount
+			,coalesce(sum(ur.TotalRatings), 0) As totalRatings
+			,avg(US.ResponseTimeMinutes) As averageResponseTimeMinutes
+			,avg(PHR.HourlyRate) As averageHourlyRate
+			,count(UP.UserID) As serviceProfessionalsCount
 			
 	FROM	Positions As P
 			 INNER JOIN
@@ -3533,24 +3564,29 @@ BEGIN
 			 AND
 			P.CountryID = @CountryID
 	GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
-	ORDER BY ProvidersCount DESC, P.DisplayRank, P.PositionPlural
+	ORDER BY serviceProfessionalsCount DESC, P.DisplayRank, P.PositionPlural
 END;
 
 CREATE PROCEDURE [dbo].[SearchProvidersByPositionSingular]
-@LanguageID int, @CountryID int, @PositionSingular varchar(300)
+@LanguageID int,
+@CountryID int,
+@PositionSingular varchar(300),
+@City nvarchar(400)
  WITH EXEC AS CALLER
 AS
 
---EXEC dbo.GetSearchResults 1,1,'Cleaner'
+--EXEC dbo.SearchProvidersByPositionSingular 1,1,'Cleaner', 'San Francisco'
 
 	SELECT 
-		d.UserID
-		,d.FirstName
-		,d.LastName
-		,a.PositionID
-		,c.PositionSingular
-		,a.UpdatedDate
-		,Positions=STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = D.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID FOR XML PATH('')) , 1 , 1 , '' )
+		d.userID
+		,d.firstName
+		,d.lastName
+		,d.secondLastName
+		,d.businessName
+		,a.PositionID As jobTitleID
+		--,c.PositionSingular
+		--,a.UpdatedDate
+		,jobTitles=STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = D.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )
 		--,rs.Rating1
 		--,rs.Rating2
 		--,rs.Rating3
@@ -3626,6 +3662,7 @@ BEGIN
 
 END
 ;
+
 
 -- =============================================
 -- Author:		Iago Lorenzo Salgueiro
@@ -3805,7 +3842,12 @@ BEGIN
 END
 ;
 
-
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 2012-07-17
+-- Description:	Inserts or update a user 
+-- verification record.
+-- =============================================
 CREATE PROCEDURE [dbo].[SetUserVerification]
 	@UserID int
 	,@VerificationID int
@@ -3825,6 +3867,7 @@ BEGIN
         UserID = @UserID
          AND
         VerificationID = @VerificationID
+
     IF @@rowcount = 0 BEGIN
         INSERT INTO UserVerification (
             UserID, VerificationID, DateVerified, CreatedDate, 
@@ -4200,48 +4243,80 @@ END
 	END
 	;
 
-
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 2012-06-01
+-- Description:	Test if the conditions for the
+-- alert type 'availability' are satisfied, 
+-- updating user alert and enabling or 
+-- disabling it profile.
+-- =============================================
 CREATE PROCEDURE [dbo].[TestAlertAvailability]
 	@UserID int
 AS
 BEGIN
-	
-	
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
+
 	DECLARE @AlertID int
 	SET @AlertID = 2
     
-    
+    -- First ever check if this type of alert affects this type of user
     IF dbo.fxCheckAlertAffectsUser(@UserID, @AlertID) = 0 OR
-		EXISTS (SELECT UserID FROM [CalendarProviderAttributes]
-		WHERE UserID = @UserID)
-		
-		
-		
-		
-		AND EXISTS (SELECT UserID FROM [CalendarEvents]
+		-- #735 ATTRIBUTES DISABLED (TEMPORARLY MAYBE)
+		-- EXISTS (SELECT UserID FROM [CalendarProviderAttributes]
+		-- WHERE UserID = @UserID)
+		-- AND
+		-- Updated script to follow new Calendar back-end that use events
+		-- with a specific type instead of the special -and deleted- table 'FreeEvents':
+		--AND EXISTS (SELECT UserID FROM [CalendarProviderFreeEvents]
+		--WHERE UserID = @UserID)
+		EXISTS (SELECT UserID FROM [CalendarEvents]
 		WHERE UserID = @UserID AND EventType = 2)
 	BEGIN
-		
+		-- PASSED: disable alert
 		EXEC dbo.SetUserAlert @UserID, 0, @AlertID, 0
 	END ELSE BEGIN
-		
+		-- NOT PASSED: active alert
 		EXEC dbo.SetUserAlert @UserID, 0, @AlertID, 1
 	END
 	
-	
+	-- Test if user profile must be actived or not
 	EXEC dbo.TestProfileActivation @UserID, 0
 END
 ;
 
-
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 2012-06-01
+-- Modified date: 2013-04-11
+-- Description:	Test if the conditions for the
+-- alert type 'backgroundcheck' are satisfied, 
+-- updating user points and enabling or 
+-- disabling it profile.
+-- There are 2 alerts for this test:
+--  12: backgroundcheck  (optional)
+--  18: required-backgroundcheck  (required)
+-- Because lookup backgroundacheck tables can
+-- be required or not, any required one is 
+-- related to the aler 18 and others to the
+-- alert 12.
+-- FROM DATE 2013-04-11:
+-- Alerts will be off when almost a request
+-- was done from provider, passing the test
+-- request with state 'verified:2' and too
+-- 'pending:1' and 'contact us:3; but not 
+-- 'rejected/unable to verified:4'.
+-- =============================================
 CREATE PROCEDURE [dbo].[TestAlertBackgroundCheck]
 	@UserID int
 AS
 BEGIN
-	
-	
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
+
 	DECLARE @AlertID int
 	SET @AlertID = 0
 	
@@ -4251,7 +4326,13 @@ BEGIN
 	SET @RequiredAlertID = 18
 	DECLARE @IsRequired bit
     
-    
+    /* Background check must be checked per position, but is not saved
+		on userverification per position. This means special treatment,
+		and we must too ensure that is enabled only on positions affected
+		by background-check according to the table PositionBackgroundCheck.
+	   A position can satisfy a required background check if user has
+	   already a background check with greater ID.
+     */
     DECLARE @cur CURSOR
     DECLARE @PositionID int
     DECLARE @HigherBackgroundCheckID int
@@ -4268,26 +4349,31 @@ BEGIN
 	FETCH NEXT FROM @cur INTO @PositionID
 	WHILE @@FETCH_STATUS = 0 BEGIN
 		
-		
+		/* Go to a 2-steps loop, first for Optional and second for Required alert.
+			allowing only tweak to vars preserving unduplicated the important code
+		 */
 		DECLARE @i int
 		SET @i = 0
 		WHILE @i < 2 BEGIN
-			
+			-- Setting up loop vars
 			IF @i = 0 BEGIN
-				
+				-- Setting up vars for Optional
 				SET @AlertID = @OptionalAlertID
 				SET @IsRequired = 0
 			END ELSE IF @i = 1 BEGIN
-				
+				-- Setting up vars for Required
 				SET @AlertID = @RequiredAlertID
 				SET @IsRequired = 1
 			END ELSE
 				BREAK
-			
-			
+
+			/***
+				RUN TEST CODE
+			 ***/
+			-- Reset var to avoid residual data
 			SET @HigherBackgroundCheckID = null
-			
-			
+			-- Get the higher background check that this position request for this user
+			-- Or the lower background check if is a non-required alert
 			SELECT	@HigherBackgroundCheckID = (CASE
 						WHEN @IsRequired = 1
 						 THEN MAX(PB.BackgroundCheckID)
@@ -4299,50 +4385,63 @@ BEGIN
 				AND PB.[Required] = @IsRequired AND PB.Active = 1
 				AND PB.CountryID = (SELECT TOP 1 CountryID FROM vwUsersContactData WHERE UserID = @UserID)
 				AND PB.StateProvinceID = (SELECT TOP 1 StateProvinceID FROM vwUsersContactData WHERE UserID = @UserID)	
-			
+
+			-- First ever check if this type of alert affects this type of user
 			IF dbo.fxCheckAlertAffectsUser(@UserID, @AlertID) = 0 OR
-				
+				-- if there is no a required background check, test passed
 				@HigherBackgroundCheckID is null
 				 OR
-				
-				
+				-- if there is a required background check, check if user
+				-- possess this or a greater background check to pass the test
 				EXISTS (
 					SELECT	UserID
 					FROM	UserBackgroundCheck
 					WHERE	UserID = @UserID
-						
+						-- Valid requests to off alert, depending on Status:
 						AND StatusID IN (1, 2, 3)
 						AND (
-							
-							
+							-- For No-required, must have almost one background check, independently
+							-- of is equals or greater, almost one
 							@IsRequired = 0
 							OR
-							
-							
+							-- For required, must have a background check equals or greater than
+							-- the higher one required for the position
 							BackgroundCheckID >= @HigherBackgroundCheckID
 						)
 			) BEGIN
-				
+				-- PASSED: disable alert
 				EXEC dbo.SetUserAlert @UserID, @PositionID, @AlertID, 0
 			END ELSE BEGIN
-				
+				-- NOT PASSED: active alert
 				EXEC dbo.SetUserAlert @UserID, @PositionID, @AlertID, 1
 			END
 		
-			
+
+			-- Next loop:
 			SET @i = @i + 1
 		END
 		
-		
+		-- Next Position
 		FETCH NEXT FROM @cur INTO @PositionID
 	END
 	CLOSE @cur
 	DEALLOCATE @cur
 	
-	
+	-- Test if user profile must be actived or not
 	EXEC dbo.TestProfileActivation @UserID
 	
-			
+			/* Old code: In-loop-inside-if check based on UserVerification; deprecated by a better, more controlled, background check
+			EXISTS (
+				SELECT	UserID
+				FROM	UserVerification As UV
+				WHERE	UV.UserID = @UserID
+						 AND
+						UV.VerificationID = 7
+						 AND
+						UV.Active = 1
+						 AND
+						UV.VerificationStatusID = 1 -- 1:confirmed
+				*/
 END
 ;
 
@@ -4390,33 +4489,47 @@ BEGIN
 END
 ;
 
-
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 2013-06-12
+-- Description:	Test if the conditions for the
+-- alert type 'add-education' are satisfied, 
+-- updating user points and enabling or 
+-- disabling it profile.
+-- =============================================
 CREATE PROCEDURE [dbo].[TestAlertEducation]
 	@UserID int
 AS
 BEGIN
-	
-	
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
+
 	DECLARE @AlertID int
 	SET @AlertID = 20
     
-    
+    -- First ever check if this type of alert affects this type of user
     IF dbo.fxCheckAlertAffectsUser(@UserID, @AlertID) = 0 OR
 		EXISTS (SELECT UserID FROM UserEducation
 				WHERE UserID = @UserID
 					AND Active = 1
-					
-					
+					/* Only require activation and InstitutionID, and this
+					last is not-null and foreign key */
+					/*AND FromYearAttended is not null
+					AND (
+						dbo.fx_IfNW(DegreeCertificate , null) is not null
+						OR
+						dbo.fx_IfNW(FieldOfStudy , null) is not null
+					)*/
 	) BEGIN
-		
+		-- PASSED: disable alert
 		EXEC dbo.SetUserAlert @UserID, 0, @AlertID, 0
 	END ELSE BEGIN
-		
+		-- NOT PASSED: active alert
 		EXEC dbo.SetUserAlert @UserID, 0, @AlertID, 1
 	END
 	
-	
+	-- Test if user profile must be actived or not
 	EXEC dbo.TestProfileActivation @UserID
 END
 ;
@@ -4466,6 +4579,7 @@ BEGIN
 	EXEC dbo.TestProfileActivation @UserID, @PositionID
 END
 ;
+
 
 -- =============================================
 -- Author:		Iago Lorenzo Salgueiro
@@ -4674,32 +4788,23 @@ END
 ;
 
 
--- =============================================
--- Author:		Iago Lorenzo Salgueiro
--- Create date: 2012-06-01
--- Description:	Test if the conditions for the
--- alert type 'pricingdetails' are satisfied, 
--- updating user points and enabling or 
--- disabling it profile.
--- =============================================
 CREATE PROCEDURE [dbo].[TestAlertPricingDetails]
 	@UserID int,
 	@PositionID int
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
+	
+	
 	SET NOCOUNT ON;
-
 	DECLARE @AlertID int
 	SET @AlertID = 1
     
-    -- First ever check if this type of alert affects this type of user
+    
     IF	dbo.fxCheckAlertAffectsUser(@UserID, @AlertID) = 0 OR
-		-- Check that user has that position (this is a position related alert). If it has not (=0), alert will off because doesn't affect:
+		
 		(SELECT count(*) FROM userprofilepositions WHERE UserID=@UserID AND PositionID=@PositionID) = 0 OR
 		
-		-- Check that there are almost one pricing package defined
+		
 		EXISTS (SELECT * FROM ProviderPackage
 			WHERE ProviderUserID = @UserID
 				AND PositionID = @PositionID
@@ -4707,41 +4812,18 @@ BEGIN
 		)
 	
 		BEGIN
-		-- PASSED: disable alert
+		
 		EXEC dbo.SetUserAlert @UserID, @PositionID, @AlertID, 0
 	END ELSE BEGIN
-		-- NOT PASSED: active alert
+		
 		EXEC dbo.SetUserAlert @UserID, @PositionID, @AlertID, 1
 	END
 	
-	-- Test if user profile must be actived or not
+	
 	EXEC dbo.TestProfileActivation @UserID, @PositionID
 END
-
 ;
 
--- =============================================
--- Author:		Iago Lorenzo Salgueiro
--- Create date: 2012-06-01
--- Modified date: 2013-04-11
--- Description:	Test if the conditions for the
--- alert type 'professionallicense' are satisfied, 
--- updating user points and enabling or 
--- disabling it profile.
--- There are 2 alerts for this test:
---  13: professionallicense  (optional)
---  19: required-professionallicense  (required)
--- Because lookup positionlicense tables can
--- be required or not, any required one is 
--- related to the aler 19 and others to the
--- alert 13.
--- FROM DATE 2013-04-11:
--- Alerts will be off when almost a request
--- was done from provider, passing the test
--- request with state 'verified:2' and too
--- 'pending:1' and 'contact us:3; but not 
--- 'rejected/unable to verified:4'.
--- =============================================
 CREATE PROCEDURE [dbo].[TestAlertProfessionalLicense]
 	@UserID int
 	,@PositionID int
@@ -4788,7 +4870,7 @@ BEGIN
 			-- Check if the user has all the required licenses (can be 0 if 0 are required)
 			(
 				SELECT	count(*)
-				FROM	PositionLicense As PL
+				FROM	jobTitleLicense As PL
 						 INNER JOIN
                         [Address] As L
                           ON L.UserID = @UserID
@@ -4813,7 +4895,7 @@ BEGIN
                             AND UL.StateProvinceID = L.StateProvinceID
                             AND UL.CountryID = L.CountryID
 						 INNER JOIN
-						PositionLicense As PL
+						jobTitleLicense As PL
 						  ON PL.LicenseCertificationID = UL.LicenseCertificationID
 							AND UL.PositionID = PL.PositionID
 							AND UL.ProviderUserID = @UserID
@@ -4821,7 +4903,7 @@ BEGIN
 							AND UL.CountryID = PL.CountryID
 						 AND
 						-- Valid requests to off alert, depending on Status:
-						UL.StatusID IN (1, 2, 3)
+						UL.VerificationStatusID IN (1, 2, 3)
 				WHERE
 					PL.[Required] = @IsRequired
 					 AND
@@ -4856,8 +4938,7 @@ BEGIN
 					UV.VerificationStatusID = 1 -- 1:confirmed
 		 )
 		*/
-END
-;
+END;
 
 -- =============================================
 -- Author:		Iago Lorenzo Salgueiro
@@ -4898,91 +4979,108 @@ BEGIN
 	EXEC dbo.TestProfileActivation @UserID
 END;
 
-
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 2012-06-01
+-- Description:	Test if the conditions for the
+-- alert type 'referencerequests' are satisfied, 
+-- updating user points and enabling or 
+-- disabling it profile.
+-- =============================================
 CREATE PROCEDURE [dbo].[TestAlertReferenceRequests]
 	@UserID int
 	,@PositionID int
 AS
 BEGIN
-	
-	
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
+
 	DECLARE @AlertID int
 	SET @AlertID = 14
     
-    
+    -- First ever check if this type of alert affects this type of user
     IF dbo.fxCheckAlertAffectsUser(@UserID, @AlertID) = 0 OR
-		
+		-- Check that user has that position (this is a position related alert). If it has not (=0), alert will off because doesn't affect:
 		(SELECT count(*) FROM userprofilepositions WHERE UserID=@UserID AND PositionID=@PositionID) = 0 OR
 		EXISTS (
 			SELECT	UserID
 			FROM	UserVerification As UV
 			WHERE	UV.UserID = @UserID
 					 AND
-					UV.VerificationID = 12 
-				    
+					UV.VerificationID = 12 -- Reference(s) from former clients
+				    -- Only 12, 11 is for 'Loconomics' user-reviewed' out of this alert.
 					 AND
 					UV.Active = 1
 					 AND
-					
-					
-					
-					
+					-- Check for verifications: 1:confirmed, 2:pending
+					-- Pending is enough because means a request done by
+					-- provider, and this alert is just for the request not
+					-- require confirmations (but confirmation do the work, too)
 					UV.VerificationStatusID IN (1, 2)
 					 AND
 					(
-					 
+					 -- Its verification for this position..
 					 UV.PositionID = @PositionID
 					  OR
-					 
+					 -- or is verification for 'any' position
 					 UV.PositionID = 0
 					)
 					
 	) BEGIN
-		
+		-- PASSED: disable alert
 		EXEC dbo.SetUserAlert @UserID, @PositionID, @AlertID, 0
 	END ELSE BEGIN
-		
+		-- NOT PASSED: active alert
 		EXEC dbo.SetUserAlert @UserID, @PositionID, @AlertID, 1
 	END
 	
-	
+	-- Test if user profile must be actived or not
 	EXEC dbo.TestProfileActivation @UserID, @PositionID
 END
 ;
 
 
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 2012-06-01
+-- Description:	Test if the conditions for the
+-- alert type 'showcasework' are satisfied, 
+-- updating user points and enabling or 
+-- disabling it profile.
+-- =============================================
 CREATE PROCEDURE [dbo].[TestAlertShowcaseWork]
 	@UserID int
 	,@PositionID int
 AS
 BEGIN
-	
-	
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
+
 	DECLARE @AlertID int
 	SET @AlertID = 17
     
-    
+    -- First ever check if this type of alert affects this type of user
     IF dbo.fxCheckAlertAffectsUser(@UserID, @AlertID) = 0 OR
-		
+		-- Check that user has that position (this is a position related alert). If it has not (=0), alert will off because doesn't affect:
 		(SELECT count(*) FROM userprofilepositions WHERE UserID=@UserID AND PositionID=@PositionID) = 0 OR
 		EXISTS (SELECT ProviderServicePhotoID FROM ProviderServicePhoto
 	WHERE UserID = @UserID
 		AND PositionID = @PositionID
-		
+		-- Must be almost one photo with address, caption and must be primary photo (to avoid provider has photos but not one chosed as primary)
 		AND dbo.fx_IfNW(PhotoAddress, null) is not null
 		AND IsPrimaryPhoto = 1
 		AND Active = 1
 	) BEGIN
-		
+		-- PASSED: disable alert
 		EXEC dbo.SetUserAlert @UserID, @PositionID, @AlertID, 0
 	END ELSE BEGIN
-		
+		-- NOT PASSED: active alert
 		EXEC dbo.SetUserAlert @UserID, @PositionID, @AlertID, 1
 	END
 	
-	
+	-- Test if user profile must be actived or not
 	EXEC dbo.TestProfileActivation @UserID, @PositionID
 END
 ;
@@ -5127,25 +5225,18 @@ END
 ;
 
 
--- =============================================
--- Author:		Iago Lorenzo Salgueiro
--- Create date: 2012-06-01
--- Description:	Execute all user alert tests and
--- the profile activation at the end.
--- =============================================
 CREATE PROCEDURE [dbo].[TestAllUserAlerts] 
 	@UserID int
 	,@PositionID int = 0
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
+	
+	
 	SET NOCOUNT ON;
-
     EXEC TestAlertPersonalInfo				@UserID
     EXEC TestAlertPhoto						@UserID
     EXEC TestAlertPayment					@UserID
-	--EXEC TestAlertTaxDocs					@UserID
+	
 	EXEC TestAlertAvailability				@UserID
 	EXEC TestAlertSocialMediaVerification	@UserID
 	EXEC TestAlertBackgroundCheck			@UserID
@@ -5153,8 +5244,7 @@ BEGIN
 	EXEC TestAlertVerifyEmail				@UserID
 	EXEC TestAlertPublicBio					@UserID
 	EXEC TestAlertEducation					@UserID
-
-	-- All positions alerts:
+	
     IF @PositionID = 0 BEGIN
 		DECLARE @cur CURSOR
 		SET @cur = CURSOR FOR 
@@ -5169,7 +5259,7 @@ BEGIN
 		OPEN @cur
 		FETCH NEXT FROM @cur INTO @PositionID
 		WHILE @@FETCH_STATUS = 0 BEGIN
-			-- Same batch of test than when a positionid is provider by parameter:
+			
 			EXEC TestAlertPricingDetails		@UserID, @PositionID
 			EXEC TestAlertPositionServices		@UserID, @PositionID
 			EXEC TestAlertReferenceRequests		@UserID, @PositionID
@@ -5181,7 +5271,6 @@ BEGIN
 		END
 		CLOSE @cur
 		DEALLOCATE @cur
-
     END ELSE BEGIN
 		EXEC TestAlertPricingDetails		@UserID, @PositionID
 		EXEC TestAlertPositionServices		@UserID, @PositionID
@@ -5327,34 +5416,46 @@ BEGIN
 END
 ;
 
-
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 2013-07-15
+-- Description:	Automatically checks the reviews
+-- providers have from customers to enable or
+-- disable the related user-verifications:
+-- 11: loconomics user reviewed
+-- 12: review from former client
+-- =============================================
 CREATE PROCEDURE ut_AutocheckReviewVerifications
 AS BEGIN
+
 	DECLARE @cur CURSOR
 	DECLARE @UserID int, @PositionID int, @RevDate datetime
 	
-	
-	
+	----------------------------------
+	-- Reviews
 	
 	SET @cur = CURSOR FOR
 		SELECT	UserID, PositionID
 		FROM	userprofilepositions
 		WHERE	Active = 1
+
 	OPEN @cur
 	FETCH NEXT FROM @cur INTO @UserID, @PositionID
 	WHILE @@FETCH_STATUS = 0 BEGIN
-		
+
+		-- Check 12: 'review from former client'
 		SET @RevDate = null
 		SELECT TOP 1 @RevDate = CreatedDate
 		FROM UserReviews
 		WHERE ProviderUserID = @UserID
 			AND BookingID = 0
 			AND PositionID = @PositionID
+
 		IF @RevDate is not null
-			
+			-- There is reviews from former clients, verification confirmed
 			EXEC SetUserVerification @UserID, 12, @RevDate, 1, @PositionID
 		ELSE BEGIN
-			
+			-- Check if there is a verification already
 			SET @RevDate = null
 			SELECT TOP 1 @RevDate = CreatedDate
 			FROM UserVerification
@@ -5362,28 +5463,32 @@ AS BEGIN
 					AND VerificationID = 12
 					AND (PositionID = 0 OR PositionID = @PositionID)
 			IF @RevDate is not null
-				
-				
-				
+				-- State: Pending, enough to off the provider-alert but not
+				-- show the verification as done.
+				-- Verification specific for the position
 				EXEC SetUserVerification @UserID, 12, @RevDate, 2, @PositionID
 		END
-		
+
+		-- Check 11: 'Loconomics user reviewed'
 		SET @RevDate = null
 		SELECT TOP 1 @RevDate = CreatedDate
 		FROM UserReviews
 		WHERE ProviderUserID = @UserID
 			AND BookingID > 0
 			AND PositionID = @PositionID
+
 		IF @RevDate is not null
 			EXEC SetUserVerification @UserID, 11, @RevDate, 1, @PositionID
 		ELSE
 			EXEC DelUserVerification @UserID, 11, @PositionID
+
 		FETCH NEXT FROM @cur INTO @UserID, @PositionID
 	END
 	CLOSE @cur
 	DEALLOCATE @cur
-    
-	
+
+    -------------------------------
+	-- Final check
 	
 	SET @cur = CURSOR FOR
 		SELECT	UserID
@@ -5393,17 +5498,22 @@ AS BEGIN
 	OPEN @cur
 	FETCH NEXT FROM @cur INTO @UserID
 	WHILE @@FETCH_STATUS = 0 BEGIN
-		
-		
+
+		-- Remove old user-verifications for 'loconomics reviews' without positionID,
+		-- that doesn't work (and check was already done in previous loop)
 		EXEC DelUserVerification @UserID, 11, 0
-		
-		
+
+		-- Remove old user-verifications for 'former customers' without positionID,
+		-- that doesn't work (and check was already done in previous loop)
 		EXEC DelUserVerification @UserID, 12, 0
+
 		FETCH NEXT FROM @cur INTO @UserID
 	END
 	CLOSE @cur
 	DEALLOCATE @cur
+
 END
+
 ;
 
 -- =============================================
@@ -5514,7 +5624,7 @@ END
 --  to active all the alerts
 -- =============================================
 CREATE TRIGGER trigInitialProviderPositionAlertTest
-   ON  UserProfilePositions
+   ON  dbo.userprofilepositions
    AFTER INSERT
 AS 
 BEGIN
