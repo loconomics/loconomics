@@ -43,7 +43,8 @@ internal class ServiceProfessionalClient
             createdByBookingID
         FROM ServiceProfessionalClient
         WHERE
-            serviceProfessionalUserID = @0,
+            serviceProfessionalUserID = @0
+              AND
             clientUserID = @1
     ";
     public static ServiceProfessionalClient Get(int serviceProfessionalUserID, int clientUserID)
