@@ -21,7 +21,7 @@ internal class ServiceProfessionalClient
     #endregion
 
     #region Instances
-    public ServiceProfessionalClient FromDB(dynamic record)
+    public static ServiceProfessionalClient FromDB(dynamic record)
     {
         if (record == null) return null;
         return new ServiceProfessionalClient
