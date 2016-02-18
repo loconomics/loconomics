@@ -77,6 +77,7 @@ A.prototype.show = function show(state) {
     
     // Parameters: pass a required duration
     this.viewModel.component().requiredDurationMinutes(this.requestData.requiredDuration |0);
+    this.viewModel.component().includeEndTime(!!this.requestData.includeEndTime);
 
     // Preselect userID and a date, or current date
     this.viewModel.component().userID(this.app.model.user().userID());

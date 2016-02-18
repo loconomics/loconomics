@@ -99,7 +99,7 @@ exports.plugIn = function (AppModel) {
     AppModel.prototype.signup = function signup(data) {
 
         // Reset the extra headers to attempt the signup
-        this.rest.extraHeadres = null;
+        this.rest.extraHeaders = null;
         
         data.returnProfile = true;
 

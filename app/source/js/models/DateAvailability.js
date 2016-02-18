@@ -141,7 +141,7 @@ function DateAvailability(values) {
             return [];
         }
         else {
-            return createTimeSlots.forList(this.getFreeAvailableSlots(), slotSizeMinutes, duration);
+            return createTimeSlots.forList(this.getFreeAvailableSlots(), slotSizeMinutes, duration, true);
         }
     };
     

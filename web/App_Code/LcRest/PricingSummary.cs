@@ -55,6 +55,12 @@ namespace LcRest
         public DateTime updatedDate;
         public decimal? cancellationFeeCharged;
         public DateTime? cancellationDate;
+        public decimal firstTimeServiceFeeFixed;
+        public decimal firstTimeServiceFeePercentage;
+        public decimal paymentProcessingFeePercentage;
+        public decimal paymentProcessingFeeFixed;
+        public decimal firstTimeServiceFeeMaximum;
+        public decimal firstTimeServiceFeeMinimum;
         #endregion
 
         #region Links
@@ -63,6 +69,17 @@ namespace LcRest
 
         #region Instances
         public PricingSummary() { }
+
+        /// <summary>
+        /// Creates a pricing summary instance prefilling the reference fees
+        /// fields with values from the bookingType and depending if is for HIPAA or not.
+        /// </summary>
+        /// <param name="bookingTypeID"></param>
+        /// <param name="isHipaa"></param>
+        public PricingSummary(int bookingTypeID, bool isHipaa)
+        {
+
+        }
 
         public static PricingSummary FromDB(dynamic record)
         {
@@ -79,7 +96,13 @@ namespace LcRest
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
                 cancellationFeeCharged = record.cancellationFeeCharged,
-                cancellationDate = record.cancellationDate
+                cancellationDate = record.cancellationDate,
+                firstTimeServiceFeeFixed = record.firstTimeServiceFeeFixed,
+                firstTimeServiceFeePercentage = record.firstTimeServiceFeePercentage,
+                paymentProcessingFeeFixed = record.paymentProcessingFeeFixed,
+                paymentProcessingFeePercentage = record.paymentProcessingFeePercentage,
+                firstTimeServiceFeeMaximum = record.firstTimeServiceFeeMaximum,
+                firstTimeServiceFeeMinimum = record.firstTimeServiceFeeMinimum
             };
         }
         #endregion
@@ -98,7 +121,13 @@ namespace LcRest
                 createdDate,
                 updatedDate,
                 cancellationFeeCharged,
-                cancellationDate
+                cancellationDate,
+                firstTimeServiceFeeFixed,
+                firstTimeServiceFeePercentage,
+                paymentProcessingFeeFixed,
+                paymentProcessingFeePercentage,
+                firstTimeServiceFeeMaximum,
+                firstTimeServiceFeeMinimum
             FROM
                 PricingSummary
             WHERE
@@ -275,7 +304,7 @@ namespace LcRest
                 {
                     this.subtotalPrice += detail.price;
                     this.serviceDurationMinutes += detail.serviceDurationMinutes;
-                    this.firstSessionDurationMinutes = detail.firstSessionDurationMinutes;
+                    this.firstSessionDurationMinutes += detail.firstSessionDurationMinutes;
                 }
             }
 
@@ -312,27 +341,18 @@ namespace LcRest
         /// </summary>
         /// <param name="type"></param>
         /// <param name="firstTimeBooking"></param>
-        public void CalculateClientServiceFee(BookingType type, bool firstTimeBooking, bool isHipaa)
+        public void CalculateClientServiceFee()
         {
-            // Only are applied on NOT-HIPAA firstTimeBookings, otherwise is zero
-            if (firstTimeBooking && !isHipaa)
+            // Can only be calculated if there is a subtotal price previously calculated
+            // otherwise clientServiceFeePrice will remain without value to mark it as not possible to calculate.
+            if (subtotalPrice.HasValue)
             {
-                // Can only be calculated if there is a subtotal price previously calculated
-                // otherwise clientServiceFeePrice will remain without value to mark it as not possible to calculate.
-                if (subtotalPrice.HasValue)
-                {
-                    var amount = Math.Round(type.firstTimeServiceFeeFixed + (type.firstTimeServiceFeePercentage * subtotalPrice.Value), 2);
-                    clientServiceFeePrice = Math.Min(Math.Max(amount, type.firstTimeServiceFeeMinimum), type.firstTimeServiceFeeMaximum);
-                }
-                else
-                {
-                    clientServiceFeePrice = null;
-                }
+                var amount = Math.Round(firstTimeServiceFeeFixed + ((firstTimeServiceFeePercentage / 100) * subtotalPrice.Value), 2);
+                clientServiceFeePrice = Math.Min(Math.Max(amount, firstTimeServiceFeeMinimum), firstTimeServiceFeeMaximum);
             }
             else
             {
-                // No fees on other cases, just 0 :-)
-                clientServiceFeePrice = 0;
+                clientServiceFeePrice = null;
             }
         }
 
@@ -340,7 +360,7 @@ namespace LcRest
         /// AKA "calculate PaymentProcessing fee".
         /// </summary>
         /// <param name="type"></param>
-        public void CalculateServiceFee(BookingType type)
+        public void CalculateServiceFee()
         {
             // Can only calculate with a notnull totalPrice and feePrice, otherwise serviceFeeAmount is null to state the impossibility of the calculation
             if (totalPrice.HasValue && clientServiceFeePrice.HasValue)
@@ -348,7 +368,7 @@ namespace LcRest
                 // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
                 // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
                 // or present more precision to the service professional (who will show how much received on their bank account).
-                serviceFeeAmount = Math.Round(type.paymentProcessingFeeFixed + (type.paymentProcessingFeePercentage/100 * (totalPrice.Value - clientServiceFeePrice.Value)) + clientServiceFeePrice.Value, 2);
+                serviceFeeAmount = Math.Round(paymentProcessingFeeFixed + ((paymentProcessingFeePercentage/100) * (totalPrice.Value - clientServiceFeePrice.Value)) + clientServiceFeePrice.Value, 2);
             }
             else
             {
@@ -361,16 +381,16 @@ namespace LcRest
         /// </summary>
         /// <param name="type"></param>
         /// <param name="firstTimeBooking"></param>
-        public void CalculateFees(BookingType type, bool firstTimeBooking, bool isHipaa)
+        public void CalculateFees()
         {
             // Calculate client fees (clientServiceFeePrice), based on subtotalPrice
-            CalculateClientServiceFee(type, firstTimeBooking, isHipaa);
+            CalculateClientServiceFee();
 
             // Total Price must be calculated before calculate the deducted payment processing fees (serviceFeeAmount)
             // because is calculated on top of that (since is deducted by the payment processing platform over the total)
             CalculateTotalPrice();
 
-            CalculateServiceFee(type);
+            CalculateServiceFee();
         }
         #endregion
 

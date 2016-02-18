@@ -49,12 +49,11 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
         classNames = 'Tile--tag-gray-lighter ';
     }
     else if (apt.id() > 0 && apt.sourceBooking()) {
-        if (apt.sourceBooking().serviceDateID())
-            classNames = 'Tile--tag-primary ' ;
-        else
-            // is a request:
+        if (apt.sourceBooking().isRequest())
             classNames = 'Tile--tag-warning ';
-        
+        else
+            classNames = 'Tile--tag-primary ';
+
         classNames += 'ItemAddonTile--largerContent ';
     }
     else {

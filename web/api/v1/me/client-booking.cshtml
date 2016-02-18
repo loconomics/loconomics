@@ -1,4 +1,4 @@
-﻿@using WebMatrix.WebData;
+@using WebMatrix.WebData;
 @*
     Allows a client to create a booking, in other words: to book a service professional.
     There is only POST access, no editing, no fetching.
@@ -108,7 +108,9 @@
             }
             else if (UrlData.Count == 2) {
                 var bookingID = UrlData[0].AsInt();
-                var booking = LcRest.Booking.Get(bookingID, false, false, userID);
+                // IMPORTANT: Internal use booking: (tasks may need some internal information)
+                // After any task, a new fetched, public, booking record is returned
+                var booking = LcRest.Booking.Get(bookingID, true, true, userID);
                 if (booking == null ||
                     booking.clientUserID != userID) {
                     throw new HttpException(404, "Not Found");
@@ -117,7 +119,7 @@
                 {
                     booking.CancelBookingByClient();
                     // fresh copy from db
-                    return LcRest.Booking.Get(bookingID, true);
+                    return LcRest.Booking.Get(bookingID, true, false, userID);
                 }
             }
             
@@ -157,18 +159,18 @@
             */
             if (!Request.Form.AllKeys.Contains<string>("services[]"))
             {
-                ModelState.AddError("services", "Choose almost one service");
+                ModelState.AddError("services", "Choose at least one service");
             }
             var pricing = Request.Form.GetValues("services[]");
             var pricingIds = new List<int>();
             if (pricing == null || pricing.Length < 1) {
-                ModelState.AddError("services", "Choose almost one service");
+                ModelState.AddError("services", "Choose at least one service");
             }
             else {
                 foreach(var pricingItem in pricing) {
                     var sid = pricingItem.AsInt(0);
                     if (sid == 0) {
-                        ModelState.AddError("services", "Some specified services are wrong");
+                        ModelState.AddError("services", "Some specified services are incorrect");
                         break;
                     }
                     pricingIds.Add(sid);
@@ -219,6 +221,7 @@
                 serviceAddress.userID = userID;
                 
                 Validation.RequireField("serviceAddress[postalCode]", LcRessources.RequiredField("Zip Code"));
+                Validation.RequireField("serviceAddress[addressLine1]", LcRessources.RequiredField("Address Line 1"));
                 Validation.Add("serviceAddress[addressLine1]", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
                 Validation.Add("serviceAddress[addressLine2]", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
                 Validation.Add("serviceAddress[addressName]", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
@@ -283,7 +286,8 @@
                         foreach(var paymentErr in paymentErrors) {
                             ModelState.AddError(paymentErr.Key, paymentErr.Value);
                         }
-                        // TODO Needs return the errors and the bookingID
+                        // Throws errors
+                        throw new HttpException(400, "We weren't able to process your payment, please review");
                     }
                 }
             }

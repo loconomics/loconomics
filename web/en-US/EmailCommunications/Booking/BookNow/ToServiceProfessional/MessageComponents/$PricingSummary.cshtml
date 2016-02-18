@@ -5,6 +5,7 @@
     // All the data for this component:
     var info = LcEmailTemplate.GetBookingInfo(PageData);
     var hasPaymentProcessingFees = info.booking.pricingSummary.serviceFeeAmount.HasValue && info.booking.pricingSummary.serviceFeeAmount.Value != 0;
+    var PaymentProcessingFees = (info.booking.pricingSummary.serviceFeeAmount - info.booking.pricingSummary.clientServiceFeePrice);
     var totalDueToProfessional = (info.booking.pricingSummary.totalPrice -info.booking.pricingSummary.serviceFeeAmount);
 }
 
@@ -85,7 +86,7 @@
                                                 <td style="padding: 0 0 10px 0;">
                                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                         <tr>
-                                                            <td align="left" style="font-family: Arial, sans-serif; color: #d9534f; font-size: 16px;">Payment processing fees*</td>
+                                                            <td align="left" style="font-family: Arial, sans-serif; color: #888888; font-size: 16px;">Payment processing fees*</td>
                                                         </tr>
                                                     </table>
                                                 </td>
@@ -97,7 +98,7 @@
                                                 <td style="padding: 0 0 10px 0;">
                                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                         <tr>
-                                                            <td align="right" style="font-family: Arial, sans-serif; color: #d9534f; font-size: 16px;">@(info.booking.pricingSummary.serviceFeeAmount.Value.ToString("c"))</td>
+                                                            <td align="right" style="font-family: Arial, sans-serif; color: #888888; font-size: 16px;">@((PaymentProcessingFees ?? 0).ToString("c"))</td>
                                                         </tr>
                                                     </table>
                                                 </td>
@@ -162,7 +163,7 @@
                                     <!-- COPY -->
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td align="left" style="padding: 0 0 0 0; text-align: left; font-size: 14px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color: #aaaaaa; font-style: italic;" class="padding-copy">*Payment processing fees are $0.30 plus 2.9% of the cost of services booked.</td>
+                                            <td align="left" style="padding: 0 0 0 0; text-align: left; font-size: 14px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color: #aaaaaa; font-style: italic;" class="padding-copy">*This fee covers the cost of processing client payments and is $0.30 plus 2.9% of the cost of services booked.</td>
                                         </tr>
                                     </table>
                                 </td>

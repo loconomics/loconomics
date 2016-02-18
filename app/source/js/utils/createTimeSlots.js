@@ -2,6 +2,7 @@
     It creates slots between the given times and size for each one.
     Past times are avoided, because are not available
 **/
+//jshint maxparams:7
 'use strict';
 
 var moment = require('moment');
@@ -11,8 +12,16 @@ var moment = require('moment');
     with a size and that fit in a given duration.
     @param from Date or ISO datetime string
     @param to Date or ISO datetime string
+    @param size:int Size in minutes of the slots to generate.
+    @param duration:int Amount of consecutive time required for slots to be useful (aka time required)
+    @param roundUp:bool Require to roundUp the 'from' time to time fragments of 'size'.
+        This basically converts a range like: 10:12 - 10:42 - and so on
+        into this: 10:15 - 10:45 (if size 15), 10:30 - 11:00 (if size 30) or 11:00 - 12:00 (if size 60)
+    @param includeEndTime:bool By default (false), means the end time (@to) is not included as slot.
+        Pass in true for this parameter to include the end time too.
 **/
-exports.forRange = function forRange(from, to, size, duration) {
+exports.forRange = function forRange(from, to, size, duration, roundUp, includeEndTime) {
+    //jshint maxcomplexity:10
     from = new Date(from);
     to = new Date(to);
     var i = moment(from),
@@ -20,6 +29,29 @@ exports.forRange = function forRange(from, to, size, duration) {
         slots = [],
         now = new Date(),
         enought;
+    
+    // Round up if required
+    if (roundUp) {
+        var r = moment(from);
+        var minutes = r.minutes();
+        // Calculate the minutes of the hour we must set
+        // substracting the excess of minutes per size and adding the size
+        // to go the next fraction.
+        // But only in case we are not already at an exact point (rest is zero)
+        var rest = minutes % size;
+        if (rest)
+           minutes = minutes - (rest) + size;
+        // set the minutes, without seconds:
+        from = r.minutes(minutes).seconds(0).toDate();
+        i = r;
+    }
+    
+    // end time included?
+    if (includeEndTime) {
+        // Since the later 'while loop' will stop before reach 'to',
+        // just add the size time to 'to' to ensure gets included.
+        to = moment(to).add(size, 'minutes').toDate();
+    }
 
     // Shortcut if bad 'to' (avoid infinite loop)
     if (to <= from)
@@ -46,12 +78,12 @@ exports.forRange = function forRange(from, to, size, duration) {
     duration for all the AvailabilitSlots in the list with availability 'free'
     Source list as a consecutive, sorted, non-overlapping list of availabilitySlots
 **/
-exports.forList = function forList(list, size, duration) {
+exports.forList = function forList(list, size, duration, roundUp, includeEndTime) {
     var slots = [];
     // Iterate every free time range/AvailabilitySlot
     list.forEach(function (item) {
         if (item.availability === 'free') {
-            slots.push.apply(slots, exports.forRange(item.startTime, item.endTime, size, duration));
+            slots.push.apply(slots, exports.forRange(item.startTime, item.endTime, size, duration, roundUp, includeEndTime));
         }
     });
     return slots;

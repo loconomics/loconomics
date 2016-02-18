@@ -141,6 +141,37 @@ namespace LcRest
         WHERE Users.UserID = @0
           AND Users.Active = 1
         ";
+        private const string sqlSelectProfileForInternalUse = @"
+        SELECT TOP 1
+            -- ID
+            Users.userID
+
+            -- Name
+            ,firstName
+            ,lastName
+            ,secondLastName
+            ,businessName
+            ,publicBio
+
+            -- User Type
+            ,isProvider as isServiceProfessional
+            ,isCustomer as isClient
+
+            ,UP.email as Email
+            ,Users.MobilePhone As phone
+            ,providerWebsiteUrl as serviceProfessionalWebsiteUrl
+            
+            ,providerProfileUrl as serviceProfessionalProfileUrlSlug
+
+            ,Users.updatedDate
+
+        FROM Users
+                INNER JOIN
+            UserProfile As UP
+                ON UP.UserID = Users.UserID
+        WHERE Users.UserID = @0
+          AND Users.Active = 1
+        ";
         #endregion
 
         #region Fetch
@@ -149,6 +180,13 @@ namespace LcRest
             using (var db = Database.Open("sqlloco"))
             {
                 return FromDB(db.QuerySingle(sqlSelectProfile, userID, requesterUserID));
+            }
+        }
+        internal static PublicUserProfile GetForInternalUse(int userID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return FromDB(db.QuerySingle(sqlSelectProfileForInternalUse, userID));
             }
         }
         #endregion

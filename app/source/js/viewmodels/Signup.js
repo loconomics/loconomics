@@ -41,6 +41,26 @@ function SignupVM(app) {
     this.signupError = ko.observable('');
     
     this.isSigningUp = ko.observable(false);
+    
+    this.profile = ko.observable(''); // client, service-professional
+    
+    this.reset = function() {
+        this.firstName('');
+        this.lastName('');
+        this.phone('');
+        this.postalCode('');
+        this.countryID('');
+        this.referralCode('');
+        this.device('');
+        this.facebookUserID('');
+        this.facebookAccessToken('');
+        this.email('');
+        this.password('');
+        this.signupError('');
+        this.isSigningUp(false);
+        this.profile('');
+    };
+    
     this.submitText = ko.pureComputed(function() {
         return (
             this.isSigningUp() ? 'Signing up...' :
@@ -56,10 +76,6 @@ function SignupVM(app) {
         // Clear previous error so makes clear we
         // are attempting
         this.signupError('');
-
-        var ended = function ended() {
-            this.isSigningUp(false);
-        }.bind(this);
 
         var plainData = {
             email: this.email(),
@@ -78,9 +94,8 @@ function SignupVM(app) {
 
         return app.model.signup(plainData)
         .then(function(signupData) {
-
-            this.signupError('');
-            ended();
+            
+            this.isSigningUp(false);
 
             // Start onboarding
             if (app.model.onboarding)
@@ -90,6 +105,8 @@ function SignupVM(app) {
             this.reset();
             
             this.emit('signedup', signupData);
+            
+            return signupData;
 
         }.bind(this))
         .catch(function(err) {
@@ -113,32 +130,27 @@ function SignupVM(app) {
                 this.email.error(msg);
             }
 
-            ended();
+            this.isSigningUp(false);
             
-            // Use event to catch up the error, since the promise catch it
-            // since this will be triggered by a button and never will have change
-            // to detect the promise, showing up unknow errors in console
-            this.emit('signuperror', err);
+            throw err;
         }.bind(this));
         
     }.bind(this);
+    
+    // For buttons
+    this.clickSignup = function() {
+        this.performSignup()
+        .catch(function(err) {
+            // Use event to catch up the error, since the promise catch it
+            // since this will be triggered by a button and never will have chance
+            // to detect the promise, showing up unknow errors in console
+            this.emit('signuperror', err);
+        });
+    }.bind(this);
 
-    this.profile = ko.observable(''); // client, service-professional
     this.forServiceProfessional = ko.pureComputed(function() {
         return this.profile() === 'service-professional';
     }, this);
-    
-    this.reset = function() {
-        this.firstName('');
-        this.lastName('');
-        this.phone('');
-        this.postalCode('');
-        this.countryID('');
-        this.referralCode('');
-        this.device('');
-        this.facebookUserID('');
-        this.facebookAccessToken('');
-    };
     
     this.facebook = function() {
         var fb = require('../utils/facebookUtils');

@@ -1,4 +1,4 @@
-﻿@*
+@*
     It allows serviceProfessionals to create and update a booking.
     It has a different set of possibilities than a client or the normal booking process.
     NOTE: To query/get bookings, use the general 'bookings' API.
@@ -89,18 +89,18 @@
                 * like the pricing estimate detail object.
             */
             if (!Request.Form.AllKeys.Contains<string>("pricing[]")) {
-                ModelState.AddError("pricing", "Choose almost one service");
+                ModelState.AddError("pricing", "Choose at least one service");
             }
             var pricing = Request.Form.GetValues("pricing[]");
             var pricingIds = new List<int>();
             if (pricing == null || pricing.Length < 1) {
-                ModelState.AddError("pricing", "Choose almost one service");
+                ModelState.AddError("pricing", "Choose at least one service");
             }
             else {
                 foreach(var pricingItem in pricing) {
                     var sid = pricingItem.AsInt(0);
                     if (sid == 0) {
-                        ModelState.AddError("pricing", "Some specified services are wrong");
+                        ModelState.AddError("pricing", "Some specified services are incorrect");
                         break;
                     }
                     pricingIds.Add(sid);
@@ -172,7 +172,9 @@
             if (UrlData.Count ==  2) {
                 var userID = WebSecurity.CurrentUserId;
                 var bookingID = UrlData[0].AsInt();
-                var booking = LcRest.Booking.Get(bookingID, false, false, userID);
+                // IMPORTANT: Internal use booking: (needed to confirm and other tasks)
+                // After any task, a new fetched, public, booking record is returned
+                var booking = LcRest.Booking.Get(bookingID, false, true, userID);
                 if (booking == null ||
                     booking.serviceProfessionalUserID != userID) {
                     throw new HttpException(404, "Not Found");

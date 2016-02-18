@@ -7,7 +7,11 @@ var ko = require('knockout'),
     _ = require('lodash'),
     $ = require('jquery');
 
+var EventEmitter = require('events').EventEmitter;
+
 function ServiceProfessionalServiceViewModel(app) {
+    
+    EventEmitter.call(this);
 
     this.isLoading = ko.observable(false);
     this.list = ko.observableArray([]);
@@ -25,6 +29,20 @@ function ServiceProfessionalServiceViewModel(app) {
     // Add activity requestData to keep progress/navigation on links
     this.requestData = ko.observable();
     this.cancelLink = ko.observable(null);
+    
+    this.reset = function() {
+        this.isLoading(false);
+        this.list([]);
+        this.jobTitleID(0);
+        this.serviceProfessionalID(null);
+        this.jobTitle(null);
+        this.isAdditionMode(false);
+        this.isSelectionMode(false);
+        this.selectedServices([]);
+        this.preSelectedServices([]);
+        this.requestData();
+        this.cancelLink(null);
+    };
     
     this.allowAddServices = ko.pureComputed(function() {
         return this.serviceProfessionalID() === null;
@@ -217,6 +235,8 @@ function ServiceProfessionalServiceViewModel(app) {
                 this.list(list);
                 
                 this.isLoading(false);
+                
+                this.emit('loaded');
 
             }.bind(this))
             .catch(function (err) {
@@ -238,5 +258,7 @@ function ServiceProfessionalServiceViewModel(app) {
         loadDataFor(this.serviceProfessionalID(), this.jobTitleID());
     }.bind(this)).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
+
+ServiceProfessionalServiceViewModel._inherits(EventEmitter);
 
 module.exports = ServiceProfessionalServiceViewModel;

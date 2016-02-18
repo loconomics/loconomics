@@ -14,7 +14,7 @@ function BookingProgress(values) {
         stepsList: [],
         ended: false
     }, values);
-    
+
     this.totalSteps = ko.pureComputed(function() {
         return this.stepsList().length;
     }, this);

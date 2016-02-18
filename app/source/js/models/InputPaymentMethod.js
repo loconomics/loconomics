@@ -14,7 +14,7 @@ function InputPaymentMethod(values) {
     Model(this);
     
     this.model.defProperties({
-        paymentMethodID: 0,
+        paymentMethodID: '',
         nameOnCard: '',
         cardNumber: null,
         expirationMonth: null,

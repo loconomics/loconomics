@@ -457,7 +457,8 @@ function AppointmentCardViewModel(params) {
         editFieldOn('datetimePicker', {
             selectedDatetime: this.item().endTime(),
             datetimeField: 'endTime',
-            headerText: 'Select the end time'
+            headerText: 'Select the end time',
+            includeEndTime: true
         });
     }.bind(this);
 

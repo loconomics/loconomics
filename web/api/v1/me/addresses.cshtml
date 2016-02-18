@@ -177,7 +177,6 @@
             int userId = WebSecurity.CurrentUserId;
             
             // TODO: Strictly, if jobTitleID does not exists for the user, the result must be a Not Found rather than empty
-
             return LcRest.Address.GetServiceAddresses(userId, jobTitleID);
         }
         
@@ -248,7 +247,7 @@
                 switch (UrlData[0]) {
                     case "service": {
                         
-                        // Route: /services/:jobTitleID[/:addressID]
+                        // Route: /service/:jobTitleID[/:addressID]
                         
                         if (UrlData[1].IsInt()) {
                             
@@ -452,7 +451,7 @@
                 switch (UrlData[0]) {
                     case "service": {
                         
-                        // Route: /services/:jobTitleID
+                        // Route: /service/:jobTitleID
                         
                         // jobTitleID can be 0, used when a client creates an address where
                         // a service professional will performs the service, but address is owned by client
@@ -493,7 +492,7 @@
                 switch (UrlData[0]) {
                     case "service": {
                         
-                        // Route: /services/:jobTitleID/:addressID
+                        // Route: /service/:jobTitleID/:addressID
                         
                         // jobTitleID can be 0, used when a client creates an address where
                         // a service professional will performs the service, but address is owned by client
@@ -546,7 +545,7 @@
                 switch (UrlData[0]) {
                     case "service": {
                         
-                        // Route: /services/:jobTitleID/:addressID
+                        // Route: /service/:jobTitleID/:addressID
                         
                         // jobTitleID can be 0, used when a client creates an address where
                         // a service professional will performs the service, but address is owned by client

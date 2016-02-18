@@ -22,7 +22,7 @@
                             @if (info.booking.paymentCollected)
                             	{
 								<tr>
-									 <td align="left" style="padding: 10px 0 15px 25px; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We&rsquo;ve collected payment from @info.client.firstName and will be authorized for @(info.booking.pricingSummary.totalPrice.Value.ToString("c")). It will be charged after services are completed and deposited into your bank account shortly thereafter.
+									 <td align="left" style="padding: 10px 0 15px 25px; text-align: left; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We&rsquo;ve collected payment from @info.client.firstName and it has been authorized for @(info.booking.pricingSummary.totalPrice.Value.ToString("c")). It will be charged after services are completed and deposited into your bank account shortly thereafter.
 									 </td>
 								</tr>
 								}
