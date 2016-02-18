@@ -1988,6 +1988,9 @@ namespace LcRest
             bookingStatusID = (int)LcEnum.BookingStatus.requestExpired;
 
             this.RefundPayment();
+
+            // Remove relationship (will internally verify if must or not delete it)
+            ServiceProfessionalClient.CancelFromBooking(serviceProfessionalUserID, clientUserID);
         }
         #endregion
 
@@ -2403,8 +2406,8 @@ namespace LcRest
             bookingStatusID = (int)LcEnum.BookingStatus.denied;
 
             this.RefundPayment();
-            // Remove relationship (will internally do it only if no other bookings active)
-            Client.DeleteServiceProfessionalClient(serviceProfessionalUserID, clientUserID);
+            // Remove relationship (will internally verify if must or not delete it)
+            ServiceProfessionalClient.CancelFromBooking(serviceProfessionalUserID, clientUserID);
 
             LcMessaging.SendBooking.For(bookingID).BookingRequestDeclined();
         }
@@ -2585,10 +2588,20 @@ namespace LcRest
                 Booking.Set(booking, clientUserID, db.Db);
                 if (booking.firstTimeBooking)
                 {
+                    // Auto-detect what is the referralSourceID
+                    // IMPORTANT: Put here future additions, to use other referral codes, using more context information for the booking
+                    // like a utm query-string.
+                    var referralSourceID = (int)(booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking ?
+                        LcEnum.ReferralSource.serviceProfessionalWebsite :
+                        LcEnum.ReferralSource.marketplace
+                    );
                     // Create client-professional relationship. Without this, professional cannot fetch information about the client
-                    Client.SetServiceProfessionalClient(booking.serviceProfessionalUserID, new Client
+                    ServiceProfessionalClient.Set(new ServiceProfessionalClient
                     {
-                        clientUserID = booking.clientUserID
+                        serviceProfessionalUserID = booking.serviceProfessionalUserID,
+                        clientUserID = booking.clientUserID,
+                        referralSourceID = referralSourceID,
+                        createdByBookingID = booking.bookingID
                     }, db.Db);
                 }
 

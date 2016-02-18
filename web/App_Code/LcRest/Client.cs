@@ -383,43 +383,21 @@ namespace LcRest
         }
 
         /// <summary>
-        /// Updates or creates a ServiceProfessionalClient record with the given data
+        /// Updates or creates a ServiceProfessionalClient record with the given data, ever as created by professional
+        /// IMPORTANT: use directly the ServiceProfessionalClient API to provide more options, like referralSourceID.
         /// </summary>
         /// <param name="serviceProfessionalUserID"></param>
         /// <param name="client"></param>
-        internal static void SetServiceProfessionalClient(int serviceProfessionalUserID, Client client, Database sharedDb = null)
+        private static void SetServiceProfessionalClient(int serviceProfessionalUserID, Client client, Database sharedDb = null)
         {
-            using (var db = new LcDatabase(sharedDb))
-            {
-                db.Execute(@"
-                IF EXISTS (SELECT * FROM ServiceProfessionalClient WHERE ServiceProfessionalUserID = @0 AND ClientUserID = @1)
-                    UPDATE ServiceProfessionalClient SET
-                        -- Passing null, will keep current notes; to delete them, pass in an empty string
-                        NotesAboutClient = coalesce(@2, NotesAboutClient),
-                        UpdatedDate = getdate()
-                    WHERE
-                        ServiceProfessionalUserID = @0
-                         AND ClientUserID = @1
-                ELSE
-                    INSERT INTO ServiceProfessionalClient (
-                        ServiceProfessionalUserID,
-                        ClientUserID,
-                        NotesAboutClient,
-                        ReferralSourceID,
-                        CreatedDate,
-                        UpdatedDate,
-                        Active
-                    ) VALUES (
-                        @0, @1, coalesce(@2, ''),
-                        12, -- source: created by serviceProfessional (12:ProviderExistingClient)
-                        getdate(),
-                        getdate(),
-                        1 -- Active
-                    )
-            ", serviceProfessionalUserID,
-                 client.clientUserID,
-                 client.notesAboutClient);
-            }
+            var spc = new ServiceProfessionalClient {
+                serviceProfessionalUserID = serviceProfessionalUserID,
+                clientUserID = client.clientUserID,
+                notesAboutClient = client.notesAboutClient,
+                // source: created by serviceProfessional
+                referralSourceID = (int)LcEnum.ReferralSource.serviceProfessionalExistingClient
+            };
+            ServiceProfessionalClient.Set(spc, sharedDb);
         }
 
         /// <summary>
@@ -549,7 +527,7 @@ namespace LcRest
             using (var db = Database.Open("sqlloco"))
             {
                 db.Execute("BEGIN TRANSACTION");
-                DeleteServiceProfessionalClient(serviceProfessionalUserID, clientUserID, db);
+                ServiceProfessionalClient.Delete(serviceProfessionalUserID, clientUserID, db);
 
                 db.Execute(@"
                     -- If there is no more providers linked to this client
@@ -581,27 +559,6 @@ namespace LcRest
                     END
                 ", serviceProfessionalUserID, clientUserID);
                 db.Execute("COMMIT TRANSACTION");
-            }
-        }
-        /// <summary>
-        /// Just remove relationship between professional and client.
-        /// Will work only if there is no bookings that related both users, unless 'declined', 'expired' ones. 
-        /// </summary>
-        /// <param name="serviceProfessionalUserID"></param>
-        /// <param name="clientUserID"></param>
-        /// <param name="sharedDb"></param>
-        internal static void DeleteServiceProfessionalClient(int serviceProfessionalUserID, int clientUserID, Database sharedDb = null)
-        {
-            using (var db = new LcDatabase(sharedDb))
-            {
-                db.Execute(@"
-                    IF NOT EXISTS (SELECT * FROM Booking WHERE serviceProfessionalUserID = @0 AND clientUserID = @1 AND BookingStatusID NOT IN (4, 5))
-                    BEGIN
-                        DELETE FROM ServiceProfessionalClient
-                        WHERE ServiceProfessionalUserID = @0
-                            AND ClientUserID = @1
-                    END
-                ", serviceProfessionalUserID, clientUserID);
             }
         }
         #endregion
