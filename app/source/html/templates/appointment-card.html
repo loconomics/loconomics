@@ -121,7 +121,7 @@
         </ul>
         
         <ul class="TilesList TilesList--opendEnd" data-bind="visible: isBooking()">
-            <li>
+            <li data-bind="visible: !isBookingRequest()">
                 <button type="button" class="InfoTile" data-bind="click: !isBookingRequest() && editMode() && pickDateTime">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-clock-outline"></span>
@@ -130,6 +130,16 @@
                         <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
                         <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
                         <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select date/time</p>
+                    </div>
+                </button>
+            </li>
+            <li data-bind="visible: isBookingRequest()">
+                <button type="button" class="InfoTile">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-ios-clock-outline"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <p>Please confirm a time below</p>
                     </div>
                 </button>
             </li>
