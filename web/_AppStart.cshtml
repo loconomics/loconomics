@@ -47,24 +47,19 @@
     // Account
     RouteTable.Routes.MapWebPageRoute("en-US/Account/Login", "~/_specialRoutes/Login.cshtml");
 
-    // ENABLED SPLASH screen on Live
-    if (LcHelpers.InLive)
-    {
-        // SPLASH ENABLED
-        // ANY NOT FOUND URL GOES TO THE INDEX
-        RouteTable.Routes.MapWebPageRoute("{customurl}", "~/_specialRoutes/RedirectToDefault.cshtml");
-        RouteTable.Routes.MapWebPageRoute("{customurl}/{*urldata}", "~/_specialRoutes/RedirectToDefault.cshtml");
-        RouteTable.Routes.MapWebPageRoute("{*urldata}", "~/_specialRoutes/RedirectToDefault.cshtml");
-    }
-    else
-    {
-        // NORMAL ROUTES
-        // Booking with service professional bookcode URL
-        RouteTable.Routes.MapWebPageRoute("book/{bookcode}", "~/_specialRoutes/Book.cshtml");
-        RouteTable.Routes.MapWebPageRoute("book/{bookcode}/{positionID}", "~/_specialRoutes/Book.cshtml");
-        // Public Profile URL optimized for SEO:
-        RouteTable.Routes.MapWebPageRoute("{city}/{position}/{user}", "~/_specialRoutes/PublicProfileURL.cshtml");
-        // CustomURL:
-        RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/_specialRoutes/CustomURL.cshtml");
-    }
+    // NORMAL ROUTES
+    // Booking with service professional bookcode URL
+    RouteTable.Routes.MapWebPageRoute("book/{bookcode}", "~/_specialRoutes/Book.cshtml");
+    RouteTable.Routes.MapWebPageRoute("book/{bookcode}/{jobTitleID}", "~/_specialRoutes/Book.cshtml");
+    // Public Profile URL optimized for SEO:
+    RouteTable.Routes.MapWebPageRoute("{city}/{jobTitle}/{user}", "~/_specialRoutes/PublicProfileURL.cshtml");
+    // CustomURL:
+    RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/_specialRoutes/CustomURL.cshtml");
+
+    // MANAGE SPA ROUTES REDIRECTING TO INDEX
+    RouteTable.Routes.MapWebPageRoute("{customurl}", "~/Default.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{customurl}/{*urldata}", "~/Default.cshtml");
+
+    // ANY NOT FOUND URL GOES TO THE INDEX, WHERE WE HAVE NOW THE SPA
+    RouteTable.Routes.MapWebPageRoute("{*urldata}", "~/_specialRoutes/RedirectToDefault.cshtml");
 }

@@ -808,15 +808,21 @@ public static partial class LcData
         #region Specific Information
         public static string GetMyPublicURL()
         {
-            return GetUserPublicURL(WebSecurity.CurrentUserId);
+            return GetUserPublicSeoUrlPath(WebSecurity.CurrentUserId);
         }
+
+        public static string GetUserPublicUrlPath(int userid, int? positionID = null)
+        {
+            return LcUrl.AppPath + "#!profile/" + userid + (positionID == null ? "" : "/" + positionID.ToString());
+        }
+
         /// <summary>
-        /// TODO: rename to GetUserPublicURLPath since it doesn't includes the domain part.
+        /// Get the optimized for SEO URL of the user, with fallback to GetUserPublicUrlPath
         /// </summary>
         /// <param name="userid"></param>
         /// <param name="positionID"></param>
         /// <returns></returns>
-        public static string GetUserPublicURL(int userid, object positionID = null)
+        public static string GetUserPublicSeoUrlPath(int userid, int? positionID = null)
         {
             string city = GetUserCity(userid);
             var pos = GetProviderPreferredPosition(userid);
@@ -826,10 +832,10 @@ public static partial class LcData
                 return LcUrl.AppPath + city + "/"
                     + ASP.LcHelpers.StringSlugify(pos.PositionSingular, 40) + "/"
                     + userid + "/" + 
-                    (positionID == null ? "" : "?PositionID=" + positionID.ToString());
+                    (positionID == null ? "" : "?jobTitleID=" + positionID.ToString());
             }
 
-            return LcUrl.LangPath + "Profile/?UserID=" + userid + (positionID == null ? "" : "&PositionID=" + positionID.ToString());
+            return GetUserPublicUrlPath(userid, positionID);
         }
 
         public static string GetUserCity(int userid)

@@ -14,7 +14,7 @@
 *@
 @{
     var city = Context.GetRouteValue("city");
-    var position = Context.GetRouteValue("position");
+    var position = Context.GetRouteValue("jobTitle");
     var user = Context.GetRouteValue("user");
 
     dynamic userid = null;
@@ -40,9 +40,9 @@
         if (city == LcHelpers.StringSlugify(LcData.UserInfo.GetUserCity(userid), 40)
             &&
             position == LcHelpers.StringSlugify(LcData.UserInfo.GetProviderPreferredPosition(userid).PositionSingular)
-        ) {
-            @RenderPage(LcUrl.RenderLangPath + "Profile/Default.cshtml", new { UserID = userid })
-            //Response.Redirect(LcUrl.LangPath + "Profile/?UserID=" + userid);
+        )
+        {
+            Response.Redirect(LcData.UserInfo.GetUserPublicUrlPath(userid));
                 
             ok = true;
         }
