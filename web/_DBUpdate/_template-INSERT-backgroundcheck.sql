@@ -1,0 +1,22 @@
+INSERT INTO [backgroundcheck]
+   ([BackgroundCheckID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[BackgroundCheckName]
+   ,[BackgroundCheckDescription]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active]
+   ,[BackGroundCheckPrice])
+VALUES
+   (@BackgroundCheckID
+   ,@LanguageID
+   ,@CountryID
+   ,@BackgroundCheckName
+   ,@BackgroundCheckDescription
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active
+   ,@BackGroundCheckPrice)
