@@ -64,7 +64,7 @@ module.exports = function(/*grunt*/) {
                 'numeral',
                 'knockout',
                 'knockout.mapping',
-                'lodash',
+                //'lodash', // specific modules fetched on demand to minimize the size
                 'es6-promise',
                 'localforage',
                 'is_js',

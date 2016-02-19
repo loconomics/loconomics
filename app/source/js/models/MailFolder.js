@@ -2,8 +2,7 @@
 'use strict';
 
 var ko = require('knockout'),
-    Model = require('./Model'),
-    _ = require('lodash');
+    Model = require('./Model');
 
 function MailFolder(values) {
 
@@ -16,7 +15,10 @@ function MailFolder(values) {
     
     this.top = ko.pureComputed(function top(num) {
         if (num) this.topNumber(num);
-        return _.first(this.messages(), this.topNumber());
+        var t = this.topNumber() - 1;
+        return this.messages().some(function(e, i) {
+            return i >= t;
+        });
     }, this);
 }
 
