@@ -1455,8 +1455,8 @@ namespace LcRest
                     UPDATE  CalendarEvents
                     SET     Description = @1,
                             Location = @2
-                    WHERE   Id = @0
-                ", this.serviceDateID, description, location);
+                    WHERE   Id IN (@0, @3, @4)
+                ", this.serviceDateID, description, location, this.alternativeDate1ID, this.alternativeDate2ID);
             }
         }
 
