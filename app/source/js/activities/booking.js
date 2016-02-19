@@ -134,7 +134,8 @@ A.prototype.show = function show(state) {
 
 A.prototype.hide = function hide() {
     Activity.prototype.hide.call(this);
-    this.viewModel.saveState();
+    if (!this.viewModel.isDone())
+        this.viewModel.saveState();
 };
 
 // L18N
@@ -301,6 +302,7 @@ function ViewModel(app) {
     this.isSaving = ko.observable(false);
     this.isLoadingNewBooking = ko.observable(false);
     this.isRestoring = ko.observable(false);
+    this.isDone = ko.observable(false);
     ///
     /// URLs (constants, don't need reset)
     this.urlTos = ko.observable('https://loconomics.com/en-US/About/TermsOfUse/');
@@ -348,6 +350,7 @@ function ViewModel(app) {
         this.isSaving(false);
         this.isLoadingNewBooking(false);
         this.isRestoring(false);
+        this.isDone(false);
         
         this.errorMessages.postalCode('');
     }.bind(this);
@@ -792,6 +795,7 @@ function ViewModel(app) {
             // Forget availability cache for this professional, since is not needed
             // and any new booking with it needs a refresh to avoid problems. See #905
             app.model.availability.clearUserCache(this.booking.serviceProfessionalUserID());
+            this.isDone(true);
             
             app.modals.showNotification({
                 title: 'Done!',
