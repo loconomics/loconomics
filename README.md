@@ -111,7 +111,9 @@ git URL, the package name can be used to locate it at [npm](https://www.npmjs.co
 
 ### Important links to bookmark
 **Test API:** http://dev.loconomics.com/tests/testrest (request access from @iagoSRL or @dani0198)
+
 **Test Email Communications:** http://dev.loconomics.com/tests/testmessaging (request access from @iagoSRL or @dani0198)
+
 **Test Any Page (for testing db changes):** http://dev.loconomics.com/tests/TestAny 
 
 ### Adding new pages to the app
