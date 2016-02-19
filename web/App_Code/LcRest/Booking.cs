@@ -454,15 +454,30 @@ namespace LcRest
              INNER JOIN
             CalendarEvents As E
                 ON E.Id = B.ServiceDateID
+             LEFT JOIN
+            CalendarEvents As EA1
+                ON EA1.Id = B.AlternativeDate1ID
+             LEFT JOIN
+            CalendarEvents As EA2
+                ON EA2.Id = B.AlternativeDate2ID
         ";
         const string sqlGetItem = sqlSelect + "WHERE B.bookingID = @0";
         const string sqlGetList = sqlSelect + sqlJoinDate + @"
             WHERE 
                 (B.clientUserID = @0 OR B.serviceProfessionalUserID = @0)
-                    AND
-                E.EndTime > @1
-                    AND
-                E.StartTime < @2
+                  AND (
+                    E.EndTime > @1
+                        AND
+                    E.StartTime < @2
+                     OR
+                    EA1.EndTime > @1  
+                        AND
+                    EA1.StartTime < @2
+                     OR
+                    EA2.EndTime > @1  
+                        AND
+                    EA2.StartTime < @2
+                  )
                     AND
                 -- An status valid to be included in the listing
                 -- request, confirmed, performed, completed, dispute
