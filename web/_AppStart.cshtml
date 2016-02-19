@@ -21,7 +21,7 @@
     Facebook.Initialize("180579422039773", "fab30a2288ce64be2b3b1e0f1113fb25", "sqlloco");
 
     /* Routing rules
-     */
+    */
     // REST API, locale in URL for locale independent files:
     // NOTE: Any folder added to the API folder need to be registered, and before the catch-all pages route
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/me/{page}/{*urldata}", "~/api/v1/me/{page}.cshtml");

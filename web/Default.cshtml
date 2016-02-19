@@ -3,5 +3,6 @@
         @RenderPage("/en-US/HelpCenter/UpgradeBrowser/");
         return;
     }
-    @RenderPage("_specialRoutes/_SPA.cshtml");
+    var s = System.IO.File.ReadAllText(Server.MapPath("~/_specialRoutes/app.html"));
+    @(new HtmlString(s))
 }
