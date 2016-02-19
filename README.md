@@ -14,6 +14,7 @@ It uses:
 - Nodejs to assist front-end development, using Grunt as tasks runner.
 
 ### Prepare dev environment
+- Request API access from @iagoSRL or @dani0198
 - Clone the git repository, master branch.
 - Install NodeJS (minimum version 0.10, not tested with the newest ones like 4.1 but must work): https://nodejs.org/ (it has packages/installers for Windows, Mac and Linux)
 - From the command line, use the NodeJS Package Manager (npm) to globally install
@@ -50,11 +51,11 @@ It uses:
   - /Gruntfile.js: file required by the Grunt task runner on the project root folder; more code is organized in the /grunt folder to don't have a fat Gruntfile.js file.
   
 **- /web: all server-side and API files**
-- /_DBUpdate: MS SQL files of any changes to the dev database to ensure the test and live databases get updated accordingly.
+- /_DBUpdate: MS SQL files of any changes to the database to ensure the dev, test and live databases get updated accordingly.
   - /api/v1: CSHTML files that communicate with the server and retrieve API data
     - /me: Information about a user requesting information about themselves, mostly private  
     - /user: Information about a user requesting information about another user, mostly public  
-  - /App_Code/LcPricing: C# files that implements.....
+  - /App_Code/LcPricing: C# files that implements...
   - /App_Code/LcRest: C# files that implements the schemes for specific objects in the REST API, and static methods/queries/updates for database operations
   - /en-US/EmailCommunications: CSTHML files for all e-mail communcations sent to users
     - /Admin: Communications to users their account (welcome, password resets, etc.) 
@@ -64,54 +65,25 @@ It uses:
       - /Marketplace: All communications for Marketplace bookings (from the Loconomic's website/app)
       - /ServiceProfessionalBooking: All communications for bookings made by the service professional 
         
-### Adding new pages or data to the app
-**Step 1: Is there an existing endpoint/call/method already in the REST API (another page using it)?**
-- If no proceed to Step 2.
-- If yes, process to Step 4. 
+### Adding new pages to the app
+**Step 1: Is there an existing endpoint/call/method already in the REST API for the data you need (another page using it)?**
+- If no, send a request to @iagoSRL or @dani0198 explaining what's needed
+- If yes, process to Step 2. 
 
-**Step 2: Is the data you need already in the database?**
-- If yes, proceed to Step 3. If not, continue.
-- Avoid renaming or deleting fields.
-- For schema changes (new columns, tables, drops,..), if your program to access database generates SQLs for the task, save them in a file at the _DBUpdate with extension ".sql".
-- The naming of ".sql" files is : 'Release-' and release number, dash, a consecutive letter, dash, consecutive number, dash, a short descriptive name of the change. I see sometimes I forgot the last dash but doesn't matters, what is **important is to keep the order** in which changes were done. I use the letters to group changes that are part of a same consecutive task (like in this case, 1-add new column, 2-insert new data, both with the same letter that is the next one available -right now the D in Release-7.1).
-- Why the order is important? Because if you changes the order things can break, breaking *live* database and its data.
-- For data updates: if applied on *system* tables (the ones that we keep manually, no interaction from the code except to read it; like countries, statuses, types and that kind of things), I have a TestDBSync page to help with that, but may require create some SQL templates first, let to me for now.
-- for data updates: if applied over *user* tables, that's more complicated and need a manually written and well tested SQL script. Rare cases need it, mostly when changing how some existent data is stored.
-
-**Step 3: Add new data to the REST API**
-- Create sample SQL with sample query parameters. 
-- If there are updates/additions to database, record them in web/_DBUpdate as .sql files with proper release in file name per Step 2.
-- Find, copy and rename an example .cs file from web/App_Code/LcRest using the name of the DB table if possible
-- Revise code to match the sample SQL. 
-- Revise any existing functions removing or updating them to match your data.
-- Add any new necessary functions (you may find similar examples in other files).
-- Determine where it should go in the web/api/v1:
-  - /: Information not related to specific users
-  - /me: Information about a user requesting information about themselves, mostly private  
-  - /user: Information about a user requesting information about another user, mostly public  
-- Find, copy and rename an example .cshtml file from the chosen folder.
-- Define functions for the API in this file.
-- TEST API call (IAGO PLEASE FILL IN INSTRUCTIONS)
-- Find, copy and rename an example .js file from app/source/js/models or model.js if there isn't a good example.
-- Revise or write code that defines the javascript objects you'll need.
-- Determine if you'll need an appmodel file (includes actions for that model). If so: 
-  - Find, copy and rename an example .js file from app/source/js/appmodel.
-  - Revise or write code that create the actionss you'll need paying special attention to utilities referenced from the /js/utils folder.
-  - Add file name to: app/source/js/appmodel/appmodel.js
-
-**Step 4: create new files for front-end code**
+**Step 2: create new files for front-end code**
 - Find, copy and rename an example .html file from app/source/html/activities.
 - Optional: Find, copy and rename an example .css file from app/source/css/activities & add file name to app/source/css/app.styl.
 - Find, copy and rename an example .js file from app/source/js/activities & add file name to app/source/js/app.activities.js.
 
-**Step 5: Edit your new html, css, js /activity files**
+**Step 3: Edit your new html, css, js /activity files**
 - Change data-activity name to new name. Review and revise .js file to reference the appopriate /models and /appmodel files and functions. 
 - Change data-activity name to new name. Review and revise .html & .css files to have front end appearance you want referencing the css file of the same name. 
 - Change references the appopriate js functions in html.
 
-**Step 6: Test new page:**
+**Step 4: Test new page:**
 - http://localhost:8811/app.html#!/newActivity
 - Test any data you're using by placing console.log(data) in the .js file and reviewing using the browser's developer console
+
 
 ### Build the source code
 **All next commands must be executed in a command line/terminal at the project directory**
@@ -156,10 +128,7 @@ The file /app/source/cordova-config.js.xml has a list of all the plugins in use 
 this config is used by the PhoneGap Build service to automatically install them. The version in use is there too, but not
 git URL, the package name can be used to locate it at [npm](https://www.npmjs.com/) and found the project git URL there.
 
-
-
-
-## Filing Github Issues
+### Filing Github Issues
 
 We use Github to track all development issues, marketing tasks, and a repository for for other related project information.
 
@@ -212,4 +181,93 @@ Steps to adding data to the API:
    -        - Decide- do I need a app/source/js activity, model, appmodel (one or all?)
    -        
 
+
+### Database & API changes
+We run a SQL Server 2008 R2 database hosted on Microsoft Azure. If you feel you need a copy of the dev database for development on your local machine, please contact @dani0198 or @iagosrl. 
+
+Access is limited to those who can sign a Business Associate Agreement per our HIPAA Policy.
+
+You should keep a copy of the dev database that runs on your local machine. Any changes to the dev database can be requested by placing a .sql file in web/_DBUpdate in your branch and @iagoSRL will review, approve, and upload changes when merging your branch into master.
+
+**Step 1: Is the data you need already in the database?**
+- If yes, proceed to Step 2. If not, continue.
+- Review database to ensure there aren't duplicates or other ways to get the data you need
+- Test fully any changes with latest app code ensuring any changes are accounted for
+- Document any changes to the schema (RENAME, ADD/DROP, ALTER, CREATE) with separate .sql files for each table saved in _DBUpdate
+  - The naming of ".sql" files is : 'Release-' and release number, dash, a consecutive letter, dash, consecutive number, dash, a short descriptive name of the change. It is **important is to keep the order** in which changes were done. Use letters to group changes that are part of the same consecutive task (like in this case, 1-add new column, 2-insert new data, both with the same letter that is the next one available, e.g. if the latest file is named *Release-7.1 - C-6 drop old invalidatebookingrequest.sql* then your file should be start with "Release-7.1 - D-1".
+  - The order is very important to ensure any data changes don't break the *live* database and its data.
+  - Avoid renaming or deleting fields without discussing it first with @iagoSRL
+  - Be sure to include any table contraints (PK, FK, etc.) in the .sql files
+  - If changes affect any *user* tables, it's a very complex process and needs a manually written and well tested SQL script as there can be rare cases that a prior release needs it, mostly when changing how some existing data is stored.
+  - Updates to *system* tables: include a _template-INSERT-tableName.sql file in _DBUpdate for any new *system* tables that include content to ensure it gets updated regularly on the live database. Updates to existing *system* tables (contain mostly content), are done automatically using a TestDBSync page.
+  - Current *system* tables:
+    - accountstatus
+    - addresstype
+    - alert
+    - alerttype
+    - backgroundcheck
+    - bookingStatus
+    - BookingType
+    - CalendarAvailabilityType
+    - CalendarEventType
+    - CalendarRecurrenceFrequencyTypes
+    - cancellationpolicy
+    - country
+    - county
+    - ExperienceLevel
+    - Gender
+    - institution
+    - jobTitleLicense
+    - language
+    - languagelevel
+    - licensecertification
+    - messagethreadstatus
+    - messagetype
+    - OwnerStatus
+    - positionbackgroundcheck
+    - positionpricingtype
+    - positionratings
+    - positions ---???
+    - postalcode
+    - PricingGroups
+    - pricingtype
+    - PricingVariableDefinition
+    - ReferralSource
+    - serviceattribute ---???
+    - serviceattributecategory
+    - ServiceAttributeExperienceLevel
+    - ServiceAttributeLanguageLevel
+    - servicecategory
+    - servicecategoryposition
+    - servicecategorypositionattribute ---???
+    - servicesubcategory
+    - stateprovince
+    - transporttype
+    - verification
+    - verificationcategory
+    - verificationstatus
+    - VOCElement
+    - VOCExperienceCategory
+    - VOCFlag
+
+**Step 2: Add new data to the REST API**
+- Create sample SQL with sample query parameters. 
+- Find, copy and rename an example .cs file from web/App_Code/LcRest using the name of the DB table if possible
+- Revise code to match the sample SQL. 
+- Decide what information shoudl be public or private adhereing to our HIPAA Policy
+- Revise any existing functions removing or updating them to match your data.
+- Add any new necessary functions (you may find similar examples in other files).
+- Determine where it should go in the web/api/v1:
+  - /: Information not related to specific users
+  - /me: Information about a user requesting information about themselves, mostly private  
+  - /user: Information about a user requesting information about another user, mostly public  
+- Find, copy and rename an example .cshtml file from the chosen folder.
+- Define functions for the API in this file.
+- TEST API call (IAGO PLEASE FILL IN INSTRUCTIONS)
+- Find, copy and rename an example .js file from app/source/js/models or model.js if there isn't a good example.
+- Revise or write code that defines the javascript objects you'll need.
+- Determine if you'll need an appmodel file (includes actions for that model). If so: 
+  - Find, copy and rename an example .js file from app/source/js/appmodel.
+  - Revise or write code that create the actionss you'll need paying special attention to utilities referenced from the /js/utils folder.
+  - Add file name to: app/source/js/appmodel/appmodel.js
 
