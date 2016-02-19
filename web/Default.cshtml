@@ -1,12 +1,8 @@
 ﻿@{
-    if (LcHelpers.InLive)
-    {
-        @RenderPage("_specialRoutes/_Splash.cshtml");
+    if (LcHelpers.IsVeryOldBrowser()) {
+        @RenderPage("/en-US/HelpCenter/UpgradeBrowser/");
         return;
     }
-    else {
-        Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
-        Page.Title = "Loconomics";
-    }
+    var s = System.IO.File.ReadAllText(Server.MapPath("~/_specialRoutes/app.html"));
+    @(new HtmlString(s))
 }
-<h1>Loconomics</h1>

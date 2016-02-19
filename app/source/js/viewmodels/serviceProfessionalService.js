@@ -4,7 +4,7 @@
 'use strict';
 
 var ko = require('knockout'),
-    _ = require('lodash'),
+    _ = require('lodash/groupBy'),
     $ = require('jquery');
 
 var EventEmitter = require('events').EventEmitter;

@@ -21,18 +21,18 @@
             Session["BookCode"] = bookcode;
             
             // Check if there is a valid position in the URL
-            var pos = Context.GetRouteValue("positionID");
+            var pos = Context.GetRouteValue("jobTitleID");
             if (pos.IsInt())
             {
                 int posID = pos.AsInt();
                 // Check that the position exists for the user and is public
                 if (LcData.UserInfo.GetUserPositionStatus(userid, posID) == 1){
                     // Redirects to the booking page for that provider and position
-                    Response.Redirect(LcUrl.LangPath + "Booking/?ProviderID=" + userid + "&PositionID=" + posID);
+                    Response.Redirect("#!booking/" + userid + "/" + posID);
                 }
             } else {
                 // Redirect to the providers public profile
-                Response.Redirect(LcData.UserInfo.GetUserPublicURL(userid));
+                Response.Redirect(LcData.UserInfo.GetUserPublicUrlPath(userid));
             }
         }
     }
