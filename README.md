@@ -12,6 +12,7 @@ It uses:
 - Preprocessors: Stylus (CSS), Browserify (js), Bliss (html)
 - Main libraries: jQuery-2, Bootstrap-3, Knockoutjs-3.3, polyfills for ES5 and ES6-Promise, momentjs.
 - Nodejs to assist front-end development, using Grunt as tasks runner.
+- Tutorial for knockout: http://knockoutjs.com
 
 ### Prepare dev environment
 - Request API access from @iagoSRL or @dani0198
@@ -64,28 +65,8 @@ It uses:
       - /BookNow: All communications for BookNow bookings (from a service professional's website)
       - /Marketplace: All communications for Marketplace bookings (from the Loconomic's website/app)
       - /ServiceProfessionalBooking: All communications for bookings made by the service professional 
-        
-### Adding new pages to the app
-**Step 1: Is there an existing endpoint/call/method already in the REST API for the data you need (another page using it)?**
-- If no, send a request to @iagoSRL or @dani0198 explaining what's needed
-- If yes, process to Step 2. 
 
-**Step 2: create new files for front-end code**
-- Find, copy and rename an example .html file from app/source/html/activities.
-- Optional: Find, copy and rename an example .css file from app/source/css/activities & add file name to app/source/css/app.styl.
-- Find, copy and rename an example .js file from app/source/js/activities & add file name to app/source/js/app.activities.js.
-
-**Step 3: Edit your new html, css, js /activity files**
-- Change data-activity name to new name. Review and revise .js file to reference the appopriate /models and /appmodel files and functions. 
-- Change data-activity name to new name. Review and revise .html & .css files to have front end appearance you want referencing the css file of the same name. 
-- Change references the appopriate js functions in html.
-
-**Step 4: Test new page:**
-- http://localhost:8811/app.html#!/newActivity
-- Test any data you're using by placing console.log(data) in the .js file and reviewing using the browser's developer console
-
-
-### Build the source code
+### Building the source code
 **All next commands must be executed in a command line/terminal at the project directory**
 
 Run next command:
@@ -128,61 +109,31 @@ The file /app/source/cordova-config.js.xml has a list of all the plugins in use 
 this config is used by the PhoneGap Build service to automatically install them. The version in use is there too, but not
 git URL, the package name can be used to locate it at [npm](https://www.npmjs.com/) and found the project git URL there.
 
-### Filing Github Issues
+### Important links to bookmark
+**Test API:** http://dev.loconomics.com/tests/testrest (request access from @iagoSRL or @dani0198)
+**Test Email Communications:** http://dev.loconomics.com/tests/testmessaging (request access from @iagoSRL or @dani0198)
+**Test Any Page (for testing db changes):** http://dev.loconomics.com/tests/TestAny 
 
-We use Github to track all development issues, marketing tasks, and a repository for for other related project information.
+### Adding new pages to the app
+**Step 1: Is there an existing endpoint/call/method already in the REST API for the data you need (another page using it)?**
+- If no, send a request to @iagoSRL or @dani0198 explaining what's needed
+- If yes, process to Step 2. 
 
-When filing an issue, you must do the following:
-- Select which milestone to attach it to:
-  - **Information Repository** Meeting Notes, People to connect with, Journalists to contact, Knowledge Base, etc.
-  - **Sandbox** All development issues not yet included in an upcoming release. Follow format outlined in milestone.
-  - **Marketing** All outstanding marketing items not yet included in specific marketing milestones.
-  - **Release X.XX** Issues to be completed and closed for a specific app release. Only @dani0198 or @iagosrl should add or remove issues from these.
-- Label approriately the issue:
-  - **Sandbox** 
-    - Include: 
-    - **Gray label** (issue type): 
-      - Bug 
-      - Content
-      - Feature 
-      - Enhancement (to an existing feature)
-      - Usability (front end changes to make feature more usable)
-      - Optimization (of an existing feature)
-    - **Blue label** (feature area)
-    - **P label** (priority:
-      - P1 (The issue will be seen by all users.)
-      - P2 (The issue will be seen by most users.)
-      - P3 (The issue will be seen by about half of users.)
-      - P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
-    - **R label** (readiness):
-      - R1 (The issue is ready to be put into a release with all supporting documentation completed. 
-        - **NEW ISSUE CREATED WITH CLEAN FORMAT & OLD ISSUE CLOSED & REFERENCED**)
-      - R2 (The issue has been deemed necessary by users and business team. Supporting documentation is being completed.)
-      - R3 (The issue is a well formed idea able to be articulated to users. Should be shared so that they may vote on it.)
-      - R4 (The issue is just an idea with no or little supporting documentation.)
-    - **S label** (severity-ONLY FOR BUGS):
-      - S1 (The issue is blocking an impending release.)
-      - S2 (The issue causes data loss, crashes or hangs salt processes, makes the system unresponsive, etc.)
-      - S3 (The issue reports incorrect functionality, bad functionality, a confusing user experience, etc.)
-      - S4 (The issue reports cosmetic items, formatting, spelling, colors, etc.)
+**Step 2: create new files for front-end code**
+- Find, copy and rename an example .html file from app/source/html/activities.
+- Optional: Find, copy and rename an example .css file from app/source/css/activities & add file name to app/source/css/app.styl.
+- Find, copy and rename an example .js file from app/source/js/activities & add file name to app/source/js/app.activities.js.
 
-Steps to adding data to the API:
-   - Is there an existing endpoint/call/method already in the REST API?
-   - Yes, find an example of where it's already used, and try and copy it
-   - No, do these steps to add an endpoint to the API:
-   -    - Ensure database table is up-to-date. 
-   -        - If you add/rename fields (DO NOT REMOVE FIELDS), create .sql records of any changes and add to _DBUPDATE
-   -        - Find an existing example of a similar table in the LcRest folder
-   -        - Decide if it's only data being pulled or if data needs to be updated/inserted
-   -        - Revise SQL statements in newly copied .cs file and test in dev database using Razor
-   -        - Create file in LcREST with data functions to query, update, etc.
-   -        - Add a cshtml file into api/v1 and decide if it should go into a me (information about user requesting, usuall private) or user (others, usually public).
-   -        - Define functions for the API in this file
-   -        - Decide- do I need a app/source/js activity, model, appmodel (one or all?)
-   -        
+**Step 3: Edit your new html, css, js /activity files**
+- Change data-activity name to new name. Review and revise .js file to reference the appopriate /models and /appmodel files and functions. 
+- Change data-activity name to new name. Review and revise .html & .css files to have front end appearance you want referencing the css file of the same name. 
+- Change references the appopriate js functions in html.
 
+**Step 4: Test new page:**
+- http://localhost:8811/app.html#!/newActivity
+- Test any data you're using by placing console.log(data) in the .js file and reviewing using the browser's developer console
 
-### Database & API changes
+## Database & API changes
 We run a SQL Server 2008 R2 database hosted on Microsoft Azure. If you feel you need a copy of the dev database for development on your local machine, please contact @dani0198 or @iagosrl. 
 
 Access is limited to those who can sign a Business Associate Agreement per our HIPAA Policy.
@@ -270,4 +221,43 @@ You should keep a copy of the dev database that runs on your local machine. Any 
   - Find, copy and rename an example .js file from app/source/js/appmodel.
   - Revise or write code that create the actionss you'll need paying special attention to utilities referenced from the /js/utils folder.
   - Add file name to: app/source/js/appmodel/appmodel.js
+
+## Filing Github Issues
+
+We use Github to track all development issues, marketing tasks, and a repository for for other related project information.
+
+When filing an issue, you must do the following:
+- Select which milestone to attach it to:
+  - **Information Repository** Meeting Notes, People to connect with, Journalists to contact, Knowledge Base, etc.
+  - **Sandbox** All development issues not yet included in an upcoming release. Follow format outlined in milestone.
+  - **Marketing** All outstanding marketing items not yet included in specific marketing milestones.
+  - **Release X.XX** Issues to be completed and closed for a specific app release. Only @dani0198 or @iagosrl should add or remove issues from these.
+- Label approriately the issue:
+  - **Sandbox** 
+    - Include: 
+    - **Gray label** (issue type): 
+      - Bug 
+      - Content
+      - Feature 
+      - Enhancement (to an existing feature)
+      - Usability (front end changes to make feature more usable)
+      - Optimization (of an existing feature)
+    - **Blue label** (feature area)
+    - **P label** (priority:
+      - P1 (The issue will be seen by all users.)
+      - P2 (The issue will be seen by most users.)
+      - P3 (The issue will be seen by about half of users.)
+      - P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
+    - **R label** (readiness):
+      - R1 (The issue is ready to be put into a release with all supporting documentation completed. 
+        - **NEW ISSUE CREATED WITH CLEAN FORMAT & OLD ISSUE CLOSED & REFERENCED**)
+      - R2 (The issue has been deemed necessary by users and business team. Supporting documentation is being completed.)
+      - R3 (The issue is a well formed idea able to be articulated to users. Should be shared so that they may vote on it.)
+      - R4 (The issue is just an idea with no or little supporting documentation.)
+    - **S label** (severity-ONLY FOR BUGS):
+      - S1 (The issue is blocking an impending release.)
+      - S2 (The issue causes data loss, crashes or hangs salt processes, makes the system unresponsive, etc.)
+      - S3 (The issue reports incorrect functionality, bad functionality, a confusing user experience, etc.)
+      - S4 (The issue reports cosmetic items, formatting, spelling, colors, etc.)
+
 
