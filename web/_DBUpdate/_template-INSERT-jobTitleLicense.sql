@@ -1,4 +1,4 @@
-INSERT INTO [positionlicense]
+INSERT INTO [jobTitleLicense]
    ([PositionID]
    ,[LicenseCertificationID]
    ,[StateProvinceID]
