@@ -5,92 +5,92 @@ DELETE FROM CalendarRecurrenceFrequencyTypes
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('0'
    ,'none'
-   ,NULL
+   ,NULL)
 
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('1'
    ,'Secondly'
-   ,'Seconds'
+   ,'Seconds')
 
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('2'
    ,'Minutely'
-   ,'Minutes'
+   ,'Minutes')
 
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('3'
    ,'Hourly'
-   ,'Hours'
+   ,'Hours')
 
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('4'
    ,'Daily'
-   ,'Days'
+   ,'Days')
 
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('5'
    ,'Weekly'
-   ,'Weeks'
+   ,'Weeks')
 
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('6'
    ,'Monthly'
-   ,'Months'
+   ,'Months')
 
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('7'
    ,'Yearly'
-   ,'Years'
+   ,'Years')
 
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('205'
    ,'Bi-Weekly'
-   ,NULL
+   ,NULL)
 
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    ('206'
    ,'Bi-Montly'
-   ,NULL
+   ,NULL)
 
 
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'

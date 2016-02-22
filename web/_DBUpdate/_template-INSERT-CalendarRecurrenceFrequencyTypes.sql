@@ -1,8 +1,8 @@
 INSERT INTO [CalendarRecurrenceFrequencyTypes]
    ([ID]
    ,[FrequencyType]
-   ,[UnitPlural]
+   ,[UnitPlural])
 VALUES
    (@ID
    ,@FrequencyType
-   ,@UnitPlural
+   ,@UnitPlural)

@@ -1,5 +1,7 @@
 ALTER TABLE dbo.country ADD numcode int;
 
+GO
+
 TRUNCATE TABLE dbo.country;
 
 INSERT INTO dbo.country(CountryID, LanguageID, CountryName, CountryCode, CountryCodeAlpha2, CountryCallingCode, CreatedDate, UpdatedDate, ModifiedBy, Active, numcode) VALUES (1, 1, N'United States', N'USA', 'US', N'1', '2012-04-14 00:00:00.0', '2016-01-21 00:00:00.0', N'jd', 1, 840);

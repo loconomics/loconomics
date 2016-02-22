@@ -10,10 +10,12 @@ INSERT INTO [bookingtype]
    ,[UpdatedDate]
    ,[ModifiedBy]
    ,[Active]
-   ,[ServiceFeeFixed]
-   ,[ServiceFeePercentage]
+   ,[FirstTimeServiceFeeFixed]
+   ,[FirstTimeServiceFeePercentage]
    ,[PaymentProcessingFeePercentage]
-   ,[PaymentProcessingFeeFixed])
+   ,[PaymentProcessingFeeFixed]
+   ,[FirstTimeServiceFeeMaximum]
+   ,[FirstTimeServiceFeeMinimum])
 VALUES
    ('1'
    ,'marketplaceBooking'
@@ -22,10 +24,12 @@ VALUES
    ,'8/29/2015 1:09:00 PM'
    ,'jd'
    ,'True'
-   ,@ServiceFeeFixed
-   ,@ServiceFeePercentage
+   ,'0.00'
+   ,'10.00'
    ,'2.90'
-   ,'0.30')
+   ,'0.30'
+   ,'10.00'
+   ,'5.00')
 INSERT INTO [bookingtype]
    ([BookingTypeID]
    ,[BookingTypeName]
@@ -34,10 +38,12 @@ INSERT INTO [bookingtype]
    ,[UpdatedDate]
    ,[ModifiedBy]
    ,[Active]
-   ,[ServiceFeeFixed]
-   ,[ServiceFeePercentage]
+   ,[FirstTimeServiceFeeFixed]
+   ,[FirstTimeServiceFeePercentage]
    ,[PaymentProcessingFeePercentage]
-   ,[PaymentProcessingFeeFixed])
+   ,[PaymentProcessingFeeFixed]
+   ,[FirstTimeServiceFeeMaximum]
+   ,[FirstTimeServiceFeeMinimum])
 VALUES
    ('2'
    ,'bookNowBooking'
@@ -46,10 +52,12 @@ VALUES
    ,'8/29/2015 1:09:00 PM'
    ,'jd'
    ,'True'
-   ,@ServiceFeeFixed
-   ,@ServiceFeePercentage
+   ,'0.00'
+   ,'0.00'
    ,'2.90'
-   ,'0.30')
+   ,'0.30'
+   ,'0.00'
+   ,'0.00')
 INSERT INTO [bookingtype]
    ([BookingTypeID]
    ,[BookingTypeName]
@@ -58,10 +66,12 @@ INSERT INTO [bookingtype]
    ,[UpdatedDate]
    ,[ModifiedBy]
    ,[Active]
-   ,[ServiceFeeFixed]
-   ,[ServiceFeePercentage]
+   ,[FirstTimeServiceFeeFixed]
+   ,[FirstTimeServiceFeePercentage]
    ,[PaymentProcessingFeePercentage]
-   ,[PaymentProcessingFeeFixed])
+   ,[PaymentProcessingFeeFixed]
+   ,[FirstTimeServiceFeeMaximum]
+   ,[FirstTimeServiceFeeMinimum])
 VALUES
    ('3'
    ,'serviceProfessionalBooking'
@@ -70,8 +80,10 @@ VALUES
    ,'2/8/2016 12:00:00 AM'
    ,'jd'
    ,'True'
-   ,@ServiceFeeFixed
-   ,@ServiceFeePercentage
+   ,'0.00'
+   ,'0.00'
+   ,'0.00'
+   ,'0.00'
    ,'0.00'
    ,'0.00')
 INSERT INTO [bookingtype]
@@ -82,10 +94,12 @@ INSERT INTO [bookingtype]
    ,[UpdatedDate]
    ,[ModifiedBy]
    ,[Active]
-   ,[ServiceFeeFixed]
-   ,[ServiceFeePercentage]
+   ,[FirstTimeServiceFeeFixed]
+   ,[FirstTimeServiceFeePercentage]
    ,[PaymentProcessingFeePercentage]
-   ,[PaymentProcessingFeeFixed])
+   ,[PaymentProcessingFeeFixed]
+   ,[FirstTimeServiceFeeMaximum]
+   ,[FirstTimeServiceFeeMinimum])
 VALUES
    ('4'
    ,'exchangeBooking'
@@ -94,8 +108,10 @@ VALUES
    ,'2/8/2016 12:00:00 AM'
    ,'jd'
    ,'True'
-   ,@ServiceFeeFixed
-   ,@ServiceFeePercentage
+   ,'0.00'
+   ,'0.00'
+   ,'0.00'
+   ,'0.00'
    ,'0.00'
    ,'0.00')
 INSERT INTO [bookingtype]
@@ -106,10 +122,12 @@ INSERT INTO [bookingtype]
    ,[UpdatedDate]
    ,[ModifiedBy]
    ,[Active]
-   ,[ServiceFeeFixed]
-   ,[ServiceFeePercentage]
+   ,[FirstTimeServiceFeeFixed]
+   ,[FirstTimeServiceFeePercentage]
    ,[PaymentProcessingFeePercentage]
-   ,[PaymentProcessingFeeFixed])
+   ,[PaymentProcessingFeeFixed]
+   ,[FirstTimeServiceFeeMaximum]
+   ,[FirstTimeServiceFeeMinimum])
 VALUES
    ('5'
    ,'partnerBooking'
@@ -118,10 +136,12 @@ VALUES
    ,'8/29/2015 1:09:00 PM'
    ,'jd'
    ,'True'
-   ,@ServiceFeeFixed
-   ,@ServiceFeePercentage
+   ,'0.00'
+   ,'0.00'
    ,'2.90'
-   ,'0.30')
+   ,'0.30'
+   ,'0.00'
+   ,'0.00')
 
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'
