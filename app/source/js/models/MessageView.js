@@ -58,18 +58,37 @@ function MessageView(values, app) {
         }
     }, this);
     
-    this.client = ko.computed(function() {
-        var s = this.sourceMessage();
-        if (!s || !app) return null;
-
-        var cid = s.sentByUserID();
-        if (cid) {
-            if (cid === app.model.userProfile.data.userID())
+    var getUserData = function(userID) {
+        if (userID) {
+            if (userID === app.model.userProfile.data.userID())
                 return app.model.userProfile.data;
             else
-                return app.model.clients.getObservableItem(cid, true)();
+                return app.model.clients.getObservableItem(userID, true)();
         }
         return null;
+    };
+    
+    this.client = ko.computed(function() {
+        //jshint maxcomplexity:8
+        var t = this.sourceThread();
+        if (!t || !app) return null;
+        return getUserData(t.clientUserID());
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+    
+    this.serviceProfessional = ko.computed(function() {
+        //jshint maxcomplexity:8
+        var t = this.sourceThread();
+        if (!t || !app) return null;
+        return getUserData(t.serviceProfessionalUserID());
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+    
+    this.sender = ko.computed(function() {
+        //jshint maxcomplexity:8
+        var m = this.sourceMessage();
+        if (!m || !app) return null;
+        return getUserData(m.sentByUserID());
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
