@@ -6,7 +6,7 @@
     Options:
 
     GET /
-        Returns UserSearchResult[]
+        Returns SearchResults[]
 
     EXAMPLES {
         "Search Service Professionals by Job TitleID": {
@@ -38,7 +38,7 @@
                 var lat = Request["origLat"].AsDecimal();
                 var lng = Request["origLong"].AsDecimal();
                 var dist = Request["searchDistance"].AsInt();
-                return LcRest.UserSearchResult.SearchByJobTitle(j, lat, lng, dist, LcRest.Locale.Current);
+                return LcRest.ServiceProfessionalsByJobTitle.SearchByJobTitleID(j, lat, lng, dist, LcRest.Locale.Current);
             }
             else if (UrlData.Count == 1)
             {
@@ -48,6 +48,7 @@
                     var city = Request["city"];
                     return LcRest.JobTitleSearchResult.SearchByCategory(cat, city, LcRest.Locale.Current);
                 }
+
             }
             return new HttpException(404, "Not found");
         }

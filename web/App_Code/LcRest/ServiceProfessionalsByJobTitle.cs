@@ -6,9 +6,9 @@ using System.Web;
 namespace LcRest
 {
     /// <summary>
-    /// Public user data for a search result querying for all providers of a specific job-title
+    /// Public data for a search result querying for all service professionals of a specific job-title within a limited search distance of the user
     /// </summary>
-    public class UserSearchResult
+    public class ServiceProfessionalsByJobTitle
     {
         #region Fields
         public int userID;
@@ -52,10 +52,10 @@ namespace LcRest
         #endregion
 
         #region Instances
-        public static UserSearchResult FromDB(dynamic record, bool fillLinks = false)
+        public static ServiceProfessionalsByJobTitle FromDB(dynamic record, bool fillLinks = false)
         {
             if (record == null) return null;
-            var r = new UserSearchResult
+            var r = new ServiceProfessionalsByJobTitle
             {
                 userID = record.userID,
                 jobTitleID = record.jobTitleID,
@@ -72,7 +72,7 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static IEnumerable<UserSearchResult> SearchByJobTitle(int JobTitleID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
+        public static IEnumerable<ServiceProfessionalsByJobTitle> SearchByJobTitleID(int JobTitleID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
         {
             using (var db = new LcDatabase())
             {
@@ -98,7 +98,7 @@ namespace LcRest
                         u.lastName,
                         u.businessName,
                         p.PositionSingular As jobTitleNameSingular,
-                        otherJobTitles=STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.PositionID != @JobTitleID AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' ),
+                        otherJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.PositionID != @JobTitleID AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
                         MIN(ROUND(@orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371,1)) as distance
                     FROM dbo.users u 
                     INNER JOIN dbo.userprofilepositions upp 
@@ -137,7 +137,7 @@ namespace LcRest
                         u.lastName,
                         u.businessName,
                         p.PositionSingular", JobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
-                    .Select(x => (UserSearchResult)FromDB(x, true));
+                    .Select(x => (ServiceProfessionalsByJobTitle)FromDB(x, true));
             }
         }
         #endregion
