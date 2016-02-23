@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,10 +15,9 @@ namespace LcRest
         private int jobTitleID;
         public string firstName;
         public string lastName;
+        public string secondLastName;
         public string businessName;
-        public string jobTitleNameSingular;
-        public string otherJobTitles;
-        public decimal distance;
+        public string jobTitles;
 
         /// <summary>
         /// Same as in PublicUserProfile
@@ -61,10 +60,9 @@ namespace LcRest
                 jobTitleID = record.jobTitleID,
                 firstName = record.firstName,
                 lastName = record.lastName,
+                secondLastName = record.secondLastName,
                 businessName = record.businessName,
-                jobTitleNameSingular = record.jobTitleNameSingular,
-                otherjobTitles = record.otherJobTitles,
-                distance = record.distance
+                jobTitles = record.jobTitles
             };
             r.FillLinks();
             return r;
@@ -72,71 +70,11 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static IEnumerable<UserSearchResult> SearchByJobTitle(int JobTitleID, double origLat, double origLong, int SearchDistance, Locale locale)
+        public static IEnumerable<UserSearchResult> SearchByJobTitle(string jobTitleSingularName, string city, Locale locale)
         {
             using (var db = new LcDatabase())
             {
-               return db.Query(@"
-                    DECLARE @JobTitleID int
-                    SET @JobTitleID = @0
-                    DECLARE @origLat DECIMAL(12, 9)
-                    SET @origLat=@1
-                    DECLARE @origLong DECIMAL(12, 9)
-                    SET @origLong=@2
-                    DECLARE @LanguageID int
-                    DECLARE @SearchDistance int
-                    SET @SearchDistance = @3
-                    SET @LanguageID = @LanguageID
-                    DECLARE @CountryID int
-                    SET @CountryID = @CountryID
-                    DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
-
-                    SELECT 
-                        u.userID,
-                        p.positionID as JobTitleID,
-                        u.firstName,
-                        u.lastName,
-                        u.businessName,
-                        p.PositionSingular As jobTitleNameSingular,
-                        otherJobTitles=STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.PositionID != @JobTitleID AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' ),
-                        MIN(ROUND(@orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371,1)) as distance
-                    FROM dbo.users u 
-                    INNER JOIN dbo.userprofilepositions upp 
-                        ON u.UserID = upp.UserID 
-                    INNER JOIN serviceaddress sa
-                        ON sa.UserID = upp.UserID
-                        AND sa.PositionID = upp.PositionID
-                    INNER JOIN
-                        address a
-                        ON a.addressID=sa.addressID
-                        AND a.CountryID=upp.CountryID
-                    INNER JOIN  positions p 
-                        ON upp.PositionID = p.PositionID 
-                        AND upp.LanguageID = p.LanguageID
-                        AND upp.CountryID = p.CountryID 
-                    WHERE
-                        upp.LanguageID = @LanguageID
-                        AND upp.CountryID = @CountryID
-                        AND u.Active = 1
-                        AND upp.Active = 1
-                        AND upp.StatusID = 1
-                        AND p.Active = 1
-                        AND p.positionID = @JobTitleID
-                        AND a.Latitude IS NOT NULL
-                        AND a.Longitude IS NOT NULL
-                        AND @orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371 <=
-                        (CASE WHEN (sa.ServicesPerformedAtLocation = 0 AND sa.ServiceRadiusFromLocation IS NOT NULL) THEN
-                        CONVERT(FLOAT, sa.ServiceRadiusFromLocation)
-                        ELSE 
-                        @SearchDistance
-                        END)
-                    GROUP BY
-                        u.userID,
-                        p.positionID,
-                        u.firstName,
-                        u.lastName,
-                        u.businessName,
-                        p.PositionSingular", JobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
+                return db.Query("EXEC dbo.SearchProvidersByPositionSingular @0, @1, @2, @3", locale.languageID, locale.countryID, jobTitleSingularName, city)
                     .Select(x => (UserSearchResult)FromDB(x, true));
             }
         }
