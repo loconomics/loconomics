@@ -16,9 +16,15 @@ function MailFolder(values) {
     this.top = ko.pureComputed(function top(num) {
         if (num) this.topNumber(num);
         var t = this.topNumber() - 1;
-        return this.messages().some(function(e, i) {
-            return i >= t;
+        var ret = [];
+        this.messages().some(function(e, i) {
+            if (i >= t) {
+                // stop
+                return true;
+            }
+            ret.push(e);
         });
+        return ret;
     }, this);
 }
 
