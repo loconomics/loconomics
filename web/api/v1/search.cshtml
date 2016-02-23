@@ -34,11 +34,11 @@
         {
             if (UrlData.Count == 0)
             {
-                var j = Request["jobTitleID"];
-                var lat = Request["origLat"];
-                var long = Request["origLong"];
-                var dist = Request["SearchDistance"];
-                return LcRest.UserSearchResult.SearchByJobTitle(j, lat, long, dist, LcRest.Locale.Current);
+                var j = Request["jobTitleID"].AsInt();
+                var lat = Request["origLat"].AsDecimal();
+                var lng = Request["origLong"].AsDecimal();
+                var dist = Request["searchDistance"].AsInt();
+                return LcRest.UserSearchResult.SearchByJobTitle(j, lat, lng, dist, LcRest.Locale.Current);
             }
             else if (UrlData.Count == 1)
             {

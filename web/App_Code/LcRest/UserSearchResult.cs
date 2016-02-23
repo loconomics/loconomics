@@ -63,7 +63,7 @@ namespace LcRest
                 lastName = record.lastName,
                 businessName = record.businessName,
                 jobTitleNameSingular = record.jobTitleNameSingular,
-                otherjobTitles = record.otherJobTitles,
+                otherJobTitles = record.otherJobTitles,
                 distance = record.distance
             };
             r.FillLinks();
@@ -72,7 +72,7 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static IEnumerable<UserSearchResult> SearchByJobTitle(int JobTitleID, double origLat, double origLong, int SearchDistance, Locale locale)
+        public static IEnumerable<UserSearchResult> SearchByJobTitle(int JobTitleID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
         {
             using (var db = new LcDatabase())
             {
