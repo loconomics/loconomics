@@ -84,6 +84,17 @@ module.exports = {
         'prepare-phonegapbuild',
         'notify:build'
 	],
+	'build-webapp': [
+        'build-js',
+        'prepare-bootstrap-variables',
+		'build-css',
+        'bliss:webapp',
+        'notify:html',
+        'build-images',
+        'build-fonts',
+        'copyto:webapp_assets',
+        'notify:build'
+	],
     'atwork': [
         'connect:atbuild',
         'watch'

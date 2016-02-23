@@ -35,6 +35,21 @@ module.exports = function(grunt) {
             }
           }
         },
+        webapp: {
+          files: {
+            '../web/_specialRoutes/app.html': ['source/html/app.js.html']
+          },
+          options: {
+            context: {
+                debug: false,
+                includedFiles: includedFiles,
+                cordovajs: false,
+                siteUrl: '',
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang
+            }
+          }
+        },
         appDebug: {
           files: {
             'build/appDebug.html': ['source/html/app.js.html']
