@@ -1,4 +1,4 @@
-﻿@**
+@**
     Search API.
     
     It performs a search of users by job title or service category
@@ -9,11 +9,13 @@
         Returns UserSearchResult[]
 
     EXAMPLES {
-        "Search Service Professionals by Job Title": {
+        "Search Service Professionals by Job TitleID": {
             "url": "/api/v1/en-US/search",
             "get": {
-                "jobTitleSingularName": "Massage Therapist",
-                "city": "San Francisco"
+                "jobTitleID": "106",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
             }
         },
         "Search Job Titles by Category": {
@@ -32,9 +34,11 @@
         {
             if (UrlData.Count == 0)
             {
-                var j = Request["jobTitleSingularName"];
-                var city = Request["city"];
-                return LcRest.UserSearchResult.SearchByJobTitle(j, city, LcRest.Locale.Current);
+                var j = Request["jobTitleID"];
+                var lat = Request["origLat"];
+                var long = Request["origLong"];
+                var dist = Request["SearchDistance"];
+                return LcRest.UserSearchResult.SearchByJobTitle(j, lat, long, dist, LcRest.Locale.Current);
             }
             else if (UrlData.Count == 1)
             {
