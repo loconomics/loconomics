@@ -18,7 +18,7 @@ namespace LcRest
         public string businessName;
         public string jobTitleNameSingular;
         public string otherJobTitles;
-        public decimal distance;
+        public double distance;
 
         /// <summary>
         /// Same as in PublicUserProfile
