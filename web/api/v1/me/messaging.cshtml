@@ -71,8 +71,8 @@
                 "messagesLimit": 1
             },
             "post": {
-                "customerUserID": 141,
-                "freelancerUserID": 141,
+                "clientUserID": 141,
+                "serviceProfessionalUserID": 141,
                 "jobTitleID": 106,
                 "subject": 'Testing conversation',
                 "bodyText": 'Testing first message'
@@ -107,7 +107,7 @@
             int? untilID = Request["untilID"].IsInt() ? Request["untilID"].AsInt() : (int?)null;
             int? sinceID = Request["sinceID"].IsInt() ? Request["sinceID"].AsInt() : (int?)null;
 
-            return LcMessaging.GetRestThreads(WebSecurity.CurrentUserId, limit, untilID, sinceID, messagesLimit);
+            return LcRest.Thread.GetList(WebSecurity.CurrentUserId, limit, untilID, sinceID, messagesLimit);
         }
         private dynamic GetThread(int threadID) {
             
@@ -120,12 +120,12 @@
             // To be able to apply the filtering options to messages, we need to use the 
             // API GetRestMessages directly, but previously use the GetRestThreads to 
             // get the single thread record.
-            var thread = LcMessaging.GetRestThreads(userId, 1, threadID + 1, threadID - 1, 1);
+            var thread = LcRest.Thread.GetList(userId, 1, threadID + 1, threadID - 1, 1);
             if (thread.Count == 0) {
                 throw new HttpException(404, "Not found");
             }
 
-            thread[0].messages = LcMessaging.GetRestThreadMessages(threadID, limit, untilID, sinceID);
+            thread[0].messages = LcRest.Message.GetList(threadID, limit, untilID, sinceID);
 
             return thread[0];
         }
@@ -139,7 +139,7 @@
             var thread = GetThread(threadID);
             if (thread.clientUserID == userId ||
                 thread.serviceProfessionalUserID == userId) {
-                var message = LcMessaging.GetRestThreadMessages(threadID, 1, messageID + 1, messageID - 1);
+                    var message = LcRest.Message.GetList(threadID, 1, messageID + 1, messageID - 1);
                 if (message.Count == 0) {
                     throw new HttpException(404, "Not found");
                 }
@@ -196,7 +196,7 @@
                 // Auto values and validation for userID's.
                 // Both userID fields are exclusive, if one is set, the other
                 // one gets as value the current userId. If both are set
-                // freelanceUserID takes precedence and client is set to userId,
+                // serviceProfessionalUserID takes precedence and client is set to userId,
                 // except if is the own userId
                 if (serviceProfessionalUserID > 0 &&
                     serviceProfessionalUserID != userId ||
@@ -232,7 +232,7 @@
                 }
   
                 // Create thread with initial message
-                var newThreadID = LcMessaging.PostRestThread(clientUserID, serviceProfessionalUserID, jobTitleID, subject, bodyText, userId);
+                var newThreadID = LcRest.Thread.PostInquiry(clientUserID, serviceProfessionalUserID, jobTitleID, subject, bodyText, userId);
                 if (newThreadID == 0) {
                     throw new HttpException(400, "The recipient does not exists.");
                 }
@@ -258,7 +258,7 @@
                     }
                     
                     // Add message to conversation
-                    var newMessageID = LcMessaging.PostRestMessage(threadID, bodyText, userId);
+                    var newMessageID = LcRest.Message.PostInquiry(threadID, bodyText, userId);
                     if (newMessageID == 0) {
                         throw new HttpException(404, "Not found");
                     }
