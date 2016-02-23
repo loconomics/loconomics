@@ -87,18 +87,24 @@ MessageView.fromThread = function(app, thread) {
     var msg = thread.messages();
     msg = msg && msg[0] || null;
     
-    // TODO: more different tag/classes depending on booking state as per design
-    // NOTE: That requires to load the booking or request by auxID and wait for it
     var tag, classNames;
-    if (msg.auxT() === 'Booking') {
-        tag = 'Booking';
-        classNames = 'text-success';
+    if (msg) {
+        // TODO: more different tag/classes depending on booking state as per design
+        // NOTE: That requires to load the booking or request by auxID and wait for it
+        if (msg.auxT() === 'Booking') {
+            tag = 'Booking';
+            classNames = 'text-success';
+        }
+        // TODO For state==request must be
+        /*{
+            tag = 'Booking request';
+            classNames = 'text-warning';
+        }*/
     }
-    // TODO For state==request must be
-    /*{
-        tag = 'Booking request';
-        classNames = 'text-warning';
-    }*/
+    else {
+        // Problem if msg is null, since almost one message must exists on every thread
+        console.error('Thread is empty', thread);
+    }
     
     return new MessageView({
         sourceThread: thread,
