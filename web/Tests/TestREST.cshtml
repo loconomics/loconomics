@@ -1,4 +1,4 @@
-﻿@{
+@{
     if (!LcHelpers.InDev) {
         LcHelpers.TestArea();
     }
@@ -821,7 +821,7 @@
             "delete": {}
         },
         "List or Upload a License/Certification Photo": {
-            "url": "/api/v1/en-US/me/licenses-certifications/106",
+            "url": "/api/v1/en-US/me/licenses-certificatinos/106",
             "get": {},
             "post": {
                 "photo": "binary image/* content",
@@ -870,11 +870,13 @@
             }
         },
 
-        "Search Service Professionals by Job Title": {
+        "Search Service Professionals by Job TitleID": {
             "url": "/api/v1/en-US/search",
             "get": {
-                "jobTitleSingularName": "Massage Therapist",
-                "city": "San Francisco"
+                "jobTitleID": "106",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
             }
         },
         "Search Job Titles by Category": {
