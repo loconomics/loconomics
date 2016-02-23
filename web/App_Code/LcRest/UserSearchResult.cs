@@ -83,12 +83,12 @@ namespace LcRest
                     SET @origLat=@1
                     DECLARE @origLong DECIMAL(12, 9)
                     SET @origLong=@2
-                    DECLARE @LanguageID int
                     DECLARE @SearchDistance int
                     SET @SearchDistance = @3
-                    SET @LanguageID = @LanguageID
+                    DECLARE @LanguageID int                    
+                    SET @LanguageID = @4
                     DECLARE @CountryID int
-                    SET @CountryID = @CountryID
+                    SET @CountryID = @5
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
 
                     SELECT 
