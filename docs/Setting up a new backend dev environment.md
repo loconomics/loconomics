@@ -1,4 +1,4 @@
-##Setting up a new backend dev environment without SQL Server##
+##Setting up a new backend dev environment using our host provider##
 ###Setting up a new database###
 - Create a backup of current dev database
 - Create a database using the dev backup named devYOURNAME (either on your local machine or ask @dani0198 or @iagosrl for one on the server)
