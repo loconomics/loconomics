@@ -27,6 +27,15 @@
                 "SearchDistance": "30"
             }
         },
+        "Search Job Titles by SubCategoryID": {
+            "url": "/api/v1/en-US/search/job-titles-subcategoryID",
+            "get": {
+                "ServiceSubCategoryID": "1",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },
         "Search Service Professionals by Name": {
             "url": "/api/v1/en-US/search/search-term",
             "get": {
@@ -56,6 +65,14 @@
                 if (UrlData[0] == "job-titles-categoryID")
                 {
                     var s = Request["ServiceCategoryID"].AsInt();
+                    var lat = Request["origLat"].AsDecimal();
+                    var lng = Request["origLong"].AsDecimal();
+                    var dist = Request["searchDistance"].AsInt();
+                    return LcRest.JobTitleSearchResult.SearchByCategoryID(s, lat, lng, dist, LcRest.Locale.Current);
+                }
+                else if (UrlData[0] == "job-titles-subcategoryID")
+                {
+                    var s = Request["ServiceSubCategoryID"].AsInt();
                     var lat = Request["origLat"].AsDecimal();
                     var lng = Request["origLong"].AsDecimal();
                     var dist = Request["searchDistance"].AsInt();
