@@ -36,8 +36,17 @@
                 "SearchDistance": "30"
             }
         },
+        "Search Job Titles by Name": {
+            "url": "/api/v1/en-US/search/job-titles-search-term",
+            "get": {
+                "SearchTerm": "cleaner",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },        
         "Search Service Professionals by Name": {
-            "url": "/api/v1/en-US/search/search-term",
+            "url": "/api/v1/en-US/search/service-professionals-search-term",
             "get": {
                 "SearchTerm": "Joshua",
                 "origLat": "37.788479",
@@ -78,7 +87,15 @@
                     var dist = Request["searchDistance"].AsInt();
                     return LcRest.JobTitleSearchResult.SearchByCategoryID(s, lat, lng, dist, LcRest.Locale.Current);
                 }
-                else if (UrlData[0] == "search-term")
+                else if (UrlData[0] == "job-titles-search-term")
+                {
+                    var s = Request["SearchTerm"];
+                    var lat = Request["origLat"].AsDecimal();
+                    var lng = Request["origLong"].AsDecimal();
+                    var dist = Request["searchDistance"].AsInt();
+                    return LcRest.JobTitleSearchResult.SearchByName(s, lat, lng, dist, LcRest.Locale.Current);
+                }
+                else if (UrlData[0] == "service-professionals-search-term")
                 {
                     var s = Request["SearchTerm"];
                     var lat = Request["origLat"].AsDecimal();

@@ -149,7 +149,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                return db.Query(@"
-                   DECLARE @SearchTerm varchar(150)
+                    DECLARE @SearchTerm varchar(150)
                     SET @SearchTerm = @0
                     DECLARE @origLat DECIMAL(12, 9)
                     SET @origLat=@1
