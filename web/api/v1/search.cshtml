@@ -47,7 +47,7 @@
                 var lat = Request["origLat"].AsDecimal();
                 var lng = Request["origLong"].AsDecimal();
                 var dist = Request["searchDistance"].AsInt();
-                return LcRest.ServiceProfessionalsByJobTitle.SearchByJobTitleID(j, lat, lng, dist, LcRest.Locale.Current);
+                return LcRest.ServiceProfessionalSearchResult.SearchByJobTitleID(j, lat, lng, dist, LcRest.Locale.Current);
             }
             else if (UrlData.Count == 1)
             {
@@ -63,7 +63,7 @@
                     var lat = Request["origLat"].AsDecimal();
                     var lng = Request["origLong"].AsDecimal();
                     var dist = Request["searchDistance"].AsInt();
-                    return LcRest.ServiceProfessionalsByName.SearchByName(j, lat, lng, dist, LcRest.Locale.Current);
+                    return LcRest.ServiceProfessionalSearchResult.SearchByName(j, lat, lng, dist, LcRest.Locale.Current);
                 }
             }
             return new HttpException(404, "Not found");
