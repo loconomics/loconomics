@@ -420,6 +420,12 @@ var appInit = function appInit() {
     }
     
     require('./utils/toggleActionSheet').on();
+    
+    // Change website index activity
+    var indexAct = $('html').data('index');
+    if (indexAct) {
+        app.shell.indexName = indexAct;
+    }
 
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)

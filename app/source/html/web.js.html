@@ -1,0 +1,40 @@
+@*context: {debug:bool, includedFiles:[], cordovajs:bool, siteUrl:string} *@
+<!DOCTYPE html>
+<html lang="en" class="App" data-index="home" data-site-url="" data-facebook-language="@(facebookLang)" data-facebook-appid="@(facebookAppID)" data-culture="en-US">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Loconomics.com App">
+        <meta name="author" content="Loconomics Coop.">
+        <link rel="icon" href="assets/images/favicon.ico" />
+        <meta
+          name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+
+        <meta name="format-detection" content="telephone=no" />
+
+        <title>Loconomics Cooperative</title>
+
+        @if(debug) {
+        <link href="assets/css/libs.@(cssVersion).css" rel="stylesheet">
+        <link href="assets/css/app.@(cssVersion).css" rel="stylesheet">
+        <script src="assets/js/styleguidelibs.@(cssVersion).js"></script>
+        <script src="assets/js/libs.@(cssVersion).js"></script>
+        <script src="assets/js/app.@(cssVersion).js"></script>
+        } else {
+        <link href="assets/css/libs.min.@(cssVersion).css" rel="stylesheet">
+        <link href="assets/css/app.min.@(cssVersion).css" rel="stylesheet">
+        <script src="assets/js/styleguidelibs.min.@(cssVersion).js"></script>
+        <script src="assets/js/libs.min.@(cssVersion).js"></script>
+        <script src="assets/js/app.min.@(cssVersion).js"></script>
+        }
+    </head>
+    <body>
+        <div class="SplashScreen">Loading...</div>
+        @render('parts/AppNav.html')
+        <div class="App-activities">
+            @for(var f=0; f < includedFiles.length; f++) {
+                @render(includedFiles[f])
+            }
+        </div>
+</body>
+</html>

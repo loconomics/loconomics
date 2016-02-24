@@ -18,6 +18,8 @@ module.exports = function(grunt) {
         'activities/signup.html',
         'activities/terms.html'
     ];
+    var moment = require('moment');
+    var version = moment().format('YYYYMMDDHHmm');
 
     return {
         app: {
@@ -37,16 +39,16 @@ module.exports = function(grunt) {
         },
         webapp: {
           files: {
-            '../web/_specialRoutes/app.html': ['source/html/app.js.html']
+            '../web/_specialRoutes/app.html': ['source/html/web.js.html']
           },
           options: {
             context: {
                 debug: false,
                 includedFiles: includedFiles,
-                cordovajs: false,
-                siteUrl: '',
                 facebookAppID: facebookAppID,
-                facebookLang: facebookLang
+                facebookLang: facebookLang,
+                cssVersion: version,
+                jsVersion: version
             }
           }
         },
