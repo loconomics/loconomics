@@ -18,11 +18,13 @@
                 "SearchDistance": "30"
             }
         },
-        "Search Job Titles by Category": {
-            "url": "/api/v1/en-US/search/job-titles",
+        "Search Job Titles by CategoryID": {
+            "url": "/api/v1/en-US/search/job-titles-categoryID",
             "get": {
-                "category": "Home",
-                "city": "San Francisco"
+                "ServiceCategoryID": "1",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
             }
         },
         "Search Service Professionals by Name": {
@@ -51,19 +53,21 @@
             }
             else if (UrlData.Count == 1)
             {
-                if (UrlData[0] == "job-titles")
+                if (UrlData[0] == "job-titles-categoryID")
                 {
-                    var cat = Request["category"];
-                    var city = Request["city"];
-                    return LcRest.JobTitleSearchResult.SearchByCategory(cat, city, LcRest.Locale.Current);
-                }
-                else if (UrlData[0] == "search-term")
-                {
-                    var j = Request["SearchTerm"];
+                    var s = Request["ServiceCategoryID"].AsInt();
                     var lat = Request["origLat"].AsDecimal();
                     var lng = Request["origLong"].AsDecimal();
                     var dist = Request["searchDistance"].AsInt();
-                    return LcRest.ServiceProfessionalSearchResult.SearchByName(j, lat, lng, dist, LcRest.Locale.Current);
+                    return LcRest.JobTitleSearchResult.SearchByCategoryID(s, lat, lng, dist, LcRest.Locale.Current);
+                }
+                else if (UrlData[0] == "search-term")
+                {
+                    var s = Request["SearchTerm"];
+                    var lat = Request["origLat"].AsDecimal();
+                    var lng = Request["origLong"].AsDecimal();
+                    var dist = Request["searchDistance"].AsInt();
+                    return LcRest.ServiceProfessionalSearchResult.SearchByName(s, lat, lng, dist, LcRest.Locale.Current);
                 }
             }
             return new HttpException(404, "Not found");
