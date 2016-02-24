@@ -476,7 +476,3 @@ if (window.cordova) {
     // Only on DOM-Ready, for in browser development
     $(appInit);
 }
-
-window.WeeklySchedule = require('./models/WeeklySchedule');
-window.WeekDaySchedule = require('./models/WeekDaySchedule');
-window.TimeRange = require('./models/TimeRange');
