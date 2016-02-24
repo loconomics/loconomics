@@ -24,8 +24,17 @@
                 "category": "Home",
                 "city": "San Francisco"
             }
+        },
+        "Search Service Professionals by Name": {
+            "url": "/api/v1/en-US/search/search-term",
+            "get": {
+                "SearchTerm": "Joshua",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
         }
-    }
+}
 **@
 @functions{
     public class RestSearch : RestWebPage
@@ -48,7 +57,14 @@
                     var city = Request["city"];
                     return LcRest.JobTitleSearchResult.SearchByCategory(cat, city, LcRest.Locale.Current);
                 }
-
+                else if (UrlData[0] == "search-term")
+                {
+                    var j = Request["SearchTerm"];
+                    var lat = Request["origLat"].AsDecimal();
+                    var lng = Request["origLong"].AsDecimal();
+                    var dist = Request["searchDistance"].AsInt();
+                    return LcRest.ServiceProfessionalsByName.SearchByName(j, lat, lng, dist, LcRest.Locale.Current);
+                }
             }
             return new HttpException(404, "Not found");
         }
