@@ -4,7 +4,7 @@
 'use strict';
 
 var ko = require('knockout'),
-    _ = require('lodash/groupBy'),
+    groupBy = require('lodash/groupBy'),
     $ = require('jquery');
 
 var EventEmitter = require('events').EventEmitter;
@@ -59,7 +59,7 @@ function ServiceProfessionalServiceViewModel(app) {
         var groups = [],
             groupsList = [];
         if (!this.isAdditionMode()) {
-            groups = _.groupBy(list, function(service) {
+            groups = groupBy(list, function(service) {
                 return service.pricingTypeID();
             });
 

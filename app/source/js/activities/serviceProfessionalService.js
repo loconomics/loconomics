@@ -6,7 +6,7 @@
 'use strict';
 
 var ko = require('knockout'),
-    _ = require('lodash/groupBy'),
+    groupBy = require('lodash/groupBy'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 
@@ -264,7 +264,7 @@ function ViewModel(app) {
         var groups = [],
             groupsList = [];
         if (!this.isAdditionMode()) {
-            groups = _.groupBy(list, function(pricingItem) {
+            groups = groupBy(list, function(pricingItem) {
                 return pricingItem.pricingTypeID();
             });
 
