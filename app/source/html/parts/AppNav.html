@@ -15,7 +15,7 @@
     <div class="hidden-xs hidden-sm" data-bind="template: 'largenavbar-template'"></div>
 
     <div class="App-menus">
-        <div id="menuIn" class="navbar-collapse collapse">
+        <div id="menuIn" class="navbar-collapse collapse hidden-md hidden-lg">
             <h4 class="App-menus-header">
                 <div class="App-menus-header-photo"><img data-bind="attr: { src: photoUrl }" /></div>
                 <span class="App-menus-header-user" data-bind="text: userName"></span>
@@ -36,14 +36,14 @@
                 <li class="go-logout"><a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a></li>
             </ul>
         </div>
-        <div id="menuOut" class="navbar-collapse collapse">
+        <div id="menuOut" class="navbar-collapse collapse hidden-md hidden-lg">
             <ul class="nav navbar-nav">
                 <li class="go-index"><a href="/">Home</a></li>
                 <li class="go-login"><a href="/login">Login</a></li>
                 <!--<li class="go-search"><a href="/home"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Search</a></li>-->
             </ul>
         </div>
-        <div id="menuNewItem" class="navbar-collapse collapse">
+        <div id="menuNewItem" class="navbar-collapse collapse hidden-md hidden-lg">
             <h4 class="App-menus-header">ADD NEW</h4>
             <ul class="nav navbar-nav">
                 <li class="go-booking-new" data-bind="visible: isServiceProfessional"><a href="/appointment/-4"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Booking</a></li>

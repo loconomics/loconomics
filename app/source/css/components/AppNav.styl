@@ -249,25 +249,30 @@
     }
 }
 
-// On AppNav opened, match SmartNavBar style with nav
-body.has-appNav-open {
-    .SmartNavBar {
-        //background: $AppNav-backColor;
-        background: transparent;
-        border-bottom-color: transparent;
-        
-        .SmartNavBar-btn {
-            color: White;
-        }
-        
-        pointer-events: none;
-        .SmartNavBar-edge,
-        .SmartNavBar-btn {
-            pointer-events: auto;
-        }
-        h1 {
-            opacity: 0;
+@import 'utils/backdrop.styl'
+@media $mediaMaxSm {
+    // On AppNav opened, match SmartNavBar style with nav
+    body.has-appNav-open {
+        backdrop();
+
+        .SmartNavBar {
+            //background: $AppNav-backColor;
+            background: transparent;
+            border-bottom-color: transparent;
+
+            .SmartNavBar-btn {
+                color: White;
+            }
+
             pointer-events: none;
+            .SmartNavBar-edge,
+            .SmartNavBar-btn {
+                pointer-events: auto;
+            }
+            h1 {
+                opacity: 0;
+                pointer-events: none;
+            }
         }
     }
 }
