@@ -44,13 +44,13 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static IEnumerable<JobTitleSearchResult> SearchByCategoryID(int ServiceCategoryID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
+        public static IEnumerable<JobTitleSearchResult> SearchByCategoryID(int categoryID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
         {
             using (var db = new LcDatabase())
             {
                 return db.Query(@"
-                    DECLARE @ServiceCategoryID AS int
-                    SET @ServiceCategoryID = @0
+                    DECLARE @categoryID AS int
+                    SET @categoryID = @0
                     DECLARE @origLat DECIMAL(12, 9)
                     SET @origLat=@1
                     DECLARE @origLong DECIMAL(12, 9)
@@ -148,7 +148,7 @@ namespace LcRest
                                 AND PHR.LanguageID = P.LanguageID
                                 AND PHR.CountryID = P.CountryID
                     WHERE
-                            SCP.ServiceCategoryID = @ServiceCategoryID
+                            SCP.ServiceCategoryID = @categoryID
                              AND
                             SCP.Active = 1
                              AND
@@ -161,7 +161,7 @@ namespace LcRest
 							AND dbo.fx_IfNW(p.PositionSingular, null) is not null                    
                     GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
                     ORDER BY serviceProfessionalsCount DESC, P.DisplayRank, P.PositionPlural  
-                                ", ServiceCategoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
+                                ", categoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(FromDB);
             }
         }

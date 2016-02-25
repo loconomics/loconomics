@@ -1,0 +1,140 @@
+@**
+    Search By API.
+    
+    It performs a search of job titles, service professionals, or categories by Search Term, Job Title ID, or Category ID within 30 miles of a user's location.
+
+    Options:
+
+    GET /
+        Returns SearchByResults[]
+
+    EXAMPLES {
+          "Search Service Professionals by Job TitleID": {
+            "url": "/api/v1/en-US/search-by/jobtitleid-service-professionals",
+            "get": {
+                "jobTitleID": "106",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },
+        "Search Job Titles by CategoryID": {
+            "url": "/api/v1/en-US/search-by/categoryid-job-titles",
+            "get": {
+                "categoryID": "1",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },
+ 
+        /* TODO: Add ServiceSubCategoryPositionTable to db, and test query in JobTitleSearchResult.cs       
+        "Search Job Titles by SubCategoryID": {
+            "url": "/api/v1/en-US/search-by/subcategoryid-job-titles",
+            "get": {
+                "ServiceSubCategoryID": "1",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },*/
+        "Search Job Titles by Search Term": {
+            "url": "/api/v1/en-US/search-by/searchterm-job-titles",
+            "get": {
+                "SearchTerm": "cleaner",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },        
+        "Search Service Professionals by Search Term": {
+            "url": "/api/v1/en-US/search-by/searchterm-service-professionals",
+            "get": {
+                "SearchTerm": "Joshua",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },        
+        "Search Categories by Search Term": {
+            "url": "/api/v1/en-US/search-by/searchterm-categories",
+            "get": {
+                "SearchTerm": "home",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },        
+        "Search Categories by CategoryID": {
+            "url": "/api/v1/en-US/search-by/categoryid-categories",
+            "get": {
+                "categoryID": "1",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        }
+}
+**@
+@functions{
+    public class RestSearchBy : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData[0] == "jobtitleid-service-professionals")
+            {
+                var j = Request["jobTitleID"].AsInt();
+                var lat = Request["origLat"].AsDecimal();
+                var lng = Request["origLong"].AsDecimal();
+                var dist = Request["searchDistance"].AsInt();
+                return LcRest.ServiceProfessionalSearchResult.SearchByJobTitleID(j, lat, lng, dist, LcRest.Locale.Current);
+            }
+            else if (UrlData[0] == "categoryid-job-titles")
+            {
+                var s = Request["categoryID"].AsInt();
+                var lat = Request["origLat"].AsDecimal();
+                var lng = Request["origLong"].AsDecimal();
+                var dist = Request["searchDistance"].AsInt();
+                return LcRest.JobTitleSearchResult.SearchByCategoryID(s, lat, lng, dist, LcRest.Locale.Current);
+            }
+
+            else if (UrlData[0] == "searchterm-job-titles")
+            {
+                var s = Request["SearchTerm"];
+                var lat = Request["origLat"].AsDecimal();
+                var lng = Request["origLong"].AsDecimal();
+                var dist = Request["searchDistance"].AsInt();
+                return LcRest.JobTitleSearchResult.SearchByName(s, lat, lng, dist, LcRest.Locale.Current);
+            }
+            else if (UrlData[0] == "searchterm-service-professionals")
+            {
+                var s = Request["SearchTerm"];
+                var lat = Request["origLat"].AsDecimal();
+                var lng = Request["origLong"].AsDecimal();
+                var dist = Request["searchDistance"].AsInt();
+                return LcRest.ServiceProfessionalSearchResult.SearchByName(s, lat, lng, dist, LcRest.Locale.Current);
+            }
+            else if (UrlData[0] == "searchterm-categories")
+            {
+                var s = Request["SearchTerm"];
+                var lat = Request["origLat"].AsDecimal();
+                var lng = Request["origLong"].AsDecimal();
+                var dist = Request["searchDistance"].AsInt();
+                return LcRest.CategorySearchResult.SearchByName(s, lat, lng, dist, LcRest.Locale.Current);
+            }
+            else if (UrlData[0] == "categoryid-categories")
+            {
+                var s = Request["categoryID"].AsInt();
+                var lat = Request["origLat"].AsDecimal();
+                var lng = Request["origLong"].AsDecimal();
+                var dist = Request["searchDistance"].AsInt();
+                return LcRest.CategorySearchResult.SearchByCategoryID(s, lat, lng, dist, LcRest.Locale.Current);
+            }
+            return new HttpException(404, "Not found");
+        }
+    }
+}
+@{
+    // Public access
+    new RestSearchBy().JsonResponse(this);
+}

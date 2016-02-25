@@ -870,8 +870,8 @@
             }
         },
 
-        "Search Service Professionals by Job TitleID": {
-            "url": "/api/v1/en-US/search",
+          "Search Service Professionals by Job TitleID": {
+            "url": "/api/v1/en-US/search-by/jobtitleid-service-professionals",
             "get": {
                 "jobTitleID": "106",
                 "origLat": "37.788479",
@@ -880,9 +880,9 @@
             }
         },
         "Search Job Titles by CategoryID": {
-            "url": "/api/v1/en-US/search/job-titles-categoryID",
+            "url": "/api/v1/en-US/search-by/categoryid-job-titles",
             "get": {
-                "ServiceCategoryID": "1",
+                "categoryID": "1",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
                 "SearchDistance": "30"
@@ -891,7 +891,7 @@
  
         /* TODO: Add ServiceSubCategoryPositionTable to db, and test query in JobTitleSearchResult.cs       
         "Search Job Titles by SubCategoryID": {
-            "url": "/api/v1/en-US/search/job-titles-subcategoryID",
+            "url": "/api/v1/en-US/search-by/subcategoryid-job-titles",
             "get": {
                 "ServiceSubCategoryID": "1",
                 "origLat": "37.788479",
@@ -899,8 +899,8 @@
                 "SearchDistance": "30"
             }
         },*/
-        "Search Job Titles by Name": {
-            "url": "/api/v1/en-US/search/job-titles-search-term",
+        "Search Job Titles by Search Term": {
+            "url": "/api/v1/en-US/search-by/searchterm-job-titles",
             "get": {
                 "SearchTerm": "cleaner",
                 "origLat": "37.788479",
@@ -908,8 +908,8 @@
                 "SearchDistance": "30"
             }
         },        
-        "Search Service Professionals by Name": {
-            "url": "/api/v1/en-US/search/service-professionals-search-term",
+        "Search Service Professionals by Search Term": {
+            "url": "/api/v1/en-US/search-by/searchterm-service-professionals",
             "get": {
                 "SearchTerm": "Joshua",
                 "origLat": "37.788479",
@@ -917,8 +917,8 @@
                 "SearchDistance": "30"
             }
         },        
-        "Search Categories by Name": {
-            "url": "/api/v1/en-US/search/category-search-term",
+        "Search Categories by Search Term": {
+            "url": "/api/v1/en-US/search-by/searchterm-categories",
             "get": {
                 "SearchTerm": "home",
                 "origLat": "37.788479",
@@ -927,9 +927,9 @@
             }
         },        
         "Search Categories by CategoryID": {
-            "url": "/api/v1/en-US/search/category-categoryID",
+            "url": "/api/v1/en-US/search-by/categoryid-categories",
             "get": {
-                "ServiceCategoryID": "1",
+                "categoryID": "1",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
                 "SearchDistance": "30"
