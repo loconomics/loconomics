@@ -147,6 +147,7 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
 
         opacity: 0;
         transition: opacity 300ms $cubic-easing;
+        pointer-events: none;
     }
 
     // On mobile:
@@ -200,6 +201,7 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
     &.is-search {
         .HomeNavBar-searchBar {
             opacity: 1;
+            pointer-events: auto;
         }
     }
 }
