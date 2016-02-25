@@ -869,79 +869,85 @@
                 "agree": true
             }
         },
+        
+        "Search Job Titles, Service Professionals, and Categories by Search Term": {
+            "url": "/api/v1/en-US/search",
+            "get": {
+                "searchTerm": "cleaner",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
+            }
+        },       
 
-          "Search Service Professionals by Job TitleID": {
-            "url": "/api/v1/en-US/search-by/jobtitleid-service-professionals",
+        "Search Service Professionals by Job TitleID": {
+            "url": "/api/v1/en-US/search/by-jobtitleid-service-professionals",
             "get": {
                 "jobTitleID": "106",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
-                "SearchDistance": "30"
+                "searchDistance": "30"
             }
         },
+        
         "Search Job Titles by CategoryID": {
-            "url": "/api/v1/en-US/search-by/categoryid-job-titles",
+            "url": "/api/v1/en-US/search/by-categoryid-job-titles",
             "get": {
                 "categoryID": "1",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
-                "SearchDistance": "30"
+                "searchDistance": "30"
             }
         },
  
         /* TODO: Add ServiceSubCategoryPositionTable to db, and test query in JobTitleSearchResult.cs       
         "Search Job Titles by SubCategoryID": {
-            "url": "/api/v1/en-US/search-by/subcategoryid-job-titles",
+            "url": "/api/v1/en-US/search/by-subcategoryid-job-titles",
             "get": {
-                "ServiceSubCategoryID": "1",
+                "serviceSubCategoryID": "1",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
-                "SearchDistance": "30"
+                "searchDistance": "30"
             }
         },*/
+        
         "Search Job Titles by Search Term": {
-            "url": "/api/v1/en-US/search-by/searchterm-job-titles",
+            "url": "/api/v1/en-US/search/by-searchterm-job-titles",
             "get": {
-                "SearchTerm": "cleaner",
+                "searchTerm": "cleaner",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
-                "SearchDistance": "30"
+                "searchDistance": "30"
             }
-        },        
+        },  
+        
         "Search Service Professionals by Search Term": {
-            "url": "/api/v1/en-US/search-by/searchterm-service-professionals",
+            "url": "/api/v1/en-US/search/by-searchterm-service-professionals",
             "get": {
-                "SearchTerm": "Joshua",
+                "searchTerm": "Joshua",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
-                "SearchDistance": "30"
+                "searchDistance": "30"
             }
-        },        
+        },   
+        
         "Search Categories by Search Term": {
-            "url": "/api/v1/en-US/search-by/searchterm-categories",
+            "url": "/api/v1/en-US/search/by-searchterm-categories",
             "get": {
-                "SearchTerm": "home",
+                "searchTerm": "home",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
-                "SearchDistance": "30"
+                "searchDistance": "30"
             }
-        },        
+        },   
+        
         "Search Categories by CategoryID": {
-            "url": "/api/v1/en-US/search-by/categoryid-categories",
+            "url": "/api/v1/en-US/search/by-categoryid-categories",
             "get": {
                 "categoryID": "1",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
-                "SearchDistance": "30"
-            }
-        },
-        "Search Job Titles, Service Professionals, and Categories by Search Term": {
-            "url": "/api/v1/en-US/search",
-            "get": {
-                "SearchTerm": "cleaner",
-                "origLat": "37.788479",
-                "origLong": "-122.40297199999998",
-                "SearchDistance": "30"
+                "searchDistance": "30"
             }
         }
     };
