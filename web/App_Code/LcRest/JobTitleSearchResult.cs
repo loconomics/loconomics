@@ -292,7 +292,7 @@ namespace LcRest
                     .Select(FromDB);
             }
         }*/
-        public static IEnumerable<JobTitleSearchResult> SearchByName(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
+        public static IEnumerable<JobTitleSearchResult> SearchBySearchTerm(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
         {
             using (var db = new LcDatabase())
             {

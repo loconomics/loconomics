@@ -104,7 +104,7 @@
                 var lat = Request["origLat"].AsDecimal();
                 var lng = Request["origLong"].AsDecimal();
                 var dist = Request["searchDistance"].AsInt();
-                return LcRest.JobTitleSearchResult.SearchByName(s, lat, lng, dist, LcRest.Locale.Current);
+                return LcRest.JobTitleSearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current);
             }
             else if (UrlData[0] == "searchterm-service-professionals")
             {
@@ -112,7 +112,7 @@
                 var lat = Request["origLat"].AsDecimal();
                 var lng = Request["origLong"].AsDecimal();
                 var dist = Request["searchDistance"].AsInt();
-                return LcRest.ServiceProfessionalSearchResult.SearchByName(s, lat, lng, dist, LcRest.Locale.Current);
+                return LcRest.ServiceProfessionalSearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current);
             }
             else if (UrlData[0] == "searchterm-categories")
             {
@@ -120,7 +120,7 @@
                 var lat = Request["origLat"].AsDecimal();
                 var lng = Request["origLong"].AsDecimal();
                 var dist = Request["searchDistance"].AsInt();
-                return LcRest.CategorySearchResult.SearchByName(s, lat, lng, dist, LcRest.Locale.Current);
+                return LcRest.CategorySearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current);
             }
             else if (UrlData[0] == "categoryid-categories")
             {

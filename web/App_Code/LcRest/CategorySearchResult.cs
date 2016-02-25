@@ -169,7 +169,7 @@ namespace LcRest
                     .Select(FromDB);
             }
         }
-        public static IEnumerable<CategorySearchResult> SearchByName(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
+        public static IEnumerable<CategorySearchResult> SearchBySearchTerm(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
         {
             using (var db = new LcDatabase())
             {

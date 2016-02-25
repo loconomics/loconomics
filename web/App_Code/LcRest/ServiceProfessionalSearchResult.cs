@@ -144,7 +144,7 @@ namespace LcRest
                     .Select(x => (ServiceProfessionalSearchResult)FromDB(x, true));
             }
         }
-        public static IEnumerable<ServiceProfessionalSearchResult> SearchByName(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
+        public static IEnumerable<ServiceProfessionalSearchResult> SearchBySearchTerm(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
         {
             using (var db = new LcDatabase())
             {
