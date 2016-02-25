@@ -21,7 +21,7 @@
 }
 **@
 @functions{
-    public class RestSearchBy : RestWebPage
+    public class RestSearch : RestWebPage
     {
         public override dynamic Get()
         {
@@ -32,10 +32,7 @@
                 var lat = Request["origLat"].AsDecimal();
                 var lng = Request["origLong"].AsDecimal();
                 var dist = Request["searchDistance"].AsInt();
-                return Json(new { 
-                JobTitles = LcRest.JobTitleSearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current), 
-                ServiceProfessionals = LcRest.ServiceProfessionalSearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current), 
-                Categories = LcRest.ServiceProfessionalSearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current) }, JsonRequestBehavior.AllowGet);
+                return LcRest.Search.Get(s, lat, lng, dist, LcRest.Locale.Current);
             }
               return new HttpException(404, "Not found");
         }
