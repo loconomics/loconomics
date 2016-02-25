@@ -93,6 +93,8 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
             padding: 0;
             margin: 0;
             font-size: 0;
+            display: inline-block;
+            vertical-align: middle;
 
             > li {
                 display: inline-block;
@@ -121,6 +123,13 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
                     // With links using btn btn-link, just adjust line to get the desired block size
                     line-height: 26px;
                 }
+            }
+            
+            .HomeNavBar-userMenu > .btn {
+                padding-top: 0px;
+                padding-bottom: 0px;
+                border-width: 0px;
+                line-height: 40px;
             }
         }
     }
