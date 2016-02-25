@@ -888,6 +888,8 @@
                 "SearchDistance": "30"
             }
         },
+ 
+        /* TODO: Add ServiceSubCategoryPositionTable to db, and test query in JobTitleSearchResult.cs       
         "Search Job Titles by SubCategoryID": {
             "url": "/api/v1/en-US/search/job-titles-subcategoryID",
             "get": {
@@ -896,7 +898,7 @@
                 "origLong": "-122.40297199999998",
                 "SearchDistance": "30"
             }
-        },
+        },*/
         "Search Job Titles by Name": {
             "url": "/api/v1/en-US/search/job-titles-search-term",
             "get": {
@@ -910,6 +912,24 @@
             "url": "/api/v1/en-US/search/service-professionals-search-term",
             "get": {
                 "SearchTerm": "Joshua",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },        
+        "Search Categories by Name": {
+            "url": "/api/v1/en-US/search/category-search-term",
+            "get": {
+                "SearchTerm": "home",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "SearchDistance": "30"
+            }
+        },        
+        "Search Categories by CategoryID": {
+            "url": "/api/v1/en-US/search/category-categoryID",
+            "get": {
+                "ServiceCategoryID": "1",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
                 "SearchDistance": "30"
