@@ -11,12 +11,12 @@ data-facebook-appid="180579422039773" data-culture="en-US">
     />
     <meta name="format-detection" content="telephone=no" />
     <title>Loconomics Cooperative</title>
-    <link href="assets/css/libs.min.201602261415.css"
+    <link href="assets/css/libs.min.201602261521.css"
     rel="stylesheet">
-    <link href="assets/css/app.min.201602261415.css" rel="stylesheet">
-    <script src="assets/js/styleguidelibs.min.201602261415.js"></script>
-    <script src="assets/js/libs.min.201602261415.js"></script>
-    <script src="assets/js/app.min.201602261415.js"></script>
+    <link href="assets/css/app.min.201602261521.css" rel="stylesheet">
+    <script src="assets/js/styleguidelibs.min.201602261521.js"></script>
+    <script src="assets/js/libs.min.201602261521.js"></script>
+    <script src="assets/js/app.min.201602261521.js"></script>
   </head>
   
   <body>
@@ -790,7 +790,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
         </ul>
       </div>
       <!-- Activity account -->
-      <div data-activity="account">
+      <div data-activity="account" class="limited-size-md limited-size-lg">
          <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
 
         <ul class="TilesList">
@@ -842,7 +842,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
         </ul>
       </div>
       <!-- AddJobTitles activity -->
-      <div data-activity="addJobTitles">
+      <div data-activity="addJobTitles" class="limited-size-md limited-size-lg">
          <h2 class="SectionTitle">
         <span>Add one or more job title(s)</span>
     </h2>
@@ -882,8 +882,9 @@ data-facebook-appid="180579422039773" data-culture="en-US">
         </div>
       </div>
       <!-- Activity addressEditor -->
-      <div class="container-fluid LightForm" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
-        <form role="form" data-bind="submit: save">
+      <div class="limited-size-md limited-size-lg LightForm" data-activity="addressEditor"
+      data-bind="css: { 'is-loading': isLoading }">
+        <form role="form" data-bind="submit: save" class="container-fluid">
            <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -928,7 +929,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
         </form>
       </div>
       <!-- Activity appointment -->
-      <div class="container-fluid" data-activity="appointment" data-bind="css: { 'in-edit': editMode }">
+      <div class="limited-size-md limited-size-lg container-fluid" data-activity="appointment"
+      data-bind="css: { 'in-edit': editMode }">
         <!-- Appointment View (cards) -->
         <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
         data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
@@ -939,7 +941,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
         </div>
       </div>
       <!-- Activity backgroundCheck -->
-      <div data-activity="backgroundCheck">
+      <div data-activity="backgroundCheck" class="limited-size-md limited-size-lg">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span>
         Background Check
@@ -973,7 +975,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
 
         </div>
       </div>
-      <div data-activity="boardMemberNominations">
+      <div data-activity="boardMemberNominations" class="limited-size-md limited-size-lg">
          <h1 class="SectionTitle">Board Member Nominations</h1>
 
         <div class="LeadContent">
@@ -982,7 +984,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
         </div>
       </div>
       <!-- BookMeButton activity -->
-      <div class="LightForm" data-activity="bookMeButton">
+      <div class="LightForm limited-size-md limited-size-lg" data-activity="bookMeButton">
          <h2 class="SectionTitle">Book Me Now Button</h2>
 
         <script type="text/html" id="bookMeButton-radioButton">
@@ -1791,7 +1793,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
     </div>
     </div>
     <!-- Activity calendar -->
-    <div data-activity="calendar" data-bind="css: { 'is-loading': isLoading }">
+    <div data-activity="calendar" data-bind="css: { 'is-loading': isLoading }"
+    class="limited-size-md limited-size-lg">
        <h1 class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
       <button type="button" class="btn btn-link">
           <time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
@@ -1805,7 +1808,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       <div id="calendarDailyView" class="TilesList" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
     </div>
     <!-- CalendarSyncing activity -->
-    <div class="LightForm" data-activity="calendarSyncing">
+    <div class="LightForm limited-size-md limited-size-lg" data-activity="calendarSyncing">
        <h2 class="SectionTitle">Calendar Syncing</h2>
 
       <form data-bind="submit: save" class="container">
@@ -1837,8 +1840,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
     </form>
     </div>
     <!-- cancellationPolicy activity -->
-    <div class="container-fluid LightForm" data-activity="cancellationPolicy"
-    data-bind="css: { 'is-loading': isLoading, 'is-saving': isSaving }">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="cancellationPolicy" data-bind="css: { 'is-loading': isLoading, 'is-saving': isSaving }">
        <h2 class="SectionTitle">
         <span>Cancellation Policy</span>
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -1907,7 +1910,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </form>
     </div>
     <!-- ClientEdition activity -->
-    <div class="container-fluid LightForm" data-activity="clientEditor">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="clientEditor">
       <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
@@ -1963,7 +1967,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </form>
     </div>
     <!-- Activity clients -->
-    <div class="container-fluid" data-activity="clients" data-bind="css: { 'is-searching': searchText(), 'has-SectionTitle': headerText }">
+    <div class="container-fluid limited-size-md limited-size-lg" data-activity="clients"
+    data-bind="css: { 'is-searching': searchText(), 'has-SectionTitle': headerText }">
        <h2 class="SectionTitle" data-bind="visible: headerText">
         <span data-bind="text: headerText">Clients</span>
     </h2>
@@ -2027,7 +2032,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- CMS activity -->
-    <div data-activity="cms">
+    <div data-activity="cms" class="limited-size-md limited-size-lg">
        <h2 class="SectionTitle">Clients</h2>
 
       <div>
@@ -2047,7 +2052,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       <app-feedback-entry params="section: 'cms'"></app-feedback-entry>
     </div>
     <!-- ContactForm activity -->
-    <div class="container-fluid LightForm" data-activity="contactForm">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="contactForm">
        <h2 class="SectionTitle">Contact us for help</h2>
 
       <p class="isolated">If you've searched the <a href="/faqs">FAQs</a> and can't find the help
@@ -2058,7 +2064,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- Activity contactInfo -->
-    <div class="container-fluid LightForm" data-activity="contactInfo">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="contactInfo">
       <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
 
@@ -2106,7 +2113,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </form>
     </div>
     <!-- Conversation activity -->
-    <div class="container-fluid" data-activity="conversation">
+    <div class="container-fluid limited-size-md limited-size-lg" data-activity="conversation">
        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing() }">
       <span data-bind="text: subject"></span>
       <!-- ko component: {
@@ -2133,7 +2140,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- Activity dashboard -->
-    <div data-activity="dashboard">
+    <div data-activity="dashboard" class="limited-size-md limited-size-lg">
       <div data-bind="visible: user.isServiceProfessional">
          <h1 class="SectionTitle" data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
             Upcoming bookings
@@ -2229,7 +2236,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
     </div>
     --></div>
     <!-- Activity datetimePicker -->
-    <div class="Boxes-sm" data-activity="datetimePicker">
+    <div class="Boxes-sm limited-size-md limited-size-lg" data-activity="datetimePicker">
       <div class="container nogaps-sm">
          <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText">Select a start time</h2>
 
@@ -2248,7 +2255,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- Activity education -->
-    <div data-activity="education">
+    <div data-activity="education" class="limited-size-md limited-size-lg">
        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span>
         Education
@@ -2285,7 +2292,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- educationForm activity -->
-    <div class="container-fluid LightForm" data-activity="educationForm">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="educationForm">
        <h2 class="SectionTitle">Education</h2>
 
       <form data-bind="submit: save, with: item">
@@ -2330,7 +2338,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </form>
     </div>
     <!-- Faqs activity -->
-    <div data-activity="faqs">
+    <div data-activity="faqs" class="limited-size-md limited-size-lg">
       <div class="isolated inset">
         <div class="input-group"> <span class="input-group-addon">
                 <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
@@ -2356,7 +2364,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- Feedback activity -->
-    <div data-activity="feedback">
+    <div data-activity="feedback" class="limited-size-md limited-size-lg">
        <h2 class="SectionTitle">We're here to help</h2>
 
       <ul class="TilesList">
@@ -2378,7 +2386,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </ul>
     </div>
     <!-- FeedbackForm activity -->
-    <div class="container-fluid LightForm" data-activity="feedbackForm">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="feedbackForm">
        <h2 class="SectionTitle">Send us ideas or feedback</h2>
 
       <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
@@ -2393,7 +2402,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- Home activity (aka search) -->
-    <div class="" data-activity="home">
+    <div data-activity="home">
       <header class="HomeNavBar" data-bind="with: nav">
         <div class="HomeNavBar-menu"> <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button"
           aria-haspopup="true" aria-expanded="false">
@@ -2731,7 +2740,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </footer>
     </div>
     <!-- Inbox activity -->
-    <div data-activity="inbox">
+    <div data-activity="inbox" class="limited-size-md limited-size-lg">
       <div class="isolated inset">
         <div class="input-group"> <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
             <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
@@ -2772,7 +2781,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- Jobtitles activity -->
-    <div data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
+    <div data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }"
+    class="limited-size-md limited-size-lg">
        <h2 class="SectionTitle">
         <span data-bind="text: jobTitleName">Job Title</span>
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -2848,7 +2858,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
     </div>
     <!-- Activity learnMoreServiceProfessionals -->
-    <div class="container-fluid" data-activity="learnMore">
+    <div class="container-fluid limited-size-md limited-size-lg" data-activity="learnMore">
       <div class="LeadContent">
         <div class="embed-responsive embed-responsive-16by9">
           <video>No video for now</video>
@@ -2868,7 +2878,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- Activity licensesCertifications -->
-    <div data-activity="licensesCertifications">
+    <div data-activity="licensesCertifications" class="limited-size-md limited-size-lg">
        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
         Certifications/Licenses
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -2901,7 +2911,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- licensesCertificationsForm activity -->
-    <div class="LightForm" data-activity="licensesCertificationsForm">
+    <div class="LightForm limited-size-md limited-size-lg" data-activity="licensesCertificationsForm">
       <div class="SmartNavView">
         <div class="SmartNavContent container-fluid">
            <h2 class="SectionTitle" data-bind="text: item() && item().licenseCertification().name() || 'Certification/License'"></h2>
@@ -3068,7 +3078,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
     <!-- Activity logout -->
     <div class="container-fluid" data-activity="logout"></div>
     <!-- marketplaceJobtitles activity -->
-    <div data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }">
+    <div data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }"
+    class="limited-size-md limited-size-lg">
        <h2 class="SectionTitle">
         <span>Profile Status</span>
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -3183,9 +3194,9 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </ul>
       <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
     </div>
-    <!-- marketplaceProfile activity. DISABLED UNTIL COMPLETE FOR APP VALIDATION
-    -->
-    <div data-activity="marketplaceProfile" DISABLEDdata-bind="css: { 'is-loading': isLoading }">
+    <!-- marketplaceProfile activity.-->
+    <div data-activity="marketplaceProfile" DISABLEDdata-bind="css: { 'is-loading': isLoading }"
+    class="limited-size-md limited-size-lg">
       <!--<div class="LeadContent">
         <h1>Coming soon!</h1>
     </div>-->
@@ -3278,7 +3289,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
     </div>
     <!-- OwnerInfo activity -->
-    <div data-activity="ownerInfo">
+    <div data-activity="ownerInfo" class="limited-size-md limited-size-lg">
        <h1 class="SectionTitle has-HelpPoint">Owner information</h1>
 
       <ul class="TilesList">
@@ -3344,7 +3355,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
         </li>
       </ul>
     </div>
-    <div class="LightForm container-fluid" data-activity="paymentAccount">
+    <div class="LightForm container-fluid limited-size-md limited-size-lg"
+    data-activity="paymentAccount">
        <h2 class="SectionTitle">Payout Preference</h2>
 
       <p>Getting paid is the easy part. We accept payments on your behalf, and
@@ -3455,7 +3467,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- PrivacySettings activity -->
-    <div class="LightForm" data-activity="privacySettings">
+    <div class="LightForm limited-size-md limited-size-lg" data-activity="privacySettings">
        <h2 class="SectionTitle">Privacy Settings</h2>
 
       <script type="text/html" id="privacySettings-optionCheck">
@@ -3881,7 +3893,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
     </div>
     </div>
     <!-- Activity profilePictureBio -->
-    <div class="LightForm" data-activity="profilePictureBio">
+    <div class="LightForm limited-size-md limited-size-lg" data-activity="profilePictureBio">
       <div class="SmartNavView">
         <div class="SmartNavContent container-fluid">
           <form role="form" data-bind="submit: save">
@@ -3926,7 +3938,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- Scheduling activity -->
-    <div data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }">
+    <div data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }"
+    class="limited-size-md limited-size-lg">
        <h2 class="SectionTitle">Services, Pricing, &amp; Locations
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
@@ -3979,7 +3992,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
     </div>
     <!-- SchedulingPreferences activity -->
-    <div class="LightForm" data-activity="schedulingPreferences">
+    <div class="LightForm limited-size-md limited-size-lg" data-activity="schedulingPreferences">
        <h2 class="SectionTitle">Schedule preferences</h2>
 
       <script type="text/html" id="schedulingPrefs-radioButton">
@@ -4053,7 +4066,7 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </form>
     </div>
     <!-- Activity locations -->
-    <div data-activity="serviceAddresses">
+    <div data-activity="serviceAddresses" class="limited-size-md limited-size-lg">
        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span data-bind="visible: headerText, text: headerText">
         Locations
@@ -4091,7 +4104,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- serviceProfessionalProfileUrl activity -->
-    <div class="container-fluid LightForm" data-activity="serviceProfessionalProfileUrl">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="serviceProfessionalProfileUrl">
        <h2 class="SectionTitle">Create a custom URL so that you can use your profile as your website</h2>
 
       <form data-bind="submit: save">
@@ -4110,7 +4124,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </form>
     </div>
     <!-- ServiceProfessionalService activity -->
-    <div data-activity="serviceProfessionalService" data-bind="css: { 'is-loading': isLoading }">
+    <div data-activity="serviceProfessionalService" class="limited-size-md limited-size-lg"
+    data-bind="css: { 'is-loading': isLoading }">
       <div>
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle"
@@ -4143,7 +4158,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </div>
     </div>
     <!-- Activity serviceProfessionalServiceEditor -->
-    <div class="container-fluid LightForm" data-activity="serviceProfessionalServiceEditor">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="serviceProfessionalServiceEditor">
       <form role="form" data-bind="submit: save">
          <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
             <span data-bind="text: header"></span>
@@ -4270,7 +4286,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
     </form>
     </div>
     <!-- serviceProfessionalWebsite activity -->
-    <div class="container-fluid LightForm" data-activity="serviceProfessionalWebsite">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="serviceProfessionalWebsite">
        <h2 class="SectionTitle">Your website</h2>
 
       <form data-bind="submit: save">
@@ -4288,7 +4305,8 @@ data-facebook-appid="180579422039773" data-culture="en-US">
       </form>
     </div>
     <!-- Activity profilePictureBio -->
-    <div class="container-fluid LightForm" data-activity="servicesOverview">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="servicesOverview">
       <form role="form" data-bind="submit: save">
         <div>
            <h2 class="SectionTitle">Brief description of your services</h2>
@@ -7018,7 +7036,8 @@ are defined as services offered to
       </div>
     </div>
     <!-- Activity textEditor -->
-    <div class="container-fluid LightForm" data-activity="textEditor">
+    <div class="container-fluid LightForm limited-size-md limited-size-lg"
+    data-activity="textEditor">
        <h2 class="SectionTitle" id="textEditorTitle" data-bind="visible: headerText, text: headerText">Text</h2>
 
       <div class="isolated">
@@ -7044,7 +7063,7 @@ are defined as services offered to
       </div>
     </div>
     <!-- Activity verifications -->
-    <div data-activity="verifications">
+    <div data-activity="verifications" class="limited-size-md limited-size-lg">
        <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span>
         Verifications
@@ -7084,7 +7103,7 @@ are defined as services offered to
         </button>
     </div>--></div>
     <!-- WeeklySchedule activity -->
-    <div class="LightForm" data-activity="weeklySchedule">
+    <div class="LightForm limited-size-md limited-size-lg" data-activity="weeklySchedule">
        <h2 class="SectionTitle">Weekly schedule</h2>
 
       <script type="text/html" id="weeklySchedule-timeSelectorHourMinutesTpl">
@@ -7223,7 +7242,7 @@ are defined as services offered to
       </form>
     </div>
     <!-- Activity welcome -->
-    <div data-activity="welcome">
+    <div data-activity="welcome" class="limited-size-md limited-size-lg">
       <div class="Splash-message">
         	<h2>Things to test:</h2>
 
@@ -7248,7 +7267,7 @@ are defined as services offered to
   </div>
 </div>
                 <!-- Activity workPhotos -->
-<div class="LightForm" data-activity="workPhotos">
+<div class="LightForm limited-size-md limited-size-lg" data-activity="workPhotos">
     <div class="SmartNavView">
         <div class="SmartNavContent container-fluid">
           <h2 class="SectionTitle" data-bind="css: { 'is-syncing': state.isSyncing }">
