@@ -1,0 +1,119 @@
+<div class="LargeNavBar container">
+    <div class="LargeNavBar-brand">
+        <a class="navbar-brand" href="/">Loconomics</a>
+    </div>
+    <div class="LargeNavBar-searchBar">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <label for="navbar-search" class="fa fa-2x ion ion-ios-search" style=""></label>
+            </span>
+            <input id="navbar-search" type="text" name="s" class="form-control" placeholder="Search for a (e.g. Garderner, Tutor...)" />
+        </div>
+    </div>
+    <!-- Anonymous nav -->
+    <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: isAnonymous()">
+        <li><a href="/signup" class="btn btn-link">Sign up</a></li>
+        <li><a href="/login" class="btn btn-link">Log in</a></li>
+    </ul>
+    <!-- User nav -->
+    <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: !isAnonymous()" hidden="hidden">
+        <!--<li class="dropdown toggle">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="LargeNavBar-label">Browse</span> <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu alert-dropdown">
+                <li>
+                    <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+                </li>
+                <li>
+                    <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+                </li>
+                <li>
+                    <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+                </li>
+                <li>
+                    <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+                </li>
+                <li>
+                    <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+                </li> 
+                <li>
+                    <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#">View All</a>
+                </li>
+            </ul>
+        </li>-->
+        <li class="LargeNavBar-userMenu dropdown text-right">
+            <a href="#" class="dropdown-toggle toggle" data-toggle="dropdown">
+                <i class="Avatar Avatar--primary Avatar--xs"><img src="https://loconomics.com/en-US/Profile/Photo/" /></i>
+                <span class="LargeNavBar-label">Iago Lorenzo</span> <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                @render('parts/UserMenuContents.html')
+            </ul>
+        </li>
+        <!--<li class="dropdown toggle mail-nav">
+            <small class="mail-alert text-center">1</small>
+            <a href="#" class="mail-toggle dropdown-toggle" data-toggle="dropdown">
+                <span class="LargeNavBar-label sr-only">Unread Messages</span>
+                <i class="fa fa-2x ion ion-ios-email-outline" aria-hidden="true"></i> <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu message-dropdown">
+                <li class="message-preview">
+                    <a href="#">
+                        <div class="media">
+                            <span class="pull-left">
+                                <img class="media-object" src="http://placehold.it/50x50" alt="">
+                            </span>
+                            <div class="media-body">
+                                <h5 class="media-heading"><strong>John Smith</strong>
+                                </h5>
+                                <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li class="message-preview">
+                    <a href="#">
+                        <div class="media">
+                            <span class="pull-left">
+                                <img class="media-object" src="http://placehold.it/50x50" alt="">
+                            </span>
+                            <div class="media-body">
+                                <h5 class="media-heading"><strong>John Smith</i></strong>
+                                </h5>
+                                <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li class="message-preview">
+                    <a href="#">
+                        <div class="media">
+                            <span class="pull-left">
+                                <img class="media-object" src="http://placehold.it/50x50" alt="">
+                            </span>
+                            <div class="media-body">
+                                <h5 class="media-heading"><strong>John Smith</strong>
+                                </h5>
+                                <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li class="message-footer">
+                    <a href="#">Read All New Messages</a>
+                </li>
+            </ul>
+        </li>-->
+        <li>
+            <a href="/feedback"><span class="LargeNavBar-label">Talk to Us</span></a>
+        </li>
+    </ul>
+</div>

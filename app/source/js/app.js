@@ -355,7 +355,17 @@ var appInit = function appInit() {
             var target = $(href);
             if (target.length) {
                 // Smooth scrolling with animation
-                scrollToElement(target, { animation: { duration: 300 } });
+                var opts = { animation: { duration: 300 } };
+                // Special case: if we are at the home page, the special, fixed header
+                // must be an offset to avoid the content to fall behind it
+                // (a generic attempt was done using 'header.is-fixed:visible' but had bug when
+                // the header is still not-fixed -scroll still at the top).
+                var act = target.closest('[data-activity]');
+                var isHome = act.data('activity') === 'home';
+                if (isHome) {
+                    opts.topOffset = act.children('header').outerHeight();
+                }
+                scrollToElement(target, opts);
             }
         }
     });
@@ -420,6 +430,12 @@ var appInit = function appInit() {
     }
     
     require('./utils/toggleActionSheet').on();
+    
+    // Change website index activity
+    var indexAct = $('html').data('index');
+    if (indexAct) {
+        app.shell.indexName = indexAct;
+    }
 
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)
@@ -476,7 +492,3 @@ if (window.cordova) {
     // Only on DOM-Ready, for in browser development
     $(appInit);
 }
-
-window.WeeklySchedule = require('./models/WeeklySchedule');
-window.WeekDaySchedule = require('./models/WeekDaySchedule');
-window.TimeRange = require('./models/TimeRange');

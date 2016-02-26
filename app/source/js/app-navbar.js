@@ -150,8 +150,12 @@ exports.extend = function (app) {
             photoUrl: ko.observable('about:blank'),
             userName: ko.observable('Me'),
             isServiceProfessional: ko.observable(false),
-            isClient: ko.observable(false)
+            isClient: ko.observable(false),
+            isApp: ko.observable(!!window.cordova)
         };
+        app.navBarBinding.isAnonymous = ko.pureComputed(function() {
+            return !this.isServiceProfessional() && !this.isClient();
+        }, app.navBarBinding);
         ko.applyBindings(app.navBarBinding, $('.AppNav').get(0));
     };
     

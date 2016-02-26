@@ -93,6 +93,8 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
             padding: 0;
             margin: 0;
             font-size: 0;
+            display: inline-block;
+            vertical-align: middle;
 
             > li {
                 display: inline-block;
@@ -122,6 +124,13 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
                     line-height: 26px;
                 }
             }
+            
+            .HomeNavBar-userMenu > .btn {
+                padding-top: 0px;
+                padding-bottom: 0px;
+                border-width: 0px;
+                line-height: 40px;
+            }
         }
     }
 
@@ -147,6 +156,7 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
 
         opacity: 0;
         transition: opacity 300ms $cubic-easing;
+        pointer-events: none;
     }
 
     // On mobile:
@@ -200,6 +210,7 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
     &.is-search {
         .HomeNavBar-searchBar {
             opacity: 1;
+            pointer-events: auto;
         }
     }
 }
