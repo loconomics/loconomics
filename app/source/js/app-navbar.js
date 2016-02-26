@@ -152,6 +152,9 @@ exports.extend = function (app) {
             isServiceProfessional: ko.observable(false),
             isClient: ko.observable(false)
         };
+        app.navBarBinding.isAnonymous = ko.pureComputed(function() {
+            return !this.isServiceProfessional() && !this.isClient();
+        }, app.navBarBinding);
         ko.applyBindings(app.navBarBinding, $('.AppNav').get(0));
     };
     

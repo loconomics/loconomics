@@ -1,4 +1,4 @@
-<header class="HomeNavBar">
+<header class="HomeNavBar" data-bind="with: nav">
     <div class="HomeNavBar-menu">
         <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
@@ -54,37 +54,7 @@
                     <span class="LargeNavBar-label">Iago Lorenzo</span> <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                    <li>
-                        <a href="/dashboard"><i class="fa ion ion-connection-bars"></i> Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="/calendar"><i class="fa fa-calendar"></i> Calendar</a>
-                    </li>
-                    <li>
-                        <a href="/inbox" class=""><i class="fa ion ion-ios-email-outline"></i> Inbox</a>
-                    </li>
-                    <li>
-                        <a href="/scheduling" class=""><i class="fa ion ion-ios-calendar-outline"></i> Scheduling</a>
-                    </li>
-                    <li>
-                        <a href="/clients" class=""><i class="fa ion ion-android-people"></i> Clients</a>
-                    </li>
-                    <li>
-                        <a href="/payments" class=""><i class="fa fa-credit-card"></i> Payments</a>
-                    </li>
-                    <li>
-                        <a href="/performance" class=""><i class="fa ion ion-ios-speedometer-outline"></i> Performance</a>
-                    </li>
-                    <li>
-                        <a href="/marketplaceProfile" class=""><i class="fa ion ion-android-person"></i> Marketplace Profile</a>
-                    </li>
-                    <li>
-                        <a href="/account" class=""><i class="fa ion ion-gear-b"></i> Account</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="/logout"><i class="fa ion ion-power"></i> Log Out</a>
-                    </li>
+                    @render('parts/UserMenuContents.html')
                 </ul>
             </li>
             <li>
