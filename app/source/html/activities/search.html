@@ -1,0 +1,28 @@
+<!-- Search activity (aka search) -->
+<div class="" data-activity="search">
+            <form id="home-search" data-bind="submit: search" action="/" method="get" class="row">
+                <div class="form-group col-sm-6">
+                    <label for="homeSearch" class="sr-only">Search</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
+                        <input type="text" data-bind="textInput: searchTerm" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)" >
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="homeLocation" class="sr-only">Where?</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
+                        <input type="text" name="location" class="form-control inset" id="homeLocation" placeholder="Where?" >
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block" >Search</button>
+                </div>
+            </form>
+            <div class="SearchResults"></div>
+            <div data-bind="foreach: searchResults.jobTitles" class="jobTitles">
+                <span data-bind="text: singularName"></span>    
+                <span data-bind="text: description"></span>    
+            </div>
+ 
+</div>

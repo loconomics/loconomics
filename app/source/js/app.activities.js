@@ -72,6 +72,7 @@ module.exports = {
     'payments': require('./activities/payments'),
     'userFees': require('./activities/userFees'),
     'performance': require('./activities/performance'),
+    'search': require('./activities/search'),
     'serviceProfessionalProfileUrl': require('./activities/serviceProfessionalProfileUrl'),
     'boardMemberNominations': require('./activities/boardMemberNominations'),
     'paymentAccount': require('./activities/paymentAccount')

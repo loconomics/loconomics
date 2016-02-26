@@ -1,5 +1,6 @@
 /**
     Home activity (aka Search)
+    //used to get apisearch results by term, lat, long, 
 **/
 'use strict';
 
