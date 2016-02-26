@@ -355,7 +355,17 @@ var appInit = function appInit() {
             var target = $(href);
             if (target.length) {
                 // Smooth scrolling with animation
-                scrollToElement(target, { animation: { duration: 300 } });
+                var opts = { animation: { duration: 300 } };
+                // Special case: if we are at the home page, the special, fixed header
+                // must be an offset to avoid the content to fall behind it
+                // (a generic attempt was done using 'header.is-fixed:visible' but had bug when
+                // the header is still not-fixed -scroll still at the top).
+                var act = target.closest('[data-activity]');
+                var isHome = act.data('activity') === 'home';
+                if (isHome) {
+                    opts.topOffset = act.children('header').outerHeight();
+                }
+                scrollToElement(target, opts);
             }
         }
     });
