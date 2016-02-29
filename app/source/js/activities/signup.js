@@ -55,4 +55,10 @@ A.prototype.show = function show(options) {
     
     var p = options && options.route && options.route.segments && options.route.segments[0] || '';
     this.viewModel.profile(p);
+    var q = options && options.route && options.route.query;
+    if (q) {
+        this.viewModel.email(q.email || null);
+        this.viewModel.emailIsLocked(!!q.email);
+        this.viewModel.confirmationCode(q.confirmationCode);
+    }
 };

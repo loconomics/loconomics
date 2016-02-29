@@ -21,6 +21,7 @@ function SignupVM(app) {
     
     EventEmitter.call(this);
     
+    this.confirmationCode = ko.observable(null);
     this.firstName = newFieldObs();
     this.lastName = newFieldObs();
     this.phone = newFieldObs();
@@ -44,7 +45,10 @@ function SignupVM(app) {
     
     this.profile = ko.observable(''); // client, service-professional
     
+    this.emailIsLocked = ko.observable(false);
+    
     this.reset = function() {
+        this.confirmationCode(null);
         this.firstName('');
         this.lastName('');
         this.phone('');
@@ -59,6 +63,7 @@ function SignupVM(app) {
         this.signupError('');
         this.isSigningUp(false);
         this.profile('');
+        this.emailIsLocked(false);
     };
     
     this.submitText = ko.pureComputed(function() {
@@ -78,6 +83,7 @@ function SignupVM(app) {
         this.signupError('');
 
         var plainData = {
+            confirmationCode: this.confirmationCode(),
             email: this.email(),
             password: this.password(),
             firstName: this.firstName(),
