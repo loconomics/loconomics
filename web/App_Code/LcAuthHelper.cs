@@ -194,7 +194,7 @@ public static class LcAuthHelper
             if (userId > -1 && !string.IsNullOrWhiteSpace(token))
             {
                 // Resend confirmation mail
-                var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");
+                var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + Uri.EscapeDataString(token ?? "");
 
                 var isProvider = (bool)(db.QueryValue("SELECT IsProvider FROM users WHERE UserID=@0", userId) ?? false);
 
