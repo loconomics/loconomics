@@ -40,12 +40,14 @@
     RouteTable.Routes.MapWebPageRoute("calendar/{userID}/{token}/{file}", "~/_specialRoutes/Calendar.cshtml");
 
     // Public User profile photo, KEEPING URL AS IN Release-6.3 FOR RELEASE-7+
-    RouteTable.Routes.MapWebPageRoute("en-US/profile/photo", "~/_specialRoutes/UserProfilePhoto.cshtml");
-    RouteTable.Routes.MapWebPageRoute("en-US/profile/photo/{userID}", "~/_specialRoutes/UserProfilePhoto.cshtml");
-    RouteTable.Routes.MapWebPageRoute("en-US/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");    
+    RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo", "~/_specialRoutes/UserProfilePhoto.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo/{userID}", "~/_specialRoutes/UserProfilePhoto.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");    
     
     // Account
-    RouteTable.Routes.MapWebPageRoute("en-US/Account/Login", "~/_specialRoutes/Login.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/account/login", "~/_specialRoutes/Login.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/account/confirm", "~/_specialRoutes/Confirm.cshtml");
+    RouteTable.Routes.MapWebPageRoute("account/confirm", "~/_specialRoutes/Confirm.cshtml");
 
     // NORMAL ROUTES
     // Booking with service professional bookcode URL

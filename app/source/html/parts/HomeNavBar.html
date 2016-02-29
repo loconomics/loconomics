@@ -50,8 +50,8 @@
         <ul data-bind="visible: !isAnonymous()" hidden="hidden">
             <li class="HomeNavBar-userMenu dropdown text-right">
                 <a href="#user-menu" class="dropdown-toggle toggle btn btn-link" data-toggle="dropdown">
-                    <i class="Avatar Avatar--primary Avatar--xs"><img src="https://loconomics.com/en-US/Profile/Photo/" /></i>
-                    <span class="LargeNavBar-label">Iago Lorenzo</span> <b class="caret"></b>
+                    <i class="Avatar Avatar--primary Avatar--xs"><img data-bind="attr: { src: photoUrl }" /></i>
+                    <span class="LargeNavBar-label" data-bind="text: userName"></span> <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
                     @render('parts/UserMenuContents.html')

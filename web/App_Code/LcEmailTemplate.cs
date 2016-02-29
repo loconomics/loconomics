@@ -427,7 +427,7 @@ public static class LcEmailTemplate
                 {
                     confirmationToken = LcAuth.GetConfirmationToken(userID) ?? "";
                 }
-                return LcUrl.AppUrl + "account/confirm/?confirmationCode=" + HttpUtility.UrlEncode(confirmationToken);
+                return LcUrl.AppUrl + "account/confirm/?confirmationCode=" + Uri.EscapeDataString(confirmationToken);
             }
         }
         /// <summary>

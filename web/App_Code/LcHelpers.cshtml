@@ -10,6 +10,14 @@
 @using System.Text.RegularExpressions;
 
 @functions{
+    public static void NotFoundOnInvalidLocaleURL()
+    {
+        if (LcRest.Locale.Current == null)
+        {
+            Server.TransferRequest("~/Errors/Error404.cshtml");
+        }
+    }
+
     /*=========================
      * Request/File Sizes
      */
@@ -791,9 +799,9 @@
     public static void RedirectToLogin()
     {
         if (Request.IsAjaxRequest())
-            ReturnJsonResult(2, LcUrl.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(LcUrl.GetTheGoodURL(Request.UrlReferrer.PathAndQuery)));
+            ReturnJsonResult(2, LcUrl.LangPath + "Account/$Login/?ajax=1&Redirect=" + Uri.EscapeDataString(LcUrl.GetTheGoodURL(Request.UrlReferrer.PathAndQuery)));
         else
-            Response.Redirect(LcUrl.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(LcUrl.GetTheGoodURL(Request.Url.PathAndQuery)));
+            Response.Redirect(LcUrl.LangPath + "Account/Login/?Redirect=" + Uri.EscapeDataString(LcUrl.GetTheGoodURL(Request.Url.PathAndQuery)));
     }
 
     /*========= STRINGS ==============*/

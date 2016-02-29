@@ -194,7 +194,7 @@ public static class LcAuthHelper
             if (userId > -1 && !string.IsNullOrWhiteSpace(token))
             {
                 // Resend confirmation mail
-                var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");
+                var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + Uri.EscapeDataString(token ?? "");
 
                 var isProvider = (bool)(db.QueryValue("SELECT IsProvider FROM users WHERE UserID=@0", userId) ?? false);
 
@@ -217,6 +217,9 @@ public static class LcAuthHelper
     #region Signup
     /// <summary>
     /// Quick signup, just username/email and a password.
+    /// 
+    /// IMPORTANT: It was used in a previous iteration of the project, now the detailed is in use and this lacks some of the latest
+    /// additions, like client-confirmationCode code.
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
@@ -353,6 +356,7 @@ public static class LcAuthHelper
             var returnProfile = Request.Form["returnProfile"].AsBool();
             
             var utm = Request.Url.Query;
+            LoginResult logged = null;
 
             // If the user exists, try to log-in with the given password,
             // becoming a provider if that was the requested profileType and follow as 
@@ -361,21 +365,97 @@ public static class LcAuthHelper
             // Otherwise, just register the user.
             if (LcAuth.ExistsEmail(email))
             {
-                LoginResult logged = null;
-                // Try Login
-                try
+                // If the email exists, we try to log-in using the provided password, to don't bother with "e-mail in use" error 
+                // if the user provides the correct credentials (maybe just don't remember he/she has already an account; make it easy for them
+                // to return).
+                // BUT we have a special situation that needs extra checks:
+                // CLIENT--CONFIRMATION LOGIC
+                // The email can exists because the user has an account created as client by a service professional:
+                // - A: On that cases, we need to communicate that specific situation (error message), generate a confirmation code
+                // for the existent user, send email to let him to confirm it owns the given e-mail.
+                // - B: On returning here after point A, a confirmation code is provided and we must proceed
+                // by checking the confirmation code and, on success, unlock and update the membership password and
+                // continue updating any given data.
+                var userID = WebSecurity.GetUserId(email);
+                var user = LcRest.UserProfile.Get(userID);
+                if (user.accountStatusID != (int)LcEnum.AccountStatus.serviceProfessionalClient)
                 {
-                    logged = Login(email, password, false, returnProfile, true);
-                    // throw exception on error
-                    if (isServiceProfessional)
+                    // NOT a client, just standard sign-up that requires verify the email/password or fail
+                    // Try Login
+                    try
                     {
-                        LcAuth.BecomeProvider(logged.userID);
+                        logged = Login(email, password, false, returnProfile, true);
+                        userID = logged.userID;
+                        // throw exception on error
+                        if (isServiceProfessional)
+                        {
+                            LcAuth.BecomeProvider(userID);
+                        }
+                    }
+                    catch (HttpException)
+                    {
+                        // Not valid log-in, throw a 'email exists' error with Conflict http code
+                        throw new HttpException(409, "E-mail address is already in use.");
                     }
                 }
-                catch (HttpException)
+                else
                 {
-                    // Not valid log-in, throw a 'email exists' error with Conflict http code
-                    throw new HttpException(409, "E-mail address is already in use.");
+                    // CLIENT--CONFIRMATION LOGIC
+                    // The email can exists because the user has an account created as client by a service professional:
+                    // - A: On that cases, we need to communicate that specific situation (error message), generate a confirmation code
+                    // for the existent user, send email to let him to confirm it owns the given e-mail.
+                    // - B: On returning here after point A, a confirmation code is provided and we must proceed
+                    // by checking the confirmation code and, on success, unlock and update the membership password and
+                    // continue updating any given data.
+                    var confirmationCode = Request["confirmationCode"];
+                    var errMsg = String.Format(@"We see one of our service professionals has already scheduled services for you in the past.
+                        We've sent an invitation to activate your account to {0}.
+                        Please follow its instructions. We can't wait to get you on board!", email
+                    );
+                    if (String.IsNullOrEmpty(confirmationCode))
+                    {
+                        // Point A: create confirmation code  
+                        // generate a confirmation code (creates the Membership record, that does not exists still since is as just a client)
+                        // this needs a random password (we still didn't verified the user, so do NOT trust on the given password).
+                        // NOTE: since this can be attempted several time by the user, and next attempts will fail because the Membership
+                        // record will exists already, just double check and try creatione only if record don't exists:
+                        if (!LcAuth.HasMembershipRecord(userID))
+                        {
+                            WebSecurity.CreateAccount(email, Membership.GeneratePassword(14, 5), true);
+                        }
+                        // send email to let him to confirm it owns the given e-mail
+                        LcMessaging.SendWelcomeCustomer(userID, email);
+                        // Not valid after all, just communicate was was done and needs to do to active its account:
+                        throw new HttpException(409, errMsg);
+                    }
+                    else
+                    {
+                        // Point B: confirm confirmation code
+                        if (LcAuth.GetConfirmationToken(userID) == confirmationCode)
+                        {
+                            // We know is valid, we can update the accountStatus to not be any more a "service professional's client"
+                            // and that will allow to set the account as confirmed
+                            using (var db = new LcDatabase())
+                            {
+                                db.Execute("UPDATE users SET accountStatusID = @1 WHERE UserID = @0", userID, LcEnum.AccountStatus.active);
+                            }
+                            // now we can confirm (we already know the code is valid, it will just double check and update database)
+                            LcAuth.ConfirmAccount(confirmationCode);
+                            // set the password provided by the user. Trick: we need to generate a reset token in order to set the password.
+                            var token = WebSecurity.GeneratePasswordResetToken(email);
+                            WebSecurity.ResetPassword(token, password);
+                            // Left continue with profile data update..
+                        }
+                        else
+                        {
+                            // RE-send email to let him to confirm it owns the given e-mail
+                            LcMessaging.SendWelcomeCustomer(userID, email);
+                            throw new HttpException(409, errMsg);
+                        }
+                    }
+
+                    // We need a logged object, and additionally a double check is performed (so we ensure setting the password process worked).
+                    logged = Login(email, password, false, returnProfile, false);
                 }
 
                 // Update account data with the extra information.
@@ -388,9 +468,9 @@ public static class LcAuthHelper
                             mobilePhone = @3,
                             signupDevice = @4
                         WHERE userID = @0
-                    ", logged.userID, firstName, lastName, phone, device);
+                    ", userID, firstName, lastName, phone, device);
 
-                    var address = LcRest.Address.GetHomeAddress(logged.userID);
+                    var address = LcRest.Address.GetHomeAddress(userID);
                     if (address.postalCode != postalCode)
                     {
                         address.postalCode = postalCode;
