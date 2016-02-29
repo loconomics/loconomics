@@ -420,4 +420,12 @@ public static class LcAuth
         }
         return null;
     }
+
+    public static bool HasMembershipRecord(int userID)
+    {
+        using (var db = new LcDatabase())
+        {
+            return db.QueryValue("SELECT userid FROM webpages_Membership WHERE userid = @0", userID) != null;
+        }
+    }
 }

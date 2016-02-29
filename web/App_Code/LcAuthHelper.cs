@@ -417,7 +417,12 @@ public static class LcAuthHelper
                         // Point A: create confirmation code  
                         // generate a confirmation code (creates the Membership record, that does not exists still since is as just a client)
                         // this needs a random password (we still didn't verified the user, so do NOT trust on the given password).
-                        WebSecurity.CreateAccount(email, Membership.GeneratePassword(14, 5), true);
+                        // NOTE: since this can be attempted several time by the user, and next attempts will fail because the Membership
+                        // record will exists already, just double check and try creatione only if record don't exists:
+                        if (!LcAuth.HasMembershipRecord(userID))
+                        {
+                            WebSecurity.CreateAccount(email, Membership.GeneratePassword(14, 5), true);
+                        }
                         // send email to let him to confirm it owns the given e-mail
                         LcMessaging.SendWelcomeCustomer(userID, email);
                         // Not valid after all, just communicate was was done and needs to do to active its account:
