@@ -10,6 +10,14 @@
 @using System.Text.RegularExpressions;
 
 @functions{
+    public static void NotFoundOnInvalidLocaleURL()
+    {
+        if (LcRest.Locale.Current == null)
+        {
+            Server.TransferRequest("~/Errors/Error404.cshtml");
+        }
+    }
+
     /*=========================
      * Request/File Sizes
      */
