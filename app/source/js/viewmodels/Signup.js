@@ -151,7 +151,7 @@ function SignupVM(app) {
             // since this will be triggered by a button and never will have chance
             // to detect the promise, showing up unknow errors in console
             this.emit('signuperror', err);
-        });
+        }.bind(this));
     }.bind(this);
 
     this.forServiceProfessional = ko.pureComputed(function() {
