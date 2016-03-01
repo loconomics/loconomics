@@ -4,6 +4,10 @@
 'use strict';
 
 var baseUrl = window.location.pathname;
+if (!window.cordova) {
+    var t = /^http.?:\/\/[^\/]+(\/[^#]*)/.exec(window.document.baseURI);
+    if (t && t[1]) baseUrl = t[1];
+}
 
 //var History = require('./app-shell-history').create(baseUrl);
 var History = require('./utils/shell/hashbangHistory');

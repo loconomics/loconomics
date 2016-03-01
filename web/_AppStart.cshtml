@@ -60,8 +60,7 @@
 
     // MANAGE SPA ROUTES REDIRECTING TO INDEX
     // CATCH-ALL:
-    RouteTable.Routes.MapWebPageRoute("{customurl}", "~/Default.cshtml");
-    RouteTable.Routes.MapWebPageRoute("{customurl}/{*urldata}", "~/Default.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{*any}", "~/Default.cshtml");
 
     // IMPORTANT: because of the previous CATCH-ALL, this will never being displayed.
     // BUT is important to know how to do it, since is expected we can replace the catch-all by specific SPA page URLs
