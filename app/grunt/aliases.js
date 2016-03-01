@@ -87,6 +87,7 @@ module.exports = {
     'build-webapp-html': [
         'bliss:webapp',
         'htmlmin:webapp',
+        'copyto:webapp_assets',
         'notify:html'
     ],
 	'build-webapp': [

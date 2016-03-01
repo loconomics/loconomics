@@ -4,9 +4,13 @@
 'use strict';
 
 var baseUrl = window.location.pathname;
+var hashBang = true;
 if (!window.cordova) {
     var t = /^http.?:\/\/[^\/]+(\/[^#]*)/.exec(window.document.baseURI);
-    if (t && t[1]) baseUrl = t[1];
+    if (t && t[1]) {
+        baseUrl = t[1];
+        hashBang = false;
+    }
 }
 
 //var History = require('./app-shell-history').create(baseUrl);
@@ -29,7 +33,7 @@ var shell = new Shell({
     // If is not in the site root, the base URL is required:
     baseUrl: baseUrl,
     
-    forceHashbang: true,
+    forceHashbang: hashBang,
 
     indexName: 'index',
 

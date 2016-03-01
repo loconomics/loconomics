@@ -12,7 +12,7 @@ var deps = require('./dependencies');
 /** Constructor **/
 
 function Shell(settings) {
-    //jshint maxcomplexity:14
+    //jshint maxcomplexity:16
     
     deps.EventEmitter.call(this);
 
@@ -22,13 +22,16 @@ function Shell(settings) {
     // With forceHashbang=true:
     // - fragments URLs cannot be used to scroll to an element (default browser behavior),
     //   they are defaultPrevented to avoid confuse the routing mechanism and current URL.
-    // - pressed links to fragments URLs are not routed, they are skipped silently
-    //   except when they are a hashbang (#!). This way, special links
-    //   that performn js actions doesn't conflits.
-    // - all URLs routed through the shell includes a hashbang (#!), the shell ensures
+    // - all URLs routed through the shell will include a hashbang (#!), the shell ensures
     //   that happens by appending the hashbang to any URL passed in (except the standard hash
     //   that are skipt).
     this.forceHashbang = settings.forceHashbang || false;
+    // By default, or if forceHashbang is true:
+    // - pressed links to fragments URLs are not routed, they are skipped silently
+    //   except when they are a hashbang (#!). This way, special links
+    //   that performn js actions doesn't conflits.
+    // But with useSingleHashForRouting=true, fragment URLs are routed even if do not include the hashbang
+    this.useSingleHashForRouting = this.forceHashbang ? false : settings.useSingleHashForRouting || false;
     this.linkEvent = settings.linkEvent || 'click';
     this.parseUrl = (settings.parseUrl || deps.parseUrl).bind(this, this.baseUrl);
     this.absolutizeUrl = (settings.absolutizeUrl || deps.absolutizeUrl).bind(this, this.baseUrl);
@@ -365,7 +368,7 @@ Shell.prototype.run = function run() {
         if (/^[a-z]+:/i.test(href)) {
             return;
         }
-        else if (shell.forceHashbang && /^#([^!]|$)/.test(href)) {
+        else if (!this.useSingleHashForRouting && /^#([^!]|$)/.test(href)) {
             // Standard hash, but not hashbang: avoid routing and default behavior
             e.preventDefault();
             // Trigger special event on the shell, so external scripts can do
