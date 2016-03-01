@@ -84,13 +84,16 @@ module.exports = {
         'prepare-phonegapbuild',
         'notify:build'
 	],
+    'build-webapp-html': [
+        'bliss:webapp',
+        'htmlmin:webapp',
+        'notify:html'
+    ],
 	'build-webapp': [
         'build-js',
         'prepare-bootstrap-variables',
 		'build-css',
-        'bliss:webapp',
-        'htmlmin:webapp',
-        'notify:html',
+        'build-webapp-html',
         'build-images',
         'build-fonts',
         'copyto:webapp_assets',
