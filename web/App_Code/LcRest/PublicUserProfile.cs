@@ -139,7 +139,8 @@ namespace LcRest
                 (   PC.ServiceProfessionalUserID = @0 AND PC.ClientUserID = @1
                  OR PC.ServiceProfessionalUserID = @1 AND PC.ClientUserID = @0 )
         WHERE Users.UserID = @0
-          AND Users.Active = 1
+            -- Users must be active (no deleted and publicly active) OR to exist in relationship with the other user (active or not, but with record)
+          AND (Users.Active = 1 AND Users.AccountStatusID = 1 OR PC.Active is not null)
         ";
         private const string sqlSelectProfileForInternalUse = @"
         SELECT TOP 1
