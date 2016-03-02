@@ -430,6 +430,13 @@ public static class LcEmailTemplate
                 return LcUrl.AppUrl + "account/confirm/?confirmationCode=" + Uri.EscapeDataString(confirmationToken);
             }
         }
+        public string viewDownloadAppURL
+        {
+            get
+            {
+                return LcUrl.AppUrl + "downloadApp";
+            }
+        }
         /// <summary>
         /// Brings the professional to the on boarding for scheduling
         /// </summary>
