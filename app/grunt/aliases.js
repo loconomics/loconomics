@@ -89,6 +89,7 @@ module.exports = {
         'prepare-bootstrap-variables',
 		'build-css',
         'bliss:webapp',
+        'htmlmin:webapp',
         'notify:html',
         'build-images',
         'build-fonts',
