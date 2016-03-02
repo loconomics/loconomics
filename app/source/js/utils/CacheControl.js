@@ -37,9 +37,10 @@ function CacheControl(options) {
         this.latest = null;
     };
     
-    // Placeholder where external code can place the the cached data
+    // Placeholder where external code can place the cached data
     // so can keep management of caching all inside this object
-    this.data = null;
+    // Can be prepopulated
+    this.data = options.data || null;
 }
 
 module.exports = CacheControl;
