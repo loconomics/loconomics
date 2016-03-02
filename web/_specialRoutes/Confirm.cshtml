@@ -1,0 +1,22 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    var code = Request["confirmationCode"];
+    using (var db = Database.Open("sqlloco"))
+    {
+        var user = LcAuth.ConfirmAccount(code);
+
+        if (user != null)
+        {
+            if (user.accountStatusID == (int)LcEnum.AccountStatus.serviceProfessionalClient) {
+                // Redirect to client activation sign-up, prepopulating only the email and
+                // providing confirmationCode
+                Response.Redirect(LcUrl.AppPath + "signup/client?email=" + Uri.EscapeDataString(user.email) + "&confirmationCode=" + Uri.EscapeDataString(code));
+            }
+            // Account confirmed, redirect to dashboard 
+            Response.Redirect(LcUrl.AppPath + "dashboard");
+        }
+        // Bad confirmation code, silently redirects to the singup form
+        Response.Redirect(LcUrl.AppPath + "signup");
+    }
+}

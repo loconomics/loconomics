@@ -3,6 +3,13 @@
 <html lang="en" class="App" data-index="home" data-site-url="" data-facebook-language="@(facebookLang)" data-facebook-appid="@(facebookAppID)" data-culture="en-US">
     <head>
         <meta charset="utf-8">
+        <!-- VERY IMPORTANT: We run a SPA at the website with URLs with multiple segments
+            so we need a base URL (the server AppUrl), allowing us to use relative URLs for assets
+            that still works fine with any URL and with any server-side set-up for virtual directories.
+            By default is just a slash, but the server-side can replace the base VERBATIM as typed next
+            with a different base:
+        -->
+        <base href=/ >
         <meta name="description" content="Loconomics.com App">
         <meta name="author" content="Loconomics Coop.">
         <link rel="icon" href="assets/images/favicon.ico" />

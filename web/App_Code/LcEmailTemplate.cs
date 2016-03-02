@@ -385,6 +385,21 @@ public static class LcEmailTemplate
 
         public LcRest.PublicUserJobTitle userJobTitle;
 
+        public bool accountNeedsConfirmation
+        {
+            get
+            {
+                // IMPORTANT: Copied initialization code from viewEmailVerificationURL
+                // check if null to know that was not loaded still. The value can be empty when is loaded
+                // but no confirmationToken exists because confirmation already happened
+                if (confirmationToken == null)
+                {
+                    confirmationToken = LcAuth.GetConfirmationToken(userID) ?? "";
+                }
+                return !String.IsNullOrEmpty(confirmationToken);
+            }
+        }
+
         #region URLs
         /// <summary>
         /// Link to to a page that prompts user with an email box and 'reset' button,
@@ -405,11 +420,21 @@ public static class LcEmailTemplate
         {
             get
             {
-                if (String.IsNullOrEmpty(confirmationToken))
+                // IMPORTANT: Initialization code copied to accountNeedsConfirmation
+                // check if null to know that was not loaded still. The value can be empty when is loaded
+                // but no confirmationToken exists because confirmation already happened
+                if (confirmationToken == null)
                 {
-                    confirmationToken = LcAuth.GetConfirmationToken(userID);
+                    confirmationToken = LcAuth.GetConfirmationToken(userID) ?? "";
                 }
-                return LcUrl.AppUrl + "account/confirm/?confirmationCode=" + HttpUtility.UrlEncode(confirmationToken);
+                return LcUrl.AppUrl + "account/confirm/?confirmationCode=" + Uri.EscapeDataString(confirmationToken);
+            }
+        }
+        public string viewDownloadAppURL
+        {
+            get
+            {
+                return LcUrl.AppUrl + "downloadApp";
             }
         }
         /// <summary>

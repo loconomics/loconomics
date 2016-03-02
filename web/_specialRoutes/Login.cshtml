@@ -1,6 +1,7 @@
 ﻿@* Fallback simple server login
  *@
 @{
+    LcHelpers.NotFoundOnInvalidLocaleURL();
     Layout = "../Tests/_TestLayout.cshtml";
     if (IsPost) {
         if (LcAuth.Login(Request["username"], Request["pwd"])) {

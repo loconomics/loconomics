@@ -6,6 +6,7 @@ using WebMatrix.Data;
 using WebMatrix.WebData;
 using WebMatrix.Security;
 using System.Web.WebPages;
+using System.Web.Security;
 
 /// <summary>
 /// Utilities class about authentication and authorization,
@@ -370,6 +371,61 @@ public static class LcAuth
                 // coalesce used to avoid the value 'DbNull' to be returned, just 'empty' when there is no token,
                 // is already confirmed
                 db.QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userID);
+        }
+    }
+
+    public static LcRest.UserProfile ConfirmAccount(string confirmationCode)
+    {
+        using (var db = new LcDatabase())
+        {
+            var userID = (int?)db.QueryValue(@"
+                SELECT UserId FROM webpages_Membership
+                WHERE ConfirmationToken = @0
+            ", confirmationCode);
+
+            if (userID.HasValue)
+            {
+                // Check if the account requires to complete the sign-up:
+                // - it happens for user whose record was created by a professional (added him as client)
+                // - so, the user has an accountStatusID serviceProfessional's client
+                // -> On that case, we cannot confirm the account yet, since we need from the client to
+                // complete the sign-up, generating a password by itself. We just follow up returning the user
+                // profile data that can be used to pre-populate the 'client activation' sign-up form.
+                var user = LcRest.UserProfile.Get(userID.Value);
+                if (user.accountStatusID != (int)LcEnum.AccountStatus.serviceProfessionalClient)
+                {
+                    // User can confirm it's account, proceed:
+                    db.Execute(@"
+                        UPDATE webpages_Membership
+                        SET ConfirmationToken = null, IsConfirmed = 1
+                        WHERE ConfirmationToken like @0 AND UserID = @1
+                    ", confirmationCode, userID);
+                    // In the lines above, we cannot use the aps.net WebSecurity standard logic:
+                    // //WebSecurity.ConfirmAccount(confirmationToken)
+                    // because the change of confirmation first-time optional step, alert at dashboard
+                    // and (sometimes this business logic changes) required for second and following login attempts.
+                    // Because of this a hack is done on provider-sign-up login over the IsConfirmed field, and this becomes the ConfirmAccount
+                    // standard method unuseful (do nothing, really, because it checks IsConfirmed field previuosly and ever is true, doing nothing -we need set to null 
+                    // ConfirmationToken to off the alert-). On success, ConfirmationToken is set to null and IsConfirmed to 1 (true), supporting both cases, when IsConfirmed is
+                    // already true and when no.
+                    db.Execute("EXEC TestAlertVerifyEmail @0", userID);
+
+                    // IMPORTANT: Since 2012-09-27, issue #134, Auto-login is done on succesful confirmation;
+                    // some code after next lines (comented as 'starndard logic' will not be executed, and some html, but preserved as documentation)
+                    // Confirmation sucess, we need user name (email) to auto-login:
+                    FormsAuthentication.SetAuthCookie(user.email, false);
+                }
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public static bool HasMembershipRecord(int userID)
+    {
+        using (var db = new LcDatabase())
+        {
+            return db.QueryValue("SELECT userid FROM webpages_Membership WHERE userid = @0", userID) != null;
         }
     }
 }

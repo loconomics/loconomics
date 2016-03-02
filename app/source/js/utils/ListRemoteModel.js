@@ -119,12 +119,18 @@ function ListRemoteModel(settings) {
     **/
     api.getList = function getList() {
 
-        if (cache.control.mustRevalidate()) {
-            // Cache still not used, then is first load, try load from local
+        // First, check if there is a running/pending request already for this
+        if (cache.request) {
+            // reuse the request, rather than overload the app and server.
+            return cache.request;
+        }
+        // Cache needs fresh data:
+        else if (cache.control.mustRevalidate()) {
+            // Cache still not used, then is first load, try to load from local
             if (cache.unused) {
                 api.state.isLoading(true);
                 // From local
-                return this.fetchListFromLocal()
+                cache.request = this.fetchListFromLocal()
                 .then(function(data) {
                     // launch remote for sync
                     api.state.isSyncing(true);
@@ -159,19 +165,22 @@ function ListRemoteModel(settings) {
                     cache.list = data;
                     this.pushListToLocal(data);
                     api.state.isLoading(false);
+                    cache.request = null;
 
                     return cache.list;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cache.request = null;
                     // rethrow error
                     throw err;
                 });
+                return cache.request;
             } else {
                 api.state.isSyncing(true);
                 // From remote
-                return this.fetchListFromRemote()
+                cache.request = this.fetchListFromRemote()
                 .then(function(data) {
                     // Ever a list, even if empty
                     data = data || [];
@@ -179,15 +188,18 @@ function ListRemoteModel(settings) {
                     this.pushListToLocal(data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
-
+                    cache.request = null;
+                    
                     return cache.list;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cache.request = null;
                     // rethrow error
                     throw err;
                 });
+                return cache.request;
             }
         }
         else {

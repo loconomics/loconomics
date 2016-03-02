@@ -16,7 +16,7 @@ module.exports = function getUrlQuery(url) {
         {
             hash = hashes[i].split('=');
             vars.push(hash[0]);
-            vars[hash[0]] = hash[1];
+            vars[hash[0]] = decodeURIComponent(hash[1]);
         }
     }
     return vars;
