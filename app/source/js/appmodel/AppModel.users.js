@@ -5,7 +5,11 @@
 **/
 'use strict';
 
+var GroupRemoteModel = require('../utils/GroupRemoteModel');
+var PublicUserProfile = require('../models/PublicUserProfile');
+
 exports.create = function create(appModel) {
+    //jshint maxstatements:80
     
     var api = {};
 
@@ -26,8 +30,20 @@ exports.create = function create(appModel) {
         return appModel.rest.get('users/' + (userID |0), options);
     };
     
+    // IMPORTANT: We need cache for user profiles, since are used to fetch information
+    // of users attached to thread-messages.
+    var profile = new GroupRemoteModel({
+        ttl: {
+            minutes: 10
+        },
+        Model: PublicUserProfile,
+        itemIdField: 'userID'
+    });
+    profile.addRestSupport(appModel.rest, 'users/', '/profile');
+    profile.addLocalforageSupport('userProfiles/');
     api.getProfile = function(userID) {
-        return appModel.rest.get('users/' + (userID |0) + '/profile');
+        return profile.getItem(userID);
+        //return appModel.rest.get('users/' + (userID |0) + '/profile');
     };
     
     api.getJobProfile = function(userID) {

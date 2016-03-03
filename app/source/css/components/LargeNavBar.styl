@@ -72,7 +72,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
             height $LargeNavBar-contentHeight
             font-size 16px
             width auto
-            border-left 1px solid $border-color
+            //border-left 1px solid $border-color
             padding 0
             white-space: nowrap;
 
@@ -91,6 +91,11 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
                   color #4c4c4c
                   padding-top 0
                   padding-bottom 0
+                  
+                  &:hover
+                  &:focus
+                      background-color transparent
+                      color $brand-primary
 
         & > .open
             & > a
@@ -112,7 +117,6 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
                     width 200px
                     > a
                       white-space normal
-                      color inherit
                       font-size inherit
 
         ///// SPECIFIC THINGS THAT MAY GET BETTER ORGANIZED OR CONVERTED TO GENERIC COMPONENTS:

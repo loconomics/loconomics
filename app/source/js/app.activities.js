@@ -17,6 +17,7 @@ var EmptyActivity = Activity.extend(function EmptyActivity() {
 
 module.exports = {
     '_test': EmptyActivity,
+    'downloadApp': require('./activities/downloadApp'),
     'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),

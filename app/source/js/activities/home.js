@@ -13,7 +13,7 @@ var A = Activity.extend(function HomeActivity() {
     this.navBar = null;
     this.accessLevel = null;
     this.viewModel = {
-        isAnonymous: this.app.model.user().isAnonymous
+        nav: this.app.navBarBinding
     };
     var $header = this.$header = this.$activity.find('header');
 

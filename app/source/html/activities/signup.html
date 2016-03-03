@@ -308,7 +308,7 @@
         
       <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
         <label for="signupAccountEmail" class="sr-only">E-mail address</label>
-        <input type="email" class="form-control" id="signupAccountEmail" placeholder="E-mail address" data-bind="value: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }">
+        <input type="email" class="form-control" id="signupAccountEmail" placeholder="E-mail address" data-bind="value: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }, disable: emailIsLocked">
           <span class="form-control-feedback ion-ios-at-outline" aria-hidden="true"></span>
       </div>
         

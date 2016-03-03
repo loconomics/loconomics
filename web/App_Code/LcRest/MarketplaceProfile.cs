@@ -75,12 +75,14 @@ namespace LcRest
             };
         }
 
+        public const string CustomUrlPrefix = "-";
+
         public static string BuildServiceProfessionalCustomURL(string slug)
         {
             if (String.IsNullOrWhiteSpace(slug))
                 return "";
             else
-                return LcUrl.AppUrl + ASP.LcHelpers.StringSlugify(slug);
+                return LcUrl.AppUrl + CustomUrlPrefix + ASP.LcHelpers.StringSlugify(slug);
         }
 
         #region SQL

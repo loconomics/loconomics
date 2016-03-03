@@ -90,10 +90,11 @@ module.exports = function(/*grunt*/) {
                     'exports': null,
                     'depends': { 'jquery': null }
                 },
-                'history': {
+                // NOTE: NOT USED RIGHT NOW, IS BUGGY with the app-shell-history
+                /*'history': {
                     'path': './vendor/history/jquery.history.js',
                     'exports': 'History'
-                },
+                },*/
                 'fastclick': {
                     path: './vendor/fastclick-forked/fastclick.js',
                     exports: 'FastClick'

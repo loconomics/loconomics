@@ -40,12 +40,15 @@
     RouteTable.Routes.MapWebPageRoute("calendar/{userID}/{token}/{file}", "~/_specialRoutes/Calendar.cshtml");
 
     // Public User profile photo, KEEPING URL AS IN Release-6.3 FOR RELEASE-7+
-    RouteTable.Routes.MapWebPageRoute("en-US/profile/photo", "~/_specialRoutes/UserProfilePhoto.cshtml");
-    RouteTable.Routes.MapWebPageRoute("en-US/profile/photo/{userID}", "~/_specialRoutes/UserProfilePhoto.cshtml");
-    RouteTable.Routes.MapWebPageRoute("en-US/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");    
+    RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo", "~/_specialRoutes/UserProfilePhoto.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo/{userID}", "~/_specialRoutes/UserProfilePhoto.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");    
     
     // Account
-    RouteTable.Routes.MapWebPageRoute("en-US/Account/Login", "~/_specialRoutes/Login.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/account/login", "~/_specialRoutes/Login.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/account/confirm", "~/_specialRoutes/Confirm.cshtml");
+    RouteTable.Routes.MapWebPageRoute("account/login", "~/_specialRoutes/Login.cshtml");
+    RouteTable.Routes.MapWebPageRoute("account/confirm", "~/_specialRoutes/Confirm.cshtml");
 
     // NORMAL ROUTES
     // Booking with service professional bookcode URL
@@ -54,12 +57,14 @@
     // Public Profile URL optimized for SEO:
     RouteTable.Routes.MapWebPageRoute("{city}/{jobTitle}/{user}", "~/_specialRoutes/PublicProfileURL.cshtml");
     // CustomURL:
-    RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/_specialRoutes/CustomURL.cshtml");
+    RouteTable.Routes.MapWebPageRoute(LcRest.MarketplaceProfile.CustomUrlPrefix + "{customurl}/", "~/_specialRoutes/CustomURL.cshtml");
 
     // MANAGE SPA ROUTES REDIRECTING TO INDEX
-    RouteTable.Routes.MapWebPageRoute("{customurl}", "~/Default.cshtml");
-    RouteTable.Routes.MapWebPageRoute("{customurl}/{*urldata}", "~/Default.cshtml");
+    // CATCH-ALL:
+    RouteTable.Routes.MapWebPageRoute("{*any}", "~/Default.cshtml");
 
-    // ANY NOT FOUND URL GOES TO THE INDEX, WHERE WE HAVE NOW THE SPA
-    RouteTable.Routes.MapWebPageRoute("{*urldata}", "~/_specialRoutes/RedirectToDefault.cshtml");
+    // IMPORTANT: because of the previous CATCH-ALL, this will never being displayed.
+    // BUT is important to know how to do it, since is expected we can replace the catch-all by specific SPA page URLs
+    // ANY NOT FOUND URL
+    RouteTable.Routes.MapWebPageRoute("{*urldata}", "~/Errors/Error404.cshtml");
 }

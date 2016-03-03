@@ -9,6 +9,7 @@
 var ko = require('knockout'),
     Model = require('./Model'),
     moment = require('moment');
+var PublicUserProfile = require('./PublicUserProfile');
 
 function MessageView(values, app) {
     
@@ -58,18 +59,44 @@ function MessageView(values, app) {
         }
     }, this);
     
-    this.client = ko.computed(function() {
-        var s = this.sourceMessage();
-        if (!s || !app) return null;
-
-        var cid = s.sentByUserID();
-        if (cid) {
-            if (cid === app.model.userProfile.data.userID())
+    var getUserData = function(userID) {
+        if (userID) {
+            if (userID === app.model.userProfile.data.userID())
                 return app.model.userProfile.data;
-            else
-                return app.model.clients.getObservableItem(cid, true)();
+            else {
+                var user = new PublicUserProfile();
+                app.model.users.getProfile(userID).then(function(d) { user.model.updateWith(d, true); });
+                return user;
+            }
         }
-        return null;
+        // Message from the System
+        return new PublicUserProfile({
+            firstName: 'Loconomics',
+            lastName: 'Cooperative Inc.'
+        });
+    };
+    
+    this.client = ko.pureComputed(function() {
+        //jshint maxcomplexity:8
+        var t = this.sourceThread();
+        if (!t || !app) return null;
+        return getUserData(t.clientUserID());
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+    
+    this.serviceProfessional = ko.pureComputed(function() {
+        //jshint maxcomplexity:8
+        var t = this.sourceThread();
+        if (!t || !app) return null;
+        return getUserData(t.serviceProfessionalUserID());
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+    
+    this.sender = ko.pureComputed(function() {
+        //jshint maxcomplexity:8
+        var m = this.sourceMessage();
+        if (!m || !app) return null;
+        return getUserData(m.sentByUserID());
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
@@ -87,18 +114,24 @@ MessageView.fromThread = function(app, thread) {
     var msg = thread.messages();
     msg = msg && msg[0] || null;
     
-    // TODO: more different tag/classes depending on booking state as per design
-    // NOTE: That requires to load the booking or request by auxID and wait for it
     var tag, classNames;
-    if (msg.auxT() === 'Booking') {
-        tag = 'Booking';
-        classNames = 'text-success';
+    if (msg) {
+        // TODO: more different tag/classes depending on booking state as per design
+        // NOTE: That requires to load the booking or request by auxID and wait for it
+        if (msg.auxT() === 'Booking') {
+            tag = 'Booking';
+            classNames = 'text-success';
+        }
+        // TODO For state==request must be
+        /*{
+            tag = 'Booking request';
+            classNames = 'text-warning';
+        }*/
     }
-    // TODO For state==request must be
-    /*{
-        tag = 'Booking request';
-        classNames = 'text-warning';
-    }*/
+    else {
+        // Problem if msg is null, since almost one message must exists on every thread
+        console.error('Thread is empty', thread);
+    }
     
     return new MessageView({
         sourceThread: thread,

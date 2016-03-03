@@ -1,0 +1,65 @@
+<header class="HomeNavBar" data-bind="with: nav">
+    <div class="HomeNavBar-menu">
+        <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+            <span class="sr-only">Menu</span>
+        </a>
+        <ul class="SideMenu">
+            <li><a href="#home-search">Search</a></li>
+            <li data-bind="visible: !isApp()"><a href="/downloadApp">Download the App</a></li>
+            <li data-bind="visible: isAnonymous()"><a href="/signup">Sign Up</a></li>
+            <li data-bind="visible: isAnonymous()"><a href="/login">Log In</a></li>
+            <li data-bind="visible: !isAnonymous()"><a href="/dashboard">Dashboard</a></li>
+            <li><a href="#home-categories">Browse</a></li>
+            <li><a href="#home-hiw">How it Works</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#inline-help">Help</a></li>
+        </ul>
+    </div>
+    <div class="HomeNavBar-brand">
+        <a href="/">Loconomics</a>
+    </div>
+    <div class="HomeNavBar-searchBar SearchBar">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <label for="navbar-search" class="fa fa-2x ion ion-ios-search" style=""></label>
+            </span>
+            <input id="navbar-search" type="text" name="s" class="form-control" placeholder="Search for a (e.g. Garderner, Tutor...)" />
+        </div>
+    </div>
+    <nav class="HomeNavBar-nav">
+        <!-- Anonymous nav -->
+        <ul data-bind="visible: isAnonymous()">
+            <li><a href="/signup" class="btn btn-link">Sign up</a></li>
+            <li><a href="/login" class="btn btn-link">Log in</a></li>
+            <!--<li>
+                <a href="#inline-help" class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Help <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#h">Visit the Help Center</a></li>
+                    <li><a href="#h">Getting Started Guide</a></li>
+                    <li><a href="#h">How much do I pay for a service?</a></li>
+                    <li><a href="#h">How does process payments?</a></li>
+                    <li><a href="#h">See all FAQs</a></li>
+                </ul>
+            </li>-->
+            <li><a href="/signup/serviceProfessional" class="btn btn-secondary">List your services</a></li>
+        </ul>
+        <!-- User nav -->
+        <ul data-bind="visible: !isAnonymous()" hidden="hidden">
+            <li class="HomeNavBar-userMenu dropdown text-right">
+                <a href="#user-menu" class="dropdown-toggle toggle btn btn-link" data-toggle="dropdown">
+                    <i class="Avatar Avatar--primary Avatar--xs"><img data-bind="attr: { src: photoUrl }" /></i>
+                    <span class="LargeNavBar-label" data-bind="text: userName"></span> <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    @render('parts/UserMenuContents.html')
+                </ul>
+            </li>
+            <li>
+                <a href="/feedback" class="btn btn-link"><span class="LargeNavBar-label">Talk to Us</span></a>
+            </li>
+        </ul>
+    </nav>
+</header>

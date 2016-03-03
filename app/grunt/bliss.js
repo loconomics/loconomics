@@ -18,6 +18,8 @@ module.exports = function(grunt) {
         'activities/signup.html',
         'activities/terms.html'
     ];
+    var moment = require('moment');
+    var version = moment().format('YYYYMMDDHHmm');
 
     return {
         app: {
@@ -32,6 +34,21 @@ module.exports = function(grunt) {
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang
+            }
+          }
+        },
+        webapp: {
+          files: {
+            '../web/_specialRoutes/app.html': ['source/html/web.js.html']
+          },
+          options: {
+            context: {
+                debug: false,
+                includedFiles: includedFiles,
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang,
+                cssVersion: version,
+                jsVersion: version
             }
           }
         },
