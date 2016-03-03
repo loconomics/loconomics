@@ -409,7 +409,7 @@ public static class LcAuthHelper
                     // continue updating any given data.
                     var confirmationCode = Request["confirmationCode"];
                     var errMsg = String.Format(@"We see one of our service professionals has already scheduled services for you in the past.
-                        We've sent an invitation to activate your account to {0}.
+                        We've just sent an invitation to create your account to {0}.
                         Please follow its instructions. We can't wait to get you on board!", email
                     );
                     if (String.IsNullOrEmpty(confirmationCode))
