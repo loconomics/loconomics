@@ -45,8 +45,9 @@
     RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");    
     
     // Account
-    //RouteTable.Routes.MapWebPageRoute("{locale}/account/login", "~/_specialRoutes/Login.cshtml");
-    //RouteTable.Routes.MapWebPageRoute("{locale}/account/confirm", "~/_specialRoutes/Confirm.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/account/login", "~/_specialRoutes/Login.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/account/confirm", "~/_specialRoutes/Confirm.cshtml");
+    RouteTable.Routes.MapWebPageRoute("account/login", "~/_specialRoutes/Login.cshtml");
     RouteTable.Routes.MapWebPageRoute("account/confirm", "~/_specialRoutes/Confirm.cshtml");
 
     // NORMAL ROUTES

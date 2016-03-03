@@ -119,7 +119,7 @@ function ListRemoteModel(settings) {
     **/
     api.getList = function getList() {
 
-        // First, check if there is a running/pending request already for this
+        // Concurrent requests: First, check if there is a running/pending request already for this
         if (cache.request) {
             // reuse the request, rather than overload the app and server.
             return cache.request;

@@ -9,6 +9,7 @@
 var ko = require('knockout'),
     Model = require('./Model'),
     moment = require('moment');
+var PublicUserProfile = require('./PublicUserProfile');
 
 function MessageView(values, app) {
     
@@ -62,13 +63,20 @@ function MessageView(values, app) {
         if (userID) {
             if (userID === app.model.userProfile.data.userID())
                 return app.model.userProfile.data;
-            else
-                return app.model.clients.getObservableItem(userID, true)();
+            else {
+                var user = new PublicUserProfile();
+                app.model.users.getProfile(userID).then(function(d) { user.model.updateWith(d, true); });
+                return user;
+            }
         }
-        return null;
+        // Message from the System
+        return new PublicUserProfile({
+            firstName: 'Loconomics',
+            lastName: 'Cooperative Inc.'
+        });
     };
     
-    this.client = ko.computed(function() {
+    this.client = ko.pureComputed(function() {
         //jshint maxcomplexity:8
         var t = this.sourceThread();
         if (!t || !app) return null;
@@ -76,7 +84,7 @@ function MessageView(values, app) {
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
-    this.serviceProfessional = ko.computed(function() {
+    this.serviceProfessional = ko.pureComputed(function() {
         //jshint maxcomplexity:8
         var t = this.sourceThread();
         if (!t || !app) return null;
@@ -84,7 +92,7 @@ function MessageView(values, app) {
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
-    this.sender = ko.computed(function() {
+    this.sender = ko.pureComputed(function() {
         //jshint maxcomplexity:8
         var m = this.sourceMessage();
         if (!m || !app) return null;
