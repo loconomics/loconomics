@@ -424,7 +424,7 @@ public static class LcAuthHelper
                             WebSecurity.CreateAccount(email, Membership.GeneratePassword(14, 5), true);
                         }
                         // send email to let him to confirm it owns the given e-mail
-                        LcMessaging.SendServiceProfessionalClientActivation(userID, email);
+                        LcMessaging.SendWelcomeCustomer(userID, email);
                         // Not valid after all, just communicate was was done and needs to do to active its account:
                         throw new HttpException(409, errMsg);
                     }
@@ -449,7 +449,7 @@ public static class LcAuthHelper
                         else
                         {
                             // RE-send email to let him to confirm it owns the given e-mail
-                            LcMessaging.SendServiceProfessionalClientActivation(userID, email);
+                            LcMessaging.SendWelcomeCustomer(userID, email);
                             throw new HttpException(409, errMsg);
                         }
                     }
