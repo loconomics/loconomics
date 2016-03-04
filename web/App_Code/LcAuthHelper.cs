@@ -409,7 +409,7 @@ public static class LcAuthHelper
                     // continue updating any given data.
                     var confirmationCode = Request["confirmationCode"];
                     var errMsg = String.Format(@"We see one of our service professionals has already scheduled services for you in the past.
-                        We've sent an invitation to activate your account to {0}.
+                        We've just sent an invitation to create your account to {0}.
                         Please follow its instructions. We can't wait to get you on board!", email
                     );
                     if (String.IsNullOrEmpty(confirmationCode))
@@ -418,13 +418,13 @@ public static class LcAuthHelper
                         // generate a confirmation code (creates the Membership record, that does not exists still since is as just a client)
                         // this needs a random password (we still didn't verified the user, so do NOT trust on the given password).
                         // NOTE: since this can be attempted several time by the user, and next attempts will fail because the Membership
-                        // record will exists already, just double check and try creatione only if record don't exists:
+                        // record will exists already, just double check and try creation only if record don't exists:
                         if (!LcAuth.HasMembershipRecord(userID))
                         {
                             WebSecurity.CreateAccount(email, Membership.GeneratePassword(14, 5), true);
                         }
                         // send email to let him to confirm it owns the given e-mail
-                        LcMessaging.SendWelcomeCustomer(userID, email);
+                        LcMessaging.SendServiceProfessionalClientActivation(userID, email);
                         // Not valid after all, just communicate was was done and needs to do to active its account:
                         throw new HttpException(409, errMsg);
                     }
@@ -449,7 +449,7 @@ public static class LcAuthHelper
                         else
                         {
                             // RE-send email to let him to confirm it owns the given e-mail
-                            LcMessaging.SendWelcomeCustomer(userID, email);
+                            LcMessaging.SendServiceProfessionalClientActivation(userID, email);
                             throw new HttpException(409, errMsg);
                         }
                     }
