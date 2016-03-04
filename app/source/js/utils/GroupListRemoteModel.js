@@ -61,12 +61,16 @@ function GroupListRemoteModel(settings) {
     api.getList = function getList(groupID) {
         var cacheEntry = cache.getGroupCache(groupID);
 
-        if (cacheEntry.control.mustRevalidate()) {
+        // Concurrent requests: First, check if there is a running/pending request already for this
+        if (cacheEntry.request) {
+            return cacheEntry.request;
+        }
+        else if (cacheEntry.control.mustRevalidate()) {
             // No cache data, is first load, try from local
             if (!cacheEntry.list) {
                 api.state.isLoading(true);
                 // From local
-                return this.fetchGroupFromLocal(groupID)
+                cacheEntry.request = this.fetchGroupFromLocal(groupID)
                 .then(function(data) {
                     // launch remote for sync
                     api.state.isSyncing(true);
@@ -86,19 +90,21 @@ function GroupListRemoteModel(settings) {
                     cache.setGroupCache(groupID, data);
                     this.pushGroupToLocal(groupID, data);
                     api.state.isLoading(false);
-
+                    cacheEntry.request = null;
                     return data;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cacheEntry.request = null;
                     // rethrow error
                     throw err;
                 });
+                return cacheEntry.request;
             } else {
                 api.state.isSyncing(true);
                 // From remote
-                return this.fetchGroupFromRemote(groupID)
+                cacheEntry.request = this.fetchGroupFromRemote(groupID)
                 .then(function(data) {
                     // Ever a list, even if empty
                     data = data || [];
@@ -106,15 +112,17 @@ function GroupListRemoteModel(settings) {
                     this.pushGroupToLocal(groupID, data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
-
+                    cacheEntry.request = null;
                     return data;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cacheEntry.request = null;
                     // rethrow error
                     throw err;
                 });
+                return cacheEntry.request;
             }
         }
         else {
