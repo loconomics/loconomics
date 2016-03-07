@@ -851,21 +851,6 @@ public class LcMessaging
                 { "userID", userID }
         }), "Loconomics Cooperative <automated@loconomics.com>");
     }
-    /// <summary>
-    /// Email sent to a client that had not an account, just a record as a 'service professional client'.
-    /// Before this e-mail, it's account was created but not active, requiring him/her to use the confirmationLink
-    /// inside to validate it's e-mail, the account and being able to complete the sign-up that will update it's record.
-    /// </summary>
-    /// <param name="userID"></param>
-    /// <param name="userEmail"></param>
-    public static void SendServiceProfessionalClientActivation(int userID, string userEmail)
-    {
-        SendMail(userEmail, "[Action Required] Welcome to a new kind of marketplace",
-            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/ServiceProfessionalClientActivation/",
-            new Dictionary<string, object> {
-                { "userID", userID }
-        }), "Loconomics Cooperative <automated@loconomics.com>");
-    }
     public static void SendResetPassword(int userID, string userEmail)
     {
         SendMail(userEmail, "Forget being forgetful",
