@@ -1,5 +1,5 @@
 <!-- Search activity (aka search) -->
-<div class="" data-activity="search">
+<div class="container" data-activity="search">
             <form id="home-search" data-bind="submit: search" action="/" method="get" class="row">
                 <div class="form-group col-sm-6">
                     <label for="homeSearch" class="sr-only">Search</label>
@@ -7,9 +7,9 @@
                         <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
                         <input type="text" data-bind="textInput: searchTerm" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)" >
                     </div>
-                    <ul class="TagsListAutocomplete">
+                    <ul class="TagsListAutocomplete" data-bind="visible: isSearchAutocompleteOpened">
                             <li data-bind="visible: searchResults.jobTitles().length>0">
-                                 <div>Services</div>               
+                                 <div>Services</div>
                                      <ul data-bind="foreach: searchResults.jobTitles">
                                         <li>
                                             <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID()}">

@@ -119,4 +119,12 @@ function ViewModel(appModel) {
         this.search();
     //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
     },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 1000 } });
+    
+    this.isSearchAutocompleteOpened = ko.pureComputed(function() {
+        return (
+            this.searchResults.jobTitles().length || 
+            this.searchResults.serviceProfessionals().length || 
+            this.searchResults.categories().length
+        );
+    }, this);
 }
