@@ -1,19 +1,27 @@
 <!-- Search activity (aka search) -->
 <div class="container" data-activity="search">
             <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
+                <div class="form-group col-sm-4">
+                    <label for="homeLocation" class="sr-only">Where?</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
+                        <input type="text" name="location" class="form-control inset" id="homeLocation" value="San Francisco, CA">
+                    </div>
+                </div>
                 <div class="form-group col-sm-6">
                     <label for="homeSearch" class="sr-only">Search</label>
                     <div class="input-group input-group-lg">
                         <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
                         <input type="text" data-bind="textInput: searchTerm" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)" >
                     </div>
-                    <ul class="TagsListAutocomplete" data-bind="visible: isSearchAutocompleteOpened">
+                    <ul class="SearchResultsPreview" data-bind="visible: isSearchAutocompleteOpened">
                             <li data-bind="visible: searchResults.jobTitles().length>0">
                                  <div>Services</div>
                                      <ul data-bind="foreach: searchResults.jobTitles">
                                         <li>
                                             <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
-                                                <span data-bind="text: pluralName"></span>                                                               <span data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span> –         
+                                                <span class="Result-name" data-bind="text: pluralName"></span>
+                                                <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>        
                                                 <span class="Result-description" data-bind="text: searchDescription"></span>  
                                             </a>
                                         </li>
@@ -24,10 +32,10 @@
                                 <ul data-bind="foreach: searchResults.serviceProfessionals">
                                         <li>
                                             <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
-                                                <span data-bind="text: firstName"></span> 
-                                                <span data-bind="text: lastName"></span> 
-                                                <span data-bind="visible: businessName">(<span data-bind="text: businessName"></span>) </span>–     
-                                                <span data-bind="text: allJobTitles"></span>   
+                                                <span class="Result-name" data-bind="text: firstName"></span> 
+                                                <span class="Result-name"  data-bind="text: lastName"></span> 
+                                                <span class="Result-name"  data-bind="visible: businessName">(<span data-bind="text: businessName"></span>) </span>     
+                                                <span class="Result-description" data-bind="text: allJobTitles"></span>   
                                             </a>
                                              </li>
                                      </ul>   
@@ -37,29 +45,16 @@
                                      <ul data-bind="foreach: searchResults.categories">
                                         <li>
                                             <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
-                                                <span data-bind="text: categoryName"></span> –     
-                                                <span data-bind="text: searchDescription"></span>  
+                                                <span class="Result-name" data-bind="text: categoryName"></span>     
+                                                <span class="Result-description" data-bind="text: searchDescription"></span>  
                                             </a>
                                         </li>
                                      </ul>   
                             </li>
                         </ul>
                 </div>
-                <div class="form-group col-sm-4">
-                    <label for="homeLocation" class="sr-only">Where?</label>
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
-                        <input type="text" name="location" class="form-control inset" id="homeLocation" value="San Francisco, CA">
-                    </div>
-                </div>
                 <div class="col-sm-2">
                     <button type="submit" class="btn btn-secondary btn-lg btn-block" >Search</button>
                 </div>
-            </form>
-            <div class="SearchResults"></div>
-            <div data-bind="foreach: searchResults.jobTitles" class="jobTitles">
-                <span data-bind="text: singularName"></span>    
-                <span data-bind="text: description"></span>    
-            </div>
- 
+            </form> 
 </div>
