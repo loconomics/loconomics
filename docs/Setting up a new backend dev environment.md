@@ -60,3 +60,13 @@ But even if is expected that will take a short time, is good to put in this mode
 To have configuration for a specific server, specially sensitive things like passwords, into files and into a repository, is not a recommended thing usually, but I didn't find how to manage it in other way, taking care that asp.net web.config files include more than just *config* or environment settings, and that things are good to keep saved and tracked. One of the problems is that anyone with access to the repository can see the passwords. But for now, we go this way, keeping all channels web.configs at github, with the channel name.
 
 This way, if there is some of that *special config* things, that affect how the whole website/backend works, that need update, I can do it in all the files, upload them, and keep tract at git of the change. And example is the recent case where I need to adjust some "hidden directories" settings to prevent web access to sensitive content (logs) and the addition of a new supported file extension (.woff2) so the download of webfonts of that format can work on the server (by default, they don't work, triggering browser error and no font/icons being loaded).
+
+### How to use the new database as the source on you local host on Chrome/Firefox
+
+At the Web console with the page opened (can be the local development server created by 'grunt atwork', or a website Webapp like dev.loconomics.com), use next to setup a different REST Service URL:
+
+    localStorage["LoconomicsApp/config"] = '{"siteUrl":"http://devJosh.loconomics.com"}';
+
+To restore it, and left the App/Webapp use the default URL just:
+    delete localStorage["LoconomicsApp/config"]
+ 
