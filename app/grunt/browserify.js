@@ -78,6 +78,7 @@ module.exports = function(/*grunt*/) {
                 './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent',
                 './vendor/iagosrl/throttle:iagosrl/throttle',
                 'knockout-sortable',
+                'geocomplete'
             ],
             'shim': {
                 /*'jquery-ui':  {
