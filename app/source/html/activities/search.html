@@ -7,6 +7,43 @@
                         <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
                         <input type="text" data-bind="textInput: searchTerm" class="form-control inset" id="homeSearch" name="s" placeholder="Search for a (e.g. Gardener, Tutor...)" >
                     </div>
+                    <ul class="TagsListAutocomplete">
+                            <li data-bind="visible: searchResults.jobTitles().length>0">
+                                 <div>Services</div>               
+                                     <ul data-bind="foreach: searchResults.jobTitles">
+                                        <li>
+                                            <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID()}">
+                                                <span data-bind="text: pluralName"></span>                                                               <span data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span> –         
+                                                <span class="Result-description" data-bind="text: searchDescription"></span>  
+                                            </a>
+                                        </li>
+                                     </ul>   
+                            </li>
+                            <li data-bind="visible: searchResults.serviceProfessionals().length>0">
+                                 <div >Professionals</div>                             
+                                <ul data-bind="foreach: searchResults.serviceProfessionals">
+                                        <li>
+                                            <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
+                                                <span data-bind="text: firstName"></span> 
+                                                <span data-bind="text: lastName"></span> 
+                                                <span data-bind="visible: businessName">(<span data-bind="text: businessName"></span>) </span>–     
+                                                <span data-bind="text: allJobTitles"></span>   
+                                            </a>
+                                             </li>
+                                     </ul>   
+                            </li>
+                            <li data-bind="visible: searchResults.categories().length>0">
+                                 <div>Categories</div>               
+                                     <ul data-bind="foreach: searchResults.categories">
+                                        <li>
+                                            <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID()}">
+                                                <span data-bind="text: categoryName"></span> –     
+                                                <span data-bind="text: searchDescription"></span>  
+                                            </a>
+                                        </li>
+                                     </ul>   
+                            </li>
+                        </ul>
                 </div>
                 <div class="form-group col-sm-4">
                     <label for="homeLocation" class="sr-only">Where?</label>

@@ -1,0 +1,17 @@
+<!-- Search Job Title activity -->
+<div class="" data-activity="searchJobTitle">
+        <div data-bind="foreach: serviceProfessionalSearchResult">
+            <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()">
+            <div><img data-bind="attr: { src: photoUrl()}"></div>
+            <div><span data-bind="text: firstName"></span></div>
+            <div><span data-bind="text: lastName"></span></div>  
+            <div><span data-bind="text: businessName"></span></div>  
+            <div><span data-bind="text: jobTitleNameSingular"></span></div>   
+            <div><span data-bind="text: distance"></span></div>   
+            <div><span data-bind="text: rating"></span></div>    
+            <div><span data-bind="text: verificationsSummary"></span></div>    
+            <div><span data-bind="text: stats"></span></div>     
+            <div><span data-bind="text: jobStats"></span></div>  
+            </a>
+        </div>
+</div>

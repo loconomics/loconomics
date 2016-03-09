@@ -1,0 +1,15 @@
+<!-- Search Category activity -->
+<div class="" data-activity="searchCategory">
+        <div data-bind="foreach: jobTitleSearchResult">
+            <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID()">
+            <div><span data-bind="text: pluralName"></span></div>
+            <div><span data-bind="text: description"></span></div>  
+            <div><span data-bind="text: searchDescription"></span></div>  
+            <div><span data-bind="text: averageRating"></span></div>   
+            <div><span data-bind="text: totalRatings"></span></div>   
+            <div><span data-bind="text: averageResponseTimeMinutes"></span></div>    
+            <div><span data-bind="text: averageHourlyRate"></span></div>    
+            <div><span data-bind="text: serviceProfessionalsCount"></span></div>     
+            </a>
+        </div>
+</div>

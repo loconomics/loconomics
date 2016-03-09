@@ -52,9 +52,9 @@ function ViewModel(appModel) {
     };
     //creates a handler function for the html search button (event)
     this.search = function(){
-        //creates a variable for the search term to check to see when a user enters more than 4 characters, we'll auto-load the data. 
+        //creates a variable for the search term to check to see when a user enters more than 2 characters, we'll auto-load the data. 
         var s = this.searchTerm(); 
-        if(s && s.length>4){
+        if(s && s.length>2){
             this.loadData(s);
         }
     };
