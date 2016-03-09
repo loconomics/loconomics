@@ -1,4 +1,4 @@
-﻿@{
+@{
     if (!LcHelpers.InDev) {
         LcHelpers.TestArea();
     }
@@ -899,6 +899,16 @@
                 "searchDistance": "30"
             }
         },
+        
+        "Search Job Title info by jobTitleID": {
+            "url": "/api/v1/en-US/search/job-titles/by-jobTitleID",
+            "get": {
+                "jobTitleID": "106",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
+            }
+        },
  
         /* TODO: Add ServiceSubCategoryPositionTable to db, and test query in JobTitleSearchResult.cs       
         "Search Job Titles by SubCategoryID": {
@@ -941,9 +951,10 @@
             }
         },   
         
-        "Search Categories by CategoryID /categories/{categoryID}": {
-            "url": "/api/v1/en-US/search/categories/1",
+        "Search Category info by CategoryID /categories/{categoryID}": {
+            "url": "/api/v1/en-US/search/categories/by-categoryID",
             "get": {
+                "categoryID": "1",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
                 "searchDistance": "30"

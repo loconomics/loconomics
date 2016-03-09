@@ -1,6 +1,6 @@
 <!-- Search activity (aka search) -->
 <div class="container" data-activity="search">
-            <form id="home-search" data-bind="submit: search" action="/" method="get" class="row">
+            <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
                 <div class="form-group col-sm-6">
                     <label for="homeSearch" class="sr-only">Search</label>
                     <div class="input-group input-group-lg">
@@ -12,7 +12,7 @@
                                  <div>Services</div>
                                      <ul data-bind="foreach: searchResults.jobTitles">
                                         <li>
-                                            <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID()}">
+                                            <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                                                 <span data-bind="text: pluralName"></span>                                                               <span data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span> –         
                                                 <span class="Result-description" data-bind="text: searchDescription"></span>  
                                             </a>
@@ -36,7 +36,7 @@
                                  <div>Categories</div>               
                                      <ul data-bind="foreach: searchResults.categories">
                                         <li>
-                                            <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID()}">
+                                            <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                                                 <span data-bind="text: categoryName"></span> –     
                                                 <span data-bind="text: searchDescription"></span>  
                                             </a>
@@ -49,7 +49,7 @@
                     <label for="homeLocation" class="sr-only">Where?</label>
                     <div class="input-group input-group-lg">
                         <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
-                        <input type="text" name="location" class="form-control inset" id="homeLocation" placeholder="Where?" >
+                        <input type="text" name="location" class="form-control inset" id="homeLocation" value="San Francisco, CA">
                     </div>
                 </div>
                 <div class="col-sm-2">

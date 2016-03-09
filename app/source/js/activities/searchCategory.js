@@ -4,7 +4,6 @@
 'use strict';
 
 var 
-    JobTitleSearchResult = require('../models/JobTitleSearchResult'),
     ko = require('knockout'),
     Activity = require('../components/Activity');
 
@@ -21,42 +20,66 @@ var A = Activity.extend(function SearchCategoryActivity() {
 
 exports.init = A.init;
 
-// get categoryID from the URL that's passed in from the search results preview
+// get jobTitleID from the URL that's passed in from the search results preview
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     var params = this.requestData.route.segments || [];
     var categoryID = params[0] || '';
-    this.viewModel.loadData(categoryID);
+    var origLat = params[1] || '';
+    var origLong = params[2] || '';
+    var searchDistance = params[3] || '';
+    this.viewModel.loadCategoryData(categoryID, origLat, origLong, searchDistance);
+    this.viewModel.loadData(categoryID, origLat, origLong, searchDistance);
 };    
 
 function ViewModel(appModel) {
     this.isLoading = ko.observable(false);
+    this.isCategoryLoading = ko.observable(false);
     //create an observable variable to hold the search term
     this.categoryID = ko.observable(); 
-    //create an object named JobTitleSearchResult to hold the search results returned from the API
-    this.jobTitleSearchResult = new JobTitleSearchResult();
-    this.loadData = function(categoryID) {
+    //create an observable variable to hold the search term
+    this.origLat = ko.observable(); 
+    //create an observable variable to hold the search term
+    this.origLong = ko.observable(); 
+    //create an observable variable to hold the search term
+    this.searchDistance = ko.observable(); 
+    //create an object named ServiceProfessionalSearchResult to hold the search results returned from the API
+    this.jobTitleSearchResult = ko.observableArray();
+    this.categorySearchResult = ko.observable();
+    
+    this.loadCategoryData = function(categoryID, origLat, origLong, searchDistance){
+        this.isCategoryLoading(true);
+        //Call the get rest API method for api/v1/en-US/search/categories/by-categoryID
+        return appModel.rest.get('search/categories/by-categoryID', {
+            categoryID: categoryID, 
+            origLat: origLat, 
+            origLong: origLong,
+            searchDistance: searchDistance
+        })
+        .then(function(data) {
+            this.categorySearchResult(data);
+            this.isCategoryLoading(false);
+        }.bind(this))
+        .catch(function(/*err*/) {
+            this.isCategoryLoading(false);
+        }.bind(this));
+    };
+    this.loadData = function(categoryID, origLat, origLong, searchDistance) {
         this.isLoading(true);
         //Call the get rest API method for api/v1/en-US/search/job-titles/by-category
         return appModel.rest.get('search/job-titles/by-category', {
             categoryID: categoryID, 
-            origLat: "37.788479", 
-            origLong: "-122.40297199999998",
-            searchDistance: "30"
+            origLat: origLat, 
+            origLong: origLong,
+            searchDistance: searchDistance
         })
-        .then(function(jobTitleSearchResult) {
-            if(jobTitleSearchResult){
-                //update JobTitleSearchResult object with all the data from the API
-                this.jobTitleSearchResult.model.updateWith(jobTitleSearchResult, true);
-            }
-            else {
-                this.jobTitleSearchResult.model.reset();
-            }
+        .then(function(list) {
+            this.jobTitleSearchResult(list);
             this.isLoading(false);
         }.bind(this))
         .catch(function(/*err*/) {
             this.isLoading(false);
         }.bind(this));
     };
-           
 }
+

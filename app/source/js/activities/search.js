@@ -40,7 +40,8 @@ var A = Activity.extend(function SearchActivity() {
                 // Save to viewmodel
                 vm.lat(place.geometry.location.lat());
                 vm.lng(place.geometry.location.lng());
-                console.log('LOCATION: ', place.geometry);
+                vm.city(place.formatted_address);
+                console.log('LOCATION: ', place);
             }
         });
 
@@ -71,7 +72,8 @@ exports.init = A.init;
 var DEFAULT_LOCATION = {
     lat: '37.788479',
     lng: '-122.40297199999998',
-    searchDistance: 30
+    searchDistance: 30,
+    city: 'San Francisco, CA USA'
 };
 
 function ViewModel(appModel) {
@@ -79,8 +81,10 @@ function ViewModel(appModel) {
     //create an observable variable to hold the search term
     this.searchTerm = ko.observable();
     // Coordinates
-    this.lat = ko.observable();
-    this.lng = ko.observable();
+    this.lat = ko.observable(DEFAULT_LOCATION.lat);
+    this.lng = ko.observable(DEFAULT_LOCATION.lng);
+    this.city = ko.observable();
+    this.searchDistance = ko.observable(DEFAULT_LOCATION.searchDistance);
     //create an object named SearchResults to hold the search results returned from the API
     this.searchResults = new SearchResults();
     this.loadData = function(searchTerm, lat, lng) {
@@ -112,6 +116,9 @@ function ViewModel(appModel) {
         var s = this.searchTerm();
         if(s && s.length > 2) {
             this.loadData(s, this.lat(), this.lng());
+        }
+        else{
+            this.searchResults.model.reset();
         }
     };
     //anything that happens in the computed function after a timeout of 60 seconds, run the code

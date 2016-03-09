@@ -40,11 +40,12 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static IEnumerable<CategorySearchResult> SearchByCategoryID(int categoryID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
+//for single result queries, remove the IEnumberable<>, .select(FromDB) and add FromDB() around the db.Query
+            public static CategorySearchResult SearchByCategoryID(int categoryID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(@"
+                return FromDB(db.Query(@"
                     DECLARE @categoryID AS int
                     SET @categoryID = @0
                     DECLARE @origLat DECIMAL(12, 9)
@@ -165,8 +166,7 @@ namespace LcRest
 							AND SC.ServiceCategoryID = @categoryID       
                     GROUP BY SC.ServiceCategoryID, SC.Name, SC.Description
                     ORDER BY serviceProfessionalsCount DESC, SC.Name
-                                ", categoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
-                    .Select(FromDB);
+                                ", categoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID));
             }
         }
         public static IEnumerable<CategorySearchResult> SearchBySearchTerm(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
