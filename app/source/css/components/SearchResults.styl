@@ -2,142 +2,110 @@
     Search-autocomplete component
 **/
 
-.SearchResultsPreview {
-    background-color: rgba(247, 247, 247, 1);
+
+.Result-list
+  display flex
+  margin 0
+  padding 0
+  flex-wrap wrap
+  justify-content center
+
+  li
+    list-style none
+    background-color rgba(255,255,255,1)
+    border-bottom 3px solid rgba(235,235,235,1)
+    width 290px
+    height 230px
+    margin 15px
+    padding-top 20px
+  
+  
+    .Result-profile-image
+      width 60px
+      height 60px
+      margin 8px 0 0 20px
+      border-radius 60px
+      display block
+      background-color red
+      float left
+      
+    .Results-item-top
+      width 69%
+      float left
+      text-align center
+      
+    .Result-verification
+      clear both
+      
+    .Result-firstName, .Result-lastName
+      font-size 20px
+      font weight bold
+      
+    .Result-businessName
+      color rgba(106, 106, 106, 1)
+      font-size: 14px
+      
+    .Results-selection
+      text-align center
+      padding-top 25px
+      clear both
+      
+      a
+        margin-top 8px
+        color rgba(252, 104, 105, 1)
+        display block
+    
+.Search-results 
+  background-color rgba(238, 238, 238, 1)
+  
+
+.SearchResultsPreview 
+    background-color rgba(247, 247, 247, 1)
     display block
     margin-top 4px
     padding 0
 
-    li {
-      list-style: none;
+    li 
+      list-style none
         
-      a {
-        text-decoration: none;
-        display: block;
-        padding: 15px;
-      }
+      a 
+        text-decoration none
+        display block
+        padding 15px
+      
         
-      div {
-        padding-top: 15px;
-        font-size: 18px;
-        text-align: center;
-      }
-      ul {
-        width: 100%;
-        padding: 0;
-        
-        li:hover {
-          background-color: rgba(255,255,255,1);
-        }
-        
-        li {
-          border-bottom: 1px solid rgba(204, 204, 204, 1);
-          
-          .Result-name {
-            color: rgba(51,51,51,1);
-            font-size: 16px;
-          }
-          
-          .Result-count {
-            font-size: 16px;
-            color: rgba(51,51,51,0.5);
-          }
-          
-          .Result-description {
-            display: block;
-            font-size: 12px;
-            color: rgba(51,51,51,0.5);
-            line-height: 24px;
-            height: 24px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-        }
-      }
-    }
-    .SearchResultsPreview-item {
-
-        display: block;
-        background: White;
-        
+      div 
+        padding-top 15px
+        font-size 18px
+        text-align center
+      
+      ul 
+        width 100%
         padding 0
-        margin-bottom 6px
         
-        vertical-align: middle;
-
-        // Name
-        > span {
-            // like the .btn
-            line-height: 34px;
-            display: inline-block;
-            padding-left: 1em;
-        }
-
-        // Removal button, on the right
-        > .btn {
-            float right
-            color Black
-            // Icon 
-            > i {
-                font-size: 18px;
-                vertical-align: top;
-            }
-        }
-
-        addTagFor($colorName, $color, $textColor = White) { 
-            &.SearchResultsPreview-item--{$colorName} {
-                background: $color;
-                color: $textColor;
-
-                > .btn,
-                > .btn > i {
-                    color: $textColor;
-                }
-            }
-        }
-
-        for $color in $brand-colors {
-            addTagFor($color, $brand-colors[$color]);
-        }
-    }
-    
-    $mediaMinSm = 'screen and (min-width: ' + screen-sm + ')'
-    @media $mediaMinSm {
-        clearfix()
+        lihover 
+          background-color rgba(255,255,255,1)
         
-        .SearchResultsPreview-item {
-            display: inline-block;
-            margin-right: 10px;
-            
-            width auto
-            float left
-            
-            > .btn {
-                float none
-            }
-        }
-    }
-    
-    &.SearchResultsPreview--decorated {
-        .SearchResultsPreview-item {
-            border-radius 4px
-            box-shadow: 0px 0px 2px -1px black;
-        }
-    }
-}
-
-.SearchResultsPreviewAutocomplete {
-    position: absolute;
-    max-height: 204px;
-    overflow: auto;
-    z-index: 999999;
-    background: White none repeat scroll 0% 0%;
-    box-shadow: 0 5px 6px 2px $gray-light;
-    left: $grid-gap;
-    right: $grid-gap;
-    
-    > ul {
-        margin: 0;
-    }
-}
+        
+        li 
+          border-bottom 1px solid rgba(204, 204, 204, 1)
+          
+          .Result-name 
+            color rgba(51,51,51,1)
+            font-size 16px
+          
+          
+          .Result-count 
+            font-size 16px
+            color rgba(51,51,51,0.5)
+          
+          
+          .Result-description 
+            display block
+            font-size 12px
+            color rgba(51,51,51,0.5)
+            line-height 24px
+            height 24px
+            white-space nowrap
+            overflow hidden
+            text-overflow ellipsis

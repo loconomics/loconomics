@@ -1,24 +1,41 @@
 <!-- Search Job Title activity -->
-<div class="" data-activity="searchJobTitle">
+
+<div class="Search-results" data-activity="searchJobTitle">
     <div data-bind="with: jobTitleSearchResult">
         <span data-bind="text: pluralName"></span>
         <span data-bind="text: searchDescription"></span>
     </div>
-        <ul data-bind="foreach: serviceProfessionalSearchResult">
-<!--            <img data-bind="attr: { src: photoUrl()}">-->
-            <li>
-            <span data-bind="text: firstName"></span>
-            <span data-bind="text: lastName"></span> 
-            <span data-bind="text: businessName"></span>  
-            <span data-bind="text: jobTitleNameSingular"></span>   
-            <span data-bind="text: distance"></span> 
-            <span data-bind="text: rating.rating1"></span>   
-            <span data-bind="text: rating.rating2"></span>  
-            <span data-bind="text: rating.rating3"></span> 
-            <span data-bind="text: rating.rating4"></span>    
-            <span data-bind="text: verificationsSummary"></span>   
-            <span data-bind="text: stats"></span>    
-            <span data-bind="text: jobStats"></span>
-                </li>
+        <ul class="Result-list" data-bind="foreach: serviceProfessionalSearchResult">
+          <li class="Result-item">
+            <div class="Result-profile-image"></div>          
+            <div class="Results-item-top">
+              <div>
+                <span class="Result-firstName" data-bind="text: firstName"></span>
+                <span class="Result-lastName" data-bind="text: lastName"></span>
+              </div>
+              <div>
+                <span class="Result-businessName" data-bind="text: businessName"></span>
+              </div>
+              <span class="Result-" data-bind="text: jobTitleNameSingular"></span>   
+              <span class="Result-" data-bind="text: distance"></span> 
+              <div class="star">
+                <span class="display-inline-block pointer h4 margin0t">
+                    <app-stars-rating class="text-secondary"></app-stars-rating>
+                </span>
+                <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true"></i> (<span></span>)</span>
+                <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" ></i></span>
+                <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" ></i></span>
+              </div>
+            </div>
+<!--
+            <span class="Result-verification" data-bind="text: verificationsSummary"></span>   
+            <span class="Result-" data-bind="text: stats"></span>    
+            <span class="Result-" data-bind="text: jobStats"></span>
+-->         
+            <div class="Results-selection">
+              <button class="btn btn-primary">Request to book</button>
+              <a href="#">See profile and reviews</a>
+            </div>
+          </li>
         </ul>
 </div>
