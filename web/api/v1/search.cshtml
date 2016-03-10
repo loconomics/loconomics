@@ -92,7 +92,7 @@
             }
         },   
         
-        "Search Category info by CategoryID /categories/{categoryID}": {
+        "Search Category info by CategoryID": {
             "url": "/api/v1/en-US/search/categories/by-categoryID",
             "get": {
                 "categoryID": "1",
@@ -167,11 +167,11 @@
             }
             else if (UrlData[0] == "categories" && UrlData[1] == "by-categoryID")
             {
-                var c = Request["categoryID"].AsInt();
+                var j = Request["categoryID"].AsInt();
                 var lat = Request["origLat"].AsDecimal();
                 var lng = Request["origLong"].AsDecimal();
                 var dist = Request["searchDistance"].AsInt();
-                return LcRest.CategorySearchResult.SearchByCategoryID(c, lat, lng, dist, LcRest.Locale.Current);
+                return LcRest.CategorySearchResult.SearchByCategoryID(j, lat, lng, dist, LcRest.Locale.Current);
             }
             return new HttpException(404, "Not found");
         }

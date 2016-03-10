@@ -15,7 +15,10 @@ namespace LcRest
         private int jobTitleID;
         public string firstName;
         public string lastName;
+        public string lastInitial;
+        public string publicBio;
         public string businessName;
+        public int instantBooking;
         public string jobTitleNameSingular;
         public string otherJobTitles;
         public string allJobTitles;
@@ -62,7 +65,10 @@ namespace LcRest
                 jobTitleID = record.jobTitleID,
                 firstName = record.firstName,
                 lastName = record.lastName,
+                lastInitial = record.lastInitial,
+                publicBio = record.publicBio,
                 businessName = record.businessName,
+                instantBooking = record.instantBooking,
                 jobTitleNameSingular = record.jobTitleNameSingular,
                 otherJobTitles = record.otherJobTitles,
                 allJobTitles = record.allJobTitles,
@@ -93,12 +99,15 @@ namespace LcRest
                     SET @CountryID = @5
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
 
-                    SELECT 
+                     SELECT 
                         u.userID,
                         p.positionID as JobTitleID,
                         u.firstName,
-                        u.lastName,
+                        u.lastName,                
+                        LEFT(u.lastName, 1) + '.' as lastInitial,
+                        u.PublicBio,
                         u.businessName,
+                        upp.InstantBooking,
                         p.PositionSingular As jobTitleNameSingular,
                         otherJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.PositionID != @JobTitleID AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
                         allJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
@@ -139,7 +148,9 @@ namespace LcRest
                         p.positionID,
                         u.firstName,
                         u.lastName,
+                        u.PublicBio,
                         u.businessName,
+                        upp.InstantBooking,
                         p.PositionSingular", JobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(x => (ServiceProfessionalSearchResult)FromDB(x, true));
             }
@@ -163,12 +174,15 @@ namespace LcRest
                     SET @CountryID = @5
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
 
-                   SELECT 
+                 SELECT 
                         u.userID,
                         jobTitleID = -2,
                         u.firstName,
-                        u.lastName,
+                        u.lastName,                
+                        LEFT(u.lastName, 1) + '.' as lastInitial,
+                        u.PublicBio,
                         u.businessName,
+                        null As instantBooking,
                         null As jobTitleNameSingular,
                         otherJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
                         allJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
@@ -209,6 +223,7 @@ namespace LcRest
                         u.userID,
                         u.firstName,
                         u.lastName,
+                        u.PublicBio,
                         u.businessName", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(x => (ServiceProfessionalSearchResult)FromDB(x, true));
             }
