@@ -105,7 +105,7 @@ namespace LcRest
                         u.firstName,
                         u.lastName,                
                         LEFT(u.lastName, 1) + '.' as lastInitial,
-                        u.PublicBio,
+                        u.publicBio,
                         u.businessName,
                         upp.InstantBooking,
                         p.PositionSingular As jobTitleNameSingular,
@@ -148,7 +148,7 @@ namespace LcRest
                         p.positionID,
                         u.firstName,
                         u.lastName,
-                        u.PublicBio,
+                        u.publicBio,
                         u.businessName,
                         upp.InstantBooking,
                         p.PositionSingular", JobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
@@ -180,7 +180,7 @@ namespace LcRest
                         u.firstName,
                         u.lastName,                
                         LEFT(u.lastName, 1) + '.' as lastInitial,
-                        u.PublicBio,
+                        u.publicBio,
                         u.businessName,
                         null As instantBooking,
                         null As jobTitleNameSingular,
@@ -223,7 +223,7 @@ namespace LcRest
                         u.userID,
                         u.firstName,
                         u.lastName,
-                        u.PublicBio,
+                        u.publicBio,
                         u.businessName", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(x => (ServiceProfessionalSearchResult)FromDB(x, true));
             }
