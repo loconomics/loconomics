@@ -439,7 +439,16 @@ var appInit = function appInit() {
 
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)
-    .then(function() {    
+    .then(function() {
+        
+        // TODO: Display a login popup/activity if a request require credentials and no log-in still??
+        /*app.model.rest.onAuthorizationRequired = function(retry) {
+            // Show login with a promise to know the result, retry if successfully.
+            // Note: no error must be returned, the caller of the original process
+            // must have it's own control.
+            xyz.showLogin().then(retry);
+        };*/
+        
         // Connect username in navbar, and type flags
         ko.computed(function() {
             var u = app.model.userProfile.data,

@@ -21,7 +21,7 @@ require('./AppModel-account').plugIn(AppModel);
 
 /**
     Load credentials from the local storage, without error if there is nothing
-    saved. If load profile data too, performing an tryLogin if no local data.
+    saved. It loads profile data too.
 **/
 AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
     return new Promise(function(resolve) { // Never rejects: , reject) {
@@ -49,36 +49,8 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
                 this.rest.extraHeaders = {
                     Authorization: 'LC alu=' + credentials.userID + ',alk=' + credentials.authKey
                 };
-                
-                // It has credentials! Has basic profile data?
-                // NOTE: the userProfile will load from local storage on this first
-                // attempt, and lazily request updated data from remote so we need
-                // to catch remote errors with events
-                this.userProfile.once('error', function(err) {
-                    this.emit('error', {
-                        message: 'Impossible to load your data. Please check your Internet connection',
-                        error: err
-                    });
-                }.bind(this));
-                
-                this.userProfile.load().then(function(profile) {
-                    if (profile) {
-                        // There is a profile cached                    
-                        // End succesfully
-                        resolve();
-                    }
-                    else {
-                        // No profile, we need to request it to be able
-                        // to work correctly, so we
-                        // attempt a login (the tryLogin process performs
-                        // a login with the saved credentials and fetch
-                        // the profile to save it in the local copy)
-                        this.tryLogin().then(resolve, resolveAnyway);
-                    }
-                }.bind(this), resolveAnyway)
-                // The error event catch any error if happens, so avoid uncaught exceptions
-                // in the console by catching the promise error
-                .catch(function() { });
+                // Load User Profile, from local with server fallback and server synchronization, silently
+                this.userProfile.load().then(resolve, resolveAnyway);
             }
             else {
                 // End successfully. Not loggin is not an error,
@@ -122,16 +94,6 @@ AppModel.prototype.init = function init() {
         
         this.config = config;
         this.rest = new Rest(config.siteUrl + '/api/v1/en-US/');
-        
-        // Setup Rest authentication
-        this.rest.onAuthorizationRequired = function(retry) {
-
-            this.tryLogin()
-            .then(function() {
-                // Logged! Just retry
-                retry();
-            });
-        }.bind(this);
         
         // With config loaded and REST ready, load all modules
         this.loadModules();
