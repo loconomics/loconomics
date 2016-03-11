@@ -224,6 +224,10 @@ You should keep a copy of the dev database that runs on your local machine. Any 
   - Revise or write code that create the actionss you'll need paying special attention to utilities referenced from the /js/utils folder.
   - Add file name to: app/source/js/appmodel/appmodel.js
 
+## CSS Naming Conventions
+
+We use SUIT naming convention for our CSS code: https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md
+
 ## Filing Github Issues
 
 We use Github to track all development issues, marketing tasks, and a repository for for other related project information.
