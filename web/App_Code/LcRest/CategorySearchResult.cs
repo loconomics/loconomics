@@ -45,7 +45,7 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.Query(@"
+                return FromDB(db.QuerySingle(@"
                     DECLARE @categoryID AS int
                     SET @categoryID = @0
                     DECLARE @origLat DECIMAL(12, 9)
@@ -59,7 +59,7 @@ namespace LcRest
                     DECLARE @CountryID int
                     SET @CountryID = @5
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
-                       SELECT	
+                       SELECT TOP 1
                     		SC.ServiceCategoryID as categoryID,
                     		SC.Name as categoryName,
                     		SC.Description as searchDescription,
@@ -166,7 +166,7 @@ namespace LcRest
 							AND SC.ServiceCategoryID = @categoryID       
                     GROUP BY SC.ServiceCategoryID, SC.Name, SC.Description
                     ORDER BY serviceProfessionalsCount DESC, SC.Name
-                                ", categoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID));
+                    ", categoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID));
             }
         }
         public static IEnumerable<CategorySearchResult> SearchBySearchTerm(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)

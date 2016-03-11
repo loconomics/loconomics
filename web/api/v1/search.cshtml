@@ -157,14 +157,6 @@
                 var dist = Request["searchDistance"].AsInt();
                 return LcRest.ServiceProfessionalSearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current);
             }
-            else if (UrlData[0] == "categories")
-            {
-                var s = Request["searchTerm"];
-                var lat = Request["origLat"].AsDecimal();
-                var lng = Request["origLong"].AsDecimal();
-                var dist = Request["searchDistance"].AsInt();
-                return LcRest.CategorySearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current);
-            }
             else if (UrlData[0] == "categories" && UrlData[1] == "by-categoryID")
             {
                 var j = Request["categoryID"].AsInt();
@@ -172,6 +164,14 @@
                 var lng = Request["origLong"].AsDecimal();
                 var dist = Request["searchDistance"].AsInt();
                 return LcRest.CategorySearchResult.SearchByCategoryID(j, lat, lng, dist, LcRest.Locale.Current);
+            }
+            else if (UrlData[0] == "categories")
+            {
+                var s = Request["searchTerm"];
+                var lat = Request["origLat"].AsDecimal();
+                var lng = Request["origLong"].AsDecimal();
+                var dist = Request["searchDistance"].AsInt();
+                return LcRest.CategorySearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current);
             }
             return new HttpException(404, "Not found");
         }
