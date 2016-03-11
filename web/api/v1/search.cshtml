@@ -66,9 +66,8 @@
         },
         
         "Search Job Title info by jobTitleID": {
-            "url": "/api/v1/en-US/search/job-titles/by-jobTitleID",
+            "url": "/api/v1/en-US/search/job-titles/106",
             "get": {
-                "jobTitleID": "106",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
                 "searchDistance": "30"
@@ -97,9 +96,8 @@
         },   
         
         "Search Category info by CategoryID": {
-            "url": "/api/v1/en-US/search/categories/by-categoryID",
+            "url": "/api/v1/en-US/search/categories/1",
             "get": {
-                "categoryID": "1",
                 "origLat": "37.788479",
                 "origLong": "-122.40297199999998",
                 "searchDistance": "30"
@@ -164,10 +162,10 @@
                             var dist = Request["searchDistance"].AsInt();
                             return LcRest.JobTitleSearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current);
                         }
-                        // /search/job-titles/by-jobTitleID
-                        if (UrlData.Count == 2 && UrlData[1] == "by-jobTitleID")
+                        // /search/job-titles/{jobTitleID} (where {jobTitleID} is an integer)
+                        if (UrlData.Count == 2 && UrlData[1].IsInt())
                         {
-                            var j = Request["jobTitleID"].AsInt();
+                            var j = UrlData[1].AsInt();
                             var lat = Request["origLat"].AsDecimal();
                             var lng = Request["origLong"].AsDecimal();
                             var dist = Request["searchDistance"].AsInt();
@@ -195,10 +193,10 @@
                             var dist = Request["searchDistance"].AsInt();
                             return LcRest.CategorySearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current);
                         }
-                        // /search/categories/by-categoryID
-                        else if (UrlData.Count == 2 && UrlData[1] == "by-categoryID")
+                        // /search/categories/{categoryID} (where {categoryID} is an integer)
+                        else if (UrlData.Count == 2 && UrlData[1].IsInt())
                         {
-                            var j = Request["categoryID"].AsInt();
+                            var j = UrlData[1].AsInt();
                             var lat = Request["origLat"].AsDecimal();
                             var lng = Request["origLong"].AsDecimal();
                             var dist = Request["searchDistance"].AsInt();
