@@ -183,7 +183,7 @@ namespace LcRest
                         LEFT(u.lastName, 1) + '.' as lastInitial,
                         u.publicBio,
                         u.businessName,
-                        upp.instantBooking,
+                        Cast(0 as bit) as instantBooking,
                         null As jobTitleNameSingular,
                         otherJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
                         allJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
@@ -225,8 +225,7 @@ namespace LcRest
                         u.firstName,
                         u.lastName,
                         u.publicBio,
-                        u.businessName,
-                        upp.instantBooking
+                        u.businessName
                     ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(x => (ServiceProfessionalSearchResult)FromDB(x, true));
             }

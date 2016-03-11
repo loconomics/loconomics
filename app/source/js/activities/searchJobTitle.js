@@ -4,7 +4,7 @@
 'use strict';
 
 var 
-//    ServiceProfessionalSearchResult = require('../models/ServiceProfessionalSearchResult'),
+    ServiceProfessionalSearchResult = require('../models/ServiceProfessionalSearchResult'),
     ko = require('knockout'),
     Activity = require('../components/Activity');
 
@@ -75,7 +75,11 @@ function ViewModel(appModel) {
             searchDistance: searchDistance
         })
         .then(function(list) {
-            this.serviceProfessionalSearchResult(list);
+            //since service professional result has objects with objects (star ratings, verifications), we need to create a more complex model using list.map to convert every record
+            var listAsModel = list.map(function(item) { 
+                return new ServiceProfessionalSearchResult(item); 
+            });
+            this.serviceProfessionalSearchResult(listAsModel);
             this.isLoading(false);
         }.bind(this))
         .catch(function(/*err*/) {
