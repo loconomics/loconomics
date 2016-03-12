@@ -50,9 +50,8 @@ function ViewModel(appModel) {
     
     this.loadJobTitleData = function(jobTitleID, origLat, origLong, searchDistance){
         this.isJobTitleLoading(true);
-        //Call the get rest API method for api/v1/en-US/search/job-titles/by-jobTitleID
-        return appModel.rest.get('search/job-titles/by-jobTitleID', {
-            jobTitleID: jobTitleID, 
+        //Call the get rest API method for api/v1/en-US/search/job-titles/106
+        return appModel.rest.get('search/job-titles/' + jobTitleID, {
             origLat: origLat, 
             origLong: origLong,
             searchDistance: searchDistance

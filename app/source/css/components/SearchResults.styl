@@ -1,59 +1,6 @@
 /**
-    Search-autocomplete component
+    Search Results component
 **/
-
-
-.Result-list
-  display flex
-  margin 0
-  padding 0
-  flex-wrap wrap
-  justify-content center
-
-  li
-    list-style none
-    background-color rgba(255,255,255,1)
-    border-bottom 3px solid rgba(235,235,235,1)
-    width 290px
-    height 230px
-    margin 15px
-    padding-top 20px
-  
-  
-    .Result-profile-image
-      margin 8px 0 0 20px
-      display block
-      float left
-      
-    .Results-item-top
-      width 69%
-      float left
-      text-align center
-      
-    .Result-verification
-      clear both
-      
-    .Result-name
-      font-size 20px
-      font weight bold
-      
-    .Result-businessName
-      color rgba(106, 106, 106, 1)
-      font-size: 14px
-      
-    .Results-selection
-      text-align center
-      padding-top 25px
-      clear both
-      
-      a
-        margin-top 8px
-        color rgba(252, 104, 105, 1)
-        display block
-    
-.Search-results 
-  background-color rgba(238, 238, 238, 1)
-  
 
 .SearchResultsPreview 
     background-color rgba(247, 247, 247, 1)
@@ -79,7 +26,7 @@
         width 100%
         padding 0
         
-        lihover 
+        li hover 
           background-color rgba(255,255,255,1)
         
         
@@ -105,3 +52,84 @@
             white-space nowrap
             overflow hidden
             text-overflow ellipsis
+    
+.Search-results 
+  background-color $gray-background
+  
+  h3
+    margin-top 10px
+    margin-bottom 5px
+    text-align center
+    
+  h5
+    color $gray-light
+    margin-top 0
+    margin-bottom 5px
+    text-align center
+    
+  p
+    text-align left
+    margin-left 15px
+    margin-right 15px
+  
+
+.Result-list
+  display flex
+  margin 0
+  padding 0
+  flex-wrap wrap
+  justify-content center
+
+  li
+    list-style none
+    background-color rgba(255,255,255,1)
+    border-bottom 3px solid $gray-lighter
+    width 290px
+    margin 15px
+    padding-top 20px
+    padding-bottom 20px
+     
+    .Result-summary
+      width 69%
+      float left
+      text-align center
+      color $gray-dark
+      h3
+        margin-top 0
+        margin-bottom 0
+
+      h5
+        margin-top 0
+        margin-bottom 0
+
+    .VerificationsRating
+      font-size 18px
+        
+    div.clear
+      clear both
+    
+    .Result-actions
+      text-align center
+      padding-top 5px
+      clear both 
+      
+      a
+        margin-top 8px
+        display block
+        color $brand-secondary
+        
+      .btn
+        width 80%
+        margin auto
+        color white
+        
+      h5
+        margin-top 8px
+        display block
+        
+      .FromPrice
+        color $gray-dark
+        font-size 16px
+        font-weight bold
+
+

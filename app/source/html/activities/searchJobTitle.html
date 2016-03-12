@@ -2,37 +2,61 @@
 
 <div class="Search-results" data-activity="searchJobTitle">
     <div data-bind="with: jobTitleSearchResult">
-        <span data-bind="text: pluralName"></span>
-        <span data-bind="text: searchDescription"></span>
+        <h3 class="text-secondary">
+            <span data-bind="text: pluralName"></span>
+        </h3>
+        <p>
+            <span data-bind="text: searchDescription"></span>
+        </p>
+        <h3>
+            <span data-bind="text: serviceProfessionalsCount, visible: serviceProfessionalsCount"></span> near you
+        </h3>
     </div>
         <ul class="Result-list" data-bind="foreach: serviceProfessionalSearchResult">
           <li class="Result-item">
-            <div class="Avatar Avatar--primary Avatar--sm Result-profile-image"><img data-bind="attr: {src: photoUrl}"></div>          
-            <div class="Results-item-top">
-              <div>
-                <span class="Result-name" data-bind="text: firstName"></span>
-                <span class="Result-name" data-bind="text: lastInitial"></span>
-              </div>
-              <div>
-                <span class="Result-businessName" data-bind="text: businessName"></span>
-                <span data-bind="visible: !businessName()">&nbsp;</span>
-              </div>
-              <span class="Result-" data-bind="text: jobTitleNameSingular"></span>   
-              <span class="Result-" data-bind="text: distance"></span> 
-            <div class="star">
-                    <span class="display-inline-block pointer h4 margin0t">
-                        <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings, size: 'sm'" class="text-secondary"></app-stars-rating>
+            <div class="Avatar Avatar--primary Avatar--sm Avatar--upperLeft"><img data-bind="attr: {src: photoUrl}"></div>          
+            <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
+                <div class="Result-summary">
+                  <div>
+                     <h3>
+                        <span data-bind="text: firstName"></span>
+                        <span data-bind="text: lastInitial"></span>
+                     </h3>
+                  </div>
+                  <div>
+                    <h5>
+                        <span data-bind="text: businessName"></span>
+                    </h5>
+                  </div>
+                <div class="ServiceProfessionalInfo-meta">
+                    <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings" class="text-secondary"></app-stars-rating>
+                    <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> 
+                        (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)
                     </span>
-                    <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)</span>
-<!--                    <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i></span>-->
+
+    <!--
+                    <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i></span>
+                    <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" data-bind="css: { 'ion-ios-heart': isClientFavorite, 'ion-ios-heart-outline': !isClientFavorite() }, attr: { 'aria-description': isClientFavorite() ? 'Favorite' : '' }"></i></span>
+    -->
                 </div>
-
-            <div class="Results-selection">
-            <a href="#" class="btn btn-primary" data-bind="attr: { href: $root.getBookLink }, visible: !instantBooking()">Request to book</a> 
-            <a href="#" class="btn btn-primary" data-bind="attr: { href: $root.getBookLink }, visible: instantBooking()">Book instantly</a> 
-              <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">See profile and reviews</a>
+                  <div>
+                    <h5>
+                        <span data-bind="text: distance"></span> miles
+                    </h5>
+                  </div>
+                  <div>
+                    <h5>
+                        <span data-bind="visible: !businessName()">&nbsp;</span>
+                    </h5>
+                  </div>
+                </div>
+              </a>
+            <div class="Result-actions">
+                <h5>Offers <span data-bind="text: jobStats().servicesCount"></span> service<span data-bind="visible: jobStats().servicesCount() > 1">s</span> from <span class="FromPrice" data-bind="text: jobStats().minServiceValue"></span></h5>
+                <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: !instantBooking()" class="btn btn-primary">Request to book</a> 
+                <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: instantBooking()" class="btn btn-primary">Book instantly</a> 
+                  <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">See profile and reviews</a>
             </div>
-
           </li>
         </ul>
 </div>

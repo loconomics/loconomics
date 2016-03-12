@@ -12,7 +12,7 @@ namespace LcRest
     {
         #region Fields
         public int userID;
-        private int jobTitleID;
+        public int jobTitleID;
         public string firstName;
         public string lastName;
         public string lastInitial;

@@ -15,6 +15,7 @@ function ServiceProfessionalSearchResult(values) {
     
     this.model.defProperties({
         userID: 0,
+        jobTitleID: 0,
         firstName: '',
         lastName: '',
         lastInitial: '',
